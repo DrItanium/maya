@@ -1,9 +1,8 @@
 ########### MAKEFILE FOR MAYA ###########
 include config.mk
-LIBELECTRON_OBJECTS = $(patsubst %.c,%.o, $(wildcard src/libelectron/*.c))
-LIBMAYA_OBJECTS = $(patsubst %.c,%.o, $(wildcard src/libmaya/*.c))
+LIBELECTRON_OBJECTS = $(patsubst %.c,%.o, $(wildcard *.c))
 MAYA_EXECUTABLE_OBJECTS = $(patsubst %.c,%.o, $(wildcard src/cmd/repl/*.c))
-OBJS = ${LIBELECTRON_OBJECTS} ${LIBMAYA_OBJECTS} ${MAYA_EXECUTABLE_OBJECTS}
+OBJS = ${LIBELECTRON_OBJECTS} ${MAYA_EXECUTABLE_OBJECTS}
 
 .PHONY: clean all
 
@@ -35,5 +34,5 @@ clean:
 		-std=c99 -Wall -Wundef -Wpointer-arith -Wshadow -Wcast-qual \
 	    -Wcast-align -Winline -Wmissing-declarations -Wredundant-decls \
 	    -Wmissing-prototypes -Wnested-externs -Wstrict-prototypes \
-	    -Waggregate-return -Wno-implicit -Iinclude/ $<
+	    -Waggregate-return -Wno-implicit -I. $<
 
