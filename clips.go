@@ -4,6 +4,7 @@ package clips
 // #include "clips.h"
 import "C"
 import "unsafe"
+import "fmt"
 
 type StrategyKind int
 
@@ -50,4 +51,29 @@ func (this *Environment) SetStrategy(strategy StrategyKind) StrategyKind {
 
 func (this *Environment) GetStrategy() StrategyKind {
 	return StrategyKind(C.EnvGetStrategy(this.ptr))
+}
+
+func (this *Environment) DribbleOn(fileName string) bool {
+	str := C.CString(fileName)
+	defer C.free((unsafe.Pointer)(str))
+	return C.EnvDribbleOn(this.ptr, str) == 1
+}
+
+func (this *Environment) DribbleOff() bool {
+	return C.EnvDribbleOff(this.ptr) == 1
+}
+
+func (this *Environment) DribbleActive() bool {
+	return C.EnvDribbleActive(this.ptr) == 1
+}
+
+func (this *Environment) GetWatchItem(item string) (bool, error) {
+	str := C.CString(item)
+	defer C.free((unsafe.Pointer)(str))
+	result := int(C.EnvGetWatchItem(this.ptr, str))
+	if result == -1 {
+		return false, fmt.Errorf("Watch item %s does not exist", item)
+	} else {
+		return (result == 1), nil
+	}
 }
