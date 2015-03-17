@@ -22,6 +22,11 @@ type Environment struct {
 	ptr unsafe.Pointer
 }
 
+func NewEnvironment() *Environment {
+	var env Environment
+	env.ptr = C.CreateEnvironment()
+	return &env
+}
 func (this *Environment) DestroyEnvironment() {
 	C.DestroyEnvironment(this.ptr)
 	this.ptr = nil
@@ -160,3 +165,41 @@ func (this *Environment) Facts(logicalName string, module *Module, start, end, m
 	defer C.free((unsafe.Pointer)(str))
 	C.EnvFacts(this.ptr, str, tModule, C.longlong(start), C.longlong(end), C.longlong(max))
 }
+
+func (this *Environment) RtnArgCount() int {
+	return int(C.EnvRtnArgCount(this.ptr))
+}
+
+type ArgumentCountRestriction int
+
+const (
+	Exactly = iota
+	AtLeast
+	NoMoreThan
+)
+
+func (this *Environment) ArgCountCheck(functionName string, restriction ArgumentCountRestriction, count int) bool {
+	str := C.CString(functionName)
+	defer C.free((unsafe.Pointer)(str))
+	return C.EnvArgCountCheck(this.ptr, str, C.int(restriction), count) == 1
+}
+
+func (this *Environment) ArgCountExactly(functionName string, count int) bool {
+	return this.ArgCountCheck(functionName, Exactly, count)
+}
+
+func (this *Environment) ArgCountAtLeast(functionName string, count int) bool {
+	return this.ArgCountCheck(functionName, AtLeast, count)
+}
+
+func (this *Environment) ArgCountNoMoreThan(functionName string, count int) bool {
+	return this.ArgCountCheck(functionName, NoMoreThan, count)
+}
+
+func (this *Environment) ArgRangeCheck(functionName string, min, max int) bool {
+	str := C.CString(functionName)
+	defer C.free((unsafe.Pointer)(str))
+	return C.EnvArgRangeCheck(this.ptr, functionName, min, max) == 1
+}
+
+// TODO: add support for the Rtn* calls
