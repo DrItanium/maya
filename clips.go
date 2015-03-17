@@ -67,6 +67,42 @@ func (this *Environment) DribbleActive() bool {
 	return C.EnvDribbleActive(this.ptr) == 1
 }
 
+const (
+	WatchFacts            = "facts"
+	WatchRules            = "rules"
+	WatchActivations      = "activations"
+	WatchFocus            = "focus"
+	WatchCompilations     = "compilations"
+	WatchStatistics       = "statistics"
+	WatchGlobals          = "globals"
+	WatchInstances        = "instances"
+	WatchSlots            = "slots"
+	WatchMessages         = "messages"
+	WatchMessageHandlers  = "message-handlers"
+	WatchGenericFunctions = "generic-functions"
+	WatchMethods          = "methods"
+	WatchDeffunctions     = "deffunctions"
+	WatchAll              = "all"
+)
+
+var watchItems = []string{
+	WatchFacts,
+	WatchRules,
+	WatchActivations,
+	WatchFocus,
+	WatchCompilations,
+	WatchStatistics,
+	WatchGlobals,
+	WatchInstances,
+	WatchSlots,
+	WatchMessages,
+	WatchMessageHandlers,
+	WatchGenericFunctions,
+	WatchMethods,
+	WatchDeffunctions,
+	WatchAll,
+}
+
 func (this *Environment) GetWatchItem(item string) (bool, error) {
 	str := C.CString(item)
 	defer C.free((unsafe.Pointer)(str))
@@ -76,4 +112,29 @@ func (this *Environment) GetWatchItem(item string) (bool, error) {
 	} else {
 		return (result == 1), nil
 	}
+}
+func legalWatchItem(item string) bool {
+	for _, value := range watchItems {
+		if value == item {
+			return true
+		}
+	}
+	return false
+}
+func (this *Environment) Watch(item string) (bool, error) {
+	if !legalWatchItem(item) {
+		return false, fmt.Errorf("Illegal watch item %s", item)
+	}
+	str := C.CString(item)
+	defer C.free((unsafe.Pointer)(str))
+	return int(C.EnvWatch(this.ptr, str)) == 1, nil
+}
+
+func (this *Environment) Unwatch(item string) (bool, error) {
+	if !legalWatchItem(item) {
+		return false, fmt.Errorf("Illegal watch item %s", item)
+	}
+	str := C.CString(item)
+	defer C.free((unsafe.Pointer)(str))
+	return int(C.EnvUnwatch(this.ptr, str)) == 1, nil
 }
