@@ -138,3 +138,25 @@ func (this *Environment) Unwatch(item string) (bool, error) {
 	defer C.free((unsafe.Pointer)(str))
 	return int(C.EnvUnwatch(this.ptr, str)) == 1, nil
 }
+
+func (this *Environment) IncrementFactCount(fact *Fact) {
+	C.EnvIncrementFactCount(this.ptr, fact.ptr)
+}
+
+func (this *Environment) DecrementFactCount(fact *Fact) {
+	C.EnvDecrementFactCount(this.ptr, fact.ptr)
+}
+
+const Unspecified = -1
+
+func (this *Environment) Facts(logicalName string, module *Module, start, end, max int64) {
+	var tModule unsafe.Pointer
+	if module == nil {
+		tModule = nil
+	} else {
+		tModule = module.ptr
+	}
+	str := C.CString(logicalName)
+	defer C.free((unsafe.Pointer)(str))
+	C.EnvFacts(this.ptr, str, tModule, C.longlong(start), C.longlong(end), C.longlong(max))
+}
