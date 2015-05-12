@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 /*
 maya
 Copyright (c) 2012-2015, Joshua Scoggins 
@@ -37,6 +38,9 @@ static void GetPixelColor(void* theEnv, DATA_OBJECT_PTR ret);
 static int NumberOfPixels(void* theEnv);
 
 void UnicornhatInterfaceDefinitions(void* theEnv) {
+	init(64);
+	initHardware();
+	setBrightness(0.2);
 	EnvDefineFunction2(theEnv, "unicornhat:number-of-pixels", 'i', PTIEF NumberOfPixels, "NumberOfPixels", "00a");
 	EnvDefineFunction2(theEnv, "unicornhat:show", 'v', PTIEF ShowPixels, "ShowPixels", "00a");
 	EnvDefineFunction2(theEnv, "unicornhat:clear", 'v', PTIEF ClearUnicornhat, "ClearUnicornhat", "00a");

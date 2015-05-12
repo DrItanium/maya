@@ -386,7 +386,7 @@ Color_t LEDBuffer[LED_BUFFER_LENGTH];
 unsigned int PWMWaveform[NUM_DATA_WORDS];
 
 unsigned char setBrightness(double b);
-double getBrightness();
+double getBrightness(void);
 void clearPWMBuffer(void);
 void clear(void);
 void clearLEDBuffer(void);

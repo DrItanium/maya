@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 #include "ws2812-RPi.h"
 
 const unsigned int ws2812_gamma[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
