@@ -1,6 +1,6 @@
 /*
 maya
-Copyright (c) 2012-2013, Joshua Scoggins 
+Copyright (c) 2012-2015, Joshua Scoggins 
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -38,4 +38,7 @@ void MayaDefinitions(void* theEnv) {
 #if BINARY_LOGICAL_OPERATIONS
    BinaryOperationsFunctionDefinitions(theEnv);
 #endif /* BINARY_LOGICAL_OPERATIONS */
+#if UNICORNHAT
+   UnicornhatInterfaceDefinitions(theEnv);
+#endif /* UNICORNHAT */
 }

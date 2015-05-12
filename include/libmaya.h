@@ -182,4 +182,7 @@ extern long long MergeFunction(void*);
 #endif
 extern void ArchitectureDetectionFunctionDefinitions(void* theEnv);
 #endif /* ARCHITECTURE_IDENTIFICATION */
+#if UNICORNHAT
+extern void UnicornhatInterfaceDefinitions(void* theEnv);
+#endif /* UNICORNHAT */
 #endif
