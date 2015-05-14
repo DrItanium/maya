@@ -30,33 +30,46 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #if UNICORNHAT
 static void ShowPixels(void* theEnv);
-static void ClearUnicornhat(void* theEnv);
 static double GetBrightness(void* theEnv);
 static int SetBrightness(void* theEnv);
 static int SetPixelColor(void* theEnv);
 static void GetPixelColor(void* theEnv, DATA_OBJECT_PTR ret);
 static int NumberOfPixels(void* theEnv);
+static void ShutdownUnicornhat(void* theEnv);
+static void InitializeUnicornhat(void* theEnv);
 
 void UnicornhatInterfaceDefinitions(void* theEnv) {
-	init(64);
-	initHardware();
-	setBrightness(0.2);
+	InitializeUnicornhat(theEnv);
 	EnvDefineFunction2(theEnv, "unicornhat:number-of-pixels", 'i', PTIEF NumberOfPixels, "NumberOfPixels", "00a");
 	EnvDefineFunction2(theEnv, "unicornhat:show", 'v', PTIEF ShowPixels, "ShowPixels", "00a");
-	EnvDefineFunction2(theEnv, "unicornhat:clear", 'v', PTIEF ClearUnicornhat, "ClearUnicornhat", "00a");
 	EnvDefineFunction2(theEnv, "unicornhat:get-brightness", 'd', PTIEF GetBrightness, "GetBrightness", "00a");
 	EnvDefineFunction2(theEnv, "unicornhat:set-brightness", 'b', PTIEF SetBrightness, "SetBrightness", "11dd");
 	EnvDefineFunction2(theEnv, "unicornhat:set-pixel-color", 'b', PTIEF SetPixelColor, "SetPixelColor", "44iiiii");
 	EnvDefineFunction2(theEnv, "unicornhat:get-pixel-color", 'u', PTIEF GetPixelColor, "GetPixelColor", "11ii");
+    EnvDefineFunction2(theEnv, "unicornhat:shutdown", 'v', PTIEF ShutdownUnicornhat, "ShutdownUnicornhat", "00a");
+}
+void InitializeUnicornhat(void* theEnv) {
+	setBrightness(0.2);
+	init(64);
+    clearLEDBuffer();
+	show();
+}
+void ShutdownUnicornhat(void* theEnv) {
+	int i;
+
+	for (i = 0; i < 64; i++) {
+		setPixelColor(i,0,0,0);
+	}
+
+	show();
+	terminate(0);
 }
 int NumberOfPixels(void* theEnv) {
 	return numPixels();
 }
 void ShowPixels(void* theEnv) {
 	show();
-}
-void ClearUnicornhat(void* theEnv) {
-	clear();
+	usleep(10);
 }
 
 double GetBrightness(void* theEnv) {
@@ -79,7 +92,9 @@ int SetBrightness(void* theEnv) {
 
 int SetPixelColor(void* theEnv) {
 	long long pixel, red, green, blue;
+    int result;
 	unsigned char r, g, b;
+   // char* container;
 	pixel = EnvRtnLong(theEnv, 1);
 	if (pixel < 0 || pixel >= numPixels()) {
 		EnvPrintRouter(theEnv,WERROR,"Pixel index is not in range!\n");
@@ -104,7 +119,8 @@ int SetPixelColor(void* theEnv) {
 	r = (unsigned char)red;
 	g = (unsigned char)green;
 	b = (unsigned char)blue;
-	return setPixelColor(pixel, r, g, b);
+    result = setPixelColor(pixel, r, g, b);
+    return result;
 }
 
 void GetPixelColor(void* theEnv, DATA_OBJECT_PTR ret) {

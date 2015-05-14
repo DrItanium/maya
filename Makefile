@@ -4,7 +4,7 @@ LIBELECTRON_OBJECTS = $(patsubst %.c,%.o, $(wildcard src/libelectron/*.c))
 LIBMAYA_OBJECTS = $(patsubst %.c,%.o, $(wildcard src/libmaya/*.c))
 LIBUNICORNHAT_OBJECTS = $(patsubst %.c,%.o, $(wildcard src/libunicornhat/*.c))
 MAYA_EXECUTABLE_OBJECTS = $(patsubst %.c,%.o, $(wildcard src/cmd/repl/*.c))
-OBJS = ${LIBELECTRON_OBJECTS} ${LIBMAYA_OBJECTS} ${MAYA_EXECUTABLE_OBJECTS} ${LIBUNICORNHAT_OBJECTS}
+OBJS = ${LIBELECTRON_OBJECTS} ${LIBMAYA_OBJECTS} $(LIBUNICORNHAT_OBJECTS) ${MAYA_EXECUTABLE_OBJECTS} 
 CPU := $(shell cat /proc/cpuinfo | grep BCM | awk '{print $$3}' | tr -d ' ')
 
 $(warning Detected CPU=$(CPU))
@@ -38,8 +38,7 @@ deinstall uninstall:
 
 clean: 
 	@echo Cleaning
-	@rm -f $(OBJS)
-	@rm -f $(OUTPUT)
+	@rm -f $(OBJS) $(OUTPUT)
 
 
 .c.o :
