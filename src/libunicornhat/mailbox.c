@@ -1,3 +1,5 @@
+#define _BSD_SOURCE
+#define _DEFAULT_SOURCE
 /*
 Copyright (c) 2012, Broadcom Europe Ltd.
 All rights reserved.

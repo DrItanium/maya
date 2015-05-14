@@ -26,6 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "clips.h"
 #include "libmaya.h"
+#include <stdbool.h>
 #if UNICORNHAT
 #include "ws2811.h"
 #include "board_info.h"
@@ -101,23 +102,43 @@ static int SetPixelColor(void* theEnv);
 static void GetPixelColor(void* theEnv, DATA_OBJECT_PTR ret);
 static int NumberOfPixels(void* theEnv);
 static void ShutdownUnicornhat(void* theEnv);
-static void InitializeUnicornhat(void* theEnv);
+static int InitializeUnicornhat(void* theEnv);
+static void Wait(void* theEnv);
 
 void UnicornhatInterfaceDefinitions(void* theEnv) {
-	InitializeUnicornhat(theEnv);
-	EnvDefineFunction2(theEnv, "unicornhat:number-of-pixels", 'i', PTIEF NumberOfPixels, "NumberOfPixels", "00a");
-	EnvDefineFunction2(theEnv, "unicornhat:show", 'v', PTIEF ShowPixels, "ShowPixels", "00a");
-	EnvDefineFunction2(theEnv, "unicornhat:get-brightness", 'i', PTIEF GetBrightness, "GetBrightness", "00a");
-	EnvDefineFunction2(theEnv, "unicornhat:set-brightness", 'b', PTIEF SetBrightness, "SetBrightness", "11dd");
-	EnvDefineFunction2(theEnv, "unicornhat:set-pixel-color", 'b', PTIEF SetPixelColor, "SetPixelColor", "44iiiii");
-	EnvDefineFunction2(theEnv, "unicornhat:get-pixel-color", 'u', PTIEF GetPixelColor, "GetPixelColor", "11ii");
-    EnvDefineFunction2(theEnv, "unicornhat:shutdown", 'v', PTIEF ShutdownUnicornhat, "ShutdownUnicornhat", "00a");
+	if (!InitializeUnicornhat(theEnv))  {
+		EnvPrintRouter(theEnv, WERROR, "Couldn't initialize the unicornhat, disabling functionality!");
+		EnvPrintRouter(theEnv, WERROR, "\n");
+	} else {
+		EnvDefineFunction2(theEnv, "unicornhat:number-of-pixels", 'i', PTIEF NumberOfPixels, "NumberOfPixels", "00a");
+		EnvDefineFunction2(theEnv, "unicornhat:show", 'v', PTIEF ShowPixels, "ShowPixels", "00a");
+		EnvDefineFunction2(theEnv, "unicornhat:get-brightness", 'i', PTIEF GetBrightness, "GetBrightness", "00a");
+		EnvDefineFunction2(theEnv, "unicornhat:set-brightness", 'b', PTIEF SetBrightness, "SetBrightness", "11ii");
+		EnvDefineFunction2(theEnv, "unicornhat:set-pixel-color", 'b', PTIEF SetPixelColor, "SetPixelColor", "44iiiii");
+		EnvDefineFunction2(theEnv, "unicornhat:get-pixel-color", 'u', PTIEF GetPixelColor, "GetPixelColor", "11ii");
+		EnvDefineFunction2(theEnv, "unicornhat:shutdown", 'v', PTIEF ShutdownUnicornhat, "ShutdownUnicornhat", "00a");
+		EnvDefineFunction2(theEnv, "wait", 'v', PTIEF Wait, "Wait", "11i");
+	}
 }
-void InitializeUnicornhat(void* theEnv) {
-	setBrightness(0.2);
-	init(64);
+void Wait(void* theEnv) {
+	long long duration;
+	duration = EnvRtnLong(theEnv, 1);
+	if (duration >= 0) {
+		usleep(duration);
+	}
+}
+int InitializeUnicornhat(void* theEnv) {
+    if (board_info_init() < 0)
+    {
+        return false;
+    }
+    if(ws2811_init(&ledstring))
+    {
+        return false;
+    }
+
     clearLEDBuffer();
-	show();
+	return true;
 }
 void ShutdownUnicornhat(void* theEnv) {
     int i;
@@ -141,14 +162,15 @@ int GetBrightness(void* theEnv) {
 int SetBrightness(void* theEnv) {
 	long long value;
 	value = EnvRtnLong(theEnv, 1);
-	if (value < 0.0) {
+	if (value < 0) {
 		EnvPrintRouter(theEnv,WERROR,"Brightness can't be less than zero!\n");
 		return FALSE;
-	} else if (value > 1.0) {
-		EnvPrintRouter(theEnv,WERROR,"Brightness can't be greater than one!\n");
+	} else if (value > 255) {
+		EnvPrintRouter(theEnv,WERROR,"Brightness can't be greater than 255!\n");
 		return FALSE;
 	} else {
 		setBrightness((unsigned char)value);
+		return TRUE;
 	}
 }
 
