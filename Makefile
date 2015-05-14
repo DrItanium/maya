@@ -29,6 +29,7 @@ install:
 	@echo Installing binaries to $(PREFIX)/bin
 	@mkdir -p $(PREFIX)/bin
 	@cp $(OUTPUT) $(PREFIX)/bin
+	@chmod +s $(PREFIX)/bin/${OUTPUT}
 
 deinstall uninstall:
 	@echo Uninstalling...
