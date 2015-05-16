@@ -30,7 +30,10 @@
            ?*micro-to-milliseconds*)))
 
 (defmethod wait
-  ((?amount INTEGER)
+  ((?amount FLOAT))
+  (wait (integer ?amount)))
+(defmethod wait
+  ((?amount NUMBER)
    (?scale SYMBOL 
            (not (neq (lowcase ?scale)
                      second
@@ -41,7 +44,7 @@
            ?*micro-to-seconds*)))
 
 (defmethod wait
-  ((?amount INTEGER)
+  ((?amount NUMBER)
    (?scale SYMBOL
            (not (neq (lowcase ?scale)
                      usec
@@ -53,7 +56,7 @@
   (wait ?amount))
 
 (defmethod wait
-  ((?amount INTEGER)
+  ((?amount NUMBER)
    (?scale SYMBOL 
            (not (neq (lowcase ?scale)
                      min
@@ -64,7 +67,7 @@
   (wait (* ?amount
            ?*micro-to-minutes*)))
 (defmethod wait
-  ((?amount INTEGER)
+  ((?amount NUMBER)
    (?scale SYMBOL
            (not (neq (lowcase ?scale)
                      h
@@ -73,6 +76,10 @@
                      hours))))
   (wait (* ?amount
            ?*micro-to-hours*)))
+(defmethod unicornhat:get-pixel-color
+  ((?x INTEGER)
+   (?y INTEGER))
+  (unicornhat:get-pixel-color (unicornhat:get-pixel-position ?x ?y)))
 (defmethod unicornhat:set-pixel-color
   ((?x INTEGER)
    (?y INTEGER)
@@ -89,6 +96,14 @@
          INTEGER))
   (unicornhat:set-pixel-color ?index
                               (expand$ ?rgb)))
+(defmethod unicornhat:set-pixel-color
+ ((?x INTEGER)
+  (?y INTEGER)
+  (?r INTEGER)
+  (?g INTEGER)
+  (?b INTEGER))
+ (unicornhat:set-pixel-color ?x ?y 
+                             (create$ ?r ?g ?b)))
 (defmethod rand-intensity
   ((?cap INTEGER))
   (mod (random) ?cap))
@@ -153,7 +168,7 @@
    (?delay-sym SYMBOL
                (eq (lowcase ?delay-sym)
                    delay:))
-   (?delay INTEGER)
+   (?delay NUMBER)
    (?delay-scale SYMBOL))
   (loop-for-count (?i 1 ?iterations) do
                   (rand-screen ?cap)
@@ -166,7 +181,7 @@
    (?delay-sym SYMBOL
                (eq (lowcase ?delay-sym)
                    delay:))
-   (?delay INTEGER))
+   (?delay NUMBER))
   (rand-screen-splash ?iterations
                       ?cap
                       ?delay-sym
@@ -177,7 +192,7 @@
    (?delay-sym SYMBOL
                (eq (lowcase ?delay-sym)
                    delay:))
-   (?delay INTEGER)
+   (?delay NUMBER)
    (?delay-scale SYMBOL))
   (rand-screen-splash ?iterations
                       ?*default-intensity-cap*
@@ -189,7 +204,7 @@
    (?delay-sym SYMBOL
                (eq (lowcase ?delay-sym)
                    delay:))
-   (?delay INTEGER))
+   (?delay NUMBER))
   (rand-screen-splash ?iterations
                       ?*default-intensity-cap*
                       ?delay-sym
