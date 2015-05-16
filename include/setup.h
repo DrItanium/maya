@@ -160,13 +160,6 @@
 
 #define intBool int
 #define globle
-typedef signed char schar;
-typedef unsigned char uchar;
-typedef unsigned short ushort;
-typedef unsigned int uint;
-typedef unsigned long ulong;
-typedef unsigned long long uvlong;
-typedef long long vlong;
 
 /*******************************************/
 /* RUN_TIME:  Specifies whether a run-time */

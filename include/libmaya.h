@@ -26,7 +26,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define _LIBMAYA_H
 extern void MayaDefinitions(void* theEnv);
 #if FILE_SYSTEM_ROOTING
-
 #define FILE_SYSTEM_ROOT_DATA USER_ENVIRONMENT_DATA + 0
 typedef struct FileSystemRootData {
 	int rootingenabled;
@@ -40,21 +39,10 @@ typedef struct FileSystemRootData {
 extern void DefineFSOverrideFunctions(void* theEnv);
 extern int FS_RemoveFunction(void*);
 extern int FS_RenameFunction(void*);
-#endif
+#endif /* FILE_SYSTEM_ROOTING */
 
 #if BINARY_LOGICAL_OPERATIONS
 extern void BinaryOperationsFunctionDefinitions(void *theEnv);
-extern long long RightShiftFunction(void*);
-extern long long LeftShiftFunction(void*);
-extern long long BinaryAndFunction(void*);
-extern long long BinaryOrFunction(void*);
-extern long long BinaryXorFunction(void*);
-extern long long BinaryNotFunction(void*);
-extern long long SliceFunction(void*);
-extern void Slice8Function(void*, DATA_OBJECT_PTR);
-extern void Slice4Function(void*, DATA_OBJECT_PTR);
-extern void Slice2Function(void*, DATA_OBJECT_PTR);
-extern long long MergeFunction(void*);
 #endif /* BINARY_LOGICAL_OPERATIONS */
 
 

@@ -792,27 +792,8 @@ EnvPrintRouter(theEnv,WDISPLAY,"Run time module is ");
 #else
   EnvPrintRouter(theEnv,WDISPLAY,"OFF\n");
 #endif
-
-#if MAYA_EXTENSIONS
-EnvPrintRouter(theEnv,WDISPLAY,"Architecture identification is ");
-#if ARCHITECTURE_IDENTIFICATION 
-  EnvPrintRouter(theEnv,WDISPLAY,"ON\n");
-#else
-  EnvPrintRouter(theEnv,WDISPLAY,"OFF\n");
-#endif
-EnvPrintRouter(theEnv,WDISPLAY, "Binary logical operators are ");
-#if BINARY_LOGICAL_OPERATIONS 
-  EnvPrintRouter(theEnv,WDISPLAY,"ON\n");
-#else
-  EnvPrintRouter(theEnv,WDISPLAY,"OFF\n");
-#endif
-EnvPrintRouter(theEnv,WDISPLAY, "File system rooting is ");
-#if FILE_SYSTEM_ROOTING 
-  EnvPrintRouter(theEnv,WDISPLAY,"ON\n");
-#else
-  EnvPrintRouter(theEnv,WDISPLAY,"OFF\n");
-#endif
-#endif /* MAYA_EXTENSIONS */
+  // Call into our maya extensions printer
+  MayaOptions(theEnv);
   }
 
 /***********************************************/
