@@ -77,18 +77,18 @@ void clearLEDBuffer(void){
   Remap an x/y coordinate to a pixel index
 */
 int getPixelPosition(int x, int y){
-
-    int map[8][8] = {
-        {7 ,6 ,5 ,4 ,3 ,2 ,1 ,0 },
-        {8 ,9 ,10,11,12,13,14,15},
-        {23,22,21,20,19,18,17,16},
-        {24,25,26,27,28,29,30,31},
-        {39,38,37,36,35,34,33,32},
-        {40,41,42,43,44,45,46,47},
-        {55,54,53,52,51,50,49,48},
-        {56,57,58,59,60,61,62,63}
-    };
-
+	// technically this should be static to make sure that only one copy of it
+	// every exists during runtime
+	int map[8][8] = {
+		{7 ,6 ,5 ,4 ,3 ,2 ,1 ,0 },
+		{8 ,9 ,10,11,12,13,14,15},
+		{23,22,21,20,19,18,17,16},
+		{24,25,26,27,28,29,30,31},
+		{39,38,37,36,35,34,33,32},
+		{40,41,42,43,44,45,46,47},
+		{55,54,53,52,51,50,49,48},
+		{56,57,58,59,60,61,62,63}
+	};
     return map[x][y];
 }
 
@@ -104,6 +104,7 @@ static int NumberOfPixels(void* theEnv);
 static void ShutdownUnicornhat(void* theEnv);
 static int InitializeUnicornhat(void* theEnv);
 static void Wait(void* theEnv);
+static void PixelPosition(void* theEnv, DATA_OBJECT_PTR ret);
 
 void UnicornhatInterfaceDefinitions(void* theEnv) {
 	if (!InitializeUnicornhat(theEnv))  {
@@ -117,23 +118,41 @@ void UnicornhatInterfaceDefinitions(void* theEnv) {
 		EnvDefineFunction2(theEnv, "unicornhat:set-pixel-color", 'b', PTIEF SetPixelColor, "SetPixelColor", "44iiiii");
 		EnvDefineFunction2(theEnv, "unicornhat:get-pixel-color", 'u', PTIEF GetPixelColor, "GetPixelColor", "11ii");
 		EnvDefineFunction2(theEnv, "unicornhat:shutdown", 'v', PTIEF ShutdownUnicornhat, "ShutdownUnicornhat", "00a");
+		EnvDefineFunction2(theEnv, "unicornhat:get-pixel-position", 'u', PTIEF PixelPosition, "PixelPosition", "22iii");
 		EnvDefineFunction2(theEnv, "wait", 'v', PTIEF Wait, "Wait", "11i");
 	}
 }
+void PixelPosition(void* theEnv, DATA_OBJECT_PTR ret) {
+	int x, y;
+	x = (int)EnvRtnLong(theEnv, 1);
+	if (x >= 8 || x < 0) {
+		EnvPrintRouter(theEnv,WERROR,"x coordinate is out of range!\n");
+		SetpType(ret, SYMBOL);
+		SetpValue(ret, EnvFalseSymbol(theEnv));
+		return;
+	}
+	y = (int)EnvRtnLong(theEnv, 2);
+	if (y >= 8 || y < 0) {
+		EnvPrintRouter(theEnv,WERROR,"y coordinate is out of range!\n");
+		SetpType(ret, SYMBOL);
+		SetpValue(ret, EnvFalseSymbol(theEnv));
+		return;
+	}
+	SetpType(ret, INTEGER);
+	SetpValue(ret, EnvAddLong(theEnv, getPixelPosition(x, y)));
+}
 void Wait(void* theEnv) {
-	long long duration;
+	vlong duration;
 	duration = EnvRtnLong(theEnv, 1);
 	if (duration >= 0) {
 		usleep(duration);
 	}
 }
 int InitializeUnicornhat(void* theEnv) {
-    if (board_info_init() < 0)
-    {
+    if (board_info_init() < 0) {
         return false;
     }
-    if(ws2811_init(&ledstring))
-    {
+    if(ws2811_init(&ledstring)) {
         return false;
     }
 
@@ -160,7 +179,7 @@ int GetBrightness(void* theEnv) {
 }
 
 int SetBrightness(void* theEnv) {
-	long long value;
+	vlong value;
 	value = EnvRtnLong(theEnv, 1);
 	if (value < 0) {
 		EnvPrintRouter(theEnv,WERROR,"Brightness can't be less than zero!\n");
@@ -169,15 +188,15 @@ int SetBrightness(void* theEnv) {
 		EnvPrintRouter(theEnv,WERROR,"Brightness can't be greater than 255!\n");
 		return FALSE;
 	} else {
-		setBrightness((unsigned char)value);
+		setBrightness((byte)value);
 		return TRUE;
 	}
 }
 
 int SetPixelColor(void* theEnv) {
-	long long pixel, red, green, blue;
+	vlong pixel, red, green, blue;
     int result;
-	unsigned char r, g, b;
+	byte r, g, b;
    // char* container;
 	pixel = EnvRtnLong(theEnv, 1);
 	if (pixel < 0 || pixel >= LED_COUNT) {
@@ -200,9 +219,9 @@ int SetPixelColor(void* theEnv) {
 		return FALSE;
 	}
 	
-	r = (unsigned char)red;
-	g = (unsigned char)green;
-	b = (unsigned char)blue;
+	r = (byte)red;
+	g = (byte)green;
+	b = (byte)blue;
     setPixelColorRGB(pixel, r, g, b);
 	return TRUE;
 }
@@ -210,7 +229,7 @@ int SetPixelColor(void* theEnv) {
 void GetPixelColor(void* theEnv, DATA_OBJECT_PTR ret) {
 	ws2811_led_t color;
 	void* multifield;
-	long long index;
+	vlong index;
 	index = EnvRtnLong(theEnv, 1);
 	if (index < 0 || index >= LED_COUNT) {
 		EnvPrintRouter(theEnv,WERROR,"Pixel index is not in range!\n");
@@ -234,9 +253,6 @@ void GetPixelColor(void* theEnv, DATA_OBJECT_PTR ret) {
 	SetpDOEnd(ret, 3);
 	return;
 }
-
-
-
 
 #endif /* UNICORNHAT */
 

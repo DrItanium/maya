@@ -29,6 +29,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 typedef signed char schar;
 typedef unsigned char uchar;
+typedef unsigned char byte;
 typedef unsigned short ushort;
 typedef unsigned int uint;
 typedef unsigned long ulong;
