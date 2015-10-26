@@ -77,6 +77,8 @@ intBool CallClipsEnvironment(void* theEnv, DATA_OBJECT* target, DATA_OBJECT* rv)
 	DATA_OBJECT theValue, arg0;
 	const char* methodName;
 	int numRulesToFire;
+	const char* path;
+	void* otherEnv;
 	if ((numberOfArguments = EnvArgCountCheck(theEnv,"call (with type clips-environment)",AT_LEAST,2)) == -1) 
 	{ return FALSE; }
 
@@ -86,7 +88,7 @@ intBool CallClipsEnvironment(void* theEnv, DATA_OBJECT* target, DATA_OBJECT* rv)
 
 	if (EnvArgTypeCheck(theEnv,"call (with type clips-environment)",2,SYMBOL,&theValue) == FALSE) 
 	{ return FALSE; }
-
+	otherEnv = DOPToExternalAddress(target);
 	methodName = DOToString(theValue);
 	if (strcmp(methodName, "run") == 0) {
 		if (numberOfArguments > 3) {
@@ -100,8 +102,19 @@ intBool CallClipsEnvironment(void* theEnv, DATA_OBJECT* target, DATA_OBJECT* rv)
 		} else {
 			numRulesToFire = -1;
 		}
-		EnvRun(target, numRulesToFire);
+		EnvRun(otherEnv, numRulesToFire);
 		return TRUE;
+	} else if (strcmp(methodName, "batch*") == 0) {
+		if (numberOfArguments != 3) {
+			EnvPrintRouter(theEnv, WERROR, "ERROR: function batch* requires a path to load!\n");
+			return FALSE;
+		} else {
+			if (EnvArgTypeCheck(theEnv, "call (with type clips-environment)", 3, SYMBOL_OR_STRING, &arg0) == FALSE) {
+				return FALSE;
+			}
+			path = DOToString(arg0);
+			return EnvBatchStar(otherEnv, path);
+		}
 	} else {
 		EnvPrintRouter(theEnv, WERROR, "Unknown function ");
 		EnvPrintRouter(theEnv, WERROR, methodName);
