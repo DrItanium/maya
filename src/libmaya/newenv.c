@@ -95,7 +95,7 @@ intBool CallClipsEnvironment(void* theEnv, DATA_OBJECT* target, DATA_OBJECT* rv)
 			EnvPrintRouter(theEnv, WERROR, "ERROR: function run allows zero or one arguments, too many arguments provided!\n");
 			return FALSE;
 		} else if (numberOfArguments == 3) {
-			if (EnvArgTypeCheck(theEnv, "call (with type clips-environment)", 3, INTEGER, &arg0) == FALSE) {
+			if (EnvArgTypeCheck(theEnv, "call run (with type clips-environment)", 3, INTEGER, &arg0) == FALSE) {
 				return FALSE;
 			}
 			numRulesToFire = DOToInteger(arg0);
@@ -109,11 +109,33 @@ intBool CallClipsEnvironment(void* theEnv, DATA_OBJECT* target, DATA_OBJECT* rv)
 			EnvPrintRouter(theEnv, WERROR, "ERROR: function batch* requires a path to load!\n");
 			return FALSE;
 		} else {
-			if (EnvArgTypeCheck(theEnv, "call (with type clips-environment)", 3, SYMBOL_OR_STRING, &arg0) == FALSE) {
+			if (EnvArgTypeCheck(theEnv, "call batch* (with type clips-environment)", 3, SYMBOL_OR_STRING, &arg0) == FALSE) {
 				return FALSE;
 			}
 			path = DOToString(arg0);
 			return EnvBatchStar(otherEnv, path);
+		}
+	} else if (strcmp(methodName, "build") == 0) {
+		if (numberOfArguments != 3) {
+			EnvPrintRouter(theEnv, WERROR, "ERROR: function build requires a string to build from!\n");
+			return FALSE;
+		} else {
+			if (EnvArgTypeCheck(theEnv, "call build (with type clips-environment)", 3, SYMBOL_OR_STRING, &arg0) == FALSE) {
+				return FALSE;
+			}
+			path = DOToString(arg0);
+			return EnvBuild(otherEnv, path);
+		}
+	} else if (strcmp(methodName, "eval") == 0) {
+		if (numberOfArguments != 3) {
+			EnvPrintRouter(theEnv, WERROR, "ERROR: function eval requires a string to eval from!\n");
+			return FALSE;
+		} else {
+			if (EnvArgTypeCheck(theEnv, "call eval (with type clips-environment)", 3, SYMBOL_OR_STRING, &arg0) == FALSE) {
+				return FALSE;
+			}
+			path = DOToString(arg0);
+			return EnvEval(otherEnv, path, rv);
 		}
 	} else {
 		EnvPrintRouter(theEnv, WERROR, "Unknown function ");
