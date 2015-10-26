@@ -149,6 +149,7 @@ typedef long long vlong;
 #define BINARY_LOGICAL_OPERATIONS 0
 #define FILE_SYSTEM_ROOTING 0
 #define PARSING_EXTENSIONS 0
+#define SPAWN_OTHER_ENVIRONMENTS
 #endif
 
 #ifndef ARCHITECTURE_IDENTIFICATION
@@ -169,6 +170,10 @@ typedef long long vlong;
 
 #ifndef PARSING_EXTENSIONS
 #define PARSING_EXTENSIONS 1
+#endif
+
+#ifndef SPAWN_OTHER_ENVIRONMENTS
+#define SPAWN_OTHER_ENVIRONMENTS 1
 #endif
 
 extern void MayaOptions(void* theEnv);

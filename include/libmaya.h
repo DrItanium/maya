@@ -172,5 +172,9 @@ extern void ArchitectureDetectionFunctionDefinitions(void* theEnv);
 #endif /* ARCHITECTURE_IDENTIFICATION */
 #if PARSING_EXTENSIONS
 extern void ParsingExtensionsFunctions(void* theEnv);
-#endif // PARSING_EXTENSIONS
+#endif /* PARSING_EXTENSIONS */
+#if SPAWN_OTHER_ENVIRONMENTS
+extern void EnvironmentSpawningFunctions(void* theEnv);
+#endif /* SPAWN_OTHER_ENVIRONMENTS */
+
 #endif

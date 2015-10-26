@@ -42,6 +42,10 @@ void MayaDefinitions(void* theEnv) {
 #if PARSING_EXTENSIONS
    ParsingExtensionsFunctions(theEnv);
 #endif /* PARSING_EXTENSIONS */
+
+#if SPAWN_OTHER_ENVIRONMENTS
+	EnvironmentSpawningFunctions(theEnv);
+#endif /* SPAWN_OTHER_ENVIRONMENTS */
 }
 
 void MayaOptions(void* theEnv) {
@@ -66,6 +70,12 @@ EnvPrintRouter(theEnv,WDISPLAY, "File system rooting is ");
 #endif
 EnvPrintRouter(theEnv, WDISPLAY, "CLIPS Parsing Extensions are ");
 #if PARSING_EXTENSIONS
+  EnvPrintRouter(theEnv,WDISPLAY,"ON\n");
+#else
+  EnvPrintRouter(theEnv,WDISPLAY,"OFF\n");
+#endif 
+EnvPrintRouter(theEnv, WDISPLAY, "Ability to spawn and reference other CLIPS environments ");
+#if SPAWN_OTHER_ENVIRONMENTS
   EnvPrintRouter(theEnv,WDISPLAY,"ON\n");
 #else
   EnvPrintRouter(theEnv,WDISPLAY,"OFF\n");
