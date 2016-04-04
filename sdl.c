@@ -25,6 +25,8 @@
 #include "sdl.h"
 #if SDL_EXTENSIONS
 #include <SDL2/SDL_cpuinfo.h>
+#include <SDL2/SDL_opengl.h>
+#include <SDL2/SDL_opengles2.h>
 #endif
 
 #if !SDL_EXTENSIONS
@@ -35,11 +37,31 @@ void InstallSDLExtensions(void* theEnv) { }
 defun_header(SystemRamCount);
 defun_header(HasAVX);
 defun_header(HasSSE42);
+defun_header(HasSSE41);
+defun_header(HasSSE3);
+defun_header(HasSSE2);
+defun_header(HasSSE);
+defun_header(Has3DNow);
+defun_header(HasMMX);
+defun_header(HasAltiVec);
+defun_header(GetGLVendor);
+defun_header(GetGLRenderer);
+defun_header(GetGLVersion);
 #undef defun_header
 void InstallSDLExtensions(void* environment) {
 	EnvAddUDF(environment, "get-system-ram-count", "i", SystemRamCount, "SystemRamCount", 0, 0, NULL, NULL);
 	EnvAddUDF(environment, "system-has-avx", "b", HasAVX, "HasAVX", 0, 0, NULL, NULL);
 	EnvAddUDF(environment, "system-has-sse42", "b", HasSSE42, "HasSSE42", 0, 0, NULL, NULL);
+	EnvAddUDF(environment, "system-has-sse41", "b", HasSSE41, "HasSSE41", 0, 0, NULL, NULL);
+	EnvAddUDF(environment, "system-has-sse3", "b", HasSSE3, "HasSSE3", 0, 0, NULL, NULL);
+	EnvAddUDF(environment, "system-has-sse2", "b", HasSSE2, "HasSSE2", 0, 0, NULL, NULL);
+	EnvAddUDF(environment, "system-has-sse", "b", HasSSE, "HasSSE", 0, 0, NULL, NULL);
+	EnvAddUDF(environment, "system-has-3dnow", "b", Has3DNow, "Has3DNow", 0, 0, NULL, NULL);
+	EnvAddUDF(environment, "system-has-mmx", "b", HasMMX, "HasMMX", 0, 0, NULL, NULL);
+	EnvAddUDF(environment, "system-has-altivec", "b", HasAltiVec, "HasAltiVec", 0, 0, NULL, NULL);
+	EnvAddUDF(environment, "gl-vendor", "sy", GetGLVendor, "GetGLVendor", 0, 0, NULL, NULL);
+	EnvAddUDF(environment, "gl-renderer", "sy", GetGLRenderer, "GetGLRenderer", 0, 0, NULL, NULL);
+	EnvAddUDF(environment, "gl-version", "sy", GetGLVersion, "GetGLVersion", 0, 0, NULL, NULL);
 }
 void SystemRamCount(UDFContext* context, CLIPSValue* ret) {
 	mCVSetInteger(ret, SDL_GetSystemRAM());
@@ -51,5 +73,39 @@ void SystemRamCount(UDFContext* context, CLIPSValue* ret) {
 boolFunction(HasAVX, SDL_HasAVX)
 boolFunction(HasSSE42, SDL_HasSSE42)
 boolFunction(HasSSE41, SDL_HasSSE41)
+boolFunction(HasSSE3, SDL_HasSSE3)
+boolFunction(HasSSE2, SDL_HasSSE2)
+boolFunction(HasSSE, SDL_HasSSE)
+boolFunction(Has3DNow, SDL_Has3DNow)
+boolFunction(HasMMX, SDL_HasMMX)
+boolFunction(HasAltiVec, SDL_HasAltiVec)
 #undef boolFunction
+
+void GetGLVendor(UDFContext* context, CLIPSValue* ret) {
+	const char* str = glGetString(GL_VENDOR);
+	if (str != NULL) {
+		mCVSetString(ret, str);
+	} else {
+		mCVSetString(ret, "Undefined");
+	}
+}
+
+void GetGLRenderer(UDFContext* context, CLIPSValue* ret) {
+	const char* str = glGetString(GL_RENDERER);
+	if (str != NULL) {
+		mCVSetString(ret, str);
+	} else {
+		mCVSetString(ret, "Undefined");
+	}
+}
+
+void GetGLVersion(UDFContext* context, CLIPSValue* ret) {
+	const char* str = glGetString(GL_VERSION);
+	if (str != NULL) {
+		mCVSetString(ret, str);
+	} else {
+		mCVSetString(ret, "Undefined");
+	}
+}
+
 #endif
