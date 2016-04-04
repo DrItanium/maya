@@ -32,6 +32,10 @@
 #include "functional.h"
 #endif
 
+#if SDL_EXTENSIONS
+#include "sdl.h"
+#endif
+
 #if !MAYA_EXTENSIONS
 void InstallMayaExtensions(void* environment) { }
 #else
@@ -52,6 +56,9 @@ void InstallMayaExtensions(void* environment) {
 #endif
 #if FUNCTIONAL_EXTENSIONS
 	InstallFunctionalExtensions(environment);
+#endif
+#if SDL_EXTENSIONS
+	InstallSDLExtensions(environment);
 #endif
 }
 
