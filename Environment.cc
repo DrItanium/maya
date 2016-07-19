@@ -22,6 +22,7 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "Environment.h"
+#include "Instance.h"
 extern "C" {
 	#include "clips.h"
 }
@@ -300,4 +301,15 @@ namespace maya {
 	encodeData( CLIPSValue* dobj, CLIPSString value) {
 		mCVSetString(dobj, value);
 	}
+
+	Instance
+	Environment::makeInstance(CLIPSString str) {
+		return Instance(this, ::EnvMakeInstance(_env, str));
+	}
+
+	Instance
+	Environment::makeInstance(const std::string& setup) {
+		return Instance(this, ::EnvMakeInstance(_env, setup.c_str()));
+	}
+	
 }

@@ -125,6 +125,9 @@ class Environment {
 		void encodeSymbol(CLIPSValue* dobj, CLIPSString str);
 		void decodeSymbol(CLIPSValue* dobj, std::string& str);
 
+		Instance makeInstance(CLIPSString str);
+		Instance makeInstance(const std::string& setup);
+
 	private:
 		void* _env;
 		bool destroy;
