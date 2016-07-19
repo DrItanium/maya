@@ -86,6 +86,7 @@ class Environment {
 		void* addNumber(float number);
 		void* addNumber(double number);
 		void* addNumber(long double number);
+		void* addNumber(CLIPSInteger number);
 		template<typename T>
 		void* addNumber(T&& value);
 
@@ -127,6 +128,33 @@ class Environment {
 
 		Instance makeInstance(CLIPSString str);
 		Instance makeInstance(const std::string& setup);
+
+		void installExpression(EXPRESSION* expr);
+		void deinstallExpression(EXPRESSION* expr);
+		void evaluateExpression(EXPRESSION* expr, DATA_OBJECT* ret);
+		void reclaimExpressionList(EXPRESSION* expr);
+
+		EXPRESSION* generateConstantExpression(uint16 type, void* value);
+
+		bool generateFunctionExpression(const std::string& name, FUNCTION_REFERENCE* ref);
+
+		void call(const std::string& function);
+		void call(const std::string& function, CLIPSValuePtr ref);
+		template<typename T>
+		void call(const std::string& function, CLIPSValuePtr ret, T args);
+
+		template<typename T, typename K>
+		void call(const std::string& function, CLIPSValuePtr ret, T arg0, K arg1);
+
+		template<typename ... Args>
+		void call(const std::string& function, CLIPSValuePtr ret, Args ... args);
+
+		template<typename R, typename ... Args>
+		void call(const std::string& function, R& ret, Args ... args);
+
+		void encode(CLIPSValuePtr dobj, std::function<void(Environment*, CLIPSValuePtr)> fn);
+		void decode(CLIPSValuePtr dobj, std::function<void(Environment*, CLIPSValuePtr)> fn);
+
 
 	private:
 		void* _env;

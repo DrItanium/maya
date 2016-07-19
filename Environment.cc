@@ -311,5 +311,37 @@ namespace maya {
 	Environment::makeInstance(const std::string& setup) {
 		return Instance(this, ::EnvMakeInstance(_env, setup.c_str()));
 	}
+	void
+	Environment::installExpression(EXPRESSION* expr) {
+		::ExpressionInstall(_env, expr);
+	}
+	void
+	Environment::deinstallExpression(EXPRESSION* expr) {
+		::ExpressionDeinstall(_env, expr);
+	}
+
+	void
+	Environment::evaluateExpression(EXPRESSION* expr, CLIPSValuePtr ret) {
+		::EvaluateExpression(_env, expr, ret);
+	}
+
+	void
+	Environment::reclaimExpressionList(EXPRESSION* expr) {
+		::ReturnExpression(_env, expr);
+	}
+
+	EXPRESSION*
+	Environment::generateConstantExpression(uint16 type, void* value) {
+		return ::GenConstant(_env, type, value);
+	}
+
+	bool
+	Environment::generateFunctionExpression(const std::string& name, FUNCTION_REFERENCE* ref) {
+		return ::GetFunctionReference(_env, name.c_str(), ref);
+	}
 	
+	void*
+	Environment::addNumber(CLIPSInteger number) {
+		return ::EnvAddLong(_env, number);
+	}
 }
