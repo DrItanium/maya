@@ -22,10 +22,16 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef MAYA_CPPLIB_ENVIRONMENT_H__
 #define MAYA_CPPLIB_ENVIRONMENT_H__
+#include "types.h"
+#include <functional>
 #include <string>
+extern "C" {
+	#include "clips.h"
+}
 namespace maya 
 {
-
+class InstanceBuilder;
+class FunctionBuilder;
 class Environment {
 
 	public:
@@ -52,9 +58,11 @@ class Environment {
 		 */
 		void* addSymbol(const char* str);
 		/**
-		 * Add the given std::string to the symbol table and return a handle
+		 * Add the given string to the symbol table and return a handle
+		 * @param the symbol/string to add to the symbol table
+		 * @returns the handle to the entry in the symbol table
 		 */
-		void* addSymbol(const std::string& value);
+		void* addSymbol(const std::string& str);
 		/**
 		 * Convert the given bool value to it's corresponding symbol
 		 * representation
@@ -67,6 +75,44 @@ class Environment {
 		 */
 		template<typename T>
 		void* addSymbol(T&& value);
+
+		void* addNumber(int8 number);
+		void* addNumber(uint8 number);
+		void* addNumber(int16 number);
+		void* addNumber(uint16 number);
+		void* addNumber(int32 number);
+		void* addNumber(uint32 number);
+		void* addNumber(int64 number);
+		void* addNumber(uint64 number);
+		void* addNumber(float number);
+		void* addNumber(double number);
+		void* addNumber(long double number);
+		template<typename T>
+		void* addNumber(T&& value);
+
+		bool watch(const char* target);
+		bool watch(const std::string& target);
+		bool unwatch(const char* target);
+		bool unwatch(const std::string& target);
+
+
+		int64 run(int64 count = -1L);
+		void reset();
+		void clear();
+		int loadFile(const char* path);
+		int loadFile(const std::string& path);
+		bool batchFile(const char* path);
+		bool batchFile(const std::string& path);
+
+		void applyToFunction(std::function<void(void*)> fn);
+		void* assertFact(const char* str);
+		void* assertFact(const std::string& str);
+		bool eval(const char* str, DATA_OBJECT* dobj);
+		bool eval(const std::string& str, DATA_OBJECT* dobj);
+		void halt();
+		bool build(const char* str);
+		bool build(const std::string& str);
+
 	private:
 		void* _env;
 		bool destroy;

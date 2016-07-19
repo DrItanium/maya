@@ -26,20 +26,19 @@ extern "C" {
 	#include "clips.h"
 }
 
+#include <functional>
 #include <utility>
 
 namespace maya 
 {
-	Environment::Environment() : destroy(true) 
-	{
+	Environment::Environment() : destroy(true) {
 		_env = ::CreateEnvironment();
 		/// @todo perform error checking
 	}
 
 	Environment::Environment(void* env) : _env(env), destroy(false) { }
 
-	Environment::~Environment() 
-	{
+	Environment::~Environment() {
 		if (destroy) {
 			::DestroyEnvironment(_env);
 			/// @todo error checking
@@ -48,20 +47,17 @@ namespace maya
 	}
 
 	void* 
-	Environment::addSymbol(const char* str)
-	{
+	Environment::addSymbol(const char* str) {
 		return ::EnvAddSymbol(_env, str);
 	}
 
 	void*
-	Environment::addSymbol(const std::string& str)
-	{
+	Environment::addSymbol(const std::string& str) {
 		return ::EnvAddSymbol(_env, str.c_str());
 	}
 
 	void*
-	Environment::addSymbol(bool value) 
-	{
+	Environment::addSymbol(bool value) {
 		if (value) {
 			return ::EnvTrueSymbol(_env);
 		} else {
@@ -75,5 +71,161 @@ namespace maya
 	Environment::addSymbol(T&& value) {
 		return convertToSymbol(this, std::forward<T>(value));
 	}
+
+	void*
+	Environment::addNumber(int8 number) {
+		return ::EnvAddLong(_env, number);
+	}
+
+	void*
+	Environment::addNumber(uint8 number) {
+		return ::EnvAddLong(_env, number);
+	}
+
+	void*
+	Environment::addNumber(int16 number) {
+		return ::EnvAddLong(_env, number);
+	}
+
+	void*
+	Environment::addNumber(uint16 number) {
+		return ::EnvAddLong(_env, number);
+	}
+
+	void*
+	Environment::addNumber(int32 number) {
+		return ::EnvAddLong(_env, number);
+	}
+
+	void*
+	Environment::addNumber(uint32 number) {
+		return ::EnvAddLong(_env, number);
+	}
+
+	void*
+	Environment::addNumber(int64 number) {
+		return ::EnvAddLong(_env, number);
+	}
+
+	void*
+	Environment::addNumber(uint64 number) {
+		return ::EnvAddLong(_env, int64(number));
+	}
+
+	void*
+	Environment::addNumber(float number) {
+		return ::EnvAddDouble(_env, number);
+	}
+
+	void*
+	Environment::addNumber(double number) {
+		return ::EnvAddDouble(_env, number);
+	}
+
+	void*
+	Environment::addNumber(long double number) {
+		return ::EnvAddDouble(_env, double(number));
+	}
 	
+	template<typename T>
+	void* 
+	Environment::addNumber(T&& value) {
+		return convertToNumber(this, std::forward<T>(value));
+	}
+
+	bool
+	Environment::watch(const char* target) {
+		return ::EnvWatch(_env, target);
+	}
+
+	bool
+	Environment::watch(const std::string& target) {
+		return ::EnvWatch(_env, target.c_str());
+	}
+
+	int64
+	Environment::run(int64 numRules) {
+		return ::EnvRun(_env, numRules);
+	}
+	
+	void
+	Environment::reset() {
+		::EnvReset(_env);
+	}
+
+	void
+	Environment::clear() {
+		::EnvClear(_env);
+	}
+
+	int
+	Environment::loadFile(const char* path) {
+		return ::EnvLoad(_env, path);
+	}
+
+	int 
+	Environment::loadFile(const std::string& path) {
+		return ::EnvLoad(_env, path.c_str());
+	}
+
+	bool
+	Environment::batchFile(const char* path) {
+		return ::EnvBatchStar(_env, path);
+	}
+
+	bool
+	Environment::batchFile(const std::string& path) {
+		return ::EnvBatchStar(_env, path.c_str());
+	}
+
+	void
+	Environment::applyToFunction(std::function<void(void*)> fn) {
+		fn(_env);
+	}
+
+	bool
+	Environment::unwatch(const char* target) {
+		return ::EnvUnwatch(_env, target);
+	}
+
+	bool
+	Environment::unwatch(const std::string& target) {
+		return ::EnvUnwatch(_env, target.c_str());
+	}
+
+	void*
+	Environment::assertFact(const char* str) {
+		return ::EnvAssertString(_env, str);
+	}
+
+	void*
+	Environment::assertFact(const std::string& str) {
+		return ::EnvAssertString(_env, str.c_str());
+	}
+
+	bool
+	Environment::eval(const char* str, DATA_OBJECT* obj) {
+		return ::EnvEval(_env, str, obj);
+	}
+	
+	bool
+	Environment::eval(const std::string& str, DATA_OBJECT* obj) {
+		return ::EnvEval(_env, str.c_str(), obj);
+	}
+
+	void
+	Environment::halt() {
+		::EnvHalt(_env);
+	}
+
+	bool
+	Environment::build(const char* str) {
+		return ::EnvBuild(_env, str);
+	}
+
+	bool
+	Environment::build(const std::string& str) {
+		return ::EnvBuild(_env, str.c_str());
+	}
+
 }
