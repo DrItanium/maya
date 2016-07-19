@@ -203,12 +203,12 @@ namespace maya {
 	}
 
 	bool
-	Environment::eval(const char* str, DATA_OBJECT* obj) {
+	Environment::eval(const char* str, CLIPSValue* obj) {
 		return ::EnvEval(_env, str, obj);
 	}
 	
 	bool
-	Environment::eval(const std::string& str, DATA_OBJECT* obj) {
+	Environment::eval(const std::string& str, CLIPSValue* obj) {
 		return ::EnvEval(_env, str.c_str(), obj);
 	}
 
@@ -229,14 +229,50 @@ namespace maya {
 
 	template<typename T>
 	void 
-	Environment::decode(DATA_OBJECT* dobj, T&& value) {
+	Environment::decode(CLIPSValue* dobj, T&& value) {
 		decodeData(this, dobj, std::forward<T>(value));
 	}
 
 	template<typename T>
 	void
-	Environment::encode(DATA_OBJECT* dobj, T&& value) {
+	Environment::encode(CLIPSValue* dobj, T&& value) {
 		encodeData(this, dobj, std::forward<T>(value));
 	}
 
+	void decodeData(Environment* env, CLIPSValue* dobj, CLIPSInteger& value) { 
+		value = mCVToInteger(dobj); 
+	}
+
+	void encodeData(Environment* env, CLIPSValue* dobj, CLIPSInteger& value) { 
+		mCVSetInteger(dobj, value); 
+	}
+
+	void decodeData(Environment* env, CLIPSValue* dobj, CLIPSFloat& value) {
+		value = mCVToFloat(dobj);
+	}
+
+	void
+	encodeData(Environment* env, CLIPSValue* dobj, CLIPSFloat& value) { 
+		mCVSetFloat(dobj, value); 
+	}
+
+	void
+	decodeData(Environment* env, CLIPSValue* dobj, bool& value) {
+		value = mCVIsTrueSymbol(dobj);
+	}
+
+	void
+	encodeData(Environment* env, CLIPSValue* dobj, bool& value) {
+		mCVSetBoolean(dobj, value);
+	}
+
+	void
+	decodeData(Environment* env, CLIPSValue* dobj, std::string & str) {
+		str = mCVToString(dobj);
+	}
+
+	void
+	encodeData(Environment* env, CLIPSValue* dobj, const std::string& val) {
+		//mCVSetString
+	}
 }

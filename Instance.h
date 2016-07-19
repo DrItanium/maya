@@ -32,10 +32,10 @@ namespace maya {
 		public:
 			Instance(Environment* env, void* instancePtr);
 			virtual ~Instance();
-			bool setSlot(const char* slotName, DATA_OBJECT* value);
-			bool setSlot(const std::string& slotName, DATA_OBJECT* value);
-			void getSlot(const char* slotName, DATA_OBJECT* ret);
-			void getSlot(const std::string& slotName, DATA_OBJECT* ret);
+			bool setSlot(const char* slotName, CLIPSValue* value);
+			bool setSlot(const std::string& slotName, CLIPSValue* value);
+			void getSlot(const char* slotName, CLIPSValue* ret);
+			void getSlot(const std::string& slotName, CLIPSValue* ret);
 			bool unmake();
 			template<typename T>
 			bool setSlot(const char* slotName, T&& value);

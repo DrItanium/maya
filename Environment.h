@@ -106,25 +106,43 @@ class Environment {
 		void applyToFunction(std::function<void(void*)> fn);
 		void* assertFact(const char* str);
 		void* assertFact(const std::string& str);
-		bool eval(const char* str, DATA_OBJECT* dobj);
-		bool eval(const std::string& str, DATA_OBJECT* dobj);
+		bool eval(const char* str, CLIPSValue* dobj);
+		bool eval(const std::string& str, CLIPSValue* dobj);
 		void halt();
 		bool build(const char* str);
 		bool build(const std::string& str);
 
 		/**
-		 * Use the given DATA_OBJECT to populate the second argument
+		 * Use the given CLIPSValue to populate the second argument
 		 * @param dobj the data object containing the data to extract
 		 */
 		template<typename T>
-		void decode(DATA_OBJECT* dobj, T&& value);
+		void decode(CLIPSValue* dobj, T&& value);
 		template<typename T>
-		void encode(DATA_OBJECT* dobj, T&& value);
+		void encode(CLIPSValue* dobj, T&& value);
 
+		void encodeSymbol(CLIPSValue* dobj, const std::string& str);
+		void encodeSymbol(CLIPSValue* dobj, CLIPSString str);
+		void encodeString(CLIPSValue* dobj, CLIPSString str);
+		void encodeString(CLIPSValue* dobj, const std::string& str);
+		void decodeSymbol(CLIPSValue* dobj, std::string& str);
+		void decodeString(CLIPSValue* dobj, std::string& str);
 	private:
 		void* _env;
 		bool destroy;
 };
+
+void decodeData(Environment* env, CLIPSValue* dobj, CLIPSInteger& value);
+void encodeData(Environment* env, CLIPSValue* dobj, CLIPSInteger& value);
+void decodeData(Environment* env, CLIPSValue* dobj, CLIPSFloat& value);
+void encodeData(Environment* env, CLIPSValue* dobj, CLIPSFloat& value);
+void decodeData(Environment* env, CLIPSValue* dobj, std::string& ret);
+void encodeData(Environment* env, CLIPSValue* dobj, const std::string& val);
+#define encodeDecodePair(type) \
+	void decodeData(Environment* env, CLIPSValue* dobj, type & value); \
+	void encodeData(Environment* env, CLIPSValue* dobj, type & value)
+encodeDecodePair(bool);
+#undef encodeDecodePair
 
 }
 

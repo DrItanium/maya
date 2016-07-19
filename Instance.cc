@@ -30,23 +30,23 @@ Instance::Instance(Environment* env, void* instancePtr) : _env(env), _instancePt
 Instance::~Instance() { }
 
 bool
-Instance::setSlot(const char* slotName, DATA_OBJECT* value) {
+Instance::setSlot(const char* slotName, CLIPSValue* value) {
 	/// @todo check and see if the set was successful
 	return ::EnvDirectPutSlot(_env->getRawEnvironment(), _instancePtr, slotName, value);
 }
 
 bool
-Instance::setSlot(const std::string& slotName, DATA_OBJECT* value) {
+Instance::setSlot(const std::string& slotName, CLIPSValue* value) {
 	return ::EnvDirectPutSlot(_env->getRawEnvironment(), _instancePtr, slotName.c_str(), value);
 }
 
 void
-Instance::getSlot(const char* slotName, DATA_OBJECT* value) {
+Instance::getSlot(const char* slotName, CLIPSValue* value) {
 	::EnvDirectGetSlot(_env->getRawEnvironment(), _instancePtr, slotName, value);
 }
 
 void
-Instance::getSlot(const std::string& slotName, DATA_OBJECT* value) {
+Instance::getSlot(const std::string& slotName, CLIPSValue* value) {
 	::EnvDirectGetSlot(_env->getRawEnvironment(), _instancePtr, slotName.c_str(), value);
 }
 
@@ -62,7 +62,7 @@ Instance::unmake() {
 template<typename T>
 void
 Instance::getSlot(const char* slotName, T&& value) {
-	DATA_OBJECT ret;
+	CLIPSValue ret;
 	getSlot(slotName, &ret);
 	_env->decode(&ret, std::forward<T>(value));
 }
@@ -70,7 +70,7 @@ Instance::getSlot(const char* slotName, T&& value) {
 template<typename T>
 void
 Instance::getSlot(const std::string& slotName, T&& value) {
-	DATA_OBJECT ret;
+	CLIPSValue ret;
 	getSlot(slotName, &ret);
 	_env->decode(&ret, std::forward<T>(value));
 }
@@ -78,14 +78,14 @@ Instance::getSlot(const std::string& slotName, T&& value) {
 template<typename T>
 bool
 Instance::setSlot(const std::string& slotName, T&& value) {
-	DATA_OBJECT input;
+	CLIPSValue input;
 	_env->encode(&input, std::forward<T>(value));
 	return setSlot(slotName, &input);
 }
 template<typename T>
 bool
 Instance::setSlot(const char* slotName, T&& value) {
-	DATA_OBJECT input;
+	CLIPSValue input;
 	_env->encode(&input, std::forward<T>(value));
 	return setSlot(slotName, &input);
 }
