@@ -230,49 +230,74 @@ namespace maya {
 	template<typename T>
 	void 
 	Environment::decode(CLIPSValue* dobj, T&& value) {
-		decodeData(this, dobj, std::forward<T>(value));
+		decodeData(dobj, std::forward<T>(value));
 	}
 
 	template<typename T>
 	void
 	Environment::encode(CLIPSValue* dobj, T&& value) {
-		encodeData(this, dobj, std::forward<T>(value));
+		encodeData(dobj, std::forward<T>(value));
 	}
 
-	void decodeData(Environment* env, CLIPSValue* dobj, CLIPSInteger& value) { 
+	void decodeData( CLIPSValue* dobj, CLIPSInteger& value) { 
 		value = mCVToInteger(dobj); 
 	}
 
-	void encodeData(Environment* env, CLIPSValue* dobj, CLIPSInteger& value) { 
+	void encodeData( CLIPSValue* dobj, CLIPSInteger& value) { 
 		mCVSetInteger(dobj, value); 
 	}
 
-	void decodeData(Environment* env, CLIPSValue* dobj, CLIPSFloat& value) {
+	void decodeData( CLIPSValue* dobj, CLIPSFloat& value) {
 		value = mCVToFloat(dobj);
 	}
 
 	void
-	encodeData(Environment* env, CLIPSValue* dobj, CLIPSFloat& value) { 
+	encodeData( CLIPSValue* dobj, CLIPSFloat& value) { 
 		mCVSetFloat(dobj, value); 
 	}
 
 	void
-	decodeData(Environment* env, CLIPSValue* dobj, bool& value) {
+	decodeData( CLIPSValue* dobj, bool& value) {
 		value = mCVIsTrueSymbol(dobj);
 	}
 
 	void
-	encodeData(Environment* env, CLIPSValue* dobj, bool& value) {
+	encodeData( CLIPSValue* dobj, bool& value) {
 		mCVSetBoolean(dobj, value);
 	}
 
 	void
-	decodeData(Environment* env, CLIPSValue* dobj, std::string & str) {
+	decodeData( CLIPSValue* dobj, std::string & str) {
 		str = mCVToString(dobj);
 	}
 
 	void
-	encodeData(Environment* env, CLIPSValue* dobj, const std::string& val) {
-		//mCVSetString
+	encodeData( CLIPSValue* dobj, const std::string& val) {
+		mCVSetString(dobj, val.c_str());
+	}
+
+	void 
+	Environment::encodeSymbol(CLIPSValue* dobj, const std::string& str) {
+		mCVSetSymbol(dobj, str.c_str());
+	}
+	void 
+	Environment::encodeSymbol(CLIPSValue* dobj, CLIPSString str) {
+		mCVSetSymbol(dobj, str);
+	}
+	void 
+	Environment::decodeSymbol(CLIPSValue* dobj, std::string& str) {
+		str = mCVToString(dobj);
+	}
+	void
+	decodeData( CLIPSValue* dobj, float& value) {
+		value = mCVToFloat(dobj);
+	}
+	void
+	encodeData( CLIPSValue* dobj, float& value) {
+		mCVSetFloat(dobj, value);
+	}
+	void
+	encodeData( CLIPSValue* dobj, CLIPSString value) {
+		mCVSetString(dobj, value);
 	}
 }

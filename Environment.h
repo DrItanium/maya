@@ -123,25 +123,28 @@ class Environment {
 
 		void encodeSymbol(CLIPSValue* dobj, const std::string& str);
 		void encodeSymbol(CLIPSValue* dobj, CLIPSString str);
-		void encodeString(CLIPSValue* dobj, CLIPSString str);
-		void encodeString(CLIPSValue* dobj, const std::string& str);
 		void decodeSymbol(CLIPSValue* dobj, std::string& str);
-		void decodeString(CLIPSValue* dobj, std::string& str);
+
 	private:
 		void* _env;
 		bool destroy;
 };
 
-void decodeData(Environment* env, CLIPSValue* dobj, CLIPSInteger& value);
-void encodeData(Environment* env, CLIPSValue* dobj, CLIPSInteger& value);
-void decodeData(Environment* env, CLIPSValue* dobj, CLIPSFloat& value);
-void encodeData(Environment* env, CLIPSValue* dobj, CLIPSFloat& value);
-void decodeData(Environment* env, CLIPSValue* dobj, std::string& ret);
-void encodeData(Environment* env, CLIPSValue* dobj, const std::string& val);
+
+
+
+void decodeData(CLIPSValue* dobj, CLIPSInteger& value);
+void encodeData(CLIPSValue* dobj, CLIPSInteger& value);
+void decodeData(CLIPSValue* dobj, CLIPSFloat& value);
+void encodeData(CLIPSValue* dobj, CLIPSFloat& value);
+void encodeData(CLIPSValue* dobj, CLIPSString value);
+void decodeData(CLIPSValue* dobj, std::string& ret);
+void encodeData(CLIPSValue* dobj, const std::string& val);
 #define encodeDecodePair(type) \
-	void decodeData(Environment* env, CLIPSValue* dobj, type & value); \
-	void encodeData(Environment* env, CLIPSValue* dobj, type & value)
+	void decodeData(CLIPSValue* dobj, type & value); \
+	void encodeData(CLIPSValue* dobj, type & value)
 encodeDecodePair(bool);
+encodeDecodePair(float);
 #undef encodeDecodePair
 
 }
