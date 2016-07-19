@@ -28,9 +28,8 @@
 extern "C" {
 	#include "clips.h"
 }
-namespace maya 
-{
-class InstanceBuilder;
+namespace maya {
+class Instance;
 class FunctionBuilder;
 class Environment {
 

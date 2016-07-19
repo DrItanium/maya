@@ -29,8 +29,7 @@ extern "C" {
 #include <functional>
 #include <utility>
 
-namespace maya 
-{
+namespace maya {
 	Environment::Environment() : destroy(true) {
 		_env = ::CreateEnvironment();
 		/// @todo perform error checking
