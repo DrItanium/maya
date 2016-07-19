@@ -23,6 +23,7 @@
 
 #include "Environment.h"
 #include "Instance.h"
+#include "FunctionBuilder.h"
 extern "C" {
 	#include "clips.h"
 }
@@ -343,5 +344,53 @@ namespace maya {
 	void*
 	Environment::addNumber(CLIPSInteger number) {
 		return ::EnvAddLong(_env, number);
+	}
+
+	void 
+	Environment::call(const std::string& function) {
+		CLIPSValue dontCare;
+		call(function, &dontCare);
+
+	}
+	void 
+	Environment::call(const std::string& function, CLIPSValuePtr ref) {
+		FunctionBuilder fb(this);
+		fb.setFunctionReference(function);
+		fb.invoke(ref);
+	}
+	template<typename T>
+	void 
+	Environment::call(const std::string& function, CLIPSValuePtr ret, T arg0) {
+		FunctionBuilder fb(this);
+		fb.setFunctionReference(function);
+		fb.addArgument(arg0);
+		fb.invoke(ret);
+	}
+
+	template<typename T, typename K>
+	void 
+	Environment::call(const std::string& function, CLIPSValuePtr ret, T arg0, K arg1) {
+		FunctionBuilder fb(this);
+		fb.setFunctionReference(function);
+		fb.addArgument(arg0);
+		fb.addArgument(arg1);
+		fb.invoke(ret);
+	}
+
+	template<typename ... Args>
+	void 
+	Environment::call(const std::string& function, CLIPSValuePtr ret, Args ... args) {
+		FunctionBuilder fb(this);
+		fb.setFunctionReference(function);
+		fb.addArgument(args...);
+		fb.invoke(ret);
+	}
+
+	template<typename R, typename ... Args>
+	void 
+	Environment::call(const std::string& function, R& ret, Args ... args) {
+		CLIPSValue r;
+		call(function, &r, args...);
+		decode(&r,  ret);
 	}
 }

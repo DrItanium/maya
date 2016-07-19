@@ -57,6 +57,12 @@ namespace maya {
 				}
 			}
 
+			template<typename T, typename ... Args>
+			void addArgument(T a, Args ... b) {
+				addArgument(a);
+				addArgument(b...);
+			}
+
 			
 
 
