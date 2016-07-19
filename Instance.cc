@@ -21,7 +21,73 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#include "InstanceBuilder.h"
+#include "Instance.h"
+#include "Environment.h"
 namespace maya { 
+
+Instance::Instance(Environment* env, void* instancePtr) : _env(env), _instancePtr(instancePtr) { }
+
+Instance::~Instance() { }
+
+bool
+Instance::setSlot(const char* slotName, DATA_OBJECT* value) {
+	/// @todo check and see if the set was successful
+	return ::EnvDirectPutSlot(_env->getRawEnvironment(), _instancePtr, slotName, value);
+}
+
+bool
+Instance::setSlot(const std::string& slotName, DATA_OBJECT* value) {
+	return ::EnvDirectPutSlot(_env->getRawEnvironment(), _instancePtr, slotName.c_str(), value);
+}
+
+void
+Instance::getSlot(const char* slotName, DATA_OBJECT* value) {
+	::EnvDirectGetSlot(_env->getRawEnvironment(), _instancePtr, slotName, value);
+}
+
+void
+Instance::getSlot(const std::string& slotName, DATA_OBJECT* value) {
+	::EnvDirectGetSlot(_env->getRawEnvironment(), _instancePtr, slotName.c_str(), value);
+}
+
+bool
+Instance::unmake() {
+	bool result = ::EnvUnmakeInstance(_env->getRawEnvironment(), _instancePtr);
+	if (result) {
+		_instancePtr = 0;
+	}
+	return result;
+	
+}
+template<typename T>
+void
+Instance::getSlot(const char* slotName, T&& value) {
+	DATA_OBJECT ret;
+	getSlot(slotName, &ret);
+	_env->decode(&ret, std::forward<T>(value));
+}
+
+template<typename T>
+void
+Instance::getSlot(const std::string& slotName, T&& value) {
+	DATA_OBJECT ret;
+	getSlot(slotName, &ret);
+	_env->decode(&ret, std::forward<T>(value));
+}
+
+template<typename T>
+bool
+Instance::setSlot(const std::string& slotName, T&& value) {
+	DATA_OBJECT input;
+	_env->encode(&input, std::forward<T>(value));
+	return setSlot(slotName, &input);
+}
+template<typename T>
+bool
+Instance::setSlot(const char* slotName, T&& value) {
+	DATA_OBJECT input;
+	_env->encode(&input, std::forward<T>(value));
+	return setSlot(slotName, &input);
+}
 
 }

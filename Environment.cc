@@ -227,4 +227,16 @@ namespace maya {
 		return ::EnvBuild(_env, str.c_str());
 	}
 
+	template<typename T>
+	void 
+	Environment::decode(DATA_OBJECT* dobj, T&& value) {
+		decodeData(this, dobj, std::forward<T>(value));
+	}
+
+	template<typename T>
+	void
+	Environment::encode(DATA_OBJECT* dobj, T&& value) {
+		encodeData(this, dobj, std::forward<T>(value));
+	}
+
 }

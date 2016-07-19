@@ -112,6 +112,15 @@ class Environment {
 		bool build(const char* str);
 		bool build(const std::string& str);
 
+		/**
+		 * Use the given DATA_OBJECT to populate the second argument
+		 * @param dobj the data object containing the data to extract
+		 */
+		template<typename T>
+		void decode(DATA_OBJECT* dobj, T&& value);
+		template<typename T>
+		void encode(DATA_OBJECT* dobj, T&& value);
+
 	private:
 		void* _env;
 		bool destroy;

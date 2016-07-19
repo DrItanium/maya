@@ -32,14 +32,22 @@ namespace maya {
 		public:
 			Instance(Environment* env, void* instancePtr);
 			virtual ~Instance();
-			void setSlot(const char* slotName, DATA_OBJECT* value);
-			void setSlot(const std::string& slotName, DATA_OBJECT* value);
+			bool setSlot(const char* slotName, DATA_OBJECT* value);
+			bool setSlot(const std::string& slotName, DATA_OBJECT* value);
 			void getSlot(const char* slotName, DATA_OBJECT* ret);
 			void getSlot(const std::string& slotName, DATA_OBJECT* ret);
-			void unmake();
+			bool unmake();
+			template<typename T>
+			bool setSlot(const char* slotName, T&& value);
+			template<typename T>
+			bool setSlot(const std::string& slotName, T&& value);
+			template<typename T>
+			void getSlot(const char* slotName, T&& value);
+			template<typename T>
+			void getSlot(const std::string& slotName, T&& value);
 		private:
 			Environment* _env;
-			void* instancePtr;
+			void* _instancePtr;
 	};
 }
 #endif // MAYA_CPPLIB_INSTANCE_H__
