@@ -69,27 +69,7 @@ namespace maya {
 			EXPRESSION* curr = nullptr;
 			bool functionReferenceSet = false;
 	};
-	class Instance {
-		public:
-			Instance(Environment* env, void* instancePtr);
-			virtual ~Instance();
-			bool setSlot(const char* slotName, CLIPSValue* value);
-			bool setSlot(const std::string& slotName, CLIPSValue* value);
-			void getSlot(const char* slotName, CLIPSValue* ret);
-			void getSlot(const std::string& slotName, CLIPSValue* ret);
-			bool unmake();
-			template<typename T>
-			bool setSlot(const char* slotName, T&& value);
-			template<typename T>
-			bool setSlot(const std::string& slotName, T&& value);
-			template<typename T>
-			void getSlot(const char* slotName, T&& value);
-			template<typename T>
-			void getSlot(const std::string& slotName, T&& value);
-		private:
-			Environment* _env;
-			void* _instancePtr;
-	};
+	class Instance;
 	class Environment {
 
 		public:
@@ -255,6 +235,49 @@ namespace maya {
 			bool destroy;
 	};
 
+	class Instance {
+		public:
+			Instance(Environment* env, void* instancePtr);
+			virtual ~Instance();
+			bool setSlot(const char* slotName, CLIPSValue* value);
+			bool setSlot(const std::string& slotName, CLIPSValue* value);
+			void getSlot(const char* slotName, CLIPSValue* ret);
+			void getSlot(const std::string& slotName, CLIPSValue* ret);
+			bool unmake();
+			template<typename T>
+			void
+			getSlot(const char* slotName, T&& value) {
+				CLIPSValue ret;
+				getSlot(slotName, &ret);
+				_env->decode(&ret, std::forward<T>(value));
+			}
+
+			template<typename T>
+			void
+			getSlot(const std::string& slotName, T&& value) {
+				CLIPSValue ret;
+				getSlot(slotName, &ret);
+				_env->decode(&ret, std::forward<T>(value));
+			}
+
+			template<typename T>
+			bool
+			setSlot(const std::string& slotName, T&& value) {
+				CLIPSValue input;
+				_env->encode(&input, std::forward<T>(value));
+				return setSlot(slotName, &input);
+			}
+			template<typename T>
+			bool
+			setSlot(const char* slotName, T&& value) {
+				CLIPSValue input;
+				_env->encode(&input, std::forward<T>(value));
+				return setSlot(slotName, &input);
+			}
+		private:
+			Environment* _env;
+			void* _instancePtr;
+	};
 
 
 
@@ -271,36 +294,6 @@ namespace maya {
 	encodeDecodePair(bool);
 	encodeDecodePair(float);
 #undef encodeDecodePair
-	template<typename T>
-		void
-		Instance::getSlot(const char* slotName, T&& value) {
-			CLIPSValue ret;
-			getSlot(slotName, &ret);
-			_env->decode(&ret, std::forward<T>(value));
-		}
-
-	template<typename T>
-		void
-		Instance::getSlot(const std::string& slotName, T&& value) {
-			CLIPSValue ret;
-			getSlot(slotName, &ret);
-			_env->decode(&ret, std::forward<T>(value));
-		}
-
-	template<typename T>
-		bool
-		Instance::setSlot(const std::string& slotName, T&& value) {
-			CLIPSValue input;
-			_env->encode(&input, std::forward<T>(value));
-			return setSlot(slotName, &input);
-		}
-	template<typename T>
-		bool
-		Instance::setSlot(const char* slotName, T&& value) {
-			CLIPSValue input;
-			_env->encode(&input, std::forward<T>(value));
-			return setSlot(slotName, &input);
-		}
 
 }
 
