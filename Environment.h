@@ -25,157 +25,216 @@
 #include "types.h"
 #include <functional>
 #include <string>
+#include <list>
 extern "C" {
 	#include "clips.h"
 }
 namespace maya {
-class Instance;
-class FunctionBuilder;
-class Environment {
+	class Environment;
+	class FunctionBuilder{
+		public:
+			FunctionBuilder(Environment* env);
+			virtual ~FunctionBuilder();
+			void setFunctionReference(const std::string& func);
+			void installArgument(uint16 type, void* value);
+			void addArgument(CLIPSString chars);
+			void addArgument(const std::string& str);
+			void addArgument(CLIPSInteger value);
+			void addArgument(bool value);
+			void addArgument(CLIPSFloat value);
+			void addArgument(std::function<void(FunctionBuilder*)> fn);
+			void invoke(CLIPSValuePtr ret);
+			template<typename T>
+				void addArgument(const std::list<T>& list) {
+					for (auto const& element : list) {
+						addArgument(element);
+					}
+				}
+			template<typename T>
+				void addArgument(const std::initializer_list<T>& list) {
+					for (auto const &element : list) {
+						addArgument(element);
+					}
+				}
 
-	public:
-		/**
-		 * Build a new environment
-		 */
-		Environment();
-		/**
-		 * Wrap an already existing raw environment pointer, this constructor
-		 * will not destroy the pointer when finished
-		 * @param env the raw environment pointer to wrap
-		 */
-		Environment(void* env);
-		/**
-		 * Destroy the given environment if so directed to do so
-		 */
-		virtual ~Environment();
-		/// Returns the raw clips pointer
-		void* getRawEnvironment() { return _env; }
-		/**
-		 * Add the given const char * to the symbol table and return a handle
-		 * @param the symbol/string to add to the symbol table
-		 * @returns the handle to the entry in the symbol table
-		 */
-		void* addSymbol(const char* str);
-		/**
-		 * Add the given string to the symbol table and return a handle
-		 * @param the symbol/string to add to the symbol table
-		 * @returns the handle to the entry in the symbol table
-		 */
-		void* addSymbol(const std::string& str);
-		/**
-		 * Convert the given bool value to it's corresponding symbol
-		 * representation
-		 * @param value the bool value to convert
-		 */
-		void* addSymbol(bool value);
-		/**
-		 * Generic version of the add symbol method
-		 * @param value the value to convert to a symbol
-		 */
-		template<typename T>
-		void* addSymbol(T&& value);
+			template<typename T, typename ... Args>
+				void addArgument(T a, Args ... b) {
+					addArgument(a);
+					addArgument(b...);
+				}
 
-		void* addNumber(int8 number);
-		void* addNumber(uint8 number);
-		void* addNumber(int16 number);
-		void* addNumber(uint16 number);
-		void* addNumber(int32 number);
-		void* addNumber(uint32 number);
-		void* addNumber(int64 number);
-		void* addNumber(uint64 number);
-		void* addNumber(float number);
-		void* addNumber(double number);
-		void* addNumber(long double number);
-		void* addNumber(CLIPSInteger number);
-		template<typename T>
-		void* addNumber(T&& value);
+		private:
+			Environment* _env;
+			FUNCTION_REFERENCE _ref;
+			EXPRESSION* curr = nullptr;
+			bool functionReferenceSet = false;
+	};
+	class Instance {
+		public:
+			Instance(Environment* env, void* instancePtr);
+			virtual ~Instance();
+			bool setSlot(const char* slotName, CLIPSValue* value);
+			bool setSlot(const std::string& slotName, CLIPSValue* value);
+			void getSlot(const char* slotName, CLIPSValue* ret);
+			void getSlot(const std::string& slotName, CLIPSValue* ret);
+			bool unmake();
+			template<typename T>
+			bool setSlot(const char* slotName, T&& value);
+			template<typename T>
+			bool setSlot(const std::string& slotName, T&& value);
+			template<typename T>
+			void getSlot(const char* slotName, T&& value);
+			template<typename T>
+			void getSlot(const std::string& slotName, T&& value);
+		private:
+			Environment* _env;
+			void* _instancePtr;
+	};
+	class Environment {
 
-		bool watch(const char* target);
-		bool watch(const std::string& target);
-		bool unwatch(const char* target);
-		bool unwatch(const std::string& target);
+		public:
+			/**
+			 * Build a new environment
+			 */
+			Environment();
+			/**
+			 * Wrap an already existing raw environment pointer, this constructor
+			 * will not destroy the pointer when finished
+			 * @param env the raw environment pointer to wrap
+			 */
+			Environment(void* env);
+			/**
+			 * Destroy the given environment if so directed to do so
+			 */
+			virtual ~Environment();
+			/// Returns the raw clips pointer
+			void* getRawEnvironment() { return _env; }
+			/**
+			 * Add the given const char * to the symbol table and return a handle
+			 * @param the symbol/string to add to the symbol table
+			 * @returns the handle to the entry in the symbol table
+			 */
+			void* addSymbol(const char* str);
+			/**
+			 * Add the given string to the symbol table and return a handle
+			 * @param the symbol/string to add to the symbol table
+			 * @returns the handle to the entry in the symbol table
+			 */
+			void* addSymbol(const std::string& str);
+			/**
+			 * Convert the given bool value to it's corresponding symbol
+			 * representation
+			 * @param value the bool value to convert
+			 */
+			void* addSymbol(bool value);
+			/**
+			 * Generic version of the add symbol method
+			 * @param value the value to convert to a symbol
+			 */
+			template<typename T>
+				void* addSymbol(T&& value);
 
+			void* addNumber(int8 number);
+			void* addNumber(uint8 number);
+			void* addNumber(int16 number);
+			void* addNumber(uint16 number);
+			void* addNumber(int32 number);
+			void* addNumber(uint32 number);
+			void* addNumber(int64 number);
+			void* addNumber(uint64 number);
+			void* addNumber(float number);
+			void* addNumber(double number);
+			void* addNumber(long double number);
+			void* addNumber(CLIPSInteger number);
+			template<typename T>
+				void* addNumber(T&& value);
 
-		int64 run(int64 count = -1L);
-		void reset();
-		void clear();
-		int loadFile(const char* path);
-		int loadFile(const std::string& path);
-		bool batchFile(const char* path);
-		bool batchFile(const std::string& path);
-
-		void applyToFunction(std::function<void(void*)> fn);
-		void* assertFact(const char* str);
-		void* assertFact(const std::string& str);
-		bool eval(const char* str, CLIPSValue* dobj);
-		bool eval(const std::string& str, CLIPSValue* dobj);
-		void halt();
-		bool build(const char* str);
-		bool build(const std::string& str);
-
-		/**
-		 * Use the given CLIPSValue to populate the second argument
-		 * @param dobj the data object containing the data to extract
-		 */
-		template<typename T>
-		void decode(CLIPSValue* dobj, T&& value);
-		template<typename T>
-		void encode(CLIPSValue* dobj, T&& value);
-
-		void encodeSymbol(CLIPSValue* dobj, const std::string& str);
-		void encodeSymbol(CLIPSValue* dobj, CLIPSString str);
-		void decodeSymbol(CLIPSValue* dobj, std::string& str);
-
-		Instance makeInstance(CLIPSString str);
-		Instance makeInstance(const std::string& setup);
-
-		void installExpression(EXPRESSION* expr);
-		void deinstallExpression(EXPRESSION* expr);
-		void evaluateExpression(EXPRESSION* expr, DATA_OBJECT* ret);
-		void reclaimExpressionList(EXPRESSION* expr);
-
-		EXPRESSION* generateConstantExpression(uint16 type, void* value);
-
-		bool generateFunctionExpression(const std::string& name, FUNCTION_REFERENCE* ref);
-
-		void call(const std::string& function);
-		void call(const std::string& function, CLIPSValuePtr ref);
-		template<typename T>
-		void call(const std::string& function, CLIPSValuePtr ret, T args);
-
-		template<typename T, typename K>
-		void call(const std::string& function, CLIPSValuePtr ret, T arg0, K arg1);
-
-		template<typename ... Args>
-		void call(const std::string& function, CLIPSValuePtr ret, Args ... args);
-
-		template<typename R, typename ... Args>
-		void call(const std::string& function, R& ret, Args ... args);
-
-		void encode(CLIPSValuePtr dobj, std::function<void(Environment*, CLIPSValuePtr)> fn);
-		void decode(CLIPSValuePtr dobj, std::function<void(Environment*, CLIPSValuePtr)> fn);
+			bool watch(const char* target);
+			bool watch(const std::string& target);
+			bool unwatch(const char* target);
+			bool unwatch(const std::string& target);
 
 
-	private:
-		void* _env;
-		bool destroy;
-};
+			int64 run(int64 count = -1L);
+			void reset();
+			void clear();
+			int loadFile(const char* path);
+			int loadFile(const std::string& path);
+			bool batchFile(const char* path);
+			bool batchFile(const std::string& path);
+
+			void applyToFunction(std::function<void(void*)> fn);
+			void* assertFact(const char* str);
+			void* assertFact(const std::string& str);
+			bool eval(const char* str, CLIPSValue* dobj);
+			bool eval(const std::string& str, CLIPSValue* dobj);
+			void halt();
+			bool build(const char* str);
+			bool build(const std::string& str);
+
+			/**
+			 * Use the given CLIPSValue to populate the second argument
+			 * @param dobj the data object containing the data to extract
+			 */
+			template<typename T>
+				void decode(CLIPSValue* dobj, T&& value);
+			template<typename T>
+				void encode(CLIPSValue* dobj, T&& value);
+
+			void encodeSymbol(CLIPSValue* dobj, const std::string& str);
+			void encodeSymbol(CLIPSValue* dobj, CLIPSString str);
+			void decodeSymbol(CLIPSValue* dobj, std::string& str);
+
+			Instance makeInstance(CLIPSString str);
+			Instance makeInstance(const std::string& setup);
+
+			void installExpression(EXPRESSION* expr);
+			void deinstallExpression(EXPRESSION* expr);
+			void evaluateExpression(EXPRESSION* expr, DATA_OBJECT* ret);
+			void reclaimExpressionList(EXPRESSION* expr);
+
+			EXPRESSION* generateConstantExpression(uint16 type, void* value);
+
+			bool generateFunctionExpression(const std::string& name, FUNCTION_REFERENCE* ref);
+
+			void call(const std::string& function);
+			void call(const std::string& function, CLIPSValuePtr ref);
+			template<typename T>
+				void call(const std::string& function, CLIPSValuePtr ret, T args);
+
+			template<typename T, typename K>
+				void call(const std::string& function, CLIPSValuePtr ret, T arg0, K arg1);
+
+			template<typename ... Args>
+				void call(const std::string& function, CLIPSValuePtr ret, Args ... args);
+
+			template<typename R, typename ... Args>
+				void call(const std::string& function, R& ret, Args ... args);
+
+			void encode(CLIPSValuePtr dobj, std::function<void(Environment*, CLIPSValuePtr)> fn);
+			void decode(CLIPSValuePtr dobj, std::function<void(Environment*, CLIPSValuePtr)> fn);
+
+
+		private:
+			void* _env;
+			bool destroy;
+	};
 
 
 
 
-void decodeData(CLIPSValue* dobj, CLIPSInteger& value);
-void encodeData(CLIPSValue* dobj, CLIPSInteger& value);
-void decodeData(CLIPSValue* dobj, CLIPSFloat& value);
-void encodeData(CLIPSValue* dobj, CLIPSFloat& value);
-void encodeData(CLIPSValue* dobj, CLIPSString value);
-void decodeData(CLIPSValue* dobj, std::string& ret);
-void encodeData(CLIPSValue* dobj, const std::string& val);
+	void decodeData(CLIPSValue* dobj, CLIPSInteger& value);
+	void encodeData(CLIPSValue* dobj, CLIPSInteger& value);
+	void decodeData(CLIPSValue* dobj, CLIPSFloat& value);
+	void encodeData(CLIPSValue* dobj, CLIPSFloat& value);
+	void encodeData(CLIPSValue* dobj, CLIPSString value);
+	void decodeData(CLIPSValue* dobj, std::string& ret);
+	void encodeData(CLIPSValue* dobj, const std::string& val);
 #define encodeDecodePair(type) \
 	void decodeData(CLIPSValue* dobj, type & value); \
 	void encodeData(CLIPSValue* dobj, type & value)
-encodeDecodePair(bool);
-encodeDecodePair(float);
+	encodeDecodePair(bool);
+	encodeDecodePair(float);
 #undef encodeDecodePair
 
 }
