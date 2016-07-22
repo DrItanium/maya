@@ -22,8 +22,6 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "Environment.h"
-#include "Instance.h"
-#include "FunctionBuilder.h"
 extern "C" {
 #include "clips.h"
 }
@@ -48,198 +46,175 @@ namespace maya {
 	}
 
 	void* 
-		Environment::addSymbol(const char* str) {
-			return ::EnvAddSymbol(_env, str);
-		}
+	Environment::addSymbol(const char* str) {
+		return ::EnvAddSymbol(_env, str);
+	}
 
 	void*
-		Environment::addSymbol(const std::string& str) {
-			return ::EnvAddSymbol(_env, str.c_str());
-		}
+	Environment::addSymbol(const std::string& str) {
+		return ::EnvAddSymbol(_env, str.c_str());
+	}
 
 	void*
-		Environment::addSymbol(bool value) {
-			if (value) {
-				return ::EnvTrueSymbol(_env);
-			} else {
-				return ::EnvFalseSymbol(_env);
-			}
+	Environment::addSymbol(bool value) {
+		if (value) {
+			return ::EnvTrueSymbol(_env);
+		} else {
+			return ::EnvFalseSymbol(_env);
 		}
-
-
-	template<typename T>
-		void*
-		Environment::addSymbol(T&& value) {
-			return convertToSymbol(this, std::forward<T>(value));
-		}
+	}
 
 	void*
-		Environment::addNumber(int8 number) {
-			return ::EnvAddLong(_env, number);
-		}
+	Environment::addNumber(int8 number) {
+		return ::EnvAddLong(_env, number);
+	}
 
 	void*
-		Environment::addNumber(uint8 number) {
-			return ::EnvAddLong(_env, number);
-		}
+	Environment::addNumber(uint8 number) {
+		return ::EnvAddLong(_env, number);
+	}
 
 	void*
-		Environment::addNumber(int16 number) {
-			return ::EnvAddLong(_env, number);
-		}
+	Environment::addNumber(int16 number) {
+		return ::EnvAddLong(_env, number);
+	}
 
 	void*
-		Environment::addNumber(uint16 number) {
-			return ::EnvAddLong(_env, number);
-		}
+	Environment::addNumber(uint16 number) {
+		return ::EnvAddLong(_env, number);
+	}
 
 	void*
-		Environment::addNumber(int32 number) {
-			return ::EnvAddLong(_env, number);
-		}
+	Environment::addNumber(int32 number) {
+		return ::EnvAddLong(_env, number);
+	}
 
 	void*
-		Environment::addNumber(uint32 number) {
-			return ::EnvAddLong(_env, number);
-		}
+	Environment::addNumber(uint32 number) {
+		return ::EnvAddLong(_env, number);
+	}
 
 	void*
-		Environment::addNumber(int64 number) {
-			return ::EnvAddLong(_env, number);
-		}
+	Environment::addNumber(int64 number) {
+		return ::EnvAddLong(_env, number);
+	}
 
 	void*
-		Environment::addNumber(uint64 number) {
-			return ::EnvAddLong(_env, int64(number));
-		}
+	Environment::addNumber(uint64 number) {
+		return ::EnvAddLong(_env, int64(number));
+	}
 
 	void*
-		Environment::addNumber(float number) {
-			return ::EnvAddDouble(_env, number);
-		}
+	Environment::addNumber(float number) {
+		return ::EnvAddDouble(_env, number);
+	}
 
 	void*
-		Environment::addNumber(double number) {
-			return ::EnvAddDouble(_env, number);
-		}
+	Environment::addNumber(double number) {
+		return ::EnvAddDouble(_env, number);
+	}
 
 	void*
-		Environment::addNumber(long double number) {
-			return ::EnvAddDouble(_env, double(number));
-		}
-
-	template<typename T>
-		void* 
-		Environment::addNumber(T&& value) {
-			return convertToNumber(this, std::forward<T>(value));
-		}
+	Environment::addNumber(long double number) {
+		return ::EnvAddDouble(_env, double(number));
+	}
 
 	bool
-		Environment::watch(const char* target) {
-			return ::EnvWatch(_env, target);
-		}
+	Environment::watch(const char* target) {
+		return ::EnvWatch(_env, target);
+	}
 
 	bool
-		Environment::watch(const std::string& target) {
-			return ::EnvWatch(_env, target.c_str());
-		}
+	Environment::watch(const std::string& target) {
+		return ::EnvWatch(_env, target.c_str());
+	}
 
 	int64
-		Environment::run(int64 numRules) {
-			return ::EnvRun(_env, numRules);
-		}
+	Environment::run(int64 numRules) {
+		return ::EnvRun(_env, numRules);
+	}
 
 	void
-		Environment::reset() {
-			::EnvReset(_env);
-		}
+	Environment::reset() {
+		::EnvReset(_env);
+	}
 
 	void
-		Environment::clear() {
-			::EnvClear(_env);
-		}
+	Environment::clear() {
+		::EnvClear(_env);
+	}
 
 	int
-		Environment::loadFile(const char* path) {
-			return ::EnvLoad(_env, path);
-		}
+	Environment::loadFile(const char* path) {
+		return ::EnvLoad(_env, path);
+	}
 
 	int 
-		Environment::loadFile(const std::string& path) {
-			return ::EnvLoad(_env, path.c_str());
-		}
+	Environment::loadFile(const std::string& path) {
+		return ::EnvLoad(_env, path.c_str());
+	}
 
 	bool
-		Environment::batchFile(const char* path) {
-			return ::EnvBatchStar(_env, path);
-		}
+	Environment::batchFile(const char* path) {
+		return ::EnvBatchStar(_env, path);
+	}
 
 	bool
-		Environment::batchFile(const std::string& path) {
-			return ::EnvBatchStar(_env, path.c_str());
-		}
+	Environment::batchFile(const std::string& path) {
+		return ::EnvBatchStar(_env, path.c_str());
+	}
 
 	void
-		Environment::applyToFunction(std::function<void(void*)> fn) {
-			fn(_env);
-		}
+	Environment::applyToFunction(std::function<void(void*)> fn) {
+		fn(_env);
+	}
 
 	bool
-		Environment::unwatch(const char* target) {
-			return ::EnvUnwatch(_env, target);
-		}
+	Environment::unwatch(const char* target) {
+		return ::EnvUnwatch(_env, target);
+	}
 
 	bool
-		Environment::unwatch(const std::string& target) {
-			return ::EnvUnwatch(_env, target.c_str());
-		}
+	Environment::unwatch(const std::string& target) {
+		return ::EnvUnwatch(_env, target.c_str());
+	}
 
 	void*
-		Environment::assertFact(const char* str) {
-			return ::EnvAssertString(_env, str);
-		}
+	Environment::assertFact(const char* str) {
+		return ::EnvAssertString(_env, str);
+	}
 
 	void*
-		Environment::assertFact(const std::string& str) {
-			return ::EnvAssertString(_env, str.c_str());
-		}
+	Environment::assertFact(const std::string& str) {
+		return ::EnvAssertString(_env, str.c_str());
+	}
 
 	bool
-		Environment::eval(const char* str, CLIPSValue* obj) {
-			return ::EnvEval(_env, str, obj);
-		}
+	Environment::eval(const char* str, CLIPSValue* obj) {
+		return ::EnvEval(_env, str, obj);
+	}
 
 	bool
-		Environment::eval(const std::string& str, CLIPSValue* obj) {
-			return ::EnvEval(_env, str.c_str(), obj);
-		}
+	Environment::eval(const std::string& str, CLIPSValue* obj) {
+		return ::EnvEval(_env, str.c_str(), obj);
+	}
 
 	void
-		Environment::halt() {
-			::EnvHalt(_env);
-		}
+	Environment::halt() {
+		::EnvHalt(_env);
+	}
 
 	bool
-		Environment::build(const char* str) {
-			return ::EnvBuild(_env, str);
-		}
+	Environment::build(const char* str) {
+		return ::EnvBuild(_env, str);
+	}
 
 	bool
-		Environment::build(const std::string& str) {
-			return ::EnvBuild(_env, str.c_str());
-		}
+	Environment::build(const std::string& str) {
+		return ::EnvBuild(_env, str.c_str());
+	}
 
-	template<typename T>
-		void 
-		Environment::decode(CLIPSValue* dobj, T&& value) {
-			decodeData(dobj, std::forward<T>(value));
-		}
 
-	template<typename T>
-		void
-		Environment::encode(CLIPSValue* dobj, T&& value) {
-			encodeData(dobj, std::forward<T>(value));
-		}
 
 	void decodeData( CLIPSValue* dobj, CLIPSInteger& value) { 
 		value = mCVToInteger(dobj); 
@@ -254,145 +229,118 @@ namespace maya {
 	}
 
 	void
-		encodeData( CLIPSValue* dobj, CLIPSFloat& value) { 
-			mCVSetFloat(dobj, value); 
-		}
+	encodeData( CLIPSValue* dobj, CLIPSFloat& value) { 
+		mCVSetFloat(dobj, value); 
+	}
 
 	void
-		decodeData( CLIPSValue* dobj, bool& value) {
-			value = mCVIsTrueSymbol(dobj);
-		}
+	decodeData( CLIPSValue* dobj, bool& value) {
+		value = mCVIsTrueSymbol(dobj);
+	}
 
 	void
-		encodeData( CLIPSValue* dobj, bool& value) {
-			mCVSetBoolean(dobj, value);
-		}
+	encodeData( CLIPSValue* dobj, bool& value) {
+		mCVSetBoolean(dobj, value);
+	}
 
 	void
-		decodeData( CLIPSValue* dobj, std::string & str) {
-			str = mCVToString(dobj);
-		}
+	decodeData( CLIPSValue* dobj, std::string & str) {
+		str = mCVToString(dobj);
+	}
 
 	void
-		encodeData( CLIPSValue* dobj, const std::string& val) {
-			mCVSetString(dobj, val.c_str());
-		}
+	encodeData( CLIPSValue* dobj, const std::string& val) {
+		mCVSetString(dobj, val.c_str());
+	}
 
 	void 
-		Environment::encodeSymbol(CLIPSValue* dobj, const std::string& str) {
-			mCVSetSymbol(dobj, str.c_str());
-		}
+	Environment::encodeSymbol(CLIPSValue* dobj, const std::string& str) {
+		mCVSetSymbol(dobj, str.c_str());
+	}
+
 	void 
-		Environment::encodeSymbol(CLIPSValue* dobj, CLIPSString str) {
-			mCVSetSymbol(dobj, str);
-		}
+	Environment::encodeSymbol(CLIPSValue* dobj, CLIPSString str) {
+		mCVSetSymbol(dobj, str);
+	}
+
 	void 
-		Environment::decodeSymbol(CLIPSValue* dobj, std::string& str) {
-			str = mCVToString(dobj);
-		}
+	Environment::decodeSymbol(CLIPSValue* dobj, std::string& str) {
+		str = mCVToString(dobj);
+	}
+
 	void
-		decodeData( CLIPSValue* dobj, float& value) {
-			value = mCVToFloat(dobj);
-		}
+	decodeData( CLIPSValue* dobj, float& value) {
+		value = mCVToFloat(dobj);
+	}
+
 	void
-		encodeData( CLIPSValue* dobj, float& value) {
-			mCVSetFloat(dobj, value);
-		}
+	encodeData( CLIPSValue* dobj, float& value) {
+		mCVSetFloat(dobj, value);
+	}
+
 	void
-		encodeData( CLIPSValue* dobj, CLIPSString value) {
-			mCVSetString(dobj, value);
-		}
+	encodeData( CLIPSValue* dobj, CLIPSString value) {
+		mCVSetString(dobj, value);
+	}
 
 	Instance
-		Environment::makeInstance(CLIPSString str) {
-			return Instance(this, ::EnvMakeInstance(_env, str));
-		}
+	Environment::makeInstance(CLIPSString str) {
+		return Instance(this, ::EnvMakeInstance(_env, str));
+	}
 
 	Instance
-		Environment::makeInstance(const std::string& setup) {
-			return Instance(this, ::EnvMakeInstance(_env, setup.c_str()));
-		}
-	void
-		Environment::installExpression(EXPRESSION* expr) {
-			::ExpressionInstall(_env, expr);
-		}
-	void
-		Environment::deinstallExpression(EXPRESSION* expr) {
-			::ExpressionDeinstall(_env, expr);
-		}
+	Environment::makeInstance(const std::string& setup) {
+		return Instance(this, ::EnvMakeInstance(_env, setup.c_str()));
+	}
 
 	void
-		Environment::evaluateExpression(EXPRESSION* expr, CLIPSValuePtr ret) {
-			::EvaluateExpression(_env, expr, ret);
-		}
+	Environment::installExpression(EXPRESSION* expr) {
+		::ExpressionInstall(_env, expr);
+	}
 
 	void
-		Environment::reclaimExpressionList(EXPRESSION* expr) {
-			::ReturnExpression(_env, expr);
-		}
+	Environment::deinstallExpression(EXPRESSION* expr) {
+		::ExpressionDeinstall(_env, expr);
+	}
+
+	void
+	Environment::evaluateExpression(EXPRESSION* expr, CLIPSValuePtr ret) {
+		::EvaluateExpression(_env, expr, ret);
+	}
+
+	void
+	Environment::reclaimExpressionList(EXPRESSION* expr) {
+		::ReturnExpression(_env, expr);
+	}
 
 	EXPRESSION*
-		Environment::generateConstantExpression(uint16 type, void* value) {
-			return ::GenConstant(_env, type, value);
-		}
+	Environment::generateConstantExpression(uint16 type, void* value) {
+		return ::GenConstant(_env, type, value);
+	}
 
 	bool
-		Environment::generateFunctionExpression(const std::string& name, FUNCTION_REFERENCE* ref) {
-			return ::GetFunctionReference(_env, name.c_str(), ref);
-		}
+	Environment::generateFunctionExpression(const std::string& name, FUNCTION_REFERENCE* ref) {
+		return ::GetFunctionReference(_env, name.c_str(), ref);
+	}
 
 	void*
-		Environment::addNumber(CLIPSInteger number) {
-			return ::EnvAddLong(_env, number);
-		}
+	Environment::addNumber(CLIPSInteger number) {
+		return ::EnvAddLong(_env, number);
+	}
 
 	void 
-		Environment::call(const std::string& function) {
-			CLIPSValue dontCare;
-			call(function, &dontCare);
+	Environment::call(const std::string& function) {
+		CLIPSValue dontCare;
+		call(function, &dontCare);
+	}
 
-		}
 	void 
-		Environment::call(const std::string& function, CLIPSValuePtr ref) {
-			FunctionBuilder fb(this);
-			fb.setFunctionReference(function);
-			fb.invoke(ref);
-		}
-	template<typename T>
-		void 
-		Environment::call(const std::string& function, CLIPSValuePtr ret, T arg0) {
-			FunctionBuilder fb(this);
-			fb.setFunctionReference(function);
-			fb.addArgument(arg0);
-			fb.invoke(ret);
-		}
+	Environment::call(const std::string& function, CLIPSValuePtr ref) {
+		FunctionBuilder fb(this);
+		fb.setFunctionReference(function);
+		fb.invoke(ref);
+	}
 
-	template<typename T, typename K>
-		void 
-		Environment::call(const std::string& function, CLIPSValuePtr ret, T arg0, K arg1) {
-			FunctionBuilder fb(this);
-			fb.setFunctionReference(function);
-			fb.addArgument(arg0);
-			fb.addArgument(arg1);
-			fb.invoke(ret);
-		}
-
-	template<typename ... Args>
-		void 
-		Environment::call(const std::string& function, CLIPSValuePtr ret, Args ... args) {
-			FunctionBuilder fb(this);
-			fb.setFunctionReference(function);
-			fb.addArgument(args...);
-			fb.invoke(ret);
-		}
-
-	template<typename R, typename ... Args>
-		void 
-		Environment::call(const std::string& function, R& ret, Args ... args) {
-			CLIPSValue r;
-			call(function, &r, args...);
-			decode(&r,  ret);
-		}
 	// end Environment
 	// begin FunctionBuilder
 	FunctionBuilder::FunctionBuilder(Environment* env) : _env(env), curr(nullptr), functionReferenceSet(false) { }
@@ -412,55 +360,55 @@ namespace maya {
 		}
 
 	void
-		FunctionBuilder::installArgument(uint16 type, void* value) {
-			if (!functionReferenceSet) {
-				throw std::runtime_error("Attempted to build an argument list before setting the function!");
-			}
-			auto tmp = _env->generateConstantExpression(type, value);
-			_env->installExpression(tmp);
-			if (_ref.argList == nullptr) {
-				_ref.argList = tmp;
-				curr = tmp;
-			} else {
-				curr->nextArg = tmp;
-				curr = tmp;
-			}
+	FunctionBuilder::installArgument(uint16 type, void* value) {
+		if (!functionReferenceSet) {
+			throw std::runtime_error("Attempted to build an argument list before setting the function!");
 		}
+		auto tmp = _env->generateConstantExpression(type, value);
+		_env->installExpression(tmp);
+		if (_ref.argList == nullptr) {
+			_ref.argList = tmp;
+			curr = tmp;
+		} else {
+			curr->nextArg = tmp;
+			curr = tmp;
+		}
+	}
 
 	void
-		FunctionBuilder::addArgument(CLIPSString chars) {
-			installArgument(STRING, _env->addSymbol(chars));
-		}
+	FunctionBuilder::addArgument(CLIPSString chars) {
+		installArgument(STRING, _env->addSymbol(chars));
+	}
 
 	void
-		FunctionBuilder::addArgument(const std::string& str) {
-			installArgument(STRING, _env->addSymbol(str));
-		}
+	FunctionBuilder::addArgument(const std::string& str) {
+		installArgument(STRING, _env->addSymbol(str));
+	}
 
 	void
-		FunctionBuilder::addArgument(CLIPSInteger value) {
-			installArgument(INTEGER, _env->addNumber(value));
-		}
+	FunctionBuilder::addArgument(CLIPSInteger value) {
+		installArgument(INTEGER, _env->addNumber(value));
+	}
 
 	void
-		FunctionBuilder::addArgument(bool value) {
-			installArgument(SYMBOL, value ? (void*)::EnvTrueSymbol(_env->getRawEnvironment()) : (void*)::EnvFalseSymbol(_env->getRawEnvironment()));
-		}
+	FunctionBuilder::addArgument(bool value) {
+		installArgument(SYMBOL, value ? (void*)::EnvTrueSymbol(_env->getRawEnvironment()) : (void*)::EnvFalseSymbol(_env->getRawEnvironment()));
+	}
 
 	void
-		FunctionBuilder::addArgument(CLIPSFloat value) {
-			installArgument(FLOAT, _env->addNumber(value));
-		}
+	FunctionBuilder::addArgument(CLIPSFloat value) {
+		installArgument(FLOAT, _env->addNumber(value));
+	}
 
 	void
-		FunctionBuilder::addArgument(std::function<void(FunctionBuilder*)> fn) {
-			fn(this);
-		}
+	FunctionBuilder::addArgument(std::function<void(FunctionBuilder*)> fn) {
+		fn(this);
+	}
 
 	void
-		FunctionBuilder::invoke(CLIPSValuePtr ret) {
-			_env->evaluateExpression(&_ref, ret);
-		}
+	FunctionBuilder::invoke(CLIPSValuePtr ret) {
+		_env->evaluateExpression(&_ref, ret);
+	}
 
 	// end FunctionBuilder
 	// begin Instance
@@ -469,68 +417,34 @@ namespace maya {
 	Instance::~Instance() { }
 
 	bool
-		Instance::setSlot(const char* slotName, CLIPSValue* value) {
-			/// @todo check and see if the set was successful
-			return ::EnvDirectPutSlot(_env->getRawEnvironment(), _instancePtr, slotName, value);
-		}
+	Instance::setSlot(const char* slotName, CLIPSValue* value) {
+		/// @todo check and see if the set was successful
+		return ::EnvDirectPutSlot(_env->getRawEnvironment(), _instancePtr, slotName, value);
+	}
 
 	bool
-		Instance::setSlot(const std::string& slotName, CLIPSValue* value) {
-			return ::EnvDirectPutSlot(_env->getRawEnvironment(), _instancePtr, slotName.c_str(), value);
-		}
+	Instance::setSlot(const std::string& slotName, CLIPSValue* value) {
+		return ::EnvDirectPutSlot(_env->getRawEnvironment(), _instancePtr, slotName.c_str(), value);
+	}
 
 	void
-		Instance::getSlot(const char* slotName, CLIPSValue* value) {
-			::EnvDirectGetSlot(_env->getRawEnvironment(), _instancePtr, slotName, value);
-		}
+	Instance::getSlot(const char* slotName, CLIPSValue* value) {
+		::EnvDirectGetSlot(_env->getRawEnvironment(), _instancePtr, slotName, value);
+	}
 
 	void
-		Instance::getSlot(const std::string& slotName, CLIPSValue* value) {
-			::EnvDirectGetSlot(_env->getRawEnvironment(), _instancePtr, slotName.c_str(), value);
-		}
+	Instance::getSlot(const std::string& slotName, CLIPSValue* value) {
+		::EnvDirectGetSlot(_env->getRawEnvironment(), _instancePtr, slotName.c_str(), value);
+	}
 
 	bool
-		Instance::unmake() {
-			bool result = ::EnvUnmakeInstance(_env->getRawEnvironment(), _instancePtr);
-			if (result) {
-				_instancePtr = 0;
-			}
-			return result;
-
+	Instance::unmake() {
+		bool result = ::EnvUnmakeInstance(_env->getRawEnvironment(), _instancePtr);
+		if (result) {
+			_instancePtr = 0;
 		}
-	template<typename T>
-		void
-		Instance::getSlot(const char* slotName, T&& value) {
-			CLIPSValue ret;
-			getSlot(slotName, &ret);
-			_env->decode(&ret, std::forward<T>(value));
-		}
-
-	template<typename T>
-		void
-		Instance::getSlot(const std::string& slotName, T&& value) {
-			CLIPSValue ret;
-			getSlot(slotName, &ret);
-			_env->decode(&ret, std::forward<T>(value));
-		}
-
-	template<typename T>
-		bool
-		Instance::setSlot(const std::string& slotName, T&& value) {
-			CLIPSValue input;
-			_env->encode(&input, std::forward<T>(value));
-			return setSlot(slotName, &input);
-		}
-	template<typename T>
-		bool
-		Instance::setSlot(const char* slotName, T&& value) {
-			CLIPSValue input;
-			_env->encode(&input, std::forward<T>(value));
-			return setSlot(slotName, &input);
-		}
+		return result;
+	}
 	// end Instance
 
-	/**
-	 * Begin Instance
-	 */
 }

@@ -132,7 +132,9 @@ namespace maya {
 			 * @param value the value to convert to a symbol
 			 */
 			template<typename T>
-				void* addSymbol(T&& value);
+			void* addSymbol(T&& sym) {
+				return convertToSymbol(this, std::forward<T>(sym));
+			}
 
 			void* addNumber(int8 number);
 			void* addNumber(uint8 number);
@@ -147,7 +149,9 @@ namespace maya {
 			void* addNumber(long double number);
 			void* addNumber(CLIPSInteger number);
 			template<typename T>
-				void* addNumber(T&& value);
+			void* addNumber(T&& number) {
+				return ::EnvAddLong(_env, number);
+			}
 
 			bool watch(const char* target);
 			bool watch(const std::string& target);
@@ -177,9 +181,16 @@ namespace maya {
 			 * @param dobj the data object containing the data to extract
 			 */
 			template<typename T>
-				void decode(CLIPSValue* dobj, T&& value);
+			void 
+			decode(CLIPSValue* dobj, T&& value) {
+				decodeData(dobj, std::forward<T>(value));
+			}
+
 			template<typename T>
-				void encode(CLIPSValue* dobj, T&& value);
+			void
+			encode(CLIPSValue* dobj, T&& value) {
+				encodeData(dobj, std::forward<T>(value));
+			}
 
 			void encodeSymbol(CLIPSValue* dobj, const std::string& str);
 			void encodeSymbol(CLIPSValue* dobj, CLIPSString str);
@@ -199,17 +210,41 @@ namespace maya {
 
 			void call(const std::string& function);
 			void call(const std::string& function, CLIPSValuePtr ref);
+
 			template<typename T>
-				void call(const std::string& function, CLIPSValuePtr ret, T args);
+			void 
+			call(const std::string& function, CLIPSValuePtr ret, T arg0) {
+				FunctionBuilder fb(this);
+				fb.setFunctionReference(function);
+				fb.addArgument(arg0);
+				fb.invoke(ret);
+			}
 
 			template<typename T, typename K>
-				void call(const std::string& function, CLIPSValuePtr ret, T arg0, K arg1);
+			void 
+			call(const std::string& function, CLIPSValuePtr ret, T arg0, K arg1) {
+				FunctionBuilder fb(this);
+				fb.setFunctionReference(function);
+				fb.addArgument(arg0);
+				fb.addArgument(arg1);
+				fb.invoke(ret);
+			}
 
 			template<typename ... Args>
-				void call(const std::string& function, CLIPSValuePtr ret, Args ... args);
+			void 
+			call(const std::string& function, CLIPSValuePtr ret, Args ... args) {
+				FunctionBuilder fb(this);
+				fb.setFunctionReference(function);
+				fb.addArgument(args...);
+				fb.invoke(ret);
+			}
 
 			template<typename R, typename ... Args>
-				void call(const std::string& function, R& ret, Args ... args);
+			void call(const std::string& function, R& ret, Args ... args) {
+				CLIPSValue r;
+				call(function, &r, args...);
+				decode(&r,  ret);
+			}
 
 			void encode(CLIPSValuePtr dobj, std::function<void(Environment*, CLIPSValuePtr)> fn);
 			void decode(CLIPSValuePtr dobj, std::function<void(Environment*, CLIPSValuePtr)> fn);
@@ -236,6 +271,36 @@ namespace maya {
 	encodeDecodePair(bool);
 	encodeDecodePair(float);
 #undef encodeDecodePair
+	template<typename T>
+		void
+		Instance::getSlot(const char* slotName, T&& value) {
+			CLIPSValue ret;
+			getSlot(slotName, &ret);
+			_env->decode(&ret, std::forward<T>(value));
+		}
+
+	template<typename T>
+		void
+		Instance::getSlot(const std::string& slotName, T&& value) {
+			CLIPSValue ret;
+			getSlot(slotName, &ret);
+			_env->decode(&ret, std::forward<T>(value));
+		}
+
+	template<typename T>
+		bool
+		Instance::setSlot(const std::string& slotName, T&& value) {
+			CLIPSValue input;
+			_env->encode(&input, std::forward<T>(value));
+			return setSlot(slotName, &input);
+		}
+	template<typename T>
+		bool
+		Instance::setSlot(const char* slotName, T&& value) {
+			CLIPSValue input;
+			_env->encode(&input, std::forward<T>(value));
+			return setSlot(slotName, &input);
+		}
 
 }
 
