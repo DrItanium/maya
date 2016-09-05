@@ -37,6 +37,7 @@ extern "C" {
 #include <boost/system/error_code.hpp>
 #include <boost/algorithm/clamp.hpp>
 #include <boost/algorithm/minmax.hpp>
+#include "Environment.h"
 
 
 #if BOOST_EXTENSIONS
@@ -57,20 +58,19 @@ void MinMaxFunction(UDFContext*, CLIPSValue*);
 
 extern "C" void InstallBoostExtensions(void* theEnv) {
 #if BOOST_EXTENSIONS
-    Environment* env = (Environment*)theEnv;
-	EnvAddUDF(env, "has-prefix", "b", HasPrefix, "HasPrefix", 2, 2, "sy;sy;sy", NULL);
-	EnvAddUDF(env, "has-suffix", "b", HasSuffix, "HasSuffix", 2, 2, "sy;sy;sy", NULL);
-	EnvAddUDF(env, "string-trim", "y", TrimString, "TrimString", 1, 1, "s", NULL);
-	EnvAddUDF(env, "string-trim-front", "y", TrimStringFront, "TrimStringFront", 1, 1, "s", NULL);
-	EnvAddUDF(env, "string-trim-back", "y", TrimStringBack, "TrimStringBack", 1, 1, "s", NULL);
-	EnvAddUDF(env, "new-uuid", "s", NewUUID, "NewUUID", 0, 0, "", NULL);
-	EnvAddUDF(env, "gcd", "l", gcdFunction, "gcdFunction", 2, 2, "l;l;l", NULL);
-	EnvAddUDF(env, "lcm", "l", lcmFunction, "lcmFunction", 2, 2, "l;l;l", NULL);
-	EnvAddUDF(env, "path-exists", "b", FileExists, "FileExists", 1, 1, "sy", NULL);
-	EnvAddUDF(env, "directoryp", "b", IsDirectory, "IsDirectory", 1, 1, "sy", NULL);
-	EnvAddUDF(env, "regular-filep", "b", IsRegularFile, "IsRegularFile", 1, 1, "sy", NULL);
-	EnvAddUDF(env, "clamp", "l", ClampValue, "ClampValue", 3, 3, "l;l;l;l", NULL);
-	EnvAddUDF(env, "min-max", "m", MinMaxFunction, "MinMaxFunction", 2, 2, "ld;ld;ld", NULL);
+	maya::Environment env(theEnv);
+	env.addUserDefinedBooleanFunction("has-prefix", HasPrefix, "HasPrefix", 2, 2, "sy;sy;sy");
+	env.addUserDefinedBooleanFunction("path-exists", FileExists, "FileExists", 1, 1, "sy");
+	env.addUserDefinedBooleanFunction("directoryp", IsDirectory, "IsDirectory", 1, 1, "sy");
+	env.addUserDefinedBooleanFunction("regular-filep", IsRegularFile, "IsRegularFile", 1, 1, "sy");
+	env.addUserDefinedFunction("string-trim", "y", TrimString, "TrimString", 1, 1, "s");
+	env.addUserDefinedFunction("string-trim-front", "y", TrimStringFront, "TrimStringFront", 1, 1, "s");
+	env.addUserDefinedFunction("string-trim-back", "y", TrimStringBack, "TrimStringBack", 1, 1, "s");
+	env.addUserDefinedFunction("new-uuid", "s", NewUUID, "NewUUID", 0, 0, "");
+	env.addUserDefinedFunction("gcd", "l", gcdFunction, "gcdFunction", 2, 2, "l;l;l");
+	env.addUserDefinedFunction("lcm", "l", lcmFunction, "lcmFunction", 2, 2, "l;l;l");
+	env.addUserDefinedFunction("clamp", "l", ClampValue, "ClampValue", 3, 3, "l;l;l;l");
+	env.addUserDefinedFunction("min-max", "m", MinMaxFunction, "MinMaxFunction", 2, 2, "ld;ld;ld");
 #endif
 }
 

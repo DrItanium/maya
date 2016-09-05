@@ -30,6 +30,74 @@ extern "C" {
 	#include "clips.h"
 }
 namespace maya {
+
+	using UserDefinedFunction = void (*)(UDFContext*, CLIPSValue*);
+	enum class ReturnType : int {
+		ExternalAddress = 'a',
+		Boolean = 'b',
+		Character = 'c',
+		DoubleFloat = 'd',
+		SingleFloat = 'f',
+		Int64 = 'g',
+		Int32 = 'i',
+		SymbolStringOrInstanceName = 'j',
+		SymbolOrString = 'k',
+		LongInteger = 'l',
+		Multifield = 'm',
+		Number = 'n',
+		InstanceName = 'o',
+		String = 's',
+		Any = 'u',
+		Void = 'v',
+		Symbol = 'w',
+		InstanceAddress = 'x',
+		DefTemplate = 'y',
+		ReturnTypeBitsDefined = 'z',
+	};
+
+	enum class CheckModifiers : int {
+		Exactly = EXACTLY,
+		AtLeast = AT_LEAST,
+		NoMoreThan = NO_MORE_THAN,
+		Range = RANGE,
+	};
+
+	enum class BasicTypes : int {
+		Float = FLOAT,
+		Integer = INTEGER,
+		Symbol = SYMBOL,
+		String = STRING,
+		Multifield = MULTIFIELD,
+		ExternalAddress = EXTERNAL_ADDRESS,
+		FactAddress = FACT_ADDRESS,
+		InstanceAddress = INSTANCE_ADDRESS,
+		InstanceName = INSTANCE_NAME,
+		Void = RVOID,
+
+		IntegerOrFloat = INTEGER_OR_FLOAT,
+		SymbolOrString = SYMBOL_OR_STRING,
+		InstanceOrInstanceName = INSTANCE_OR_INSTANCE_NAME,
+	};
+
+	enum class BitTypes : unsigned int {
+		Float = FLOAT_TYPE,
+		Integer = INTEGER_TYPE,
+		Symbol = SYMBOL_TYPE,
+		String = STRING_TYPE,
+		Multifield = MULTIFIELD_TYPE,
+		ExternalAddress = EXTERNAL_ADDRESS_TYPE,
+		FactAddress = FACT_ADDRESS_TYPE,
+		InstanceAddress = INSTANCE_ADDRESS_TYPE,
+		InstanceName = INSTANCE_NAME_TYPE, 
+		Void = VOID_TYPE,
+		Boolean = BOOLEAN_TYPE,
+		Number = NUMBER_TYPES,
+		Lexeme = LEXEME_TYPES,
+		Address = ADDRESS_TYPES,
+		Instance = INSTANCE_TYPES,
+		Singlefield = SINGLEFIELD_TYPES,
+		Any = ANY_TYPE,
+	};
 	class Environment;
 	class FunctionBuilder{
 		public:
@@ -116,18 +184,8 @@ namespace maya {
 				return convertToSymbol(this, std::forward<T>(sym));
 			}
 
-			void* addNumber(int8 number);
-			void* addNumber(uint8 number);
-			void* addNumber(int16 number);
-			void* addNumber(uint16 number);
-			void* addNumber(int32 number);
-			void* addNumber(uint32 number);
-			void* addNumber(int64 number);
-			void* addNumber(uint64 number);
-			void* addNumber(float number);
-			void* addNumber(double number);
-			void* addNumber(long double number);
 			void* addNumber(CLIPSInteger number);
+			void* addNumber(CLIPSFloat number);
 			template<typename T>
 			void* addNumber(T&& number) {
 				return ::EnvAddLong(_env, number);
@@ -161,14 +219,12 @@ namespace maya {
 			 * @param dobj the data object containing the data to extract
 			 */
 			template<typename T>
-			void 
-			decode(CLIPSValue* dobj, T&& value) {
+			void decode(CLIPSValue* dobj, T&& value) {
 				decodeData(dobj, std::forward<T>(value));
 			}
 
 			template<typename T>
-			void
-			encode(CLIPSValue* dobj, T&& value) {
+			void encode(CLIPSValue* dobj, T&& value) {
 				encodeData(dobj, std::forward<T>(value));
 			}
 
@@ -192,8 +248,7 @@ namespace maya {
 			void call(const std::string& function, CLIPSValuePtr ref);
 
 			template<typename T>
-			void 
-			call(const std::string& function, CLIPSValuePtr ret, T arg0) {
+			void call(const std::string& function, CLIPSValuePtr ret, T arg0) {
 				FunctionBuilder fb(this);
 				fb.setFunctionReference(function);
 				fb.addArgument(arg0);
@@ -201,8 +256,7 @@ namespace maya {
 			}
 
 			template<typename T, typename K>
-			void 
-			call(const std::string& function, CLIPSValuePtr ret, T arg0, K arg1) {
+			void call(const std::string& function, CLIPSValuePtr ret, T arg0, K arg1) {
 				FunctionBuilder fb(this);
 				fb.setFunctionReference(function);
 				fb.addArgument(arg0);
@@ -211,8 +265,7 @@ namespace maya {
 			}
 
 			template<typename ... Args>
-			void 
-			call(const std::string& function, CLIPSValuePtr ret, Args ... args) {
+			void call(const std::string& function, CLIPSValuePtr ret, Args ... args) {
 				FunctionBuilder fb(this);
 				fb.setFunctionReference(function);
 				fb.addArgument(args...);
@@ -229,6 +282,9 @@ namespace maya {
 			void encode(CLIPSValuePtr dobj, std::function<void(Environment*, CLIPSValuePtr)> fn);
 			void decode(CLIPSValuePtr dobj, std::function<void(Environment*, CLIPSValuePtr)> fn);
 
+			void addUserDefinedFunction(const std::string& name, const std::string& returnType, UserDefinedFunction func, const std::string& nativeFunctionName, int minArgs, int maxArgs, const std::string& restrictions, void* context = nullptr);
+			void addUserDefinedFunction(const std::string& name, ReturnType returnType, UserDefinedFunction func, const std::string& nativeFunctionName, int minArgs, int maxArgs, const std::string& restrictions, void* context = nullptr);
+			void addUserDefinedBooleanFunction(const std::string& name, UserDefinedFunction func, const std::string& nativeFunctionName, int minArgs, int maxArgs, const std::string& restrictions, void* context = nullptr);
 
 		private:
 			void* _env;
@@ -245,31 +301,27 @@ namespace maya {
 			void getSlot(const std::string& slotName, CLIPSValue* ret);
 			bool unmake();
 			template<typename T>
-			void
-			getSlot(const char* slotName, T&& value) {
+			void getSlot(const char* slotName, T&& value) {
 				CLIPSValue ret;
 				getSlot(slotName, &ret);
 				_env->decode(&ret, std::forward<T>(value));
 			}
 
 			template<typename T>
-			void
-			getSlot(const std::string& slotName, T&& value) {
+			void getSlot(const std::string& slotName, T&& value) {
 				CLIPSValue ret;
 				getSlot(slotName, &ret);
 				_env->decode(&ret, std::forward<T>(value));
 			}
 
 			template<typename T>
-			bool
-			setSlot(const std::string& slotName, T&& value) {
+			bool setSlot(const std::string& slotName, T&& value) {
 				CLIPSValue input;
 				_env->encode(&input, std::forward<T>(value));
 				return setSlot(slotName, &input);
 			}
 			template<typename T>
-			bool
-			setSlot(const char* slotName, T&& value) {
+			bool setSlot(const char* slotName, T&& value) {
 				CLIPSValue input;
 				_env->encode(&input, std::forward<T>(value));
 				return setSlot(slotName, &input);

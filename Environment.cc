@@ -64,59 +64,16 @@ namespace maya {
 		}
 	}
 
+
 	void*
-	Environment::addNumber(int8 number) {
+	Environment::addNumber(CLIPSInteger number) {
 		return ::EnvAddLong(_env, number);
 	}
 
-	void*
-	Environment::addNumber(uint8 number) {
-		return ::EnvAddLong(_env, number);
-	}
 
 	void*
-	Environment::addNumber(int16 number) {
-		return ::EnvAddLong(_env, number);
-	}
-
-	void*
-	Environment::addNumber(uint16 number) {
-		return ::EnvAddLong(_env, number);
-	}
-
-	void*
-	Environment::addNumber(int32 number) {
-		return ::EnvAddLong(_env, number);
-	}
-
-	void*
-	Environment::addNumber(uint32 number) {
-		return ::EnvAddLong(_env, number);
-	}
-
-	void*
-	Environment::addNumber(int64 number) {
-		return ::EnvAddLong(_env, number);
-	}
-
-	void*
-	Environment::addNumber(uint64 number) {
-		return ::EnvAddLong(_env, int64(number));
-	}
-
-	void*
-	Environment::addNumber(float number) {
+	Environment::addNumber(CLIPSFloat number) {
 		return ::EnvAddDouble(_env, number);
-	}
-
-	void*
-	Environment::addNumber(double number) {
-		return ::EnvAddDouble(_env, number);
-	}
-
-	void*
-	Environment::addNumber(long double number) {
-		return ::EnvAddDouble(_env, double(number));
 	}
 
 	bool
@@ -323,11 +280,6 @@ namespace maya {
 		return ::GetFunctionReference(_env, name.c_str(), ref);
 	}
 
-	void*
-	Environment::addNumber(CLIPSInteger number) {
-		return ::EnvAddLong(_env, number);
-	}
-
 	void 
 	Environment::call(const std::string& function) {
 		CLIPSValue dontCare;
@@ -340,6 +292,22 @@ namespace maya {
 		fb.setFunctionReference(function);
 		fb.invoke(ref);
 	}
+
+	void
+	Environment::addUserDefinedFunction(const std::string& name, const std::string& returnType, UserDefinedFunction func, const std::string& nativeFunctionName, int minArgs, int maxArgs, const std::string& restrictions, void* context) {
+		::EnvAddUDF(static_cast<::Environment*>(_env), name.c_str(), returnType.c_str(), func, nativeFunctionName.c_str(), minArgs, maxArgs, restrictions.c_str(), context);
+	}
+
+	void 
+	Environment::addUserDefinedFunction(const std::string& name, ReturnType returnType, UserDefinedFunction func, const std::string& nativeFunctionName, int minArgs, int maxArgs, const std::string& restrictions, void* context) {
+		addUserDefinedFunction(name, std::string(1, static_cast<char>(returnType)), func, nativeFunctionName, minArgs, maxArgs, restrictions, context);
+	}
+
+	void
+	Environment::addUserDefinedBooleanFunction(const std::string& name, UserDefinedFunction func, const std::string& nativeFunctionName, int minArgs, int maxArgs, const std::string& restrictions, void* context) {
+		addUserDefinedFunction(name, ReturnType::Boolean, func, nativeFunctionName, minArgs, maxArgs, restrictions, context);
+	}
+
 
 	// end Environment
 	// begin FunctionBuilder
