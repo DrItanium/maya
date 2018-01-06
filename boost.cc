@@ -100,7 +100,7 @@ void FileExists(Environment* env, clips::udf::Context* context, clips::udf::Valu
 	if (!UDFFirstArgument(context, LEXEME_BITS, &path)) {
         clips::udf::setFalse(env, ret);
 	} else {
-		std::string p(path.lexemeValue->contents);
+		std::string p(clips::udf::getLexeme(path));
         clips::udf::setBoolean(env, ret, boost::filesystem::exists(p));
 	}
 }
@@ -110,7 +110,7 @@ void IsDirectory(Environment* env, clips::udf::Context* context, clips::udf::Val
 	if (!UDFFirstArgument(context, LEXEME_BITS, &path)) {
         clips::udf::setFalse(env, ret);
 	} else {
-		std::string p(path.lexemeValue->contents);
+		std::string p(clips::udf::getLexeme(path));
         clips::udf::setBoolean(env, ret, boost::filesystem::is_directory(p));
 	}
 }
@@ -120,7 +120,7 @@ void IsRegularFile(Environment* env, clips::udf::Context* context, clips::udf::V
 	if (!UDFFirstArgument(context, LEXEME_BITS, &path)) {
         clips::udf::setFalse(env, ret);
 	} else {
-		std::string p(path.lexemeValue->contents);
+		std::string p(clips::udf::getLexeme(path));
         clips::udf::setBoolean(env, ret, boost::filesystem::is_regular_file(p));
 	}
 }
@@ -160,8 +160,8 @@ void HasPrefix(Environment* env, clips::udf::Context* context, clips::udf::Value
         clips::udf::setFalse(env, ret);
 		return;
 	}
-	std::string dataStr(data.lexemeValue->contents);
-	std::string prefixStr(prefix.lexemeValue->contents);
+	std::string dataStr(clips::udf::getLexeme(data));
+	std::string prefixStr(clips::udf::getLexeme(prefix));
     clips::udf::setBoolean(env, ret, boost::starts_with(dataStr, prefixStr));
 }
 
@@ -174,8 +174,8 @@ void HasSuffix(Environment* env, clips::udf::Context* context, clips::udf::Value
         clips::udf::setFalse(env, ret);
 		return;
 	}
-	std::string dataStr(data.lexemeValue->contents);
-	std::string suffixStr(suffix.lexemeValue->contents);
+	std::string dataStr(clips::udf::getLexeme(data));
+	std::string suffixStr(clips::udf::getLexeme(suffix));
     clips::udf::setBoolean(env, ret, boost::ends_with(dataStr, suffixStr));
 }
 void TrimString(Environment* env, clips::udf::Context* context, clips::udf::Value* ret) {
@@ -183,7 +183,7 @@ void TrimString(Environment* env, clips::udf::Context* context, clips::udf::Valu
 	if (!UDFFirstArgument(context, STRING_BIT, &str)) {
         clips::udf::setFalse(env, ret);
 	} else {
-		std::string tmp(str.lexemeValue->contents);
+		std::string tmp(clips::udf::getLexeme(str));
 		boost::algorithm::trim(tmp);
 		ret->value = CreateString(env, tmp.c_str());
 	}
@@ -193,7 +193,7 @@ void TrimStringFront(Environment* env, clips::udf::Context* context, clips::udf:
 	if (!UDFFirstArgument(context, STRING_BIT, &str)) {
         clips::udf::setFalse(env, ret);
 	} else {
-		std::string tmp(str.lexemeValue->contents);
+		std::string tmp(clips::udf::getLexeme(str));
 		boost::algorithm::trim_left(tmp);
 		ret->value = CreateString(env, tmp.c_str());
 	}
@@ -203,7 +203,7 @@ void TrimStringBack(Environment* env, clips::udf::Context* context, clips::udf::
 	if (!UDFFirstArgument(context, STRING_BIT, &str)) {
         clips::udf::setFalse(env, ret);
 	} else {
-		std::string tmp(str.lexemeValue->contents);
+		std::string tmp(clips::udf::getLexeme(str));
 		boost::algorithm::trim_right(tmp);
 		ret->value = CreateString(env, tmp.c_str());
 	}
