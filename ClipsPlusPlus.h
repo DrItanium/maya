@@ -28,7 +28,6 @@ extern "C" {
 }
 
 namespace clips {
-    using Environment = ::Environment;
     using Void = ::CLIPSVoid;
     using Lexeme = ::CLIPSLexeme;
     using Float = ::CLIPSFloat;
@@ -46,7 +45,6 @@ namespace clips {
         using EvaluationFunction = ::EntityEvaluationFunction;
         using BusyCountFunction = ::EntityBusyCountFunction;
     } // end namespace entity
-
 
 } // end namespace clips
 

@@ -1,5 +1,5 @@
 // maya
-// Copyright (c) 2012-2018, Joshua Scoggins 
+// Copyright (c) 2012-2018, Joshua Scoggins
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -13,7 +13,7 @@
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 // ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 // WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR 
+// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
 // ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
 // (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
 // LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
@@ -25,6 +25,7 @@
 #ifdef __cplusplus
 #include <string>
 #include <cstdint>
+#include "ClipsPlusPlus.h"
 
 extern "C" {
 #endif
@@ -42,19 +43,19 @@ class FunctionCallBuilder {
 	public:
 		FunctionCallBuilder(Environment* theEnv, size_t size = 0);
 		~FunctionCallBuilder();
-		ErrorKind call(const std::string& functionName, CLIPSValue* ret) noexcept;
+		ErrorKind call(const std::string& functionName, clips::InternalValue* ret) noexcept;
 		void reset() noexcept { FCBReset(_builder); }
 		void append(UDFValue* value) noexcept;
-		void append(CLIPSValue* value) noexcept;
-		void append(CLIPSInteger* value) noexcept;
+		void append(clips::InternalValue* value) noexcept;
+		void append(clips::Integer* value) noexcept;
 		void append(int64_t value) noexcept;
-		void append(CLIPSFloat* value) noexcept;
+		void append(clips::Float* value) noexcept;
 		void append(double value) noexcept;
-		void append(CLIPSLexeme* value) noexcept;
+		void append(clips::Lexeme* value) noexcept;
 		void appendSymbol(const std::string& sym) noexcept;
 		void appendString(const std::string& sym) noexcept;
 		void appendInstanceName(const std::string& sym) noexcept;
-		void append(CLIPSExternalAddress* value) noexcept;
+		void append(clips::ExternalAddress* value) noexcept;
 		void append(Fact* value) noexcept;
 		void append(Instance* value) noexcept;
 		void append(Multifield* value) noexcept;
@@ -65,18 +66,18 @@ class MultifieldBuilder {
 	public:
 		using MB = ::MultifieldBuilder;
 	public:
-		MultifieldBuilder(Environment* theEnv, size_t size = 0); 
-		~MultifieldBuilder(); 
+		MultifieldBuilder(Environment* theEnv, size_t size = 0);
+		~MultifieldBuilder();
 		Multifield* create() noexcept { return MBCreate(_builder); }
 		void reset() noexcept { MBReset(_builder); }
 		void append(UDFValue*) noexcept;
-		void append(CLIPSValue*) noexcept;
-		void append(CLIPSInteger* value) noexcept;
+		void append(clips::InternalValue*) noexcept;
+		void append(clips::Integer* value) noexcept;
 		void append(int64_t) noexcept;
-		void append(CLIPSFloat*) noexcept;
+		void append(clips::Float*) noexcept;
 		void append(double) noexcept;
-		void append(CLIPSLexeme*) noexcept;
-		void append(CLIPSExternalAddress*) noexcept;
+		void append(clips::Lexeme*) noexcept;
+		void append(clips::ExternalAddress*) noexcept;
 		void append(Fact*) noexcept;
 		void append(Instance*) noexcept;
 		void append(Multifield*) noexcept;
@@ -87,5 +88,5 @@ class MultifieldBuilder {
 		MB* _builder;
 };
 }
-#endif 
+#endif
 #endif

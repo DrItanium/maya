@@ -29,10 +29,10 @@ extern "C" {
 #include <string>
 
 #if FUNCTIONAL_EXTENSIONS
-void MapFunction(Environment* env, UDFContext* context, UDFValue* ret);
-void FilterFunction(Environment* env, UDFContext* context, UDFValue* ret);
-void ExistsFunction(Environment* env, UDFContext* context, UDFValue* ret);
-void NotExistsFunction(Environment* env, UDFContext* context, UDFValue* ret);
+void MapFunction(Environment* env, clips::udf::Context* context, clips::udf::Value* ret);
+void FilterFunction(Environment* env, clips::udf::Context* context, clips::udf::Value* ret);
+void ExistsFunction(Environment* env, clips::udf::Context* context, clips::udf::Value* ret);
+void NotExistsFunction(Environment* env, clips::udf::Context* context, clips::udf::Value* ret);
 void FunctionError(Environment*, int, FunctionCallBuilderError, const std::string&) noexcept;
 #endif
 
@@ -84,8 +84,8 @@ FunctionError(Environment* theEnv, int code, FunctionCallBuilderError err, const
 
 }
 void
-MapFunction(Environment* env, UDFContext* context, UDFValue* ret) {
-	UDFValue func, curr;
+MapFunction(Environment* env, clips::udf::Context* context, clips::udf::Value* ret) {
+	clips::udf::Value func, curr;
 	if (!UDFFirstArgument(context, LEXEME_BITS, &func)) {
 		ret->lexemeValue = FalseSymbol(env);
 		return;
@@ -96,7 +96,7 @@ MapFunction(Environment* env, UDFContext* context, UDFValue* ret) {
 				ret->lexemeValue = FalseSymbol(env);
 				return;
 			} else {
-				CLIPSValue tmp;
+				clips::InternalValue tmp;
 				maya::FunctionCallBuilder fcb(env, 0);
 				fcb.append(&curr);
 				auto result = fcb.call(func.lexemeValue->contents, &tmp);
@@ -112,8 +112,8 @@ MapFunction(Environment* env, UDFContext* context, UDFValue* ret) {
 }
 
 void
-FilterFunction(Environment* env, UDFContext* context, UDFValue* ret) {
-	UDFValue func, curr;
+FilterFunction(Environment* env, clips::udf::Context* context, clips::udf::Value* ret) {
+	clips::udf::Value func, curr;
 	if (!UDFFirstArgument(context, LEXEME_BITS, &func)) {
 		ret->lexemeValue = FalseSymbol(env);
 		return;
@@ -124,7 +124,7 @@ FilterFunction(Environment* env, UDFContext* context, UDFValue* ret) {
 				ret->lexemeValue = FalseSymbol(env);
 				return;
 			} else {
-				CLIPSValue tmp;
+				clips::InternalValue tmp;
 				maya::FunctionCallBuilder fcb(env, 0);
 				fcb.append(&curr);
 				auto result = fcb.call(func.lexemeValue->contents, &tmp);
@@ -142,8 +142,8 @@ FilterFunction(Environment* env, UDFContext* context, UDFValue* ret) {
 }
 
 void
-ExistsFunction(Environment* env, UDFContext* context, UDFValue* ret) {
-	UDFValue func, curr;
+ExistsFunction(Environment* env, clips::udf::Context* context, clips::udf::Value* ret) {
+	clips::udf::Value func, curr;
 	if (!UDFFirstArgument(context, LEXEME_BITS, &func)) {
 		ret->lexemeValue = FalseSymbol(env);
 		return;
@@ -154,7 +154,7 @@ ExistsFunction(Environment* env, UDFContext* context, UDFValue* ret) {
 				ret->lexemeValue = FalseSymbol(env);
 				return;
 			} else {
-				CLIPSValue tmp;
+				clips::InternalValue tmp;
 				maya::FunctionCallBuilder fcb(env, 0);
 				fcb.append(&curr);
 				auto result = fcb.call(func.lexemeValue->contents, &tmp);
@@ -172,8 +172,8 @@ ExistsFunction(Environment* env, UDFContext* context, UDFValue* ret) {
 }
 
 void
-NotExistsFunction(Environment* env, UDFContext* context, UDFValue* ret) {
-	UDFValue func, curr;
+NotExistsFunction(Environment* env, clips::udf::Context* context, clips::udf::Value* ret) {
+	clips::udf::Value func, curr;
 	if (!UDFFirstArgument(context, LEXEME_BITS, &func)) {
 		ret->lexemeValue = FalseSymbol(env);
 		return;
@@ -184,7 +184,7 @@ NotExistsFunction(Environment* env, UDFContext* context, UDFValue* ret) {
 				ret->lexemeValue = FalseSymbol(env);
 				return;
 			} else {
-				CLIPSValue tmp;
+				clips::InternalValue tmp;
 				maya::FunctionCallBuilder fcb(env, 0);
 				fcb.append(&curr);
 				auto result = fcb.call(func.lexemeValue->contents, &tmp);
@@ -207,17 +207,17 @@ namespace maya {
 		FCBDispose(_builder);
 		_builder = nullptr;
 	}
-	FunctionCallBuilder::ErrorKind FunctionCallBuilder::call(const std::string& functionName, CLIPSValue* ret) noexcept {
+	FunctionCallBuilder::ErrorKind FunctionCallBuilder::call(const std::string& functionName, clips::InternalValue* ret) noexcept {
 		return FCBCall(_builder, functionName.c_str(), ret);
 	}
-	void FunctionCallBuilder::append(UDFValue* value) noexcept { FCBAppendUDFValue(_builder, value); }
-	void FunctionCallBuilder::append(CLIPSValue* value) noexcept { FCBAppend(_builder, value); }
-	void FunctionCallBuilder::append(CLIPSInteger* value) noexcept { FCBAppendCLIPSInteger(_builder, value); }
+	void FunctionCallBuilder::append(clips::udf::Value* value) noexcept { FCBAppendUDFValue(_builder, value); }
+	void FunctionCallBuilder::append(clips::InternalValue* value) noexcept { FCBAppend(_builder, value); }
+	void FunctionCallBuilder::append(clips::Integer* value) noexcept { FCBAppendCLIPSInteger(_builder, value); }
 	void FunctionCallBuilder::append(int64_t value) noexcept { FCBAppendInteger(_builder, value); }
-	void FunctionCallBuilder::append(CLIPSFloat* value) noexcept { FCBAppendCLIPSFloat(_builder, value); }
+	void FunctionCallBuilder::append(clips::Float* value) noexcept { FCBAppendCLIPSFloat(_builder, value); }
 	void FunctionCallBuilder::append(double value) noexcept { FCBAppendFloat(_builder, value); }
-	void FunctionCallBuilder::append(CLIPSLexeme* value) noexcept { FCBAppendCLIPSLexeme(_builder, value); }
-	void FunctionCallBuilder::append(CLIPSExternalAddress* value) noexcept { FCBAppendCLIPSExternalAddress(_builder, value); }
+	void FunctionCallBuilder::append(clips::Lexeme* value) noexcept { FCBAppendCLIPSLexeme(_builder, value); }
+	void FunctionCallBuilder::append(clips::ExternalAddress* value) noexcept { FCBAppendCLIPSExternalAddress(_builder, value); }
 	void FunctionCallBuilder::append(Fact* value) noexcept { FCBAppendFact(_builder, value); }
 	void FunctionCallBuilder::append(Instance* value) noexcept { FCBAppendInstance(_builder, value); }
 	void FunctionCallBuilder::append(Multifield* value) noexcept { FCBAppendMultifield(_builder, value); }
@@ -226,12 +226,12 @@ namespace maya {
 	void FunctionCallBuilder::appendInstanceName(const std::string& sym) noexcept { FCBAppendInstanceName(_builder, sym.c_str()); }
 	MultifieldBuilder::MultifieldBuilder(Environment* theEnv, size_t size) : _builder(CreateMultifieldBuilder(theEnv, size)) { }
 	MultifieldBuilder::~MultifieldBuilder() { MBDispose(_builder); }
-	void MultifieldBuilder::append(UDFValue* value) noexcept { MBAppendUDFValue(_builder, value); }
-	void MultifieldBuilder::append(CLIPSValue* value) noexcept { MBAppend(_builder, value); }
-	void MultifieldBuilder::append(CLIPSInteger* value) noexcept { MBAppendCLIPSInteger(_builder, value); }
-	void MultifieldBuilder::append(CLIPSFloat* value) noexcept { MBAppendCLIPSFloat(_builder, value); }
-	void MultifieldBuilder::append(CLIPSLexeme* value) noexcept { MBAppendCLIPSLexeme(_builder, value); }
-	void MultifieldBuilder::append(CLIPSExternalAddress* value) noexcept { MBAppendCLIPSExternalAddress(_builder, value); }
+	void MultifieldBuilder::append(clips::udf::Value* value) noexcept { MBAppendUDFValue(_builder, value); }
+	void MultifieldBuilder::append(clips::InternalValue* value) noexcept { MBAppend(_builder, value); }
+	void MultifieldBuilder::append(clips::Integer* value) noexcept { MBAppendCLIPSInteger(_builder, value); }
+	void MultifieldBuilder::append(clips::Float* value) noexcept { MBAppendCLIPSFloat(_builder, value); }
+	void MultifieldBuilder::append(clips::Lexeme* value) noexcept { MBAppendCLIPSLexeme(_builder, value); }
+	void MultifieldBuilder::append(clips::ExternalAddress* value) noexcept { MBAppendCLIPSExternalAddress(_builder, value); }
 	void MultifieldBuilder::append(Fact* value) noexcept { MBAppendFact(_builder, value); }
 	void MultifieldBuilder::append(Instance* value) noexcept { MBAppendInstance(_builder, value); }
 	void MultifieldBuilder::append(Multifield* value) noexcept { MBAppendMultifield(_builder, value); }
