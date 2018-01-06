@@ -26,6 +26,7 @@
 extern "C" {
     #include "clips.h"
 }
+#include <string>
 
 namespace clips {
     using Void = ::CLIPSVoid;
@@ -38,6 +39,13 @@ namespace clips {
     namespace udf {
         using Value = ::UDFValue;
         using Context = ::UDFContext;
+        using AddError = ::AddUDFError;
+        using Function = ::UserDefinedFunction;
+        AddError add(Environment* env, const std::string& name, const std::string& retType, unsigned short minArgs, unsigned short maxArgs, const std::string& parameterRestrictions, Function* body, const std::string& actualFunctionName, void* context = nullptr) noexcept;
+        AddError addNoArguments(Environment* env, const std::string& name, const std::string& retType, Function* body, const std::string& actualFunctionName, void* context = nullptr) noexcept;
+        inline void setFalse(Environment* env, Value* value) noexcept { value->lexemeValue = FalseSymbol(env); }
+        inline void setTrue(Environment* env, Value* value) noexcept { value->lexemeValue = TrueSymbol(env); }
+        inline void setBoolean(Environment* env, Value* store, bool value) noexcept { value ? setTrue(env, store) : setFalse(env, store); }
     } // end namespace udf
     namespace entity {
         using Record = ::EntityRecord;
@@ -45,6 +53,8 @@ namespace clips {
         using EvaluationFunction = ::EntityEvaluationFunction;
         using BusyCountFunction = ::EntityBusyCountFunction;
     } // end namespace entity
+
+
 
 } // end namespace clips
 
