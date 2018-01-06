@@ -101,7 +101,7 @@ void FileExists(Environment* env, clips::udf::Context* context, clips::udf::Valu
         clips::udf::setFalse(env, ret);
 	} else {
 		std::string p(path.lexemeValue->contents);
-		ret->lexemeValue = boost::filesystem::exists(p) ? TrueSymbol(env) : FalseSymbol(env);
+        clips::udf::setBoolean(env, ret, boost::filesystem::exists(p));
 	}
 }
 
@@ -111,7 +111,7 @@ void IsDirectory(Environment* env, clips::udf::Context* context, clips::udf::Val
         clips::udf::setFalse(env, ret);
 	} else {
 		std::string p(path.lexemeValue->contents);
-		ret->lexemeValue = boost::filesystem::is_directory(p) ? TrueSymbol(env) : FalseSymbol(env);
+        clips::udf::setBoolean(env, ret, boost::filesystem::is_directory(p));
 	}
 }
 
@@ -121,7 +121,7 @@ void IsRegularFile(Environment* env, clips::udf::Context* context, clips::udf::V
         clips::udf::setFalse(env, ret);
 	} else {
 		std::string p(path.lexemeValue->contents);
-		ret->lexemeValue = boost::filesystem::is_regular_file(p) ? TrueSymbol(env) : FalseSymbol(env);
+        clips::udf::setBoolean(env, ret, boost::filesystem::is_regular_file(p));
 	}
 }
 
@@ -162,7 +162,7 @@ void HasPrefix(Environment* env, clips::udf::Context* context, clips::udf::Value
 	}
 	std::string dataStr(data.lexemeValue->contents);
 	std::string prefixStr(prefix.lexemeValue->contents);
-	ret->lexemeValue = boost::starts_with(dataStr, prefixStr) ? TrueSymbol(env) : FalseSymbol(env);
+    clips::udf::setBoolean(env, ret, boost::starts_with(dataStr, prefixStr));
 }
 
 void HasSuffix(Environment* env, clips::udf::Context* context, clips::udf::Value* ret) {
@@ -176,7 +176,7 @@ void HasSuffix(Environment* env, clips::udf::Context* context, clips::udf::Value
 	}
 	std::string dataStr(data.lexemeValue->contents);
 	std::string suffixStr(suffix.lexemeValue->contents);
-	ret->lexemeValue = boost::ends_with(dataStr, suffixStr) ? TrueSymbol(env) : FalseSymbol(env);
+    clips::udf::setBoolean(env, ret, boost::ends_with(dataStr, suffixStr));
 }
 void TrimString(Environment* env, clips::udf::Context* context, clips::udf::Value* ret) {
 	clips::udf::Value str;

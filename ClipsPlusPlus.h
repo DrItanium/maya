@@ -36,6 +36,10 @@ namespace clips {
     using BitMap = ::CLIPSBitMap;
     using ExternalAddress = ::CLIPSExternalAddress;
     using InternalValue = ::CLIPSValue;
+    inline bool getBoolean(Environment* env, InternalValue* value) noexcept { return value->lexemeValue != FalseSymbol(env); }
+    inline bool getBoolean(Environment* env, InternalValue& value) noexcept { return value.lexemeValue != FalseSymbol(env); }
+    inline const char* getLexeme(InternalValue* value) noexcept { return value->lexemeValue->contents; }
+    inline const char* getLexeme(InternalValue& value) noexcept { return value.lexemeValue->contents; }
     namespace udf {
         using Value = ::UDFValue;
         using Context = ::UDFContext;
@@ -46,6 +50,11 @@ namespace clips {
         inline void setFalse(Environment* env, Value* value) noexcept { value->lexemeValue = FalseSymbol(env); }
         inline void setTrue(Environment* env, Value* value) noexcept { value->lexemeValue = TrueSymbol(env); }
         inline void setBoolean(Environment* env, Value* store, bool value) noexcept { value ? setTrue(env, store) : setFalse(env, store); }
+        inline bool getBoolean(Environment* env, Value* value) noexcept { return (value->lexemeValue != FalseSymbol(env)); }
+        inline bool getBoolean(Environment* env, Value& value) noexcept { return (value.lexemeValue != FalseSymbol(env)); }
+        inline const char* getLexeme(Value* value) noexcept { return value->lexemeValue->contents; }
+        inline const char* getLexeme(Value& value) noexcept { return value.lexemeValue->contents; }
+
     } // end namespace udf
     namespace entity {
         using Record = ::EntityRecord;
