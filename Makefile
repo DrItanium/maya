@@ -21,11 +21,11 @@ all: libclips.a repl
 
 repl: libclips.a cmd/repl/main.o
 	@echo Building maya
-	@$(LD) $(LDFLAGS) -o $(OUTPUT) cmd/repl/main.o libclips.a ${LIBRARIES}
+	$(LD) $(LDFLAGS) -o $(OUTPUT) cmd/repl/main.o libclips.a ${LIBRARIES}
 
 libclips.a: $(OBJS)
 	@echo Building libclips
-	@$(AR) rcs libclips.a $(OBJS)
+	$(AR) rcs libclips.a $(OBJS)
 
 install: repl
 	@echo Installing binaries to $(PREFIX)/bin
