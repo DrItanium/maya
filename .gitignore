@@ -8,3 +8,5 @@ obj/
 libs/
 *.class
 *.obj
+*.pail
+log_dir/
