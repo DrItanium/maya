@@ -1,4 +1,5 @@
-CC := cc
+ASMPREFIX := asminst -a x86_64_gcc --
+CC := ${ASMPREFIX} gcc
 OUTPUT := maya
 PREFIX := /usr/local
 CFLAGS := -Os -g3 -std=c99
@@ -6,7 +7,7 @@ LIBRARIES := -lm -lrt -lc
 LDFLAGS :=
 CXXEXTENSIONS ?= TRUE
 ifeq ($(CXXEXTENSIONS), TRUE)
-	CXX := c++
+	CXX := ${ASMPREFIX} g++
 	#LIBRARIES += /usr/lib/libboost_system.a /usr/lib/libboost_filesystem.a
 	LIBRARIES += -lboost_system -lboost_filesystem -ltag
 	CXXFLAGS := -Os -g3 -std=c++17 
