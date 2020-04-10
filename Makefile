@@ -17,11 +17,15 @@ endif
 
 .PHONY: clean all
 
-all: repl
+all: libclips.a repl
 
-repl: $(OBJS) cmd/repl/main.o
+repl: libclips.a cmd/repl/main.o
 	@echo Building maya
-	@$(LD) $(LDFLAGS) -o maya cmd/repl/main.o $(OBJS) ${LIBRARIES}
+	@$(LD) $(LDFLAGS) -o $(OUTPUT) cmd/repl/main.o libclips.a ${LIBRARIES}
+
+libclips.a: $(OBJS)
+	@echo Building libclips
+	@$(AR) rcs libclips.a $(OBJS)
 
 install: repl
 	@echo Installing binaries to $(PREFIX)/bin
@@ -34,7 +38,7 @@ deinstall uninstall:
 
 clean:
 	@echo Cleaning
-	@rm -f $(OBJS) cmd/repl/main.o $(OUTPUT)
+	@rm -f $(OBJS) cmd/repl/main.o $(OUTPUT) libclips.a
 
 .c.o :
 	@echo CC $<
