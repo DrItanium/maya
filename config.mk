@@ -7,7 +7,7 @@ CC := $(ASMPREFIX_CC) $(ORIGINAL_CC)
 OUTPUT := maya
 PREFIX := /usr/local
 CFLAGS := -Os -g3 -std=c99
-LIBRARIES := -lm -lrt -lc
+LIBRARIES := /usr/lib/crt1.o /usr/lib/crti.o -lm -lrt -lc 
 LDFLAGS := 
 CXXEXTENSIONS ?= FALSE 
 ifeq ($(CXXEXTENSIONS), TRUE)

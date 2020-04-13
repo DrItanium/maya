@@ -379,7 +379,7 @@
 /********************************************************************/
 
 #ifndef CONSTRUCT_COMPILER
-#define  CONSTRUCT_COMPILER 0
+#define  CONSTRUCT_COMPILER 1
 #endif
 
 #if CONSTRUCT_COMPILER
@@ -451,7 +451,7 @@
 /********************************************/
 
 #ifndef DEVELOPER
-#define DEVELOPER 0
+#define DEVELOPER 1
 #endif
 
 #if DEVELOPER

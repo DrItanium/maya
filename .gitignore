@@ -10,3 +10,4 @@ libs/
 *.obj
 *.pail
 log_dir/
+aux/

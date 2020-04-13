@@ -1,7 +1,7 @@
 #!/bin/bash
 
 make clean
-rm -f *.pail *.s *.o asmtool_* aux/
+rm -rf *.pail *.s *.o asmtool_*
 make -j12
 mkdir aux
 mv asmtool_* aux/

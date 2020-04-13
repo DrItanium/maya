@@ -1,6 +1,5 @@
 ########### MAKEFILE FOR MAYA ###########
 include config.mk
-LD := ld
 CFLAGS += -I.
 CXXFLAGS += -I.
 OBJECTS = $(patsubst %.c,%.o, $(wildcard *.c))
