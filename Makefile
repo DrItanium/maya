@@ -1,5 +1,6 @@
 ########### MAKEFILE FOR MAYA ###########
 include config.mk
+LD := ld
 CFLAGS += -I.
 CXXFLAGS += -I.
 OBJECTS = $(patsubst %.c,%.o, $(wildcard *.c))
@@ -19,9 +20,15 @@ endif
 
 all: libclips.a repl
 
+instrumented_copy: asm_libclips.a 
+
 repl: libclips.a cmd/repl/main.o
 	@echo Building maya
 	$(LD) $(LDFLAGS) -o $(OUTPUT) cmd/repl/main.o libclips.a ${LIBRARIES}
+
+asmlink: libclips.a cmd/repl/main.o aux/asmtool_senddata.o
+	@echo Building maya but instrumented!
+	$(LD) $(LDFLAGS) -o $(OUTPUT) cmd/repl/main.o libclips.a aux/asmtool_senddata.o ${LIBRARIES} 
 
 libclips.a: $(OBJS)
 	@echo Building libclips
