@@ -28,7 +28,8 @@ private slots:
     void on_actionClear_Console_triggered();
 
     void on_lineEdit_returnPressed();
-
+private:
+    void transferTextToConsole();
 private:
     Ui::REPLMainWindow *ui;
 };

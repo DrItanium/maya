@@ -29,8 +29,7 @@ void REPLMainWindow::on_actionExit_triggered()
 {
     QCoreApplication::quit();
 }
-
-void REPLMainWindow::on_submitLine_clicked()
+void REPLMainWindow::transferTextToConsole()
 {
     if (ui->lineEdit->isModified()) {
         auto text = ui->lineEdit->text();
@@ -38,6 +37,10 @@ void REPLMainWindow::on_submitLine_clicked()
         ui->lineEdit->clear();
         ui->lineEdit->setText("");
     }
+}
+void REPLMainWindow::on_submitLine_clicked()
+{
+    transferTextToConsole();
 }
 
 void REPLMainWindow::on_actionSave_triggered()
@@ -63,5 +66,5 @@ void REPLMainWindow::on_actionClear_Console_triggered()
 
 void REPLMainWindow::on_lineEdit_returnPressed()
 {
-
+    transferTextToConsole();
 }
