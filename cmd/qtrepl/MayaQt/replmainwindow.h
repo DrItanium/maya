@@ -23,6 +23,10 @@ private slots:
 
     void on_submitLine_clicked();
 
+    void on_actionSave_triggered();
+
+    void on_actionClear_Console_triggered();
+
 private:
     Ui::REPLMainWindow *ui;
 };

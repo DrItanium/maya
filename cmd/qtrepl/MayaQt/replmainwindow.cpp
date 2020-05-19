@@ -3,6 +3,9 @@
 #include <QApplication>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QDir>
+#include <QSaveFile>
+#include <QTextStream>
 
 REPLMainWindow::REPLMainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -39,5 +42,21 @@ void REPLMainWindow::on_submitLine_clicked()
 
 void REPLMainWindow::on_actionSave_triggered()
 {
+    auto homeLocation = QDir::homePath();
+    auto path = QFileDialog::getSaveFileName(this, tr("Save console to"), homeLocation);
+    QSaveFile file(path);
+    if (!file.open(QIODevice::WriteOnly)) {
+        QMessageBox::information(this, tr("Unable to open file for writing"),
+                                 file.errorString());
+        return;
+    } else {
+        QTextStream ts(&file);
+        ts << ui->plainTextEdit->toPlainText();
+        file.commit();
+    }
+}
 
+void REPLMainWindow::on_actionClear_Console_triggered()
+{
+   ui->plainTextEdit->clear();
 }
