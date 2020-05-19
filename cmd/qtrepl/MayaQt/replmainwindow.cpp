@@ -28,9 +28,10 @@ void REPLMainWindow::on_actionExit_triggered()
 
 void REPLMainWindow::on_submitLine_clicked()
 {
-    if (ui->lineEdit->modified()) {
+    if (ui->lineEdit->isModified()) {
         auto text = ui->lineEdit->text();
         ui->plainTextEdit->appendPlainText(text);
         ui->lineEdit->clear();
+        ui->lineEdit->setText("");
     }
 }
