@@ -17,5 +17,9 @@ REPLMainWindow::~REPLMainWindow()
 
 void REPLMainWindow::on_actionAbout_triggered()
 {
+}
+
+void REPLMainWindow::on_actionExit_triggered()
+{
     QCoreApplication::quit();
 }
