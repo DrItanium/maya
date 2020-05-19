@@ -9,6 +9,7 @@
 extern "C"
 {
 #include "clips.h"
+#include "pprint.h"
 }
 #define slots Q_SLOTS
 

@@ -49,7 +49,7 @@ void REPLMainWindow::addTextToCommand()
 {
     QTextStream commandStream;
     commandStream.setString(&_commandString);
-    commandStream << _currentLine;
+    commandStream << _currentLine << endl;
 }
 void REPLMainWindow::processCommand()
 {
@@ -64,16 +64,20 @@ void REPLMainWindow::processCommand()
     switch (::CompleteCommand(cmd)) {
     case 0:
         // more input required so just return
+        ui->plainTextEdit->appendPlainText("&&");
         break;
     case -1:
         ui->plainTextEdit->appendPlainText("An error occurred in the command stream... clearing out");
-        _currentCommand.clear();
+        _commandString.clear();
         break;
     case 1:
         [this, cmd](){
+        QTextStream commandStream;
+        commandStream.setString(&_commandString);
+        commandStream << endl;
         FlushPPBuffer(_env);
         SetPPBufferStatus(_env,false);
-        RouteCommand(_env,cmd, true);
+        RouteCommand(_env, cmd, true);
         FlushPPBuffer(_env);
 #if (! BLOAD_ONLY)
         FlushParsingMessages(_env);
@@ -82,7 +86,7 @@ void REPLMainWindow::processCommand()
         SetEvaluationError(_env,false);
         FlushCommandString(_env);
         CleanCurrentGarbageFrame(_env, nullptr);
-        _currentCommand.clear();
+        _commandString.clear();
     }();
         break;
     }
