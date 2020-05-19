@@ -23,6 +23,7 @@ HEADERS += \
     replmainwindow.h
 
 FORMS += \
+    AboutDialog.ui \
     replmainwindow.ui
 
 # Default rules for deployment.

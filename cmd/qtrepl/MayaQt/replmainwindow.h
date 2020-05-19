@@ -2,6 +2,7 @@
 #define REPLMAINWINDOW_H
 
 #include <QMainWindow>
+#include <QString>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class REPLMainWindow; }
@@ -14,6 +15,9 @@ class REPLMainWindow : public QMainWindow
 public:
     REPLMainWindow(QWidget *parent = nullptr);
     ~REPLMainWindow();
+
+private slots:
+    void on_actionAbout_triggered();
 
 private:
     Ui::REPLMainWindow *ui;

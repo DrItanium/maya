@@ -1,5 +1,6 @@
 #include "replmainwindow.h"
 #include "ui_replmainwindow.h"
+#include <QApplication>
 
 REPLMainWindow::REPLMainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -13,3 +14,8 @@ REPLMainWindow::~REPLMainWindow()
     delete ui;
 }
 
+
+void REPLMainWindow::on_actionAbout_triggered()
+{
+    QCoreApplication::quit();
+}
