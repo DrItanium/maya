@@ -25,3 +25,12 @@ void REPLMainWindow::on_actionExit_triggered()
 {
     QCoreApplication::quit();
 }
+
+void REPLMainWindow::on_submitLine_clicked()
+{
+    if (ui->lineEdit->modified()) {
+        auto text = ui->lineEdit->text();
+        ui->plainTextEdit->appendPlainText(text);
+        ui->lineEdit->clear();
+    }
+}

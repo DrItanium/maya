@@ -21,6 +21,8 @@ private slots:
 
     void on_actionExit_triggered();
 
+    void on_submitLine_clicked();
+
 private:
     Ui::REPLMainWindow *ui;
 };
