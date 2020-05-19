@@ -2,6 +2,7 @@
 #include "ui_replmainwindow.h"
 #include <QApplication>
 #include <QMessageBox>
+#include <QFileDialog>
 
 REPLMainWindow::REPLMainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -34,4 +35,9 @@ void REPLMainWindow::on_submitLine_clicked()
         ui->lineEdit->clear();
         ui->lineEdit->setText("");
     }
+}
+
+void REPLMainWindow::on_actionSave_triggered()
+{
+
 }
