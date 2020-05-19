@@ -26,7 +26,6 @@ HEADERS += \
 
 FORMS += \
     AboutDialog.ui \
-    aboutdialog.ui \
     replmainwindow.ui
 
 # Default rules for deployment.
