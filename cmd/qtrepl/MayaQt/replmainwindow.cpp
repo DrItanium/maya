@@ -1,6 +1,7 @@
 #include "replmainwindow.h"
 #include "ui_replmainwindow.h"
 #include <QApplication>
+#include <QMessageBox>
 
 REPLMainWindow::REPLMainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -17,6 +18,7 @@ REPLMainWindow::~REPLMainWindow()
 
 void REPLMainWindow::on_actionAbout_triggered()
 {
+   QMessageBox::about(this, "About", "Simple CLIPS REPL (C) 2020 Josh Scoggins");
 }
 
 void REPLMainWindow::on_actionExit_triggered()
