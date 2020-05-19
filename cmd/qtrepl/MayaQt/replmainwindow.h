@@ -3,6 +3,13 @@
 
 #include <QMainWindow>
 #include <QString>
+// undefine slots for temporarily
+#undef slots
+extern "C"
+{
+#include "clips.h"
+}
+#define slots Q_SLOTS
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class REPLMainWindow; }
@@ -30,7 +37,9 @@ private slots:
     void on_lineEdit_returnPressed();
 private:
     void transferTextToConsole();
+
 private:
     Ui::REPLMainWindow *ui;
+    ::Environment* _env;
 };
 #endif // REPLMAINWINDOW_H

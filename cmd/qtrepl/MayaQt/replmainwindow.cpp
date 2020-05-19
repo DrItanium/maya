@@ -12,11 +12,17 @@ REPLMainWindow::REPLMainWindow(QWidget *parent)
     , ui(new Ui::REPLMainWindow)
 {
     ui->setupUi(this);
+    _env = ::CreateEnvironment();
+    if (!_env) {
+        QMessageBox::critial(this, "Environment Allocation Problem", "Could not allocate the backing clips environment! Terminating!");
+        QCoreApplication::quit();
+    }
 }
 
 REPLMainWindow::~REPLMainWindow()
 {
     delete ui;
+    ::DestroyEnvironment(_env);
 }
 
 

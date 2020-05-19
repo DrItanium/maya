@@ -392,3 +392,5 @@ unix|win32: LIBS += -lboost_system
 unix|win32: LIBS += -lboost_filesystem
 
 unix|win32: LIBS += -ltag
+
+INCLUDEPATH += ../../../
