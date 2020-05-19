@@ -6,6 +6,7 @@
 #include <QDir>
 #include <QSaveFile>
 #include <QTextStream>
+#include <QScrollBar>
 
 REPLMainWindow::REPLMainWindow(QWidget *parent)
         : QMainWindow(parent)
@@ -170,12 +171,17 @@ void REPLMainWindow::on_lineEdit_returnPressed()
 void REPLMainWindow::printoutToConsole(const QString& str)
 {
     ui->textEdit->insertPlainText(str);
+    moveToBottomOfLog();
 }
 
 void REPLMainWindow::printoutToErrorStream(const QString& str)
 {
-    auto oldTextColor = ui->textEdit->textColor();
-    ui->textEdit->setTextColor(Qt::red)	;
     ui->textEdit->insertPlainText(str);
-    ui->textEdit->setTextColor(oldTextColor);
+    moveToBottomOfLog();
+}
+
+void REPLMainWindow::moveToBottomOfLog()
+{
+    auto scrollBar = ui->textEdit->verticalScrollBar();
+    scrollBar->setValue(scrollBar->maximum());
 }

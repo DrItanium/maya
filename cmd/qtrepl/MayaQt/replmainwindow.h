@@ -27,6 +27,7 @@ public:
 public slots:
     void printoutToConsole(const QString& str);
     void printoutToErrorStream(const QString& str);
+    void moveToBottomOfLog();
 private slots:
     void on_actionAbout_triggered();
 
