@@ -26,6 +26,7 @@ public:
     ~REPLMainWindow();
 public slots:
     void printoutToConsole(const QString& str);
+    void printoutToErrorStream(const QString& str);
 private slots:
     void on_actionAbout_triggered();
 

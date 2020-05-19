@@ -12,37 +12,16 @@ REPLMainWindow::REPLMainWindow(QWidget *parent)
         ,ui(new Ui::REPLMainWindow)
 {
     ui->setupUi(this);
-    ui->plainTextEdit->appendPlainText("UI Setup...");
-    ui->plainTextEdit->appendPlainText("Creating a CLIPS Environment");
+    ui->textEdit->append("UI Setup...");
+    ui->textEdit->append("Creating a CLIPS Environment");
     _env = ::CreateEnvironment();
     if (!_env) {
         QMessageBox::critical(this, "Environment Allocation Problem", "Could not allocate the backing clips environment! Terminating!");
         QCoreApplication::quit();
     }
-    ui->plainTextEdit->appendPlainText("CLIPS Environment Successfully Created");
-    ui->plainTextEdit->appendPlainText("---------------------------------------");
+    ui->textEdit->append("CLIPS Environment Successfully Created");
+    ui->textEdit->append("---------------------------------------");
     // setup the routers
-#if 0
-    // cool infobox support :)
-    ::AddRouter(_env, "infobox", 50,
-                [](Environment* env, const char* logicalName, void*)  {
-        QString str(logicalName);
-        return str == "infobox";
-    },
-    [](Environment* env,
-                    const char* logicalName,
-                    const char* str,
-                    void* context) {
-        QString message(str);
-        decltype(this) self = (decltype(this))(context);
-        QMessageBox::information(self, "Message from CLIPS", message);
-    },
-    nullptr,
-    nullptr,
-    nullptr,
-    this);
-#endif
-
     ::AddRouter(_env, "qtstdout", 20,
                 [](Environment* env,
                 const char* logicalName,
@@ -50,6 +29,27 @@ REPLMainWindow::REPLMainWindow(QWidget *parent)
     {
         QString str(logicalName);
         return str == STDOUT;
+    },
+    [](Environment* env,
+       const char* logicalName,
+       const char* str,
+            void* context) {
+        QString message(str);
+        decltype(this) self = (decltype(this))(context);
+        self->printoutToConsole(message);
+    },
+    nullptr,
+    nullptr,
+    nullptr,
+    this);
+
+    ::AddRouter(_env, "qtstderr", 20,
+                [](Environment* env,
+                const char* logicalName,
+                void*)
+    {
+        QString str(logicalName);
+        return str == STDERR;
     },
     [](Environment* env,
        const char* logicalName,
@@ -106,10 +106,10 @@ void REPLMainWindow::processCommand()
     switch (::CompleteCommand(cmd)) {
     case 0:
         // more input required so just return
-        ui->plainTextEdit->appendPlainText("&&");
+        ui->textEdit->append("&&");
         break;
     case -1:
-        ui->plainTextEdit->appendPlainText("An error occurred in the command stream... clearing out");
+        ui->textEdit->append("An error occurred in the command stream... clearing out");
         _commandString.clear();
         break;
     case 1:
@@ -135,8 +135,8 @@ void REPLMainWindow::processCommand()
 }
 void REPLMainWindow::transferTextToConsole()
 {
-    ui->plainTextEdit->appendPlainText(_currentLine);
-    ui->plainTextEdit->appendPlainText(""); // make sure that we newline things correctly
+    ui->textEdit->append(_currentLine);
+    ui->textEdit->append(""); // make sure that we newline things correctly
 }
 
 void REPLMainWindow::on_actionSave_triggered()
@@ -150,14 +150,14 @@ void REPLMainWindow::on_actionSave_triggered()
         return;
     } else {
         QTextStream ts(&file);
-        ts << ui->plainTextEdit->toPlainText();
+        ts << ui->textEdit->toPlainText();
         file.commit();
     }
 }
 
 void REPLMainWindow::on_actionClear_Console_triggered()
 {
-    ui->plainTextEdit->clear();
+    ui->textEdit->clear();
 }
 
 void REPLMainWindow::on_lineEdit_returnPressed()
@@ -169,5 +169,13 @@ void REPLMainWindow::on_lineEdit_returnPressed()
 
 void REPLMainWindow::printoutToConsole(const QString& str)
 {
-    ui->plainTextEdit->insertPlainText(str);
+    ui->textEdit->insertPlainText(str);
+}
+
+void REPLMainWindow::printoutToErrorStream(const QString& str)
+{
+    auto oldTextColor = ui->textEdit->textColor();
+    ui->textEdit->setTextColor(Qt::red)	;
+    ui->textEdit->insertPlainText(str);
+    ui->textEdit->setTextColor(oldTextColor);
 }
