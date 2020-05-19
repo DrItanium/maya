@@ -9,7 +9,7 @@
 
 REPLMainWindow::REPLMainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::REPLMainWindow)
+    ,ui(new Ui::REPLMainWindow)
 {
     ui->setupUi(this);
     ui->plainTextEdit->appendPlainText("UI Setup...");
@@ -39,18 +39,63 @@ void REPLMainWindow::on_actionExit_triggered()
 {
     QCoreApplication::quit();
 }
+void REPLMainWindow::extractCurrentLineFromInput()
+{
+    _currentLine = ui->lineEdit->text();
+    ui->lineEdit->clear();
+    ui->lineEdit->setText("");
+}
+void REPLMainWindow::addTextToCommand()
+{
+    QTextStream commandStream;
+    commandStream.setString(&_commandString);
+    commandStream << _currentLine;
+}
+void REPLMainWindow::processCommand()
+{
+    // get the input line
+    extractCurrentLineFromInput();
+    // update the console
+    transferTextToConsole();
+    addTextToCommand();
+    // now that we have added the text to the command stream we must see if CLIPS
+    // considers it to be a complete command
+    const char* cmd = _commandString.toLocal8Bit().data();
+    switch (::CompleteCommand(cmd)) {
+    case 0:
+        // more input required so just return
+        break;
+    case -1:
+        ui->plainTextEdit->appendPlainText("An error occurred in the command stream... clearing out");
+        _currentCommand.clear();
+        break;
+    case 1:
+        [this, cmd](){
+        FlushPPBuffer(_env);
+        SetPPBufferStatus(_env,false);
+        RouteCommand(_env,cmd, true);
+        FlushPPBuffer(_env);
+#if (! BLOAD_ONLY)
+        FlushParsingMessages(_env);
+#endif
+        SetHaltExecution(_env,false);
+        SetEvaluationError(_env,false);
+        FlushCommandString(_env);
+        CleanCurrentGarbageFrame(_env, nullptr);
+        _currentCommand.clear();
+    }();
+        break;
+    }
+}
 void REPLMainWindow::transferTextToConsole()
 {
-    if (ui->lineEdit->isModified()) {
-        auto text = ui->lineEdit->text();
-        ui->plainTextEdit->appendPlainText(text);
-        ui->lineEdit->clear();
-        ui->lineEdit->setText("");
-    }
+    ui->plainTextEdit->appendPlainText(_currentLine);
 }
 void REPLMainWindow::on_submitLine_clicked()
 {
-    transferTextToConsole();
+    if (ui->lineEdit->isModified()) {
+        processCommand();
+    }
 }
 
 void REPLMainWindow::on_actionSave_triggered()
@@ -76,5 +121,7 @@ void REPLMainWindow::on_actionClear_Console_triggered()
 
 void REPLMainWindow::on_lineEdit_returnPressed()
 {
-    transferTextToConsole();
+    if (ui->lineEdit->isModified()) {
+        processCommand();
+    }
 }

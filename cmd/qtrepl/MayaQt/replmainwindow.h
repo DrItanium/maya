@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QString>
+#include <QTextStream>
 // undefine slots for temporarily
 #undef slots
 extern "C"
@@ -36,10 +37,14 @@ private slots:
 
     void on_lineEdit_returnPressed();
 private:
+    void extractCurrentLineFromInput();
     void transferTextToConsole();
-
+    void addTextToCommand();
+    void processCommand();
 private:
     Ui::REPLMainWindow *ui;
     ::Environment* _env;
+    QString _currentLine;
+    QString _commandString;
 };
 #endif // REPLMAINWINDOW_H
