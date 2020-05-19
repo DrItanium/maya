@@ -186,6 +186,7 @@ SOURCES += \
     ../../../utility.c \
     ../../../watch.c \
     main.cpp \
+    qtredirectrouter.cpp \
     replmainwindow.cpp
 
 HEADERS += \
@@ -370,6 +371,7 @@ HEADERS += \
     ../../../usrsetup.h \
     ../../../utility.h \
     ../../../watch.h \
+    qtredirectrouter.h \
     replmainwindow.h
 
 FORMS += \
