@@ -7,6 +7,53 @@
 #include <QSaveFile>
 #include <QTextStream>
 #include <QScrollBar>
+#include <type_traits>
+
+template<typename T>
+void setupQTRouters(Environment* env, void* context) {
+    using K = std::remove_pointer_t<std::decay_t<T>>;
+    ::AddRouter(env, "qtstdout", 20,
+                [](Environment* env,
+                const char* logicalName,
+                void*)
+    {
+        QString str(logicalName);
+        return str == STDOUT;
+    },
+    [](Environment* env,
+       const char* logicalName,
+       const char* str,
+            void* context) {
+        QString message(str);
+        auto self = (K*)(context);
+        self->printoutToConsole(message);
+    },
+    nullptr,
+    nullptr,
+    nullptr,
+    context);
+
+    ::AddRouter(env, "qtstderr", 20,
+                [](Environment* env,
+                const char* logicalName,
+                void*)
+    {
+        QString str(logicalName);
+        return str == STDERR;
+    },
+    [](Environment* env,
+       const char* logicalName,
+       const char* str,
+            void* context) {
+        QString message(str);
+        auto self = (K*)(context);
+        self->printoutToConsole(message);
+    },
+    nullptr,
+    nullptr,
+    nullptr,
+    context);
+}
 
 REPLMainWindow::REPLMainWindow(QWidget *parent)
         : QMainWindow(parent)
@@ -22,48 +69,12 @@ REPLMainWindow::REPLMainWindow(QWidget *parent)
     }
     ui->textEdit->append("CLIPS Environment Successfully Created");
     ui->textEdit->append("---------------------------------------");
-    // setup the routers
-    ::AddRouter(_env, "qtstdout", 20,
-                [](Environment* env,
-                const char* logicalName,
-                void*)
-    {
-        QString str(logicalName);
-        return str == STDOUT;
-    },
-    [](Environment* env,
-       const char* logicalName,
-       const char* str,
-            void* context) {
-        QString message(str);
-        decltype(this) self = (decltype(this))(context);
-        self->printoutToConsole(message);
-    },
-    nullptr,
-    nullptr,
-    nullptr,
-    this);
-
-    ::AddRouter(_env, "qtstderr", 20,
-                [](Environment* env,
-                const char* logicalName,
-                void*)
-    {
-        QString str(logicalName);
-        return str == STDERR;
-    },
-    [](Environment* env,
-       const char* logicalName,
-       const char* str,
-            void* context) {
-        QString message(str);
-        decltype(this) self = (decltype(this))(context);
-        self->printoutToConsole(message);
-    },
-    nullptr,
-    nullptr,
-    nullptr,
-    this);
+    setupQTRouters<decltype(this)>(_env, this);
+    ::AddClearFunction(_env,
+                       "qtrouters",
+                       setupQTRouters<decltype(this)>,
+                       0,
+                       this);
 }
 
 REPLMainWindow::~REPLMainWindow()
