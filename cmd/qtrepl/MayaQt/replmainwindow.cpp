@@ -21,6 +21,25 @@ REPLMainWindow::REPLMainWindow(QWidget *parent)
     }
     ui->plainTextEdit->appendPlainText("CLIPS Environment Successfully Created");
     ui->plainTextEdit->appendPlainText("---------------------------------------");
+    // setup the routers
+    // cool infobox support :)
+    ::AddRouter(_env, "infobox", 50,
+                [](Environment* env, const char* logicalName, void*)  {
+        QString str(logicalName);
+        return str == "infobox";
+    },
+    [](Environment* env,
+                    const char* logicalName,
+                    const char* str,
+                    void* context) {
+        QString message(str);
+        decltype(this) self = (decltype(this))(context);
+        QMessageBox::information(self, "Message from CLIPS", message);
+    },
+    nullptr,
+    nullptr,
+    nullptr,
+    this);
 }
 
 REPLMainWindow::~REPLMainWindow()
