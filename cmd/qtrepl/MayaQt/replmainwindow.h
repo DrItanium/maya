@@ -24,19 +24,19 @@ class REPLMainWindow : public QMainWindow
 public:
     REPLMainWindow(QWidget *parent = nullptr);
     ~REPLMainWindow();
-
+public slots:
+    void printoutToConsole(const QString& str);
 private slots:
     void on_actionAbout_triggered();
 
     void on_actionExit_triggered();
-
-    void on_submitLine_clicked();
 
     void on_actionSave_triggered();
 
     void on_actionClear_Console_triggered();
 
     void on_lineEdit_returnPressed();
+
 private:
     void extractCurrentLineFromInput();
     void transferTextToConsole();

@@ -22,6 +22,7 @@ REPLMainWindow::REPLMainWindow(QWidget *parent)
     ui->plainTextEdit->appendPlainText("CLIPS Environment Successfully Created");
     ui->plainTextEdit->appendPlainText("---------------------------------------");
     // setup the routers
+#if 0
     // cool infobox support :)
     ::AddRouter(_env, "infobox", 50,
                 [](Environment* env, const char* logicalName, void*)  {
@@ -40,15 +41,28 @@ REPLMainWindow::REPLMainWindow(QWidget *parent)
     nullptr,
     nullptr,
     this);
+#endif
 
     ::AddRouter(_env, "qtstdout", 20,
                 [](Environment* env,
                 const char* logicalName,
-                void* context)
+                void*)
     {
         QString str(logicalName);
         return str == STDOUT;
-    });
+    },
+    [](Environment* env,
+       const char* logicalName,
+       const char* str,
+            void* context) {
+        QString message(str);
+        decltype(this) self = (decltype(this))(context);
+        self->printoutToConsole(message);
+    },
+    nullptr,
+    nullptr,
+    nullptr,
+    this);
 }
 
 REPLMainWindow::~REPLMainWindow()
@@ -122,12 +136,7 @@ void REPLMainWindow::processCommand()
 void REPLMainWindow::transferTextToConsole()
 {
     ui->plainTextEdit->appendPlainText(_currentLine);
-}
-void REPLMainWindow::on_submitLine_clicked()
-{
-    if (ui->lineEdit->isModified()) {
-        processCommand();
-    }
+    ui->plainTextEdit->appendPlainText(""); // make sure that we newline things correctly
 }
 
 void REPLMainWindow::on_actionSave_triggered()
@@ -156,4 +165,9 @@ void REPLMainWindow::on_lineEdit_returnPressed()
     if (ui->lineEdit->isModified()) {
         processCommand();
     }
+}
+
+void REPLMainWindow::printoutToConsole(const QString& str)
+{
+    ui->plainTextEdit->insertPlainText(str);
 }

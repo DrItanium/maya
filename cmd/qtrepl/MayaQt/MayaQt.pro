@@ -185,7 +185,6 @@ SOURCES += \
     ../../../userfunctions.c \
     ../../../utility.c \
     ../../../watch.c \
-    capturestdio.cpp \
     main.cpp \
     replmainwindow.cpp
 
@@ -371,7 +370,6 @@ HEADERS += \
     ../../../usrsetup.h \
     ../../../utility.h \
     ../../../watch.h \
-    capturestdio.h \
     replmainwindow.h
 
 FORMS += \
