@@ -12,11 +12,15 @@ REPLMainWindow::REPLMainWindow(QWidget *parent)
     , ui(new Ui::REPLMainWindow)
 {
     ui->setupUi(this);
+    ui->plainTextEdit->appendPlainText("UI Setup...");
+    ui->plainTextEdit->appendPlainText("Creating a CLIPS Environment");
     _env = ::CreateEnvironment();
     if (!_env) {
-        QMessageBox::critial(this, "Environment Allocation Problem", "Could not allocate the backing clips environment! Terminating!");
+        QMessageBox::critical(this, "Environment Allocation Problem", "Could not allocate the backing clips environment! Terminating!");
         QCoreApplication::quit();
     }
+    ui->plainTextEdit->appendPlainText("CLIPS Environment Successfully Created");
+    ui->plainTextEdit->appendPlainText("---------------------------------------");
 }
 
 REPLMainWindow::~REPLMainWindow()
