@@ -60,3 +60,8 @@ void REPLMainWindow::on_actionClear_Console_triggered()
 {
    ui->plainTextEdit->clear();
 }
+
+void REPLMainWindow::on_lineEdit_returnPressed()
+{
+
+}
