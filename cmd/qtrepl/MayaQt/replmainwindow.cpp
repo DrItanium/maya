@@ -8,8 +8,8 @@
 #include <QTextStream>
 
 REPLMainWindow::REPLMainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    ,ui(new Ui::REPLMainWindow)
+        : QMainWindow(parent)
+        ,ui(new Ui::REPLMainWindow)
 {
     ui->setupUi(this);
     ui->plainTextEdit->appendPlainText("UI Setup...");
@@ -40,6 +40,15 @@ REPLMainWindow::REPLMainWindow(QWidget *parent)
     nullptr,
     nullptr,
     this);
+
+    ::AddRouter(_env, "qtstdout", 20,
+                [](Environment* env,
+                const char* logicalName,
+                void* context)
+    {
+        QString str(logicalName);
+        return str == STDOUT;
+    });
 }
 
 REPLMainWindow::~REPLMainWindow()
@@ -51,7 +60,7 @@ REPLMainWindow::~REPLMainWindow()
 
 void REPLMainWindow::on_actionAbout_triggered()
 {
-   QMessageBox::about(this, "About", "Simple CLIPS REPL (C) 2020 Josh Scoggins");
+    QMessageBox::about(this, "About", "Simple CLIPS REPL (C) 2020 Josh Scoggins");
 }
 
 void REPLMainWindow::on_actionExit_triggered()
@@ -91,22 +100,22 @@ void REPLMainWindow::processCommand()
         break;
     case 1:
         [this, cmd](){
-        QTextStream commandStream;
-        commandStream.setString(&_commandString);
-        commandStream << endl;
-        FlushPPBuffer(_env);
-        SetPPBufferStatus(_env,false);
-        RouteCommand(_env, cmd, true);
-        FlushPPBuffer(_env);
+            QTextStream commandStream;
+            commandStream.setString(&_commandString);
+            commandStream << endl;
+            FlushPPBuffer(_env);
+            SetPPBufferStatus(_env,false);
+            RouteCommand(_env, cmd, true);
+            FlushPPBuffer(_env);
 #if (! BLOAD_ONLY)
-        FlushParsingMessages(_env);
+            FlushParsingMessages(_env);
 #endif
-        SetHaltExecution(_env,false);
-        SetEvaluationError(_env,false);
-        FlushCommandString(_env);
-        CleanCurrentGarbageFrame(_env, nullptr);
-        _commandString.clear();
-    }();
+            SetHaltExecution(_env,false);
+            SetEvaluationError(_env,false);
+            FlushCommandString(_env);
+            CleanCurrentGarbageFrame(_env, nullptr);
+            _commandString.clear();
+        }();
         break;
     }
 }
@@ -139,7 +148,7 @@ void REPLMainWindow::on_actionSave_triggered()
 
 void REPLMainWindow::on_actionClear_Console_triggered()
 {
-   ui->plainTextEdit->clear();
+    ui->plainTextEdit->clear();
 }
 
 void REPLMainWindow::on_lineEdit_returnPressed()
