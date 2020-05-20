@@ -5,13 +5,17 @@
 #include <QString>
 #include <QTextStream>
 // undefine slots temporarily
+// parasoft-begin-suppress ALL "clips uses the phrase slots which conflicts with Qt"
 #undef slots
+// parasoft-end-suppress ALL "clips uses the phrase slots"
 extern "C"
 {
 #include "clips.h"
 #include "pprint.h"
 }
+// parasoft-begin-suppress ALL "clips uses the phrase slots which conflicts with Qt"
 #define slots Q_SLOTS
+// parasoft-end-suppress ALL "clips uses the phrase slots"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class REPLMainWindow; }
