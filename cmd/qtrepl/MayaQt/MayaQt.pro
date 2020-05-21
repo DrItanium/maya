@@ -185,6 +185,7 @@ SOURCES += \
     ../../../userfunctions.c \
     ../../../utility.c \
     ../../../watch.c \
+    environmentthread.cpp \
     main.cpp \
     replmainwindow.cpp
 
@@ -370,6 +371,7 @@ HEADERS += \
     ../../../usrsetup.h \
     ../../../utility.h \
     ../../../watch.h \
+    environmentthread.h \
     replmainwindow.h
 
 FORMS += \

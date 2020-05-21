@@ -4,18 +4,7 @@
 #include <QMainWindow>
 #include <QString>
 #include <QTextStream>
-// undefine slots temporarily
-// parasoft-begin-suppress ALL "clips uses the phrase slots which conflicts with Qt"
-#undef slots
-// parasoft-end-suppress ALL "clips uses the phrase slots"
-extern "C"
-{
-#include "clips.h"
-#include "pprint.h"
-}
-// parasoft-begin-suppress ALL "clips uses the phrase slots which conflicts with Qt"
-#define slots Q_SLOTS
-// parasoft-end-suppress ALL "clips uses the phrase slots"
+#include "environmentthread.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class REPLMainWindow; }
@@ -30,6 +19,8 @@ class REPLMainWindow : public QMainWindow
 public:
     REPLMainWindow(QWidget *parent = nullptr);
     ~REPLMainWindow();
+signals:
+    void sendCommand(const QString&);
 public slots:
     void printoutToConsole(const QString& str);
     void printoutToErrorStream(const QString& str);
@@ -52,7 +43,7 @@ private:
     void processCommand();
 private:
     Ui::REPLMainWindow *ui;
-    ::Environment* _env;
+    EnvironmentThread* _env;
     QString _currentLine;
     QString _commandString;
 };
