@@ -25,6 +25,8 @@ public slots:
     void printoutToConsole(const QString& str);
     void printoutToErrorStream(const QString& str);
     void moveToBottomOfLog();
+    void println(const QString& str);
+    void print(const QString& str);
 private slots:
     void on_actionAbout_triggered();
 
@@ -37,9 +39,7 @@ private slots:
     void on_lineEdit_returnPressed();
 
 private:
-    void extractCurrentLineFromInput();
-    void transferTextToConsole();
-    void addTextToCommand();
+    QString extractCurrentLineFromInput();
     void processCommand();
 private:
     Ui::REPLMainWindow *ui;

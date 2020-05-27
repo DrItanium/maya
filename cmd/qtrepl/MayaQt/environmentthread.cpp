@@ -68,6 +68,14 @@ void
 EnvironmentThread::writeOut(const QString& str)  {
     emit writeOut(str);
 }
+void
+EnvironmentThread::parseLine(const QString& str) {
+#if 0
+    QTextStream commandStream;
+    commandStream.setString(&_commandString);
+    commandStream << _currentLine << endl;
+#endif
+}
 EnvironmentThread::~EnvironmentThread() {
 
 #if 0

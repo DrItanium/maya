@@ -25,7 +25,7 @@ public:
 signals:
     void ioRouterWrite(const QString& str);
 public slots:
-    void parseCommand(const QString&);
+    void parseLine(const QString&);
 private:
    void writeOut(const QString& str);
 private:

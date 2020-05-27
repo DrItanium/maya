@@ -34,31 +34,37 @@ void REPLMainWindow::on_actionExit_triggered()
 {
     QCoreApplication::quit();
 }
-void REPLMainWindow::extractCurrentLineFromInput()
+QString
+REPLMainWindow::extractCurrentLineFromInput()
 {
-    _currentLine = ui->lineEdit->text();
+    auto tmp = ui->lineEdit->text();
     ui->lineEdit->clear();
     ui->lineEdit->setText("");
+    return tmp;
 }
-void REPLMainWindow::addTextToCommand()
+
+void
+REPLMainWindow::print(const QString& str)
 {
-    QTextStream commandStream;
-    commandStream.setString(&_commandString);
-    commandStream << _currentLine << endl;
+    ui->textEdit->append(str);
 }
+
+void
+REPLMainWindow::println(const QString& str)
+{
+    print(str);
+    ui->textEdit->append(""); // make sure that we newline things correctly
+}
+
 void REPLMainWindow::processCommand()
 {
     // get the input line
-    extractCurrentLineFromInput();
+    auto str = extractCurrentLineFromInput();
+    emit sendCommand(str);
     // update the console
-    transferTextToConsole();
-    addTextToCommand();
+    println(str);
+    moveToBottomOfLog();
 
-}
-void REPLMainWindow::transferTextToConsole()
-{
-    ui->textEdit->append(_currentLine);
-    ui->textEdit->append(""); // make sure that we newline things correctly
 }
 
 void REPLMainWindow::on_actionSave_triggered()
@@ -87,18 +93,6 @@ void REPLMainWindow::on_lineEdit_returnPressed()
     if (ui->lineEdit->isModified()) {
         processCommand();
     }
-}
-
-void REPLMainWindow::printoutToConsole(const QString& str)
-{
-    ui->textEdit->insertPlainText(str);
-    moveToBottomOfLog();
-}
-
-void REPLMainWindow::printoutToErrorStream(const QString& str)
-{
-    ui->textEdit->insertPlainText(str);
-    moveToBottomOfLog();
 }
 
 void REPLMainWindow::moveToBottomOfLog()
