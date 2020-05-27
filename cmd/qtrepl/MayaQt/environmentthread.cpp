@@ -88,6 +88,8 @@ EnvironmentThread::parseLine(const QString& str) {
         break;
     case 1:
         [this, cmd]() {
+            SetEvaluationError(_env, false);
+            SetHaltExecution(_env, false);
             FlushPPBuffer(_env);
             SetPPBufferStatus(_env,false);
             RouteCommand(_env, cmd, true);
