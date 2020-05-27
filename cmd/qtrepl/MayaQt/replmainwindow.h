@@ -47,7 +47,6 @@ private:
 private:
     Ui::REPLMainWindow *ui;
     EnvironmentThread _env;
-    size_t _collectionSize = 0;
-    QStringList _temporaryCollection;
+    QString _temporaryStorage;
 };
 #endif // REPLMAINWINDOW_H
