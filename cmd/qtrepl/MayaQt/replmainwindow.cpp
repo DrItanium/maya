@@ -17,6 +17,10 @@ REPLMainWindow::REPLMainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->textEdit->append("UI Setup...");
     ui->textEdit->append("Creating a CLIPS Environment");
+    connect(&_env, &EnvironmentThread::ioRouterWrite,
+            this, &REPLMainWindow::println);
+    connect(this, &REPLMainWindow::sendCommand,
+            &_env, &EnvironmentThread::parseLine);
 }
 
 REPLMainWindow::~REPLMainWindow()
@@ -64,7 +68,6 @@ void REPLMainWindow::processCommand()
     // update the console
     println(str);
     moveToBottomOfLog();
-
 }
 
 void REPLMainWindow::on_actionSave_triggered()

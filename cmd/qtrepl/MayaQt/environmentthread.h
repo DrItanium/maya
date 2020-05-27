@@ -26,11 +26,10 @@ signals:
     void ioRouterWrite(const QString& str);
 public slots:
     void parseLine(const QString&);
-private:
+public:
    void writeOut(const QString& str);
 private:
     ::Environment* _env;
-    QString _currentLine;
     QString _commandString;
 
 };

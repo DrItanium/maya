@@ -22,8 +22,6 @@ public:
 signals:
     void sendCommand(const QString&);
 public slots:
-    void printoutToConsole(const QString& str);
-    void printoutToErrorStream(const QString& str);
     void moveToBottomOfLog();
     void println(const QString& str);
     void print(const QString& str);
@@ -43,6 +41,6 @@ private:
     void processCommand();
 private:
     Ui::REPLMainWindow *ui;
-    EnvironmentThread* _env;
+    EnvironmentThread _env;
 };
 #endif // REPLMAINWINDOW_H
