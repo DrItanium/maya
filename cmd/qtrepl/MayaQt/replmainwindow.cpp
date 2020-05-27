@@ -16,8 +16,6 @@ REPLMainWindow::REPLMainWindow(QWidget *parent)
         ,ui(new Ui::REPLMainWindow)
 {
     ui->setupUi(this);
-    ui->textEdit->append("UI Setup...");
-    ui->textEdit->append("Creating a CLIPS Environment");
     connect(&_env, &EnvironmentThread::ioRouterWrite,
             this, &REPLMainWindow::print);
     connect(this, &REPLMainWindow::sendCommand,
@@ -57,7 +55,7 @@ REPLMainWindow::print(const QString& str)
 void
 REPLMainWindow::println(const QString& str)
 {
-    ui->textEdit->append(str);
+    ui->textEdit->insertPlainText(str);
     ui->textEdit->append("");
 }
 

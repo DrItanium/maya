@@ -55,8 +55,6 @@ EnvironmentThread::EnvironmentThread(QObject* parent) : QObject(parent)
         QMessageBox::critical(nullptr, "Environment Allocation Problem", "Could not allocate the backing clips environment! Terminating!");
         QCoreApplication::quit();
     }
-    emit ioRouterWriteLine("CLIPS Environment Successfully Created");
-    emit ioRouterWriteLine("---------------------------------------");
     setupQTRouters<decltype(this)>(_env, this);
     ::AddClearFunction(_env,
                        "qtrouters",
@@ -71,20 +69,25 @@ void
 EnvironmentThread::writeOut(const QString& str)  {
     emit ioRouterWrite(str);
 }
+
 void
-EnvironmentThread::parseLine(const QString& str) {
-    QTextStream commandStream;
-    commandStream.setString(&_commandString);
-    commandStream << str << endl;
+EnvironmentThread::processCommand()
+{
     // now that we have added the line to our command string, we need to process it
-    auto cmd = _commandString.toLocal8Bit().data();
-    switch(::CompleteCommand(cmd)) {
+    // make a copy of the string
+    auto cmdString(_commandString);
+    auto cmd = cmdString.toLocal8Bit().data();
+    auto result = ::CompleteCommand(cmd);
+    if (result != 0) {
+        _commandString.clear();
+    }
+    // at this point we can unlock because we have a safe copy of the input stream
+    switch (result) {
+    case 0:
+        // do nothing here just process the command
+        break;
     case -1:
         emit ioRouterWrite("An error occurred in the command stream... clearing out");
-        _commandString.clear();
-        break;
-    case 0:
-        emit ioRouterWrite("&&");
         break;
     case 1:
         [this, cmd]() {
@@ -101,12 +104,17 @@ EnvironmentThread::parseLine(const QString& str) {
             SetEvaluationError(_env,false);
             FlushCommandString(_env);
             CleanCurrentGarbageFrame(_env, nullptr);
-            _commandString.clear();
            }();
         break;
     default:
         emit ioRouterWrite("Unknown parsing state... clearing command");
-        _commandString.clear();
         break;
     }
+}
+void
+EnvironmentThread::parseLine(const QString& str) {
+    QTextStream commandStream;
+    commandStream.setString(&_commandString);
+    commandStream << str << endl;
+    processCommand();
 }

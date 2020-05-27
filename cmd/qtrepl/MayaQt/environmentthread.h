@@ -24,11 +24,12 @@ public:
     ~EnvironmentThread() override;
 signals:
     void ioRouterWrite(const QString& str);
-    void ioRouterWriteLine(const QString& str);
 public slots:
     void parseLine(const QString&);
 public:
    void writeOut(const QString& str);
+private:
+   void processCommand();
 private:
     ::Environment* _env;
     QString _commandString;
