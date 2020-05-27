@@ -55,8 +55,8 @@ EnvironmentThread::EnvironmentThread(QObject* parent) : QObject(parent)
         QMessageBox::critical(nullptr, "Environment Allocation Problem", "Could not allocate the backing clips environment! Terminating!");
         QCoreApplication::quit();
     }
-    emit ioRouterWrite("CLIPS Environment Successfully Created");
-    emit ioRouterWrite("---------------------------------------");
+    emit ioRouterWriteLine("CLIPS Environment Successfully Created");
+    emit ioRouterWriteLine("---------------------------------------");
     setupQTRouters<decltype(this)>(_env, this);
     ::AddClearFunction(_env,
                        "qtrouters",
@@ -108,37 +108,3 @@ EnvironmentThread::parseLine(const QString& str) {
         break;
     }
 }
-/*
-    // now that we have added the text to the command stream we must see if CLIPS
-    // considers it to be a complete command
-    const char* cmd = _commandString.toLocal8Bit().data();
-    switch (::CompleteCommand(cmd)) {
-    case 0:
-    // more input required so just return
-    ui->textEdit->append("&&");
-    break;
-    case -1:
-    ui->textEdit->append("An error occurred in the command stream... clearing out");
-    _commandString.clear();
-    break;
-    case 1:
-    [this, cmd](){
-    QTextStream commandStream;
-    commandStream.setString(&_commandString);
-    commandStream << endl;
-    FlushPPBuffer(_env);
-    SetPPBufferStatus(_env,false);
-    RouteCommand(_env, cmd, true);
-    FlushPPBuffer(_env);
-#if (! BLOAD_ONLY)
-    FlushParsingMessages(_env);
-#endif
-    SetHaltExecution(_env,false);
-    SetEvaluationError(_env,false);
-    FlushCommandString(_env);
-    CleanCurrentGarbageFrame(_env, nullptr);
-    _commandString.clear();
-    }();
-    break;
-    }
-    */

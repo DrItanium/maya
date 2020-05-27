@@ -18,7 +18,7 @@ REPLMainWindow::REPLMainWindow(QWidget *parent)
     ui->textEdit->append("UI Setup...");
     ui->textEdit->append("Creating a CLIPS Environment");
     connect(&_env, &EnvironmentThread::ioRouterWrite,
-            this, &REPLMainWindow::println);
+            this, &REPLMainWindow::print);
     connect(this, &REPLMainWindow::sendCommand,
             &_env, &EnvironmentThread::parseLine);
 }
@@ -50,23 +50,23 @@ REPLMainWindow::extractCurrentLineFromInput()
 void
 REPLMainWindow::print(const QString& str)
 {
-    ui->textEdit->append(str);
+    ui->textEdit->insertPlainText(str);
 }
 
 void
 REPLMainWindow::println(const QString& str)
 {
-    print(str);
-    ui->textEdit->append(""); // make sure that we newline things correctly
+    ui->textEdit->append(str);
+    ui->textEdit->append("");
 }
 
 void REPLMainWindow::processCommand()
 {
     // get the input line
     auto str = extractCurrentLineFromInput();
+    println(str);
     emit sendCommand(str);
     // update the console
-    println(str);
     moveToBottomOfLog();
 }
 
