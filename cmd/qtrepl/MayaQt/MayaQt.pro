@@ -187,7 +187,8 @@ SOURCES += \
     ../../../watch.c \
     environmentthread.cpp \
     main.cpp \
-    replmainwindow.cpp
+    replmainwindow.cpp \
+    commandstoragehelper.cpp
 
 HEADERS += \
     ../../../agenda.h \
@@ -372,7 +373,8 @@ HEADERS += \
     ../../../utility.h \
     ../../../watch.h \
     environmentthread.h \
-    replmainwindow.h
+    replmainwindow.h \
+    commandstoragehelper.h
 
 FORMS += \
     replmainwindow.ui
