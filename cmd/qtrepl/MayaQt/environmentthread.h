@@ -33,6 +33,7 @@ private:
     ::Environment* _env;
     QString _commandString;
     QMutex _mutex;
+    QWaitCondition _cond;
 };
 
 #endif // ENVIRONMENTTHREAD_H

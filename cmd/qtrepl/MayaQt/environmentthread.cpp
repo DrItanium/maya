@@ -3,6 +3,7 @@
 #include <QMessageBox>
 #include <QApplication>
 #include <QTextStream>
+#include <QMutexLocker>
 
 template<typename T>
 void setupQTRouters(Environment* env, void* context) {
@@ -63,11 +64,18 @@ EnvironmentThread::EnvironmentThread(QObject* parent) : QThread(parent)
                        this);
 }
 EnvironmentThread::~EnvironmentThread() {
+    _mutex.lock();
     ::DestroyEnvironment(_env);
+    _env = nullptr;
+    _cond.wakeOne();
+    _mutex.unlock();
+    wait();
 }
 void
 EnvironmentThread::writeOut(const QString& str)  {
+    _mutex.lock();
     emit ioRouterWrite(str);
+    _mutex.unlock();
 }
 
 void
@@ -113,14 +121,20 @@ EnvironmentThread::run()
             emit ioRouterWrite("Unknown parsing state... clearing command");
             break;
         }
+        _mutex.lock();
+        _cond.wait(&_mutex);
+        _mutex.unlock();
     }
 }
 void
 EnvironmentThread::parseLine(const QString& str) {
-
-    _mutex.lock();
+    QMutexLocker locker(&_mutex);
     QTextStream commandStream;
     commandStream.setString(&_commandString);
     commandStream << str << endl;
-    _mutex.unlock();
+    if (!isRunning()) {
+        start(LowPriority);
+    } else {
+        _cond.wakeOne();
+    }
 }
