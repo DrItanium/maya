@@ -16,9 +16,10 @@ extern "C"
 #define slots Q_SLOTS
 // parasoft-end-suppress ALL "clips uses the phrase slots"
 
-class EnvironmentThread : public QObject
+class EnvironmentThread : public QThread
 {
     Q_OBJECT
+    void run() override;
 public:
     EnvironmentThread(QObject* parent = nullptr);
     ~EnvironmentThread() override;
@@ -28,8 +29,6 @@ public slots:
     void parseLine(const QString&);
 public:
    void writeOut(const QString& str);
-private:
-   void processCommand();
 private:
     ::Environment* _env;
     QString _commandString;
