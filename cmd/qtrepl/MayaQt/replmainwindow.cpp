@@ -20,6 +20,10 @@ REPLMainWindow::REPLMainWindow(QWidget *parent)
             this, &REPLMainWindow::print);
     connect(this, &REPLMainWindow::sendCommand,
             &_env, &EnvironmentThread::parseLine);
+    connect(this, &REPLMainWindow::insertTextInWindow,
+            this->ui->plainTextEdit, &QPlainTextEdit::insertPlainText);
+    connect(this, &REPLMainWindow::appendTextInWindow,
+            this->ui->plainTextEdit, &QPlainTextEdit::appendPlainText);
 }
 
 REPLMainWindow::~REPLMainWindow()
@@ -49,9 +53,9 @@ REPLMainWindow::extractCurrentLineFromInput()
 void
 REPLMainWindow::printGeneric(const QString& str, bool appendNewLine)
 {
-    ui->plainTextEdit->insertPlainText(str);
+    emit insertTextInWindow(str);
     if (appendNewLine) {
-        ui->plainTextEdit->appendPlainText("");
+        emit appendTextInWindow("");
     }
     moveToBottomOfLog();
 }

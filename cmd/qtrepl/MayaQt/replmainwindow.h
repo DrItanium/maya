@@ -23,6 +23,8 @@ public:
     void resizeEvent(QResizeEvent*) override;
 signals:
     void sendCommand(const QString&);
+    void insertTextInWindow(const QString&);
+    void appendTextInWindow(const QString&);
 public slots:
     void moveToBottomOfLog();
     void print(const QString& str);
