@@ -28,11 +28,7 @@
       <widget class="QLineEdit" name="lineEdit"/>
      </item>
      <item row="0" column="0">
-      <widget class="QTextEdit" name="textEdit">
-       <property name="readOnly">
-        <bool>true</bool>
-       </property>
-      </widget>
+      <widget class="QPlainTextEdit" name="plainTextEdit"/>
      </item>
     </layout>
    </widget>

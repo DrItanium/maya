@@ -5,6 +5,7 @@
 #include <QString>
 #include <QTextStream>
 #include "environmentthread.h"
+#include <QStringList>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class REPLMainWindow; }
@@ -24,8 +25,8 @@ signals:
     void sendCommand(const QString&);
 public slots:
     void moveToBottomOfLog();
-    void println(const QString& str);
     void print(const QString& str);
+    void println(const QString& str);
 private slots:
     void on_actionAbout_triggered();
 
@@ -40,8 +41,11 @@ private slots:
 private:
     QString extractCurrentLineFromInput();
     void processCommand();
+    void printGeneric(const QString& str, bool appendNewLine = false);
 private:
     Ui::REPLMainWindow *ui;
     EnvironmentThread _env;
+    size_t _collectionSize = 0;
+    QStringList _temporaryCollection;
 };
 #endif // REPLMAINWINDOW_H

@@ -47,16 +47,24 @@ REPLMainWindow::extractCurrentLineFromInput()
 }
 
 void
+REPLMainWindow::printGeneric(const QString& str, bool appendNewLine)
+{
+    ui->plainTextEdit->insertPlainText(str);
+    if (appendNewLine) {
+        ui->plainTextEdit->appendPlainText("");
+    }
+    moveToBottomOfLog();
+}
+void
 REPLMainWindow::print(const QString& str)
 {
-    ui->textEdit->insertPlainText(str);
+    printGeneric(str);
 }
 
 void
 REPLMainWindow::println(const QString& str)
 {
-    ui->textEdit->insertPlainText(str);
-    ui->textEdit->append("");
+    printGeneric(str, true);
 }
 
 void REPLMainWindow::processCommand()
@@ -80,14 +88,14 @@ void REPLMainWindow::on_actionSave_triggered()
         return;
     } else {
         QTextStream ts(&file);
-        ts << ui->textEdit->toPlainText();
+        ts << ui->plainTextEdit->toPlainText();
         file.commit();
     }
 }
 
 void REPLMainWindow::on_actionClear_Console_triggered()
 {
-    ui->textEdit->clear();
+    ui->plainTextEdit->clear();
 }
 
 void REPLMainWindow::on_lineEdit_returnPressed()
@@ -99,7 +107,7 @@ void REPLMainWindow::on_lineEdit_returnPressed()
 
 void REPLMainWindow::moveToBottomOfLog()
 {
-    auto scrollBar = ui->textEdit->verticalScrollBar();
+    auto scrollBar = ui->plainTextEdit->verticalScrollBar();
     scrollBar->setValue(scrollBar->maximum());
 }
 

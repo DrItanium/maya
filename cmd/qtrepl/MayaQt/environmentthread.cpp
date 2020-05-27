@@ -75,6 +75,7 @@ void
 EnvironmentThread::writeOut(const QString& str)  {
     _mutex.lock();
     emit ioRouterWrite(str);
+    _cond.wakeOne();
     _mutex.unlock();
 }
 
