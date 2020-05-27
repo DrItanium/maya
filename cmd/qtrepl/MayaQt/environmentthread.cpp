@@ -75,12 +75,14 @@ EnvironmentThread::processCommand()
 {
     // now that we have added the line to our command string, we need to process it
     // make a copy of the string
+    _mutex.lock();
     auto cmdString(_commandString);
     auto cmd = cmdString.toLocal8Bit().data();
     auto result = ::CompleteCommand(cmd);
     if (result != 0) {
         _commandString.clear();
     }
+    _mutex.unlock();
     // at this point we can unlock because we have a safe copy of the input stream
     switch (result) {
     case 0:
@@ -113,8 +115,11 @@ EnvironmentThread::processCommand()
 }
 void
 EnvironmentThread::parseLine(const QString& str) {
+
+    _mutex.lock();
     QTextStream commandStream;
     commandStream.setString(&_commandString);
     commandStream << str << endl;
+    _mutex.unlock();
     processCommand();
 }
