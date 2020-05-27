@@ -8,6 +8,7 @@
 #include <QTextStream>
 #include <QScrollBar>
 #include <type_traits>
+#include <QResizeEvent>
 
 
 REPLMainWindow::REPLMainWindow(QWidget *parent)
@@ -102,4 +103,10 @@ void REPLMainWindow::moveToBottomOfLog()
 {
     auto scrollBar = ui->textEdit->verticalScrollBar();
     scrollBar->setValue(scrollBar->maximum());
+}
+
+void
+REPLMainWindow::resizeEvent(QResizeEvent* evt)
+{
+    QMainWindow::resizeEvent(evt);
 }

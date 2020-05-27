@@ -33,7 +33,7 @@ void setupQTRouters(Environment* env, void* context) {
                 void*)
     {
         QString str(logicalName);
-        return str == STDERR;
+        return str == STDERR || str == "werror" || str == "wwarning";
     },
     [](Environment*,
                     const char*,

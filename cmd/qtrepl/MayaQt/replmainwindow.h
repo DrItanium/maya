@@ -18,7 +18,8 @@ class REPLMainWindow : public QMainWindow
 
 public:
     REPLMainWindow(QWidget *parent = nullptr);
-    ~REPLMainWindow();
+    ~REPLMainWindow() override;
+    void resizeEvent(QResizeEvent*) override;
 signals:
     void sendCommand(const QString&);
 public slots:
