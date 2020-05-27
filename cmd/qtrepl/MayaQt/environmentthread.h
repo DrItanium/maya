@@ -2,6 +2,7 @@
 #define ENVIRONMENTTHREAD_H
 #include <QMutex>
 #include <QThread>
+#include <QWaitCondition>
 
 // parasoft-begin-suppress ALL "clips uses the phrase slots which conflicts with Qt"
 #undef slots
@@ -15,15 +16,23 @@ extern "C"
 #define slots Q_SLOTS
 // parasoft-end-suppress ALL "clips uses the phrase slots"
 
-class EnvironmentThread : public QThread
+class EnvironmentThread : public QObject
 {
     Q_OBJECT
 public:
     EnvironmentThread(QObject* parent = nullptr);
-    ~EnvironmentThread();
-
+    ~EnvironmentThread() override;
+signals:
+    void ioRouterWrite(const QString& str);
 public slots:
     void parseCommand(const QString&);
+private:
+   void writeOut(const QString& str);
+private:
+    ::Environment* _env;
+    QString _currentLine;
+    QString _commandString;
+
 };
 
 #endif // ENVIRONMENTTHREAD_H

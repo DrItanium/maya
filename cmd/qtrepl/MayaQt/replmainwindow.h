@@ -44,7 +44,5 @@ private:
 private:
     Ui::REPLMainWindow *ui;
     EnvironmentThread* _env;
-    QString _currentLine;
-    QString _commandString;
 };
 #endif // REPLMAINWINDOW_H
