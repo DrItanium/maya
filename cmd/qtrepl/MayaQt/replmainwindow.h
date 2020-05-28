@@ -25,8 +25,9 @@ signals:
     void sendCommand(const QString&);
     void insertTextInWindow(const QString&);
     void appendTextInWindow(const QString&);
+    void clearTextInWindow();
+    void setInputBoxText(const QString&);
 public slots:
-    void moveToBottomOfLog();
     void print(const QString& str);
     void println(const QString& str);
 private slots:
@@ -43,6 +44,7 @@ private slots:
 private:
     QString extractCurrentLineFromInput();
     void processCommand();
+    void moveToBottomOfLog();
 private:
     Ui::REPLMainWindow *ui;
     EnvironmentThread _env;

@@ -9,7 +9,7 @@
 #include <QScrollBar>
 #include <type_traits>
 #include <QResizeEvent>
-
+#include <QTextEdit>
 
 REPLMainWindow::REPLMainWindow(QWidget *parent)
         : QMainWindow(parent)
@@ -21,9 +21,13 @@ REPLMainWindow::REPLMainWindow(QWidget *parent)
     connect(this, &REPLMainWindow::sendCommand,
             &_env, &EnvironmentThread::parseLine);
     connect(this, &REPLMainWindow::insertTextInWindow,
-            this->ui->plainTextEdit, &QPlainTextEdit::insertPlainText);
+            this->ui->textEdit, &QTextEdit::insertPlainText);
     connect(this, &REPLMainWindow::appendTextInWindow,
-            this->ui->plainTextEdit, &QPlainTextEdit::appendPlainText);
+            this->ui->textEdit, &QTextEdit::append);
+    connect(this, &REPLMainWindow::clearTextInWindow,
+            this->ui->textEdit, &QTextEdit::clear);
+    connect(this, &REPLMainWindow::setInputBoxText,
+            this->ui->lineEdit, &QLineEdit::setText);
 }
 
 REPLMainWindow::~REPLMainWindow()
@@ -45,7 +49,7 @@ QString
 REPLMainWindow::extractCurrentLineFromInput()
 {
     auto tmp = ui->lineEdit->text();
-    ui->lineEdit->clear();
+    //ui->lineEdit->clear();
     ui->lineEdit->setText("");
     return tmp;
 }
@@ -60,7 +64,8 @@ REPLMainWindow::print(const QString& str)
 void
 REPLMainWindow::println(const QString& str)
 {
-    emit appendTextInWindow(str);
+    emit insertTextInWindow(str);
+    emit appendTextInWindow("");
     moveToBottomOfLog();
 }
 
@@ -85,14 +90,15 @@ void REPLMainWindow::on_actionSave_triggered()
         return;
     } else {
         QTextStream ts(&file);
-        ts << ui->plainTextEdit->toPlainText();
+        ts << ui->textEdit->toPlainText();
         file.commit();
     }
 }
 
 void REPLMainWindow::on_actionClear_Console_triggered()
 {
-    ui->plainTextEdit->clear();
+    emit clearTextInWindow();
+    //ui->plainTextEdit->clear();
 }
 
 void REPLMainWindow::on_lineEdit_returnPressed()
@@ -104,7 +110,7 @@ void REPLMainWindow::on_lineEdit_returnPressed()
 
 void REPLMainWindow::moveToBottomOfLog()
 {
-    auto scrollBar = ui->plainTextEdit->verticalScrollBar();
+    auto scrollBar = ui->textEdit->verticalScrollBar();
     scrollBar->setValue(scrollBar->maximum());
 }
 

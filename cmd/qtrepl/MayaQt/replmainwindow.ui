@@ -28,18 +28,12 @@
       <widget class="QLineEdit" name="lineEdit"/>
      </item>
      <item row="0" column="0">
-      <widget class="QPlainTextEdit" name="plainTextEdit">
+      <widget class="QTextEdit" name="textEdit">
        <property name="undoRedoEnabled">
         <bool>false</bool>
        </property>
        <property name="readOnly">
         <bool>true</bool>
-       </property>
-       <property name="maximumBlockCount">
-        <number>10000</number>
-       </property>
-       <property name="centerOnScroll">
-        <bool>false</bool>
        </property>
       </widget>
      </item>
