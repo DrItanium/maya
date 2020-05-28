@@ -29,6 +29,10 @@ signals:
     void resetInvoked();
 public slots:
     void parseLine(const QString&);
+    //void clearEnvironment();
+    //void resetEnvironment();
+    //void runEnvironment(int64_t count);
+    //void runEnvironment();
 public: // used to bridge CLIPS -> C++ since I can't capture this in a lambda and pass that to C code
    void writeOut(const QString& str);
    void transmitClearSignal();
