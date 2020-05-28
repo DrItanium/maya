@@ -10,7 +10,8 @@
 #include <type_traits>
 #include <QResizeEvent>
 #include <QTextEdit>
-
+constexpr auto LineForcedPaintFrequency = 8;
+static_assert(LineForcedPaintFrequency > 0, "Must have a positive number for the frequency");
 REPLMainWindow::REPLMainWindow(QWidget *parent)
         : QMainWindow(parent)
         ,ui(new Ui::REPLMainWindow)
@@ -30,6 +31,8 @@ REPLMainWindow::REPLMainWindow(QWidget *parent)
             this->ui->lineEdit, &QLineEdit::setText);
     connect(&_env, &EnvironmentThread::clearInvoked,
             this, &REPLMainWindow::on_actionClear_Console_triggered);
+    connect(this->ui->plainTextEdit, &QPlainTextEdit::blockCountChanged,
+            this, [this](int blockCount) { if (blockCount % LineForcedPaintFrequency == 0) { this->repaint(); }});
 }
 
 REPLMainWindow::~REPLMainWindow()
@@ -75,6 +78,7 @@ void REPLMainWindow::processCommand()
     // get the input line
     auto str = extractCurrentLineFromInput();
     println(str);
+    // before we send the next command we need to perform some cleanup
     emit sendCommand(str);
     // update the console
     moveToBottomOfLog();
