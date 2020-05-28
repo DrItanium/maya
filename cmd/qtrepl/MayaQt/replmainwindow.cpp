@@ -54,12 +54,14 @@ void
 REPLMainWindow::print(const QString& str)
 {
     emit insertTextInWindow(str);
+    moveToBottomOfLog();
 }
 
 void
 REPLMainWindow::println(const QString& str)
 {
     emit appendTextInWindow(str);
+    moveToBottomOfLog();
 }
 
 void REPLMainWindow::processCommand()

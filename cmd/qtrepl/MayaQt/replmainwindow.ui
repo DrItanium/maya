@@ -39,7 +39,7 @@
         <number>10000</number>
        </property>
        <property name="centerOnScroll">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
       </widget>
      </item>
