@@ -10,7 +10,7 @@
 #include <type_traits>
 #include <QResizeEvent>
 #include <QTextEdit>
-constexpr auto LineForcedPaintFrequency = 8;
+constexpr auto LineForcedPaintFrequency = 40;
 static_assert(LineForcedPaintFrequency > 0, "Must have a positive number for the frequency");
 REPLMainWindow::REPLMainWindow(QWidget *parent)
         : QMainWindow(parent)
