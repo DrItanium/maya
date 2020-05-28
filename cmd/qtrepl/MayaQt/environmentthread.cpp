@@ -49,6 +49,20 @@ void setupQTRouters(Environment* env, void* context) {
                     nullptr,
                     context);
 }
+template<typename T>
+void transmitClearToGui(Environment*, void* context) {
+    using K = std::remove_pointer_t<std::decay_t<T>>;
+    auto self = static_cast<K*>(context);
+    self->transmitClearSignal();
+}
+
+template<typename T>
+void transmitResetToGui(Environment*, void* context) {
+    using K = std::remove_pointer_t<std::decay_t<T>>;
+    auto self = static_cast<K*>(context);
+    self->transmitResetSignal();
+}
+
 EnvironmentThread::EnvironmentThread(QObject* parent) : QThread(parent)
 {
     _env = ::CreateEnvironment();
@@ -60,6 +74,16 @@ EnvironmentThread::EnvironmentThread(QObject* parent) : QThread(parent)
     ::AddClearFunction(_env,
                        "qtrouters",
                        setupQTRouters<decltype(this)>,
+                       1, // this has higher priority
+                       this);
+    ::AddClearFunction(_env,
+                       "sendClearToQtGui",
+                       transmitClearToGui<decltype(this)>,
+                       0,
+                       this);
+    ::AddResetFunction(_env,
+                       "sendResetToQtGui",
+                       transmitResetToGui<decltype(this)>,
                        0,
                        this);
 }
@@ -67,13 +91,6 @@ EnvironmentThread::~EnvironmentThread() {
     _mutex.lock();
     ::DestroyEnvironment(_env);
     _env = nullptr;
-    _cond.wakeOne();
-    _mutex.unlock();
-}
-void
-EnvironmentThread::writeOut(const QString& str)  {
-    _mutex.lock();
-    emit ioRouterWrite(str);
     _cond.wakeOne();
     _mutex.unlock();
 }
@@ -137,4 +154,30 @@ EnvironmentThread::parseLine(const QString& str) {
     } else {
         _cond.wakeOne();
     }
+}
+
+void
+EnvironmentThread::writeOut(const QString& str)  {
+    _mutex.lock();
+    emit ioRouterWrite(str);
+    _cond.wakeOne();
+    _mutex.unlock();
+}
+
+void
+EnvironmentThread::transmitClearSignal()
+{
+    _mutex.lock();
+    emit clearInvoked();
+    _cond.wakeOne();
+    _mutex.unlock();
+}
+
+void
+EnvironmentThread::transmitResetSignal()
+{
+    _mutex.lock();
+    emit resetInvoked();
+    _cond.wakeOne();
+    _mutex.unlock();
 }

@@ -25,10 +25,14 @@ public:
     ~EnvironmentThread() override;
 signals:
     void ioRouterWrite(const QString& str);
+    void clearInvoked();
+    void resetInvoked();
 public slots:
     void parseLine(const QString&);
-public:
+public: // used to bridge CLIPS -> C++ since I can't capture this in a lambda and pass that to C code
    void writeOut(const QString& str);
+   void transmitClearSignal();
+   void transmitResetSignal();
 private:
     ::Environment* _env;
     QString _commandString;

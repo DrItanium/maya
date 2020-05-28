@@ -28,6 +28,8 @@ REPLMainWindow::REPLMainWindow(QWidget *parent)
             this->ui->textEdit, &QTextEdit::clear);
     connect(this, &REPLMainWindow::setInputBoxText,
             this->ui->lineEdit, &QLineEdit::setText);
+    connect(&_env, &EnvironmentThread::clearInvoked,
+            this, &REPLMainWindow::on_actionClear_Console_triggered);
 }
 
 REPLMainWindow::~REPLMainWindow()
@@ -49,8 +51,7 @@ QString
 REPLMainWindow::extractCurrentLineFromInput()
 {
     auto tmp = ui->lineEdit->text();
-    //ui->lineEdit->clear();
-    ui->lineEdit->setText("");
+    emit setInputBoxText("");
     return tmp;
 }
 
@@ -98,7 +99,6 @@ void REPLMainWindow::on_actionSave_triggered()
 void REPLMainWindow::on_actionClear_Console_triggered()
 {
     emit clearTextInWindow();
-    //ui->plainTextEdit->clear();
 }
 
 void REPLMainWindow::on_lineEdit_returnPressed()
