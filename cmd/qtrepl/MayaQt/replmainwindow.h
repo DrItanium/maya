@@ -43,10 +43,8 @@ private slots:
 private:
     QString extractCurrentLineFromInput();
     void processCommand();
-    void printGeneric(const QString& str, bool appendNewLine = false);
 private:
     Ui::REPLMainWindow *ui;
     EnvironmentThread _env;
-    QString _temporaryStorage;
 };
 #endif // REPLMAINWINDOW_H

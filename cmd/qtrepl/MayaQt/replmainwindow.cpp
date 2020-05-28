@@ -51,32 +51,18 @@ REPLMainWindow::extractCurrentLineFromInput()
 }
 
 void
-REPLMainWindow::printGeneric(const QString& str, bool appendNewLine)
-{
-    {
-        QTextStream commandStream;
-        commandStream.setString(&_temporaryStorage);
-        commandStream << str;
-        if (appendNewLine) {
-            commandStream << endl;
-        }
-    }
-    if (_temporaryStorage.length() >= 8) {
-        emit insertTextInWindow(_temporaryStorage);
-        _temporaryStorage.clear();
-        moveToBottomOfLog();
-    }
-}
-void
 REPLMainWindow::print(const QString& str)
 {
-    printGeneric(str);
+    emit insertTextInWindow(str);
+    moveToBottomOfLog();
 }
 
 void
 REPLMainWindow::println(const QString& str)
 {
-    printGeneric(str, true);
+    emit insertTextInWindow(str);
+    emit appendTextInWindow("");
+    moveToBottomOfLog();
 }
 
 void REPLMainWindow::processCommand()
