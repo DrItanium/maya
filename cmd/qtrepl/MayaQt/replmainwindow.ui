@@ -32,6 +32,12 @@
        <property name="undoRedoEnabled">
         <bool>false</bool>
        </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+       <property name="maximumBlockCount">
+        <number>0</number>
+       </property>
       </widget>
      </item>
     </layout>

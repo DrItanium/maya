@@ -69,7 +69,6 @@ EnvironmentThread::~EnvironmentThread() {
     _env = nullptr;
     _cond.wakeOne();
     _mutex.unlock();
-    wait();
 }
 void
 EnvironmentThread::writeOut(const QString& str)  {
