@@ -53,21 +53,13 @@ REPLMainWindow::extractCurrentLineFromInput()
 void
 REPLMainWindow::print(const QString& str)
 {
-    auto* ptext = ui->plainTextEdit;
-    auto cursor = ptext->textCursor();
-    cursor.joinPreviousEditBlock();
-    cursor.insertText(str);
-    cursor.endEditBlock();
-    //emit insertTextInWindow(str);
-    moveToBottomOfLog();
+    emit insertTextInWindow(str);
 }
 
 void
 REPLMainWindow::println(const QString& str)
 {
-    emit insertTextInWindow(str);
-    emit appendTextInWindow("");
-    moveToBottomOfLog();
+    emit appendTextInWindow(str);
 }
 
 void REPLMainWindow::processCommand()
