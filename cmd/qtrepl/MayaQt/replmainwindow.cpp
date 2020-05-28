@@ -21,11 +21,11 @@ REPLMainWindow::REPLMainWindow(QWidget *parent)
     connect(this, &REPLMainWindow::sendCommand,
             &_env, &EnvironmentThread::parseLine);
     connect(this, &REPLMainWindow::insertTextInWindow,
-            this->ui->textEdit, &QTextEdit::insertPlainText);
+            this->ui->plainTextEdit, &QPlainTextEdit::insertPlainText);
     connect(this, &REPLMainWindow::appendTextInWindow,
-            this->ui->textEdit, &QTextEdit::append);
+            this->ui->plainTextEdit, &QPlainTextEdit::appendPlainText);
     connect(this, &REPLMainWindow::clearTextInWindow,
-            this->ui->textEdit, &QTextEdit::clear);
+            this->ui->plainTextEdit, &QPlainTextEdit::clear);
     connect(this, &REPLMainWindow::setInputBoxText,
             this->ui->lineEdit, &QLineEdit::setText);
     connect(&_env, &EnvironmentThread::clearInvoked,
@@ -91,7 +91,7 @@ void REPLMainWindow::on_actionSave_triggered()
         return;
     } else {
         QTextStream ts(&file);
-        ts << ui->textEdit->toPlainText();
+        ts << ui->plainTextEdit->toPlainText();
         file.commit();
     }
 }
@@ -110,7 +110,7 @@ void REPLMainWindow::on_lineEdit_returnPressed()
 
 void REPLMainWindow::moveToBottomOfLog()
 {
-    auto scrollBar = ui->textEdit->verticalScrollBar();
+    auto scrollBar = ui->plainTextEdit->verticalScrollBar();
     scrollBar->setValue(scrollBar->maximum());
 }
 

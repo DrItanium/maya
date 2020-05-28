@@ -28,7 +28,7 @@
       <widget class="QLineEdit" name="lineEdit"/>
      </item>
      <item row="0" column="0">
-      <widget class="QTextEdit" name="textEdit">
+      <widget class="QPlainTextEdit" name="plainTextEdit">
        <property name="undoRedoEnabled">
         <bool>false</bool>
        </property>
