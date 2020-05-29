@@ -27,6 +27,7 @@ signals:
     void ioRouterWrite(const QString& str);
     void clearInvoked();
     void resetInvoked();
+    void exitInvoked(int code);
 public slots:
     void parseLine(const QString&);
     //void clearEnvironment();
@@ -39,6 +40,7 @@ public: // used to bridge CLIPS -> C++ since I can't capture this in a lambda an
    void transmitResetSignal();
    int putChar(int ch);
    int getChar();
+   void transmitExitSignal(int code);
 private:
     ::Environment* _env;
     QString _commandString;
