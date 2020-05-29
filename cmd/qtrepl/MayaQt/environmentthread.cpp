@@ -53,26 +53,26 @@ void setupQTRouters(Environment* env, void* context) {
                 [](Environment*,
                 const char* logicalName,
                 void*) {
-      QString str(logicalName);
-      return str == STDIN;
+        QString str(logicalName);
+        return str == STDIN;
     },
     nullptr,
-    [](Environment*,
-       const char*,
-            void* context) {
+                    [](Environment*,
+                    const char*,
+                    void* context) {
         auto self = static_cast<K*>(context);
         return self->getChar();
     },
     [](Environment*,
-       const char*,
-       int ch,
-       void* context)
+                    const char*,
+                    int ch,
+                    void* context)
     {
         auto self = static_cast<K*>(context);
         return self->putChar(ch);
     },
     nullptr,
-    context);
+                    context);
     // hack to make sure that the worker thread does not call genexit,
     // we intercept it before hand and link it to the application's exit routine.
     // Since the priority is below 0, all file handles and any other structures
@@ -83,12 +83,14 @@ void setupQTRouters(Environment* env, void* context) {
                 nullptr,
                 nullptr,
                 nullptr,
-                [](Environment*,
-                   int code,
-                   void* context)
+                [](Environment* env,
+                int code,
+                void* context)
     {
         auto self = static_cast<K*>(context);
         self->transmitExitSignal(code);
+        // we do not want genexit to be called
+        ::AbortExit(env);
     },
     context);
 }
@@ -141,8 +143,59 @@ EnvironmentThread::~EnvironmentThread() {
 void
 EnvironmentThread::run()
 {
-    ::CommandLoop(_env);
+    // copy of the body of CommandLoop
+    WriteString(_env,STDOUT,CommandLineData(_env)->BannerString);
+    SetHaltExecution(_env,false);
+    SetEvaluationError(_env,false);
+
+    CleanCurrentGarbageFrame(_env, nullptr);
+    CallPeriodicTasks(_env);
+
+    PrintPrompt(_env);
+    RouterData(_env)->CommandBufferInputCount = 0;
+    RouterData(_env)->InputUngets = 0;
+    RouterData(_env)->AwaitingInput = true;
+
+    while (_executing) {
+        /*===================================================*/
+        /* If a batch file is active, grab the command input */
+        /* directly from the batch file, otherwise call the  */
+        /* event function.                                   */
+        /*===================================================*/
+
+        if (BatchActive(_env) == true) {
+            int inchar = LLGetcBatch(_env,STDIN,true);
+            if (inchar == EOF) {
+                (*CommandLineData(_env)->EventCallback)(_env);
+            } else {
+                ExpandCommandString(_env,(char) inchar);
+            }
+        } else {
+            (*CommandLineData(_env)->EventCallback)(_env);
+        }
+
+        /*=================================================*/
+        /* If execution was halted, then remove everything */
+        /* from the command buffer.                        */
+        /*=================================================*/
+
+        if (GetHaltExecution(_env) == true) {
+            SetHaltExecution(_env,false);
+            SetEvaluationError(_env,false);
+            FlushCommandString(_env);
+            WriteString(_env,STDOUT,"\n");
+            PrintPrompt(_env);
+        }
+
+        /*=========================================*/
+        /* If a complete command is in the command */
+        /* buffer, then execute it.                */
+        /*=========================================*/
+
+        ExecuteIfCommandComplete(_env);
+    }
 }
+
 void
 EnvironmentThread::parseLine(const QString& str) {
     QMutexLocker locker(&_mutex);
@@ -158,7 +211,9 @@ EnvironmentThread::parseLine(const QString& str) {
 
 void
 EnvironmentThread::writeOut(const QString& str)  {
+    _mutex.lock();
     emit ioRouterWrite(str);
+    _mutex.unlock();
 }
 
 void
@@ -166,7 +221,6 @@ EnvironmentThread::transmitClearSignal()
 {
     _mutex.lock();
     emit clearInvoked();
-    _cond.wakeOne();
     _mutex.unlock();
 }
 
@@ -175,7 +229,6 @@ EnvironmentThread::transmitResetSignal()
 {
     _mutex.lock();
     emit resetInvoked();
-    _cond.wakeOne();
     _mutex.unlock();
 }
 
@@ -205,9 +258,7 @@ EnvironmentThread::putChar(int ch)
 void
 EnvironmentThread::transmitExitSignal(int code)
 {
-    _mutex.lock();
     emit exitInvoked(code);
-    _cond.wakeOne();
-    _mutex.unlock();
-
+    // make sure that the loop body is terminated
+    _executing = false;
 }

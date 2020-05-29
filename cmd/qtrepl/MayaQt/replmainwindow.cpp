@@ -34,8 +34,6 @@ REPLMainWindow::REPLMainWindow(QWidget *parent)
     connect(this->ui->plainTextEdit, &QPlainTextEdit::blockCountChanged,
             this, [this](int blockCount) { if (blockCount % LineForcedPaintFrequency == 0) { this->repaint(); }});
     // hook up to the exit handler
-    connect(&_env, &EnvironmentThread::transmitExitSignal,
-            this, [this](int code) { this->on_actionExit_triggered(); });
     emit sendCommand("");
 }
 

@@ -46,6 +46,7 @@ private:
     QString _commandString;
     QMutex _mutex;
     QWaitCondition _cond;
+    bool _executing = true;
 };
 
 #endif // ENVIRONMENTTHREAD_H
