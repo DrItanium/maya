@@ -4,6 +4,7 @@
 #include <QApplication>
 #include <QTextStream>
 #include <QMutexLocker>
+#include <QByteArray>
 
 template<typename T>
 void setupQTRouters(Environment* env, void* context) {
@@ -217,7 +218,7 @@ EnvironmentThread::getChar()
     if (_commandString.isEmpty()) {
         _cond.wait(&_mutex);
     }
-    auto firstChar = _commandString.toLocal8Bit().front();
+    char firstChar = _commandString.toLocal8Bit().front();
     _commandString.remove(0, 1); // strip the first character off
     _mutex.unlock();
     return firstChar;
