@@ -33,6 +33,7 @@ REPLMainWindow::REPLMainWindow(QWidget *parent)
             this, &REPLMainWindow::on_actionClear_Console_triggered);
     connect(this->ui->plainTextEdit, &QPlainTextEdit::blockCountChanged,
             this, [this](int blockCount) { if (blockCount % LineForcedPaintFrequency == 0) { this->repaint(); }});
+    emit sendCommand("");
 }
 
 REPLMainWindow::~REPLMainWindow()
