@@ -204,3 +204,13 @@ EnvironmentThread::putChar(int ch)
     _mutex.unlock();
     return ch;
 }
+
+void
+EnvironmentThread::transmitExitSignal(int code)
+{
+    _mutex.lock();
+    emit exitInvoked(code);
+    _cond.wakeOne();
+    _mutex.unlock();
+
+}
