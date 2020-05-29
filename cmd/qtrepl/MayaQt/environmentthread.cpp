@@ -124,6 +124,7 @@ EnvironmentThread::run()
 {
     // now that we have added the line to our command string, we need to process it
     // make a copy of the string
+#if 0
     forever {
         _mutex.lock();
         auto cmdString(_commandString);
@@ -166,6 +167,8 @@ EnvironmentThread::run()
         _cond.wait(&_mutex);
         _mutex.unlock();
     }
+#endif
+    ::CommandLoop(_env);
 }
 void
 EnvironmentThread::parseLine(const QString& str) {
