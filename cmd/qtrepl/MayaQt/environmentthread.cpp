@@ -48,6 +48,31 @@ void setupQTRouters(Environment* env, void* context) {
                     nullptr,
                     nullptr,
                     context);
+    ::AddRouter(env, "qtstdin", 20,
+                [](Environment*,
+                const char* logicalName,
+                void*) {
+      QString str(logicalName);
+      return str == STDIN;
+    },
+    nullptr,
+    [](Environment* env,
+       const char* logicalName,
+            void* context) {
+        return 0;
+    },
+    [](Environment* env,
+       const char* logicalName,
+       int ch,
+       void* context)
+    {
+        return 0;
+    },
+    nullptr,
+    context);
+
+
+
 }
 template<typename T>
 void transmitClearToGui(Environment*, void* context) {
