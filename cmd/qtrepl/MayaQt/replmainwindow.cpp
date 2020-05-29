@@ -49,6 +49,9 @@ void REPLMainWindow::on_actionAbout_triggered()
 
 void REPLMainWindow::on_actionExit_triggered()
 {
+    /// @todo figure out how to tell the other thread to terminate and then wait until that happens
+    /// right now, the program quits before we can cleanup fully.
+    /// the only complete way to exit is to invoke exit in the REPL and then close the program
     QCoreApplication::quit();
 }
 QString
