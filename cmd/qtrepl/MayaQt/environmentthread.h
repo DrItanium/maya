@@ -37,6 +37,8 @@ public: // used to bridge CLIPS -> C++ since I can't capture this in a lambda an
    void writeOut(const QString& str);
    void transmitClearSignal();
    void transmitResetSignal();
+   int putChar(int ch);
+   int getChar();
 private:
     ::Environment* _env;
     QString _commandString;

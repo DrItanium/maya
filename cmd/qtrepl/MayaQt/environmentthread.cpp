@@ -56,23 +56,22 @@ void setupQTRouters(Environment* env, void* context) {
       return str == STDIN;
     },
     nullptr,
-    [](Environment* env,
-       const char* logicalName,
+    [](Environment*,
+       const char*,
             void* context) {
-        return 0;
+        auto self = static_cast<K*>(context);
+        return self->getChar();
     },
-    [](Environment* env,
-       const char* logicalName,
+    [](Environment*,
+       const char*,
        int ch,
        void* context)
     {
-        return 0;
+        auto self = static_cast<K*>(context);
+        return self->putChar(ch);
     },
     nullptr,
     context);
-
-
-
 }
 template<typename T>
 void transmitClearToGui(Environment*, void* context) {
@@ -205,4 +204,27 @@ EnvironmentThread::transmitResetSignal()
     emit resetInvoked();
     _cond.wakeOne();
     _mutex.unlock();
+}
+
+int
+EnvironmentThread::getChar()
+{
+    // pull a character out of the input stream
+    _mutex.lock();
+    if (_commandString.isEmpty()) {
+        _cond.wait(&_mutex);
+    }
+    auto firstChar = _commandString.toLocal8Bit().front();
+    _commandString.remove(0, 1); // strip the first character off
+    _mutex.unlock();
+    return firstChar;
+}
+
+int
+EnvironmentThread::putChar(int ch)
+{
+    _mutex.lock();
+    _commandString.push_front(ch);
+    _mutex.unlock();
+    return ch;
 }
