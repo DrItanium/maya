@@ -73,6 +73,24 @@ void setupQTRouters(Environment* env, void* context) {
     },
     nullptr,
     context);
+    // hack to make sure that the worker thread does not call genexit,
+    // we intercept it before hand and link it to the application's exit routine.
+    // Since the priority is below 0, all file handles and any other structures
+    // held open by any other routers will be cleaned up by this point (at least in theory).
+    ::AddRouter(env, "qtexit",
+                -1, // makes sure that this router always comes _last_
+                nullptr,
+                nullptr,
+                nullptr,
+                nullptr,
+                [](Environment*,
+                   int code,
+                   void* context)
+    {
+        auto self = static_cast<K*>(context);
+        self->transmitExitSignal(code);
+    },
+    context);
 }
 template<typename T>
 void transmitClearToGui(Environment*, void* context) {
