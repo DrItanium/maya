@@ -7,7 +7,8 @@
 #include <QByteArray>
 
 template<typename T>
-void setupQTRouters(Environment* env, void* context) {
+void
+setupQTRouters(Environment* env, void* context) {
     using K = std::remove_pointer_t<std::decay_t<T>>;
     ::AddRouter(env, "qtstdout", 20,
                 [](Environment*,
@@ -115,7 +116,11 @@ EnvironmentThread::EnvironmentThread(QObject* parent) : QThread(parent)
         QMessageBox::critical(nullptr, "Environment Allocation Problem", "Could not allocate the backing clips environment! Terminating!");
         QCoreApplication::quit();
     }
-    setupQTRouters<decltype(this)>(_env, this);
+    installQTRouters();
+    installClearFunctions();
+}
+void
+EnvironmentThread::installClearFunctions() noexcept {
     ::AddClearFunction(_env,
                        "qtrouters",
                        setupQTRouters<decltype(this)>,
@@ -132,10 +137,17 @@ EnvironmentThread::EnvironmentThread(QObject* parent) : QThread(parent)
                        0,
                        this);
 }
+void
+EnvironmentThread::installQTRouters() noexcept
+{
+    setupQTRouters<decltype(this)>(_env, this);
+}
 EnvironmentThread::~EnvironmentThread() {
     _mutex.lock();
-    ::DestroyEnvironment(_env);
-    _env = nullptr;
+    if (_env) {
+        ::DestroyEnvironment(_env);
+        _env = nullptr;
+    }
     _cond.wakeOne();
     _mutex.unlock();
 }
@@ -143,6 +155,13 @@ EnvironmentThread::~EnvironmentThread() {
 void
 EnvironmentThread::run()
 {
+    if (!_env) {
+        _mutex.lock();
+        _env = ::CreateEnvironment();
+        installQTRouters();
+        installClearFunctions();
+        _mutex.unlock();
+    }
     // copy of the body of CommandLoop
     WriteString(_env,STDOUT,CommandLineData(_env)->BannerString);
     SetHaltExecution(_env,false);
@@ -194,6 +213,8 @@ EnvironmentThread::run()
 
         ExecuteIfCommandComplete(_env);
     }
+    ::DestroyEnvironment(_env);
+    _env = nullptr;
 }
 
 void

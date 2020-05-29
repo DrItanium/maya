@@ -42,6 +42,9 @@ public: // used to bridge CLIPS -> C++ since I can't capture this in a lambda an
    int getChar();
    void transmitExitSignal(int code);
 private:
+   void installClearFunctions() noexcept;
+   void installQTRouters() noexcept;
+private:
     ::Environment* _env;
     QString _commandString;
     QMutex _mutex;
