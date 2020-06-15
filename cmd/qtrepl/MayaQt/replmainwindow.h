@@ -13,9 +13,7 @@ QT_END_NAMESPACE
 
 class REPLMainWindow : public QMainWindow
 {
-    // parasoft-begin-suppress ALL "Q_OBJECT inserts code that is from Qt"
     Q_OBJECT
-    // parasoft-end-suppress ALL "Q_OBJECT's expansion needs to be ignored, end of the block"
 
 public:
     REPLMainWindow(QWidget *parent = nullptr);
