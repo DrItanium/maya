@@ -66,18 +66,18 @@ X(GREATER_THAN, 1);
 X(EQUAL, 2);
 #undef X
 
-typedef enum {
+enum SaveScope{
     LOCAL_SAVE,
     VISIBLE_SAVE
-} SaveScope;
+};
 
-typedef enum {
+enum DefaultType {
     NO_DEFAULT,
     STATIC_DEFAULT,
     DYNAMIC_DEFAULT
-} DefaultType;
+} ;
 
-typedef enum {
+enum PutSlotError {
     PSE_NO_ERROR = 0,
     PSE_nullptr_POINTER_ERROR,
     PSE_INVALID_TARGET_ERROR,
@@ -89,14 +89,14 @@ typedef enum {
     PSE_ALLOWED_CLASSES_ERROR,
     PSE_EVALUATION_ERROR,
     PSE_RULE_NETWORK_ERROR
-} PutSlotError;
+};
 
-typedef enum {
+enum GetSlotError {
     GSE_NO_ERROR = 0,
     GSE_nullptr_POINTER_ERROR,
     GSE_INVALID_TARGET_ERROR,
     GSE_SLOT_NOT_FOUND_ERROR
-} GetSlotError;
+};
 
 #ifndef APPLICATION_NAME
 #define APPLICATION_NAME "CLIPS"
@@ -154,7 +154,7 @@ X(ADDRESS_TYPE_CODE, 13);
 X(INSTANCE_TYPE_CODE, 14);
 #undef X
 
-typedef enum {
+enum CLIPSType {
     FLOAT_BIT = (1 << 0),
     INTEGER_BIT = (1 << 1),
     SYMBOL_BIT = (1 << 2),
@@ -166,7 +166,7 @@ typedef enum {
     INSTANCE_NAME_BIT = (1 << 8),
     VOID_BIT = (1 << 9),
     BOOLEAN_BIT = (1 << 10),
-} CLIPSType;
+};
 
 constexpr auto NUMBER_BITS = (INTEGER_BIT | FLOAT_BIT);
 constexpr auto LEXEME_BITS = (SYMBOL_BIT | STRING_BIT | BOOLEAN_BIT);
