@@ -106,16 +106,16 @@ void FieldConversion(
     struct expr *headOfPNExpression, *headOfJNExpression;
     struct expr *lastPNExpression, *lastJNExpression;
     struct expr *tempExpression;
-    struct expr *patternNetTest = NULL;
-    struct expr *joinNetTest = NULL;
-    struct expr *constantSelector = NULL;
-    struct expr *constantValue = NULL;
+    struct expr *patternNetTest = nullptr;
+    struct expr *joinNetTest = nullptr;
+    struct expr *constantSelector = nullptr;
+    struct expr *constantValue = nullptr;
 
     /*==================================================*/
-    /* Consider a NULL pointer to be an internal error. */
+    /* Consider a nullptr pointer to be an internal error. */
     /*==================================================*/
 
-    if (theField == NULL) {
+    if (theField == nullptr) {
         SystemError(theEnv, "ANALYSIS", 3);
         ExitRouter(theEnv, EXIT_FAILURE);
     }
@@ -127,8 +127,8 @@ void FieldConversion(
     /* the pattern.                                           */
     /*========================================================*/
 
-    if (theField->bottom != NULL) {
-        if (theField->bottom->bottom != NULL) { testInPatternNetwork = AllVariablesInPattern(theField->bottom, theField->pattern); }
+    if (theField->bottom != nullptr) {
+        if (theField->bottom->bottom != nullptr) { testInPatternNetwork = AllVariablesInPattern(theField->bottom, theField->pattern); }
     }
 
     /*=============================================================*/
@@ -137,11 +137,11 @@ void FieldConversion(
     /* join network expressions and adding them to a running list. */
     /*=============================================================*/
 
-    headOfPNExpression = lastPNExpression = NULL;
-    headOfJNExpression = lastJNExpression = NULL;
+    headOfPNExpression = lastPNExpression = nullptr;
+    headOfJNExpression = lastJNExpression = nullptr;
 
     for (patternPtr = theField->bottom;
-         patternPtr != NULL;
+         patternPtr != nullptr;
          patternPtr = patternPtr->bottom) {
         /*=============================================*/
         /* Extract pattern and join network tests from */
@@ -157,9 +157,9 @@ void FieldConversion(
         /* constaint "red | blue" can not use hashing.                 */
         /*=============================================================*/
 
-        if (constantSelector != NULL) {
+        if (constantSelector != nullptr) {
             if ((patternPtr == theField->bottom) &&
-                (patternPtr->bottom == NULL)) {
+                (patternPtr->bottom == nullptr)) {
                 theField->constantSelector = constantSelector;
                 theField->constantValue = constantValue;
             } else {
@@ -167,8 +167,8 @@ void FieldConversion(
                 ReturnExpression(theEnv, constantValue);
                 ReturnExpression(theEnv, theField->constantSelector);
                 ReturnExpression(theEnv, theField->constantValue);
-                theField->constantSelector = NULL;
-                theField->constantValue = NULL;
+                theField->constantSelector = nullptr;
+                theField->constantValue = nullptr;
             }
         }
 
@@ -177,8 +177,8 @@ void FieldConversion(
         /* of pattern network expressions being constructed.   */
         /*=====================================================*/
 
-        if (patternNetTest != NULL) {
-            if (lastPNExpression == NULL) { headOfPNExpression = patternNetTest; }
+        if (patternNetTest != nullptr) {
+            if (lastPNExpression == nullptr) { headOfPNExpression = patternNetTest; }
             else { lastPNExpression->nextArg = patternNetTest; }
             lastPNExpression = patternNetTest;
         }
@@ -188,8 +188,8 @@ void FieldConversion(
         /* of join network expressions being constructed.   */
         /*==================================================*/
 
-        if (joinNetTest != NULL) {
-            if (lastJNExpression == NULL) { headOfJNExpression = joinNetTest; }
+        if (joinNetTest != nullptr) {
+            if (lastJNExpression == nullptr) { headOfJNExpression = joinNetTest; }
             else { lastJNExpression->nextArg = joinNetTest; }
             lastJNExpression = joinNetTest;
         }
@@ -201,7 +201,7 @@ void FieldConversion(
     /* enclose the expressions within an "or" function call.    */
     /*==========================================================*/
 
-    if ((headOfPNExpression != NULL) ? (headOfPNExpression->nextArg != NULL) : false) {
+    if ((headOfPNExpression != nullptr) ? (headOfPNExpression->nextArg != nullptr) : false) {
         tempExpression = GenConstant(theEnv, FCALL, ExpressionData(theEnv)->PTR_OR);
         tempExpression->argList = headOfPNExpression;
         headOfPNExpression = tempExpression;
@@ -213,7 +213,7 @@ void FieldConversion(
     /* enclose the expressions within an "or" function call.    */
     /*==========================================================*/
 
-    if ((headOfJNExpression != NULL) ? (headOfJNExpression->nextArg != NULL) : false) {
+    if ((headOfJNExpression != nullptr) ? (headOfJNExpression->nextArg != nullptr) : false) {
         tempExpression = GenConstant(theEnv, FCALL, ExpressionData(theEnv)->PTR_OR);
         tempExpression->argList = headOfJNExpression;
         headOfJNExpression = tempExpression;
@@ -227,7 +227,7 @@ void FieldConversion(
     /*===============================================================*/
 
     if (((theField->pnType == MF_VARIABLE_NODE) || (theField->pnType == SF_VARIABLE_NODE)) &&
-        (theField->referringNode != NULL)) {
+        (theField->referringNode != nullptr)) {
         /*================================================================*/
         /* If the previous variable reference is within the same pattern, */
         /* then the variable comparison can occur in the pattern network. */
@@ -258,7 +258,7 @@ void FieldConversion(
             /* Generate the hash index. */
             /*==========================*/
 
-            if (theField->patternType->genGetPNValueFunction != NULL) {
+            if (theField->patternType->genGetPNValueFunction != nullptr) {
                 tempExpression = (*theField->patternType->genGetPNValueFunction)(theEnv, theField);
                 thePattern->rightHash = AppendExpressions(tempExpression, thePattern->rightHash);
             }
@@ -304,10 +304,10 @@ static void ExtractAnds(
     /* join network expressions associated with it.    */
     /*=================================================*/
 
-    *patternNetTest = NULL;
-    *joinNetTest = NULL;
-    *constantSelector = NULL;
-    *constantValue = NULL;
+    *patternNetTest = nullptr;
+    *joinNetTest = nullptr;
+    *constantSelector = nullptr;
+    *constantValue = nullptr;
 
     /*=========================================*/
     /* Loop through each of the subfields tied */
@@ -315,7 +315,7 @@ static void ExtractAnds(
     /*=========================================*/
 
     for (;
-            andField != NULL;
+            andField != nullptr;
             andField = andField->right) {
         /*======================================*/
         /* Extract the pattern and join network */
@@ -362,10 +362,10 @@ static void ExtractFieldTest(
         struct expr **constantSelector,
         struct expr **constantValue,
         struct nandFrame *theNandFrames) {
-    *patternNetTest = NULL;
-    *joinNetTest = NULL;
-    *constantSelector = NULL;
-    *constantValue = NULL;
+    *patternNetTest = nullptr;
+    *joinNetTest = nullptr;
+    *constantSelector = nullptr;
+    *constantValue = nullptr;
 
     /*==========================================================*/
     /* Generate a network expression for a constant constraint. */
@@ -410,7 +410,7 @@ static void ExtractFieldTest(
 
     else if ((theField->pnType == SF_VARIABLE_NODE) || (theField->pnType == MF_VARIABLE_NODE)) {
         if ((testInPatternNetwork == true) &&
-            ((theField->referringNode != NULL) ?
+            ((theField->referringNode != nullptr) ?
              (theField->referringNode->pattern == theField->pattern) :
              false)) { *patternNetTest = GenPNVariableComparison(theEnv, theField, theField->referringNode); }
         else {
@@ -439,7 +439,7 @@ static struct expr *GenPNConstant(
     /* the expression generated.                     */
     /*===============================================*/
 
-    if (theField->patternType->genPNConstantFunction != NULL) { return (*theField->patternType->genPNConstantFunction)(theEnv, theField); }
+    if (theField->patternType->genPNConstantFunction != nullptr) { return (*theField->patternType->genPNConstantFunction)(theEnv, theField); }
 
     /*===================================================*/
     /* Otherwise, generate a test which uses the eq/neq  */
@@ -475,7 +475,7 @@ static struct expr *GenJNConstant(
     /* expression generated.                         */
     /*===============================================*/
 
-    if (theField->patternType->genJNConstantFunction != NULL) {
+    if (theField->patternType->genJNConstantFunction != nullptr) {
         if (isNand) { return (*theField->patternType->genJNConstantFunction)(theEnv, theField, NESTED_RHS); }
         else { return (*theField->patternType->genJNConstantFunction)(theEnv, theField, CLIPS_RHS); }
     }
@@ -668,7 +668,7 @@ void AddNandUnification(
     /*======================================================*/
 
     for (theFrame = theNandFrames;
-         theFrame != NULL;
+         theFrame != nullptr;
          theFrame = theFrame->next) {
         if (theFrame->depth >= nodeList->referringNode->beginNandDepth) {
             // nodeList->referringNode->marked = true;
@@ -700,11 +700,11 @@ struct expr *GetvarReplace(
     struct expr *newList;
 
     /*====================================*/
-    /* Return NULL for a NULL pointer     */
+    /* Return nullptr for a nullptr pointer     */
     /* (i.e. nothing has to be replaced). */
     /*====================================*/
 
-    if (nodeList == NULL) return NULL;
+    if (nodeList == nullptr) return nullptr;
 
     /*=====================================================*/
     /* Create an expression data structure and recursively */
@@ -774,11 +774,11 @@ static struct expr *GetfieldReplace(
     struct expr *newList;
 
     /*====================================*/
-    /* Return NULL for a NULL pointer     */
+    /* Return nullptr for a nullptr pointer     */
     /* (i.e. nothing has to be replaced). */
     /*====================================*/
 
-    if (nodeList == NULL) return NULL;
+    if (nodeList == nullptr) return nullptr;
 
     /*=====================================================*/
     /* Create an expression data structure and recursively */
@@ -829,8 +829,8 @@ static struct expr *GenJNVariableComparison(
     /* the appropriate test, then no test is generated.       */
     /*========================================================*/
 
-    if ((selfNode->patternType->genCompareJNValuesFunction == NULL) ||
-        (referringNode->patternType->genCompareJNValuesFunction == NULL)) { return NULL; }
+    if ((selfNode->patternType->genCompareJNValuesFunction == nullptr) ||
+        (referringNode->patternType->genCompareJNValuesFunction == nullptr)) { return nullptr; }
 
     /*=====================================================*/
     /* If both patterns are of the same type, then use the */
@@ -867,11 +867,11 @@ static struct expr *GenPNVariableComparison(
         Environment *theEnv,
         struct lhsParseNode *selfNode,
         struct lhsParseNode *referringNode) {
-    if (selfNode->patternType->genComparePNValuesFunction != NULL) {
+    if (selfNode->patternType->genComparePNValuesFunction != nullptr) {
         return (*selfNode->patternType->genComparePNValuesFunction)(theEnv, selfNode, referringNode);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /************************************************************/
@@ -889,14 +889,14 @@ static bool AllVariablesInPattern(
     /*=========================================*/
 
     for (;
-            orField != NULL;
+            orField != nullptr;
             orField = orField->bottom) {
         /*=========================================*/
         /* Loop through each of the & constraints. */
         /*=========================================*/
 
         for (andField = orField;
-             andField != NULL;
+             andField != nullptr;
              andField = andField->right) {
             /*========================================================*/
             /* If a variable is found, make sure the pattern in which */
@@ -941,7 +941,7 @@ static bool AllVariablesInExpression(
     /*==========================================*/
 
     for (;
-            theExpression != NULL;
+            theExpression != nullptr;
             theExpression = theExpression->right) {
         /*========================================================*/
         /* If a variable is found, make sure the pattern in which */

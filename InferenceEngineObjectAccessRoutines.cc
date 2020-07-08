@@ -142,75 +142,75 @@ void InstallObjectPrimitives(
         Environment *theEnv) {
     struct entityRecord objectGVInfo1 = {"OBJ_GET_SLOT_JNVAR1", OBJ_GET_SLOT_JNVAR1, 0, 1, 0,
                                          PrintObjectGetVarJN1,
-                                         PrintObjectGetVarJN1, NULL,
+                                         PrintObjectGetVarJN1, nullptr,
                                          ObjectGetVarJNFunction1,
-                                         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+                                         nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
     struct entityRecord objectGVInfo2 = {"OBJ_GET_SLOT_JNVAR2", OBJ_GET_SLOT_JNVAR2, 0, 1, 0,
                                          PrintObjectGetVarJN2,
-                                         PrintObjectGetVarJN2, NULL,
+                                         PrintObjectGetVarJN2, nullptr,
                                          ObjectGetVarJNFunction2,
-                                         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+                                         nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
     struct entityRecord objectGVPNInfo1 = {"OBJ_GET_SLOT_PNVAR1", OBJ_GET_SLOT_PNVAR1, 0, 1, 0,
                                            PrintObjectGetVarPN1,
-                                           PrintObjectGetVarPN1, NULL,
+                                           PrintObjectGetVarPN1, nullptr,
                                            ObjectGetVarPNFunction1,
-                                           NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+                                           nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
     struct entityRecord objectGVPNInfo2 = {"OBJ_GET_SLOT_PNVAR2", OBJ_GET_SLOT_PNVAR2, 0, 1, 0,
                                            PrintObjectGetVarPN2,
-                                           PrintObjectGetVarPN2, NULL,
+                                           PrintObjectGetVarPN2, nullptr,
                                            ObjectGetVarPNFunction2,
-                                           NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+                                           nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
     struct entityRecord objectCmpConstantInfo = {"OBJ_PN_CONSTANT", OBJ_PN_CONSTANT, 0, 1, 1,
                                                  PrintObjectCmpConstant,
-                                                 PrintObjectCmpConstant, NULL,
+                                                 PrintObjectCmpConstant, nullptr,
                                                  ObjectCmpConstantFunction,
-                                                 NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+                                                 nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
     struct entityRecord lengthTestInfo = {"OBJ_SLOT_LENGTH", OBJ_SLOT_LENGTH, 0, 1, 0,
                                           PrintSlotLengthTest,
-                                          PrintSlotLengthTest, NULL,
+                                          PrintSlotLengthTest, nullptr,
                                           SlotLengthTestFunction,
-                                          NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+                                          nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
     struct entityRecord pNSimpleCompareInfo1 = {"OBJ_PN_CMP1", OBJ_PN_CMP1, 0, 1, 1,
                                                 PrintPNSimpleCompareFunction1,
-                                                PrintPNSimpleCompareFunction1, NULL,
+                                                PrintPNSimpleCompareFunction1, nullptr,
                                                 PNSimpleCompareFunction1,
-                                                NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+                                                nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
     struct entityRecord pNSimpleCompareInfo2 = {"OBJ_PN_CMP2", OBJ_PN_CMP2, 0, 1, 1,
                                                 PrintPNSimpleCompareFunction2,
-                                                PrintPNSimpleCompareFunction2, NULL,
+                                                PrintPNSimpleCompareFunction2, nullptr,
                                                 PNSimpleCompareFunction2,
-                                                NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+                                                nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
     struct entityRecord pNSimpleCompareInfo3 = {"OBJ_PN_CMP3", OBJ_PN_CMP3, 0, 1, 1,
                                                 PrintPNSimpleCompareFunction3,
-                                                PrintPNSimpleCompareFunction3, NULL,
+                                                PrintPNSimpleCompareFunction3, nullptr,
                                                 PNSimpleCompareFunction3,
-                                                NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+                                                nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
     struct entityRecord jNSimpleCompareInfo1 = {"OBJ_JN_CMP1", OBJ_JN_CMP1, 0, 1, 1,
                                                 PrintJNSimpleCompareFunction1,
-                                                PrintJNSimpleCompareFunction1, NULL,
+                                                PrintJNSimpleCompareFunction1, nullptr,
                                                 JNSimpleCompareFunction1,
-                                                NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+                                                nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
     struct entityRecord jNSimpleCompareInfo2 = {"OBJ_JN_CMP2", OBJ_JN_CMP2, 0, 1, 1,
                                                 PrintJNSimpleCompareFunction2,
-                                                PrintJNSimpleCompareFunction2, NULL,
+                                                PrintJNSimpleCompareFunction2, nullptr,
                                                 JNSimpleCompareFunction2,
-                                                NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+                                                nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
     struct entityRecord jNSimpleCompareInfo3 = {"OBJ_JN_CMP3", OBJ_JN_CMP3, 0, 1, 1,
                                                 PrintJNSimpleCompareFunction3,
-                                                PrintJNSimpleCompareFunction3, NULL,
+                                                PrintJNSimpleCompareFunction3, nullptr,
                                                 JNSimpleCompareFunction3,
-                                                NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+                                                nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
     AllocateEnvironmentData(theEnv, OBJECT_RETE_DATA, sizeof(struct objectReteData), DeallocateObjectReteData);
     ObjectReteData(theEnv)->CurrentObjectSlotLength = 1;
@@ -267,9 +267,9 @@ static void DestroyObjectPatternNetwork(
         OBJECT_PATTERN_NODE *thePattern) {
     OBJECT_PATTERN_NODE *patternPtr;
 
-    if (thePattern == NULL) return;
+    if (thePattern == nullptr) return;
 
-    while (thePattern != NULL) {
+    while (thePattern != nullptr) {
         patternPtr = thePattern->rightNode;
 
         DestroyObjectPatternNetwork(theEnv, thePattern->nextLevel);
@@ -288,9 +288,9 @@ static void DestroyObjectAlphaNodes(
         OBJECT_ALPHA_NODE *theNode) {
     OBJECT_ALPHA_NODE *nodePtr;
 
-    if (theNode == NULL) return;
+    if (theNode == nullptr) return;
 
-    while (theNode != NULL) {
+    while (theNode != nullptr) {
         nodePtr = theNode->nxtInGroup;
 
         DestroyAlphaMemory(theEnv, &theNode->header, false);
@@ -954,7 +954,7 @@ static void GetPatternObjectAndMarks(
                 get_nth_pm_match(EngineData(theEnv)->GlobalRHSBinds, pattern)->matchingItem;
         *theMarkers =
                 get_nth_pm_match(EngineData(theEnv)->GlobalRHSBinds, pattern)->markers;
-    } else if (EngineData(theEnv)->GlobalRHSBinds == NULL) {
+    } else if (EngineData(theEnv)->GlobalRHSBinds == nullptr) {
         *theInstance = (Instance *)
                 get_nth_pm_match(EngineData(theEnv)->GlobalLHSBinds, pattern)->matchingItem;
         *theMarkers =
@@ -1022,10 +1022,10 @@ static void GetObjectValueGeneral(
        an RHS action), give the pattern matcher
        the real value of the slot
        ========================================= */
-    if ((theInstance->basisSlots != NULL) &&
+    if ((theInstance->basisSlots != nullptr) &&
         (!EngineData(theEnv)->JoinOperationInProgress)) {
         basisSlot = theInstance->basisSlots + (insSlot - theInstance->slotAddresses);
-        if (basisSlot->value != NULL)
+        if (basisSlot->value != nullptr)
             insSlot = &basisSlot;
     }
 
@@ -1096,10 +1096,10 @@ static void GetObjectValueSimple(
        an RHS action), give the pattern matcher
        the real value of the slot
        ========================================= */
-    if ((theInstance->basisSlots != NULL) &&
+    if ((theInstance->basisSlots != nullptr) &&
         (!EngineData(theEnv)->JoinOperationInProgress)) {
         basisSlot = theInstance->basisSlots + (insSlot - theInstance->slotAddresses);
-        if (basisSlot->value != NULL)
+        if (basisSlot->value != nullptr)
             insSlot = &basisSlot;
     }
 
@@ -1130,7 +1130,7 @@ static void GetObjectValueSimple(
                  an object slot for a given pattern
                  variable
   INPUTS       : 1) The list of markers to examine
-                 2) The instance slot (can be NULL)
+                 2) The instance slot (can be nullptr)
                  3) The pattern index of the variable
                  4) A buffer in which to store the
                     extent of the pattern variable
@@ -1150,16 +1150,16 @@ static size_t CalculateSlotField(
     actualIndex = theIndex;
     *extent = SIZE_MAX;
 
-    if (theSlot == NULL) { return actualIndex; }
+    if (theSlot == nullptr) { return actualIndex; }
 
     theSlotName = theSlot->desc->slotName->name;
-    while (theMarkers != NULL) {
+    while (theMarkers != nullptr) {
         if (theMarkers->where.whichSlot == theSlotName)
             break;
         theMarkers = theMarkers->next;
     }
 
-    while ((theMarkers != NULL) ? (theMarkers->where.whichSlot == theSlotName) : false) {
+    while ((theMarkers != nullptr) ? (theMarkers->where.whichSlot == theSlotName) : false) {
         if (theMarkers->whichField == theIndex) {
             *extent = theMarkers->range;
 

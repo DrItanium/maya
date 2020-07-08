@@ -134,8 +134,8 @@ FunctionError(Environment *theEnv, int code, FunctionCallBuilderError err, Strin
             WriteString(theEnv, STDERR, func.c_str());
             WriteString(theEnv, STDERR, "' has a custom parser and cannot be used with map$!\n");
             break;
-        case FunctionCallBuilderError::FCBE_NULL_POINTER_ERROR:
-            WriteString(theEnv, STDERR, "Provided function name is null!\n");
+        case FunctionCallBuilderError::FCBE_nullptr_POINTER_ERROR:
+            WriteString(theEnv, STDERR, "Provided function name is nullptr!\n");
             break;
         case FunctionCallBuilderError::FCBE_NO_ERROR:
             WriteString(theEnv, STDERR, "NO_ERROR SHOULD NEVER EVER BE FIRED!!!\n");

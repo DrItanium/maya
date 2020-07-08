@@ -97,9 +97,9 @@ static void SetErrorCaptureValues(Environment *, UDFValue *);
 /*****************************************/
 void ParseFunctionDefinitions(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, PARSEFUN_DATA, sizeof(struct parseFunctionData), NULL);
+    AllocateEnvironmentData(theEnv, PARSEFUN_DATA, sizeof(struct parseFunctionData), nullptr);
 
-    AddUDF(theEnv, "check-syntax", "ym", 1, 1, "s", CheckSyntaxFunction, NULL);
+    AddUDF(theEnv, "check-syntax", "ym", 1, 1, "s", CheckSyntaxFunction, nullptr);
 }
 
 /*******************************************/
@@ -185,7 +185,7 @@ bool CheckSyntax(
 
     AddRouter(theEnv, "cs-error-capture", 40,
               QueryErrorCaptureCallback, WriteErrorCaptureCallback,
-              NULL, NULL, NULL, NULL);
+              nullptr, nullptr, nullptr, nullptr);
 
     /*================================*/
     /* Determine if it's a construct. */
@@ -210,7 +210,7 @@ bool CheckSyntax(
 
         CloseStringSource(theEnv, "check-syntax");
 
-        if ((rv != false) || (ParseFunctionData(theEnv)->WarningString != NULL)) {
+        if ((rv != false) || (ParseFunctionData(theEnv)->WarningString != nullptr)) {
             SetErrorCaptureValues(theEnv, returnValue);
             DeactivateErrorCapture(theEnv);
             return true;
@@ -236,7 +236,7 @@ bool CheckSyntax(
     ClearParsedBindNames(theEnv);
     CloseStringSource(theEnv, "check-syntax");
 
-    if (top == NULL) {
+    if (top == nullptr) {
         SetErrorCaptureValues(theEnv, returnValue);
         DeactivateErrorCapture(theEnv);
         return true;
@@ -263,14 +263,14 @@ bool CheckSyntax(
 /**************************************************/
 static void DeactivateErrorCapture(
         Environment *theEnv) {
-    if (ParseFunctionData(theEnv)->ErrorString != NULL) {
+    if (ParseFunctionData(theEnv)->ErrorString != nullptr) {
         rm(theEnv, ParseFunctionData(theEnv)->ErrorString, ParseFunctionData(theEnv)->ErrorMaximumPosition);
-        ParseFunctionData(theEnv)->ErrorString = NULL;
+        ParseFunctionData(theEnv)->ErrorString = nullptr;
     }
 
-    if (ParseFunctionData(theEnv)->WarningString != NULL) {
+    if (ParseFunctionData(theEnv)->WarningString != nullptr) {
         rm(theEnv, ParseFunctionData(theEnv)->WarningString, ParseFunctionData(theEnv)->WarningMaximumPosition);
-        ParseFunctionData(theEnv)->WarningString = NULL;
+        ParseFunctionData(theEnv)->WarningString = nullptr;
     }
 
     ParseFunctionData(theEnv)->ErrorCurrentPosition = 0;
@@ -296,12 +296,12 @@ static void SetErrorCaptureValues(
 
     theMultifield = CreateMultifield(theEnv, 2L);
 
-    if (ParseFunctionData(theEnv)->ErrorString != NULL) {
+    if (ParseFunctionData(theEnv)->ErrorString != nullptr) {
         theMultifield->contents[0].lexemeValue = CreateString(theEnv, ParseFunctionData(
                 theEnv)->ErrorString);
     } else { theMultifield->contents[0].lexemeValue = FalseSymbol(theEnv); }
 
-    if (ParseFunctionData(theEnv)->WarningString != NULL) {
+    if (ParseFunctionData(theEnv)->WarningString != nullptr) {
         theMultifield->contents[1].lexemeValue = CreateString(theEnv, ParseFunctionData(
                 theEnv)->WarningString);
     } else { theMultifield->contents[1].lexemeValue = FalseSymbol(theEnv); }

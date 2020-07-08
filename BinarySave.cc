@@ -98,7 +98,7 @@ static void DeallocateBsaveData(
     struct BinaryItem *tmpPtr, *nextPtr;
 
     tmpPtr = BsaveData(theEnv)->ListOfBinaryItems;
-    while (tmpPtr != NULL) {
+    while (tmpPtr != nullptr) {
         nextPtr = tmpPtr->next;
         rtn_struct(theEnv, BinaryItem, tmpPtr);
         tmpPtr = nextPtr;
@@ -117,7 +117,7 @@ void BsaveCommand(
     const char *fileName;
 
     fileName = GetFileName(context);
-    if (fileName != NULL) {
+    if (fileName != nullptr) {
         if (Bsave(theEnv, fileName)) {
             returnValue->lexemeValue = TrueSymbol(theEnv);
             return;
@@ -149,7 +149,7 @@ bool Bsave(
     /* If embedded, clear the error flags. */
     /*=====================================*/
 
-    if (EvaluationData(theEnv)->CurrentExpression == NULL) { ResetErrorFlags(theEnv); }
+    if (EvaluationData(theEnv)->CurrentExpression == nullptr) { ResetErrorFlags(theEnv); }
 
     /*===================================*/
     /* A bsave can't occur when a binary */
@@ -167,7 +167,7 @@ bool Bsave(
     /* Open the file. */
     /*================*/
 
-    if ((fp = GenOpen(theEnv, fileName, "wb")) == NULL) {
+    if ((fp = GenOpen(theEnv, fileName, "wb")) == nullptr) {
         OpenErrorMessage(theEnv, "bsave", fileName);
         return false;
     }
@@ -217,9 +217,9 @@ bool Bsave(
     /*===========================================*/
 
     for (biPtr = BsaveData(theEnv)->ListOfBinaryItems;
-         biPtr != NULL;
+         biPtr != nullptr;
          biPtr = biPtr->next) {
-        if (biPtr->bsaveStorageFunction != NULL) {
+        if (biPtr->bsaveStorageFunction != nullptr) {
             genstrncpy(constructBuffer, biPtr->name, CONSTRUCT_HEADER_SIZE);
             GenWrite(constructBuffer, CONSTRUCT_HEADER_SIZE, fp);
             (*biPtr->bsaveStorageFunction)(theEnv, fp);
@@ -253,9 +253,9 @@ bool Bsave(
     /*==================*/
 
     for (biPtr = BsaveData(theEnv)->ListOfBinaryItems;
-         biPtr != NULL;
+         biPtr != nullptr;
          biPtr = biPtr->next) {
-        if (biPtr->bsaveFunction != NULL) {
+        if (biPtr->bsaveFunction != nullptr) {
             genstrncpy(constructBuffer, biPtr->name, CONSTRUCT_HEADER_SIZE);
             GenWrite(constructBuffer, CONSTRUCT_HEADER_SIZE, fp);
             (*biPtr->bsaveFunction)(theEnv, fp);
@@ -303,7 +303,7 @@ static void InitializeFunctionNeededFlags(
     struct functionDefinition *functionList;
 
     for (functionList = GetFunctionList(theEnv);
-         functionList != NULL;
+         functionList != nullptr;
          functionList = functionList->next) { functionList->neededFunction = false; }
 }
 
@@ -318,8 +318,8 @@ static void FindNeededItems(
     struct BinaryItem *biPtr;
 
     for (biPtr = BsaveData(theEnv)->ListOfBinaryItems;
-         biPtr != NULL;
-         biPtr = biPtr->next) { if (biPtr->findFunction != NULL) (*biPtr->findFunction)(theEnv); }
+         biPtr != nullptr;
+         biPtr = biPtr->next) { if (biPtr->findFunction != nullptr) (*biPtr->findFunction)(theEnv); }
 }
 
 /****************************************************/
@@ -338,7 +338,7 @@ static void WriteNeededFunctions(
     /*================================================*/
 
     for (functionList = GetFunctionList(theEnv);
-         functionList != NULL;
+         functionList != nullptr;
          functionList = functionList->next) {
         if (functionList->neededFunction) { functionList->bsaveIndex = count++; }
         else { functionList->bsaveIndex = ULONG_MAX; }
@@ -367,7 +367,7 @@ static void WriteNeededFunctions(
     /*===============================*/
 
     for (functionList = GetFunctionList(theEnv);
-         functionList != NULL;
+         functionList != nullptr;
          functionList = functionList->next) {
         if (functionList->neededFunction) {
             length = strlen(functionList->callFunctionName->contents) + 1;
@@ -387,7 +387,7 @@ static size_t FunctionBinarySize(
     struct functionDefinition *functionList;
 
     for (functionList = GetFunctionList(theEnv);
-         functionList != NULL;
+         functionList != nullptr;
          functionList = functionList->next) {
         if (functionList->neededFunction) { size += strlen(functionList->callFunctionName->contents) + 1; }
     }
@@ -407,12 +407,12 @@ void SaveBloadCount(
 
     tmp = get_struct(theEnv, bloadcntsv);
     tmp->val = cnt;
-    tmp->nxt = NULL;
+    tmp->nxt = nullptr;
 
-    if (BsaveData(theEnv)->BloadCountSaveTop == NULL) { BsaveData(theEnv)->BloadCountSaveTop = tmp; }
+    if (BsaveData(theEnv)->BloadCountSaveTop == nullptr) { BsaveData(theEnv)->BloadCountSaveTop = tmp; }
     else {
         prv = BsaveData(theEnv)->BloadCountSaveTop;
-        while (prv->nxt != NULL) { prv = prv->nxt; }
+        while (prv->nxt != nullptr) { prv = prv->nxt; }
         prv->nxt = tmp;
     }
 }
@@ -441,7 +441,7 @@ void RestoreBloadCount(
 void MarkNeededItems(
         Environment *theEnv,
         struct expr *testPtr) {
-    while (testPtr != NULL) {
+    while (testPtr != nullptr) {
         switch (testPtr->type) {
             case SYMBOL_TYPE:
             case STRING_TYPE:
@@ -466,14 +466,14 @@ void MarkNeededItems(
                 break;
 
             default:
-                if (EvaluationData(theEnv)->PrimitivesArray[testPtr->type] == NULL) break;
+                if (EvaluationData(theEnv)->PrimitivesArray[testPtr->type] == nullptr) break;
                 if (EvaluationData(
                         theEnv)->PrimitivesArray[testPtr->type]->bitMap) { ((CLIPSBitMap *) testPtr->value)->neededBitMap = true; }
                 break;
 
         }
 
-        if (testPtr->argList != NULL) { MarkNeededItems(theEnv, testPtr->argList); }
+        if (testPtr->argList != nullptr) { MarkNeededItems(theEnv, testPtr->argList); }
 
         testPtr = testPtr->nextArg;
     }
@@ -525,7 +525,7 @@ bool AddBinaryItem(
         void (*bloadStorageFunction)(Environment *),
         void (*bloadFunction)(Environment *),
         void (*clearFunction)(Environment *)) {
-    struct BinaryItem *newPtr, *currentPtr, *lastPtr = NULL;
+    struct BinaryItem *newPtr, *currentPtr, *lastPtr = nullptr;
 
     /*========================================*/
     /* Create the binary item data structure. */
@@ -548,8 +548,8 @@ bool AddBinaryItem(
     /* just put the item on the list.  */
     /*=================================*/
 
-    if (BsaveData(theEnv)->ListOfBinaryItems == NULL) {
-        newPtr->next = NULL;
+    if (BsaveData(theEnv)->ListOfBinaryItems == nullptr) {
+        newPtr->next = nullptr;
         BsaveData(theEnv)->ListOfBinaryItems = newPtr;
         return true;
     }
@@ -561,12 +561,12 @@ bool AddBinaryItem(
     /*=========================================*/
 
     currentPtr = BsaveData(theEnv)->ListOfBinaryItems;
-    while ((currentPtr != NULL) ? (priority < currentPtr->priority) : false) {
+    while ((currentPtr != nullptr) ? (priority < currentPtr->priority) : false) {
         lastPtr = currentPtr;
         currentPtr = currentPtr->next;
     }
 
-    if (lastPtr == NULL) {
+    if (lastPtr == nullptr) {
         newPtr->next = BsaveData(theEnv)->ListOfBinaryItems;
         BsaveData(theEnv)->ListOfBinaryItems = newPtr;
     } else {

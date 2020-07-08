@@ -84,7 +84,7 @@ void AllocateExpressions(
 
     GenReadBinary(theEnv, &ExpressionData(theEnv)->NumberOfExpressions, sizeof(long));
     if (ExpressionData(theEnv)->NumberOfExpressions == 0L)
-        ExpressionData(theEnv)->ExpressionArray = NULL;
+        ExpressionData(theEnv)->ExpressionArray = nullptr;
     else {
         space = ExpressionData(theEnv)->NumberOfExpressions * sizeof(struct expr);
         ExpressionData(theEnv)->ExpressionArray = (struct expr *) genalloc(theEnv, space);
@@ -97,7 +97,7 @@ void AllocateExpressions(
 /**********************************************/
 void RefreshExpressions(
         Environment *theEnv) {
-    if (ExpressionData(theEnv)->ExpressionArray == NULL) return;
+    if (ExpressionData(theEnv)->ExpressionArray == nullptr) return;
 
     BloadandRefresh(theEnv, ExpressionData(theEnv)->NumberOfExpressions,
                     sizeof(BSAVE_EXPRESSION), UpdateExpression);
@@ -132,7 +132,7 @@ static void UpdateExpression(
 #if DEFGENERIC_CONSTRUCT
             ExpressionData(theEnv)->ExpressionArray[obji].value = GenericPointer(bexp->value);
 #else
-            ExpressionData(theEnv)->ExpressionArray[obji].value = NULL;
+            ExpressionData(theEnv)->ExpressionArray[obji].value = nullptr;
 #endif
             break;
 
@@ -140,7 +140,7 @@ static void UpdateExpression(
 #if DEFFUNCTION_CONSTRUCT
             ExpressionData(theEnv)->ExpressionArray[obji].value = DeffunctionPointer(bexp->value);
 #else
-            ExpressionData(theEnv)->ExpressionArray[obji].value = NULL;
+            ExpressionData(theEnv)->ExpressionArray[obji].value = nullptr;
 #endif
             break;
 
@@ -148,7 +148,7 @@ static void UpdateExpression(
 #if DEFTEMPLATE_CONSTRUCT
             ExpressionData(theEnv)->ExpressionArray[obji].value = DeftemplatePointer(bexp->value);
 #else
-            ExpressionData(theEnv)->ExpressionArray[obji].value = NULL;
+            ExpressionData(theEnv)->ExpressionArray[obji].value = nullptr;
 #endif
             break;
 
@@ -161,7 +161,7 @@ static void UpdateExpression(
 #if DEFGLOBAL_CONSTRUCT
             ExpressionData(theEnv)->ExpressionArray[obji].value = DefglobalPointer(bexp->value);
 #else
-            ExpressionData(theEnv)->ExpressionArray[obji].value = NULL;
+            ExpressionData(theEnv)->ExpressionArray[obji].value = nullptr;
 #endif
             break;
 
@@ -196,14 +196,14 @@ static void UpdateExpression(
             break;
 
         case EXTERNAL_ADDRESS_TYPE:
-            ExpressionData(theEnv)->ExpressionArray[obji].value = NULL;
+            ExpressionData(theEnv)->ExpressionArray[obji].value = nullptr;
             break;
 
         case VOID_TYPE:
             break;
 
         default:
-            if (EvaluationData(theEnv)->PrimitivesArray[bexp->type] == NULL) break;
+            if (EvaluationData(theEnv)->PrimitivesArray[bexp->type] == nullptr) break;
             if (EvaluationData(theEnv)->PrimitivesArray[bexp->type]->bitMap) {
                 ExpressionData(theEnv)->ExpressionArray[obji].value = SymbolData(theEnv)->BitMapArray[bexp->value];
                 IncrementBitMapCount((CLIPSBitMap *) ExpressionData(theEnv)->ExpressionArray[obji].value);
@@ -212,11 +212,11 @@ static void UpdateExpression(
     }
 
     theIndex = bexp->nextArg;
-    if (theIndex == ULONG_MAX) { ExpressionData(theEnv)->ExpressionArray[obji].nextArg = NULL; }
+    if (theIndex == ULONG_MAX) { ExpressionData(theEnv)->ExpressionArray[obji].nextArg = nullptr; }
     else { ExpressionData(theEnv)->ExpressionArray[obji].nextArg = (struct expr *) &ExpressionData(theEnv)->ExpressionArray[theIndex]; }
 
     theIndex = bexp->argList;
-    if (theIndex == ULONG_MAX) { ExpressionData(theEnv)->ExpressionArray[obji].argList = NULL; }
+    if (theIndex == ULONG_MAX) { ExpressionData(theEnv)->ExpressionArray[obji].argList = nullptr; }
     else { ExpressionData(theEnv)->ExpressionArray[obji].argList = (struct expr *) &ExpressionData(theEnv)->ExpressionArray[theIndex]; }
 }
 
@@ -261,7 +261,7 @@ void ClearBloadedExpressions(
                 break;
 
             default:
-                if (EvaluationData(theEnv)->PrimitivesArray[ExpressionData(theEnv)->ExpressionArray[i].type] == NULL) break;
+                if (EvaluationData(theEnv)->PrimitivesArray[ExpressionData(theEnv)->ExpressionArray[i].type] == nullptr) break;
                 if (EvaluationData(theEnv)->PrimitivesArray[ExpressionData(
                         theEnv)->ExpressionArray[i].type]->bitMap) {
                     DecrementBitMapReferenceCount(theEnv, (CLIPSBitMap *) ExpressionData(
@@ -299,7 +299,7 @@ void FindHashedExpressions(
     EXPRESSION_HN *exphash;
 
     for (i = 0; i < EXPRESSION_HASH_SIZE; i++)
-        for (exphash = ExpressionData(theEnv)->ExpressionHashTable[i]; exphash != NULL; exphash = exphash->next) {
+        for (exphash = ExpressionData(theEnv)->ExpressionHashTable[i]; exphash != nullptr; exphash = exphash->next) {
             MarkNeededItems(theEnv, exphash->exp);
             exphash->bsaveID = ExpressionData(theEnv)->ExpressionCount;
             ExpressionData(theEnv)->ExpressionCount += ExpressionSize(exphash->exp);
@@ -321,7 +321,7 @@ void BsaveHashedExpressions(
     EXPRESSION_HN *exphash;
 
     for (i = 0; i < EXPRESSION_HASH_SIZE; i++)
-        for (exphash = ExpressionData(theEnv)->ExpressionHashTable[i]; exphash != NULL; exphash = exphash->next)
+        for (exphash = ExpressionData(theEnv)->ExpressionHashTable[i]; exphash != nullptr; exphash = exphash->next)
             BsaveExpression(theEnv, exphash->exp, fp);
 }
 
@@ -335,9 +335,9 @@ void BsaveConstructExpressions(
     struct BinaryItem *biPtr;
 
     for (biPtr = BsaveData(theEnv)->ListOfBinaryItems;
-         biPtr != NULL;
+         biPtr != nullptr;
          biPtr = biPtr->next) {
-        if (biPtr->expressionFunction != NULL) { (*biPtr->expressionFunction)(theEnv, fp); }
+        if (biPtr->expressionFunction != nullptr) { (*biPtr->expressionFunction)(theEnv, fp); }
     }
 }
 
@@ -352,7 +352,7 @@ void BsaveExpression(
     BSAVE_EXPRESSION newTest;
     unsigned long newIndex;
 
-    while (testPtr != NULL) {
+    while (testPtr != nullptr) {
         ExpressionData(theEnv)->ExpressionCount++;
 
         /*================*/
@@ -365,14 +365,14 @@ void BsaveExpression(
         /* Convert the argList slot to an index. */
         /*=======================================*/
 
-        if (testPtr->argList == NULL) { newTest.argList = ULONG_MAX; }
+        if (testPtr->argList == nullptr) { newTest.argList = ULONG_MAX; }
         else { newTest.argList = ExpressionData(theEnv)->ExpressionCount; }
 
         /*========================================*/
         /* Convert the nextArg slot to an index. */
         /*========================================*/
 
-        if (testPtr->nextArg == NULL) { newTest.nextArg = ULONG_MAX; }
+        if (testPtr->nextArg == nullptr) { newTest.nextArg = ULONG_MAX; }
         else {
             newIndex = ExpressionData(theEnv)->ExpressionCount + ExpressionSize(testPtr->argList);
             newTest.nextArg = newIndex;
@@ -397,7 +397,7 @@ void BsaveExpression(
 
             case GCALL:
 #if DEFGENERIC_CONSTRUCT
-                if (testPtr->value != NULL)
+                if (testPtr->value != nullptr)
                     newTest.value = testPtr->constructValue->bsaveID;
                 else
 #endif
@@ -406,7 +406,7 @@ void BsaveExpression(
 
             case PCALL:
 #if DEFFUNCTION_CONSTRUCT
-                if (testPtr->value != NULL)
+                if (testPtr->value != nullptr)
                     newTest.value = testPtr->constructValue->bsaveID;
                 else
 #endif
@@ -415,7 +415,7 @@ void BsaveExpression(
 
             case DEFTEMPLATE_PTR:
 #if DEFTEMPLATE_CONSTRUCT
-                if (testPtr->value != NULL)
+                if (testPtr->value != nullptr)
                     newTest.value = testPtr->constructValue->bsaveID;
                 else
 #endif
@@ -423,7 +423,7 @@ void BsaveExpression(
                 break;
 
             case DEFCLASS_PTR:
-                if (testPtr->value != NULL)
+                if (testPtr->value != nullptr)
                     newTest.value = testPtr->constructValue->bsaveID;
                 else
                     newTest.value = ULONG_MAX;
@@ -431,7 +431,7 @@ void BsaveExpression(
 
             case DEFGLOBAL_PTR:
 #if DEFGLOBAL_CONSTRUCT
-                if (testPtr->value != NULL)
+                if (testPtr->value != nullptr)
                     newTest.value = testPtr->constructValue->bsaveID;
                 else
 #endif
@@ -455,7 +455,7 @@ void BsaveExpression(
                 break;
 
             default:
-                if (EvaluationData(theEnv)->PrimitivesArray[testPtr->type] == NULL) break;
+                if (EvaluationData(theEnv)->PrimitivesArray[testPtr->type] == nullptr) break;
                 if (EvaluationData(
                         theEnv)->PrimitivesArray[testPtr->type]->bitMap) { newTest.value = ((CLIPSBitMap *) testPtr->value)->bucket; }
                 break;
@@ -471,7 +471,7 @@ void BsaveExpression(
         /* Write out argument list. */
         /*==========================*/
 
-        if (testPtr->argList != NULL) {
+        if (testPtr->argList != nullptr) {
             BsaveExpression(theEnv, testPtr->argList, fp);
         }
 

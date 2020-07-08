@@ -119,7 +119,7 @@ struct expr *Function0Parse(
     GetToken(theEnv, logicalName, &theToken);
     if (theToken.tknType != LEFT_PARENTHESIS_TOKEN) {
         SyntaxErrorMessage(theEnv, "function calls");
-        return NULL;
+        return nullptr;
     }
 
     /*=================================*/
@@ -149,7 +149,7 @@ struct expr *Function1Parse(
     if (theToken.tknType != SYMBOL_TOKEN) {
         PrintErrorID(theEnv, "EXPRNPSR", 1, true);
         WriteString(theEnv, STDERR, "A function name must be a symbol.\n");
-        return NULL;
+        return nullptr;
     }
 
     /*=================================*/
@@ -173,7 +173,7 @@ struct expr *Function2Parse(
     struct expr *top;
     bool moduleSpecified = false;
     unsigned position;
-    CLIPSLexeme *moduleName = NULL, *constructName = NULL;
+    CLIPSLexeme *moduleName = nullptr, *constructName = nullptr;
 #if DEFGENERIC_CONSTRUCT
     Defgeneric *gfunc;
 #endif
@@ -188,12 +188,12 @@ struct expr *Function2Parse(
     if ((position = FindModuleSeparator(name)) != 0) {
         moduleName = ExtractModuleName(theEnv, position, name);
 
-        if (moduleName == NULL) {
+        if (moduleName == nullptr) {
             PrintErrorID(theEnv, "EXPRNPSR", 7, true);
             WriteString(theEnv, STDERR, "Missing module name for '");
             WriteString(theEnv, STDERR, name);
             WriteString(theEnv, STDERR, "'.\n");
-            return NULL;
+            return nullptr;
         }
 
         constructName = ExtractConstructName(theEnv, position, name, SYMBOL_TYPE);
@@ -210,24 +210,24 @@ struct expr *Function2Parse(
     if (moduleSpecified) {
         if (ConstructExported(theEnv, "defgeneric", moduleName, constructName) ||
             GetCurrentModule(theEnv) == FindDefmodule(theEnv, moduleName->contents)) { gfunc = FindDefgenericInModule(theEnv, name); }
-        else { gfunc = NULL; }
+        else { gfunc = nullptr; }
     } else { gfunc = LookupDefgenericInScope(theEnv, name); }
 #endif
 
 #if DEFFUNCTION_CONSTRUCT
 #if DEFGENERIC_CONSTRUCT
-    if ((theFunction == NULL)
-        && (gfunc == NULL))
+    if ((theFunction == nullptr)
+        && (gfunc == nullptr))
 #else
-        if (theFunction == NULL)
+        if (theFunction == nullptr)
 #endif
         if (moduleSpecified) {
             if (ConstructExported(theEnv, "deffunction", moduleName, constructName) ||
                 GetCurrentModule(theEnv) == FindDefmodule(theEnv, moduleName->contents)) { dptr = FindDeffunctionInModule(theEnv, name); }
-            else { dptr = NULL; }
+            else { dptr = nullptr; }
         } else { dptr = LookupDeffunctionInScope(theEnv, name); }
     else
-        dptr = NULL;
+        dptr = nullptr;
 #endif
 
     /*=============================*/
@@ -235,23 +235,23 @@ struct expr *Function2Parse(
     /*=============================*/
 
 #if DEFFUNCTION_CONSTRUCT
-    if (dptr != NULL)
+    if (dptr != nullptr)
         top = GenConstant(theEnv, PCALL, dptr);
     else
 #endif
 #if DEFGENERIC_CONSTRUCT
-    if (gfunc != NULL)
+    if (gfunc != nullptr)
         top = GenConstant(theEnv, GCALL, gfunc);
     else
 #endif
-    if (theFunction != NULL)
+    if (theFunction != nullptr)
         top = GenConstant(theEnv, FCALL, theFunction);
     else {
         PrintErrorID(theEnv, "EXPRNPSR", 3, true);
         WriteString(theEnv, STDERR, "Missing function declaration for '");
         WriteString(theEnv, STDERR, name);
         WriteString(theEnv, STDERR, "'.\n");
-        return NULL;
+        return nullptr;
     }
 
     /*=======================================================*/
@@ -266,14 +266,14 @@ struct expr *Function2Parse(
     if (top->type == FCALL)
 #endif
     {
-        if (theFunction->parser != NULL) {
+        if (theFunction->parser != nullptr) {
             top = (*theFunction->parser)(theEnv, top, logicalName);
             PopRtnBrkContexts(theEnv);
-            if (top == NULL) return NULL;
+            if (top == nullptr) return nullptr;
             if (ReplaceSequenceExpansionOps(theEnv, top->argList, top, FindFunction(theEnv, "(expansion-call)"),
                                             FindFunction(theEnv, "expand$"))) {
                 ReturnExpression(theEnv, top);
-                return NULL;
+                return nullptr;
             }
             return (top);
         }
@@ -285,12 +285,12 @@ struct expr *Function2Parse(
 
     top = CollectArguments(theEnv, top, logicalName);
     PopRtnBrkContexts(theEnv);
-    if (top == NULL) return NULL;
+    if (top == nullptr) return nullptr;
 
     if (ReplaceSequenceExpansionOps(theEnv, top->argList, top, FindFunction(theEnv, "(expansion-call)"),
                                     FindFunction(theEnv, "expand$"))) {
         ReturnExpression(theEnv, top);
-        return NULL;
+        return nullptr;
     }
 
     /*============================================================*/
@@ -307,7 +307,7 @@ struct expr *Function2Parse(
     if (top->type == FCALL) {
         if (CheckExpressionAgainstRestrictions(theEnv, top, theFunction, name)) {
             ReturnExpression(theEnv, top);
-            return NULL;
+            return nullptr;
         }
     }
 
@@ -315,7 +315,7 @@ struct expr *Function2Parse(
     else if (top->type == PCALL) {
         if (CheckDeffunctionCall(theEnv, (Deffunction *) top->value, CountArguments(top->argList)) == false) {
             ReturnExpression(theEnv, top);
-            return NULL;
+            return nullptr;
         }
     }
 #endif
@@ -355,7 +355,7 @@ bool ReplaceSequenceExpansionOps(
         void *expmult) {
     Expression *theExp;
 
-    while (actions != NULL) {
+    while (actions != nullptr) {
         if ((ExpressionData(theEnv)->SequenceOpMode == false) &&
             ((actions->type == MF_VARIABLE) || (actions->type == MF_GBL_VARIABLE))) {
             if (actions->type == MF_VARIABLE) { actions->type = SF_VARIABLE; }
@@ -375,7 +375,7 @@ bool ReplaceSequenceExpansionOps(
             if (fcallexp->value != expcall) {
                 theExp = GenConstant(theEnv, fcallexp->type, fcallexp->value);
                 theExp->argList = fcallexp->argList;
-                theExp->nextArg = NULL;
+                theExp->nextArg = nullptr;
                 fcallexp->type = FCALL;
                 fcallexp->value = expcall;
                 fcallexp->argList = theExp;
@@ -389,7 +389,7 @@ bool ReplaceSequenceExpansionOps(
                 actions->value = expmult;
             }
         }
-        if (actions->argList != NULL) {
+        if (actions->argList != nullptr) {
             if ((actions->type == GCALL) ||
                 (actions->type == PCALL) ||
                 (actions->type == FCALL))
@@ -443,7 +443,7 @@ bool RestrictionExists(
         int position) {
     int i = 0, currentPosition = 0;
 
-    if (restrictionString == NULL) { return false; }
+    if (restrictionString == nullptr) { return false; }
 
     while (restrictionString[i] != '\0') {
         if (restrictionString[i] == ';') {
@@ -477,7 +477,7 @@ FunctionArgumentsError CheckExpressionAgainstRestrictions(
     const char *restrictions;
     unsigned defaultRestriction2, argRestriction2;
 
-    if (theFunction->restrictions == NULL) { restrictions = NULL; }
+    if (theFunction->restrictions == nullptr) { restrictions = nullptr; }
     else { restrictions = theFunction->restrictions->contents; }
 
     /*=========================================*/
@@ -520,7 +520,7 @@ FunctionArgumentsError CheckExpressionAgainstRestrictions(
     /* Return if there are no argument restrictions. */
     /*===============================================*/
 
-    if (restrictions == NULL) return FAE_NO_ERROR;
+    if (restrictions == nullptr) return FAE_NO_ERROR;
 
     /*=======================================*/
     /* Check for the default argument types. */
@@ -533,7 +533,7 @@ FunctionArgumentsError CheckExpressionAgainstRestrictions(
     /*======================*/
 
     for (argPtr = theExpression->argList;
-         argPtr != NULL;
+         argPtr != nullptr;
          argPtr = argPtr->nextArg) {
         PopulateRestriction(theEnv, &argRestriction2, defaultRestriction2, restrictions, j);
 
@@ -564,7 +564,7 @@ struct expr *CollectArguments(
     /* Default parsing routine for functions. */
     /*========================================*/
 
-    lastOne = NULL;
+    lastOne = nullptr;
 
     while (true) {
         SavePPBuffer(theEnv, " ");
@@ -574,17 +574,17 @@ struct expr *CollectArguments(
 
         if (errorFlag == true) {
             ReturnExpression(theEnv, top);
-            return NULL;
+            return nullptr;
         }
 
-        if (nextOne == NULL) {
+        if (nextOne == nullptr) {
             PPBackup(theEnv);
             PPBackup(theEnv);
             SavePPBuffer(theEnv, ")");
             return (top);
         }
 
-        if (lastOne == NULL) { top->argList = nextOne; }
+        if (lastOne == nullptr) { top->argList = nextOne; }
         else { lastOne->nextArg = nextOne; }
 
         lastOne = nextOne;
@@ -612,7 +612,7 @@ struct expr *ArgumentParse(
     /* ')' counts as no argument. */
     /*============================*/
 
-    if (theToken.tknType == RIGHT_PARENTHESIS_TOKEN) { return NULL; }
+    if (theToken.tknType == RIGHT_PARENTHESIS_TOKEN) { return nullptr; }
 
     /*================================*/
     /* Parse constants and variables. */
@@ -637,11 +637,11 @@ struct expr *ArgumentParse(
         PrintErrorID(theEnv, "EXPRNPSR", 2, true);
         WriteString(theEnv, STDERR, "Expected a constant, variable, or expression.\n");
         *errorFlag = true;
-        return NULL;
+        return nullptr;
     }
 
     top = Function1Parse(theEnv, logicalName);
-    if (top == NULL) *errorFlag = true;
+    if (top == nullptr) *errorFlag = true;
     return (top);
 }
 
@@ -657,7 +657,7 @@ struct expr *ParseAtomOrExpression(
     struct token theToken, *thisToken;
     struct expr *rv;
 
-    if (useToken == NULL) {
+    if (useToken == nullptr) {
         thisToken = &theToken;
         GetToken(theEnv, logicalName, thisToken);
     } else thisToken = useToken;
@@ -673,11 +673,11 @@ struct expr *ParseAtomOrExpression(
         rv = GenConstant(theEnv, TokenTypeToType(thisToken->tknType), thisToken->value);
     } else if (thisToken->tknType == LEFT_PARENTHESIS_TOKEN) {
         rv = Function1Parse(theEnv, logicalName);
-        if (rv == NULL) return NULL;
+        if (rv == nullptr) return nullptr;
     } else {
         PrintErrorID(theEnv, "EXPRNPSR", 2, true);
         WriteString(theEnv, STDERR, "Expected a constant, variable, or expression.\n");
-        return NULL;
+        return nullptr;
     }
 
     return (rv);
@@ -695,7 +695,7 @@ struct expr *GroupActions(
         bool readFirstToken,
         const char *endWord,
         bool functionNameParsed) {
-    struct expr *top, *nextOne, *lastOne = NULL;
+    struct expr *top, *nextOne, *lastOne = nullptr;
 
     /*=============================*/
     /* Create the enclosing progn. */
@@ -723,7 +723,7 @@ struct expr *GroupActions(
         /*=================================================*/
 
         if ((theToken->tknType == SYMBOL_TOKEN) &&
-            (endWord != NULL) &&
+            (endWord != nullptr) &&
             (!functionNameParsed)) {
             if (strcmp(theToken->lexemeValue->contents, endWord) == 0) { return (top); }
         }
@@ -765,11 +765,11 @@ struct expr *GroupActions(
             /*======================================*/
 
         else {
-            if (ReplaceSequenceExpansionOps(theEnv, top, NULL,
+            if (ReplaceSequenceExpansionOps(theEnv, top, nullptr,
                                             FindFunction(theEnv, "(expansion-call)"),
                                             FindFunction(theEnv, "expand$"))) {
                 ReturnExpression(theEnv, top);
-                return NULL;
+                return nullptr;
             }
 
             return (top);
@@ -780,13 +780,13 @@ struct expr *GroupActions(
         /* list of progn arguments.  */
         /*===========================*/
 
-        if (nextOne == NULL) {
+        if (nextOne == nullptr) {
             theToken->tknType = UNKNOWN_VALUE_TOKEN;
             ReturnExpression(theEnv, top);
-            return NULL;
+            return nullptr;
         }
 
-        if (lastOne == NULL) { top->argList = nextOne; }
+        if (lastOne == nullptr) { top->argList = nextOne; }
         else { lastOne->nextArg = nextOne; }
 
         lastOne = nextOne;
@@ -809,7 +809,7 @@ void PopulateRestriction(
 
     *restriction = 0;
 
-    if (restrictionString == NULL) {
+    if (restrictionString == nullptr) {
         *restriction = defaultRestriction;
         return;
     }
@@ -914,7 +914,7 @@ Expression *ParseConstantArguments(
         Environment *theEnv,
         const char *argstr,
         bool *error) {
-    Expression *top = NULL, *bot = NULL, *tmp;
+    Expression *top = nullptr, *bot = nullptr, *tmp;
     const char *router = "***FNXARGS***";
     struct token tkn;
     const char *oldRouter;
@@ -923,7 +923,7 @@ Expression *ParseConstantArguments(
 
     *error = false;
 
-    if (argstr == NULL) return NULL;
+    if (argstr == nullptr) return nullptr;
 
     /*=============================*/
     /* Use the fast router bypass. */
@@ -951,10 +951,10 @@ Expression *ParseConstantArguments(
             ReturnExpression(theEnv, top);
             *error = true;
             CloseStringSource(theEnv, router);
-            return NULL;
+            return nullptr;
         }
         tmp = GenConstant(theEnv, TokenTypeToType(tkn.tknType), tkn.value);
-        if (top == NULL)
+        if (top == nullptr)
             top = tmp;
         else
             bot->nextArg = tmp;
@@ -986,7 +986,7 @@ struct expr *RemoveUnneededProgn(
     struct functionDefinition *fptr;
     struct expr *temp;
 
-    if (theExpression == NULL) return (theExpression);
+    if (theExpression == nullptr) return (theExpression);
 
     if (theExpression->type != FCALL) return (theExpression);
 
@@ -994,12 +994,12 @@ struct expr *RemoveUnneededProgn(
 
     if (fptr->functionPointer != PrognFunction) { return (theExpression); }
 
-    if ((theExpression->argList != NULL) &&
-        (theExpression->argList->nextArg == NULL)) {
+    if ((theExpression->argList != nullptr) &&
+        (theExpression->argList->nextArg == nullptr)) {
         temp = theExpression;
         theExpression = theExpression->argList;
-        temp->argList = NULL;
-        temp->nextArg = NULL;
+        temp->argList = nullptr;
+        temp->nextArg = nullptr;
         ReturnExpression(theEnv, temp);
     }
 

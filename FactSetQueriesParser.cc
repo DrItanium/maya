@@ -112,7 +112,7 @@ static bool IsQueryFunction(Expression *);
                    (find-all-facts)
   INPUTS       : 1) The address of the top node of the query function
                  2) The logical name of the input
-  RETURNS      : The completed expression chain, or NULL on errors
+  RETURNS      : The completed expression chain, or nullptr on errors
   SIDE EFFECTS : The expression chain is extended, or the "top" node
                  is deleted on errors
   NOTES        : H/L Syntax :
@@ -141,7 +141,7 @@ Expression *FactParseQueryNoAction(
     struct token queryInputToken;
 
     factQuerySetVars = ParseQueryRestrictions(theEnv, top, readSource, &queryInputToken);
-    if (factQuerySetVars == NULL) { return NULL; }
+    if (factQuerySetVars == nullptr) { return nullptr; }
 
     IncrementIndentDepth(theEnv, 3);
     PPCRAndIndent(theEnv);
@@ -149,7 +149,7 @@ Expression *FactParseQueryNoAction(
     if (ParseQueryTestExpression(theEnv, top, readSource) == false) {
         DecrementIndentDepth(theEnv, 3);
         ReturnExpression(theEnv, factQuerySetVars);
-        return NULL;
+        return nullptr;
     }
 
     DecrementIndentDepth(theEnv, 3);
@@ -159,13 +159,13 @@ Expression *FactParseQueryNoAction(
         SyntaxErrorMessage(theEnv, "fact-set query function");
         ReturnExpression(theEnv, top);
         ReturnExpression(theEnv, factQuerySetVars);
-        return NULL;
+        return nullptr;
     }
 
     if (ReplaceFactVariables(theEnv, factQuerySetVars, top->argList, true, 0)) {
         ReturnExpression(theEnv, top);
         ReturnExpression(theEnv, factQuerySetVars);
-        return NULL;
+        return nullptr;
     }
 
     ReturnExpression(theEnv, factQuerySetVars);
@@ -181,7 +181,7 @@ Expression *FactParseQueryNoAction(
                    (delayed-do-for-all-facts)
   INPUTS       : 1) The address of the top node of the query function
                  2) The logical name of the input
-  RETURNS      : The completed expression chain, or NULL on errors
+  RETURNS      : The completed expression chain, or nullptr on errors
   SIDE EFFECTS : The expression chain is extended, or the "top" node
                  is deleted on errors
   NOTES        : H/L Syntax :
@@ -210,7 +210,7 @@ Expression *FactParseQueryAction(
     struct token queryInputToken;
 
     factQuerySetVars = ParseQueryRestrictions(theEnv, top, readSource, &queryInputToken);
-    if (factQuerySetVars == NULL) { return NULL; }
+    if (factQuerySetVars == nullptr) { return nullptr; }
 
     IncrementIndentDepth(theEnv, 3);
     PPCRAndIndent(theEnv);
@@ -218,7 +218,7 @@ Expression *FactParseQueryAction(
     if (ParseQueryTestExpression(theEnv, top, readSource) == false) {
         DecrementIndentDepth(theEnv, 3);
         ReturnExpression(theEnv, factQuerySetVars);
-        return NULL;
+        return nullptr;
     }
 
     PPCRAndIndent(theEnv);
@@ -226,7 +226,7 @@ Expression *FactParseQueryAction(
     if (ParseQueryActionExpression(theEnv, top, readSource, factQuerySetVars, &queryInputToken) == false) {
         DecrementIndentDepth(theEnv, 3);
         ReturnExpression(theEnv, factQuerySetVars);
-        return NULL;
+        return nullptr;
     }
 
     DecrementIndentDepth(theEnv, 3);
@@ -235,19 +235,19 @@ Expression *FactParseQueryAction(
         SyntaxErrorMessage(theEnv, "fact-set query function");
         ReturnExpression(theEnv, top);
         ReturnExpression(theEnv, factQuerySetVars);
-        return NULL;
+        return nullptr;
     }
 
     if (ReplaceFactVariables(theEnv, factQuerySetVars, top->argList, true, 0)) {
         ReturnExpression(theEnv, top);
         ReturnExpression(theEnv, factQuerySetVars);
-        return NULL;
+        return nullptr;
     }
 
     if (ReplaceFactVariables(theEnv, factQuerySetVars, top->argList->nextArg, false, 0)) {
         ReturnExpression(theEnv, top);
         ReturnExpression(theEnv, factQuerySetVars);
-        return NULL;
+        return nullptr;
     }
 
     ReturnExpression(theEnv, factQuerySetVars);
@@ -273,16 +273,16 @@ Expression *FactParseQueryAction(
                    variable expressions
                  Template restrictions attached to query-expression
                    as arguments
-  NOTES        : Expects top != NULL
+  NOTES        : Expects top != nullptr
  ***************************************************************/
 static Expression *ParseQueryRestrictions(
         Environment *theEnv,
         Expression *top,
         const char *readSource,
         struct token *queryInputToken) {
-    Expression *factQuerySetVars = NULL, *lastFactQuerySetVars = NULL,
-            *templateExp = NULL, *lastTemplateExp,
-            *tmp, *lastOne = NULL;
+    Expression *factQuerySetVars = nullptr, *lastFactQuerySetVars = nullptr,
+            *templateExp = nullptr, *lastTemplateExp,
+            *tmp, *lastOne = nullptr;
     bool error = false;
 
     SavePPBuffer(theEnv, " ");
@@ -298,7 +298,7 @@ static Expression *ParseQueryRestrictions(
         if (queryInputToken->tknType != SF_VARIABLE_TOKEN) { goto ParseQueryRestrictionsError1; }
 
         tmp = factQuerySetVars;
-        while (tmp != NULL) {
+        while (tmp != nullptr) {
             if (tmp->value == queryInputToken->value) {
                 PrintErrorID(theEnv, "FACTQPSR", 1, false);
                 WriteString(theEnv, STDERR, "Duplicate fact member variable name in function ");
@@ -311,7 +311,7 @@ static Expression *ParseQueryRestrictions(
         }
 
         tmp = GenConstant(theEnv, SF_VARIABLE, queryInputToken->value);
-        if (factQuerySetVars == NULL) { factQuerySetVars = tmp; }
+        if (factQuerySetVars == nullptr) { factQuerySetVars = tmp; }
         else { lastFactQuerySetVars->nextArg = tmp; }
 
         lastFactQuerySetVars = tmp;
@@ -321,14 +321,14 @@ static Expression *ParseQueryRestrictions(
 
         if (error) { goto ParseQueryRestrictionsError2; }
 
-        if (templateExp == NULL) { goto ParseQueryRestrictionsError1; }
+        if (templateExp == nullptr) { goto ParseQueryRestrictionsError1; }
 
         if (ReplaceTemplateNameWithReference(theEnv, templateExp) == false) { goto ParseQueryRestrictionsError2; }
 
         lastTemplateExp = templateExp;
         SavePPBuffer(theEnv, " ");
 
-        while ((tmp = ArgumentParse(theEnv, readSource, &error)) != NULL) {
+        while ((tmp = ArgumentParse(theEnv, readSource, &error)) != nullptr) {
             if (ReplaceTemplateNameWithReference(theEnv, tmp) == false)
                 goto ParseQueryRestrictionsError2;
             lastTemplateExp->nextArg = tmp;
@@ -347,11 +347,11 @@ static Expression *ParseQueryRestrictions(
         lastTemplateExp->nextArg = tmp;
         lastTemplateExp = tmp;
 
-        if (top->argList == NULL) { top->argList = templateExp; }
+        if (top->argList == nullptr) { top->argList = templateExp; }
         else { lastOne->nextArg = templateExp; }
 
         lastOne = lastTemplateExp;
-        templateExp = NULL;
+        templateExp = nullptr;
         SavePPBuffer(theEnv, " ");
         GetToken(theEnv, readSource, queryInputToken);
     }
@@ -370,7 +370,7 @@ static Expression *ParseQueryRestrictions(
     ReturnExpression(theEnv, templateExp);
     ReturnExpression(theEnv, top);
     ReturnExpression(theEnv, factQuerySetVars);
-    return NULL;
+    return nullptr;
 }
 
 /***************************************************
@@ -398,10 +398,10 @@ static bool ReplaceTemplateNameWithReference(
         theTemplateName = theExp->lexemeValue->contents;
 
         theDeftemplate = (Deftemplate *)
-                FindImportedConstruct(theEnv, "deftemplate", NULL, theTemplateName,
-                                      &count, true, NULL);
+                FindImportedConstruct(theEnv, "deftemplate", nullptr, theTemplateName,
+                                      &count, true, nullptr);
 
-        if (theDeftemplate == NULL) {
+        if (theDeftemplate == nullptr) {
             CantFindItemErrorMessage(theEnv, "deftemplate", theTemplateName, true);
             return false;
         }
@@ -430,7 +430,7 @@ static bool ReplaceTemplateNameWithReference(
                  Nodes allocated for new expression
                  Test shoved in front of class-restrictions on
                     query argument list
-  NOTES        : Expects top != NULL
+  NOTES        : Expects top != nullptr
  *************************************************************/
 static bool ParseQueryTestExpression(
         Environment *theEnv,
@@ -442,7 +442,7 @@ static bool ParseQueryTestExpression(
 
     error = false;
     oldBindList = GetParsedBindNames(theEnv);
-    SetParsedBindNames(theEnv, NULL);
+    SetParsedBindNames(theEnv, nullptr);
 
     qtest = ArgumentParse(theEnv, readSource, &error);
 
@@ -453,7 +453,7 @@ static bool ParseQueryTestExpression(
         return false;
     }
 
-    if (qtest == NULL) {
+    if (qtest == nullptr) {
         ClearParsedBindNames(theEnv);
         SetParsedBindNames(theEnv, oldBindList);
         SyntaxErrorMessage(theEnv, "fact-set query function");
@@ -492,7 +492,7 @@ static bool ParseQueryTestExpression(
                  Action shoved in front of template-restrictions
                     and in back of test-expression on query
                     argument list
-  NOTES        : Expects top != NULL && top->argList != NULL
+  NOTES        : Expects top != nullptr && top->argList != nullptr
  *************************************************************/
 static bool ParseQueryActionExpression(
         Environment *theEnv,
@@ -504,12 +504,12 @@ static bool ParseQueryActionExpression(
     struct BindInfo *oldBindList, *newBindList, *prev;
 
     oldBindList = GetParsedBindNames(theEnv);
-    SetParsedBindNames(theEnv, NULL);
+    SetParsedBindNames(theEnv, nullptr);
 
     ExpressionData(theEnv)->BreakContext = true;
     ExpressionData(theEnv)->ReturnContext = ExpressionData(theEnv)->svContexts->rtn;
 
-    qaction = GroupActions(theEnv, readSource, queryInputToken, true, NULL, false);
+    qaction = GroupActions(theEnv, readSource, queryInputToken, true, nullptr, false);
 
     PPBackup(theEnv);
     PPBackup(theEnv);
@@ -517,7 +517,7 @@ static bool ParseQueryActionExpression(
 
     ExpressionData(theEnv)->BreakContext = false;
 
-    if (qaction == NULL) {
+    if (qaction == nullptr) {
         ClearParsedBindNames(theEnv);
         SetParsedBindNames(theEnv, oldBindList);
         SyntaxErrorMessage(theEnv, "fact-set query function");
@@ -529,10 +529,10 @@ static bool ParseQueryActionExpression(
     top->argList->nextArg = qaction;
 
     newBindList = GetParsedBindNames(theEnv);
-    prev = NULL;
-    while (newBindList != NULL) {
+    prev = nullptr;
+    while (newBindList != nullptr) {
         tmpFactSetVars = factQuerySetVars;
-        while (tmpFactSetVars != NULL) {
+        while (tmpFactSetVars != nullptr) {
             if (tmpFactSetVars->value == (void *) newBindList->name) {
                 ClearParsedBindNames(theEnv);
                 SetParsedBindNames(theEnv, oldBindList);
@@ -551,7 +551,7 @@ static bool ParseQueryActionExpression(
         newBindList = newBindList->next;
     }
 
-    if (prev == NULL) { SetParsedBindNames(theEnv, oldBindList); }
+    if (prev == nullptr) { SetParsedBindNames(theEnv, oldBindList); }
     else { prev->next = oldBindList; }
 
     return true;
@@ -588,15 +588,15 @@ static bool ReplaceFactVariables(
 
     rindx_func = FindFunction(theEnv, "(query-fact)");
     rslot_func = FindFunction(theEnv, "(query-fact-slot)");
-    while (bexp != NULL) {
+    while (bexp != nullptr) {
         if (bexp->type == SF_VARIABLE) {
             eptr = vlist;
             posn = 0;
-            while ((eptr != NULL) ? (eptr->value != bexp->value) : false) {
+            while ((eptr != nullptr) ? (eptr->value != bexp->value) : false) {
                 eptr = eptr->nextArg;
                 posn++;
             }
-            if (eptr != NULL) {
+            if (eptr != nullptr) {
                 bexp->type = FCALL;
                 bexp->value = rindx_func;
                 eptr = GenConstant(theEnv, INTEGER_TYPE, CreateInteger(theEnv, ndepth));
@@ -606,7 +606,7 @@ static bool ReplaceFactVariables(
                 if (ReplaceSlotReference(theEnv, vlist, bexp, rslot_func, ndepth)) { return true; }
             }
         }
-        if (bexp->argList != NULL) {
+        if (bexp->argList != nullptr) {
             if (IsQueryFunction(bexp)) {
                 if (ReplaceFactVariables(theEnv, vlist, bexp->argList, sdirect, ndepth + 1)) { return true; }
             } else {
@@ -662,7 +662,7 @@ static bool ReplaceSlotReference(
                 eptr = eptr->nextArg;
                 posn++;
             }
-            if (eptr != NULL) {
+            if (eptr != nullptr) {
                 OpenStringSource(theEnv, "query-var", str + i + 1, 0);
                 oldpp = GetPPBufferStatus(theEnv);
                 SetPPBufferStatus(theEnv, false);

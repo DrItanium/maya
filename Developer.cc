@@ -83,19 +83,19 @@ static void                    PrintOPNLevel(Environment *,OBJECT_PATTERN_NODE *
 void DeveloperCommands(
 Environment *theEnv)
 {
-AddUDF(theEnv,"primitives-info","v",0,0,NULL,PrimitiveTablesInfoCommand,"PrimitiveTablesInfoCommand",NULL);
-AddUDF(theEnv,"primitives-usage","v",0,0,NULL,PrimitiveTablesUsageCommand,"PrimitiveTablesUsageCommand",NULL);
+AddUDF(theEnv,"primitives-info","v",0,0,nullptr,PrimitiveTablesInfoCommand,"PrimitiveTablesInfoCommand",nullptr);
+AddUDF(theEnv,"primitives-usage","v",0,0,nullptr,PrimitiveTablesUsageCommand,"PrimitiveTablesUsageCommand",nullptr);
 
 #if DEFTEMPLATE_CONSTRUCT
-AddUDF(theEnv,"validate-fact-integrity","b", 0,0,NULL,ValidateFactIntegrityCommand,"ValidateFactIntegrityCommand",NULL);
+AddUDF(theEnv,"validate-fact-integrity","b", 0,0,nullptr,ValidateFactIntegrityCommand,"ValidateFactIntegrityCommand",nullptr);
 
-AddUDF(theEnv,"show-fpn","v",1,1,"y",ShowFactPatternNetworkCommand,"ShowFactPatternNetworkCommand",NULL);
-AddUDF(theEnv,"show-fht","v",0,0,NULL,ShowFactHashTableCommand,"ShowFactHashTableCommand",NULL);
+AddUDF(theEnv,"show-fpn","v",1,1,"y",ShowFactPatternNetworkCommand,"ShowFactPatternNetworkCommand",nullptr);
+AddUDF(theEnv,"show-fht","v",0,0,nullptr,ShowFactHashTableCommand,"ShowFactHashTableCommand",nullptr);
 #endif
 
-AddUDF(theEnv,"show-opn","v",0,0,NULL,PrintObjectPatternNetworkCommand,"PrintObjectPatternNetworkCommand",NULL);
+AddUDF(theEnv,"show-opn","v",0,0,nullptr,PrintObjectPatternNetworkCommand,"PrintObjectPatternNetworkCommand",nullptr);
 
-AddUDF(theEnv,"instance-table-usage","v",0,0,NULL,InstanceTableUsageCommand,"InstanceTableUsageCommand",NULL);
+AddUDF(theEnv,"instance-table-usage","v",0,0,nullptr,InstanceTableUsageCommand,"InstanceTableUsageCommand",nullptr);
 
 }
 
@@ -123,7 +123,7 @@ unsigned long long floatCount = 0, bitMapCount = 0;
 symbolArray = GetSymbolTable(theEnv);
 for (i = 0; i < SYMBOL_HASH_SIZE; i++)
   {
-   for (symbolPtr = symbolArray[i]; symbolPtr != NULL; symbolPtr = symbolPtr->next)
+   for (symbolPtr = symbolArray[i]; symbolPtr != nullptr; symbolPtr = symbolPtr->next)
      { symbolCount++; }
   }
 
@@ -134,7 +134,7 @@ for (i = 0; i < SYMBOL_HASH_SIZE; i++)
 integerArray = GetIntegerTable(theEnv);
 for (i = 0; i < INTEGER_HASH_SIZE; i++)
   {
-   for (integerPtr = integerArray[i]; integerPtr != NULL; integerPtr = integerPtr->next)
+   for (integerPtr = integerArray[i]; integerPtr != nullptr; integerPtr = integerPtr->next)
      { integerCount++; }
   }
 
@@ -145,7 +145,7 @@ for (i = 0; i < INTEGER_HASH_SIZE; i++)
 floatArray = GetFloatTable(theEnv);
 for (i = 0; i < FLOAT_HASH_SIZE; i++)
   {
-   for (floatPtr = floatArray[i]; floatPtr != NULL; floatPtr = floatPtr->next)
+   for (floatPtr = floatArray[i]; floatPtr != nullptr; floatPtr = floatPtr->next)
      { floatCount++; }
   }
 
@@ -156,7 +156,7 @@ for (i = 0; i < FLOAT_HASH_SIZE; i++)
 bitMapArray = GetBitMapTable(theEnv);
 for (i = 0; i < BITMAP_HASH_SIZE; i++)
   {
-   for (bitMapPtr = bitMapArray[i]; bitMapPtr != NULL; bitMapPtr = bitMapPtr->next)
+   for (bitMapPtr = bitMapArray[i]; bitMapPtr != nullptr; bitMapPtr = bitMapPtr->next)
      { bitMapCount++; }
   }
 
@@ -210,7 +210,7 @@ symbolArray = GetSymbolTable(theEnv);
 for (i = 0; i < SYMBOL_HASH_SIZE; i++)
   {
    symbolCount = 0;
-   for (symbolPtr = symbolArray[i]; symbolPtr != NULL; symbolPtr = symbolPtr->next)
+   for (symbolPtr = symbolArray[i]; symbolPtr != nullptr; symbolPtr = symbolPtr->next)
      {
       symbolCount++;
       totalSymbolCount++;
@@ -230,7 +230,7 @@ floatArray = GetFloatTable(theEnv);
 for (i = 0; i < FLOAT_HASH_SIZE; i++)
   {
    floatCount = 0;
-   for (floatPtr = floatArray[i]; floatPtr != NULL; floatPtr = floatPtr->next)
+   for (floatPtr = floatArray[i]; floatPtr != nullptr; floatPtr = floatPtr->next)
      {
       floatCount++;
       totalFloatCount++;
@@ -294,8 +294,8 @@ if (theEnv->initialized == false)
    return;
   }
 
-for (theFact = GetNextFact(theEnv,NULL);
-     theFact != NULL;
+for (theFact = GetNextFact(theEnv,nullptr);
+     theFact != nullptr;
      theFact = GetNextFact(theEnv,theFact))
   {
    if (theFact->patternHeader.busyCount <= 0)
@@ -360,13 +360,13 @@ const char *theName;
 int depth = 0, i;
 
 theName = GetConstructName(context,"show-fpn","template name");
-if (theName == NULL) return;
+if (theName == nullptr) return;
 
 theDeftemplate = FindDeftemplate(theEnv,theName);
-if (theDeftemplate == NULL) return;
+if (theDeftemplate == nullptr) return;
 
 patternPtr = theDeftemplate->patternNetwork;
-while (patternPtr != NULL)
+while (patternPtr != nullptr)
   {
    for (i = 0; i < depth; i++) WriteString(theEnv,STDOUT," ");
    if (patternPtr->header.singlefieldNode) WriteString(theEnv,STDOUT,"SF   ");
@@ -385,20 +385,20 @@ while (patternPtr != NULL)
    WriteString(theEnv,STDOUT," Field: ");
    PrintUnsignedInteger(theEnv,STDOUT,patternPtr->whichField);
    WriteString(theEnv,STDOUT," Expression: ");
-   if (patternPtr->networkTest == NULL) WriteString(theEnv,STDOUT,"None");
+   if (patternPtr->networkTest == nullptr) WriteString(theEnv,STDOUT,"None");
    else PrintExpression(theEnv,STDOUT,patternPtr->networkTest);
    WriteString(theEnv,STDOUT," RightHash: ");
-   if (patternPtr->header.rightHash == NULL) WriteString(theEnv,STDOUT,"None");
+   if (patternPtr->header.rightHash == nullptr) WriteString(theEnv,STDOUT,"None");
    else PrintExpression(theEnv,STDOUT,patternPtr->header.rightHash);
    WriteString(theEnv,STDOUT,"\n");
 
-   if (patternPtr->nextLevel == NULL)
+   if (patternPtr->nextLevel == nullptr)
      {
-      while (patternPtr->rightNode == NULL)
+      while (patternPtr->rightNode == nullptr)
         {
          patternPtr = patternPtr->lastLevel;
          depth--;
-         if (patternPtr == NULL) return;
+         if (patternPtr == nullptr) return;
         }
       patternPtr = patternPtr->rightNode;
      }
@@ -456,10 +456,10 @@ unsigned short i;
 OBJECT_PATTERN_NODE *uptr;
 OBJECT_ALPHA_NODE *alphaPtr;
 
-while (pptr != NULL)
+while (pptr != nullptr)
   {
    WriteString(theEnv,STDOUT,indentbuf);
-   if (pptr->alphaNode != NULL)
+   if (pptr->alphaNode != nullptr)
      WriteString(theEnv,STDOUT,"+");
    WriteString(theEnv,STDOUT,FindIDSlotName(theEnv,pptr->slotNameID)->contents);
    WriteString(theEnv,STDOUT," (");
@@ -469,11 +469,11 @@ while (pptr != NULL)
    PrintUnsignedInteger(theEnv,STDOUT,pptr->whichField);
    WriteString(theEnv,STDOUT," ");
    WriteString(theEnv,STDOUT,pptr->multifieldNode ? "$? " : "? ");
-   if (pptr->networkTest != NULL)
+   if (pptr->networkTest != nullptr)
      PrintExpression(theEnv,STDOUT,pptr->networkTest);
    WriteString(theEnv,STDOUT,"\n");
    alphaPtr = pptr->alphaNode;
-   while (alphaPtr != NULL)
+   while (alphaPtr != nullptr)
      {
       WriteString(theEnv,STDOUT,indentbuf);
       WriteString(theEnv,STDOUT,"     Classes:");
@@ -484,24 +484,24 @@ while (pptr != NULL)
            WriteString(theEnv,STDOUT," ");
            WriteString(theEnv,STDOUT,DefclassName(DefclassData(theEnv)->ClassIDMap[i]));
           }
-      if (alphaPtr->slotbmp != NULL)
+      if (alphaPtr->slotbmp != nullptr)
         {
          sbmp = (SLOT_BITMAP *) alphaPtr->slotbmp->contents;
          WriteString(theEnv,STDOUT," *** Slots:");
          for (i = NAME_ID ; i <= sbmp->maxid ; i++)
            if (TestBitMap(sbmp->map,i))
              {
-              for (uptr = pptr ; uptr != NULL ; uptr  = uptr->lastLevel)
+              for (uptr = pptr ; uptr != nullptr ; uptr  = uptr->lastLevel)
                 if (uptr->slotNameID == i)
                   break;
-              if (uptr == NULL)
+              if (uptr == nullptr)
                 {
                  WriteString(theEnv,STDOUT," ");
                  WriteString(theEnv,STDOUT,FindIDSlotName(theEnv,i)->contents);
                 }
              }
         }
-      if (alphaPtr->header.rightHash != NULL)
+      if (alphaPtr->header.rightHash != nullptr)
         {
          WriteString(theEnv,STDOUT," RH: ");
          PrintExpression(theEnv,STDOUT,alphaPtr->header.rightHash);
@@ -510,7 +510,7 @@ while (pptr != NULL)
       WriteString(theEnv,STDOUT,"\n");
       alphaPtr = alphaPtr->nxtInGroup;
      }
-   indentbuf[ilen++] = (char) ((pptr->rightNode != NULL) ? '|' : ' ');
+   indentbuf[ilen++] = (char) ((pptr->rightNode != nullptr) ? '|' : ' ');
    indentbuf[ilen++] = ' ';
    indentbuf[ilen++] = ' ';
    indentbuf[ilen] = '\0';
@@ -547,7 +547,7 @@ for (i = 0; i < COUNT_SIZE; i++)
 for (i = 0; i < INSTANCE_TABLE_HASH_SIZE; i++)
   {
    instanceCount = 0;
-   for (ins = InstanceData(theEnv)->InstanceTable[i]; ins != NULL; ins = ins->nxtHash)
+   for (ins = InstanceData(theEnv)->InstanceTable[i]; ins != nullptr; ins = ins->nxtHash)
      {
       instanceCount++;
       totalInstanceCount++;
@@ -601,10 +601,10 @@ static void TraverseBetaMemories(
 Environment *theEnv,
 struct joinNode *theJoin)
 {
-if (theJoin == NULL)
+if (theJoin == nullptr)
   { return; }
 
-if (theJoin->lastLevel != NULL)
+if (theJoin->lastLevel != nullptr)
   { TraverseBetaMemories(theEnv,theJoin->lastLevel); }
 
 if (theJoin->depth > 2)
@@ -632,7 +632,7 @@ void *buffer)
 Defrule *rulePtr;
 
 for (rulePtr = (Defrule *) theConstruct;
-     rulePtr != NULL;
+     rulePtr != nullptr;
      rulePtr = rulePtr->disjunct)
   {
    TraverseBetaMemories(theEnv,rulePtr->lastJoin);
@@ -648,7 +648,7 @@ UDFContext *context,
 UDFValue *returnValue)
 {
 WriteString(theEnv,STDOUT,"ValidateBetaMemories");
-DoForAllConstructs(theEnv,ValidateRuleBetaMemoriesAction,DefruleData(theEnv)->DefruleModuleIndex,false,NULL);
+DoForAllConstructs(theEnv,ValidateRuleBetaMemoriesAction,DefruleData(theEnv)->DefruleModuleIndex,false,nullptr);
 }
 
 #endif

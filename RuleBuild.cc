@@ -92,7 +92,7 @@ struct joinNode *ConstructJoins(
         bool tryToReuse,
         bool firstJoin) {
     struct patternNodeHeader *lastPattern;
-    struct joinNode *listOfJoins = NULL;
+    struct joinNode *listOfJoins = nullptr;
     struct joinNode *oldJoin;
     int joinNumber = 1;
     bool isLogical, isExists;
@@ -107,11 +107,11 @@ struct joinNode *ConstructJoins(
     struct joinLink *theLinks;
     bool useLinks;
 
-    if (theLHS == NULL) {
-        lastJoin = FindShareableJoin(DefruleData(theEnv)->RightPrimeJoins, NULL, true, NULL, true,
-                                     false, false, false, NULL, NULL, NULL, NULL);
+    if (theLHS == nullptr) {
+        lastJoin = FindShareableJoin(DefruleData(theEnv)->RightPrimeJoins, nullptr, true, nullptr, true,
+                                     false, false, false, nullptr, nullptr, nullptr, nullptr);
 
-        if (lastJoin == NULL) { lastJoin = CreateNewJoin(theEnv, NULL, NULL, NULL, NULL, false, false, false, NULL, NULL); }
+        if (lastJoin == nullptr) { lastJoin = CreateNewJoin(theEnv, nullptr, nullptr, nullptr, nullptr, false, false, false, nullptr, nullptr); }
     }
 
     /*=====================================================*/
@@ -119,7 +119,7 @@ struct joinNode *ConstructJoins(
     /* there should be no and/or/not CEs in the LHS.       */
     /*=====================================================*/
 
-    while (theLHS != NULL) {
+    while (theLHS != nullptr) {
         /*======================================================*/
         /* Find the beginning of the next group of patterns. If */
         /* the current pattern is not the beginning of a "join  */
@@ -129,10 +129,10 @@ struct joinNode *ConstructJoins(
         /*======================================================*/
 
         nextLHS = theLHS->bottom;
-        secondaryExternalTest = NULL;
+        secondaryExternalTest = nullptr;
 
         if (theLHS->endNandDepth > startDepth) {
-            while ((nextLHS != NULL) &&
+            while ((nextLHS != nullptr) &&
                    (nextLHS->endNandDepth > startDepth)) { nextLHS = nextLHS->bottom; }
 
             /*====================================================*/
@@ -143,14 +143,14 @@ struct joinNode *ConstructJoins(
             /* is the last iteration for the enclosing group.     */
             /*====================================================*/
 
-            if (nextLHS != NULL) {
+            if (nextLHS != nullptr) {
                 if (nextLHS->endNandDepth < startDepth) { lastIteration = true; }
             }
 
             if (!lastIteration) {
-                if (nextLHS != NULL) { nextLHS = nextLHS->bottom; }
+                if (nextLHS != nullptr) { nextLHS = nextLHS->bottom; }
 
-                if ((nextLHS != NULL) &&
+                if ((nextLHS != nullptr) &&
                     (nextLHS->pnType == TEST_CE_NODE) &&
                     (nextLHS->beginNandDepth >= startDepth)) {
                     if (nextLHS->endNandDepth < startDepth) { lastIteration = true; }
@@ -160,7 +160,7 @@ struct joinNode *ConstructJoins(
                 }
             }
         } else if (theLHS->endNandDepth == startDepth) {
-            if (nextLHS == NULL) { lastIteration = true; }
+            if (nextLHS == nullptr) { lastIteration = true; }
             else if ((nextLHS->pnType == TEST_CE_NODE) &&
                      (nextLHS->endNandDepth < startDepth)) { lastIteration = true; }
         } else // theLHS->endNandDepth < startDepth
@@ -182,7 +182,7 @@ struct joinNode *ConstructJoins(
 
             rhsStruct = lastRightJoin;
             rhsType = 0;
-            lastPattern = NULL;
+            lastPattern = nullptr;
             networkTest = theLHS->externalNetworkTest;
             secondaryNetworkTest = secondaryExternalTest;
             leftHash = theLHS->externalLeftHash;
@@ -195,23 +195,23 @@ struct joinNode *ConstructJoins(
             /* memory as the RHS of the join to be added.            */
             /*=======================================================*/
 
-        else if (theLHS->right == NULL) {
+        else if (theLHS->right == nullptr) {
             joinFromTheRight = false;
             rhsType = 0;
-            lastPattern = NULL;
-            rhsStruct = NULL;
-            lastRightJoin = NULL;
+            lastPattern = nullptr;
+            rhsStruct = nullptr;
+            lastRightJoin = nullptr;
             isExists = theLHS->exists;
             networkTest = theLHS->networkTest;
             secondaryNetworkTest = theLHS->secondaryNetworkTest;
-            leftHash = NULL;
-            rightHash = NULL;
+            leftHash = nullptr;
+            rightHash = nullptr;
         } else {
             joinFromTheRight = false;
             rhsType = theLHS->patternType->positionInArray;
             lastPattern = (*theLHS->patternType->addPatternFunction)(theEnv, theLHS);
             rhsStruct = lastPattern;
-            lastRightJoin = NULL;
+            lastRightJoin = nullptr;
             isExists = theLHS->exists;
             networkTest = theLHS->networkTest;
             secondaryNetworkTest = theLHS->secondaryNetworkTest;
@@ -232,11 +232,11 @@ struct joinNode *ConstructJoins(
         /*===============================================*/
 
         useLinks = true;
-        if (lastJoin != NULL) { theLinks = lastJoin->nextLinks; }
-        else if (theLHS->right == NULL) { theLinks = DefruleData(theEnv)->RightPrimeJoins; }
-        else if (lastPattern != NULL) {
+        if (lastJoin != nullptr) { theLinks = lastJoin->nextLinks; }
+        else if (theLHS->right == nullptr) { theLinks = DefruleData(theEnv)->RightPrimeJoins; }
+        else if (lastPattern != nullptr) {
             listOfJoins = lastPattern->entryJoin;
-            theLinks = NULL;
+            theLinks = nullptr;
             useLinks = false;
         } else { theLinks = lastRightJoin->nextLinks; }
 
@@ -248,7 +248,7 @@ struct joinNode *ConstructJoins(
             ((oldJoin = FindShareableJoin(theLinks, listOfJoins, useLinks, rhsStruct, firstJoin,
                                           theLHS->negated, isExists, isLogical,
                                           networkTest, secondaryNetworkTest,
-                                          leftHash, rightHash)) != NULL)) {
+                                          leftHash, rightHash)) != nullptr)) {
 #if DEBUGGING_FUNCTIONS
             if ((GetWatchItem(theEnv, "compilations") == 1) && GetPrintWhileLoading(theEnv)) { WriteString(theEnv, STDOUT, "=j"); }
 #endif
@@ -290,8 +290,8 @@ struct joinNode *ConstructJoins(
     /*=================================================*/
 
     if (startDepth == 1) {
-        lastJoin = CreateNewJoin(theEnv, NULL, NULL, lastJoin, NULL,
-                                 false, false, false, NULL, NULL);
+        lastJoin = CreateNewJoin(theEnv, nullptr, nullptr, lastJoin, nullptr,
+                                 false, false, false, nullptr, nullptr);
     }
 
     /*===================================================*/
@@ -322,17 +322,17 @@ void AttachTestCEsToPatternCEs(
         struct lhsParseNode *theLHS) {
     struct lhsParseNode *lastNode, *tempNode, *lastLastNode;
 
-    if (theLHS == NULL) return;
+    if (theLHS == nullptr) return;
 
     /*=============================================================*/
     /* Attach test CEs that can be attached directly to a pattern. */
     /*=============================================================*/
 
-    lastLastNode = NULL;
+    lastLastNode = nullptr;
     lastNode = theLHS;
     theLHS = lastNode->bottom;
 
-    while (theLHS != NULL) {
+    while (theLHS != nullptr) {
         /*================================================================*/
         /* Skip over any CE that's not a TEST CE as we're only interested */
         /* in attaching a TEST CE to a preceding pattern CE. Update the   */
@@ -461,7 +461,7 @@ void AttachTestCEsToPatternCEs(
             /* Case #3 */
             /*=========*/
 
-        else if (lastLastNode == NULL) {
+        else if (lastLastNode == nullptr) {
             /*=========================================================*/
             /* The prior pattern is a single pattern within a not/and. */
             /*                                                         */
@@ -483,7 +483,7 @@ void AttachTestCEsToPatternCEs(
                         CombineExpressions(theEnv, lastNode->networkTest, lastNode->externalNetworkTest);
                 lastNode->networkTest =
                         CombineExpressions(theEnv, lastNode->networkTest, theLHS->networkTest);
-                lastNode->externalNetworkTest = NULL;
+                lastNode->externalNetworkTest = nullptr;
             }
 
                 /*=================================================================*/
@@ -551,7 +551,7 @@ void AttachTestCEsToPatternCEs(
                         CombineExpressions(theEnv, lastNode->networkTest, lastNode->externalNetworkTest);
                 lastNode->networkTest =
                         CombineExpressions(theEnv, lastNode->networkTest, theLHS->networkTest);
-                lastNode->externalNetworkTest = NULL;
+                lastNode->externalNetworkTest = nullptr;
             }
 
                 /*=======================================*/
@@ -602,7 +602,7 @@ void AttachTestCEsToPatternCEs(
                         CombineExpressions(theEnv, lastNode->secondaryNetworkTest, lastNode->externalNetworkTest);
                 lastNode->secondaryNetworkTest =
                         CombineExpressions(theEnv, lastNode->secondaryNetworkTest, theLHS->networkTest);
-                lastNode->externalNetworkTest = NULL;
+                lastNode->externalNetworkTest = nullptr;
             }
 
                 /*==============================================*/
@@ -691,7 +691,7 @@ void AttachTestCEsToPatternCEs(
                         CombineExpressions(theEnv, lastNode->networkTest, lastNode->externalNetworkTest);
                 lastNode->networkTest =
                         CombineExpressions(theEnv, lastNode->networkTest, theLHS->networkTest);
-                lastNode->externalNetworkTest = NULL;
+                lastNode->externalNetworkTest = nullptr;
             }
 
                 /*=================================================================*/
@@ -756,7 +756,7 @@ void AttachTestCEsToPatternCEs(
                         CombineExpressions(theEnv, lastNode->networkTest, lastNode->externalNetworkTest);
                 lastNode->networkTest =
                         CombineExpressions(theEnv, lastNode->networkTest, theLHS->networkTest);
-                lastNode->externalNetworkTest = NULL;
+                lastNode->externalNetworkTest = nullptr;
             }
 
                 /*=======================================*/
@@ -820,9 +820,9 @@ void AttachTestCEsToPatternCEs(
         /* Remove the TEST CE and continue to the next CE. */
         /*=================================================*/
 
-        theLHS->networkTest = NULL;
+        theLHS->networkTest = nullptr;
         tempNode = theLHS->bottom;
-        theLHS->bottom = NULL;
+        theLHS->bottom = nullptr;
         lastNode->bottom = tempNode;
         lastNode->endNandDepth = theLHS->endNandDepth;
         ReturnLHSParseNodes(theEnv, theLHS);
@@ -834,7 +834,7 @@ void AttachTestCEsToPatternCEs(
 /* FindShareableJoin: Determines whether a join exists that can be  */
 /*   reused for the join currently being added to the join network. */
 /*   Returns a pointer to the join to be shared if one if found,    */
-/*   otherwise returns a NULL pointer.                              */
+/*   otherwise returns a nullptr pointer.                              */
 /********************************************************************/
 static struct joinNode *FindShareableJoin(
         struct joinLink *theLinks,
@@ -855,11 +855,11 @@ static struct joinNode *FindShareableJoin(
     /*========================================*/
 
     if (useLinks) {
-        if (theLinks != NULL) { listOfJoins = theLinks->join; }
-        else { listOfJoins = NULL; }
+        if (theLinks != nullptr) { listOfJoins = theLinks->join; }
+        else { listOfJoins = nullptr; }
     }
 
-    while (listOfJoins != NULL) {
+    while (listOfJoins != nullptr) {
         /*=========================================================*/
         /* If the join being tested for reuse is connected on the  */
         /* RHS to the end node of the pattern node associated with */
@@ -884,17 +884,17 @@ static struct joinNode *FindShareableJoin(
 
         if (useLinks) {
             theLinks = theLinks->next;
-            if (theLinks != NULL) { listOfJoins = theLinks->join; }
-            else { listOfJoins = NULL; }
+            if (theLinks != nullptr) { listOfJoins = theLinks->join; }
+            else { listOfJoins = nullptr; }
         } else { listOfJoins = listOfJoins->rightMatchNode; }
     }
 
     /*================================*/
-    /* Return a NULL pointer, since a */
+    /* Return a nullptr pointer, since a */
     /* reusable join was not found.   */
     /*================================*/
 
-    return NULL;
+    return nullptr;
 }
 
 /**************************************************************/
@@ -1009,19 +1009,19 @@ static struct joinNode *CreateNewJoin(
     /* unless the RHS pattern is an exists or not CE.       */
     /*======================================================*/
 
-    if ((lhsEntryStruct != NULL) || existsRHSPattern || negatedRHSPattern || joinFromTheRight) {
-        if (leftHash == NULL) {
+    if ((lhsEntryStruct != nullptr) || existsRHSPattern || negatedRHSPattern || joinFromTheRight) {
+        if (leftHash == nullptr) {
             newJoin->leftMemory = get_struct(theEnv, betaMemory);
             newJoin->leftMemory->beta = (struct partialMatch **) genalloc(theEnv, sizeof(struct partialMatch *));
-            newJoin->leftMemory->beta[0] = NULL;
-            newJoin->leftMemory->last = NULL;
+            newJoin->leftMemory->beta[0] = nullptr;
+            newJoin->leftMemory->last = nullptr;
             newJoin->leftMemory->size = 1;
             newJoin->leftMemory->count = 0;
         } else {
             newJoin->leftMemory = get_struct(theEnv, betaMemory);
             newJoin->leftMemory->beta = (struct partialMatch **) genalloc(theEnv, sizeof(struct partialMatch *) * INITIAL_BETA_HASH_SIZE);
             memset(newJoin->leftMemory->beta, 0, sizeof(struct partialMatch *) * INITIAL_BETA_HASH_SIZE);
-            newJoin->leftMemory->last = NULL;
+            newJoin->leftMemory->last = nullptr;
             newJoin->leftMemory->size = INITIAL_BETA_HASH_SIZE;
             newJoin->leftMemory->count = 0;
         }
@@ -1033,20 +1033,20 @@ static struct joinNode *CreateNewJoin(
         /* current right memory partial match satisfying the CE.     */
         /*===========================================================*/
 
-        if ((lhsEntryStruct == NULL) && (existsRHSPattern || negatedRHSPattern || joinFromTheRight)) {
+        if ((lhsEntryStruct == nullptr) && (existsRHSPattern || negatedRHSPattern || joinFromTheRight)) {
             newJoin->leftMemory->beta[0] = CreateEmptyPartialMatch(theEnv);
             newJoin->leftMemory->beta[0]->owner = newJoin;
             newJoin->leftMemory->count = 1;
         }
-    } else { newJoin->leftMemory = NULL; }
+    } else { newJoin->leftMemory = nullptr; }
 
     if (joinFromTheRight) {
-        if (leftHash == NULL) {
+        if (leftHash == nullptr) {
             newJoin->rightMemory = get_struct(theEnv, betaMemory);
             newJoin->rightMemory->beta = (struct partialMatch **) genalloc(theEnv, sizeof(struct partialMatch *));
             newJoin->rightMemory->last = (struct partialMatch **) genalloc(theEnv, sizeof(struct partialMatch *));
-            newJoin->rightMemory->beta[0] = NULL;
-            newJoin->rightMemory->last[0] = NULL;
+            newJoin->rightMemory->beta[0] = nullptr;
+            newJoin->rightMemory->last[0] = nullptr;
             newJoin->rightMemory->size = 1;
             newJoin->rightMemory->count = 0;
         } else {
@@ -1058,7 +1058,7 @@ static struct joinNode *CreateNewJoin(
             newJoin->rightMemory->size = INITIAL_BETA_HASH_SIZE;
             newJoin->rightMemory->count = 0;
         }
-    } else if (rhsEntryStruct == NULL) {
+    } else if (rhsEntryStruct == nullptr) {
         newJoin->rightMemory = get_struct(theEnv, betaMemory);
         newJoin->rightMemory->beta = (struct partialMatch **) genalloc(theEnv, sizeof(struct partialMatch *));
         newJoin->rightMemory->last = (struct partialMatch **) genalloc(theEnv, sizeof(struct partialMatch *));
@@ -1068,9 +1068,9 @@ static struct joinNode *CreateNewJoin(
         newJoin->rightMemory->last[0] = newJoin->rightMemory->beta[0];
         newJoin->rightMemory->size = 1;
         newJoin->rightMemory->count = 1;
-    } else { newJoin->rightMemory = NULL; }
+    } else { newJoin->rightMemory = nullptr; }
 
-    newJoin->nextLinks = NULL;
+    newJoin->nextLinks = nullptr;
     newJoin->joinFromTheRight = joinFromTheRight;
 
     if (existsRHSPattern) { newJoin->patternIsNegated = false; }
@@ -1080,7 +1080,7 @@ static struct joinNode *CreateNewJoin(
     newJoin->marked = false;
     newJoin->initialize = true;
     newJoin->logicalJoin = false;
-    newJoin->ruleToActivate = NULL;
+    newJoin->ruleToActivate = nullptr;
     newJoin->memoryLeftAdds = 0;
     newJoin->memoryRightAdds = 0;
     newJoin->memoryLeftDeletes = 0;
@@ -1111,7 +1111,7 @@ static struct joinNode *CreateNewJoin(
 
     newJoin->lastLevel = lhsEntryStruct;
 
-    if (lhsEntryStruct == NULL) {
+    if (lhsEntryStruct == nullptr) {
         newJoin->firstJoin = true;
         newJoin->depth = 1;
     } else {
@@ -1136,7 +1136,7 @@ static struct joinNode *CreateNewJoin(
         /* will prevent partial matches on this path.                   */
         /*==============================================================*/
 
-        if ((joinFromTheRight) && (lhsEntryStruct->nextLinks != NULL)) {
+        if ((joinFromTheRight) && (lhsEntryStruct->nextLinks != nullptr)) {
             theLink->next = lhsEntryStruct->nextLinks->next;
             lhsEntryStruct->nextLinks->next = theLink;
         } else {
@@ -1153,7 +1153,7 @@ static struct joinNode *CreateNewJoin(
 
     newJoin->rightSideEntryStructure = rhsEntryStruct;
 
-    if (rhsEntryStruct == NULL) {
+    if (rhsEntryStruct == nullptr) {
         if (newJoin->firstJoin) {
             theLink = get_struct(theEnv, joinLink);
             theLink->join = newJoin;
@@ -1162,7 +1162,7 @@ static struct joinNode *CreateNewJoin(
             DefruleData(theEnv)->RightPrimeJoins = theLink;
         }
 
-        newJoin->rightMatchNode = NULL;
+        newJoin->rightMatchNode = nullptr;
 
         return (newJoin);
     }
@@ -1189,7 +1189,7 @@ static struct joinNode *CreateNewJoin(
         theLink->enterDirection = CLIPS_RHS;
         theLink->next = ((struct joinNode *) rhsEntryStruct)->nextLinks;
         ((struct joinNode *) rhsEntryStruct)->nextLinks = theLink;
-        newJoin->rightMatchNode = NULL;
+        newJoin->rightMatchNode = nullptr;
     } else {
         newJoin->rightMatchNode = ((struct patternNodeHeader *) rhsEntryStruct)->entryJoin;
         ((struct patternNodeHeader *) rhsEntryStruct)->entryJoin = newJoin;

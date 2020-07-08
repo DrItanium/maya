@@ -82,15 +82,15 @@ void MarkConstructHeaderNeededItems(
 void AssignBsaveConstructHeaderVals(
         struct bsaveConstructHeader *theBsaveConstruct,
         ConstructHeader *theConstruct) {
-    if (theConstruct->name != NULL) { theBsaveConstruct->name = theConstruct->name->bucket; }
+    if (theConstruct->name != nullptr) { theBsaveConstruct->name = theConstruct->name->bucket; }
     else { theBsaveConstruct->name = ULONG_MAX; }
 
-    if ((theConstruct->whichModule != NULL) &&
+    if ((theConstruct->whichModule != nullptr) &&
         (theConstruct->whichModule->theModule !=
-         NULL)) { theBsaveConstruct->whichModule = theConstruct->whichModule->theModule->header.bsaveID; }
+         nullptr)) { theBsaveConstruct->whichModule = theConstruct->whichModule->theModule->header.bsaveID; }
     else { theBsaveConstruct->whichModule = ULONG_MAX; }
 
-    if (theConstruct->next != NULL)
+    if (theConstruct->next != nullptr)
         theBsaveConstruct->next = theConstruct->next->bsaveID;
     else
         theBsaveConstruct->next = ULONG_MAX;
@@ -131,23 +131,23 @@ void UpdateConstructHeader(
         moduleOffset = itemModuleSize * theBsaveConstruct->whichModule;
         theConstruct->whichModule =
                 (struct defmoduleItemHeader *) &((char *) itemModuleArray)[moduleOffset];
-    } else { theConstruct->whichModule = NULL; }
+    } else { theConstruct->whichModule = nullptr; }
 
     if (theBsaveConstruct->name != ULONG_MAX) {
         theConstruct->name = SymbolPointer(theBsaveConstruct->name);
         IncrementLexemeCount(theConstruct->name);
-    } else { theConstruct->name = NULL; }
+    } else { theConstruct->name = nullptr; }
 
     if (theBsaveConstruct->next != ULONG_MAX) {
         itemOffset = itemSize * theBsaveConstruct->next;
         theConstruct->next = (ConstructHeader *) &((char *) itemArray)[itemOffset];
-    } else { theConstruct->next = NULL; }
+    } else { theConstruct->next = nullptr; }
 
     theConstruct->constructType = theType;
     theConstruct->env = theEnv;
-    theConstruct->ppForm = NULL;
+    theConstruct->ppForm = nullptr;
     theConstruct->bsaveID = 0L;
-    theConstruct->usrData = NULL;
+    theConstruct->usrData = nullptr;
 }
 
 /*******************************************************

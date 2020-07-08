@@ -88,7 +88,7 @@ static void DeallocateDefmoduleData(Environment *);
 /************************************************/
 void AllocateDefmoduleGlobals(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, DEFMODULE_DATA, sizeof(struct defmoduleData), NULL);
+    AllocateEnvironmentData(theEnv, DEFMODULE_DATA, sizeof(struct defmoduleData), nullptr);
     AddEnvironmentCleanupFunction(theEnv, "defmodules", DeallocateDefmoduleData, -1000);
     DefmoduleData(theEnv)->CallModuleChangeFunctions = true;
     DefmoduleData(theEnv)->MainModuleRedefinable = true;
@@ -111,7 +111,7 @@ static void DeallocateDefmoduleData(
 
 #if (BLOAD_AND_BSAVE)
     for (i = 0; i < DefmoduleData(theEnv)->BNumberOfDefmodules; i++) {
-        if (DefmoduleData(theEnv)->DefmoduleArray[i].itemsArray != NULL) {
+        if (DefmoduleData(theEnv)->DefmoduleArray[i].itemsArray != nullptr) {
             rm(theEnv, DefmoduleData(theEnv)->DefmoduleArray[i].itemsArray,
                sizeof(void *) * GetNumberOfModuleItems(theEnv));
         }
@@ -120,7 +120,7 @@ static void DeallocateDefmoduleData(
     space = DefmoduleData(theEnv)->BNumberOfDefmodules * sizeof(Defmodule);
     if (space != 0) {
         genfree(theEnv, DefmoduleData(theEnv)->DefmoduleArray, space);
-        DefmoduleData(theEnv)->ListOfDefmodules = NULL;
+        DefmoduleData(theEnv)->ListOfDefmodules = nullptr;
     }
 
     space = DefmoduleData(theEnv)->NumberOfPortItems * sizeof(struct portItem);
@@ -128,28 +128,28 @@ static void DeallocateDefmoduleData(
 #endif
 
     tmpDMPtr = DefmoduleData(theEnv)->ListOfDefmodules;
-    while (tmpDMPtr != NULL) {
+    while (tmpDMPtr != nullptr) {
         nextDMPtr = (Defmodule *) tmpDMPtr->header.next;
         ReturnDefmodule(theEnv, tmpDMPtr, true);
         tmpDMPtr = nextDMPtr;
     }
 
     tmpPCPtr = DefmoduleData(theEnv)->ListOfPortConstructItems;
-    while (tmpPCPtr != NULL) {
+    while (tmpPCPtr != nullptr) {
         nextPCPtr = tmpPCPtr->next;
         rtn_struct(theEnv, portConstructItem, tmpPCPtr);
         tmpPCPtr = nextPCPtr;
     }
 
     tmpMSPtr = DefmoduleData(theEnv)->ModuleStack;
-    while (tmpMSPtr != NULL) {
+    while (tmpMSPtr != nullptr) {
         nextMSPtr = tmpMSPtr->next;
         rtn_struct(theEnv, moduleStackItem, tmpMSPtr);
         tmpMSPtr = nextMSPtr;
     }
 
     tmpMIPtr = DefmoduleData(theEnv)->ListOfModuleItems;
-    while (tmpMIPtr != NULL) {
+    while (tmpMIPtr != nullptr) {
         nextMIPtr = tmpMIPtr->next;
         rtn_struct(theEnv, moduleItem, tmpMIPtr);
         tmpMIPtr = nextMIPtr;
@@ -166,17 +166,17 @@ void InitializeDefmodules(
         Environment *theEnv) {
     DefmoduleBasicCommands(theEnv);
 
-    CreateMainModule(theEnv, NULL);
+    CreateMainModule(theEnv, nullptr);
 
 #if DEFMODULE_CONSTRUCT
-    AddConstruct(theEnv, "defmodule", "defmodules", ParseDefmodule, NULL, NULL, NULL, NULL,
-                 NULL, NULL, NULL, NULL, NULL);
+    AddConstruct(theEnv, "defmodule", "defmodules", ParseDefmodule, nullptr, nullptr, nullptr, nullptr,
+                 nullptr, nullptr, nullptr, nullptr, nullptr);
 #endif
 
 #if DEFMODULE_CONSTRUCT
-    AddUDF(theEnv, "get-current-module", "y", 0, 0, NULL, GetCurrentModuleCommand, NULL);
+    AddUDF(theEnv, "get-current-module", "y", 0, 0, nullptr, GetCurrentModuleCommand, nullptr);
 
-    AddUDF(theEnv, "set-current-module", "y", 1, 1, "y", SetCurrentModuleCommand, NULL);
+    AddUDF(theEnv, "set-current-module", "y", 1, 1, "y", SetCurrentModuleCommand, nullptr);
 #endif
 }
 
@@ -200,9 +200,9 @@ RegisterModuleItem(Environment *theEnv,
     newModuleItem->bloadModuleReference = bloadModuleReference;
     newModuleItem->findFunction = findFunction;
     newModuleItem->moduleIndex = DefmoduleData(theEnv)->NumberOfModuleItems++;
-    newModuleItem->next = NULL;
+    newModuleItem->next = nullptr;
 
-    if (DefmoduleData(theEnv)->LastModuleItem == NULL) {
+    if (DefmoduleData(theEnv)->LastModuleItem == nullptr) {
         DefmoduleData(theEnv)->ListOfModuleItems = newModuleItem;
         DefmoduleData(theEnv)->LastModuleItem = newModuleItem;
     } else {
@@ -239,10 +239,10 @@ struct moduleItem *FindModuleItem(
     struct moduleItem *theModuleItem;
 
     for (theModuleItem = DefmoduleData(theEnv)->ListOfModuleItems;
-         theModuleItem != NULL;
+         theModuleItem != nullptr;
          theModuleItem = theModuleItem->next) { if (strcmp(theModuleItem->name, theName) == 0) return (theModuleItem); }
 
-    return NULL;
+    return nullptr;
 }
 
 /***************************************/
@@ -284,7 +284,7 @@ Defmodule *SetCurrentModule(
     if (DefmoduleData(theEnv)->CallModuleChangeFunctions) {
         DefmoduleData(theEnv)->ModuleChangeIndex++;
         changeFunctions = DefmoduleData(theEnv)->AfterModuleChangeFunctions;
-        while (changeFunctions != NULL) {
+        while (changeFunctions != nullptr) {
             (*changeFunctions->func)(theEnv, changeFunctions->context);
             changeFunctions = changeFunctions->next;
         }
@@ -340,12 +340,12 @@ void *GetModuleItem(
         Environment *theEnv,
         Defmodule *theModule,
         unsigned moduleItemIndex) {
-    if (theModule == NULL) {
-        if (DefmoduleData(theEnv)->CurrentModule == NULL) return NULL;
+    if (theModule == nullptr) {
+        if (DefmoduleData(theEnv)->CurrentModule == nullptr) return nullptr;
         theModule = DefmoduleData(theEnv)->CurrentModule;
     }
 
-    if (theModule->itemsArray == NULL) return (NULL);
+    if (theModule->itemsArray == nullptr) return (nullptr);
 
     return ((void *) theModule->itemsArray[moduleItemIndex]);
 }
@@ -361,12 +361,12 @@ void SetModuleItem(
         Defmodule *theModule,
         unsigned moduleItemIndex,
         void *newValue) {
-    if (theModule == NULL) {
-        if (DefmoduleData(theEnv)->CurrentModule == NULL) return;
+    if (theModule == nullptr) {
+        if (DefmoduleData(theEnv)->CurrentModule == nullptr) return;
         theModule = DefmoduleData(theEnv)->CurrentModule;
     }
 
-    if (theModule->itemsArray == NULL) return;
+    if (theModule->itemsArray == nullptr) return;
     theModule->itemsArray[moduleItemIndex] = (struct defmoduleItemHeader *) newValue;
 }
 
@@ -389,13 +389,13 @@ void CreateMainModule(
     newDefmodule = get_struct(theEnv, defmodule);
     newDefmodule->header.name = CreateSymbol(theEnv, "MAIN");
     IncrementLexemeCount(newDefmodule->header.name);
-    newDefmodule->header.whichModule = NULL;
-    newDefmodule->header.next = NULL;
-    newDefmodule->header.ppForm = NULL;
-    newDefmodule->importList = NULL;
-    newDefmodule->exportList = NULL;
+    newDefmodule->header.whichModule = nullptr;
+    newDefmodule->header.next = nullptr;
+    newDefmodule->header.ppForm = nullptr;
+    newDefmodule->importList = nullptr;
+    newDefmodule->exportList = nullptr;
     newDefmodule->header.bsaveID = 0L;
-    newDefmodule->header.usrData = NULL;
+    newDefmodule->header.usrData = nullptr;
     newDefmodule->header.constructType = DEFMODULE;
     newDefmodule->header.env = theEnv;
 
@@ -404,21 +404,21 @@ void CreateMainModule(
     /* the module's construct lists.    */
     /*==================================*/
 
-    if (DefmoduleData(theEnv)->NumberOfModuleItems == 0) newDefmodule->itemsArray = NULL;
+    if (DefmoduleData(theEnv)->NumberOfModuleItems == 0) newDefmodule->itemsArray = nullptr;
     else {
         newDefmodule->itemsArray = (struct defmoduleItemHeader **)
                 gm2(theEnv, sizeof(void *) * DefmoduleData(theEnv)->NumberOfModuleItems);
         for (i = 0, theItem = DefmoduleData(theEnv)->ListOfModuleItems;
-             (i < DefmoduleData(theEnv)->NumberOfModuleItems) && (theItem != NULL);
+             (i < DefmoduleData(theEnv)->NumberOfModuleItems) && (theItem != nullptr);
              i++, theItem = theItem->next) {
-            if (theItem->allocateFunction == NULL) { newDefmodule->itemsArray[i] = NULL; }
+            if (theItem->allocateFunction == nullptr) { newDefmodule->itemsArray[i] = nullptr; }
             else {
                 newDefmodule->itemsArray[i] = (struct defmoduleItemHeader *)
                         (*theItem->allocateFunction)(theEnv);
                 theHeader = (struct defmoduleItemHeader *) newDefmodule->itemsArray[i];
                 theHeader->theModule = newDefmodule;
-                theHeader->firstItem = NULL;
-                theHeader->lastItem = NULL;
+                theHeader->firstItem = nullptr;
+                theHeader->lastItem = nullptr;
             }
         }
     }
@@ -448,24 +448,24 @@ void SetListOfDefmodules(
     DefmoduleData(theEnv)->ListOfDefmodules = defmodulePtr;
     DefmoduleData(theEnv)->LastDefmodule = DefmoduleData(theEnv)->ListOfDefmodules;
 
-    if (DefmoduleData(theEnv)->LastDefmodule == NULL) return;
+    if (DefmoduleData(theEnv)->LastDefmodule == nullptr) return;
     DefmoduleData(theEnv)->LastDefmodule->header.env = theEnv;
 
-    while (DefmoduleData(theEnv)->LastDefmodule->header.next != NULL) {
+    while (DefmoduleData(theEnv)->LastDefmodule->header.next != nullptr) {
         DefmoduleData(theEnv)->LastDefmodule = (Defmodule *) DefmoduleData(theEnv)->LastDefmodule->header.next;
         DefmoduleData(theEnv)->LastDefmodule->header.env = theEnv;
     }
 }
 
 /*******************************************************************/
-/* GetNextDefmodule: If passed a NULL pointer, returns the first   */
+/* GetNextDefmodule: If passed a nullptr pointer, returns the first   */
 /*   defmodule in the ListOfDefmodules. Otherwise returns the next */
 /*   defmodule following the defmodule passed as an argument.      */
 /*******************************************************************/
 Defmodule *GetNextDefmodule(
         Environment *theEnv,
         Defmodule *defmodulePtr) {
-    if (defmodulePtr == NULL) { return DefmoduleData(theEnv)->ListOfDefmodules; }
+    if (defmodulePtr == nullptr) { return DefmoduleData(theEnv)->ListOfDefmodules; }
     else { return (Defmodule *) defmodulePtr->header.next; }
 }
 
@@ -497,14 +497,14 @@ void RemoveAllDefmodules(
         void *context) {
     Defmodule *nextDefmodule;
 
-    while (DefmoduleData(theEnv)->ListOfDefmodules != NULL) {
+    while (DefmoduleData(theEnv)->ListOfDefmodules != nullptr) {
         nextDefmodule = (Defmodule *) DefmoduleData(theEnv)->ListOfDefmodules->header.next;
         ReturnDefmodule(theEnv, DefmoduleData(theEnv)->ListOfDefmodules, false);
         DefmoduleData(theEnv)->ListOfDefmodules = nextDefmodule;
     }
 
-    DefmoduleData(theEnv)->CurrentModule = NULL;
-    DefmoduleData(theEnv)->LastDefmodule = NULL;
+    DefmoduleData(theEnv)->CurrentModule = nullptr;
+    DefmoduleData(theEnv)->LastDefmodule = nullptr;
 }
 
 /************************************************************/
@@ -523,7 +523,7 @@ static void ReturnDefmodule(
     /* Set the current module to the module being deleted. */
     /*=====================================================*/
 
-    if (theDefmodule == NULL) return;
+    if (theDefmodule == nullptr) return;
 
     if (!environmentClear) { SetCurrentModule(theEnv, theDefmodule); }
 
@@ -532,12 +532,12 @@ static void ReturnDefmodule(
     /* belonging to this module.                  */
     /*============================================*/
 
-    if (theDefmodule->itemsArray != NULL) {
+    if (theDefmodule->itemsArray != nullptr) {
         if (!environmentClear) {
             for (i = 0, theItem = DefmoduleData(theEnv)->ListOfModuleItems;
-                 (i < DefmoduleData(theEnv)->NumberOfModuleItems) && (theItem != NULL);
+                 (i < DefmoduleData(theEnv)->NumberOfModuleItems) && (theItem != nullptr);
                  i++, theItem = theItem->next) {
-                if (theItem->freeFunction != NULL) { (*theItem->freeFunction)(theEnv, theDefmodule->itemsArray[i]); }
+                if (theItem->freeFunction != nullptr) { (*theItem->freeFunction)(theEnv, theDefmodule->itemsArray[i]); }
             }
         }
 
@@ -555,12 +555,12 @@ static void ReturnDefmodule(
     /*====================================*/
 
     theSpec = theDefmodule->importList;
-    while (theSpec != NULL) {
+    while (theSpec != nullptr) {
         nextSpec = theSpec->next;
         if (!environmentClear) {
-            if (theSpec->moduleName != NULL) ReleaseLexeme(theEnv, theSpec->moduleName);
-            if (theSpec->constructType != NULL) ReleaseLexeme(theEnv, theSpec->constructType);
-            if (theSpec->constructName != NULL) ReleaseLexeme(theEnv, theSpec->constructName);
+            if (theSpec->moduleName != nullptr) ReleaseLexeme(theEnv, theSpec->moduleName);
+            if (theSpec->constructType != nullptr) ReleaseLexeme(theEnv, theSpec->constructType);
+            if (theSpec->constructName != nullptr) ReleaseLexeme(theEnv, theSpec->constructName);
         }
         rtn_struct(theEnv, portItem, theSpec);
         theSpec = nextSpec;
@@ -571,12 +571,12 @@ static void ReturnDefmodule(
     /*====================================*/
 
     theSpec = theDefmodule->exportList;
-    while (theSpec != NULL) {
+    while (theSpec != nullptr) {
         nextSpec = theSpec->next;
         if (!environmentClear) {
-            if (theSpec->moduleName != NULL) ReleaseLexeme(theEnv, theSpec->moduleName);
-            if (theSpec->constructType != NULL) ReleaseLexeme(theEnv, theSpec->constructType);
-            if (theSpec->constructName != NULL) ReleaseLexeme(theEnv, theSpec->constructName);
+            if (theSpec->moduleName != nullptr) ReleaseLexeme(theEnv, theSpec->moduleName);
+            if (theSpec->constructType != nullptr) ReleaseLexeme(theEnv, theSpec->constructType);
+            if (theSpec->constructName != nullptr) ReleaseLexeme(theEnv, theSpec->constructName);
         }
         rtn_struct(theEnv, portItem, theSpec);
         theSpec = nextSpec;
@@ -586,7 +586,7 @@ static void ReturnDefmodule(
     /* Free the defmodule pretty print string. */
     /*=========================================*/
 
-    if (theDefmodule->header.ppForm != NULL) {
+    if (theDefmodule->header.ppForm != nullptr) {
         rm(theEnv, (void *) theDefmodule->header.ppForm,
            sizeof(char) * (strlen(theDefmodule->header.ppForm) + 1));
     }
@@ -608,7 +608,7 @@ static void ReturnDefmodule(
 /************************************************/
 /* FindDefmodule: Searches for a defmodule in   */
 /*   the list of defmodules. Returns a pointer  */
-/*   to the defmodule if found, otherwise NULL. */
+/*   to the defmodule if found, otherwise nullptr. */
 /************************************************/
 Defmodule *FindDefmodule(
         Environment *theEnv,
@@ -616,16 +616,16 @@ Defmodule *FindDefmodule(
     Defmodule *defmodulePtr;
     CLIPSLexeme *findValue;
 
-    if ((findValue = FindSymbolHN(theEnv, defmoduleName, SYMBOL_BIT)) == NULL) return NULL;
+    if ((findValue = FindSymbolHN(theEnv, defmoduleName, SYMBOL_BIT)) == nullptr) return nullptr;
 
     defmodulePtr = DefmoduleData(theEnv)->ListOfDefmodules;
-    while (defmodulePtr != NULL) {
+    while (defmodulePtr != nullptr) {
         if (defmodulePtr->header.name == findValue) { return defmodulePtr; }
 
         defmodulePtr = (Defmodule *) defmodulePtr->header.next;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /*************************************************/
@@ -640,7 +640,7 @@ void GetCurrentModuleCommand(
 
     theModule = GetCurrentModule(theEnv);
 
-    if (theModule == NULL) {
+    if (theModule == nullptr) {
         returnValue->lexemeValue = FalseSymbol(theEnv);
         return;
     }
@@ -666,7 +666,7 @@ void SetCurrentModuleCommand(
     /*=======================*/
 
     theModule = GetCurrentModule(theEnv);
-    if (theModule == NULL) {
+    if (theModule == nullptr) {
         returnValue->lexemeValue = FalseSymbol(theEnv);
         return;
     }
@@ -688,7 +688,7 @@ void SetCurrentModuleCommand(
 
     theModule = FindDefmodule(theEnv, argument);
 
-    if (theModule == NULL) {
+    if (theModule == nullptr) {
         CantFindItemErrorMessage(theEnv, "defmodule", argument, true);
         return;
     }

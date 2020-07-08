@@ -116,7 +116,7 @@ static void EarlySlotBindError(Environment *, Instance *, Defclass *, unsigned);
   INPUTS       : 1) Message symbolic name
                  2) The instance address
                  3) Address of UDFValue buffer
-                    (NULL if don't care)
+                    (nullptr if don't care)
                  4) Message argument expressions
   RETURNS      : Returns false is an execution error occurred
                  or execution is halted, otherwise true
@@ -132,11 +132,11 @@ bool DirectMessage(
     Expression args;
     UDFValue temp;
 
-    if (resultbuf == NULL)
+    if (resultbuf == nullptr)
         resultbuf = &temp;
 
     args.nextArg = remargs;
-    args.argList = NULL;
+    args.argList = nullptr;
     args.type = INSTANCE_ADDRESS_TYPE;
     args.value = ins;
 
@@ -173,17 +173,17 @@ void Send(
     /* If embedded, clear the error flags. */
     /*=====================================*/
 
-    if (EvaluationData(theEnv)->CurrentExpression == NULL) { ResetErrorFlags(theEnv); }
+    if (EvaluationData(theEnv)->CurrentExpression == nullptr) { ResetErrorFlags(theEnv); }
 
-    if (EvaluationData(theEnv)->CurrentExpression == NULL) {
-        CleanCurrentGarbageFrame(theEnv, NULL);
+    if (EvaluationData(theEnv)->CurrentExpression == nullptr) {
+        CleanCurrentGarbageFrame(theEnv, nullptr);
         CallPeriodicTasks(theEnv);
     }
 
-    if (returnValue != NULL) { returnValue->value = FalseSymbol(theEnv); }
+    if (returnValue != nullptr) { returnValue->value = FalseSymbol(theEnv); }
 
     msym = FindSymbolHN(theEnv, msg, SYMBOL_BIT);
-    if (msym == NULL) {
+    if (msym == nullptr) {
         PrintNoHandlerError(theEnv, msg);
         SetEvaluationError(theEnv, true);
         return;
@@ -200,7 +200,7 @@ void Send(
     PerformMessage(theEnv, &result, iexp, msym);
     ReturnExpression(theEnv, iexp);
 
-    if (returnValue != NULL) {
+    if (returnValue != nullptr) {
         NormalizeMultifield(theEnv, &result);
         returnValue->value = result.value;
     }
@@ -219,7 +219,7 @@ void DestroyHandlerLinks(
         HANDLER_LINK *mhead) {
     HANDLER_LINK *tmp;
 
-    while (mhead != NULL) {
+    while (mhead != nullptr) {
         tmp = mhead;
         mhead = mhead->nxt;
         tmp->hnd->busy--;
@@ -304,14 +304,14 @@ void NextHandlerAvailableFunction(
  *****************************************************/
 bool NextHandlerAvailable(
         Environment *theEnv) {
-    if (MessageHandlerData(theEnv)->CurrentCore == NULL) { return false; }
+    if (MessageHandlerData(theEnv)->CurrentCore == nullptr) { return false; }
 
     if (MessageHandlerData(theEnv)->CurrentCore->hnd->type == MAROUND) {
-        return (MessageHandlerData(theEnv)->NextInCore != NULL) ? true : false;
+        return (MessageHandlerData(theEnv)->NextInCore != nullptr) ? true : false;
     }
 
     if ((MessageHandlerData(theEnv)->CurrentCore->hnd->type == MPRIMARY) &&
-        (MessageHandlerData(theEnv)->NextInCore != NULL)) {
+        (MessageHandlerData(theEnv)->NextInCore != nullptr)) {
         return (MessageHandlerData(theEnv)->NextInCore->hnd->type == MPRIMARY) ? true : false;
     }
 
@@ -371,7 +371,7 @@ void CallNextHandler(
         else
             args.value = &ProceduralPrimitiveData(theEnv)->ProcParamArray[0];
         args.nextArg = GetFirstArgument();
-        args.argList = NULL;
+        args.argList = nullptr;
         PushProcParameters(theEnv, &args, CountArguments(&args),
                            MessageHandlerData(theEnv)->CurrentMessageName->contents, "message",
                            UnboundHandlerErr);
@@ -486,8 +486,8 @@ void FindApplicableOfName(
         hnd[arr[i]].busy++;
         IncrementDefclassBusyCount(theEnv, hnd[arr[i]].cls);
         tmp->hnd = &hnd[arr[i]];
-        if (tops[tmp->hnd->type] == NULL) {
-            tmp->nxt = NULL;
+        if (tops[tmp->hnd->type] == nullptr) {
+            tmp->nxt = nullptr;
             tops[tmp->hnd->type] = bots[tmp->hnd->type] = tmp;
         } else if (tmp->hnd->type == MAFTER) {
             tmp->nxt = tops[tmp->hnd->type];
@@ -495,7 +495,7 @@ void FindApplicableOfName(
         } else {
             bots[tmp->hnd->type]->nxt = tmp;
             bots[tmp->hnd->type] = tmp;
-            tmp->nxt = NULL;
+            tmp->nxt = nullptr;
         }
     }
 }
@@ -506,7 +506,7 @@ void FindApplicableOfName(
   INPUTS       : 1-2) The tops and bottoms of the four handler type lists:
                       around, before, primary and after
                  3) The message name symbol
-  RETURNS      : The top of the joined lists, NULL on errors
+  RETURNS      : The top of the joined lists, nullptr on errors
   SIDE EFFECTS : Links all the handler type lists together, or all the
                    lists are destroyed if there are no primary handlers
   NOTES        : None
@@ -519,22 +519,22 @@ HANDLER_LINK *JoinHandlerLinks(
     int i;
     HANDLER_LINK *mlink;
 
-    if (tops[MPRIMARY] == NULL) {
+    if (tops[MPRIMARY] == nullptr) {
         PrintNoHandlerError(theEnv, mname->contents);
         for (i = MAROUND; i <= MAFTER; i++)
             DestroyHandlerLinks(theEnv, tops[i]);
         SetEvaluationError(theEnv, true);
-        return NULL;
+        return nullptr;
     }
 
     mlink = tops[MPRIMARY];
 
-    if (tops[MBEFORE] != NULL) {
+    if (tops[MBEFORE] != nullptr) {
         bots[MBEFORE]->nxt = mlink;
         mlink = tops[MBEFORE];
     }
 
-    if (tops[MAROUND] != NULL) {
+    if (tops[MAROUND] != nullptr) {
         bots[MAROUND]->nxt = mlink;
         mlink = tops[MAROUND];
     }
@@ -682,7 +682,7 @@ void PrintHandlerSlotPutFunction(
     WriteString(theEnv,logicalName,"]");
     sd = theDefclass->instanceTemplate[theDefclass->slotNameMap[theReference->slotID] - 1];
     WriteString(theEnv,logicalName,sd->slotName->name->contents);
-    if (GetFirstArgument() != NULL)
+    if (GetFirstArgument() != nullptr)
       {
        WriteString(theEnv,logicalName," ");
        PrintExpression(theEnv,logicalName,GetFirstArgument());
@@ -767,7 +767,7 @@ bool HandlerSlotPutFunction(
        ======================================================= */
     if (sp->desc->initializeOnly && (!theInstance->initializeInProgress)) {
         SlotAccessViolationError(theEnv, sp->desc->slotName->name->contents,
-                                 theInstance, NULL);
+                                 theInstance, nullptr);
         goto HandlerPutError2;
     }
 
@@ -785,7 +785,7 @@ bool HandlerSlotPutFunction(
         theSetVal.range = 0;
         theSetVal.value = ProceduralPrimitiveData(theEnv)->NoParamValue;
     }
-    if (PutSlotValue(theEnv, theInstance, sp, &theSetVal, theResult, NULL) != PSE_NO_ERROR)
+    if (PutSlotValue(theEnv, theInstance, sp, &theSetVal, theResult, nullptr) != PSE_NO_ERROR)
         goto HandlerPutError2;
     return true;
 
@@ -827,7 +827,7 @@ void DynamicHandlerGetSlot(
     }
     ins = GetActiveInstance(theEnv);
     sp = FindInstanceSlot(theEnv, ins, temp.lexemeValue);
-    if (sp == NULL) {
+    if (sp == nullptr) {
         SlotExistError(theEnv, temp.lexemeValue->contents, "dynamic-get");
         return;
     }
@@ -873,14 +873,14 @@ void DynamicHandlerPutSlot(
     }
     ins = GetActiveInstance(theEnv);
     sp = FindInstanceSlot(theEnv, ins, temp.lexemeValue);
-    if (sp == NULL) {
+    if (sp == nullptr) {
         SlotExistError(theEnv, temp.lexemeValue->contents, "dynamic-put");
         return;
     }
     if ((sp->desc->noWrite == 0) ? false :
         ((sp->desc->initializeOnly == 0) || (!ins->initializeInProgress))) {
         SlotAccessViolationError(theEnv, sp->desc->slotName->name->contents,
-                                 ins, NULL);
+                                 ins, nullptr);
         SetEvaluationError(theEnv, true);
         return;
     }
@@ -899,7 +899,7 @@ void DynamicHandlerPutSlot(
         temp.range = 0;
         temp.value = ProceduralPrimitiveData(theEnv)->NoParamValue;
     }
-    PutSlotValue(theEnv, ins, sp, &temp, returnValue, NULL);
+    PutSlotValue(theEnv, ins, sp, &temp, returnValue, nullptr);
 }
 
 /* =========================================
@@ -930,8 +930,8 @@ static bool PerformMessage(
         CLIPSLexeme *mname) {
     bool oldce;
     /* HANDLER_LINK *oldCore; */
-    Defclass *cls = NULL;
-    Instance *ins = NULL;
+    Defclass *cls = nullptr;
+    Instance *ins = nullptr;
     CLIPSLexeme *oldName;
 #if PROFILING_FUNCTIONS
     struct profileFrameInfo profileFrame;
@@ -977,7 +977,7 @@ static bool PerformMessage(
         }
     } else if (ProceduralPrimitiveData(theEnv)->ProcParamArray->header->type == INSTANCE_NAME_TYPE) {
         ins = FindInstanceBySymbol(theEnv, ProceduralPrimitiveData(theEnv)->ProcParamArray->lexemeValue);
-        if (ins == NULL) {
+        if (ins == nullptr) {
             PrintErrorID(theEnv, "MSGPASS", 2, false);
             WriteString(theEnv, STDERR, "No such instance [");
             WriteString(theEnv, STDERR, ProceduralPrimitiveData(theEnv)->ProcParamArray->lexemeValue->contents);
@@ -988,7 +988,7 @@ static bool PerformMessage(
             cls = ins->cls;
             ins->busy++;
         }
-    } else if ((cls = DefclassData(theEnv)->PrimitiveClassMap[ProceduralPrimitiveData(theEnv)->ProcParamArray->header->type]) == NULL) {
+    } else if ((cls = DefclassData(theEnv)->PrimitiveClassMap[ProceduralPrimitiveData(theEnv)->ProcParamArray->header->type]) == nullptr) {
         SystemError(theEnv, "MSGPASS", 1);
         ExitRouter(theEnv, EXIT_FAILURE);
     }
@@ -1006,14 +1006,14 @@ static bool PerformMessage(
 
     /* oldCore = MessageHandlerData(theEnv)->TopOfCore; */
 
-    if (MessageHandlerData(theEnv)->TopOfCore != NULL) {
+    if (MessageHandlerData(theEnv)->TopOfCore != nullptr) {
         MessageHandlerData(theEnv)->TopOfCore->nxtInStack = MessageHandlerData(theEnv)->OldCore;
     }
     MessageHandlerData(theEnv)->OldCore = MessageHandlerData(theEnv)->TopOfCore;
 
     MessageHandlerData(theEnv)->TopOfCore = FindApplicableHandlers(theEnv, cls, mname);
 
-    if (MessageHandlerData(theEnv)->TopOfCore != NULL) {
+    if (MessageHandlerData(theEnv)->TopOfCore != nullptr) {
         HANDLER_LINK *oldCurrent, *oldNext;
 
         oldCurrent = MessageHandlerData(theEnv)->CurrentCore;
@@ -1052,7 +1052,7 @@ static bool PerformMessage(
                 WatchMessage(theEnv, STDOUT, END_TRACE);
 #endif
         } else {
-            MessageHandlerData(theEnv)->CurrentCore = NULL;
+            MessageHandlerData(theEnv)->CurrentCore = nullptr;
             MessageHandlerData(theEnv)->NextInCore = MessageHandlerData(theEnv)->TopOfCore;
 #if DEBUGGING_FUNCTIONS
             if (MessageHandlerData(theEnv)->WatchMessages)
@@ -1072,13 +1072,13 @@ static bool PerformMessage(
 
     /* MessageHandlerData(theEnv)->TopOfCore = oldCore; */
     MessageHandlerData(theEnv)->TopOfCore = MessageHandlerData(theEnv)->OldCore;
-    if (MessageHandlerData(theEnv)->OldCore != NULL) {
+    if (MessageHandlerData(theEnv)->OldCore != nullptr) {
         MessageHandlerData(theEnv)->OldCore = MessageHandlerData(theEnv)->OldCore->nxtInStack;
     }
 
     ProcedureFunctionData(theEnv)->ReturnFlag = false;
 
-    if (ins != NULL)
+    if (ins != nullptr)
         ins->busy--;
 
     /* ==================================
@@ -1117,7 +1117,7 @@ static bool PerformMessage(
 
   INPUTS       : 1) The class of the instance (or primitive) for the message
                  2) The message name
-  RETURNS      : NULL if no applicable handlers or errors,
+  RETURNS      : nullptr if no applicable handlers or errors,
                    the list of handlers otherwise
   SIDE EFFECTS : Links are allocated for the list
   NOTES        : The instance is the first thing on the ProcParamArray
@@ -1131,7 +1131,7 @@ static HANDLER_LINK *FindApplicableHandlers(
     HANDLER_LINK *tops[4], *bots[4];
 
     for (i = MAROUND; i <= MAFTER; i++)
-        tops[i] = bots[i] = NULL;
+        tops[i] = bots[i] = nullptr;
 
     for (i = 0; i < cls->allSuperclasses.classCount; i++)
         FindApplicableOfName(theEnv, cls->allSuperclasses.classArray[i], tops, bots, mname);
@@ -1160,7 +1160,7 @@ static HANDLER_LINK *FindApplicableHandlers(
 static void CallHandlers(
         Environment *theEnv,
         UDFValue *returnValue) {
-    HANDLER_LINK *oldCurrent = NULL, *oldNext = NULL;  /* prevents warning */
+    HANDLER_LINK *oldCurrent = nullptr, *oldNext = nullptr;  /* prevents warning */
     UDFValue temp;
 #if PROFILING_FUNCTIONS
     struct profileFrameInfo profileFrame;
@@ -1201,7 +1201,7 @@ static void CallHandlers(
             WatchHandler(theEnv, STDOUT, MessageHandlerData(theEnv)->CurrentCore, END_TRACE);
 #endif
         ProcedureFunctionData(theEnv)->ReturnFlag = false;
-        if ((MessageHandlerData(theEnv)->NextInCore == NULL) || EvaluationData(theEnv)->HaltExecution) {
+        if ((MessageHandlerData(theEnv)->NextInCore == nullptr) || EvaluationData(theEnv)->HaltExecution) {
             MessageHandlerData(theEnv)->NextInCore = oldNext;
             MessageHandlerData(theEnv)->CurrentCore = oldCurrent;
             return;
@@ -1237,14 +1237,14 @@ static void CallHandlers(
 #endif
         ProcedureFunctionData(theEnv)->ReturnFlag = false;
 
-        if ((MessageHandlerData(theEnv)->NextInCore == NULL) || EvaluationData(theEnv)->HaltExecution) {
+        if ((MessageHandlerData(theEnv)->NextInCore == nullptr) || EvaluationData(theEnv)->HaltExecution) {
             MessageHandlerData(theEnv)->NextInCore = oldNext;
             MessageHandlerData(theEnv)->CurrentCore = oldCurrent;
             return;
         }
         while (MessageHandlerData(theEnv)->NextInCore->hnd->type == MPRIMARY) {
             MessageHandlerData(theEnv)->NextInCore = MessageHandlerData(theEnv)->NextInCore->nxt;
-            if (MessageHandlerData(theEnv)->NextInCore == NULL) {
+            if (MessageHandlerData(theEnv)->NextInCore == nullptr) {
                 MessageHandlerData(theEnv)->NextInCore = oldNext;
                 MessageHandlerData(theEnv)->CurrentCore = oldCurrent;
                 return;
@@ -1280,7 +1280,7 @@ static void CallHandlers(
             WatchHandler(theEnv, STDOUT, MessageHandlerData(theEnv)->CurrentCore, END_TRACE);
 #endif
         ProcedureFunctionData(theEnv)->ReturnFlag = false;
-        if ((MessageHandlerData(theEnv)->NextInCore == NULL) || EvaluationData(theEnv)->HaltExecution) {
+        if ((MessageHandlerData(theEnv)->NextInCore == nullptr) || EvaluationData(theEnv)->HaltExecution) {
             MessageHandlerData(theEnv)->NextInCore = oldNext;
             MessageHandlerData(theEnv)->CurrentCore = oldCurrent;
             return;

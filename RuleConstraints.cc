@@ -109,7 +109,7 @@ static void ConstraintConflictMessage(
     /* for which the constraint violation occurred.         */
     /*======================================================*/
 
-    if (variableName != NULL) {
+    if (variableName != nullptr) {
         WriteString(theEnv, STDERR, "Variable ?");
         WriteString(theEnv, STDERR, variableName->contents);
         WriteString(theEnv, STDERR, " in CE #");
@@ -124,7 +124,7 @@ static void ConstraintConflictMessage(
     /* in which the violation occurred.      */
     /*=======================================*/
 
-    if (theSlot == NULL) {
+    if (theSlot == nullptr) {
         WriteString(theEnv, STDERR, " field #");
         WriteInteger(theEnv, STDERR, theField);
     } else {
@@ -168,7 +168,7 @@ static bool MultifieldCardinalityViolation(
     /*=============================================*/
 
     for (tmpNode = theNode->bottom;
-         tmpNode != NULL;
+         tmpNode != nullptr;
          tmpNode = tmpNode->right) {
         /*====================================================*/
         /* A single field variable increases both the minimum */
@@ -188,7 +188,7 @@ static bool MultifieldCardinalityViolation(
             /* associated with this LHS node.                  */
             /*=================================================*/
 
-        else if (tmpNode->constraints != NULL) {
+        else if (tmpNode->constraints != nullptr) {
             /*=======================================*/
             /* The lowest minimum of all the min/max */
             /* pairs will be the first in the list.  */
@@ -203,7 +203,7 @@ static bool MultifieldCardinalityViolation(
             /*=========================================*/
 
             tmpMax = tmpNode->constraints->maxFields;
-            while (tmpMax->nextArg != NULL) tmpMax = tmpMax->nextArg;
+            while (tmpMax->nextArg != nullptr) tmpMax = tmpMax->nextArg;
             if (tmpMax->value == SymbolData(theEnv)->PositiveInfinity) { posInfinity = true; }
             else { maxFields += tmpMax->integerValue->contents; }
         }
@@ -222,7 +222,7 @@ static bool MultifieldCardinalityViolation(
     /* cardinalities of the restrictions inside the multifield slot.    */
     /*==================================================================*/
 
-    if (theNode->constraints == NULL) tempConstraint = GetConstraintRecord(theEnv);
+    if (theNode->constraints == nullptr) tempConstraint = GetConstraintRecord(theEnv);
     else tempConstraint = CopyConstraintRecord(theEnv, theNode->constraints);
     ReturnExpression(theEnv, tempConstraint->minFields);
     ReturnExpression(theEnv, tempConstraint->maxFields);
@@ -261,7 +261,7 @@ bool ProcessConnectedConstraints(
         struct lhsParseNode *theNode,
         struct lhsParseNode *multifieldHeader,
         struct lhsParseNode *patternHead) {
-    struct constraintRecord *orConstraints = NULL, *andConstraints;
+    struct constraintRecord *orConstraints = nullptr, *andConstraints;
     struct constraintRecord *tmpConstraints, *rvConstraints;
     struct lhsParseNode *orNode, *andNode;
     struct expr *tmpExpr;
@@ -271,13 +271,13 @@ bool ProcessConnectedConstraints(
     /* found in the connected constraint.         */
     /*============================================*/
 
-    for (orNode = theNode->bottom; orNode != NULL; orNode = orNode->bottom) {
+    for (orNode = theNode->bottom; orNode != nullptr; orNode = orNode->bottom) {
         /*=================================================*/
         /* Intersect all of the &'ed constraints together. */
         /*=================================================*/
 
-        andConstraints = NULL;
-        for (andNode = orNode; andNode != NULL; andNode = andNode->right) {
+        andConstraints = nullptr;
+        for (andNode = orNode; andNode != nullptr; andNode = andNode->right) {
             if (!andNode->negated) {
                 if (andNode->pnType == RETURN_VALUE_CONSTRAINT_NODE) {
                     if (andNode->expression->pnType == FCALL_NODE) {
@@ -295,7 +295,7 @@ bool ProcessConnectedConstraints(
                     RemoveConstraint(theEnv, tmpConstraints);
                     RemoveConstraint(theEnv, rvConstraints);
                     ReturnExpression(theEnv, tmpExpr);
-                } else if (andNode->constraints != NULL) {
+                } else if (andNode->constraints != nullptr) {
                     tmpConstraints = andConstraints;
                     andConstraints = IntersectConstraints(theEnv, andConstraints, andNode->constraints);
                     RemoveConstraint(theEnv, tmpConstraints);
@@ -315,7 +315,7 @@ bool ProcessConnectedConstraints(
         /* Remove any negated constants from the list of allowed values. */
         /*===============================================================*/
 
-        for (andNode = orNode; andNode != NULL; andNode = andNode->right) {
+        for (andNode = orNode; andNode != nullptr; andNode = andNode->right) {
             if ((andNode->negated) && ConstantNode(andNode)) {
                 RemoveConstantFromConstraint(theEnv, NodeTypeToType(andNode), andNode->value, andConstraints);
             }
@@ -337,7 +337,7 @@ bool ProcessConnectedConstraints(
     /* constraints (which should be a subset.        */
     /*===============================================*/
 
-    if (orConstraints != NULL) {
+    if (orConstraints != nullptr) {
         if (theNode->derivedConstraints) RemoveConstraint(theEnv, theNode->constraints);
         theNode->constraints = orConstraints;
         theNode->derivedConstraints = true;
@@ -354,10 +354,10 @@ bool ProcessConnectedConstraints(
     /* slot, check for cardinality violations. */
     /*=========================================*/
 
-    if ((multifieldHeader != NULL) && (theNode->right == NULL)) {
+    if ((multifieldHeader != nullptr) && (theNode->right == nullptr)) {
         if (MultifieldCardinalityViolation(theEnv, multifieldHeader)) {
             ConstraintViolationErrorMessage(theEnv, "The group of restrictions",
-                                            NULL, false,
+                                            nullptr, false,
                                             patternHead->whichCE,
                                             multifieldHeader->slot,
                                             multifieldHeader->index,
@@ -414,7 +414,7 @@ void ConstraintReferenceErrorMessage(
     WriteString(theEnv, STDERR, " of the expression ");
     temprv = LHSParseNodesToExpression(theEnv, theExpression);
     ReturnExpression(theEnv, temprv->nextArg);
-    temprv->nextArg = NULL;
+    temprv->nextArg = nullptr;
     PrintExpression(theEnv, STDERR, temprv);
     WriteString(theEnv, STDERR, "\n");
     ReturnExpression(theEnv, temprv);
@@ -427,7 +427,7 @@ void ConstraintReferenceErrorMessage(
 
     WriteString(theEnv, STDERR, "found in CE #");
     WriteInteger(theEnv, STDERR, theExpression->whichCE);
-    if (slotName == NULL) {
+    if (slotName == nullptr) {
         if (theField > 0) {
             WriteString(theEnv, STDERR, " field #");
             WriteInteger(theEnv, STDERR, theField);
@@ -460,20 +460,20 @@ static struct lhsParseNode *AddToVariableConstraints(
     /* modifying the constraint if it is.              */
     /*=================================================*/
 
-    while (newItems != NULL) {
+    while (newItems != nullptr) {
         /*==========================================*/
         /* Get the next item since the next pointer */
-        /* value (right) needs to be set to NULL.   */
+        /* value (right) needs to be set to nullptr.   */
         /*==========================================*/
 
         temp = newItems->right;
-        newItems->right = NULL;
+        newItems->right = nullptr;
 
         /*===================================*/
         /* Search the list for the variable. */
         /*===================================*/
 
-        for (trace = oldList; trace != NULL; trace = trace->right) {
+        for (trace = oldList; trace != nullptr; trace = trace->right) {
             /*=========================================*/
             /* If the variable is already in the list, */
             /* modify the constraint already there to  */
@@ -495,7 +495,7 @@ static struct lhsParseNode *AddToVariableConstraints(
         /* the list if it wasn't found.    */
         /*=================================*/
 
-        if (trace == NULL) {
+        if (trace == nullptr) {
             newItems->right = oldList;
             oldList = newItems;
         }
@@ -520,19 +520,19 @@ static struct lhsParseNode *UnionVariableConstraints(
         Environment *theEnv,
         struct lhsParseNode *list1,
         struct lhsParseNode *list2) {
-    struct lhsParseNode *list3 = NULL, *trace, *temp;
+    struct lhsParseNode *list3 = nullptr, *trace, *temp;
 
     /*===================================*/
     /* Loop through all of the variables */
     /* in the first list.                */
     /*===================================*/
 
-    while (list1 != NULL) {
+    while (list1 != nullptr) {
         /*=============================================*/
         /* Search for the variable in the second list. */
         /*=============================================*/
 
-        for (trace = list2; trace != NULL; trace = trace->right) {
+        for (trace = list2; trace != nullptr; trace = trace->right) {
             /*============================================*/
             /* If the variable is found in both lists,    */
             /* union the constraints and add the variable */
@@ -556,7 +556,7 @@ static struct lhsParseNode *UnionVariableConstraints(
         /*==============================*/
 
         temp = list1->right;
-        list1->right = NULL;
+        list1->right = nullptr;
         ReturnLHSParseNodes(theEnv, list1);
         list1 = temp;
     }
@@ -585,17 +585,17 @@ static struct lhsParseNode *UnionVariableConstraints(
 struct lhsParseNode *GetExpressionVarConstraints(
         Environment *theEnv,
         struct lhsParseNode *theExpression) {
-    struct lhsParseNode *list1 = NULL, *list2;
+    struct lhsParseNode *list1 = nullptr, *list2;
 
-    for (; theExpression != NULL; theExpression = theExpression->bottom) {
-        if (theExpression->right != NULL) {
+    for (; theExpression != nullptr; theExpression = theExpression->bottom) {
+        if (theExpression->right != nullptr) {
             list2 = GetExpressionVarConstraints(theEnv, theExpression->right);
             list1 = AddToVariableConstraints(theEnv, list2, list1);
         }
 
         if (theExpression->pnType == SF_VARIABLE_NODE) {
             list2 = GetLHSParseNode(theEnv);
-            if (theExpression->referringNode != NULL) { list2->pnType = theExpression->referringNode->pnType; }
+            if (theExpression->referringNode != nullptr) { list2->pnType = theExpression->referringNode->pnType; }
             else { list2->pnType = SF_VARIABLE_NODE; }
             list2->value = theExpression->value;
             list2->derivedConstraints = true;
@@ -616,7 +616,7 @@ struct lhsParseNode *DeriveVariableConstraints(
         Environment *theEnv,
         struct lhsParseNode *theNode) {
     struct lhsParseNode *orNode, *andNode;
-    struct lhsParseNode *list1, *list2, *list3 = NULL;
+    struct lhsParseNode *list1, *list2, *list3 = nullptr;
     bool first = true;
 
     /*===============================*/
@@ -624,13 +624,13 @@ struct lhsParseNode *DeriveVariableConstraints(
     /* single connected constraint.  */
     /*===============================*/
 
-    for (orNode = theNode->bottom; orNode != NULL; orNode = orNode->bottom) {
+    for (orNode = theNode->bottom; orNode != nullptr; orNode = orNode->bottom) {
         /*=================================================*/
         /* Intersect all of the &'ed constraints together. */
         /*=================================================*/
 
-        list2 = NULL;
-        for (andNode = orNode; andNode != NULL; andNode = andNode->right) {
+        list2 = nullptr;
+        for (andNode = orNode; andNode != nullptr; andNode = andNode->right) {
             if ((andNode->pnType == RETURN_VALUE_CONSTRAINT_NODE) ||
                 (andNode->pnType == PREDICATE_CONSTRAINT_NODE)) {
                 list1 = GetExpressionVarConstraints(theEnv, andNode->expression);
@@ -657,27 +657,27 @@ bool CheckRHSForConstraintErrors(
         struct lhsParseNode *theLHS) {
     struct functionDefinition *theFunction;
     unsigned int i;
-    struct expr *lastOne = NULL, *checkList, *tmpPtr;
+    struct expr *lastOne = nullptr, *checkList, *tmpPtr;
 
-    if (expressionList == NULL) return false;
+    if (expressionList == nullptr) return false;
 
     for (checkList = expressionList;
-         checkList != NULL;
+         checkList != nullptr;
          checkList = checkList->nextArg) {
         expressionList = checkList->argList;
         i = 1;
         if (checkList->type == FCALL) {
             lastOne = checkList;
             theFunction = checkList->functionValue;
-        } else { theFunction = NULL; }
+        } else { theFunction = nullptr; }
 
-        while (expressionList != NULL) {
+        while (expressionList != nullptr) {
             if (CheckArgumentForConstraintError(theEnv, expressionList, lastOne, i,
                                                 theFunction, theLHS)) { return true; }
 
             i++;
             tmpPtr = expressionList->nextArg;
-            expressionList->nextArg = NULL;
+            expressionList->nextArg = nullptr;
             if (CheckRHSForConstraintErrors(theEnv, expressionList, theLHS)) {
                 expressionList->nextArg = tmpPtr;
                 return true;
@@ -714,7 +714,7 @@ static bool CheckArgumentForConstraintError(
     /* no constraint information so they aren't checked).          */
     /*=============================================================*/
 
-    if ((expressionList->type != SF_VARIABLE) || (theFunction == NULL)) { return (rv); }
+    if ((expressionList->type != SF_VARIABLE) || (theFunction == nullptr)) { return (rv); }
 
     /*===========================================*/
     /* Get the restrictions for the argument and */
@@ -730,13 +730,13 @@ static bool CheckArgumentForConstraintError(
     /*================================================*/
 
     theVariable = FindVariable(expressionList->lexemeValue, theLHS);
-    if (theVariable != NULL) {
+    if (theVariable != nullptr) {
         if (theVariable->pnType == MF_VARIABLE_NODE) {
             constraint2 = GetConstraintRecord(theEnv);
             SetConstraintType(MULTIFIELD_TYPE, constraint2);
-        } else if (theVariable->constraints == NULL) { constraint2 = GetConstraintRecord(theEnv); }
+        } else if (theVariable->constraints == nullptr) { constraint2 = GetConstraintRecord(theEnv); }
         else { constraint2 = CopyConstraintRecord(theEnv, theVariable->constraints); }
-    } else { constraint2 = NULL; }
+    } else { constraint2 = nullptr; }
 
     /*================================================*/
     /* Look for the constraint record associated with */
@@ -773,7 +773,7 @@ static bool CheckArgumentForConstraintError(
         WriteInteger(theEnv, STDERR, i);
         WriteString(theEnv, STDERR, " of the expression ");
         tmpPtr = lastOne->nextArg;
-        lastOne->nextArg = NULL;
+        lastOne->nextArg = nullptr;
         PrintExpression(theEnv, STDERR, lastOne);
         lastOne->nextArg = tmpPtr;
         WriteString(theEnv, STDERR, " found in the rule's RHS to be violated.\n");

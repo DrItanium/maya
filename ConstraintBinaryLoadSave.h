@@ -41,8 +41,8 @@
 #include "Evaluation.h"
 #include "Constraint.h"
 
-#define ConstraintIndex(theConstraint) (((! GetDynamicConstraintChecking(theEnv)) || (theConstraint == NULL)) ? ULONG_MAX : (theConstraint->bsaveID))
-#define ConstraintPointer(i) (((i) == ULONG_MAX) ? NULL : (CONSTRAINT_RECORD *) &ConstraintData(theEnv)->ConstraintArray[i])
+#define ConstraintIndex(theConstraint) (((! GetDynamicConstraintChecking(theEnv)) || (theConstraint == nullptr)) ? ULONG_MAX : (theConstraint->bsaveID))
+#define ConstraintPointer(i) (((i) == ULONG_MAX) ? nullptr : (CONSTRAINT_RECORD *) &ConstraintData(theEnv)->ConstraintArray[i])
 
 #if BLOAD_AND_BSAVE
 void WriteNeededConstraints(Environment *, FILE *);

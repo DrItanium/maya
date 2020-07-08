@@ -117,7 +117,7 @@ struct expr *BuildRHSAssert(
                 *error = true;
                 SyntaxErrorMessage(theEnv, whereParsed);
             }
-            return NULL;
+            return nullptr;
         }
     }
 
@@ -125,17 +125,17 @@ struct expr *BuildRHSAssert(
     /* Parse the facts until no more are encountered. */
     /*================================================*/
 
-    lastOne = assertList = NULL;
+    lastOne = assertList = nullptr;
     while ((nextOne = GetRHSPattern(theEnv, logicalName, theToken,
                                     error, false, readFirstParen,
-                                    true, RIGHT_PARENTHESIS_TOKEN)) != NULL) {
+                                    true, RIGHT_PARENTHESIS_TOKEN)) != nullptr) {
         PPCRAndIndent(theEnv);
 
         stub = GenConstant(theEnv, FCALL, FindFunction(theEnv, "assert"));
         stub->argList = nextOne;
         nextOne = stub;
 
-        if (lastOne == NULL) { assertList = nextOne; }
+        if (lastOne == nullptr) { assertList = nextOne; }
         else { lastOne->nextArg = nextOne; }
         lastOne = nextOne;
 
@@ -148,7 +148,7 @@ struct expr *BuildRHSAssert(
 
     if (*error) {
         ReturnExpression(theEnv, assertList);
-        return NULL;
+        return nullptr;
     }
 
     /*======================================*/
@@ -162,17 +162,17 @@ struct expr *BuildRHSAssert(
     }
 
     /*==============================================================*/
-    /* If no facts are being asserted then return NULL. In addition */
+    /* If no facts are being asserted then return nullptr. In addition */
     /* if at least one fact was required, then signal an error.     */
     /*==============================================================*/
 
-    if (assertList == NULL) {
+    if (assertList == nullptr) {
         if (atLeastOne) {
             *error = true;
             SyntaxErrorMessage(theEnv, whereParsed);
         }
 
-        return NULL;
+        return nullptr;
     }
 
     /*===============================================*/
@@ -180,7 +180,7 @@ struct expr *BuildRHSAssert(
     /* wrap the assert commands within a progn call. */
     /*===============================================*/
 
-    if (assertList->nextArg != NULL) {
+    if (assertList->nextArg != nullptr) {
         stub = GenConstant(theEnv, FCALL, FindFunction(theEnv, "progn"));
         stub->argList = assertList;
         assertList = stub;
@@ -195,7 +195,7 @@ struct expr *BuildRHSAssert(
 
 /***************************************************************/
 /* GetRHSPattern: Parses a single RHS fact pattern. The return */
-/*   value is the fact just parsed (or NULL if the delimiter   */
+/*   value is the fact just parsed (or nullptr if the delimiter   */
 /*   for no more facts is the first token parsed). If an error */
 /*   occurs, then the error flag passed as an argument is set. */
 /***************************************************************/
@@ -208,13 +208,13 @@ struct expr *GetRHSPattern(
         bool readFirstParen,
         bool checkFirstParen,
         TokenType endType) {
-    struct expr *lastOne = NULL;
-    struct expr *nextOne, *firstOne, *argHead = NULL;
+    struct expr *lastOne = nullptr;
+    struct expr *nextOne, *firstOne, *argHead = nullptr;
     bool printError;
     unsigned int count;
     Deftemplate *theDeftemplate;
     CLIPSLexeme *templateName;
-    const char *nullBitMap = "\0";
+    const char *nullptrBitMap = "\0";
 
     /*=================================================*/
     /* Get the opening parenthesis of the RHS pattern. */
@@ -225,12 +225,12 @@ struct expr *GetRHSPattern(
     if (readFirstParen) GetToken(theEnv, readSource, tempToken);
 
     if (checkFirstParen) {
-        if (tempToken->tknType == endType) return NULL;
+        if (tempToken->tknType == endType) return nullptr;
 
         if (tempToken->tknType != LEFT_PARENTHESIS_TOKEN) {
             SyntaxErrorMessage(theEnv, "RHS patterns");
             *error = true;
-            return NULL;
+            return nullptr;
         }
     }
 
@@ -243,12 +243,12 @@ struct expr *GetRHSPattern(
     if (tempToken->tknType != SYMBOL_TOKEN) {
         SyntaxErrorMessage(theEnv, "first field of a RHS pattern");
         *error = true;
-        return NULL;
+        return nullptr;
     } else if ((strcmp(tempToken->lexemeValue->contents, "=") == 0) ||
                (strcmp(tempToken->lexemeValue->contents, ":") == 0)) {
         SyntaxErrorMessage(theEnv, "first field of a RHS pattern");
         *error = true;
-        return NULL;
+        return nullptr;
     }
 
     /*=========================================================*/
@@ -257,10 +257,10 @@ struct expr *GetRHSPattern(
 
     templateName = (CLIPSLexeme *) tempToken->value;
 
-    if (ReservedPatternSymbol(theEnv, templateName->contents, NULL)) {
+    if (ReservedPatternSymbol(theEnv, templateName->contents, nullptr)) {
         ReservedPatternSymbolErrorMsg(theEnv, templateName->contents, "a relation name");
         *error = true;
-        return NULL;
+        return nullptr;
     }
 
     /*============================================================*/
@@ -271,7 +271,7 @@ struct expr *GetRHSPattern(
         IllegalModuleSpecifierMessage(theEnv);
 
         *error = true;
-        return NULL;
+        return nullptr;
     }
 
     /*=============================================================*/
@@ -281,13 +281,13 @@ struct expr *GetRHSPattern(
     /*=============================================================*/
 
     theDeftemplate = (Deftemplate *)
-            FindImportedConstruct(theEnv, "deftemplate", NULL, templateName->contents,
-                                  &count, true, NULL);
+            FindImportedConstruct(theEnv, "deftemplate", nullptr, templateName->contents,
+                                  &count, true, nullptr);
 
     if (count > 1) {
         AmbiguousReferenceErrorMessage(theEnv, "deftemplate", templateName->contents);
         *error = true;
-        return NULL;
+        return nullptr;
     }
 
     /*======================================================*/
@@ -295,19 +295,19 @@ struct expr *GetRHSPattern(
     /* name, then create an implied deftemplate.            */
     /*======================================================*/
 
-    if (theDeftemplate == NULL) {
+    if (theDeftemplate == nullptr) {
 #if BLOAD_AND_BSAVE
         if ((Bloaded(theEnv)) && (!ConstructData(theEnv)->CheckSyntaxMode)) {
             NoSuchTemplateError(theEnv, templateName->contents);
             *error = true;
-            return NULL;
+            return nullptr;
         }
 #endif
 #if DEFMODULE_CONSTRUCT
         if (FindImportExportConflict(theEnv, "deftemplate", GetCurrentModule(theEnv), templateName->contents)) {
-            ImportExportConflictMessage(theEnv, "implied deftemplate", templateName->contents, NULL, NULL);
+            ImportExportConflictMessage(theEnv, "implied deftemplate", templateName->contents, nullptr, nullptr);
             *error = true;
-            return NULL;
+            return nullptr;
         }
 #endif
         if (!ConstructData(theEnv)->CheckSyntaxMode) { theDeftemplate = CreateImpliedDeftemplate(theEnv, templateName, true); }
@@ -318,7 +318,7 @@ struct expr *GetRHSPattern(
     /* parse the fact as a deftemplate fact.   */
     /*=========================================*/
 
-    if ((theDeftemplate != NULL) && (theDeftemplate->implied == false)) {
+    if ((theDeftemplate != nullptr) && (theDeftemplate->implied == false)) {
         firstOne = GenConstant(theEnv, DEFTEMPLATE_PTR, theDeftemplate);
         firstOne->nextArg = ParseAssertTemplate(theEnv, readSource, tempToken,
                                                 error, endType,
@@ -328,7 +328,7 @@ struct expr *GetRHSPattern(
 
         if (*error) {
             ReturnExpression(theEnv, firstOne);
-            firstOne = NULL;
+            firstOne = nullptr;
         }
 
         return (firstOne);
@@ -345,22 +345,22 @@ struct expr *GetRHSPattern(
     SavePPBuffer(theEnv, " ");
 
     while ((nextOne = GetAssertArgument(theEnv, readSource, tempToken,
-                                        error, endType, constantsOnly, &printError)) != NULL) {
-        if (argHead == NULL) argHead = nextOne;
+                                        error, endType, constantsOnly, &printError)) != nullptr) {
+        if (argHead == nullptr) argHead = nextOne;
         else lastOne->nextArg = nextOne;
         lastOne = nextOne;
         SavePPBuffer(theEnv, " ");
     }
 
     /*===========================================================*/
-    /* If an error occurred, set the error flag and return NULL. */
+    /* If an error occurred, set the error flag and return nullptr. */
     /*===========================================================*/
 
     if (*error) {
         if (printError) SyntaxErrorMessage(theEnv, "RHS patterns");
         ReturnExpression(theEnv, firstOne);
         ReturnExpression(theEnv, argHead);
-        return NULL;
+        return nullptr;
     }
 
     /*=====================================*/
@@ -378,7 +378,7 @@ struct expr *GetRHSPattern(
     /* single multifield slot.                                  */
     /*==========================================================*/
 
-    firstOne->nextArg = GenConstant(theEnv, FACT_STORE_MULTIFIELD, AddBitMap(theEnv, (void *) nullBitMap, 1));
+    firstOne->nextArg = GenConstant(theEnv, FACT_STORE_MULTIFIELD, AddBitMap(theEnv, (void *) nullptrBitMap, 1));
     firstOne->nextArg->argList = argHead;
 
     /*==============================*/
@@ -392,7 +392,7 @@ struct expr *GetRHSPattern(
 /* GetAssertArgument: Parses a single RHS slot value and returns an */
 /*   expression representing the value. When parsing a deftemplate  */
 /*   slot, the slot name has already been parsed when this function */
-/*   is called. NULL is returned if a slot or fact delimiter is     */
+/*   is called. nullptr is returned if a slot or fact delimiter is     */
 /*   encountered. In the event of a parse error, the error flag     */
 /*   passed as an argument is set.                                  */
 /********************************************************************/
@@ -413,7 +413,7 @@ struct expr *GetAssertArgument(
 
     *printError = true;
     GetToken(theEnv, logicalName, theToken);
-    if (theToken->tknType == endType) return NULL;
+    if (theToken->tknType == endType) return nullptr;
 
     /*=============================================================*/
     /* If an equal sign of left parenthesis was parsed, then parse */
@@ -431,12 +431,12 @@ struct expr *GetAssertArgument(
         (theToken->tknType == LEFT_PARENTHESIS_TOKEN)) {
         if (constantsOnly) {
             *error = true;
-            return NULL;
+            return nullptr;
         }
 
         if (theToken->tknType == LEFT_PARENTHESIS_TOKEN) nextField = Function1Parse(theEnv, logicalName);
         else nextField = Function0Parse(theEnv, logicalName);
-        if (nextField == NULL) {
+        if (nextField == nullptr) {
             *printError = false;
             *error = true;
         } else {
@@ -472,7 +472,7 @@ struct expr *GetAssertArgument(
         (theToken->tknType == MF_VARIABLE_TOKEN)) {
         if (constantsOnly) {
             *error = true;
-            return NULL;
+            return nullptr;
         }
 
         return (GenConstant(theEnv, TokenTypeToType(theToken->tknType), theToken->value));
@@ -484,7 +484,7 @@ struct expr *GetAssertArgument(
     /*==========================================================*/
 
     *error = true;
-    return NULL;
+    return nullptr;
 }
 
 /****************************************************/
@@ -520,22 +520,22 @@ Fact *StringToFact(
     /* Check for errors or the use of variables. */
     /*===========================================*/
 
-    if ((assertArgs == NULL) && (!error)) {
+    if ((assertArgs == nullptr) && (!error)) {
         SyntaxErrorMessage(theEnv, "RHS patterns");
         ReturnExpression(theEnv, assertArgs);
-        return NULL;
+        return nullptr;
     }
 
     if (error) {
         ReturnExpression(theEnv, assertArgs);
-        return NULL;
+        return nullptr;
     }
 
     if (ExpressionContainsVariables(assertArgs, false)) {
         LocalVariableErrorMessage(theEnv, "the assert-string function");
         SetEvaluationError(theEnv, true);
         ReturnExpression(theEnv, assertArgs);
-        return NULL;
+        return nullptr;
     }
 
     /*=======================================================*/
@@ -543,7 +543,7 @@ Fact *StringToFact(
     /* create a fact data structure of the appropriate size. */
     /*=======================================================*/
 
-    for (tempPtr = assertArgs->nextArg; tempPtr != NULL; tempPtr = tempPtr->nextArg) { numberOfFields++; }
+    for (tempPtr = assertArgs->nextArg; tempPtr != nullptr; tempPtr = tempPtr->nextArg) { numberOfFields++; }
 
     factPtr = CreateFactBySize(theEnv, numberOfFields);
     factPtr->whichDeftemplate = (Deftemplate *) assertArgs->value;
@@ -555,7 +555,7 @@ Fact *StringToFact(
     IncrementClearReadyLocks(theEnv);
     ExpressionInstall(theEnv, assertArgs); /* DR0836 */
     whichField = 0;
-    for (tempPtr = assertArgs->nextArg; tempPtr != NULL; tempPtr = tempPtr->nextArg) {
+    for (tempPtr = assertArgs->nextArg; tempPtr != nullptr; tempPtr = tempPtr->nextArg) {
         EvaluateExpression(theEnv, tempPtr, &theResult);
         factPtr->theProposition.contents[whichField].value = theResult.value;
         whichField++;

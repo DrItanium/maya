@@ -122,7 +122,7 @@ static Fact *FactExists(
     hashValue = (hashValue % FactData(theEnv)->FactHashTableSize);
 
     for (theFactHash = FactData(theEnv)->FactHashTable[hashValue];
-         theFactHash != NULL;
+         theFactHash != nullptr;
          theFactHash = theFactHash->next) {
         if (theFact->hashValue != theFactHash->theFact->hashValue) { continue; }
 
@@ -131,7 +131,7 @@ static Fact *FactExists(
                              &theFactHash->theFact->theProposition) : false) { return (theFactHash->theFact); }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /************************************************************/
@@ -168,11 +168,11 @@ bool RemoveHashedFact(
     hashValue = HashFact(theFact);
     hashValue = (hashValue % FactData(theEnv)->FactHashTableSize);
 
-    for (hptr = FactData(theEnv)->FactHashTable[hashValue], prev = NULL;
-         hptr != NULL;
+    for (hptr = FactData(theEnv)->FactHashTable[hashValue], prev = nullptr;
+         hptr != nullptr;
          hptr = hptr->next) {
         if (hptr->theFact == theFact) {
-            if (prev == NULL) {
+            if (prev == nullptr) {
                 FactData(theEnv)->FactHashTable[hashValue] = hptr->next;
                 rtn_struct(theEnv, factHashEntry, hptr);
                 if (FactData(theEnv)->NumberOfFacts == 1) { ResetFactHashTable(theEnv); }
@@ -205,7 +205,7 @@ bool FactWillBeAsserted(
     hashValue = HashFact(theFact);
 
     tempPtr = FactExists(theEnv, theFact, hashValue);
-    if (tempPtr == NULL) return true;
+    if (tempPtr == nullptr) return true;
 
     return false;
 }
@@ -222,14 +222,14 @@ size_t HandleFactDuplication(
         Fact **duplicate,
         long long reuseIndex) {
     size_t hashValue;
-    *duplicate = NULL;
+    *duplicate = nullptr;
 
     hashValue = HashFact(theFact);
 
     if (FactData(theEnv)->FactDuplication) { return hashValue; }
 
     *duplicate = FactExists(theEnv, theFact, hashValue);
-    if (*duplicate == NULL) return hashValue;
+    if (*duplicate == nullptr) return hashValue;
 
     if (reuseIndex == 0) { ReturnFact(theEnv, theFact); }
     else {
@@ -269,7 +269,7 @@ bool SetFactDuplication(
 
 /**************************************************/
 /* InitializeFactHashTable: Initializes the table */
-/*   entries in the fact hash table to NULL.      */
+/*   entries in the fact hash table to nullptr.      */
 /**************************************************/
 void InitializeFactHashTable(
         Environment *theEnv) {
@@ -289,9 +289,9 @@ static struct factHashEntry **CreateFactHashTable(
     theTable = (struct factHashEntry **)
             gm2(theEnv, sizeof(struct factHashEntry *) * tableSize);
 
-    if (theTable == NULL) ExitRouter(theEnv, EXIT_FAILURE);
+    if (theTable == nullptr) ExitRouter(theEnv, EXIT_FAILURE);
 
-    for (i = 0; i < tableSize; i++) theTable[i] = NULL;
+    for (i = 0; i < tableSize; i++) theTable[i] = nullptr;
 
     return theTable;
 }
@@ -316,7 +316,7 @@ static void ResizeFactHashTable(
 
     for (i = 0; i < FactData(theEnv)->FactHashTableSize; i++) {
         theEntry = theTable[i];
-        while (theEntry != NULL) {
+        while (theEntry != nullptr) {
             nextEntry = theEntry->next;
 
             newLocation = theEntry->theFact->hashValue % newSize;
@@ -383,7 +383,7 @@ void ShowFactHashTableCommand(
    for (i = 0; i < FactData(theEnv)->FactHashTableSize; i++)
      {
       for (theEntry =  FactData(theEnv)->FactHashTable[i], count = 0;
-           theEntry != NULL;
+           theEntry != nullptr;
            theEntry = theEntry->next)
         { count++; }
 

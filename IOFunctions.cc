@@ -172,35 +172,35 @@ static void PrintDriver(UDFContext *, const char *, bool);
 /**************************************/
 void IOFunctionDefinitions(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, IO_FUNCTION_DATA, sizeof(struct IOFunctionData), NULL);
+    AllocateEnvironmentData(theEnv, IO_FUNCTION_DATA, sizeof(struct IOFunctionData), nullptr);
 
 #if IO_FUNCTIONS
     IOFunctionData(theEnv)->useFullCRLF = false;
-    IOFunctionData(theEnv)->locale = CreateSymbol(theEnv, setlocale(LC_ALL, NULL));
+    IOFunctionData(theEnv)->locale = CreateSymbol(theEnv, setlocale(LC_ALL, nullptr));
     IncrementLexemeCount(IOFunctionData(theEnv)->locale);
 #endif
 
 #if IO_FUNCTIONS
-    AddUDF(theEnv, "printout", "v", 1, UNBOUNDED, "*;ldsyn", PrintoutFunction, NULL);
-    AddUDF(theEnv, "print", "v", 0, UNBOUNDED, NULL, PrintFunction, NULL);
-    AddUDF(theEnv, "println", "v", 0, UNBOUNDED, NULL, PrintlnFunction, NULL);
-    AddUDF(theEnv, "read", "synldfie", 0, 1, ";ldsyn", ReadFunction, NULL);
-    AddUDF(theEnv, "open", "b", 2, 3, "*;sy;ldsyn;s", OpenFunction, NULL);
-    AddUDF(theEnv, "close", "b", 0, 1, "ldsyn", CloseFunction, NULL);
-    AddUDF(theEnv, "flush", "b", 0, 1, "ldsyn", FlushFunction, NULL);
-    AddUDF(theEnv, "rewind", "b", 1, 1, ";ldsyn", RewindFunction, NULL);
-    AddUDF(theEnv, "tell", "lb", 1, 1, ";ldsyn", TellFunction, NULL);
-    AddUDF(theEnv, "seek", "b", 3, 3, ";ldsyn;l;y", SeekFunction, NULL);
-    AddUDF(theEnv, "get-char", "l", 0, 1, ";ldsyn", GetCharFunction, NULL);
-    AddUDF(theEnv, "unget-char", "l", 1, 2, ";ldsyn;l", UngetCharFunction, NULL);
-    AddUDF(theEnv, "put-char", "v", 1, 2, ";ldsyn;l", PutCharFunction, NULL);
-    AddUDF(theEnv, "remove", "b", 1, 1, "sy", RemoveFunction, NULL);
-    AddUDF(theEnv, "rename", "b", 2, 2, "sy", RenameFunction, NULL);
-    AddUDF(theEnv, "format", "s", 2, UNBOUNDED, "*;ldsyn;s", FormatFunction, NULL);
-    AddUDF(theEnv, "readline", "sy", 0, 1, ";ldsyn", ReadlineFunction, NULL);
-    AddUDF(theEnv, "set-locale", "sy", 0, 1, ";s", SetLocaleFunction, NULL);
-    AddUDF(theEnv, "read-number", "syld", 0, 1, ";ldsyn", ReadNumberFunction, NULL);
-    AddUDF(theEnv, "chdir", "b", 0, 1, "sy", ChdirFunction, NULL);
+    AddUDF(theEnv, "printout", "v", 1, UNBOUNDED, "*;ldsyn", PrintoutFunction, nullptr);
+    AddUDF(theEnv, "print", "v", 0, UNBOUNDED, nullptr, PrintFunction, nullptr);
+    AddUDF(theEnv, "println", "v", 0, UNBOUNDED, nullptr, PrintlnFunction, nullptr);
+    AddUDF(theEnv, "read", "synldfie", 0, 1, ";ldsyn", ReadFunction, nullptr);
+    AddUDF(theEnv, "open", "b", 2, 3, "*;sy;ldsyn;s", OpenFunction, nullptr);
+    AddUDF(theEnv, "close", "b", 0, 1, "ldsyn", CloseFunction, nullptr);
+    AddUDF(theEnv, "flush", "b", 0, 1, "ldsyn", FlushFunction, nullptr);
+    AddUDF(theEnv, "rewind", "b", 1, 1, ";ldsyn", RewindFunction, nullptr);
+    AddUDF(theEnv, "tell", "lb", 1, 1, ";ldsyn", TellFunction, nullptr);
+    AddUDF(theEnv, "seek", "b", 3, 3, ";ldsyn;l;y", SeekFunction, nullptr);
+    AddUDF(theEnv, "get-char", "l", 0, 1, ";ldsyn", GetCharFunction, nullptr);
+    AddUDF(theEnv, "unget-char", "l", 1, 2, ";ldsyn;l", UngetCharFunction, nullptr);
+    AddUDF(theEnv, "put-char", "v", 1, 2, ";ldsyn;l", PutCharFunction, nullptr);
+    AddUDF(theEnv, "remove", "b", 1, 1, "sy", RemoveFunction, nullptr);
+    AddUDF(theEnv, "rename", "b", 2, 2, "sy", RenameFunction, nullptr);
+    AddUDF(theEnv, "format", "s", 2, UNBOUNDED, "*;ldsyn;s", FormatFunction, nullptr);
+    AddUDF(theEnv, "readline", "sy", 0, 1, ";ldsyn", ReadlineFunction, nullptr);
+    AddUDF(theEnv, "set-locale", "sy", 0, 1, ";s", SetLocaleFunction, nullptr);
+    AddUDF(theEnv, "read-number", "syld", 0, 1, ";ldsyn", ReadNumberFunction, nullptr);
+    AddUDF(theEnv, "chdir", "b", 0, 1, "sy", ChdirFunction, nullptr);
 #endif
 }
 
@@ -221,7 +221,7 @@ void PrintoutFunction(
     /*=====================================================*/
 
     logicalName = GetLogicalName(context, STDOUT);
-    if (logicalName == NULL) {
+    if (logicalName == nullptr) {
         IllegalLogicalNameMessage(theEnv, "printout");
         SetHaltExecution(theEnv, true);
         SetEvaluationError(theEnv, true);
@@ -336,7 +336,7 @@ void ReadFunction(
         UDFContext *context,
         UDFValue *returnValue) {
     struct token theToken;
-    const char *logicalName = NULL;
+    const char *logicalName = nullptr;
 
     ClearErrorValue(theEnv);
 
@@ -347,7 +347,7 @@ void ReadFunction(
     if (!UDFHasNextArgument(context)) { logicalName = STDIN; }
     else {
         logicalName = GetLogicalName(context, STDIN);
-        if (logicalName == NULL) {
+        if (logicalName == nullptr) {
             IllegalLogicalNameMessage(theEnv, "read");
             SetHaltExecution(theEnv, true);
             SetEvaluationError(theEnv, true);
@@ -410,7 +410,7 @@ static void ReadTokenFromStdin(
     /* the characters retrieved from stdin.      */
     /*===========================================*/
 
-    inputString = NULL;
+    inputString = nullptr;
     RouterData(theEnv)->CommandBufferInputCount = 0;
     RouterData(theEnv)->InputUngets = 0;
     RouterData(theEnv)->AwaitingInput = true;
@@ -496,14 +496,14 @@ void OpenFunction(
         Environment *theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
-    const char *fileName, *logicalName, *accessMode = NULL;
+    const char *fileName, *logicalName, *accessMode = nullptr;
     UDFValue theArg;
 
     /*====================*/
     /* Get the file name. */
     /*====================*/
 
-    if ((fileName = GetFileName(context)) == NULL) {
+    if ((fileName = GetFileName(context)) == nullptr) {
         returnValue->lexemeValue = FalseSymbol(theEnv);
         return;
     }
@@ -513,8 +513,8 @@ void OpenFunction(
     /* with the opened file.                 */
     /*=======================================*/
 
-    logicalName = GetLogicalName(context, NULL);
-    if (logicalName == NULL) {
+    logicalName = GetLogicalName(context, nullptr);
+    if (logicalName == nullptr) {
         SetHaltExecution(theEnv, true);
         SetEvaluationError(theEnv, true);
         IllegalLogicalNameMessage(theEnv, "open");
@@ -527,7 +527,7 @@ void OpenFunction(
     /* is already in use.               */
     /*==================================*/
 
-    if (FindFile(theEnv, logicalName, NULL)) {
+    if (FindFile(theEnv, logicalName, nullptr)) {
         SetHaltExecution(theEnv, true);
         SetEvaluationError(theEnv, true);
         PrintErrorID(theEnv, "IOFUN", 2, false);
@@ -607,8 +607,8 @@ void CloseFunction(
     /* Get the logical name argument. */
     /*================================*/
 
-    logicalName = GetLogicalName(context, NULL);
-    if (logicalName == NULL) {
+    logicalName = GetLogicalName(context, nullptr);
+    if (logicalName == nullptr) {
         IllegalLogicalNameMessage(theEnv, "close");
         SetHaltExecution(theEnv, true);
         SetEvaluationError(theEnv, true);
@@ -649,8 +649,8 @@ void FlushFunction(
     /* Get the logical name argument. */
     /*================================*/
 
-    logicalName = GetLogicalName(context, NULL);
-    if (logicalName == NULL) {
+    logicalName = GetLogicalName(context, nullptr);
+    if (logicalName == nullptr) {
         IllegalLogicalNameMessage(theEnv, "flush");
         SetHaltExecution(theEnv, true);
         SetEvaluationError(theEnv, true);
@@ -680,8 +680,8 @@ void RewindFunction(
     /* Get the logical name argument. */
     /*================================*/
 
-    logicalName = GetLogicalName(context, NULL);
-    if (logicalName == NULL) {
+    logicalName = GetLogicalName(context, nullptr);
+    if (logicalName == nullptr) {
         IllegalLogicalNameMessage(theEnv, "flush");
         SetHaltExecution(theEnv, true);
         SetEvaluationError(theEnv, true);
@@ -724,8 +724,8 @@ void TellFunction(
     /* Get the logical name argument. */
     /*================================*/
 
-    logicalName = GetLogicalName(context, NULL);
-    if (logicalName == NULL) {
+    logicalName = GetLogicalName(context, nullptr);
+    if (logicalName == nullptr) {
         IllegalLogicalNameMessage(theEnv, "tell");
         SetHaltExecution(theEnv, true);
         SetEvaluationError(theEnv, true);
@@ -771,8 +771,8 @@ void SeekFunction(
     /* Get the logical name argument. */
     /*================================*/
 
-    logicalName = GetLogicalName(context, NULL);
-    if (logicalName == NULL) {
+    logicalName = GetLogicalName(context, nullptr);
+    if (logicalName == nullptr) {
         IllegalLogicalNameMessage(theEnv, "seek");
         SetHaltExecution(theEnv, true);
         SetEvaluationError(theEnv, true);
@@ -845,7 +845,7 @@ void GetCharFunction(
     if (!UDFHasNextArgument(context)) { logicalName = STDIN; }
     else {
         logicalName = GetLogicalName(context, STDIN);
-        if (logicalName == NULL) {
+        if (logicalName == nullptr) {
             IllegalLogicalNameMessage(theEnv, "get-char");
             SetHaltExecution(theEnv, true);
             SetEvaluationError(theEnv, true);
@@ -912,7 +912,7 @@ void UngetCharFunction(
     if (numberOfArguments == 1) { logicalName = STDIN; }
     else {
         logicalName = GetLogicalName(context, STDIN);
-        if (logicalName == NULL) {
+        if (logicalName == nullptr) {
             IllegalLogicalNameMessage(theEnv, "ungetc-char");
             SetHaltExecution(theEnv, true);
             SetEvaluationError(theEnv, true);
@@ -973,7 +973,7 @@ void PutCharFunction(
     if (numberOfArguments == 1) { logicalName = STDOUT; }
     else {
         logicalName = GetLogicalName(context, STDOUT);
-        if (logicalName == NULL) {
+        if (logicalName == nullptr) {
             IllegalLogicalNameMessage(theEnv, "put-char");
             SetHaltExecution(theEnv, true);
             SetEvaluationError(theEnv, true);
@@ -1004,7 +1004,7 @@ void PutCharFunction(
     /*===================================================*/
 
     theFile = FindFptr(theEnv, logicalName);
-    if (theFile != NULL) { putc((int) theChar, theFile); }
+    if (theFile != nullptr) { putc((int) theChar, theFile); }
 }
 
 /****************************************/
@@ -1021,7 +1021,7 @@ void RemoveFunction(
     /* Get the file name. */
     /*====================*/
 
-    if ((theFileName = GetFileName(context)) == NULL) {
+    if ((theFileName = GetFileName(context)) == nullptr) {
         returnValue->lexemeValue = FalseSymbol(theEnv);
         return;
     }
@@ -1048,12 +1048,12 @@ void RenameFunction(
     /* Check for the file names. */
     /*===========================*/
 
-    if ((oldFileName = GetFileName(context)) == NULL) {
+    if ((oldFileName = GetFileName(context)) == nullptr) {
         returnValue->lexemeValue = FalseSymbol(theEnv);
         return;
     }
 
-    if ((newFileName = GetFileName(context)) == NULL) {
+    if ((newFileName = GetFileName(context)) == nullptr) {
         returnValue->lexemeValue = FalseSymbol(theEnv);
         return;
     }
@@ -1083,7 +1083,7 @@ void ChdirFunction(
     /*===============================================*/
 
     if (!UDFHasNextArgument(context)) {
-        if (genchdir(theEnv, NULL)) { returnValue->lexemeValue = TrueSymbol(theEnv); }
+        if (genchdir(theEnv, nullptr)) { returnValue->lexemeValue = TrueSymbol(theEnv); }
         else { returnValue->lexemeValue = FalseSymbol(theEnv); }
 
         return;
@@ -1093,7 +1093,7 @@ void ChdirFunction(
     /* Get the file name. */
     /*====================*/
 
-    if ((theFileName = GetFileName(context)) == NULL) {
+    if ((theFileName = GetFileName(context)) == nullptr) {
         returnValue->lexemeValue = FalseSymbol(theEnv);
         return;
     }
@@ -1140,7 +1140,7 @@ void FormatFunction(
     unsigned int f_cur_arg = 3;
     size_t form_pos = 0;
     char percentBuffer[FLAG_MAX];
-    char *fstr = NULL;
+    char *fstr = nullptr;
     size_t fmaxm = 0;
     size_t fpos = 0;
     void *hptr;
@@ -1163,7 +1163,7 @@ void FormatFunction(
     /* First argument must be a logical name. */
     /*========================================*/
 
-    if ((logicalName = GetLogicalName(context, STDOUT)) == NULL) {
+    if ((logicalName = GetLogicalName(context, STDOUT)) == nullptr) {
         IllegalLogicalNameMessage(theEnv, "format");
         SetHaltExecution(theEnv, true);
         SetEvaluationError(theEnv, true);
@@ -1184,7 +1184,7 @@ void FormatFunction(
     /* present in the argument list.                       */
     /*=====================================================*/
 
-    if ((formatString = ControlStringCheck(context, argCount)) == NULL) {
+    if ((formatString = ControlStringCheck(context, argCount)) == nullptr) {
         returnValue->value = hptr;
         return;
     }
@@ -1204,20 +1204,20 @@ void FormatFunction(
             form_pos++;
             formatFlagType = FindFormatFlag(formatString, &form_pos, percentBuffer, FLAG_MAX);
             if (formatFlagType != ' ') {
-                if ((theString = PrintFormatFlag(context, percentBuffer, f_cur_arg, formatFlagType)) == NULL) {
-                    if (fstr != NULL) rm(theEnv, fstr, fmaxm);
+                if ((theString = PrintFormatFlag(context, percentBuffer, f_cur_arg, formatFlagType)) == nullptr) {
+                    if (fstr != nullptr) rm(theEnv, fstr, fmaxm);
                     returnValue->value = hptr;
                     return;
                 }
                 fstr = AppendToString(theEnv, theString, fstr, &fpos, &fmaxm);
-                if (fstr == NULL) {
+                if (fstr == nullptr) {
                     returnValue->value = hptr;
                     return;
                 }
                 f_cur_arg++;
             } else {
                 fstr = AppendToString(theEnv, percentBuffer, fstr, &fpos, &fmaxm);
-                if (fstr == NULL) {
+                if (fstr == nullptr) {
                     returnValue->value = hptr;
                     return;
                 }
@@ -1225,7 +1225,7 @@ void FormatFunction(
         }
     }
 
-    if (fstr != NULL) {
+    if (fstr != nullptr) {
         hptr = CreateString(theEnv, fstr);
         if (strcmp(logicalName, "nil") != 0) WriteString(theEnv, logicalName, fstr);
         rm(theEnv, fstr, fmaxm);
@@ -1249,7 +1249,7 @@ static const char *ControlStringCheck(
     char formatFlag;
     Environment *theEnv = context->environment;
 
-    if (!UDFNthArgument(context, 2, STRING_BIT, &t_ptr)) { return NULL; }
+    if (!UDFNthArgument(context, 2, STRING_BIT, &t_ptr)) { return nullptr; }
 
     per_count = 0;
     str_array = t_ptr.lexemeValue->contents;
@@ -1263,7 +1263,7 @@ static const char *ControlStringCheck(
                 WriteString(theEnv, STDERR, print_buff);
                 WriteString(theEnv, STDERR, "\" specified in format function.\n");
                 SetEvaluationError(theEnv, true);
-                return (NULL);
+                return (nullptr);
             } else if (formatFlag != ' ') { per_count++; }
         } else { i++; }
     }
@@ -1271,7 +1271,7 @@ static const char *ControlStringCheck(
     if ((per_count + 2) != argCount) {
         ExpectedCountError(theEnv, "format", EXACTLY, per_count + 2);
         SetEvaluationError(theEnv, true);
-        return (NULL);
+        return (nullptr);
     }
 
     return (str_array);
@@ -1401,7 +1401,7 @@ static const char *PrintFormatFlag(
 
     switch (formatType) {
         case 's':
-            if (!UDFNthArgument(context, whichArg, LEXEME_BITS, &theResult)) { return (NULL); }
+            if (!UDFNthArgument(context, whichArg, LEXEME_BITS, &theResult)) { return (nullptr); }
             theLength = strlen(formatString) + strlen(theResult.lexemeValue->contents) + 200;
             printBuffer = (char *) gm2(theEnv, (sizeof(char) * theLength));
             gensprintf(printBuffer, formatString, theResult.lexemeValue->contents);
@@ -1420,7 +1420,7 @@ static const char *PrintFormatFlag(
                 gensprintf(printBuffer, formatString, (char) theResult.integerValue->contents);
             } else {
                 ExpectedTypeError1(theEnv, "format", whichArg, "symbol, string, or integer");
-                return NULL;
+                return nullptr;
             }
             break;
 
@@ -1428,11 +1428,11 @@ static const char *PrintFormatFlag(
         case 'x':
         case 'o':
         case 'u':
-            if (!UDFNthArgument(context, whichArg, NUMBER_BITS, &theResult)) { return (NULL); }
+            if (!UDFNthArgument(context, whichArg, NUMBER_BITS, &theResult)) { return (nullptr); }
             theLength = strlen(formatString) + 200;
             printBuffer = (char *) gm2(theEnv, (sizeof(char) * theLength));
 
-            oldLocale = CreateSymbol(theEnv, setlocale(LC_NUMERIC, NULL));
+            oldLocale = CreateSymbol(theEnv, setlocale(LC_NUMERIC, nullptr));
             setlocale(LC_NUMERIC, IOFunctionData(theEnv)->locale->contents);
 
             if (theResult.header->type == FLOAT_TYPE) { gensprintf(printBuffer, formatString, (long long) theResult.floatValue->contents); }
@@ -1444,11 +1444,11 @@ static const char *PrintFormatFlag(
         case 'f':
         case 'g':
         case 'e':
-            if (!UDFNthArgument(context, whichArg, NUMBER_BITS, &theResult)) { return (NULL); }
+            if (!UDFNthArgument(context, whichArg, NUMBER_BITS, &theResult)) { return (nullptr); }
             theLength = strlen(formatString) + 200;
             printBuffer = (char *) gm2(theEnv, (sizeof(char) * theLength));
 
-            oldLocale = CreateSymbol(theEnv, setlocale(LC_NUMERIC, NULL));
+            oldLocale = CreateSymbol(theEnv, setlocale(LC_NUMERIC, nullptr));
 
             setlocale(LC_NUMERIC, IOFunctionData(theEnv)->locale->contents);
 
@@ -1462,7 +1462,7 @@ static const char *PrintFormatFlag(
         default:
             WriteString(theEnv, STDERR, " Error in format, the conversion character");
             WriteString(theEnv, STDERR, " for formatted output is not valid\n");
-            return NULL;
+            return nullptr;
     }
 
     theString = CreateString(theEnv, printBuffer)->contents;
@@ -1485,7 +1485,7 @@ void ReadlineFunction(
     if (!UDFHasNextArgument(context)) { logicalName = STDIN; }
     else {
         logicalName = GetLogicalName(context, STDIN);
-        if (logicalName == NULL) {
+        if (logicalName == nullptr) {
             IllegalLogicalNameMessage(theEnv, "readline");
             SetHaltExecution(theEnv, true);
             SetEvaluationError(theEnv, true);
@@ -1520,11 +1520,11 @@ void ReadlineFunction(
 
     if (GetHaltExecution(theEnv)) {
         returnValue->lexemeValue = FalseSymbol(theEnv);
-        if (buffer != NULL) rm(theEnv, buffer, sizeof(char) * line_max);
+        if (buffer != nullptr) rm(theEnv, buffer, sizeof(char) * line_max);
         return;
     }
 
-    if (buffer == NULL) {
+    if (buffer == nullptr) {
         returnValue->lexemeValue = CreateSymbol(theEnv, "EOF");
         return;
     }
@@ -1545,7 +1545,7 @@ static char *FillBuffer(
         size_t *currentPosition,
         size_t *maximumSize) {
     int c;
-    char *buf = NULL;
+    char *buf = nullptr;
 
     /*================================*/
     /* Read until end of line or eof. */
@@ -1553,7 +1553,7 @@ static char *FillBuffer(
 
     c = ReadRouter(theEnv, logicalName);
 
-    if (c == EOF) { return NULL; }
+    if (c == EOF) { return nullptr; }
 
     /*==================================*/
     /* Grab characters until cr or eof. */
@@ -1623,7 +1623,7 @@ void ReadNumberFunction(
         UDFContext *context,
         UDFValue *returnValue) {
     struct token theToken;
-    const char *logicalName = NULL;
+    const char *logicalName = nullptr;
 
     /*======================================================*/
     /* Determine the logical name from which input is read. */
@@ -1632,7 +1632,7 @@ void ReadNumberFunction(
     if (!UDFHasNextArgument(context)) { logicalName = STDIN; }
     else {
         logicalName = GetLogicalName(context, STDIN);
-        if (logicalName == NULL) {
+        if (logicalName == nullptr) {
             IllegalLogicalNameMessage(theEnv, "read");
             SetHaltExecution(theEnv, true);
             SetEvaluationError(theEnv, true);
@@ -1694,7 +1694,7 @@ static void ReadNumber(
         struct token *theToken,
         bool isStdin) {
     char *inputString;
-    char *charPtr = NULL;
+    char *charPtr = nullptr;
     size_t inputStringSize;
     int inchar;
     long long theLong;
@@ -1708,7 +1708,7 @@ static void ReadNumber(
     /* the characters retrieved from stdin.      */
     /*===========================================*/
 
-    inputString = NULL;
+    inputString = nullptr;
     inputStringSize = 0;
     inchar = ReadRouter(theEnv, logicalName);
 
@@ -1771,7 +1771,7 @@ static void ReadNumber(
     /* converted using the localized format. */
     /*=======================================*/
 
-    oldLocale = CreateSymbol(theEnv, setlocale(LC_NUMERIC, NULL));
+    oldLocale = CreateSymbol(theEnv, setlocale(LC_NUMERIC, nullptr));
     setlocale(LC_NUMERIC, IOFunctionData(theEnv)->locale->contents);
 
     /*========================================*/

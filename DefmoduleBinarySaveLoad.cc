@@ -65,16 +65,16 @@ static void ClearBload(Environment *);
 /*********************************************/
 void DefmoduleBinarySetup(
         Environment *theEnv) {
-    AddBeforeBloadFunction(theEnv, "defmodule", RemoveAllDefmodules, 2000, NULL);
+    AddBeforeBloadFunction(theEnv, "defmodule", RemoveAllDefmodules, 2000, nullptr);
 
 #if BLOAD_AND_BSAVE
-    AddBinaryItem(theEnv, "defmodule", 0, BsaveFind, NULL,
+    AddBinaryItem(theEnv, "defmodule", 0, BsaveFind, nullptr,
                   BsaveStorage, BsaveBinaryItem,
                   BloadStorage, BloadBinaryItem,
                   ClearBload);
 #endif
 
-    AddAbortBloadFunction(theEnv, "defmodule", CreateMainModule, 0, NULL);
+    AddAbortBloadFunction(theEnv, "defmodule", CreateMainModule, 0, nullptr);
 
 }
 
@@ -92,8 +92,8 @@ void UpdateDefmoduleItemHeader(
 
     theHeader->theModule = ModulePointer(theBsaveHeader->theModule);
     if (theBsaveHeader->firstItem == ULONG_MAX) {
-        theHeader->firstItem = NULL;
-        theHeader->lastItem = NULL;
+        theHeader->firstItem = nullptr;
+        theHeader->lastItem = nullptr;
     } else {
         firstOffset = itemSize * theBsaveHeader->firstItem;
         lastOffset = itemSize * theBsaveHeader->lastItem;
@@ -114,7 +114,7 @@ void AssignBsaveDefmdlItemHdrVals(
         struct bsaveDefmoduleItemHeader *theBsaveHeader,
         struct defmoduleItemHeader *theHeader) {
     theBsaveHeader->theModule = theHeader->theModule->header.bsaveID;
-    if (theHeader->firstItem == NULL) {
+    if (theHeader->firstItem == nullptr) {
         theBsaveHeader->firstItem = ULONG_MAX;
         theBsaveHeader->lastItem = ULONG_MAX;
     } else {
@@ -154,8 +154,8 @@ static void BsaveFind(
     /* Loop through each module. */
     /*===========================*/
 
-    for (defmodulePtr = GetNextDefmodule(theEnv, NULL);
-         defmodulePtr != NULL;
+    for (defmodulePtr = GetNextDefmodule(theEnv, nullptr);
+         defmodulePtr != nullptr;
          defmodulePtr = GetNextDefmodule(theEnv, defmodulePtr)) {
         /*==============================================*/
         /* Increment the number of modules encountered. */
@@ -178,12 +178,12 @@ static void BsaveFind(
         /*==============================================*/
 
         for (theList = defmodulePtr->importList;
-             theList != NULL;
+             theList != nullptr;
              theList = theList->next) {
             DefmoduleData(theEnv)->NumberOfPortItems++;
-            if (theList->moduleName != NULL) { theList->moduleName->neededSymbol = true; }
-            if (theList->constructType != NULL) { theList->constructType->neededSymbol = true; }
-            if (theList->constructName != NULL) { theList->constructName->neededSymbol = true; }
+            if (theList->moduleName != nullptr) { theList->moduleName->neededSymbol = true; }
+            if (theList->constructType != nullptr) { theList->constructType->neededSymbol = true; }
+            if (theList->constructName != nullptr) { theList->constructName->neededSymbol = true; }
         }
 
         /*==============================================*/
@@ -194,12 +194,12 @@ static void BsaveFind(
         /*==============================================*/
 
         for (theList = defmodulePtr->exportList;
-             theList != NULL;
+             theList != nullptr;
              theList = theList->next) {
             DefmoduleData(theEnv)->NumberOfPortItems++;
-            if (theList->moduleName != NULL) { theList->moduleName->neededSymbol = true; }
-            if (theList->constructType != NULL) { theList->constructType->neededSymbol = true; }
-            if (theList->constructName != NULL) { theList->constructName->neededSymbol = true; }
+            if (theList->moduleName != nullptr) { theList->moduleName->neededSymbol = true; }
+            if (theList->constructType != nullptr) { theList->constructType->neededSymbol = true; }
+            if (theList->constructName != nullptr) { theList->constructName->neededSymbol = true; }
         }
     }
 }
@@ -247,26 +247,26 @@ static void BsaveBinaryItem(
 
     DefmoduleData(theEnv)->BNumberOfDefmodules = 0;
     DefmoduleData(theEnv)->NumberOfPortItems = 0;
-    for (defmodulePtr = GetNextDefmodule(theEnv, NULL);
-         defmodulePtr != NULL;
+    for (defmodulePtr = GetNextDefmodule(theEnv, nullptr);
+         defmodulePtr != nullptr;
          defmodulePtr = GetNextDefmodule(theEnv, defmodulePtr)) {
         AssignBsaveConstructHeaderVals(&newDefmodule.header, &defmodulePtr->header);
 
         DefmoduleData(theEnv)->BNumberOfDefmodules++;
 
-        if (defmodulePtr->importList == NULL) { newDefmodule.importList = ULONG_MAX; }
+        if (defmodulePtr->importList == nullptr) { newDefmodule.importList = ULONG_MAX; }
         else {
             newDefmodule.importList = DefmoduleData(theEnv)->NumberOfPortItems;
             for (theList = defmodulePtr->importList;
-                 theList != NULL;
+                 theList != nullptr;
                  theList = theList->next) { DefmoduleData(theEnv)->NumberOfPortItems++; }
         }
 
-        if (defmodulePtr->exportList == NULL) { newDefmodule.exportList = ULONG_MAX; }
+        if (defmodulePtr->exportList == nullptr) { newDefmodule.exportList = ULONG_MAX; }
         else {
             newDefmodule.exportList = DefmoduleData(theEnv)->NumberOfPortItems;
             for (theList = defmodulePtr->exportList;
-                 theList != NULL;
+                 theList != nullptr;
                  theList = theList->next) { DefmoduleData(theEnv)->NumberOfPortItems++; }
         }
 
@@ -279,41 +279,41 @@ static void BsaveBinaryItem(
     /*==========================================*/
 
     DefmoduleData(theEnv)->NumberOfPortItems = 0;
-    defmodulePtr = GetNextDefmodule(theEnv, NULL);
-    while (defmodulePtr != NULL) {
+    defmodulePtr = GetNextDefmodule(theEnv, nullptr);
+    while (defmodulePtr != nullptr) {
         for (theList = defmodulePtr->importList;
-             theList != NULL;
+             theList != nullptr;
              theList = theList->next) {
             DefmoduleData(theEnv)->NumberOfPortItems++;
-            if (theList->moduleName == NULL) newPortItem.moduleName = ULONG_MAX;
+            if (theList->moduleName == nullptr) newPortItem.moduleName = ULONG_MAX;
             else newPortItem.moduleName = theList->moduleName->bucket;
 
-            if (theList->constructType == NULL) newPortItem.constructType = ULONG_MAX;
+            if (theList->constructType == nullptr) newPortItem.constructType = ULONG_MAX;
             else newPortItem.constructType = theList->constructType->bucket;
 
-            if (theList->constructName == NULL) newPortItem.constructName = ULONG_MAX;
+            if (theList->constructName == nullptr) newPortItem.constructName = ULONG_MAX;
             else newPortItem.constructName = theList->constructName->bucket;
 
-            if (theList->next == NULL) newPortItem.next = ULONG_MAX;
+            if (theList->next == nullptr) newPortItem.next = ULONG_MAX;
             else newPortItem.next = DefmoduleData(theEnv)->NumberOfPortItems;
 
             GenWrite(&newPortItem, sizeof(struct bsavePortItem), fp);
         }
 
         for (theList = defmodulePtr->exportList;
-             theList != NULL;
+             theList != nullptr;
              theList = theList->next) {
             DefmoduleData(theEnv)->NumberOfPortItems++;
-            if (theList->moduleName == NULL) newPortItem.moduleName = ULONG_MAX;
+            if (theList->moduleName == nullptr) newPortItem.moduleName = ULONG_MAX;
             else newPortItem.moduleName = theList->moduleName->bucket;
 
-            if (theList->constructType == NULL) newPortItem.constructType = ULONG_MAX;
+            if (theList->constructType == nullptr) newPortItem.constructType = ULONG_MAX;
             else newPortItem.constructType = theList->constructType->bucket;
 
-            if (theList->constructName == NULL) newPortItem.constructName = ULONG_MAX;
+            if (theList->constructName == nullptr) newPortItem.constructName = ULONG_MAX;
             else newPortItem.constructName = theList->constructName->bucket;
 
-            if (theList->next == NULL) newPortItem.next = ULONG_MAX;
+            if (theList->next == nullptr) newPortItem.next = ULONG_MAX;
             else newPortItem.next = DefmoduleData(theEnv)->NumberOfPortItems;
 
             GenWrite(&newPortItem, sizeof(struct bsavePortItem), fp);
@@ -358,7 +358,7 @@ static void BloadStorage(
     /*================================*/
 
     if (DefmoduleData(theEnv)->BNumberOfDefmodules == 0) {
-        DefmoduleData(theEnv)->DefmoduleArray = NULL;
+        DefmoduleData(theEnv)->DefmoduleArray = nullptr;
         return;
     }
 
@@ -371,7 +371,7 @@ static void BloadStorage(
     /*================================*/
 
     if (DefmoduleData(theEnv)->NumberOfPortItems == 0) {
-        DefmoduleData(theEnv)->PortItemArray = NULL;
+        DefmoduleData(theEnv)->PortItemArray = nullptr;
         return;
     }
 
@@ -394,7 +394,7 @@ static void BloadBinaryItem(
     BloadandRefresh(theEnv, DefmoduleData(theEnv)->NumberOfPortItems, sizeof(struct bsavePortItem), UpdatePortItem);
 
     SetListOfDefmodules(theEnv, DefmoduleData(theEnv)->DefmoduleArray);
-    SetCurrentModule(theEnv, GetNextDefmodule(theEnv, NULL));
+    SetCurrentModule(theEnv, GetNextDefmodule(theEnv, nullptr));
 }
 
 /******************************************/
@@ -412,18 +412,18 @@ static void UpdateDefmodule(
     bdp = (struct bsaveDefmodule *) buf;
 
     UpdateConstructHeader(theEnv, &bdp->header, &DefmoduleData(theEnv)->DefmoduleArray[obji].header, DEFMODULE,
-                          0, NULL, sizeof(Defmodule), DefmoduleData(theEnv)->DefmoduleArray);
+                          0, nullptr, sizeof(Defmodule), DefmoduleData(theEnv)->DefmoduleArray);
 
-    if (GetNumberOfModuleItems(theEnv) == 0) { DefmoduleData(theEnv)->DefmoduleArray[obji].itemsArray = NULL; }
+    if (GetNumberOfModuleItems(theEnv) == 0) { DefmoduleData(theEnv)->DefmoduleArray[obji].itemsArray = nullptr; }
     else {
         DefmoduleData(theEnv)->DefmoduleArray[obji].itemsArray =
                 (struct defmoduleItemHeader **) gm2(theEnv, sizeof(void *) * GetNumberOfModuleItems(theEnv));
     }
 
     for (i = 0, theItem = GetListOfModuleItems(theEnv);
-         (i < GetNumberOfModuleItems(theEnv)) && (theItem != NULL);
+         (i < GetNumberOfModuleItems(theEnv)) && (theItem != nullptr);
          i++, theItem = theItem->next) {
-        if (theItem->bloadModuleReference == NULL) { DefmoduleData(theEnv)->DefmoduleArray[obji].itemsArray[i] = NULL; }
+        if (theItem->bloadModuleReference == nullptr) { DefmoduleData(theEnv)->DefmoduleArray[obji].itemsArray[i] = nullptr; }
         else {
             DefmoduleData(theEnv)->DefmoduleArray[obji].itemsArray[i] =
                     (struct defmoduleItemHeader *)
@@ -431,15 +431,15 @@ static void UpdateDefmodule(
         }
     }
 
-    DefmoduleData(theEnv)->DefmoduleArray[obji].header.ppForm = NULL;
+    DefmoduleData(theEnv)->DefmoduleArray[obji].header.ppForm = nullptr;
 
     if (bdp->importList != ULONG_MAX) {
         DefmoduleData(theEnv)->DefmoduleArray[obji].importList = (struct portItem *) &DefmoduleData(theEnv)->PortItemArray[bdp->importList];
-    } else { DefmoduleData(theEnv)->DefmoduleArray[obji].importList = NULL; }
+    } else { DefmoduleData(theEnv)->DefmoduleArray[obji].importList = nullptr; }
 
     if (bdp->exportList != ULONG_MAX) {
         DefmoduleData(theEnv)->DefmoduleArray[obji].exportList = (struct portItem *) &DefmoduleData(theEnv)->PortItemArray[bdp->exportList];
-    } else { DefmoduleData(theEnv)->DefmoduleArray[obji].exportList = NULL; }
+    } else { DefmoduleData(theEnv)->DefmoduleArray[obji].exportList = nullptr; }
     DefmoduleData(theEnv)->DefmoduleArray[obji].header.bsaveID = bdp->bsaveID;
 }
 
@@ -458,21 +458,21 @@ static void UpdatePortItem(
     if (bdp->moduleName != ULONG_MAX) {
         DefmoduleData(theEnv)->PortItemArray[obji].moduleName = SymbolPointer(bdp->moduleName);
         IncrementLexemeCount(DefmoduleData(theEnv)->PortItemArray[obji].moduleName);
-    } else { DefmoduleData(theEnv)->PortItemArray[obji].moduleName = NULL; }
+    } else { DefmoduleData(theEnv)->PortItemArray[obji].moduleName = nullptr; }
 
     if (bdp->constructType != ULONG_MAX) {
         DefmoduleData(theEnv)->PortItemArray[obji].constructType = SymbolPointer(bdp->constructType);
         IncrementLexemeCount(DefmoduleData(theEnv)->PortItemArray[obji].constructType);
-    } else { DefmoduleData(theEnv)->PortItemArray[obji].constructType = NULL; }
+    } else { DefmoduleData(theEnv)->PortItemArray[obji].constructType = nullptr; }
 
     if (bdp->constructName != ULONG_MAX) {
         DefmoduleData(theEnv)->PortItemArray[obji].constructName = SymbolPointer(bdp->constructName);
         IncrementLexemeCount(DefmoduleData(theEnv)->PortItemArray[obji].constructName);
-    } else { DefmoduleData(theEnv)->PortItemArray[obji].constructName = NULL; }
+    } else { DefmoduleData(theEnv)->PortItemArray[obji].constructName = nullptr; }
 
     if (bdp->next != ULONG_MAX) {
         DefmoduleData(theEnv)->PortItemArray[obji].next = (struct portItem *) &DefmoduleData(theEnv)->PortItemArray[bdp->next];
-    } else { DefmoduleData(theEnv)->PortItemArray[obji].next = NULL; }
+    } else { DefmoduleData(theEnv)->PortItemArray[obji].next = nullptr; }
 }
 
 /***************************************/
@@ -493,19 +493,19 @@ static void ClearBload(
     for (i = 0; i < DefmoduleData(theEnv)->BNumberOfDefmodules; i++) {
         ReleaseLexeme(theEnv, DefmoduleData(theEnv)->DefmoduleArray[i].header.name);
         for (theList = DefmoduleData(theEnv)->DefmoduleArray[i].importList;
-             theList != NULL;
+             theList != nullptr;
              theList = theList->next) {
-            if (theList->moduleName != NULL) ReleaseLexeme(theEnv, theList->moduleName);
-            if (theList->constructType != NULL) ReleaseLexeme(theEnv, theList->constructType);
-            if (theList->constructName != NULL) ReleaseLexeme(theEnv, theList->constructName);
+            if (theList->moduleName != nullptr) ReleaseLexeme(theEnv, theList->moduleName);
+            if (theList->constructType != nullptr) ReleaseLexeme(theEnv, theList->constructType);
+            if (theList->constructName != nullptr) ReleaseLexeme(theEnv, theList->constructName);
         }
 
         for (theList = DefmoduleData(theEnv)->DefmoduleArray[i].exportList;
-             theList != NULL;
+             theList != nullptr;
              theList = theList->next) {
-            if (theList->moduleName != NULL) ReleaseLexeme(theEnv, theList->moduleName);
-            if (theList->constructType != NULL) ReleaseLexeme(theEnv, theList->constructType);
-            if (theList->constructName != NULL) ReleaseLexeme(theEnv, theList->constructName);
+            if (theList->moduleName != nullptr) ReleaseLexeme(theEnv, theList->moduleName);
+            if (theList->constructType != nullptr) ReleaseLexeme(theEnv, theList->constructType);
+            if (theList->constructName != nullptr) ReleaseLexeme(theEnv, theList->constructName);
         }
 
         rm(theEnv, DefmoduleData(theEnv)->DefmoduleArray[i].itemsArray, sizeof(void *) * GetNumberOfModuleItems(theEnv));
@@ -533,8 +533,8 @@ static void ClearBload(
     /* Reset module information. */
     /*===========================*/
 
-    SetListOfDefmodules(theEnv, NULL);
-    CreateMainModule(theEnv, NULL);
+    SetListOfDefmodules(theEnv, nullptr);
+    CreateMainModule(theEnv, nullptr);
     DefmoduleData(theEnv)->MainModuleRedefinable = true;
 }
 

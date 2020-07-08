@@ -119,7 +119,7 @@ void SetupDeffunctionsBload(
                   BloadStorageDeffunctions, BloadDeffunctions,
                   ClearDeffunctionBload);
 #else
-    AddBinaryItem(theEnv,"deffunctions",0,NULL,NULL,NULL,NULL,
+    AddBinaryItem(theEnv,"deffunctions",0,nullptr,nullptr,nullptr,nullptr,
                               BloadStorageDeffunctions,BloadDeffunctions,
                               ClearDeffunctionBload);
 #endif
@@ -190,7 +190,7 @@ static void BsaveDeffunctionFind(
 
     DoForAllConstructs(theEnv, MarkDeffunctionItems,
                        DeffunctionData(theEnv)->DeffunctionModuleIndex,
-                       false, NULL);
+                       false, nullptr);
 }
 
 /***************************************************
@@ -296,8 +296,8 @@ static void BsaveDeffunctions(
        Write out each deffunction module
        ================================= */
     DeffunctionBinaryData(theEnv)->DeffunctionCount = 0L;
-    theModule = GetNextDefmodule(theEnv, NULL);
-    while (theModule != NULL) {
+    theModule = GetNextDefmodule(theEnv, nullptr);
+    while (theModule != nullptr) {
         theModuleItem = (DeffunctionModuleData *)
                 GetModuleItem(theEnv, theModule, FindModuleItem(theEnv, "deffunction")->moduleIndex);
         AssignBsaveDefmdlItemHdrVals(&dummy_mitem.header, &theModuleItem->header);
@@ -335,7 +335,7 @@ static void BsaveDeffunction(
     dummy_df.minNumberOfParameters = dptr->minNumberOfParameters;
     dummy_df.maxNumberOfParameters = dptr->maxNumberOfParameters;
     dummy_df.numberOfLocalVars = dptr->numberOfLocalVars;
-    if (dptr->code != NULL) {
+    if (dptr->code != nullptr) {
         dummy_df.code = ExpressionData(theEnv)->ExpressionCount;
         ExpressionData(theEnv)->ExpressionCount += ExpressionSize(dptr->code);
     } else
@@ -365,8 +365,8 @@ static void BloadStorageDeffunctions(
     GenReadBinary(theEnv, &DeffunctionBinaryData(theEnv)->ModuleCount, sizeof(unsigned long));
     GenReadBinary(theEnv, &DeffunctionBinaryData(theEnv)->DeffunctionCount, sizeof(unsigned long));
     if (DeffunctionBinaryData(theEnv)->ModuleCount == 0L) {
-        DeffunctionBinaryData(theEnv)->ModuleArray = NULL;
-        DeffunctionBinaryData(theEnv)->DeffunctionArray = NULL;
+        DeffunctionBinaryData(theEnv)->ModuleArray = nullptr;
+        DeffunctionBinaryData(theEnv)->DeffunctionArray = nullptr;
         return;
     }
 
@@ -374,7 +374,7 @@ static void BloadStorageDeffunctions(
     DeffunctionBinaryData(theEnv)->ModuleArray = (DeffunctionModuleData *) genalloc(theEnv, space);
 
     if (DeffunctionBinaryData(theEnv)->DeffunctionCount == 0L) {
-        DeffunctionBinaryData(theEnv)->DeffunctionArray = NULL;
+        DeffunctionBinaryData(theEnv)->DeffunctionArray = nullptr;
         return;
     }
 
@@ -466,7 +466,7 @@ static void UpdateDeffunction(
   NAME         : ClearDeffunctionBload
   DESCRIPTION  : Release all binary-loaded deffunction
                    structure arrays
-                 Resets deffunction list to NULL
+                 Resets deffunction list to nullptr
   INPUTS       : None
   RETURNS      : Nothing useful
   SIDE EFFECTS : Memory cleared
@@ -481,7 +481,7 @@ static void ClearDeffunctionBload(
     if (space == 0L)
         return;
     genfree(theEnv, DeffunctionBinaryData(theEnv)->ModuleArray, space);
-    DeffunctionBinaryData(theEnv)->ModuleArray = NULL;
+    DeffunctionBinaryData(theEnv)->ModuleArray = nullptr;
     DeffunctionBinaryData(theEnv)->ModuleCount = 0L;
 
     for (i = 0; i < DeffunctionBinaryData(theEnv)->DeffunctionCount; i++)
@@ -490,7 +490,7 @@ static void ClearDeffunctionBload(
     if (space == 0)
         return;
     genfree(theEnv, DeffunctionBinaryData(theEnv)->DeffunctionArray, space);
-    DeffunctionBinaryData(theEnv)->DeffunctionArray = NULL;
+    DeffunctionBinaryData(theEnv)->DeffunctionArray = nullptr;
     DeffunctionBinaryData(theEnv)->DeffunctionCount = 0L;
 }
 

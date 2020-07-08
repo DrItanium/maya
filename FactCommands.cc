@@ -121,18 +121,18 @@ static long long GetFactsArgument(UDFContext *);
 void FactCommandDefinitions(
         Environment *theEnv) {
 #if DEBUGGING_FUNCTIONS
-    AddUDF(theEnv, "facts", "v", 0, 4, "l;*", FactsCommand, NULL);
+    AddUDF(theEnv, "facts", "v", 0, 4, "l;*", FactsCommand, nullptr);
 #endif
 
-    AddUDF(theEnv, "assert", "bf", 0, UNBOUNDED, NULL, AssertCommand, NULL);
-    AddUDF(theEnv, "retract", "v", 1, UNBOUNDED, "fly", RetractCommand, NULL);
-    AddUDF(theEnv, "assert-string", "bf", 1, 1, "s", AssertStringFunction, NULL);
-    AddUDF(theEnv, "str-assert", "bf", 1, 1, "s", AssertStringFunction, NULL);
+    AddUDF(theEnv, "assert", "bf", 0, UNBOUNDED, nullptr, AssertCommand, nullptr);
+    AddUDF(theEnv, "retract", "v", 1, UNBOUNDED, "fly", RetractCommand, nullptr);
+    AddUDF(theEnv, "assert-string", "bf", 1, 1, "s", AssertStringFunction, nullptr);
+    AddUDF(theEnv, "str-assert", "bf", 1, 1, "s", AssertStringFunction, nullptr);
 
-    AddUDF(theEnv, "get-fact-duplication", "b", 0, 0, NULL, GetFactDuplicationCommand, NULL);
-    AddUDF(theEnv, "set-fact-duplication", "b", 1, 1, NULL, SetFactDuplicationCommand, NULL);
+    AddUDF(theEnv, "get-fact-duplication", "b", 0, 0, nullptr, GetFactDuplicationCommand, nullptr);
+    AddUDF(theEnv, "set-fact-duplication", "b", 1, 1, nullptr, SetFactDuplicationCommand, nullptr);
 
-    AddUDF(theEnv, "fact-index", "l", 1, 1, "f", FactIndexFunction, NULL);
+    AddUDF(theEnv, "fact-index", "l", 1, 1, "f", FactIndexFunction, nullptr);
 
     FuncSeqOvlFlags(theEnv, "assert", false, false);
     AddFunctionParser(theEnv, "assert", AssertParse);
@@ -174,8 +174,8 @@ void AssertCommand(
         slotPtr = theDeftemplate->slotList;
     } else {
         newFact = CreateFactBySize(theEnv, 1);
-        if (theExpression->nextArg == NULL) { newFact->theProposition.contents[0].multifieldValue = CreateUnmanagedMultifield(theEnv, 0L); }
-        slotPtr = NULL;
+        if (theExpression->nextArg == nullptr) { newFact->theProposition.contents[0].multifieldValue = CreateUnmanagedMultifield(theEnv, 0L); }
+        slotPtr = nullptr;
     }
 
     newFact->whichDeftemplate = theDeftemplate;
@@ -191,7 +191,7 @@ void AssertCommand(
     theField = newFact->theProposition.contents;
 
     for (theExpression = theExpression->nextArg, i = 0;
-         theExpression != NULL;
+         theExpression != nullptr;
          theExpression = theExpression->nextArg, i++) {
         /*===================================================*/
         /* Evaluate the expression to be stored in the slot. */
@@ -203,7 +203,7 @@ void AssertCommand(
         /* A multifield value can't be stored in a single field slot. */
         /*============================================================*/
 
-        if ((slotPtr != NULL) ?
+        if ((slotPtr != nullptr) ?
             (slotPtr->multislot == false) && (theValue.header->type == MULTIFIELD_TYPE) :
             false) {
             MultiIntoSingleFieldSlotError(theEnv, slotPtr, theDeftemplate);
@@ -221,7 +221,7 @@ void AssertCommand(
         /* Get the information for the next slot. */
         /*========================================*/
 
-        if (slotPtr != NULL) slotPtr = slotPtr->next;
+        if (slotPtr != nullptr) slotPtr = slotPtr->next;
     }
 
     DecrementClearReadyLocks(theEnv);
@@ -247,7 +247,7 @@ void AssertCommand(
     /* The asserted fact is the return value. */
     /*========================================*/
 
-    if (theFact != NULL) { returnValue->factValue = theFact; }
+    if (theFact != nullptr) { returnValue->factValue = theFact; }
     else { returnValue->lexemeValue = FalseSymbol(theEnv); }
 
     return;
@@ -311,7 +311,7 @@ void RetractCommand(
             /* otherwise print an error message.   */
             /*=====================================*/
 
-            if (ptr != NULL) { Retract(ptr); }
+            if (ptr != nullptr) { Retract(ptr); }
             else {
                 char tempBuffer[20];
                 gensprintf(tempBuffer, "f-%lld", factIndex);
@@ -459,7 +459,7 @@ void FactsCommand(
 
     if (CVIsSymbol(&theArg)) {
         theModule = FindDefmodule(theEnv, theArg.lexemeValue->contents);
-        if ((theModule == NULL) && (strcmp(theArg.lexemeValue->contents, "*") != 0)) {
+        if ((theModule == nullptr) && (strcmp(theArg.lexemeValue->contents, "*") != 0)) {
             SetEvaluationError(theEnv, true);
             CantFindItemErrorMessage(theEnv, "defmodule", theArg.lexemeValue->contents, true);
             return;
@@ -532,22 +532,22 @@ void Facts(
     /* or just facts from the current module.                  */
     /*=========================================================*/
 
-    if (theModule == NULL) allModules = true;
+    if (theModule == nullptr) allModules = true;
     else SetCurrentModule(theEnv, theModule);
 
     /*=====================================*/
     /* Get the first fact to be displayed. */
     /*=====================================*/
 
-    if (allModules) factPtr = GetNextFact(theEnv, NULL);
-    else factPtr = GetNextFactInScope(theEnv, NULL);
+    if (allModules) factPtr = GetNextFact(theEnv, nullptr);
+    else factPtr = GetNextFactInScope(theEnv, nullptr);
 
     /*===============================*/
     /* Display facts until there are */
     /* no more facts to display.     */
     /*===============================*/
 
-    while (factPtr != NULL) {
+    while (factPtr != nullptr) {
         /*==================================================*/
         /* Abort the display of facts if the Halt Execution */
         /* flag has been set (normally by user action).     */
@@ -586,7 +586,7 @@ void Facts(
         /*======================================================*/
 
         if (factPtr->factIndex >= start) {
-            PrintFactWithIdentifier(theEnv, logicalName, factPtr, NULL);
+            PrintFactWithIdentifier(theEnv, logicalName, factPtr, nullptr);
             WriteString(theEnv, logicalName, "\n");
             count++;
             if (max > 0) max--;
@@ -664,7 +664,7 @@ void AssertStringFunction(
     /*==========================================*/
 
     theFact = AssertString(theEnv, theArg.lexemeValue->contents);
-    if (theFact != NULL) { returnValue->factValue = theFact; }
+    if (theFact != nullptr) { returnValue->factValue = theFact; }
     else { returnValue->lexemeValue = FalseSymbol(theEnv); }
 }
 

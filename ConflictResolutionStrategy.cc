@@ -68,8 +68,8 @@
 
 #include "ConflictResolutionStrategy.h"
 
-#define GetMatchingItem(x, i) ((x->basis->binds[i].gm.theMatch != NULL) ? \
-                              (x->basis->binds[i].gm.theMatch->matchingItem) : NULL)
+#define GetMatchingItem(x, i) ((x->basis->binds[i].gm.theMatch != nullptr) ? \
+                              (x->basis->binds[i].gm.theMatch->matchingItem) : nullptr)
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
@@ -95,7 +95,7 @@ void PlaceActivation(
         Activation **whichAgenda,
         Activation *newActivation,
         struct salienceGroup *theGroup) {
-    Activation *placeAfter = NULL;
+    Activation *placeAfter = nullptr;
 
     /*================================================*/
     /* Set the flag which indicates that a change has */
@@ -110,7 +110,7 @@ void PlaceActivation(
     /* current conflict resolution strategy.       */
     /*==============================================*/
 
-    if (*whichAgenda != NULL) {
+    if (*whichAgenda != nullptr) {
         switch (AgendaData(theEnv)->Strategy) {
             case DEPTH_STRATEGY:
                 placeAfter = PlaceDepthActivation(newActivation, theGroup);
@@ -149,17 +149,17 @@ void PlaceActivation(
     /* Place the activation at the appropriate place in the agenda. */
     /*==============================================================*/
 
-    if (placeAfter == NULL) /* then place it at the beginning of then agenda. */
+    if (placeAfter == nullptr) /* then place it at the beginning of then agenda. */
     {
         newActivation->next = *whichAgenda;
         *whichAgenda = newActivation;
-        if (newActivation->next != NULL) newActivation->next->prev = newActivation;
+        if (newActivation->next != nullptr) newActivation->next->prev = newActivation;
     } else /* insert it in the agenda. */
     {
         newActivation->next = placeAfter->next;
         newActivation->prev = placeAfter;
         placeAfter->next = newActivation;
-        if (newActivation->next != NULL) { newActivation->next->prev = newActivation; }
+        if (newActivation->next != nullptr) { newActivation->next->prev = newActivation; }
     }
 }
 
@@ -167,7 +167,7 @@ void PlaceActivation(
 /* PlaceDepthActivation: Determines the location in the agenda     */
 /*    where a new activation should be placed for the depth        */
 /*    strategy. Returns a pointer to the activation after which    */
-/*    the new activation should be placed (or NULL if the          */
+/*    the new activation should be placed (or nullptr if the          */
 /*    activation should be placed at the beginning of the agenda). */
 /*******************************************************************/
 static Activation *PlaceDepthActivation(
@@ -181,7 +181,7 @@ static Activation *PlaceDepthActivation(
     /*============================================*/
 
     timetag = newActivation->timetag;
-    if (theGroup->prev == NULL) { lastAct = NULL; }
+    if (theGroup->prev == nullptr) { lastAct = nullptr; }
     else { lastAct = theGroup->prev->last; }
 
     /*=========================================================*/
@@ -194,7 +194,7 @@ static Activation *PlaceDepthActivation(
     /*=========================================================*/
 
     actPtr = theGroup->first;
-    while (actPtr != NULL) {
+    while (actPtr != nullptr) {
         if (timetag < actPtr->timetag) {
             lastAct = actPtr;
             if (actPtr == theGroup->last) { break; }
@@ -206,10 +206,10 @@ static Activation *PlaceDepthActivation(
     /* Update the salience group information. */
     /*========================================*/
 
-    if ((lastAct == NULL) ||
-        ((theGroup->prev != NULL) && (theGroup->prev->last == lastAct))) { theGroup->first = newActivation; }
+    if ((lastAct == nullptr) ||
+        ((theGroup->prev != nullptr) && (theGroup->prev->last == lastAct))) { theGroup->first = newActivation; }
 
-    if ((theGroup->last == NULL) || (theGroup->last == lastAct)) { theGroup->last = newActivation; }
+    if ((theGroup->last == nullptr) || (theGroup->last == lastAct)) { theGroup->last = newActivation; }
 
     /*===========================================*/
     /* Return the insertion point in the agenda. */
@@ -222,7 +222,7 @@ static Activation *PlaceDepthActivation(
 /* PlaceBreadthActivation: Determines the location in the agenda   */
 /*    where a new activation should be placed for the breadth      */
 /*    strategy. Returns a pointer to the activation after which    */
-/*    the new activation should be placed (or NULL if the          */
+/*    the new activation should be placed (or nullptr if the          */
 /*    activation should be placed at the beginning of the agenda). */
 /*******************************************************************/
 static Activation *PlaceBreadthActivation(
@@ -236,8 +236,8 @@ static Activation *PlaceBreadthActivation(
     /*============================================*/
 
     timetag = newActivation->timetag;
-    if (theGroup->last == NULL) {
-        if (theGroup->prev == NULL) { lastAct = NULL; }
+    if (theGroup->last == nullptr) {
+        if (theGroup->prev == nullptr) { lastAct = nullptr; }
         else { lastAct = theGroup->prev->last; }
     } else { lastAct = theGroup->last; }
 
@@ -251,10 +251,10 @@ static Activation *PlaceBreadthActivation(
     /*=========================================================*/
 
     actPtr = theGroup->last;
-    while (actPtr != NULL) {
+    while (actPtr != nullptr) {
         if (timetag < actPtr->timetag) {
             if (actPtr == theGroup->first) {
-                if (theGroup->prev == NULL) { lastAct = NULL; }
+                if (theGroup->prev == nullptr) { lastAct = nullptr; }
                 else { lastAct = theGroup->prev->last; }
                 break;
             } else { actPtr = actPtr->prev; }
@@ -268,10 +268,10 @@ static Activation *PlaceBreadthActivation(
     /* Update the salience group information. */
     /*========================================*/
 
-    if ((lastAct == NULL) ||
-        ((theGroup->prev != NULL) && (theGroup->prev->last == lastAct))) { theGroup->first = newActivation; }
+    if ((lastAct == nullptr) ||
+        ((theGroup->prev != nullptr) && (theGroup->prev->last == lastAct))) { theGroup->first = newActivation; }
 
-    if ((theGroup->last == NULL) || (theGroup->last == lastAct)) { theGroup->last = newActivation; }
+    if ((theGroup->last == nullptr) || (theGroup->last == lastAct)) { theGroup->last = newActivation; }
 
     /*===========================================*/
     /* Return the insertion point in the agenda. */
@@ -284,7 +284,7 @@ static Activation *PlaceBreadthActivation(
 /* PlaceLEXActivation: Determines the location in the agenda       */
 /*    where a new activation should be placed for the lex          */
 /*    strategy. Returns a pointer to the activation after which    */
-/*    the new activation should be placed (or NULL if the          */
+/*    the new activation should be placed (or nullptr if the          */
 /*    activation should be placed at the beginning of the agenda). */
 /*******************************************************************/
 static Activation *PlaceLEXActivation(
@@ -300,7 +300,7 @@ static Activation *PlaceLEXActivation(
     /*============================================*/
 
     timetag = newActivation->timetag;
-    if (theGroup->prev == NULL) { lastAct = NULL; }
+    if (theGroup->prev == nullptr) { lastAct = nullptr; }
     else { lastAct = theGroup->prev->last; }
 
     /*================================================*/
@@ -309,7 +309,7 @@ static Activation *PlaceLEXActivation(
     /*================================================*/
 
     actPtr = theGroup->last;
-    if (actPtr != NULL) {
+    if (actPtr != nullptr) {
         flag = ComparePartialMatches(theEnv, actPtr, newActivation);
 
         if ((flag == LESS_THAN) ||
@@ -329,7 +329,7 @@ static Activation *PlaceLEXActivation(
     /*=========================================================*/
 
     actPtr = theGroup->first;
-    while (actPtr != NULL) {
+    while (actPtr != nullptr) {
         flag = ComparePartialMatches(theEnv, actPtr, newActivation);
 
         if (flag == LESS_THAN) {
@@ -351,10 +351,10 @@ static Activation *PlaceLEXActivation(
     /* Update the salience group information. */
     /*========================================*/
 
-    if ((lastAct == NULL) ||
-        ((theGroup->prev != NULL) && (theGroup->prev->last == lastAct))) { theGroup->first = newActivation; }
+    if ((lastAct == nullptr) ||
+        ((theGroup->prev != nullptr) && (theGroup->prev->last == lastAct))) { theGroup->first = newActivation; }
 
-    if ((theGroup->last == NULL) || (theGroup->last == lastAct)) { theGroup->last = newActivation; }
+    if ((theGroup->last == nullptr) || (theGroup->last == lastAct)) { theGroup->last = newActivation; }
 
     /*===========================================*/
     /* Return the insertion point in the agenda. */
@@ -367,7 +367,7 @@ static Activation *PlaceLEXActivation(
 /* PlaceMEAActivation: Determines the location in the agenda       */
 /*    where a new activation should be placed for the mea          */
 /*    strategy. Returns a pointer to the activation after which    */
-/*    the new activation should be placed (or NULL if the          */
+/*    the new activation should be placed (or nullptr if the          */
 /*    activation should be placed at the beginning of the agenda). */
 /*******************************************************************/
 static Activation *PlaceMEAActivation(
@@ -385,7 +385,7 @@ static Activation *PlaceMEAActivation(
     /*============================================*/
 
     timetag = newActivation->timetag;
-    if (theGroup->prev == NULL) { lastAct = NULL; }
+    if (theGroup->prev == nullptr) { lastAct = nullptr; }
     else { lastAct = theGroup->prev->last; }
 
     /*================================================*/
@@ -394,13 +394,13 @@ static Activation *PlaceMEAActivation(
     /*================================================*/
 
     actPtr = theGroup->last;
-    if (actPtr != NULL) {
-        if (GetMatchingItem(newActivation, 0) != NULL) {
+    if (actPtr != nullptr) {
+        if (GetMatchingItem(newActivation, 0) != nullptr) {
             cWhoset = GetMatchingItem(newActivation, 0)->timeTag;
             cSet = true;
         } else { cSet = false; }
 
-        if (GetMatchingItem(actPtr, 0) != NULL) {
+        if (GetMatchingItem(actPtr, 0) != nullptr) {
             oWhoset = GetMatchingItem(actPtr, 0)->timeTag;
             oSet = true;
         } else { oSet = false; }
@@ -429,12 +429,12 @@ static Activation *PlaceMEAActivation(
     /*=========================================================*/
 
     actPtr = theGroup->first;
-    while (actPtr != NULL) {
+    while (actPtr != nullptr) {
         cWhoset = 0;
         oWhoset = 0;
-        if (GetMatchingItem(newActivation, 0) != NULL) { cWhoset = GetMatchingItem(newActivation, 0)->timeTag; }
+        if (GetMatchingItem(newActivation, 0) != nullptr) { cWhoset = GetMatchingItem(newActivation, 0)->timeTag; }
 
-        if (GetMatchingItem(actPtr, 0) != NULL) { oWhoset = GetMatchingItem(actPtr, 0)->timeTag; }
+        if (GetMatchingItem(actPtr, 0) != nullptr) { oWhoset = GetMatchingItem(actPtr, 0)->timeTag; }
 
         if (oWhoset < cWhoset) {
             if (cWhoset > 0) flag = GREATER_THAN;
@@ -463,10 +463,10 @@ static Activation *PlaceMEAActivation(
     /* Update the salience group information. */
     /*========================================*/
 
-    if ((lastAct == NULL) ||
-        ((theGroup->prev != NULL) && (theGroup->prev->last == lastAct))) { theGroup->first = newActivation; }
+    if ((lastAct == nullptr) ||
+        ((theGroup->prev != nullptr) && (theGroup->prev->last == lastAct))) { theGroup->first = newActivation; }
 
-    if ((theGroup->last == NULL) || (theGroup->last == lastAct)) { theGroup->last = newActivation; }
+    if ((theGroup->last == nullptr) || (theGroup->last == lastAct)) { theGroup->last = newActivation; }
 
     /*===========================================*/
     /* Return the insertion point in the agenda. */
@@ -479,7 +479,7 @@ static Activation *PlaceMEAActivation(
 /* PlaceComplexityActivation: Determines the location in the agenda  */
 /*    where a new activation should be placed for the complexity     */
 /*    strategy. Returns a pointer to the activation  after which the */
-/*    new activation should be placed (or NULL if the activation     */
+/*    new activation should be placed (or nullptr if the activation     */
 /*    should be placed at the beginning of the agenda).              */
 /*********************************************************************/
 static Activation *PlaceComplexityActivation(
@@ -495,7 +495,7 @@ static Activation *PlaceComplexityActivation(
 
     timetag = newActivation->timetag;
     complexity = newActivation->theRule->complexity;
-    if (theGroup->prev == NULL) { lastAct = NULL; }
+    if (theGroup->prev == nullptr) { lastAct = nullptr; }
     else { lastAct = theGroup->prev->last; }
 
     /*=========================================================*/
@@ -507,7 +507,7 @@ static Activation *PlaceComplexityActivation(
     /*=========================================================*/
 
     actPtr = theGroup->first;
-    while (actPtr != NULL) {
+    while (actPtr != nullptr) {
         if (complexity < actPtr->theRule->complexity) {
             lastAct = actPtr;
             if (actPtr == theGroup->last) { break; }
@@ -524,10 +524,10 @@ static Activation *PlaceComplexityActivation(
     /* Update the salience group information. */
     /*========================================*/
 
-    if ((lastAct == NULL) ||
-        ((theGroup->prev != NULL) && (theGroup->prev->last == lastAct))) { theGroup->first = newActivation; }
+    if ((lastAct == nullptr) ||
+        ((theGroup->prev != nullptr) && (theGroup->prev->last == lastAct))) { theGroup->first = newActivation; }
 
-    if ((theGroup->last == NULL) || (theGroup->last == lastAct)) { theGroup->last = newActivation; }
+    if ((theGroup->last == nullptr) || (theGroup->last == lastAct)) { theGroup->last = newActivation; }
 
     /*===========================================*/
     /* Return the insertion point in the agenda. */
@@ -540,7 +540,7 @@ static Activation *PlaceComplexityActivation(
 /* PlaceSimplicityActivation: Determines the location in the agenda  */
 /*    where a new activation should be placed for the simplicity     */
 /*    strategy. Returns a pointer to the activation  after which the */
-/*    new activation should be placed (or NULL if the activation     */
+/*    new activation should be placed (or nullptr if the activation     */
 /*    should be placed at the beginning of the agenda).              */
 /*********************************************************************/
 static Activation *PlaceSimplicityActivation(
@@ -556,7 +556,7 @@ static Activation *PlaceSimplicityActivation(
 
     timetag = newActivation->timetag;
     complexity = newActivation->theRule->complexity;
-    if (theGroup->prev == NULL) { lastAct = NULL; }
+    if (theGroup->prev == nullptr) { lastAct = nullptr; }
     else { lastAct = theGroup->prev->last; }
 
     /*=========================================================*/
@@ -568,7 +568,7 @@ static Activation *PlaceSimplicityActivation(
     /*=========================================================*/
 
     actPtr = theGroup->first;
-    while (actPtr != NULL) {
+    while (actPtr != nullptr) {
         if (complexity > actPtr->theRule->complexity) {
             lastAct = actPtr;
             if (actPtr == theGroup->last) { break; }
@@ -585,10 +585,10 @@ static Activation *PlaceSimplicityActivation(
     /* Update the salience group information. */
     /*========================================*/
 
-    if ((lastAct == NULL) ||
-        ((theGroup->prev != NULL) && (theGroup->prev->last == lastAct))) { theGroup->first = newActivation; }
+    if ((lastAct == nullptr) ||
+        ((theGroup->prev != nullptr) && (theGroup->prev->last == lastAct))) { theGroup->first = newActivation; }
 
-    if ((theGroup->last == NULL) || (theGroup->last == lastAct)) { theGroup->last = newActivation; }
+    if ((theGroup->last == nullptr) || (theGroup->last == lastAct)) { theGroup->last = newActivation; }
 
     /*===========================================*/
     /* Return the insertion point in the agenda. */
@@ -601,7 +601,7 @@ static Activation *PlaceSimplicityActivation(
 /* PlaceRandomActivation: Determines the location in the agenda    */
 /*    where a new activation should be placed for the random       */
 /*    strategy. Returns a pointer to the activation  after which   */
-/*    the new activation should be placed (or NULL if the          */
+/*    the new activation should be placed (or nullptr if the          */
 /*    activation should be placed at the beginning of the agenda). */
 /*******************************************************************/
 static Activation *PlaceRandomActivation(
@@ -617,7 +617,7 @@ static Activation *PlaceRandomActivation(
 
     timetag = newActivation->timetag;
     randomID = newActivation->randomID;
-    if (theGroup->prev == NULL) { lastAct = NULL; }
+    if (theGroup->prev == nullptr) { lastAct = nullptr; }
     else { lastAct = theGroup->prev->last; }
 
     /*=========================================================*/
@@ -629,7 +629,7 @@ static Activation *PlaceRandomActivation(
     /*=========================================================*/
 
     actPtr = theGroup->first;
-    while (actPtr != NULL) {
+    while (actPtr != nullptr) {
         if (randomID > actPtr->randomID) {
             lastAct = actPtr;
             if (actPtr == theGroup->last) { break; }
@@ -646,10 +646,10 @@ static Activation *PlaceRandomActivation(
     /* Update the salience group information. */
     /*========================================*/
 
-    if ((lastAct == NULL) ||
-        ((theGroup->prev != NULL) && (theGroup->prev->last == lastAct))) { theGroup->first = newActivation; }
+    if ((lastAct == nullptr) ||
+        ((theGroup->prev != nullptr) && (theGroup->prev->last == lastAct))) { theGroup->first = newActivation; }
 
-    if ((theGroup->last == NULL) || (theGroup->last == lastAct)) { theGroup->last = newActivation; }
+    if ((theGroup->last == nullptr) || (theGroup->last == lastAct)) { theGroup->last = newActivation; }
 
     /*===========================================*/
     /* Return the insertion point in the agenda. */
@@ -679,8 +679,8 @@ static unsigned long long *SortPartialMatch(
     nbinds = (unsigned long long *) get_mem(theEnv, sizeof(long long) * binds->bcount);
 
     for (j = 0; j < binds->bcount; j++) {
-        if ((binds->binds[j].gm.theMatch != NULL) &&
-            (binds->binds[j].gm.theMatch->matchingItem != NULL)) { nbinds[j] = binds->binds[j].gm.theMatch->matchingItem->timeTag; }
+        if ((binds->binds[j].gm.theMatch != nullptr) &&
+            (binds->binds[j].gm.theMatch->matchingItem != nullptr)) { nbinds[j] = binds->binds[j].gm.theMatch->matchingItem->timeTag; }
         else { nbinds[j] = 0; }
     }
 

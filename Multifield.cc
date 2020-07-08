@@ -96,7 +96,7 @@ Multifield *CreateUnmanagedMultifield(
     theSegment->header.type = MULTIFIELD_TYPE;
     theSegment->length = size;
     theSegment->busyCount = 0;
-    theSegment->next = NULL;
+    theSegment->next = nullptr;
 
     return theSegment;
 }
@@ -109,7 +109,7 @@ void ReturnMultifield(
         Multifield *theSegment) {
     size_t newSize;
 
-    if (theSegment == NULL) return;
+    if (theSegment == nullptr) return;
 
     if (theSegment->length == 0) newSize = 1;
     else newSize = theSegment->length;
@@ -126,7 +126,7 @@ void RetainMultifield(
     size_t length, i;
     CLIPSValue *contents;
 
-    if (theSegment == NULL) return;
+    if (theSegment == nullptr) return;
 
     length = theSegment->length;
 
@@ -145,7 +145,7 @@ void ReleaseMultifield(
     size_t length, i;
     CLIPSValue *contents;
 
-    if (theSegment == NULL) return;
+    if (theSegment == nullptr) return;
 
     length = theSegment->length;
     theSegment->busyCount--;
@@ -163,7 +163,7 @@ void IncrementCLIPSValueMultifieldReferenceCount(
     size_t length, i;
     CLIPSValue *contents;
 
-    if (theSegment == NULL) return;
+    if (theSegment == nullptr) return;
 
     length = theSegment->length;
 
@@ -182,7 +182,7 @@ void DecrementCLIPSValueMultifieldReferenceCount(
     size_t length, i;
     CLIPSValue *contents;
 
-    if (theSegment == NULL) return;
+    if (theSegment == nullptr) return;
 
     length = theSegment->length;
     theSegment->busyCount--;
@@ -202,7 +202,7 @@ Multifield *StringToMultifield(
     Multifield *theSegment;
     CLIPSValue *contents;
     unsigned long numberOfFields = 0;
-    struct expr *topAtom = NULL, *lastAtom = NULL, *theAtom;
+    struct expr *topAtom = nullptr, *lastAtom = nullptr, *theAtom;
 
     /*====================================================*/
     /* Open the string as an input source and read in the */
@@ -219,7 +219,7 @@ Multifield *StringToMultifield(
         else { theAtom = GenConstant(theEnv, SYMBOL_TYPE, CreateSymbol(theEnv, theToken.printForm)); }
 
         numberOfFields++;
-        if (topAtom == NULL) topAtom = theAtom;
+        if (topAtom == nullptr) topAtom = theAtom;
         else lastAtom->nextArg = theAtom;
 
         lastAtom = theAtom;
@@ -241,7 +241,7 @@ Multifield *StringToMultifield(
 
     theAtom = topAtom;
     numberOfFields = 0;
-    while (theAtom != NULL) {
+    while (theAtom != nullptr) {
         contents[numberOfFields].value = theAtom->value;
         numberOfFields++;
         theAtom = theAtom->nextArg;
@@ -305,12 +305,12 @@ Multifield *CreateMultifield(
     theSegment->header.type = MULTIFIELD_TYPE;
     theSegment->length = size;
     theSegment->busyCount = 0;
-    theSegment->next = NULL;
+    theSegment->next = nullptr;
 
     theSegment->next = UtilityData(theEnv)->CurrentGarbageFrame->ListOfMultifields;
     UtilityData(theEnv)->CurrentGarbageFrame->ListOfMultifields = theSegment;
     UtilityData(theEnv)->CurrentGarbageFrame->dirty = true;
-    if (UtilityData(theEnv)->CurrentGarbageFrame->LastMultifield == NULL) {
+    if (UtilityData(theEnv)->CurrentGarbageFrame->LastMultifield == nullptr) {
         UtilityData(theEnv)->CurrentGarbageFrame->LastMultifield = theSegment;
     }
 
@@ -325,7 +325,7 @@ Multifield *DOToMultifield(
         UDFValue *theValue) {
     Multifield *dst, *src;
 
-    if (theValue->header->type != MULTIFIELD_TYPE) return NULL;
+    if (theValue->header->type != MULTIFIELD_TYPE) return nullptr;
 
     dst = CreateUnmanagedMultifield(theEnv, (unsigned long) theValue->range);
 
@@ -345,7 +345,7 @@ void AddToMultifieldList(
     theSegment->next = UtilityData(theEnv)->CurrentGarbageFrame->ListOfMultifields;
     UtilityData(theEnv)->CurrentGarbageFrame->ListOfMultifields = theSegment;
     UtilityData(theEnv)->CurrentGarbageFrame->dirty = true;
-    if (UtilityData(theEnv)->CurrentGarbageFrame->LastMultifield == NULL) {
+    if (UtilityData(theEnv)->CurrentGarbageFrame->LastMultifield == nullptr) {
         UtilityData(theEnv)->CurrentGarbageFrame->LastMultifield = theSegment;
     }
 }
@@ -355,17 +355,17 @@ void AddToMultifieldList(
 /*********************/
 void FlushMultifields(
         Environment *theEnv) {
-    Multifield *theSegment, *nextPtr, *lastPtr = NULL;
+    Multifield *theSegment, *nextPtr, *lastPtr = nullptr;
     size_t newSize;
 
     theSegment = UtilityData(theEnv)->CurrentGarbageFrame->ListOfMultifields;
-    while (theSegment != NULL) {
+    while (theSegment != nullptr) {
         nextPtr = theSegment->next;
         if (theSegment->busyCount == 0) {
             if (theSegment->length == 0) newSize = 1;
             else newSize = theSegment->length;
             rtn_var_struct(theEnv, multifield, sizeof(struct clipsValue) * (newSize - 1), theSegment);
-            if (lastPtr == NULL) UtilityData(theEnv)->CurrentGarbageFrame->ListOfMultifields = nextPtr;
+            if (lastPtr == nullptr) UtilityData(theEnv)->CurrentGarbageFrame->ListOfMultifields = nextPtr;
             else lastPtr->next = nextPtr;
 
             /*=================================================*/
@@ -374,7 +374,7 @@ void FlushMultifields(
             /* to the prior multifield.                        */
             /*=================================================*/
 
-            if (nextPtr == NULL) { UtilityData(theEnv)->CurrentGarbageFrame->LastMultifield = lastPtr; }
+            if (nextPtr == nullptr) { UtilityData(theEnv)->CurrentGarbageFrame->LastMultifield = lastPtr; }
         } else { lastPtr = theSegment; }
 
         theSegment = nextPtr;
@@ -480,7 +480,7 @@ void EphemerateMultifield(
     size_t length, i;
     CLIPSValue *contents;
 
-    if (theSegment == NULL) return;
+    if (theSegment == nullptr) return;
 
     length = theSegment->length;
 
@@ -545,7 +545,7 @@ void StoreInMultifield(
     argCount = CountArguments(expptr);
 
     /*=========================================*/
-    /* If no arguments are given return a NULL */
+    /* If no arguments are given return a nullptr */
     /* multifield of length zero.              */
     /*=========================================*/
 
@@ -910,7 +910,7 @@ MultifieldBuilder *CreateMultifieldBuilder(
     theMB->bufferMaximum = theSize;
     theMB->length = 0;
 
-    if (theSize == 0) { theMB->contents = NULL; }
+    if (theSize == 0) { theMB->contents = nullptr; }
     else { theMB->contents = (CLIPSValue *) gm2(theEnv, sizeof(CLIPSValue) * theSize); }
 
     return theMB;
@@ -1197,7 +1197,7 @@ Multifield *MBCreate(
 
     rv = CreateMultifield(theMB->mbEnv, theMB->length);
 
-    if (rv == NULL) return NULL;
+    if (rv == nullptr) return nullptr;
 
     for (i = 0; i < theMB->length; i++) {
         rv->contents[i].value = theMB->contents[i].value;
@@ -1221,7 +1221,7 @@ void MBReset(
     if (theMB->bufferReset != theMB->bufferMaximum) {
         if (theMB->bufferMaximum != 0) { rm(theMB->mbEnv, theMB->contents, sizeof(CLIPSValue) * theMB->bufferMaximum); }
 
-        if (theMB->bufferReset == 0) { theMB->contents = NULL; }
+        if (theMB->bufferReset == 0) { theMB->contents = nullptr; }
         else { theMB->contents = (CLIPSValue *) gm2(theMB->mbEnv, sizeof(CLIPSValue) * theMB->bufferReset); }
 
         theMB->bufferMaximum = theMB->bufferReset;

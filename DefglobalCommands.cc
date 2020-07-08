@@ -69,11 +69,11 @@ static void PrintDefglobalValueForm(Environment *, const char *, Defglobal *);
 /************************************************************/
 void DefglobalCommandDefinitions(
         Environment *theEnv) {
-    AddUDF(theEnv, "set-reset-globals", "b", 1, 1, NULL, SetResetGlobalsCommand, NULL);
-    AddUDF(theEnv, "get-reset-globals", "b", 0, 0, NULL, GetResetGlobalsCommand, NULL);
+    AddUDF(theEnv, "set-reset-globals", "b", 1, 1, nullptr, SetResetGlobalsCommand, nullptr);
+    AddUDF(theEnv, "get-reset-globals", "b", 0, 0, nullptr, GetResetGlobalsCommand, nullptr);
 
 #if DEBUGGING_FUNCTIONS
-    AddUDF(theEnv, "show-defglobals", "v", 0, 1, "y", ShowDefglobalsCommand, NULL);
+    AddUDF(theEnv, "show-defglobals", "v", 0, 1, "y", ShowDefglobalsCommand, nullptr);
 #endif
 }
 
@@ -181,12 +181,12 @@ void ShowDefglobals(
     struct defmoduleItemHeader *theModuleItem;
 
     /*=======================================*/
-    /* If the module specified is NULL, then */
+    /* If the module specified is nullptr, then */
     /* list all constructs in all modules.   */
     /*=======================================*/
 
-    if (theModule == NULL) {
-        theModule = GetNextDefmodule(theEnv, NULL);
+    if (theModule == nullptr) {
+        theModule = GetNextDefmodule(theEnv, nullptr);
         allModules = true;
     }
 
@@ -195,7 +195,7 @@ void ShowDefglobals(
     /*======================================================*/
 
     for (;
-            theModule != NULL;
+            theModule != nullptr;
             theModule = GetNextDefmodule(theEnv, theModule)) {
         /*===========================================*/
         /* Print the module name before every group  */
@@ -216,7 +216,7 @@ void ShowDefglobals(
         theModuleItem = (struct defmoduleItemHeader *) GetModuleItem(theEnv, theModule, DefglobalData(theEnv)->DefglobalModuleIndex);
 
         for (constructPtr = theModuleItem->firstItem;
-             constructPtr != NULL;
+             constructPtr != nullptr;
              constructPtr = constructPtr->next) {
             if (EvaluationData(theEnv)->HaltExecution == true) return;
 

@@ -108,21 +108,21 @@ void FileCommandDefinitions(
     AllocateEnvironmentData(theEnv, FILECOM_DATA, sizeof(struct fileCommandData), DeallocateFileCommandData);
 
 #if DEBUGGING_FUNCTIONS
-    AddUDF(theEnv, "batch", "b", 1, 1, "sy", BatchCommand, NULL);
-    AddUDF(theEnv, "batch*", "b", 1, 1, "sy", BatchStarCommand, NULL);
-    AddUDF(theEnv, "dribble-on", "b", 1, 1, "sy", DribbleOnCommand, NULL);
-    AddUDF(theEnv, "dribble-off", "b", 0, 0, NULL, DribbleOffCommand, NULL);
-    AddUDF(theEnv, "save", "b", 1, 1, "sy", SaveCommand, NULL);
+    AddUDF(theEnv, "batch", "b", 1, 1, "sy", BatchCommand, nullptr);
+    AddUDF(theEnv, "batch*", "b", 1, 1, "sy", BatchStarCommand, nullptr);
+    AddUDF(theEnv, "dribble-on", "b", 1, 1, "sy", DribbleOnCommand, nullptr);
+    AddUDF(theEnv, "dribble-off", "b", 0, 0, nullptr, DribbleOffCommand, nullptr);
+    AddUDF(theEnv, "save", "b", 1, 1, "sy", SaveCommand, nullptr);
 #endif
-    AddUDF(theEnv, "load", "b", 1, 1, "sy", LoadCommand, NULL);
-    AddUDF(theEnv, "load*", "b", 1, 1, "sy", LoadStarCommand, NULL);
+    AddUDF(theEnv, "load", "b", 1, 1, "sy", LoadCommand, nullptr);
+    AddUDF(theEnv, "load*", "b", 1, 1, "sy", LoadStarCommand, nullptr);
 #if BLOAD_AND_BSAVE
-    AddUDF(theEnv, "bsave", "b", 1, 1, "sy", BsaveCommand, NULL);
+    AddUDF(theEnv, "bsave", "b", 1, 1, "sy", BsaveCommand, nullptr);
 #endif
 #if BLOAD_AND_BSAVE
     InitializeBsaveData(theEnv);
     InitializeBloadData(theEnv);
-    AddUDF(theEnv, "bload", "b", 1, 1, "sy", BloadCommand, NULL);
+    AddUDF(theEnv, "bload", "b", 1, 1, "sy", BloadCommand, nullptr);
 #endif
 }
 
@@ -135,7 +135,7 @@ static void DeallocateFileCommandData(
     struct batchEntry *theEntry, *nextEntry;
 
     theEntry = FileCommandData(theEnv)->TopOfBatchList;
-    while (theEntry != NULL) {
+    while (theEntry != nullptr) {
         nextEntry = theEntry->next;
 
         if (theEntry->batchType == FILE_BATCH) { GenClose(theEnv, FileCommandData(theEnv)->TopOfBatchList->fileSource); }
@@ -148,19 +148,19 @@ static void DeallocateFileCommandData(
         theEntry = nextEntry;
     }
 
-    if (FileCommandData(theEnv)->BatchBuffer != NULL) {
+    if (FileCommandData(theEnv)->BatchBuffer != nullptr) {
         rm(theEnv, FileCommandData(theEnv)->BatchBuffer, FileCommandData(theEnv)->BatchMaximumPosition);
     }
 
     DeleteString(theEnv, FileCommandData(theEnv)->batchPriorParsingFile);
-    FileCommandData(theEnv)->batchPriorParsingFile = NULL;
+    FileCommandData(theEnv)->batchPriorParsingFile = nullptr;
 
 #if DEBUGGING_FUNCTIONS
-    if (FileCommandData(theEnv)->DribbleBuffer != NULL) {
+    if (FileCommandData(theEnv)->DribbleBuffer != nullptr) {
         rm(theEnv, FileCommandData(theEnv)->DribbleBuffer, FileCommandData(theEnv)->DribbleMaximumPosition);
     }
 
-    if (FileCommandData(theEnv)->DribbleFP != NULL) { GenClose(theEnv, FileCommandData(theEnv)->DribbleFP); }
+    if (FileCommandData(theEnv)->DribbleFP != nullptr) { GenClose(theEnv, FileCommandData(theEnv)->DribbleFP); }
 #endif
 }
 
@@ -176,7 +176,7 @@ void DribbleOnCommand(
         UDFValue *returnValue) {
     const char *fileName;
 
-    if ((fileName = GetFileName(context)) == NULL) {
+    if ((fileName = GetFileName(context)) == nullptr) {
         returnValue->lexemeValue = FalseSymbol(theEnv);
         return;
     }
@@ -207,7 +207,7 @@ void BatchCommand(
         UDFValue *returnValue) {
     const char *fileName;
 
-    if ((fileName = GetFileName(context)) == NULL) {
+    if ((fileName = GetFileName(context)) == nullptr) {
         returnValue->lexemeValue = FalseSymbol(theEnv);
         return;
     }
@@ -225,7 +225,7 @@ void BatchStarCommand(
         UDFValue *returnValue) {
     const char *fileName;
 
-    if ((fileName = GetFileName(context)) == NULL) {
+    if ((fileName = GetFileName(context)) == nullptr) {
         returnValue->lexemeValue = FalseSymbol(theEnv);
         return;
     }
@@ -243,7 +243,7 @@ void LoadCommand(
     const char *theFileName;
     LoadError rv;
 
-    if ((theFileName = GetFileName(context)) == NULL) {
+    if ((theFileName = GetFileName(context)) == nullptr) {
         returnValue->lexemeValue = FalseSymbol(theEnv);
         return;
     }
@@ -273,7 +273,7 @@ void LoadStarCommand(
     const char *theFileName;
     LoadError rv;
 
-    if ((theFileName = GetFileName(context)) == NULL) {
+    if ((theFileName = GetFileName(context)) == nullptr) {
         returnValue->lexemeValue = FalseSymbol(theEnv);
         return;
     }
@@ -298,7 +298,7 @@ void SaveCommand(
         UDFValue *returnValue) {
     const char *theFileName;
 
-    if ((theFileName = GetFileName(context)) == NULL) {
+    if ((theFileName = GetFileName(context)) == nullptr) {
         returnValue->lexemeValue = FalseSymbol(theEnv);
         return;
     }

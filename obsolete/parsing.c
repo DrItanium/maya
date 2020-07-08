@@ -30,7 +30,7 @@ void NextTokenFunction(
   {
    struct token theToken;
    int numberOfArguments;
-   const char *logicalName = NULL;
+   const char *logicalName = nullptr;
    void* mf = 0;
 
    /*===============================================*/
@@ -53,7 +53,7 @@ void NextTokenFunction(
    else if (numberOfArguments == 1)
      {
       logicalName = GetLogicalName(theEnv,1,"stdin");
-      if (logicalName == NULL)
+      if (logicalName == nullptr)
         {
          IllegalLogicalNameMessage(theEnv,"read");
          SetHaltExecution(theEnv,TRUE);
@@ -173,7 +173,7 @@ void NextTokenFromStdin(
       /* the characters retrieved from stdin.      */
       /*===========================================*/
 
-      inputString = NULL;
+      inputString = nullptr;
       RouterData(theEnv)->CommandBufferInputCount = 0;
       RouterData(theEnv)->AwaitingInput = TRUE;
       inputStringSize = 0;

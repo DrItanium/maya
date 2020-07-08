@@ -56,7 +56,7 @@ struct defgenericBinaryData {
 
 #define DefgenericBinaryData(theEnv) ((struct defgenericBinaryData *) GetEnvironmentData(theEnv,GENRCBIN_DATA))
 
-#define GenericPointer(i) (((i) == ULONG_MAX) ? NULL : &DefgenericBinaryData(theEnv)->DefgenericArray[i])
+#define GenericPointer(i) (((i) == ULONG_MAX) ? nullptr : &DefgenericBinaryData(theEnv)->DefgenericArray[i])
 
 void SetupGenericsBload(Environment *);
 void *BloadDefgenericModuleReference(Environment *, unsigned long);

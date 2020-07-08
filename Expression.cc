@@ -88,7 +88,7 @@ void InitExpressionData(
     ExpressionData(theEnv)->ExpressionHashTable = (EXPRESSION_HN **)
             gm2(theEnv, sizeof(EXPRESSION_HN *) * EXPRESSION_HASH_SIZE);
     for (i = 0; i < EXPRESSION_HASH_SIZE; i++)
-        ExpressionData(theEnv)->ExpressionHashTable[i] = NULL;
+        ExpressionData(theEnv)->ExpressionHashTable[i] = nullptr;
 }
 
 /*****************************************/
@@ -106,7 +106,7 @@ static void DeallocateExpressionData(
     {
         for (i = 0; i < EXPRESSION_HASH_SIZE; i++) {
             tmpPtr = ExpressionData(theEnv)->ExpressionHashTable[i];
-            while (tmpPtr != NULL) {
+            while (tmpPtr != nullptr) {
                 nextPtr = tmpPtr->next;
                 ReturnPackedExpression(theEnv, tmpPtr->exp);
                 rtn_struct(theEnv, exprHashNode, tmpPtr);
@@ -138,9 +138,9 @@ void InitExpressionPointers(
     ExpressionData(theEnv)->PTR_NEQ = FindFunction(theEnv, "neq");
     ExpressionData(theEnv)->PTR_NOT = FindFunction(theEnv, "not");
 
-    if ((ExpressionData(theEnv)->PTR_AND == NULL) || (ExpressionData(theEnv)->PTR_OR == NULL) ||
-        (ExpressionData(theEnv)->PTR_EQ == NULL) || (ExpressionData(theEnv)->PTR_NEQ == NULL) ||
-        (ExpressionData(theEnv)->PTR_NOT == NULL)) {
+    if ((ExpressionData(theEnv)->PTR_AND == nullptr) || (ExpressionData(theEnv)->PTR_OR == nullptr) ||
+        (ExpressionData(theEnv)->PTR_EQ == nullptr) || (ExpressionData(theEnv)->PTR_NEQ == nullptr) ||
+        (ExpressionData(theEnv)->PTR_NOT == nullptr)) {
         SystemError(theEnv, "EXPRESSN", 1);
         ExitRouter(theEnv, EXIT_FAILURE);
     }
@@ -153,9 +153,9 @@ void InitExpressionPointers(
 void ExpressionInstall(
         Environment *theEnv,
         struct expr *expression) {
-    if (expression == NULL) return;
+    if (expression == nullptr) return;
 
-    while (expression != NULL) {
+    while (expression != nullptr) {
         AtomInstall(theEnv, expression->type, expression->value);
         ExpressionInstall(theEnv, expression->argList);
         expression = expression->nextArg;
@@ -169,9 +169,9 @@ void ExpressionInstall(
 void ExpressionDeinstall(
         Environment *theEnv,
         struct expr *expression) {
-    if (expression == NULL) return;
+    if (expression == nullptr) return;
 
-    while (expression != NULL) {
+    while (expression != nullptr) {
         AtomDeinstall(theEnv, expression->type, expression->value);
         ExpressionDeinstall(theEnv, expression->argList);
         expression = expression->nextArg;
@@ -191,7 +191,7 @@ struct expr *PackExpression(
         struct expr *original) {
     struct expr *packPtr;
 
-    if (original == NULL) return NULL;
+    if (original == nullptr) return nullptr;
 
     packPtr = (struct expr *)
             gm2(theEnv, sizeof(struct expr) * ExpressionSize(original));
@@ -209,23 +209,23 @@ static unsigned long ListToPacked(
         unsigned long count) {
     unsigned long i;
 
-    if (original == NULL) { return count; }
+    if (original == nullptr) { return count; }
 
-    while (original != NULL) {
+    while (original != nullptr) {
         i = count;
         count++;
 
         destination[i].type = original->type;
         destination[i].value = original->value;
 
-        if (original->argList == NULL) { destination[i].argList = NULL; }
+        if (original->argList == nullptr) { destination[i].argList = nullptr; }
         else {
             destination[i].argList =
                     (struct expr *) &destination[count];
             count = ListToPacked(original->argList, destination, count);
         }
 
-        if (original->nextArg == NULL) { destination[i].nextArg = NULL; }
+        if (original->nextArg == nullptr) { destination[i].nextArg = nullptr; }
         else {
             destination[i].nextArg = &destination[count];
         }
@@ -244,7 +244,7 @@ static unsigned long ListToPacked(
 void ReturnPackedExpression(
         Environment *theEnv,
         struct expr *packPtr) {
-    if (packPtr != NULL) {
+    if (packPtr != nullptr) {
         rm(theEnv, packPtr, sizeof(struct expr) * ExpressionSize(packPtr));
     }
 }
@@ -258,8 +258,8 @@ void ReturnExpression(
         struct expr *waste) {
     struct expr *tmp;
 
-    while (waste != NULL) {
-        if (waste->argList != NULL) ReturnExpression(theEnv, waste->argList);
+    while (waste != nullptr) {
+        if (waste->argList != nullptr) ReturnExpression(theEnv, waste->argList);
         tmp = waste;
         waste = waste->nextArg;
         rtn_struct(theEnv, expr, tmp);
@@ -276,7 +276,7 @@ void ReturnExpression(
                  3) A buffer to hold the previous
                     node in the hash chain
   RETURNS      : The expression hash table entry
-                 (NULL if not found)
+                 (nullptr if not found)
   SIDE EFFECTS : None
   NOTES        : None
  ***************************************************/
@@ -287,18 +287,18 @@ static EXPRESSION_HN *FindHashedExpression(
         EXPRESSION_HN **prv) {
     EXPRESSION_HN *exphash;
 
-    if (theExp == NULL)
-        return NULL;
+    if (theExp == nullptr)
+        return nullptr;
     *hashval = HashExpression(theExp);
-    *prv = NULL;
+    *prv = nullptr;
     exphash = ExpressionData(theEnv)->ExpressionHashTable[*hashval];
-    while (exphash != NULL) {
+    while (exphash != nullptr) {
         if (IdenticalExpression(exphash->exp, theExp))
             return (exphash);
         *prv = exphash;
         exphash = exphash->next;
     }
-    return NULL;
+    return nullptr;
 }
 
 /***************************************************
@@ -318,9 +318,9 @@ static unsigned HashExpression(
         unsigned long uv;
     } fis;
 
-    if (theExp->argList != NULL)
+    if (theExp->argList != nullptr)
         tally += HashExpression(theExp->argList) * PRIME_ONE;
-    while (theExp != NULL) {
+    while (theExp != nullptr) {
         tally += theExp->type * PRIME_TWO;
         fis.uv = 0;
         fis.vv = theExp->value;
@@ -351,11 +351,11 @@ void RemoveHashedExpression(
     unsigned hashval;
 
     exphash = FindHashedExpression(theEnv, theExp, &hashval, &prv);
-    if (exphash == NULL)
+    if (exphash == nullptr)
         return;
     if (--exphash->count != 0)
         return;
-    if (prv == NULL)
+    if (prv == nullptr)
         ExpressionData(theEnv)->ExpressionHashTable[hashval] = exphash->next;
     else
         prv->next = exphash->next;
@@ -384,9 +384,9 @@ Expression *AddHashedExpression(
     EXPRESSION_HN *prv, *exphash;
     unsigned hashval;
 
-    if (theExp == NULL) return NULL;
+    if (theExp == nullptr) return nullptr;
     exphash = FindHashedExpression(theEnv, theExp, &hashval, &prv);
-    if (exphash != NULL) {
+    if (exphash != nullptr) {
         exphash->count++;
         return (exphash->exp);
     }
@@ -418,10 +418,10 @@ unsigned long HashedExpressionIndex(
     EXPRESSION_HN *exphash, *prv;
     unsigned hashval;
 
-    if (theExp == NULL)
+    if (theExp == nullptr)
         return ULONG_MAX;
     exphash = FindHashedExpression(theEnv, theExp, &hashval, &prv);
-    return ((exphash != NULL) ? exphash->bsaveID : ULONG_MAX);
+    return ((exphash != nullptr) ? exphash->bsaveID : ULONG_MAX);
 }
 
 #endif /* (BLOAD_AND_BSAVE) */

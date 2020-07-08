@@ -91,9 +91,9 @@ static struct patternNodeHashEntry **CreatePatternHashTable(
     theTable = (struct patternNodeHashEntry **)
             gm2(theEnv, sizeof(struct patternNodeHashEntry *) * tableSize);
 
-    if (theTable == NULL) ExitRouter(theEnv, EXIT_FAILURE);
+    if (theTable == nullptr) ExitRouter(theEnv, EXIT_FAILURE);
 
-    for (i = 0; i < tableSize; i++) theTable[i] = NULL;
+    for (i = 0; i < tableSize; i++) theTable[i] = nullptr;
 
     return (theTable);
 }
@@ -110,14 +110,14 @@ static void DeallocatePatternData(
     unsigned long i;
 
     tmpRSPtr = PatternData(theEnv)->ListOfReservedPatternSymbols;
-    while (tmpRSPtr != NULL) {
+    while (tmpRSPtr != nullptr) {
         nextRSPtr = tmpRSPtr->next;
         rtn_struct(theEnv, reservedSymbol, tmpRSPtr);
         tmpRSPtr = nextRSPtr;
     }
 
     tmpPPPtr = PatternData(theEnv)->ListOfPatternParsers;
-    while (tmpPPPtr != NULL) {
+    while (tmpPPPtr != nullptr) {
         nextPPPtr = tmpPPPtr->next;
         rtn_struct(theEnv, patternParser, tmpPPPtr);
         tmpPPPtr = nextPPPtr;
@@ -126,7 +126,7 @@ static void DeallocatePatternData(
     for (i = 0; i < PatternData(theEnv)->PatternHashTableSize; i++) {
         tmpPNEPtr = PatternData(theEnv)->PatternHashTable[i];
 
-        while (tmpPNEPtr != NULL) {
+        while (tmpPNEPtr != nullptr) {
             nextPNEPtr = tmpPNEPtr->next;
             rtn_struct(theEnv, patternNodeHashEntry, tmpPNEPtr);
             tmpPNEPtr = nextPNEPtr;
@@ -180,11 +180,11 @@ bool RemoveHashedPatternNode(
     hashValue = GetAtomicHashValue(keyType, keyValue, 1) + HashExternalAddress(parent, 0); /* TBD mult * 30 */
     hashValue = (hashValue % PatternData(theEnv)->PatternHashTableSize);
 
-    for (hptr = PatternData(theEnv)->PatternHashTable[hashValue], prev = NULL;
-         hptr != NULL;
+    for (hptr = PatternData(theEnv)->PatternHashTable[hashValue], prev = nullptr;
+         hptr != nullptr;
          hptr = hptr->next) {
         if (hptr->child == child) {
-            if (prev == NULL) {
+            if (prev == nullptr) {
                 PatternData(theEnv)->PatternHashTable[hashValue] = hptr->next;
                 rtn_struct(theEnv, patternNodeHashEntry, hptr);
                 return true;
@@ -216,14 +216,14 @@ void *FindHashedPatternNode(
     hashValue = (hashValue % PatternData(theEnv)->PatternHashTableSize);
 
     for (hptr = PatternData(theEnv)->PatternHashTable[hashValue];
-         hptr != NULL;
+         hptr != nullptr;
          hptr = hptr->next) {
         if ((hptr->parent == parent) &&
             (keyType == hptr->type) &&
             (keyValue == hptr->value)) { return (hptr->child); }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /******************************************************************/
@@ -260,10 +260,10 @@ bool ReservedPatternSymbol(
     struct reservedSymbol *currentSymbol;
 
     for (currentSymbol = PatternData(theEnv)->ListOfReservedPatternSymbols;
-         currentSymbol != NULL;
+         currentSymbol != nullptr;
          currentSymbol = currentSymbol->next) {
         if (strcmp(theSymbol, currentSymbol->theSymbol) == 0) {
-            if ((currentSymbol->reservedBy == NULL) || (checkedBy == NULL)) { return true; }
+            if ((currentSymbol->reservedBy == nullptr) || (checkedBy == nullptr)) { return true; }
 
             if (strcmp(checkedBy, currentSymbol->reservedBy) == 0) return false;
 
@@ -302,7 +302,7 @@ void GetNextPatternEntity(
         struct patternEntity **theEntity) {
 
     /*=============================================================*/
-    /* If the current parser is NULL, then we want to retrieve the */
+    /* If the current parser is nullptr, then we want to retrieve the */
     /* very first data entity. The traversal of entities is done   */
     /* by entity type (e.g. all facts are traversed followed by    */
     /* all instances). To get the first entity type to traverse,   */
@@ -310,9 +310,9 @@ void GetNextPatternEntity(
     /* of pattern parsers.                                         */
     /*=============================================================*/
 
-    if (*theParser == NULL) {
+    if (*theParser == nullptr) {
         *theParser = PatternData(theEnv)->ListOfPatternParsers;
-        *theEntity = NULL;
+        *theEntity = nullptr;
     }
 
         /*================================================================*/
@@ -322,18 +322,18 @@ void GetNextPatternEntity(
         /* parser, otherwise return that entity as the next one.          */
         /*================================================================*/
 
-    else if (theEntity != NULL) {
+    else if (theEntity != nullptr) {
         *theEntity = (struct patternEntity *)
                 (*(*theParser)->entityType->base.getNextFunction)(theEnv, *theEntity);
 
-        if ((*theEntity) != NULL) return;
+        if ((*theEntity) != nullptr) return;
 
         *theParser = (*theParser)->next;
     }
 
         /*===============================================================*/
         /* Otherwise, we encountered a situation which should not occur. */
-        /* Once a NULL entity is returned from GetNextEntity, it should  */
+        /* Once a nullptr entity is returned from GetNextEntity, it should  */
         /* not be passed back to GetNextEntity.                          */
         /*===============================================================*/
 
@@ -347,11 +347,11 @@ void GetNextPatternEntity(
     /* pattern parsers until an entity is found.      */
     /*================================================*/
 
-    while ((*theEntity == NULL) && (*theParser != NULL)) {
+    while ((*theEntity == nullptr) && (*theParser != nullptr)) {
         *theEntity = (struct patternEntity *)
                 (*(*theParser)->entityType->base.getNextFunction)(theEnv, *theEntity);
 
-        if (*theEntity != NULL) return;
+        if (*theEntity != nullptr) return;
 
         *theParser = (*theParser)->next;
     }
@@ -370,7 +370,7 @@ void DetachPattern(
         struct patternNodeHeader *theHeader) {
     if (rhsType == 0) return;
 
-    if (PatternData(theEnv)->PatternParserArray[rhsType - 1] != NULL) {
+    if (PatternData(theEnv)->PatternParserArray[rhsType - 1] != nullptr) {
         FlushAlphaMemory(theEnv, theHeader);
         (*PatternData(theEnv)->PatternParserArray[rhsType - 1]->removePatternFunction)(theEnv, theHeader);
     }
@@ -384,7 +384,7 @@ void DetachPattern(
 bool AddPatternParser(
         Environment *theEnv,
         struct patternParser *newPtr) {
-    struct patternParser *currentPtr, *lastPtr = NULL;
+    struct patternParser *currentPtr, *lastPtr = nullptr;
 
     /*============================================*/
     /* Check to see that the limit for the number */
@@ -406,19 +406,19 @@ bool AddPatternParser(
     /* parsers based on its priority. */
     /*================================*/
 
-    if (PatternData(theEnv)->ListOfPatternParsers == NULL) {
-        newPtr->next = NULL;
+    if (PatternData(theEnv)->ListOfPatternParsers == nullptr) {
+        newPtr->next = nullptr;
         PatternData(theEnv)->ListOfPatternParsers = newPtr;
         return true;
     }
 
     currentPtr = PatternData(theEnv)->ListOfPatternParsers;
-    while ((currentPtr != NULL) ? (newPtr->priority < currentPtr->priority) : false) {
+    while ((currentPtr != nullptr) ? (newPtr->priority < currentPtr->priority) : false) {
         lastPtr = currentPtr;
         currentPtr = currentPtr->next;
     }
 
-    if (lastPtr == NULL) {
+    if (lastPtr == nullptr) {
         newPtr->next = PatternData(theEnv)->ListOfPatternParsers;
         PatternData(theEnv)->ListOfPatternParsers = newPtr;
     } else {
@@ -440,10 +440,10 @@ struct patternParser *FindPatternParser(
     struct patternParser *tempParser;
 
     for (tempParser = PatternData(theEnv)->ListOfPatternParsers;
-         tempParser != NULL;
+         tempParser != nullptr;
          tempParser = tempParser->next) { if (strcmp(tempParser->name, name) == 0) return (tempParser); }
 
-    return NULL;
+    return nullptr;
 }
 
 /******************************************************/
@@ -453,7 +453,7 @@ struct patternParser *FindPatternParser(
 struct patternParser *GetPatternParser(
         Environment *theEnv,
         unsigned short rhsType) {
-    if (rhsType == 0) return NULL;
+    if (rhsType == 0) return nullptr;
 
     return (PatternData(theEnv)->PatternParserArray[rhsType - 1]);
 }
@@ -472,10 +472,10 @@ bool PostPatternAnalysis(
     struct lhsParseNode *patternPtr;
     struct patternParser *tempParser;
 
-    for (patternPtr = theLHS; patternPtr != NULL; patternPtr = patternPtr->bottom) {
-        if ((patternPtr->pnType == PATTERN_CE_NODE) && (patternPtr->patternType != NULL)) {
+    for (patternPtr = theLHS; patternPtr != nullptr; patternPtr = patternPtr->bottom) {
+        if ((patternPtr->pnType == PATTERN_CE_NODE) && (patternPtr->patternType != nullptr)) {
             tempParser = patternPtr->patternType;
-            if (tempParser->postAnalysisFunction != NULL) { if ((*tempParser->postAnalysisFunction)(theEnv, patternPtr)) return true; }
+            if (tempParser->postAnalysisFunction != nullptr) { if ((*tempParser->postAnalysisFunction)(theEnv, patternPtr)) return true; }
         }
     }
 
@@ -501,7 +501,7 @@ struct lhsParseNode *RestrictionParse(
         unsigned short slotNumber,
         CONSTRAINT_RECORD *theConstraints,
         unsigned short position) {
-    struct lhsParseNode *topNode = NULL, *lastNode = NULL, *nextNode;
+    struct lhsParseNode *topNode = nullptr, *lastNode = nullptr, *nextNode;
     int numberOfSingleFields = 0;
     int numberOfMultifields = 0;
     unsigned short startPosition = position;
@@ -531,9 +531,9 @@ struct lhsParseNode *RestrictionParse(
             GetToken(theEnv, readSource, theToken);
         } else {
             nextNode = ConjuctiveRestrictionParse(theEnv, readSource, theToken, &error);
-            if (nextNode == NULL) {
+            if (nextNode == nullptr) {
                 ReturnLHSParseNodes(theEnv, topNode);
-                return NULL;
+                return nullptr;
             }
         }
 
@@ -572,9 +572,9 @@ struct lhsParseNode *RestrictionParse(
         /*==============================================*/
 
         if (!multifieldSlot) {
-            if (theConstraints == NULL) {
+            if (theConstraints == nullptr) {
                 if (nextNode->pnType == SF_VARIABLE_NODE) { nextNode->constraints = GetConstraintRecord(theEnv); }
-                else nextNode->constraints = NULL;
+                else nextNode->constraints = nullptr;
             } else nextNode->constraints = theConstraints;
             return (nextNode);
         }
@@ -584,7 +584,7 @@ struct lhsParseNode *RestrictionParse(
         /* already parsed for this slot or ordered fact.      */
         /*====================================================*/
 
-        if (lastNode == NULL) topNode = nextNode;
+        if (lastNode == nullptr) topNode = nextNode;
         else lastNode->right = nextNode;
 
         lastNode = nextNode;
@@ -597,9 +597,9 @@ struct lhsParseNode *RestrictionParse(
     /* with a multifield slot.                             */
     /*=====================================================*/
 
-    if ((topNode == NULL) && (!multifieldSlot)) {
+    if ((topNode == nullptr) && (!multifieldSlot)) {
         SyntaxErrorMessage(theEnv, "defrule");
-        return NULL;
+        return nullptr;
     }
 
     /*===============================================*/
@@ -607,7 +607,7 @@ struct lhsParseNode *RestrictionParse(
     /* list of restrictions for the multifield slot. */
     /*===============================================*/
 
-    for (nextNode = topNode; nextNode != NULL; nextNode = nextNode->right) {
+    for (nextNode = topNode; nextNode != nullptr; nextNode = nextNode->right) {
         /*===================================================*/
         /* Assign a constraint record to each constraint. If */
         /* the slot has an explicit constraint, then copy    */
@@ -617,7 +617,7 @@ struct lhsParseNode *RestrictionParse(
         /* for a multifield constraint.                      */
         /*===================================================*/
 
-        if (theConstraints == NULL) {
+        if (theConstraints == nullptr) {
             if (nextNode->pnType == SF_VARIABLE_NODE) { nextNode->constraints = GetConstraintRecord(theEnv); }
             else { continue; }
         } else { nextNode->constraints = CopyConstraintRecord(theEnv, theConstraints); }
@@ -716,7 +716,7 @@ static void TallyFieldTypes(
     /* multifield variables and wildcards.    */
     /*========================================*/
 
-    for (tempNode1 = theRestrictions; tempNode1 != NULL; tempNode1 = tempNode1->right) {
+    for (tempNode1 = theRestrictions; tempNode1 != nullptr; tempNode1 = tempNode1->right) {
         if ((tempNode1->pnType == SF_VARIABLE_NODE) || (tempNode1->pnType == SF_WILDCARD_NODE)) { totalSingleFields++; }
         else { totalMultiFields++; }
     }
@@ -726,7 +726,7 @@ static void TallyFieldTypes(
     /* the variable types before and after along the way.   */
     /*======================================================*/
 
-    for (tempNode1 = theRestrictions; tempNode1 != NULL; tempNode1 = tempNode1->right) {
+    for (tempNode1 = theRestrictions; tempNode1 != nullptr; tempNode1 = tempNode1->right) {
         /*===================================*/
         /* Assign the values to the "binding */
         /* variable" node of the constraint. */
@@ -749,8 +749,8 @@ static void TallyFieldTypes(
         /* connected constraints within the constraint.        */
         /*=====================================================*/
 
-        for (tempNode2 = tempNode1->bottom; tempNode2 != NULL; tempNode2 = tempNode2->bottom) {
-            for (tempNode3 = tempNode2; tempNode3 != NULL; tempNode3 = tempNode3->right) {
+        for (tempNode2 = tempNode1->bottom; tempNode2 != nullptr; tempNode2 = tempNode2->bottom) {
+            for (tempNode3 = tempNode2; tempNode3 != nullptr; tempNode3 = tempNode3->right) {
                 tempNode3->singleFieldsBefore = tempNode1->singleFieldsBefore;
                 tempNode3->singleFieldsAfter = tempNode1->singleFieldsAfter;
                 tempNode3->multiFieldsBefore = tempNode1->multiFieldsBefore;
@@ -797,7 +797,7 @@ static struct lhsParseNode *ConjuctiveRestrictionParse(
 
     theNode = LiteralRestrictionParse(theEnv, readSource, theToken, error);
 
-    if (*error == true) { return NULL; }
+    if (*error == true) { return nullptr; }
 
     GetToken(theEnv, readSource, theToken);
 
@@ -806,8 +806,8 @@ static struct lhsParseNode *ConjuctiveRestrictionParse(
         (theToken->tknType != OR_CONSTRAINT_TOKEN)) {
         theNode->bindingVariable = true;
         bindNode = theNode;
-        nextOr = NULL;
-        nextAnd = NULL;
+        nextOr = nullptr;
+        nextAnd = nullptr;
     } else {
         bindNode = GetLHSParseNode(theEnv);
         if (theNode->pnType == MF_VARIABLE_NODE) bindNode->pnType = MF_WILDCARD_NODE;
@@ -836,7 +836,7 @@ static struct lhsParseNode *ConjuctiveRestrictionParse(
 
         if (*error == true) {
             ReturnLHSParseNodes(theEnv, bindNode);
-            return NULL;
+            return nullptr;
         }
 
         /*=======================================*/
@@ -845,12 +845,12 @@ static struct lhsParseNode *ConjuctiveRestrictionParse(
         /*=======================================*/
 
         if (connectorType == OR_CONSTRAINT_TOKEN) {
-            if (nextOr == NULL) { bindNode->bottom = theNode; }
+            if (nextOr == nullptr) { bindNode->bottom = theNode; }
             else { nextOr->bottom = theNode; }
             nextOr = theNode;
             nextAnd = theNode;
         } else if (connectorType == AND_CONSTRAINT_TOKEN) {
-            if (nextAnd == NULL) {
+            if (nextAnd == nullptr) {
                 bindNode->bottom = theNode;
                 nextOr = theNode;
             } else { nextAnd->right = theNode; }
@@ -876,7 +876,7 @@ static struct lhsParseNode *ConjuctiveRestrictionParse(
     if (CheckForVariableMixing(theEnv, bindNode)) {
         *error = true;
         ReturnLHSParseNodes(theEnv, bindNode);
-        return NULL;
+        return nullptr;
     }
 
     /*========================*/
@@ -917,7 +917,7 @@ static bool CheckForVariableMixing(
     /*===========================================*/
 
     for (theRestriction = theRestriction->bottom;
-         theRestriction != NULL;
+         theRestriction != nullptr;
          theRestriction = theRestriction->bottom) {
         /*============================================*/
         /* Loop through each of the and (&) connected */
@@ -925,7 +925,7 @@ static bool CheckForVariableMixing(
         /*============================================*/
 
         for (tempRestriction = theRestriction;
-             tempRestriction != NULL;
+             tempRestriction != nullptr;
              tempRestriction = tempRestriction->right) {
             /*=====================================================*/
             /* Determine if the constraint contains a single field */
@@ -1032,10 +1032,10 @@ static struct lhsParseNode *LiteralRestrictionParse(
 
         if (strcmp(theToken->lexemeValue->contents, "=") == 0) {
             theExpression = Function0Parse(theEnv, readSource);
-            if (theExpression == NULL) {
+            if (theExpression == nullptr) {
                 *error = true;
                 ReturnLHSParseNodes(theEnv, topNode);
-                return NULL;
+                return nullptr;
             }
             topNode->pnType = RETURN_VALUE_CONSTRAINT_NODE;
             topNode->expression = ExpressionToLHSParseNodes(theEnv, theExpression);
@@ -1049,10 +1049,10 @@ static struct lhsParseNode *LiteralRestrictionParse(
 
         else if (strcmp(theToken->lexemeValue->contents, ":") == 0) {
             theExpression = Function0Parse(theEnv, readSource);
-            if (theExpression == NULL) {
+            if (theExpression == nullptr) {
                 *error = true;
                 ReturnLHSParseNodes(theEnv, topNode);
-                return NULL;
+                return nullptr;
             }
             topNode->pnType = PREDICATE_CONSTRAINT_NODE;
             topNode->expression = ExpressionToLHSParseNodes(theEnv, theExpression);
@@ -1092,7 +1092,7 @@ static struct lhsParseNode *LiteralRestrictionParse(
         SyntaxErrorMessage(theEnv, "defrule");
         *error = true;
         ReturnLHSParseNodes(theEnv, topNode);
-        return NULL;
+        return nullptr;
     }
 
     /*===============================*/

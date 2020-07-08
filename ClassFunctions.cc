@@ -171,16 +171,16 @@ void DecrementDefclassBusyCount(
 bool InstancesPurge(
         Environment *theEnv,
         void *context) {
-    DestroyAllInstances(theEnv, NULL);
-    CleanupInstances(theEnv, NULL);
-    return ((InstanceData(theEnv)->InstanceList != NULL) ? false : true);
+    DestroyAllInstances(theEnv, nullptr);
+    CleanupInstances(theEnv, nullptr);
+    return ((InstanceData(theEnv)->InstanceList != nullptr) ? false : true);
 }
 
 /***************************************************
   NAME         : InitializeClasses
   DESCRIPTION  : Allocates class hash table
                  Initializes class hash table
-                   to all NULL addresses
+                   to all nullptr addresses
                  Creates system classes
   INPUTS       : None
   RETURNS      : Nothing useful
@@ -194,11 +194,11 @@ void InitializeClasses(
     DefclassData(theEnv)->ClassTable =
             (Defclass **) gm2(theEnv, (sizeof(Defclass *) * CLASS_TABLE_HASH_SIZE));
     for (i = 0; i < CLASS_TABLE_HASH_SIZE; i++)
-        DefclassData(theEnv)->ClassTable[i] = NULL;
+        DefclassData(theEnv)->ClassTable[i] = nullptr;
     DefclassData(theEnv)->SlotNameTable =
             (SLOT_NAME **) gm2(theEnv, (sizeof(SLOT_NAME *) * SLOT_NAME_TABLE_HASH_SIZE));
     for (i = 0; i < SLOT_NAME_TABLE_HASH_SIZE; i++)
-        DefclassData(theEnv)->SlotNameTable[i] = NULL;
+        DefclassData(theEnv)->SlotNameTable[i] = nullptr;
 }
 
 /********************************************************
@@ -206,7 +206,7 @@ void InitializeClasses(
   DESCRIPTION  : Searches for a named slot in a class
   INPUTS       : 1) The class address
                  2) The symbolic slot name
-  RETURNS      : Address of slot if found, NULL otherwise
+  RETURNS      : Address of slot if found, nullptr otherwise
   SIDE EFFECTS : None
   NOTES        : Only looks in class defn, does not
                    examine inheritance paths
@@ -220,7 +220,7 @@ SlotDescriptor *FindClassSlot(
         if (cls->slots[i].slotName->name == sname)
             return (&cls->slots[i]);
     }
-    return NULL;
+    return nullptr;
 }
 
 /***************************************************************
@@ -258,7 +258,7 @@ void DeleteClassLinks(
         CLASS_LINK *clink) {
     CLASS_LINK *ctmp;
 
-    for (ctmp = clink; ctmp != NULL; ctmp = clink) {
+    for (ctmp = clink; ctmp != nullptr; ctmp = clink) {
         clink = clink->nxt;
         rtn_struct(theEnv, classLink, ctmp);
     }
@@ -354,13 +354,13 @@ void RemoveClassFromTable(
         Defclass *cls) {
     Defclass *prvhsh, *hshptr;
 
-    prvhsh = NULL;
+    prvhsh = nullptr;
     hshptr = DefclassData(theEnv)->ClassTable[cls->hashTableIndex];
     while (hshptr != cls) {
         prvhsh = hshptr;
         hshptr = hshptr->nxtHash;
     }
-    if (prvhsh == NULL)
+    if (prvhsh == nullptr)
         DefclassData(theEnv)->ClassTable[cls->hashTableIndex] = cls->nxtHash;
     else
         prvhsh->nxtHash = cls->nxtHash;
@@ -441,7 +441,7 @@ void DeleteSubclassLink(
         GenCopyMemory(Defclass *, src->classCount - deletedIndex - 1,
                       dst.classArray + deletedIndex, src->classArray + deletedIndex + 1);
     } else
-        dst.classArray = NULL;
+        dst.classArray = nullptr;
 
     dst.classCount = src->classCount - 1;
     DeletePackedClassLinks(theEnv, src, false);
@@ -481,7 +481,7 @@ void DeleteSuperclassLink(
         GenCopyMemory(Defclass *, src->classCount - deletedIndex - 1,
                       dst.classArray + deletedIndex, src->classArray + deletedIndex + 1);
     } else
-        dst.classArray = NULL;
+        dst.classArray = nullptr;
 
     dst.classCount = src->classCount - 1;
     DeletePackedClassLinks(theEnv, src, false);
@@ -517,27 +517,27 @@ Defclass *NewClass(
 #endif
     cls->hashTableIndex = 0;
     cls->directSuperclasses.classCount = 0;
-    cls->directSuperclasses.classArray = NULL;
+    cls->directSuperclasses.classArray = nullptr;
     cls->directSubclasses.classCount = 0;
-    cls->directSubclasses.classArray = NULL;
+    cls->directSubclasses.classArray = nullptr;
     cls->allSuperclasses.classCount = 0;
-    cls->allSuperclasses.classArray = NULL;
-    cls->slots = NULL;
-    cls->instanceTemplate = NULL;
-    cls->slotNameMap = NULL;
+    cls->allSuperclasses.classArray = nullptr;
+    cls->slots = nullptr;
+    cls->instanceTemplate = nullptr;
+    cls->slotNameMap = nullptr;
     cls->instanceSlotCount = 0;
     cls->localInstanceSlotCount = 0;
     cls->slotCount = 0;
     cls->maxSlotNameID = 0;
-    cls->handlers = NULL;
-    cls->handlerOrderMap = NULL;
+    cls->handlers = nullptr;
+    cls->handlerOrderMap = nullptr;
     cls->handlerCount = 0;
-    cls->instanceList = NULL;
-    cls->instanceListBottom = NULL;
-    cls->nxtHash = NULL;
-    cls->scopeMap = NULL;
+    cls->instanceList = nullptr;
+    cls->instanceListBottom = nullptr;
+    cls->nxtHash = nullptr;
+    cls->scopeMap = nullptr;
     ClearBitString(cls->traversalRecord, TRAVERSAL_BYTES);
-    cls->relevant_terminal_alpha_nodes = NULL;
+    cls->relevant_terminal_alpha_nodes = nullptr;
     return (cls);
 }
 
@@ -559,7 +559,7 @@ void DeletePackedClassLinks(
     if (plp->classCount > 0) {
         rm(theEnv, plp->classArray, (sizeof(Defclass *) * plp->classCount));
         plp->classCount = 0;
-        plp->classArray = NULL;
+        plp->classArray = nullptr;
     }
     if (deleteTop)
         rtn_struct(theEnv, packedClassLinks, plp);
@@ -588,7 +588,7 @@ void AssignClassID(
         DefclassData(theEnv)->AvailClassID += CLASS_ID_MAP_CHUNK;
 
         for (i = DefclassData(theEnv)->MaxClassID; i < (DefclassData(theEnv)->MaxClassID + CLASS_ID_MAP_CHUNK); i++)
-            DefclassData(theEnv)->ClassIDMap[i] = NULL;
+            DefclassData(theEnv)->ClassIDMap[i] = nullptr;
     }
     DefclassData(theEnv)->ClassIDMap[DefclassData(theEnv)->MaxClassID] = cls;
     cls->id = DefclassData(theEnv)->MaxClassID++;
@@ -619,9 +619,9 @@ SLOT_NAME *AddSlotName(
 
     hashTableIndex = HashSlotName(slotName);
     snp = DefclassData(theEnv)->SlotNameTable[hashTableIndex];
-    while ((snp != NULL) ? (snp->name != slotName) : false)
+    while ((snp != nullptr) ? (snp->name != slotName) : false)
         snp = snp->nxt;
-    if (snp != NULL) {
+    if (snp != nullptr) {
         if (usenewid && (newid != snp->id)) {
             SystemError(theEnv, "CLASSFUN", 1);
             ExitRouter(theEnv, EXIT_FAILURE);
@@ -665,9 +665,9 @@ void DeleteSlotName(
         SLOT_NAME *slotName) {
     SLOT_NAME *snp, *prv;
 
-    if (slotName == NULL)
+    if (slotName == nullptr)
         return;
-    prv = NULL;
+    prv = nullptr;
     snp = DefclassData(theEnv)->SlotNameTable[slotName->hashTableIndex];
     while (snp != slotName) {
         prv = snp;
@@ -676,7 +676,7 @@ void DeleteSlotName(
     snp->use--;
     if (snp->use != 0)
         return;
-    if (prv == NULL)
+    if (prv == nullptr)
         DefclassData(theEnv)->SlotNameTable[snp->hashTableIndex] = snp->nxt;
     else
         prv->nxt = snp->nxt;
@@ -728,7 +728,7 @@ void RemoveDefclass(
     DeletePackedClassLinks(theEnv, &cls->directSubclasses, false);
 
     for (i = 0; i < cls->slotCount; i++) {
-        if (cls->slots[i].defaultValue != NULL) {
+        if (cls->slots[i].defaultValue != nullptr) {
             if (cls->slots[i].dynamicDefault)
                 ReturnPackedExpression(theEnv, (Expression *) cls->slots[i].defaultValue);
             else {
@@ -752,11 +752,11 @@ void RemoveDefclass(
 
     for (i = 0; i < cls->handlerCount; i++) {
         hnd = &cls->handlers[i];
-        if (hnd->actions != NULL)
+        if (hnd->actions != nullptr)
             ReturnPackedExpression(theEnv, hnd->actions);
-        if (hnd->header.ppForm != NULL)
+        if (hnd->header.ppForm != nullptr)
             rm(theEnv, (void *) hnd->header.ppForm, (sizeof(char) * (strlen(hnd->header.ppForm) + 1)));
-        if (hnd->header.usrData != NULL) { ClearUserDataList(theEnv, hnd->header.usrData); }
+        if (hnd->header.usrData != nullptr) { ClearUserDataList(theEnv, hnd->header.usrData); }
     }
     if (cls->handlerCount != 0) {
         rm(theEnv, cls->handlers, (sizeof(DefmessageHandler) * cls->handlerCount));
@@ -764,14 +764,14 @@ void RemoveDefclass(
     }
 
     currentAlphaLink = cls->relevant_terminal_alpha_nodes;
-    while (currentAlphaLink != NULL) {
+    while (currentAlphaLink != nullptr) {
         nextAlphaLink = currentAlphaLink->next;
         rtn_struct(theEnv, classAlphaLink, currentAlphaLink);
         currentAlphaLink = nextAlphaLink;
     }
-    cls->relevant_terminal_alpha_nodes = NULL;
+    cls->relevant_terminal_alpha_nodes = nullptr;
 
-    SetDefclassPPForm(theEnv, cls, NULL);
+    SetDefclassPPForm(theEnv, cls, nullptr);
     DeassignClassID(theEnv, cls->id);
     rtn_struct(theEnv, defclass, cls);
 }
@@ -797,7 +797,7 @@ void DestroyDefclass(
     DeletePackedClassLinks(theEnv, &cls->allSuperclasses, false);
     DeletePackedClassLinks(theEnv, &cls->directSubclasses, false);
     for (i = 0; i < cls->slotCount; i++) {
-        if (cls->slots[i].defaultValue != NULL) {
+        if (cls->slots[i].defaultValue != nullptr) {
             if (cls->slots[i].dynamicDefault)
                 ReturnPackedExpression(theEnv, (Expression *) cls->slots[i].defaultValue);
             else {
@@ -820,13 +820,13 @@ void DestroyDefclass(
 
     for (i = 0; i < cls->handlerCount; i++) {
         hnd = &cls->handlers[i];
-        if (hnd->actions != NULL)
+        if (hnd->actions != nullptr)
             ReturnPackedExpression(theEnv, hnd->actions);
 
-        if (hnd->header.ppForm != NULL)
+        if (hnd->header.ppForm != nullptr)
             rm(theEnv, (void *) hnd->header.ppForm, (sizeof(char) * (strlen(hnd->header.ppForm) + 1)));
 
-        if (hnd->header.usrData != NULL) { ClearUserDataList(theEnv, hnd->header.usrData); }
+        if (hnd->header.usrData != nullptr) { ClearUserDataList(theEnv, hnd->header.usrData); }
     }
 
     if (cls->handlerCount != 0) {
@@ -835,12 +835,12 @@ void DestroyDefclass(
     }
 
     currentAlphaLink = cls->relevant_terminal_alpha_nodes;
-    while (currentAlphaLink != NULL) {
+    while (currentAlphaLink != nullptr) {
         nextAlphaLink = currentAlphaLink->next;
         rtn_struct(theEnv, classAlphaLink, currentAlphaLink);
         currentAlphaLink = nextAlphaLink;
     }
-    cls->relevant_terminal_alpha_nodes = NULL;
+    cls->relevant_terminal_alpha_nodes = nullptr;
 
     DestroyConstructHeader(theEnv, &cls->header);
 
@@ -891,7 +891,7 @@ void InstallClass(
         for (i = 0; i < cls->slotCount; i++) {
             slot = &cls->slots[i];
             ReleaseLexeme(theEnv, slot->overrideMessage);
-            if (slot->defaultValue != NULL) {
+            if (slot->defaultValue != nullptr) {
                 if (slot->dynamicDefault)
                     ExpressionDeinstall(theEnv, (Expression *) slot->defaultValue);
                 else
@@ -901,7 +901,7 @@ void InstallClass(
         for (i = 0; i < cls->handlerCount; i++) {
             hnd = &cls->handlers[i];
             ReleaseLexeme(theEnv, hnd->header.name);
-            if (hnd->actions != NULL)
+            if (hnd->actions != nullptr)
                 ExpressionDeinstall(theEnv, hnd->actions);
         }
     } else {
@@ -955,13 +955,13 @@ bool RemoveAllUserClasses(
     /* ====================================================
        Don't delete built-in system classes at head of list
        ==================================================== */
-    userClasses = GetNextDefclass(theEnv, NULL);
-    while (userClasses != NULL) {
+    userClasses = GetNextDefclass(theEnv, nullptr);
+    while (userClasses != nullptr) {
         if (userClasses->system == 0)
             break;
         userClasses = GetNextDefclass(theEnv, userClasses);
     }
-    while (userClasses != NULL) {
+    while (userClasses != nullptr) {
         ctmp = userClasses;
         userClasses = GetNextDefclass(theEnv, userClasses);
         if (DefclassIsDeletable(ctmp)) {
@@ -1056,16 +1056,16 @@ unsigned short FindSlotNameID(
 
     snp = DefclassData(theEnv)->SlotNameTable[HashSlotName(slotName)];
 
-    while ((snp != NULL) ? (snp->name != slotName) : false) { snp = snp->nxt; }
+    while ((snp != nullptr) ? (snp->name != slotName) : false) { snp = snp->nxt; }
 
-    return (snp != NULL) ? snp->id : SLOT_NAME_NOT_FOUND;
+    return (snp != nullptr) ? snp->id : SLOT_NAME_NOT_FOUND;
 }
 
 /***************************************************
   NAME         : FindIDSlotName
   DESCRIPTION  : Finds the slot anme for an id
   INPUTS       : The id
-  RETURNS      : The slot name (NULL if not found)
+  RETURNS      : The slot name (nullptr if not found)
   SIDE EFFECTS : None
   NOTES        : None
  ***************************************************/
@@ -1076,14 +1076,14 @@ CLIPSLexeme *FindIDSlotName(
 
     snp = FindIDSlotNameHash(theEnv, id);
 
-    return ((snp != NULL) ? snp->name : NULL);
+    return ((snp != nullptr) ? snp->name : nullptr);
 }
 
 /***************************************************
   NAME         : FindIDSlotNameHash
   DESCRIPTION  : Finds the slot anme for an id
   INPUTS       : The id
-  RETURNS      : The slot name (NULL if not found)
+  RETURNS      : The slot name (nullptr if not found)
   SIDE EFFECTS : None
   NOTES        : None
  ***************************************************/
@@ -1095,13 +1095,13 @@ SLOT_NAME *FindIDSlotNameHash(
 
     for (i = 0; i < SLOT_NAME_TABLE_HASH_SIZE; i++) {
         snp = DefclassData(theEnv)->SlotNameTable[i];
-        while (snp != NULL) {
+        while (snp != nullptr) {
             if (snp->id == id)
                 return snp;
             snp = snp->nxt;
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 /***************************************************
@@ -1131,7 +1131,7 @@ int GetTraversalID(
     }
 
     for (i = 0; i < CLASS_TABLE_HASH_SIZE; i++)
-        for (cls = DefclassData(theEnv)->ClassTable[i]; cls != NULL; cls = cls->nxtHash)
+        for (cls = DefclassData(theEnv)->ClassTable[i]; cls != nullptr; cls = cls->nxtHash)
             ClearTraversalID(cls->traversalRecord, DefclassData(theEnv)->CTID);
     return (DefclassData(theEnv)->CTID++);
 }
@@ -1217,13 +1217,13 @@ static void DeassignClassID(
     bool reallocReqd;
     unsigned short oldChunk = 0, newChunk = 0;
 
-    DefclassData(theEnv)->ClassIDMap[id] = NULL;
+    DefclassData(theEnv)->ClassIDMap[id] = nullptr;
     for (i = id + 1; i < DefclassData(theEnv)->MaxClassID; i++)
-        if (DefclassData(theEnv)->ClassIDMap[i] != NULL)
+        if (DefclassData(theEnv)->ClassIDMap[i] != nullptr)
             return;
 
     reallocReqd = false;
-    while (DefclassData(theEnv)->ClassIDMap[id] == NULL) {
+    while (DefclassData(theEnv)->ClassIDMap[id] == nullptr) {
         DefclassData(theEnv)->MaxClassID = id;
         if ((DefclassData(theEnv)->MaxClassID % CLASS_ID_MAP_CHUNK) == 0) {
             newChunk = DefclassData(theEnv)->MaxClassID;

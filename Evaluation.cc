@@ -122,7 +122,7 @@ static bool                    DiscardCAddress(void *,void *);
 /**************************************************/
 void InitializeEvaluationData(
         Environment *theEnv) {
-    struct externalAddressType cPointer = {"C", PrintCAddress, PrintCAddress, NULL, NewCAddress, NULL};
+    struct externalAddressType cPointer = {"C", PrintCAddress, PrintCAddress, nullptr, NewCAddress, nullptr};
 
     AllocateEnvironmentData(theEnv, EVALUATION_DATA, sizeof(struct evaluationData), DeallocateEvaluationData);
 
@@ -161,7 +161,7 @@ bool EvaluateExpression(
     returnValue->begin = 0;
     returnValue->range = SIZE_MAX;
 
-    if (problem == NULL) {
+    if (problem == nullptr) {
         returnValue->value = FalseSymbol(theEnv);
         return (EvaluationData(theEnv)->EvaluationError);
     }
@@ -229,7 +229,7 @@ bool EvaluateExpression(
             break;
 
         default:
-            if (EvaluationData(theEnv)->PrimitivesArray[problem->type] == NULL) {
+            if (EvaluationData(theEnv)->PrimitivesArray[problem->type] == nullptr) {
                 SystemError(theEnv, "EVALUATN", 3);
                 ExitRouter(theEnv, EXIT_FAILURE);
             }
@@ -239,7 +239,7 @@ bool EvaluateExpression(
                 break;
             }
 
-            if (EvaluationData(theEnv)->PrimitivesArray[problem->type]->evaluateFunction == NULL) {
+            if (EvaluationData(theEnv)->PrimitivesArray[problem->type]->evaluateFunction == nullptr) {
                 SystemError(theEnv, "EVALUATN", 4);
                 ExitRouter(theEnv, EXIT_FAILURE);
             }
@@ -274,7 +274,7 @@ void InstallPrimitive(
         Environment *theEnv,
         struct entityRecord *thePrimitive,
         int whichPosition) {
-    if (EvaluationData(theEnv)->PrimitivesArray[whichPosition] != NULL) {
+    if (EvaluationData(theEnv)->PrimitivesArray[whichPosition] != nullptr) {
         SystemError(theEnv, "EVALUATN", 5);
         ExitRouter(theEnv, EXIT_FAILURE);
     }
@@ -359,10 +359,10 @@ void ReturnValues(
         bool decrementSupplementalInfo) {
     UDFValue *nextPtr;
 
-    while (garbagePtr != NULL) {
+    while (garbagePtr != nullptr) {
         nextPtr = garbagePtr->next;
         ReleaseUDFV(theEnv, garbagePtr);
-        if ((garbagePtr->supplementalInfo != NULL) && decrementSupplementalInfo) {
+        if ((garbagePtr->supplementalInfo != nullptr) && decrementSupplementalInfo) {
             ReleaseLexeme(theEnv, (CLIPSLexeme *) garbagePtr->supplementalInfo);
         }
         rtn_struct(theEnv, udfValue, garbagePtr);
@@ -636,7 +636,7 @@ void AtomInstall(
             break;
 
         default:
-            if (EvaluationData(theEnv)->PrimitivesArray[type] == NULL) break;
+            if (EvaluationData(theEnv)->PrimitivesArray[type] == nullptr) break;
             if (EvaluationData(theEnv)->PrimitivesArray[type]->bitMap) IncrementBitMapCount(vPtr);
             else if (EvaluationData(theEnv)->PrimitivesArray[type]->incrementBusyCount) {
                 (*EvaluationData(theEnv)->PrimitivesArray[type]->incrementBusyCount)(theEnv, vPtr);
@@ -683,7 +683,7 @@ void AtomDeinstall(
             break;
 
         default:
-            if (EvaluationData(theEnv)->PrimitivesArray[type] == NULL) break;
+            if (EvaluationData(theEnv)->PrimitivesArray[type] == nullptr) break;
             if (EvaluationData(theEnv)->PrimitivesArray[type]->bitMap) DecrementBitMapReferenceCount(theEnv, (CLIPSBitMap *) vPtr);
             else if (EvaluationData(theEnv)->PrimitivesArray[type]->decrementBusyCount) {
                 (*EvaluationData(theEnv)->PrimitivesArray[type]->decrementBusyCount)(theEnv, vPtr);
@@ -733,19 +733,19 @@ struct expr *ConvertValueToExpression(
         Environment *theEnv,
         UDFValue *theValue) {
     size_t i;
-    struct expr *head = NULL, *last = NULL, *newItem;
+    struct expr *head = nullptr, *last = nullptr, *newItem;
 
     if (theValue->header->type != MULTIFIELD_TYPE) { return (GenConstant(theEnv, theValue->header->type, theValue->value)); }
 
     for (i = theValue->begin; i < (theValue->begin + theValue->range); i++) {
         newItem = GenConstant(theEnv, theValue->multifieldValue->contents[i].header->type,
                               theValue->multifieldValue->contents[i].value);
-        if (last == NULL) head = newItem;
+        if (last == nullptr) head = newItem;
         else last->nextArg = newItem;
         last = newItem;
     }
 
-    if (head == NULL)
+    if (head == nullptr)
         return (GenConstant(theEnv, FCALL, FindFunction(theEnv, "create$")));
 
     return (head);
@@ -825,7 +825,7 @@ struct expr *FunctionReferenceExpression(
     /*=====================================================*/
 
 #if DEFFUNCTION_CONSTRUCT
-    if ((dptr = LookupDeffunctionInScope(theEnv, name)) != NULL) { return (GenConstant(theEnv, PCALL, dptr)); }
+    if ((dptr = LookupDeffunctionInScope(theEnv, name)) != nullptr) { return (GenConstant(theEnv, PCALL, dptr)); }
 #endif
 
     /*====================================================*/
@@ -833,7 +833,7 @@ struct expr *FunctionReferenceExpression(
     /*====================================================*/
 
 #if DEFGENERIC_CONSTRUCT
-    if ((gfunc = LookupDefgenericInScope(theEnv, name)) != NULL) { return (GenConstant(theEnv, GCALL, gfunc)); }
+    if ((gfunc = LookupDefgenericInScope(theEnv, name)) != nullptr) { return (GenConstant(theEnv, GCALL, gfunc)); }
 #endif
 
     /*======================================*/
@@ -841,14 +841,14 @@ struct expr *FunctionReferenceExpression(
     /* a system or user defined function.   */
     /*======================================*/
 
-    if ((fptr = FindFunction(theEnv, name)) != NULL) { return (GenConstant(theEnv, FCALL, fptr)); }
+    if ((fptr = FindFunction(theEnv, name)) != nullptr) { return (GenConstant(theEnv, FCALL, fptr)); }
 
     /*===================================================*/
     /* The specified function name is not a deffunction, */
     /* defgeneric, or user/system defined function.      */
     /*===================================================*/
 
-    return NULL;
+    return nullptr;
 }
 
 /******************************************************************/
@@ -870,12 +870,12 @@ bool GetFunctionReference(
     struct functionDefinition *fptr;
     bool moduleSpecified = false;
     unsigned position;
-    CLIPSLexeme *moduleName = NULL, *constructName = NULL;
+    CLIPSLexeme *moduleName = nullptr, *constructName = nullptr;
 
-    theReference->nextArg = NULL;
-    theReference->argList = NULL;
+    theReference->nextArg = nullptr;
+    theReference->argList = nullptr;
     theReference->type = VOID_TYPE;
-    theReference->value = NULL;
+    theReference->value = nullptr;
 
     /*==============================*/
     /* Look for a module specifier. */
@@ -895,14 +895,14 @@ bool GetFunctionReference(
     if (moduleSpecified) {
         if (ConstructExported(theEnv, "defgeneric", moduleName, constructName) ||
             GetCurrentModule(theEnv) == FindDefmodule(theEnv, moduleName->contents)) {
-            if ((gfunc = FindDefgenericInModule(theEnv, name)) != NULL) {
+            if ((gfunc = FindDefgenericInModule(theEnv, name)) != nullptr) {
                 theReference->type = GCALL;
                 theReference->value = gfunc;
                 return true;
             }
         }
     } else {
-        if ((gfunc = LookupDefgenericInScope(theEnv, name)) != NULL) {
+        if ((gfunc = LookupDefgenericInScope(theEnv, name)) != nullptr) {
             theReference->type = GCALL;
             theReference->value = gfunc;
             return true;
@@ -918,14 +918,14 @@ bool GetFunctionReference(
     if (moduleSpecified) {
         if (ConstructExported(theEnv, "deffunction", moduleName, constructName) ||
             GetCurrentModule(theEnv) == FindDefmodule(theEnv, moduleName->contents)) {
-            if ((dptr = FindDeffunctionInModule(theEnv, name)) != NULL) {
+            if ((dptr = FindDeffunctionInModule(theEnv, name)) != nullptr) {
                 theReference->type = PCALL;
                 theReference->value = dptr;
                 return true;
             }
         }
     } else {
-        if ((dptr = LookupDeffunctionInScope(theEnv, name)) != NULL) {
+        if ((dptr = LookupDeffunctionInScope(theEnv, name)) != nullptr) {
             theReference->type = PCALL;
             theReference->value = dptr;
             return true;
@@ -938,7 +938,7 @@ bool GetFunctionReference(
     /* a system or user defined function.   */
     /*======================================*/
 
-    if ((fptr = FindFunction(theEnv, name)) != NULL) {
+    if ((fptr = FindFunction(theEnv, name)) != nullptr) {
         theReference->type = FCALL;
         theReference->value = fptr;
         return true;
@@ -991,14 +991,14 @@ bool EvaluateAndStoreInDataObject(
     val->begin = 0;
     val->range = 0;
 
-    if (theExp == NULL) {
+    if (theExp == nullptr) {
         if (garbageSegment) val->value = CreateMultifield(theEnv, 0L);
         else val->value = CreateUnmanagedMultifield(theEnv, 0L);
 
         return true;
     }
 
-    if ((mfp == false) && (theExp->nextArg == NULL))
+    if ((mfp == false) && (theExp->nextArg == nullptr))
         EvaluateExpression(theEnv, theExp, val);
     else
         StoreInMultifield(theEnv, val, theExp, garbageSegment);
@@ -1040,7 +1040,7 @@ static void NewCAddress(
         return;
     }
 
-    rv->value = CreateExternalAddress(theEnv, NULL, 0);
+    rv->value = CreateExternalAddress(theEnv, nullptr, 0);
 }
 
 /******************************/
@@ -1051,7 +1051,7 @@ FunctionCallBuilder *CreateFunctionCallBuilder(
         size_t theSize) {
     FunctionCallBuilder *theFC;
 
-    if (theEnv == NULL) return NULL;
+    if (theEnv == nullptr) return nullptr;
 
     theFC = get_struct(theEnv, functionCallBuilder);
 
@@ -1060,7 +1060,7 @@ FunctionCallBuilder *CreateFunctionCallBuilder(
     theFC->bufferMaximum = theSize;
     theFC->length = 0;
 
-    if (theSize == 0) { theFC->contents = NULL; }
+    if (theSize == 0) { theFC->contents = nullptr; }
     else { theFC->contents = (CLIPSValue *) gm2(theEnv, sizeof(CLIPSValue) * theSize); }
 
     return theFC;
@@ -1325,17 +1325,17 @@ FunctionCallBuilderError FCBCall(
         const char *functionName,
         CLIPSValue *returnValue) {
     Environment *theEnv;
-    Expression theReference, *lastAdd = NULL, *nextAdd, *multiAdd;
-    struct functionDefinition *theFunction = NULL;
+    Expression theReference, *lastAdd = nullptr, *nextAdd, *multiAdd;
+    struct functionDefinition *theFunction = nullptr;
     size_t i, j;
     UDFValue udfReturnValue;
     GCBlock gcb;
 
     /*==========================*/
-    /* Check for NULL pointers. */
+    /* Check for nullptr pointers. */
     /*==========================*/
 
-    if ((theFCB == NULL) || (functionName == NULL)) { return FCBE_NULL_POINTER_ERROR; }
+    if ((theFCB == nullptr) || (functionName == nullptr)) { return FCBE_nullptr_POINTER_ERROR; }
 
     /*======================================*/
     /* Check to see if the function exists. */
@@ -1350,7 +1350,7 @@ FunctionCallBuilderError FCBCall(
 
     if (theReference.type == FCALL) {
         theFunction = FindFunction(theFCB->fcbEnv, functionName);
-        if (theFunction->parser != NULL) { return FCBE_INVALID_FUNCTION_ERROR; }
+        if (theFunction->parser != nullptr) { return FCBE_INVALID_FUNCTION_ERROR; }
     }
 
     /*=======================================*/
@@ -1369,17 +1369,17 @@ FunctionCallBuilderError FCBCall(
         if (theFCB->contents[i].header->type == MULTIFIELD_TYPE) {
             nextAdd = GenConstant(theEnv, FCALL, FindFunction(theEnv, "create$"));
 
-            if (lastAdd == NULL) { theReference.argList = nextAdd; }
+            if (lastAdd == nullptr) { theReference.argList = nextAdd; }
             else { lastAdd->nextArg = nextAdd; }
 
             lastAdd = nextAdd;
 
-            multiAdd = NULL;
+            multiAdd = nullptr;
             for (j = 0; j < theFCB->contents[i].multifieldValue->length; j++) {
                 nextAdd = GenConstant(theEnv, theFCB->contents[i].multifieldValue->contents[j].header->type,
                                       theFCB->contents[i].multifieldValue->contents[j].value);
 
-                if (multiAdd == NULL) { lastAdd->argList = nextAdd; }
+                if (multiAdd == nullptr) { lastAdd->argList = nextAdd; }
                 else { multiAdd->nextArg = nextAdd; }
                 multiAdd = nextAdd;
             }
@@ -1392,7 +1392,7 @@ FunctionCallBuilderError FCBCall(
         else {
             nextAdd = GenConstant(theEnv, theFCB->contents[i].header->type, theFCB->contents[i].value);
 
-            if (lastAdd == NULL) { theReference.argList = nextAdd; }
+            if (lastAdd == nullptr) { theReference.argList = nextAdd; }
             else { lastAdd->nextArg = nextAdd; }
             lastAdd = nextAdd;
         }
@@ -1442,7 +1442,7 @@ FunctionCallBuilderError FCBCall(
     /* If embedded, clear the error flags. */
     /*=====================================*/
 
-    if (EvaluationData(theEnv)->CurrentExpression == NULL) { ResetErrorFlags(theEnv); }
+    if (EvaluationData(theEnv)->CurrentExpression == nullptr) { ResetErrorFlags(theEnv); }
 
     /*======================*/
     /* Call the expression. */
@@ -1467,7 +1467,7 @@ FunctionCallBuilderError FCBCall(
     /* Restore the old garbage frame. */
     /*================================*/
 
-    if (returnValue != NULL) { GCBlockEndUDF(theEnv, &gcb, &udfReturnValue); }
+    if (returnValue != nullptr) { GCBlockEndUDF(theEnv, &gcb, &udfReturnValue); }
     else { GCBlockEnd(theEnv, &gcb); }
 
     /*==========================================*/
@@ -1475,13 +1475,13 @@ FunctionCallBuilderError FCBCall(
     /* issued from an embedded controller.      */
     /*==========================================*/
 
-    if (EvaluationData(theEnv)->CurrentExpression == NULL) {
-        if (returnValue != NULL) { CleanCurrentGarbageFrame(theEnv, &udfReturnValue); }
-        else { CleanCurrentGarbageFrame(theEnv, NULL); }
+    if (EvaluationData(theEnv)->CurrentExpression == nullptr) {
+        if (returnValue != nullptr) { CleanCurrentGarbageFrame(theEnv, &udfReturnValue); }
+        else { CleanCurrentGarbageFrame(theEnv, nullptr); }
         CallPeriodicTasks(theEnv);
     }
 
-    if (returnValue != NULL) { returnValue->value = udfReturnValue.value; }
+    if (returnValue != nullptr) { returnValue->value = udfReturnValue.value; }
 
     if (GetEvaluationError(theEnv)) return FCBE_PROCESSING_ERROR;
 
@@ -1500,7 +1500,7 @@ void FCBReset(
     if (theFCB->bufferReset != theFCB->bufferMaximum) {
         if (theFCB->bufferMaximum != 0) { rm(theFCB->fcbEnv, theFCB->contents, sizeof(CLIPSValue) * theFCB->bufferMaximum); }
 
-        if (theFCB->bufferReset == 0) { theFCB->contents = NULL; }
+        if (theFCB->bufferReset == 0) { theFCB->contents = nullptr; }
         else { theFCB->contents = (CLIPSValue *) gm2(theFCB->fcbEnv, sizeof(CLIPSValue) * theFCB->bufferReset); }
 
         theFCB->bufferMaximum = theFCB->bufferReset;

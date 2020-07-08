@@ -182,7 +182,7 @@ void SlotAccessViolationError(
     WriteString(theEnv, STDERR, "Write access denied for slot '");
     WriteString(theEnv, STDERR, slotName);
     WriteString(theEnv, STDERR, "' in ");
-    if (theInstance != NULL) {
+    if (theInstance != nullptr) {
         WriteString(theEnv, STDERR, "instance ");
         WriteString(theEnv, STDERR, "[");
         WriteString(theEnv, STDERR, InstanceName(theInstance));
@@ -258,10 +258,10 @@ void NewSystemHandler(
     hnd->minParams = hnd->maxParams = extraargs + 1;
     hnd->localVarCount = 0;
     hnd->actions = get_struct(theEnv, expr);
-    hnd->actions->argList = NULL;
+    hnd->actions->argList = nullptr;
     hnd->actions->type = FCALL;
     hnd->actions->value = FindFunction(theEnv, fname);
-    hnd->actions->nextArg = NULL;
+    hnd->actions->nextArg = nullptr;
 }
 
 /***************************************************
@@ -273,7 +273,7 @@ void NewSystemHandler(
                  2) The handler name
                  3) The handler type
   RETURNS      : The address of the new handler
-                   header, NULL on errors
+                   header, nullptr on errors
   SIDE EFFECTS : Class handler array reallocated
                    and resorted
   NOTES        : Assumes handler does not exist
@@ -315,14 +315,14 @@ DefmessageHandler *InsertHandlerHeader(
 #endif
     nhnd[cls->handlerCount].header.name = mname;
     nhnd[cls->handlerCount].header.whichModule = cls->header.whichModule;
-    nhnd[cls->handlerCount].header.next = NULL;
+    nhnd[cls->handlerCount].header.next = nullptr;
     nhnd[cls->handlerCount].cls = cls;
     nhnd[cls->handlerCount].minParams = 0;
     nhnd[cls->handlerCount].maxParams = 0;
     nhnd[cls->handlerCount].localVarCount = 0;
-    nhnd[cls->handlerCount].actions = NULL;
-    nhnd[cls->handlerCount].header.ppForm = NULL;
-    nhnd[cls->handlerCount].header.usrData = NULL;
+    nhnd[cls->handlerCount].actions = nullptr;
+    nhnd[cls->handlerCount].header.ppForm = nullptr;
+    nhnd[cls->handlerCount].header.usrData = nullptr;
     nhnd[cls->handlerCount].header.constructType = DEFMESSAGE_HANDLER;
     nhnd[cls->handlerCount].header.env = theEnv;
     if (cls->handlerCount != 0) {
@@ -402,7 +402,7 @@ bool DeleteHandler(
         found = false;
         for (i = MAROUND; i <= MAFTER; i++) {
             hnd = FindHandlerByAddress(cls, mname, (unsigned) i);
-            if (hnd != NULL) {
+            if (hnd != nullptr) {
                 found = true;
                 if (hnd->system == 0)
                     hnd->mark = 1;
@@ -420,7 +420,7 @@ bool DeleteHandler(
         }
     } else {
         hnd = FindHandlerByAddress(cls, mname, (unsigned) mtype);
-        if (hnd == NULL) {
+        if (hnd == nullptr) {
             if (strcmp(mname->contents, "*") == 0) {
                 for (i = 0; i < cls->handlerCount; i++)
                     if ((cls->handlers[i].type == (unsigned) mtype) &&
@@ -473,7 +473,7 @@ void DeallocateMarkedHandlers(
             ExpressionDeinstall(theEnv, hnd->actions);
             ReturnPackedExpression(theEnv, hnd->actions);
             ClearUserDataList(theEnv, hnd->header.usrData);
-            if (hnd->header.ppForm != NULL)
+            if (hnd->header.ppForm != nullptr)
                 rm(theEnv, (void *) hnd->header.ppForm,
                    (sizeof(char) * (strlen(hnd->header.ppForm) + 1)));
         } else
@@ -488,8 +488,8 @@ void DeallocateMarkedHandlers(
     if (count == cls->handlerCount) {
         rm(theEnv, cls->handlers, (sizeof(DefmessageHandler) * cls->handlerCount));
         rm(theEnv, cls->handlerOrderMap, (sizeof(unsigned) * cls->handlerCount));
-        cls->handlers = NULL;
-        cls->handlerOrderMap = NULL;
+        cls->handlers = nullptr;
+        cls->handlerOrderMap = nullptr;
         cls->handlerCount = 0;
     } else {
         count = (cls->handlerCount - count);
@@ -639,7 +639,7 @@ void PrintHandler(
                  2) The handler symbolic name
                  3) The handler type (MPRIMARY,etc.)
   RETURNS      : The address of the found handler,
-                   NULL if not found
+                   nullptr if not found
   SIDE EFFECTS : None
   NOTES        : Assumes array is in ascending order
                    1st key: symbolic name of handler
@@ -655,16 +655,16 @@ DefmessageHandler *FindHandlerByAddress(
     unsigned *arr;
 
     if ((b = FindHandlerNameGroup(cls, name)) == -1)
-        return NULL;
+        return nullptr;
     arr = cls->handlerOrderMap;
     hnd = cls->handlers;
     for (i = (unsigned) b; i < cls->handlerCount; i++) {
         if (hnd[arr[i]].header.name != name)
-            return NULL;
+            return nullptr;
         if (hnd[arr[i]].type == type)
             return (&hnd[arr[i]]);
     }
-    return NULL;
+    return nullptr;
 }
 
 /***********************************************************
@@ -802,20 +802,20 @@ void DisplayCore(
         int sdepth) {
     if (core->hnd->type == MAROUND) {
         PrintPreviewHandler(theEnv, logicalName, core, sdepth, BEGIN_TRACE);
-        if (core->nxt != NULL)
+        if (core->nxt != nullptr)
             DisplayCore(theEnv, logicalName, core->nxt, sdepth + 1);
         PrintPreviewHandler(theEnv, logicalName, core, sdepth, END_TRACE);
     } else {
-        while ((core != NULL) ? (core->hnd->type == MBEFORE) : false) {
+        while ((core != nullptr) ? (core->hnd->type == MBEFORE) : false) {
             PrintPreviewHandler(theEnv, logicalName, core, sdepth, BEGIN_TRACE);
             PrintPreviewHandler(theEnv, logicalName, core, sdepth, END_TRACE);
             core = core->nxt;
         }
-        if ((core != NULL) ? (core->hnd->type == MPRIMARY) : false)
+        if ((core != nullptr) ? (core->hnd->type == MPRIMARY) : false)
 
             core = DisplayPrimaryCore(theEnv, logicalName, core, sdepth);
 
-        while ((core != NULL) ? (core->hnd->type == MAFTER) : false) {
+        while ((core != nullptr) ? (core->hnd->type == MAFTER) : false) {
             PrintPreviewHandler(theEnv, logicalName, core, sdepth, BEGIN_TRACE);
             PrintPreviewHandler(theEnv, logicalName, core, sdepth, END_TRACE);
             core = core->nxt;
@@ -831,7 +831,7 @@ void DisplayCore(
                    than instances for implicit slot-accessors
   INPUTS       : 1) The class address
                  2) The message name symbol
-  RETURNS      : The links of applicable handlers, NULL on errors
+  RETURNS      : The links of applicable handlers, nullptr on errors
   SIDE EFFECTS : Links are allocated for the list
   NOTES        : None
  ******************************************************************/
@@ -843,7 +843,7 @@ HANDLER_LINK *FindPreviewApplicableHandlers(
     HANDLER_LINK *tops[4], *bots[4];
 
     for (i = MAROUND; i <= MAFTER; i++)
-        tops[i] = bots[i] = NULL;
+        tops[i] = bots[i] = nullptr;
 
     for (i = 0; i < cls->allSuperclasses.classCount; i++)
         FindApplicableOfName(theEnv, cls->allSuperclasses.classArray[i], tops, bots, mname);
@@ -947,7 +947,7 @@ static HANDLER_LINK *DisplayPrimaryCore(
     HANDLER_LINK *rtn;
 
     PrintPreviewHandler(theEnv, logicalName, core, pdepth, BEGIN_TRACE);
-    if ((core->nxt != NULL) ? (core->nxt->hnd->type == MPRIMARY) : false)
+    if ((core->nxt != nullptr) ? (core->nxt->hnd->type == MPRIMARY) : false)
         rtn = DisplayPrimaryCore(theEnv, logicalName, core->nxt, pdepth + 1);
     else
         rtn = core->nxt;

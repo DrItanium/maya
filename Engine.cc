@@ -131,8 +131,8 @@ void InitializeEngine(
     AllocateEnvironmentData(theEnv, ENGINE_DATA, sizeof(struct engineData), DeallocateEngineData);
 
 #if DEBUGGING_FUNCTIONS
-    AddWatchItem(theEnv, "statistics", 0, &EngineData(theEnv)->WatchStatistics, 20, NULL, NULL);
-    AddWatchItem(theEnv, "focus", 0, &EngineData(theEnv)->WatchFocus, 0, NULL, NULL);
+    AddWatchItem(theEnv, "statistics", 0, &EngineData(theEnv)->WatchStatistics, 20, nullptr, nullptr);
+    AddWatchItem(theEnv, "focus", 0, &EngineData(theEnv)->WatchFocus, 0, nullptr, nullptr);
 #endif
 }
 
@@ -148,7 +148,7 @@ static void DeallocateEngineData(
     DeallocateRuleFiredCallList(theEnv, EngineData(theEnv)->ListOfBeforeRuleFiresFunctions);
 
     tmpPtr = EngineData(theEnv)->CurrentFocus;
-    while (tmpPtr != NULL) {
+    while (tmpPtr != nullptr) {
         nextPtr = tmpPtr->next;
         rtn_struct(theEnv, focalModule, tmpPtr);
         tmpPtr = nextPtr;
@@ -177,7 +177,7 @@ long long Run(
 #endif
     unsigned short i;
     struct patternEntity *theMatchingItem;
-    struct partialMatch *theBasis = NULL;
+    struct partialMatch *theBasis = nullptr;
     Activation *theActivation;
     const char *ruleFiring;
 #if PROFILING_FUNCTIONS
@@ -225,7 +225,7 @@ long long Run(
     /* If embedded, clear the error flags. */
     /*=====================================*/
 
-    if (EvaluationData(theEnv)->CurrentExpression == NULL) { ResetErrorFlags(theEnv); }
+    if (EvaluationData(theEnv)->CurrentExpression == nullptr) { ResetErrorFlags(theEnv); }
 
     /*=============================*/
     /* Set up execution variables. */
@@ -252,7 +252,7 @@ long long Run(
     /*=====================================================*/
 
     theActivation = NextActivationToFire(theEnv);
-    while ((theActivation != NULL) &&
+    while ((theActivation != nullptr) &&
            (runLimit != 0) &&
            (EvaluationData(theEnv)->HaltExecution == false) &&
            (EngineData(theEnv)->HaltRules == false)) {
@@ -262,7 +262,7 @@ long long Run(
         /*========================================*/
 
         for (ruleFiresFunction = EngineData(theEnv)->ListOfBeforeRuleFiresFunctions;
-             ruleFiresFunction != NULL;
+             ruleFiresFunction != nullptr;
              ruleFiresFunction = ruleFiresFunction->next) {
             (*ruleFiresFunction->func)(theEnv, theActivation, ruleFiresFunction->context);
         }
@@ -313,11 +313,11 @@ long long Run(
         /* routines which do variable extractions.         */
         /*=================================================*/
 
-        theBasis->marker = NULL;
+        theBasis->marker = nullptr;
         theBasis->busy = true;
 
         EngineData(theEnv)->GlobalLHSBinds = theBasis;
-        EngineData(theEnv)->GlobalRHSBinds = NULL;
+        EngineData(theEnv)->GlobalRHSBinds = nullptr;
 
         /*===================================================================*/
         /* Increment the count for each of the facts/objects associated with */
@@ -326,9 +326,9 @@ long long Run(
         /*===================================================================*/
 
         for (i = 0; i < theBasis->bcount; i++) {
-            if (theBasis->binds[i].gm.theMatch == NULL) continue;
+            if (theBasis->binds[i].gm.theMatch == nullptr) continue;
             theMatchingItem = theBasis->binds[i].gm.theMatch->matchingItem;
-            if (theMatchingItem != NULL) { (*theMatchingItem->theInfo->incrementBasisCount)(theEnv, theMatchingItem); }
+            if (theMatchingItem != nullptr) { (*theMatchingItem->theInfo->incrementBasisCount)(theEnv, theMatchingItem); }
         }
 
         /*====================================================*/
@@ -339,10 +339,10 @@ long long Run(
 
         EngineData(theEnv)->TheLogicalJoin = EngineData(theEnv)->ExecutingRule->logicalJoin;
 
-        if (EngineData(theEnv)->TheLogicalJoin != NULL) {
+        if (EngineData(theEnv)->TheLogicalJoin != nullptr) {
             EngineData(theEnv)->TheLogicalBind = FindLogicalBind(EngineData(theEnv)->TheLogicalJoin, EngineData(theEnv)->GlobalLHSBinds);
             EngineData(theEnv)->TheLogicalBind->busy = true;
-        } else { EngineData(theEnv)->TheLogicalBind = NULL; }
+        } else { EngineData(theEnv)->TheLogicalBind = nullptr; }
 
         /*=============================================*/
         /* Execute the rule's right hand side actions. */
@@ -361,7 +361,7 @@ long long Run(
 
         EvaluateProcActions(theEnv, EngineData(theEnv)->ExecutingRule->header.whichModule->theModule,
                             EngineData(theEnv)->ExecutingRule->actions, EngineData(theEnv)->ExecutingRule->localVarCnt,
-                            &returnValue, NULL);
+                            &returnValue, nullptr);
 
 #if PROFILING_FUNCTIONS
         EndProfile(theEnv, &profileFrame);
@@ -371,7 +371,7 @@ long long Run(
         EngineData(theEnv)->ExecutingRule->executing = false;
         SetEvaluationError(theEnv, false);
         EvaluationData(theEnv)->CurrentEvaluationDepth--;
-        if (EvaluationData(theEnv)->CurrentExpression == NULL) { ConstructData(theEnv)->DanglingConstructs = danglingConstructs; }
+        if (EvaluationData(theEnv)->CurrentExpression == nullptr) { ConstructData(theEnv)->DanglingConstructs = danglingConstructs; }
 
         /*========================================*/
         /* Execute the list of functions that are */
@@ -379,18 +379,18 @@ long long Run(
         /*========================================*/
 
         for (ruleFiresFunction = EngineData(theEnv)->ListOfAfterRuleFiresFunctions;
-             ruleFiresFunction != NULL;
+             ruleFiresFunction != nullptr;
              ruleFiresFunction = ruleFiresFunction->next) { (*ruleFiresFunction->func)(theEnv, theActivation, ruleFiresFunction->context); }
 
         /*=====================================*/
         /* Remove information for logical CEs. */
         /*=====================================*/
 
-        EngineData(theEnv)->TheLogicalJoin = NULL;
+        EngineData(theEnv)->TheLogicalJoin = nullptr;
 
-        if (EngineData(theEnv)->TheLogicalBind != NULL) {
+        if (EngineData(theEnv)->TheLogicalBind != nullptr) {
             EngineData(theEnv)->TheLogicalBind->busy = false;
-            EngineData(theEnv)->TheLogicalBind = NULL;
+            EngineData(theEnv)->TheLogicalBind = nullptr;
         }
 
         /*=====================================================*/
@@ -427,9 +427,9 @@ long long Run(
         theBasis->busy = false;
 
         for (i = 0; i < (theBasis->bcount); i++) {
-            if (theBasis->binds[i].gm.theMatch == NULL) continue;
+            if (theBasis->binds[i].gm.theMatch == nullptr) continue;
             theMatchingItem = theBasis->binds[i].gm.theMatch->matchingItem;
-            if (theMatchingItem != NULL) { (*theMatchingItem->theInfo->decrementBasisCount)(theEnv, theMatchingItem); }
+            if (theMatchingItem != nullptr) { (*theMatchingItem->theInfo->decrementBasisCount)(theEnv, theMatchingItem); }
         }
 
         /*========================================*/
@@ -451,7 +451,7 @@ long long Run(
         /* while executing the rule's RHS.  */
         /*==================================*/
 
-        CleanCurrentGarbageFrame(theEnv, NULL);
+        CleanCurrentGarbageFrame(theEnv, nullptr);
         CallPeriodicTasks(theEnv);
 
         /*==========================*/
@@ -501,7 +501,7 @@ long long Run(
         /* Check for a rule breakpoint. */
         /*==============================*/
 
-        if (theActivation != NULL) {
+        if (theActivation != nullptr) {
             if (GetActivationRule(theEnv, theActivation)->afterBreakpoint) {
                 EngineData(theEnv)->HaltRules = true;
                 WriteString(theEnv, STDOUT, "Breaking on rule ");
@@ -517,8 +517,8 @@ long long Run(
 
     if (rulesFired == 0) {
         for (ruleFiresFunction = EngineData(theEnv)->ListOfAfterRuleFiresFunctions;
-             ruleFiresFunction != NULL;
-             ruleFiresFunction = ruleFiresFunction->next) { (*ruleFiresFunction->func)(theEnv, NULL, ruleFiresFunction->context); }
+             ruleFiresFunction != nullptr;
+             ruleFiresFunction = ruleFiresFunction->next) { (*ruleFiresFunction->func)(theEnv, nullptr, ruleFiresFunction->context); }
     }
 
     /*======================================================*/
@@ -532,7 +532,7 @@ long long Run(
     /* Restore execution variables. */
     /*==============================*/
 
-    EngineData(theEnv)->ExecutingRule = NULL;
+    EngineData(theEnv)->ExecutingRule = nullptr;
     EngineData(theEnv)->HaltRules = false;
 
     /*=================================================*/
@@ -628,7 +628,7 @@ long long Run(
     /* focus when the run finishes.             */
     /*==========================================*/
 
-    if (EngineData(theEnv)->CurrentFocus != NULL) {
+    if (EngineData(theEnv)->CurrentFocus != nullptr) {
         if (EngineData(theEnv)->CurrentFocus->theModule != GetCurrentModule(theEnv)) {
             SetCurrentModule(theEnv, EngineData(theEnv)->CurrentFocus->theModule);
         }
@@ -663,7 +663,7 @@ Activation *NextActivationToFire(
     /* focus on the MAIN module.          */
     /*====================================*/
 
-    if (EngineData(theEnv)->CurrentFocus == NULL) {
+    if (EngineData(theEnv)->CurrentFocus == nullptr) {
         theModule = FindDefmodule(theEnv, "MAIN");
         Focus(theModule);
     }
@@ -676,9 +676,9 @@ Activation *NextActivationToFire(
     /*===========================================================*/
 
     theActivation = EngineData(theEnv)->CurrentFocus->theDefruleModule->agenda;
-    while ((theActivation == NULL) && (EngineData(theEnv)->CurrentFocus != NULL)) {
-        if (EngineData(theEnv)->CurrentFocus != NULL) PopFocus(theEnv);
-        if (EngineData(theEnv)->CurrentFocus != NULL) theActivation = EngineData(theEnv)->CurrentFocus->theDefruleModule->agenda;
+    while ((theActivation == nullptr) && (EngineData(theEnv)->CurrentFocus != nullptr)) {
+        if (EngineData(theEnv)->CurrentFocus != nullptr) PopFocus(theEnv);
+        if (EngineData(theEnv)->CurrentFocus != nullptr) theActivation = EngineData(theEnv)->CurrentFocus->theDefruleModule->agenda;
     }
 
     /*=========================================*/
@@ -700,20 +700,20 @@ static Defmodule *RemoveFocus(
     bool currentFocusRemoved = false;
 
     /*====================================*/
-    /* Return NULL if there is nothing on */
+    /* Return nullptr if there is nothing on */
     /* the focus stack to remove.         */
     /*====================================*/
 
-    if (EngineData(theEnv)->CurrentFocus == NULL) return NULL;
+    if (EngineData(theEnv)->CurrentFocus == nullptr) return nullptr;
 
     /*=============================================*/
     /* Remove the first occurence of the specified */
     /* module from the focus stack.                */
     /*=============================================*/
 
-    prevFocus = NULL;
+    prevFocus = nullptr;
     tempFocus = EngineData(theEnv)->CurrentFocus;
-    while ((tempFocus != NULL) && (!found)) {
+    while ((tempFocus != nullptr) && (!found)) {
         if (tempFocus->theModule == theModule) {
             found = true;
 
@@ -721,7 +721,7 @@ static Defmodule *RemoveFocus(
             rtn_struct(theEnv, focalModule, tempFocus);
             tempFocus = nextFocus;
 
-            if (prevFocus == NULL) {
+            if (prevFocus == nullptr) {
                 currentFocusRemoved = true;
                 EngineData(theEnv)->CurrentFocus = tempFocus;
             } else { prevFocus->next = tempFocus; }
@@ -750,7 +750,7 @@ static Defmodule *RemoveFocus(
         WriteString(theEnv, STDOUT, "<== Focus ");
         WriteString(theEnv, STDOUT, theModule->header.name->contents);
 
-        if ((EngineData(theEnv)->CurrentFocus != NULL) && currentFocusRemoved) {
+        if ((EngineData(theEnv)->CurrentFocus != nullptr) && currentFocusRemoved) {
             WriteString(theEnv, STDOUT, " to ");
             WriteString(theEnv, STDOUT, EngineData(theEnv)->CurrentFocus->theModule->header.name->contents);
         }
@@ -765,7 +765,7 @@ static Defmodule *RemoveFocus(
     /* flag indicating that the focus has changed.          */
     /*======================================================*/
 
-    if ((EngineData(theEnv)->CurrentFocus != NULL) && currentFocusRemoved) {
+    if ((EngineData(theEnv)->CurrentFocus != nullptr) && currentFocusRemoved) {
         SetCurrentModule(theEnv, EngineData(theEnv)->CurrentFocus->theModule);
     }
     EngineData(theEnv)->FocusChanged = true;
@@ -783,7 +783,7 @@ static Defmodule *RemoveFocus(
 /**********************************************************/
 Defmodule *PopFocus(
         Environment *theEnv) {
-    if (EngineData(theEnv)->CurrentFocus == NULL) return NULL;
+    if (EngineData(theEnv)->CurrentFocus == nullptr) return nullptr;
     return RemoveFocus(theEnv, EngineData(theEnv)->CurrentFocus->theModule);
 }
 
@@ -794,11 +794,11 @@ FocalModule *GetNextFocus(
         Environment *theEnv,
         FocalModule *theFocus) {
     /*==================================================*/
-    /* If NULL is passed as an argument, return the top */
+    /* If nullptr is passed as an argument, return the top */
     /* focus on the focus stack (the current focus).    */
     /*==================================================*/
 
-    if (theFocus == NULL) return EngineData(theEnv)->CurrentFocus;
+    if (theFocus == nullptr) return EngineData(theEnv)->CurrentFocus;
 
     /*=======================================*/
     /* Otherwise, return the focus following */
@@ -832,7 +832,7 @@ void Focus(
     FocalModule *tempFocus;
     Environment *theEnv;
 
-    if (theModule == NULL) return;
+    if (theModule == nullptr) return;
 
     theEnv = theModule->header.env;
 
@@ -843,7 +843,7 @@ void Focus(
     /*==================================================*/
 
     SetCurrentModule(theEnv, theModule);
-    if (EngineData(theEnv)->CurrentFocus != NULL) { if (EngineData(theEnv)->CurrentFocus->theModule == theModule) return; }
+    if (EngineData(theEnv)->CurrentFocus != nullptr) { if (EngineData(theEnv)->CurrentFocus->theModule == theModule) return; }
 
     /*=====================================*/
     /* If the focus is being watched, then */
@@ -856,7 +856,7 @@ void Focus(
         (!ConstructData(theEnv)->ClearInProgress)) {
         WriteString(theEnv, STDOUT, "==> Focus ");
         WriteString(theEnv, STDOUT, theModule->header.name->contents);
-        if (EngineData(theEnv)->CurrentFocus != NULL) {
+        if (EngineData(theEnv)->CurrentFocus != nullptr) {
             WriteString(theEnv, STDOUT, " from ");
             WriteString(theEnv, STDOUT, EngineData(theEnv)->CurrentFocus->theModule->header.name->contents);
         }
@@ -893,7 +893,7 @@ void ClearFocusStackCommand(
 /****************************************/
 void ClearFocusStack(
         Environment *theEnv) {
-    while (EngineData(theEnv)->CurrentFocus != NULL) PopFocus(theEnv);
+    while (EngineData(theEnv)->CurrentFocus != nullptr) PopFocus(theEnv);
 
     EngineData(theEnv)->FocusChanged = true;
 }
@@ -971,7 +971,7 @@ RuleFiredFunctionItem *AddRuleFiredFunctionToCallList(
         RuleFiredFunction *func,
         RuleFiredFunctionItem *head,
         void *context) {
-    RuleFiredFunctionItem *newPtr, *currentPtr, *lastPtr = NULL;
+    RuleFiredFunctionItem *newPtr, *currentPtr, *lastPtr = nullptr;
     char *nameCopy;
 
     newPtr = get_struct(theEnv, ruleFiredFunctionItem);
@@ -984,18 +984,18 @@ RuleFiredFunctionItem *AddRuleFiredFunctionToCallList(
     newPtr->priority = priority;
     newPtr->context = context;
 
-    if (head == NULL) {
-        newPtr->next = NULL;
+    if (head == nullptr) {
+        newPtr->next = nullptr;
         return newPtr;
     }
 
     currentPtr = head;
-    while ((currentPtr != NULL) ? (priority < currentPtr->priority) : false) {
+    while ((currentPtr != nullptr) ? (priority < currentPtr->priority) : false) {
         lastPtr = currentPtr;
         currentPtr = currentPtr->next;
     }
 
-    if (lastPtr == NULL) {
+    if (lastPtr == nullptr) {
         newPtr->next = head;
         head = newPtr;
     } else {
@@ -1018,13 +1018,13 @@ RuleFiredFunctionItem *RemoveRuleFiredFunctionFromCallList(
     RuleFiredFunctionItem *currentPtr, *lastPtr;
 
     *found = false;
-    lastPtr = NULL;
+    lastPtr = nullptr;
     currentPtr = head;
 
-    while (currentPtr != NULL) {
+    while (currentPtr != nullptr) {
         if (strcmp(name, currentPtr->name) == 0) {
             *found = true;
-            if (lastPtr == NULL) { head = currentPtr->next; }
+            if (lastPtr == nullptr) { head = currentPtr->next; }
             else { lastPtr->next = currentPtr->next; }
 
             genfree(theEnv, (void *) currentPtr->name, strlen(currentPtr->name) + 1);
@@ -1049,7 +1049,7 @@ void DeallocateRuleFiredCallList(
     RuleFiredFunctionItem *tmpPtr, *nextPtr;
 
     tmpPtr = theList;
-    while (tmpPtr != NULL) {
+    while (tmpPtr != nullptr) {
         nextPtr = tmpPtr->next;
         genfree(theEnv, (void *) tmpPtr->name, strlen(tmpPtr->name) + 1);
         rtn_struct(theEnv, ruleFiredFunctionItem, tmpPtr);
@@ -1108,7 +1108,7 @@ void SetBreak(
     Defrule *thePtr;
 
     for (thePtr = theRule;
-         thePtr != NULL;
+         thePtr != nullptr;
          thePtr = thePtr->disjunct) { thePtr->afterBreakpoint = 1; }
 }
 
@@ -1122,7 +1122,7 @@ bool RemoveBreak(
     bool rv = false;
 
     for (thePtr = theRule;
-         thePtr != NULL;
+         thePtr != nullptr;
          thePtr = thePtr->disjunct) {
         if (thePtr->afterBreakpoint == 1) {
             thePtr->afterBreakpoint = 0;
@@ -1139,11 +1139,11 @@ bool RemoveBreak(
 void RemoveAllBreakpoints(
         Environment *theEnv) {
     Defrule *theRule;
-    Defmodule *theDefmodule = NULL;
+    Defmodule *theDefmodule = nullptr;
 
-    while ((theDefmodule = GetNextDefmodule(theEnv, theDefmodule)) != NULL) {
-        theRule = NULL;
-        while ((theRule = GetNextDefrule(theEnv, theRule)) != NULL) { RemoveBreak(theRule); }
+    while ((theDefmodule = GetNextDefmodule(theEnv, theDefmodule)) != nullptr) {
+        theRule = nullptr;
+        while ((theRule = GetNextDefrule(theEnv, theRule)) != nullptr) { RemoveBreak(theRule); }
     }
 }
 
@@ -1156,10 +1156,10 @@ void ShowBreaks(
         const char *logicalName,
         Defmodule *theModule) {
     ListItemsDriver(theEnv, logicalName, theModule,
-                    NULL, NULL,
+                    nullptr, nullptr,
                     (GetNextItemFunction *) GetNextDefrule,
                     (const char *(*)(void *)) GetConstructNameString,
-                    NULL,
+                    nullptr,
                     (bool (*)(void *)) DefruleHasBreakpoint);
 }
 
@@ -1188,7 +1188,7 @@ void SetBreakCommand(
 
     argument = theArg.lexemeValue->contents;
 
-    if ((defrulePtr = FindDefrule(theEnv, argument)) == NULL) {
+    if ((defrulePtr = FindDefrule(theEnv, argument)) == nullptr) {
         CantFindItemErrorMessage(theEnv, "defrule", argument, true);
         return;
     }
@@ -1217,7 +1217,7 @@ void RemoveBreakCommand(
 
     argument = theArg.lexemeValue->contents;
 
-    if ((defrulePtr = FindDefrule(theEnv, argument)) == NULL) {
+    if ((defrulePtr = FindDefrule(theEnv, argument)) == nullptr) {
         CantFindItemErrorMessage(theEnv, "defrule", argument, true);
         return;
     }
@@ -1272,7 +1272,7 @@ void ListFocusStack(
     FocalModule *theFocus;
 
     for (theFocus = EngineData(theEnv)->CurrentFocus;
-         theFocus != NULL;
+         theFocus != nullptr;
          theFocus = theFocus->next) {
         WriteString(theEnv, logicalName, DefmoduleName(theFocus->theModule));
         WriteString(theEnv, logicalName, "\n");
@@ -1311,7 +1311,7 @@ void GetFocusStack(
     /* a multifield value of length zero.        */
     /*===========================================*/
 
-    if (EngineData(theEnv)->CurrentFocus == NULL) {
+    if (EngineData(theEnv)->CurrentFocus == nullptr) {
         returnValue->value = CreateMultifield(theEnv, 0L);
         return;
     }
@@ -1320,7 +1320,7 @@ void GetFocusStack(
     /* Determine the number of modules on the focus stack. */
     /*=====================================================*/
 
-    for (theFocus = EngineData(theEnv)->CurrentFocus; theFocus != NULL; theFocus = theFocus->next) { count++; }
+    for (theFocus = EngineData(theEnv)->CurrentFocus; theFocus != nullptr; theFocus = theFocus->next) { count++; }
 
     /*=============================================*/
     /* Create a multifield of the appropriate size */
@@ -1335,7 +1335,7 @@ void GetFocusStack(
     /*=================================================*/
 
     for (theFocus = EngineData(theEnv)->CurrentFocus, count = 0;
-         theFocus != NULL;
+         theFocus != nullptr;
          theFocus = theFocus->next, count++) {
         theList->contents[count].value = theFocus->theModule->header.name;
     }
@@ -1352,7 +1352,7 @@ void PopFocusFunction(
     Defmodule *theModule;
 
     theModule = PopFocus(theEnv);
-    if (theModule == NULL) {
+    if (theModule == nullptr) {
         returnValue->lexemeValue = FalseSymbol(theEnv);
         return;
     }
@@ -1385,7 +1385,7 @@ void FocusCommand(
         argument = theArg.lexemeValue->contents;
         theModule = FindDefmodule(theEnv, argument);
 
-        if (theModule == NULL) {
+        if (theModule == nullptr) {
             CantFindItemErrorMessage(theEnv, "defmodule", argument, true);
             returnValue->lexemeValue = FalseSymbol(theEnv);
             return;

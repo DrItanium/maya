@@ -117,7 +117,7 @@ void SetupDefinstancesBload(
                   BloadStorageDefinstances, BloadDefinstances,
                   ClearDefinstancesBload);
 #else
-    AddBinaryItem(theEnv,"definstances",0,NULL,NULL,NULL,NULL,
+    AddBinaryItem(theEnv,"definstances",0,nullptr,nullptr,nullptr,nullptr,
                               BloadStorageDefinstances,BloadDefinstances,
                               ClearDefinstancesBload);
 #endif
@@ -188,7 +188,7 @@ static void BsaveDefinstancesFind(
 
     DoForAllConstructs(theEnv, MarkDefinstancesItems,
                        DefinstancesData(theEnv)->DefinstancesModuleIndex,
-                       false, NULL);
+                       false, nullptr);
 }
 
 /***************************************************
@@ -294,8 +294,8 @@ static void BsaveDefinstancesDriver(
        Write out each definstances module
        ================================= */
     DefinstancesBinaryData(theEnv)->DefinstancesCount = 0L;
-    theModule = GetNextDefmodule(theEnv, NULL);
-    while (theModule != NULL) {
+    theModule = GetNextDefmodule(theEnv, nullptr);
+    while (theModule != nullptr) {
         theModuleItem = (DEFINSTANCES_MODULE *)
                 GetModuleItem(theEnv, theModule, FindModuleItem(theEnv, "definstances")->moduleIndex);
         AssignBsaveDefmdlItemHdrVals(&dummy_mitem.header, &theModuleItem->header);
@@ -331,7 +331,7 @@ static void BsaveDefinstances(
     BSAVE_DEFINSTANCES dummy_df;
 
     AssignBsaveConstructHeaderVals(&dummy_df.header, &dptr->header);
-    if (dptr->mkinstance != NULL) {
+    if (dptr->mkinstance != nullptr) {
         dummy_df.mkinstance = ExpressionData(theEnv)->ExpressionCount;
         ExpressionData(theEnv)->ExpressionCount += ExpressionSize(dptr->mkinstance);
     } else
@@ -361,8 +361,8 @@ static void BloadStorageDefinstances(
     GenReadBinary(theEnv, &DefinstancesBinaryData(theEnv)->ModuleCount, sizeof(unsigned long));
     GenReadBinary(theEnv, &DefinstancesBinaryData(theEnv)->DefinstancesCount, sizeof(unsigned long));
     if (DefinstancesBinaryData(theEnv)->ModuleCount == 0L) {
-        DefinstancesBinaryData(theEnv)->ModuleArray = NULL;
-        DefinstancesBinaryData(theEnv)->DefinstancesArray = NULL;
+        DefinstancesBinaryData(theEnv)->ModuleArray = nullptr;
+        DefinstancesBinaryData(theEnv)->DefinstancesArray = nullptr;
         return;
     }
 
@@ -370,7 +370,7 @@ static void BloadStorageDefinstances(
     DefinstancesBinaryData(theEnv)->ModuleArray = (DEFINSTANCES_MODULE *) genalloc(theEnv, space);
 
     if (DefinstancesBinaryData(theEnv)->DefinstancesCount == 0L) {
-        DefinstancesBinaryData(theEnv)->DefinstancesArray = NULL;
+        DefinstancesBinaryData(theEnv)->DefinstancesArray = nullptr;
         return;
     }
 
@@ -454,7 +454,7 @@ static void UpdateDefinstances(
   NAME         : ClearDefinstancesBload
   DESCRIPTION  : Release all binary-loaded definstances
                    structure arrays
-                 Resets definstances list to NULL
+                 Resets definstances list to nullptr
   INPUTS       : None
   RETURNS      : Nothing useful
   SIDE EFFECTS : Memory cleared
@@ -469,7 +469,7 @@ static void ClearDefinstancesBload(
     if (space == 0L)
         return;
     genfree(theEnv, DefinstancesBinaryData(theEnv)->ModuleArray, space);
-    DefinstancesBinaryData(theEnv)->ModuleArray = NULL;
+    DefinstancesBinaryData(theEnv)->ModuleArray = nullptr;
     DefinstancesBinaryData(theEnv)->ModuleCount = 0L;
 
     for (i = 0; i < DefinstancesBinaryData(theEnv)->DefinstancesCount; i++)
@@ -478,7 +478,7 @@ static void ClearDefinstancesBload(
     if (space == 0)
         return;
     genfree(theEnv, DefinstancesBinaryData(theEnv)->DefinstancesArray, space);
-    DefinstancesBinaryData(theEnv)->DefinstancesArray = NULL;
+    DefinstancesBinaryData(theEnv)->DefinstancesArray = nullptr;
     DefinstancesBinaryData(theEnv)->DefinstancesCount = 0L;
 }
 

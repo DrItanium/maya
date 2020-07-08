@@ -109,7 +109,7 @@ static bool ReplaceClassNameWithReference(Environment *, Expression *);
   INPUTS       : 1) The address of the top node of the expression
                     containing the initialize-instance function call
                  2) The logical name of the input source
-  RETURNS      : The address of the modified expression, or NULL
+  RETURNS      : The address of the modified expression, or nullptr
                     if there is an error
   SIDE EFFECTS : The expression is enhanced to include all
                     aspects of the initialize-instance call
@@ -206,7 +206,7 @@ Expression *ParseInitializeInstance(
     top->argList = ArgumentParse(theEnv, readSource, &error);
     if (error)
         goto ParseInitializeInstanceError;
-    else if (top->argList == NULL) {
+    else if (top->argList == nullptr) {
         SyntaxErrorMessage(theEnv, "instance");
         goto ParseInitializeInstanceError;
     }
@@ -222,7 +222,7 @@ Expression *ParseInitializeInstance(
             top->argList->nextArg = ArgumentParse(theEnv, readSource, &error);
             if (error == true)
                 goto ParseInitializeInstanceError;
-            if (top->argList->nextArg == NULL) {
+            if (top->argList->nextArg == nullptr) {
                 SyntaxErrorMessage(theEnv, "instance class");
                 goto ParseInitializeInstanceError;
             }
@@ -247,7 +247,7 @@ Expression *ParseInitializeInstance(
             top->argList->nextArg = ArgumentParse(theEnv, readSource, &error);
             if (error)
                 goto ParseInitializeInstanceError;
-            if (top->argList->nextArg == NULL) {
+            if (top->argList->nextArg == nullptr) {
                 SyntaxErrorMessage(theEnv, "instance class");
                 goto ParseInitializeInstanceError;
             }
@@ -277,7 +277,7 @@ Expression *ParseInitializeInstance(
                 top->argList->nextArg = ArgumentParse(theEnv, readSource, &error);
                 if (error)
                     goto ParseInitializeInstanceError;
-                if (top->argList->nextArg == NULL) {
+                if (top->argList->nextArg == nullptr) {
                     SyntaxErrorMessage(theEnv, "instance name");
                     goto ParseInitializeInstanceError;
                 }
@@ -302,7 +302,7 @@ Expression *ParseInitializeInstance(
     SetEvaluationError(theEnv, true);
     ReturnExpression(theEnv, top);
     DecrementIndentDepth(theEnv, 3);
-    return NULL;
+    return nullptr;
 }
 
 /********************************************************************************
@@ -310,7 +310,7 @@ Expression *ParseInitializeInstance(
   DESCRIPTION  : Forms expressions for slot-overrides
   INPUTS       : 1) The logical name of the input
                  2) Caller's buffer for error flkag
-  RETURNS      : Address override expressions, NULL
+  RETURNS      : Address override expressions, nullptr
                    if none or error.
   SIDE EFFECTS : Slot-expression built
                  Caller's error flag set
@@ -329,7 +329,7 @@ Expression *ParseSlotOverrides(
         Environment *theEnv,
         const char *readSource,
         bool *error) {
-    Expression *top = NULL, *bot = NULL, *theExp;
+    Expression *top = nullptr, *bot = nullptr, *theExp;
     Expression *theExpNext;
 
     while (DefclassData(theEnv)->ObjectParseToken.tknType == LEFT_PARENTHESIS_TOKEN) {
@@ -337,23 +337,23 @@ Expression *ParseSlotOverrides(
         theExp = ArgumentParse(theEnv, readSource, error);
         if (*error == true) {
             ReturnExpression(theEnv, top);
-            return NULL;
-        } else if (theExp == NULL) {
+            return nullptr;
+        } else if (theExp == nullptr) {
             SyntaxErrorMessage(theEnv, "slot-override");
             *error = true;
             ReturnExpression(theEnv, top);
             SetEvaluationError(theEnv, true);
-            return NULL;
+            return nullptr;
         }
         theExpNext = GenConstant(theEnv, SYMBOL_TYPE, TrueSymbol(theEnv));
-        if (CollectArguments(theEnv, theExpNext, readSource) == NULL) {
+        if (CollectArguments(theEnv, theExpNext, readSource) == nullptr) {
             *error = true;
             ReturnExpression(theEnv, top);
             ReturnExpression(theEnv, theExp);
-            return NULL;
+            return nullptr;
         }
         theExp->nextArg = theExpNext;
-        if (top == NULL)
+        if (top == nullptr)
             top = theExp;
         else
             bot->nextArg = theExp;
@@ -375,7 +375,7 @@ Expression *ParseSlotOverrides(
   INPUTS       : 1) The address of the top node of the expression
                     containing the make-instance function call
                  2) The logical name of the input source
-  RETURNS      : The address of the modified expression, or NULL
+  RETURNS      : The address of the modified expression, or nullptr
                     if there is an error
   SIDE EFFECTS : The expression is enhanced to include all
                     aspects of the make-instance call
@@ -404,7 +404,7 @@ Expression *ParseSimpleInstance(
         Environment *theEnv,
         Expression *top,
         const char *readSource) {
-    Expression *theExp, *vals = NULL, *vbot, *tval;
+    Expression *theExp, *vals = nullptr, *vbot, *tval;
     TokenType type;
 
     GetToken(theEnv, readSource, &DefclassData(theEnv)->ObjectParseToken);
@@ -442,7 +442,7 @@ Expression *ParseSimpleInstance(
         theExp->nextArg->nextArg = GenConstant(theEnv, SYMBOL_TYPE, TrueSymbol(theEnv));
         theExp = theExp->nextArg->nextArg;
         GetToken(theEnv, readSource, &DefclassData(theEnv)->ObjectParseToken);
-        vbot = NULL;
+        vbot = nullptr;
         while (DefclassData(theEnv)->ObjectParseToken.tknType != RIGHT_PARENTHESIS_TOKEN) {
             type = DefclassData(theEnv)->ObjectParseToken.tknType;
             if (type == LEFT_PARENTHESIS_TOKEN) {
@@ -460,7 +460,7 @@ Expression *ParseSimpleInstance(
                     goto SlotOverrideError;
                 tval = GenConstant(theEnv, TokenTypeToType(type), DefclassData(theEnv)->ObjectParseToken.value);
             }
-            if (vals == NULL)
+            if (vals == nullptr)
                 vals = tval;
             else
                 vbot->nextArg = tval;
@@ -469,7 +469,7 @@ Expression *ParseSimpleInstance(
         }
         theExp->argList = vals;
         GetToken(theEnv, readSource, &DefclassData(theEnv)->ObjectParseToken);
-        vals = NULL;
+        vals = nullptr;
     }
     if (DefclassData(theEnv)->ObjectParseToken.tknType != RIGHT_PARENTHESIS_TOKEN)
         goto SlotOverrideError;
@@ -479,14 +479,14 @@ Expression *ParseSimpleInstance(
     SyntaxErrorMessage(theEnv, "make-instance");
     SetEvaluationError(theEnv, true);
     ReturnExpression(theEnv, top);
-    return NULL;
+    return nullptr;
 
     SlotOverrideError:
     SyntaxErrorMessage(theEnv, "slot-override");
     SetEvaluationError(theEnv, true);
     ReturnExpression(theEnv, top);
     ReturnExpression(theEnv, vals);
-    return NULL;
+    return nullptr;
 }
 
 /* =========================================
@@ -522,7 +522,7 @@ static bool ReplaceClassNameWithReference(
         theClassName = theExp->lexemeValue->contents;
         //theDefclass = (void *) LookupDefclassInScope(theEnv,theClassName);
         theDefclass = LookupDefclassByMdlOrScope(theEnv, theClassName); // Module or scope is now allowed
-        if (theDefclass == NULL) {
+        if (theDefclass == nullptr) {
             CantFindItemErrorMessage(theEnv, "class", theClassName, true);
             return false;
         }

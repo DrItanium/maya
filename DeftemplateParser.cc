@@ -131,7 +131,7 @@ bool ParseDeftemplate(
                                                  (DeleteConstructFunction *) Undeftemplate, "%",
                                                  true, true, true, false);
 
-    if (deftemplateName == NULL) return true;
+    if (deftemplateName == nullptr) return true;
 
     if (ReservedPatternSymbol(theEnv, deftemplateName->contents, "deftemplate")) {
         ReservedPatternSymbolErrorMsg(theEnv, deftemplateName->contents, "a deftemplate name");
@@ -161,8 +161,8 @@ bool ParseDeftemplate(
 
     newDeftemplate = get_struct(theEnv, deftemplate);
     newDeftemplate->header.name = deftemplateName;
-    newDeftemplate->header.next = NULL;
-    newDeftemplate->header.usrData = NULL;
+    newDeftemplate->header.next = nullptr;
+    newDeftemplate->header.usrData = nullptr;
     newDeftemplate->header.constructType = DEFTEMPLATE;
     newDeftemplate->header.env = theEnv;
     newDeftemplate->slotList = slots;
@@ -171,17 +171,17 @@ bool ParseDeftemplate(
     newDeftemplate->busyCount = 0;
     newDeftemplate->watch = 0;
     newDeftemplate->inScope = true;
-    newDeftemplate->patternNetwork = NULL;
-    newDeftemplate->factList = NULL;
-    newDeftemplate->lastFact = NULL;
+    newDeftemplate->patternNetwork = nullptr;
+    newDeftemplate->factList = nullptr;
+    newDeftemplate->lastFact = nullptr;
     newDeftemplate->header.whichModule = (struct defmoduleItemHeader *)
-            GetModuleItem(theEnv, NULL, DeftemplateData(theEnv)->DeftemplateModuleIndex);
+            GetModuleItem(theEnv, nullptr, DeftemplateData(theEnv)->DeftemplateModuleIndex);
 
     /*================================*/
     /* Determine the number of slots. */
     /*================================*/
 
-    while (slots != NULL) {
+    while (slots != nullptr) {
         newDeftemplate->numberOfSlots++;
         slots = slots->next;
     }
@@ -190,7 +190,7 @@ bool ParseDeftemplate(
     /* Store pretty print representation. */
     /*====================================*/
 
-    if (GetConserveMemory(theEnv) == true) { newDeftemplate->header.ppForm = NULL; }
+    if (GetConserveMemory(theEnv) == true) { newDeftemplate->header.ppForm = nullptr; }
     else { newDeftemplate->header.ppForm = CopyPPBuffer(theEnv); }
 
     /*=======================================================================*/
@@ -228,7 +228,7 @@ void InstallDeftemplate(
     IncrementLexemeCount(theDeftemplate->header.name);
 
     for (slotPtr = theDeftemplate->slotList;
-         slotPtr != NULL;
+         slotPtr != nullptr;
          slotPtr = slotPtr->next) {
         IncrementLexemeCount(slotPtr->slotName);
         tempExpr = AddHashedExpression(theEnv, slotPtr->defaultList);
@@ -248,8 +248,8 @@ static struct templateSlot *SlotDeclarations(
         Environment *theEnv,
         const char *readSource,
         struct token *inputToken) {
-    struct templateSlot *newSlot, *slotList = NULL, *lastSlot = NULL;
-    struct templateSlot *multiSlot = NULL;
+    struct templateSlot *newSlot, *slotList = nullptr, *lastSlot = nullptr;
+    struct templateSlot *multiSlot = nullptr;
 
     while (inputToken->tknType != RIGHT_PARENTHESIS_TOKEN) {
         /*====================================================*/
@@ -261,7 +261,7 @@ static struct templateSlot *SlotDeclarations(
             ReturnSlots(theEnv, slotList);
             ReturnSlots(theEnv, multiSlot);
             DeftemplateData(theEnv)->DeftemplateError = true;
-            return NULL;
+            return nullptr;
         }
 
         GetToken(theEnv, readSource, inputToken);
@@ -270,7 +270,7 @@ static struct templateSlot *SlotDeclarations(
             ReturnSlots(theEnv, slotList);
             ReturnSlots(theEnv, multiSlot);
             DeftemplateData(theEnv)->DeftemplateError = true;
-            return NULL;
+            return nullptr;
         }
 
         /*=================*/
@@ -282,15 +282,15 @@ static struct templateSlot *SlotDeclarations(
             ReturnSlots(theEnv, newSlot);
             ReturnSlots(theEnv, slotList);
             ReturnSlots(theEnv, multiSlot);
-            return NULL;
+            return nullptr;
         }
 
         /*===========================================*/
         /* Attach the new slot to the list of slots. */
         /*===========================================*/
 
-        if (newSlot != NULL) {
-            if (lastSlot == NULL) { slotList = newSlot; }
+        if (newSlot != nullptr) {
+            if (lastSlot == nullptr) { slotList = newSlot; }
             else { lastSlot->next = newSlot; }
             lastSlot = newSlot;
         }
@@ -339,7 +339,7 @@ static struct templateSlot *ParseSlot(
         (strcmp(inputToken->lexemeValue->contents, "multislot") != 0)) {
         SyntaxErrorMessage(theEnv, "deftemplate");
         DeftemplateData(theEnv)->DeftemplateError = true;
-        return NULL;
+        return nullptr;
     }
 
     /*===============================================*/
@@ -359,7 +359,7 @@ static struct templateSlot *ParseSlot(
     if (inputToken->tknType != SYMBOL_TOKEN) {
         SyntaxErrorMessage(theEnv, "deftemplate");
         DeftemplateData(theEnv)->DeftemplateError = true;
-        return NULL;
+        return nullptr;
     }
 
     slotName = inputToken->lexemeValue;
@@ -368,11 +368,11 @@ static struct templateSlot *ParseSlot(
     /* Determine if the slot has already been parsed. */
     /*================================================*/
 
-    while (slotList != NULL) {
+    while (slotList != nullptr) {
         if (slotList->slotName == slotName) {
             AlreadyParsedErrorMessage(theEnv, "slot ", slotList->slotName->contents);
             DeftemplateData(theEnv)->DeftemplateError = true;
-            return NULL;
+            return nullptr;
         }
 
         slotList = slotList->next;
@@ -383,9 +383,9 @@ static struct templateSlot *ParseSlot(
     /*===================================*/
 
     newSlot = DefinedSlots(theEnv, readSource, slotName, parsingMultislot, inputToken);
-    if (newSlot == NULL) {
+    if (newSlot == nullptr) {
         DeftemplateData(theEnv)->DeftemplateError = true;
-        return NULL;
+        return nullptr;
     }
 
     /*=================================*/
@@ -395,7 +395,7 @@ static struct templateSlot *ParseSlot(
     if (CheckConstraintParseConflicts(theEnv, newSlot->constraints) == false) {
         ReturnSlots(theEnv, newSlot);
         DeftemplateData(theEnv)->DeftemplateError = true;
-        return NULL;
+        return nullptr;
     }
 
     if ((newSlot->defaultPresent) || (newSlot->defaultDynamic)) {
@@ -410,7 +410,7 @@ static struct templateSlot *ParseSlot(
                                         newSlot->slotName, 0, rv, newSlot->constraints, true);
         ReturnSlots(theEnv, newSlot);
         DeftemplateData(theEnv)->DeftemplateError = true;
-        return NULL;
+        return nullptr;
     }
 
     /*==================*/
@@ -441,15 +441,15 @@ static struct templateSlot *DefinedSlots(
 
     newSlot = get_struct(theEnv, templateSlot);
     newSlot->slotName = slotName;
-    newSlot->defaultList = NULL;
-    newSlot->facetList = NULL;
+    newSlot->defaultList = nullptr;
+    newSlot->facetList = nullptr;
     newSlot->constraints = GetConstraintRecord(theEnv);
     if (multifieldSlot) { newSlot->constraints->multifieldsAllowed = true; }
     newSlot->multislot = multifieldSlot;
     newSlot->noDefault = false;
     newSlot->defaultPresent = false;
     newSlot->defaultDynamic = false;
-    newSlot->next = NULL;
+    newSlot->next = nullptr;
 
     /*========================================*/
     /* Parse the primitive slot if it exists. */
@@ -471,7 +471,7 @@ static struct templateSlot *DefinedSlots(
             SyntaxErrorMessage(theEnv, "deftemplate");
             ReturnSlots(theEnv, newSlot);
             DeftemplateData(theEnv)->DeftemplateError = true;
-            return NULL;
+            return nullptr;
         }
 
         /*=============================================*/
@@ -483,7 +483,7 @@ static struct templateSlot *DefinedSlots(
             SyntaxErrorMessage(theEnv, "deftemplate");
             ReturnSlots(theEnv, newSlot);
             DeftemplateData(theEnv)->DeftemplateError = true;
-            return NULL;
+            return nullptr;
         }
 
         /*================================================================*/
@@ -496,7 +496,7 @@ static struct templateSlot *DefinedSlots(
                                         multifieldSlot) == false) {
                 DeftemplateData(theEnv)->DeftemplateError = true;
                 ReturnSlots(theEnv, newSlot);
-                return NULL;
+                return nullptr;
             }
         }
 
@@ -512,10 +512,10 @@ static struct templateSlot *DefinedSlots(
             /*======================================================*/
 
             if (defaultFound) {
-                AlreadyParsedErrorMessage(theEnv, "default attribute", NULL);
+                AlreadyParsedErrorMessage(theEnv, "default attribute", nullptr);
                 DeftemplateData(theEnv)->DeftemplateError = true;
                 ReturnSlots(theEnv, newSlot);
-                return NULL;
+                return nullptr;
             }
 
             newSlot->noDefault = false;
@@ -540,7 +540,7 @@ static struct templateSlot *DefinedSlots(
                                        true, &noneSpecified, &deriveSpecified, &DeftemplateData(theEnv)->DeftemplateError);
             if (DeftemplateData(theEnv)->DeftemplateError == true) {
                 ReturnSlots(theEnv, newSlot);
-                return NULL;
+                return nullptr;
             }
 
             /*==================================*/
@@ -564,13 +564,13 @@ static struct templateSlot *DefinedSlots(
             if (!ParseFacetAttribute(theEnv, readSource, newSlot, false)) {
                 ReturnSlots(theEnv, newSlot);
                 DeftemplateData(theEnv)->DeftemplateError = true;
-                return NULL;
+                return nullptr;
             }
         } else if (strcmp(inputToken->lexemeValue->contents, "multifacet") == 0) {
             if (!ParseFacetAttribute(theEnv, readSource, newSlot, true)) {
                 ReturnSlots(theEnv, newSlot);
                 DeftemplateData(theEnv)->DeftemplateError = true;
-                return NULL;
+                return nullptr;
             }
         }
 
@@ -582,7 +582,7 @@ static struct templateSlot *DefinedSlots(
             SyntaxErrorMessage(theEnv, "slot attributes");
             ReturnSlots(theEnv, newSlot);
             DeftemplateData(theEnv)->DeftemplateError = true;
-            return NULL;
+            return nullptr;
         }
 
         /*===================================*/
@@ -609,7 +609,7 @@ static bool ParseFacetAttribute(
         bool multifacet) {
     struct token inputToken;
     CLIPSLexeme *facetName;
-    struct expr *facetPair, *tempFacet, *facetValue = NULL, *lastValue = NULL;
+    struct expr *facetPair, *tempFacet, *facetValue = nullptr, *lastValue = nullptr;
 
     /*==============================*/
     /* Parse the name of the facet. */
@@ -640,7 +640,7 @@ static bool ParseFacetAttribute(
     /*====================================*/
 
     for (tempFacet = theSlot->facetList;
-         tempFacet != NULL;
+         tempFacet != nullptr;
          tempFacet = tempFacet->nextArg) {
         if (tempFacet->value == facetName) {
             if (multifacet) AlreadyParsedErrorMessage(theEnv, "multifacet ", facetName->contents);
@@ -672,7 +672,7 @@ static bool ParseFacetAttribute(
         /* Add the value to the list of values. */
         /*======================================*/
 
-        if (lastValue == NULL) {
+        if (lastValue == nullptr) {
             facetValue = GenConstant(theEnv, TokenTypeToType(inputToken.tknType), inputToken.value);
             lastValue = facetValue;
         } else {
@@ -710,7 +710,7 @@ static bool ParseFacetAttribute(
     /* A facet must contain one constant. */
     /*====================================*/
 
-    if ((!multifacet) && (facetValue == NULL)) {
+    if ((!multifacet) && (facetValue == nullptr)) {
         SyntaxErrorMessage(theEnv, "facet attribute");
         return false;
     }

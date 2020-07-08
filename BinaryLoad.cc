@@ -90,9 +90,9 @@ void InitializeBloadData(
     sprintf(sizeBuffer, "%2zu%2zu%2zu%2zu%2zu", sizeof(void *), sizeof(double),
             sizeof(int), sizeof(long), sizeof(long long));
 
-    AllocateEnvironmentData(theEnv, BLOAD_DATA, sizeof(struct bloadData), NULL);
+    AllocateEnvironmentData(theEnv, BLOAD_DATA, sizeof(struct bloadData), nullptr);
     AddEnvironmentCleanupFunction(theEnv, "bload", DeallocateBloadData, -1500);
-    AddClearFunction(theEnv, "bload", ClearBloadCallback, 10000, NULL);
+    AddClearFunction(theEnv, "bload", ClearBloadCallback, 10000, nullptr);
 
     BloadData(theEnv)->BinaryPrefixID = "\1\2\3\4CLIPS";
     BloadData(theEnv)->BinaryVersionID = "V6.40";
@@ -133,7 +133,7 @@ bool Bload(
     /* If embedded, clear the error flags. */
     /*=====================================*/
 
-    if (EvaluationData(theEnv)->CurrentExpression == NULL) { ResetErrorFlags(theEnv); }
+    if (EvaluationData(theEnv)->CurrentExpression == nullptr) { ResetErrorFlags(theEnv); }
 
     /*================*/
     /* Open the file. */
@@ -221,7 +221,7 @@ bool Bload(
 
     ConstructData(theEnv)->ClearInProgress = true;
     for (bfPtr = BloadData(theEnv)->BeforeBloadFunctions;
-         bfPtr != NULL;
+         bfPtr != nullptr;
          bfPtr = bfPtr->next) { (*bfPtr->func)(theEnv, bfPtr->context); }
 
     ConstructData(theEnv)->ClearInProgress = false;
@@ -268,10 +268,10 @@ bool Bload(
 
         found = false;
         for (biPtr = BsaveData(theEnv)->ListOfBinaryItems;
-             biPtr != NULL;
+             biPtr != nullptr;
              biPtr = biPtr->next) {
             if (strncmp(biPtr->name, constructBuffer, CONSTRUCT_HEADER_SIZE) == 0) {
-                if (biPtr->bloadStorageFunction != NULL) {
+                if (biPtr->bloadStorageFunction != nullptr) {
                     (*biPtr->bloadStorageFunction)(theEnv);
                     found = true;
                 }
@@ -325,10 +325,10 @@ bool Bload(
 
         found = false;
         for (biPtr = BsaveData(theEnv)->ListOfBinaryItems;
-             biPtr != NULL;
+             biPtr != nullptr;
              biPtr = biPtr->next) {
             if (strncmp(biPtr->name, constructBuffer, CONSTRUCT_HEADER_SIZE) == 0) {
-                if (biPtr->bloadFunction != NULL) {
+                if (biPtr->bloadFunction != nullptr) {
                     (*biPtr->bloadFunction)(theEnv);
                     found = true;
                 }
@@ -358,7 +358,7 @@ bool Bload(
     /* function and atomic value information. */
     /*========================================*/
 
-    if (BloadData(theEnv)->FunctionArray != NULL) {
+    if (BloadData(theEnv)->FunctionArray != nullptr) {
         genfree(theEnv, BloadData(theEnv)->FunctionArray,
                 sizeof(struct functionDefinition *) * numberOfFunctions);
     }
@@ -370,7 +370,7 @@ bool Bload(
     /*==================================*/
 
     for (bfPtr = BloadData(theEnv)->AfterBloadFunctions;
-         bfPtr != NULL;
+         bfPtr != nullptr;
          bfPtr = bfPtr->next) { (*bfPtr->func)(theEnv, bfPtr->context); }
 
     /*=======================================*/
@@ -422,7 +422,7 @@ void BloadandRefresh(
     do {
         space = objsmaxread * objsz;
         buf = (char *) genalloc(theEnv, space);
-        if (buf == NULL) {
+        if (buf == nullptr) {
             if ((objsmaxread / 2) == 0) {
                 if ((*oldOutOfMemoryFunction)(theEnv, space) == true) {
                     SetOutOfMemoryFunction(theEnv, oldOutOfMemoryFunction);
@@ -431,7 +431,7 @@ void BloadandRefresh(
             } else
                 objsmaxread /= 2;
         }
-    } while (buf == NULL);
+    } while (buf == nullptr);
 
     SetOutOfMemoryFunction(theEnv, oldOutOfMemoryFunction);
 
@@ -469,7 +469,7 @@ static struct functionDefinition **ReadNeededFunctions(
     GenReadBinary(theEnv, &space, sizeof(unsigned long));
     if (*numberOfFunctions == 0) {
         *error = false;
-        return NULL;
+        return nullptr;
     }
 
     /*=======================================*/
@@ -486,9 +486,9 @@ static struct functionDefinition **ReadNeededFunctions(
     temp = sizeof(struct functionDefinition *) * *numberOfFunctions;
     newFunctionArray = (struct functionDefinition **) genalloc(theEnv, temp);
     namePtr = functionNames;
-    functionPtr = NULL;
+    functionPtr = nullptr;
     for (i = 0; i < *numberOfFunctions; i++) {
-        if ((functionPtr = FastFindFunction(theEnv, namePtr, functionPtr)) == NULL) {
+        if ((functionPtr = FastFindFunction(theEnv, namePtr, functionPtr)) == nullptr) {
             if (!functionsNotFound) {
                 PrintErrorID(theEnv, "BLOAD", 6, false);
                 WriteString(theEnv, STDERR, "The following undefined functions are ");
@@ -518,7 +518,7 @@ static struct functionDefinition **ReadNeededFunctions(
 
     if (functionsNotFound) {
         genfree(theEnv, newFunctionArray, temp);
-        newFunctionArray = NULL;
+        newFunctionArray = nullptr;
     }
 
     /*===================================*/
@@ -545,14 +545,14 @@ static struct functionDefinition *FastFindFunction(
     /*========================*/
 
     theList = GetFunctionList(theEnv);
-    if (theList == NULL) { return NULL; }
+    if (theList == nullptr) { return nullptr; }
 
     /*=======================================*/
     /* If we completed a previous function   */
     /* search, start where we last left off. */
     /*=======================================*/
 
-    if (lastFunction != NULL) { theFunction = lastFunction->next; }
+    if (lastFunction != nullptr) { theFunction = lastFunction->next; }
     else { theFunction = theList; }
 
     /*======================================================*/
@@ -562,8 +562,8 @@ static struct functionDefinition *FastFindFunction(
 
     while (strcmp(functionName, theFunction->callFunctionName->contents) != 0) {
         theFunction = theFunction->next;
-        if (theFunction == lastFunction) return NULL;
-        if (theFunction == NULL) theFunction = theList;
+        if (theFunction == lastFunction) return nullptr;
+        if (theFunction == nullptr) theFunction = theList;
     }
 
     /*=======================*/
@@ -617,7 +617,7 @@ static bool ClearBload(
 
     error = false;
     for (bfPtr = BloadData(theEnv)->ClearBloadReadyFunctions;
-         bfPtr != NULL;
+         bfPtr != nullptr;
          bfPtr = bfPtr->next) {
         ready = (bfPtr->func)(theEnv, bfPtr->context);
 
@@ -650,8 +650,8 @@ static bool ClearBload(
     /*=============================*/
 
     for (biPtr = BsaveData(theEnv)->ListOfBinaryItems;
-         biPtr != NULL;
-         biPtr = biPtr->next) { if (biPtr->clearFunction != NULL) (*biPtr->clearFunction)(theEnv); }
+         biPtr != nullptr;
+         biPtr = biPtr->next) { if (biPtr->clearFunction != nullptr) (*biPtr->clearFunction)(theEnv); }
 
     /*===========================*/
     /* Free bloaded expressions. */
@@ -688,7 +688,7 @@ static void AbortBload(
     struct voidCallFunctionItem *bfPtr;
 
     for (bfPtr = BloadData(theEnv)->AbortBloadFunctions;
-         bfPtr != NULL;
+         bfPtr != nullptr;
          bfPtr = bfPtr->next) { (*bfPtr->func)(theEnv, bfPtr->context); }
 }
 
@@ -762,7 +762,7 @@ void AddAbortBloadFunction(
   INPUTS       : The memory request size (unused)
   RETURNS      : True (indicates a failure and for
                  the memory functions to simply
-                 return a NULL pointer)
+                 return a nullptr pointer)
   SIDE EFFECTS : None
   NOTES        : None
  *******************************************************/
@@ -803,7 +803,7 @@ void BloadCommand(
     const char *fileName;
 
     fileName = GetFileName(context);
-    if (fileName != NULL) {
+    if (fileName != nullptr) {
         returnValue->lexemeValue = CreateBoolean(theEnv, Bload(theEnv, fileName));
         return;
     }

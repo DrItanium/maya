@@ -101,25 +101,25 @@ struct constraintRecord *IntersectConstraints(
     bool c1Changed = false, c2Changed = false;
 
     /*=================================================*/
-    /* If both constraint records are NULL,then create */
+    /* If both constraint records are nullptr,then create */
     /* a constraint record that allows any value.      */
     /*=================================================*/
 
-    if ((c1 == NULL) && (c2 == NULL)) {
+    if ((c1 == nullptr) && (c2 == nullptr)) {
         rv = GetConstraintRecord(theEnv);
         rv->multifieldsAllowed = true;
         return (rv);
     }
 
     /*=================================================*/
-    /* If one of the constraint records is NULL, then  */
+    /* If one of the constraint records is nullptr, then  */
     /* the intersection is the other constraint record */
-    /* (a NULL value means no constraints).            */
+    /* (a nullptr value means no constraints).            */
     /*=================================================*/
 
-    if (c1 == NULL) return (CopyConstraintRecord(theEnv, c2));
+    if (c1 == nullptr) return (CopyConstraintRecord(theEnv, c2));
 
-    if (c2 == NULL) return (CopyConstraintRecord(theEnv, c1));
+    if (c2 == nullptr) return (CopyConstraintRecord(theEnv, c1));
 
     /*=================================*/
     /* Create a new constraint record. */
@@ -230,7 +230,7 @@ static void IntersectAllowedValueExpressions(
         CONSTRAINT_RECORD *constraint2,
         CONSTRAINT_RECORD *newConstraint) {
     struct expr *theList1, *theList2;
-    struct expr *theHead = NULL, *tmpExpr;
+    struct expr *theHead = nullptr, *tmpExpr;
 
     /*===========================================*/
     /* Loop through each value in allowed-values */
@@ -240,7 +240,7 @@ static void IntersectAllowedValueExpressions(
     /*===========================================*/
 
     for (theList1 = constraint1->restrictionList;
-         theList1 != NULL;
+         theList1 != nullptr;
          theList1 = theList1->nextArg) {
         if (CheckAllowedValuesConstraint(theList1->type, theList1->value, constraint1) &&
             CheckAllowedValuesConstraint(theList1->type, theList1->value, constraint2)) {
@@ -258,7 +258,7 @@ static void IntersectAllowedValueExpressions(
     /*===========================================*/
 
     for (theList2 = constraint2->restrictionList;
-         theList2 != NULL;
+         theList2 != nullptr;
          theList2 = theList2->nextArg) {
         if (FindItemInExpression(theList2->type, theList2->value, true, theHead)) { /* The value is already in the list--Do nothing */ }
         else if (CheckAllowedValuesConstraint(theList2->type, theList2->value, constraint1) &&
@@ -288,7 +288,7 @@ static void IntersectAllowedClassExpressions(
         CONSTRAINT_RECORD *constraint2,
         CONSTRAINT_RECORD *newConstraint) {
     struct expr *theList1, *theList2;
-    struct expr *theHead = NULL, *tmpExpr;
+    struct expr *theHead = nullptr, *tmpExpr;
 
     /*============================================*/
     /* Loop through each value in allowed-classes */
@@ -298,7 +298,7 @@ static void IntersectAllowedClassExpressions(
     /*============================================*/
 
     for (theList1 = constraint1->classList;
-         theList1 != NULL;
+         theList1 != nullptr;
          theList1 = theList1->nextArg) {
         if (CheckAllowedClassesConstraint(theEnv, theList1->type, theList1->value, constraint1) &&
             CheckAllowedClassesConstraint(theEnv, theList1->type, theList1->value, constraint2)) {
@@ -316,7 +316,7 @@ static void IntersectAllowedClassExpressions(
     /*============================================*/
 
     for (theList2 = constraint2->classList;
-         theList2 != NULL;
+         theList2 != nullptr;
          theList2 = theList2->nextArg) {
         if (FindItemInExpression(theList2->type, theList2->value, true, theHead)) { /* The value is already in the list--Do nothing */ }
         else if (CheckAllowedClassesConstraint(theEnv, theList2->type, theList2->value, constraint1) &&
@@ -347,7 +347,7 @@ static void IntersectNumericExpressions(
         CONSTRAINT_RECORD *newConstraint,
         bool range) {
     struct expr *tmpmin1, *tmpmax1, *tmpmin2, *tmpmax2, *theMin, *theMax;
-    struct expr *theMinList, *theMaxList, *lastMin = NULL, *lastMax = NULL;
+    struct expr *theMinList, *theMaxList, *lastMin = nullptr, *lastMax = nullptr;
     int cmaxmax, cminmin, cmaxmin, cminmax;
 
     /*==========================================*/
@@ -355,8 +355,8 @@ static void IntersectNumericExpressions(
     /* for the intersection of the constraints. */
     /*==========================================*/
 
-    theMinList = NULL;
-    theMaxList = NULL;
+    theMinList = nullptr;
+    theMaxList = nullptr;
 
     /*=================================*/
     /* Determine the min/max values of */
@@ -377,7 +377,7 @@ static void IntersectNumericExpressions(
     /*===========================================*/
 
     for (;
-            tmpmin1 != NULL;
+            tmpmin1 != nullptr;
             tmpmin1 = tmpmin1->nextArg, tmpmax1 = tmpmax1->nextArg) {
         /*============================================*/
         /* Get the appropriate values from the second */
@@ -399,7 +399,7 @@ static void IntersectNumericExpressions(
         /*================================================*/
 
         for (;
-                tmpmin2 != NULL;
+                tmpmin2 != nullptr;
                 tmpmin2 = tmpmin2->nextArg, tmpmax2 = tmpmax2->nextArg) {
             /*==============================================*/
             /* Determine the relationship between the four  */
@@ -447,7 +447,7 @@ static void IntersectNumericExpressions(
             /* to the intersection list.        */
             /*==================================*/
 
-            if (lastMin == NULL) {
+            if (lastMin == nullptr) {
                 theMinList = theMin;
                 theMaxList = theMax;
             } else {
@@ -466,7 +466,7 @@ static void IntersectNumericExpressions(
     /* record to the new intersected values.                      */
     /*============================================================*/
 
-    if (theMinList != NULL) {
+    if (theMinList != nullptr) {
         if (range) {
             ReturnExpression(theEnv, newConstraint->minValue);
             ReturnExpression(theEnv, newConstraint->maxValue);
@@ -511,29 +511,29 @@ static void IntersectNumericExpressions(
 /************************************************************/
 static void UpdateRestrictionFlags(
         CONSTRAINT_RECORD *rv) {
-    if ((rv->anyRestriction) && (rv->restrictionList == NULL)) {
+    if ((rv->anyRestriction) && (rv->restrictionList == nullptr)) {
         SetAnyAllowedFlags(rv, true);
         rv->anyAllowed = false;
     }
 
     if ((rv->symbolRestriction) && (rv->symbolsAllowed)) {
-        rv->symbolsAllowed = FindItemInExpression(SYMBOL_TYPE, NULL, false, rv->restrictionList);
+        rv->symbolsAllowed = FindItemInExpression(SYMBOL_TYPE, nullptr, false, rv->restrictionList);
     }
 
     if ((rv->stringRestriction) && (rv->stringsAllowed)) {
-        rv->stringsAllowed = FindItemInExpression(STRING_TYPE, NULL, false, rv->restrictionList);
+        rv->stringsAllowed = FindItemInExpression(STRING_TYPE, nullptr, false, rv->restrictionList);
     }
 
     if ((rv->floatRestriction) && (rv->floatsAllowed)) {
-        rv->floatsAllowed = FindItemInExpression(FLOAT_TYPE, NULL, false, rv->restrictionList);
+        rv->floatsAllowed = FindItemInExpression(FLOAT_TYPE, nullptr, false, rv->restrictionList);
     }
 
     if ((rv->integerRestriction) && (rv->integersAllowed)) {
-        rv->integersAllowed = FindItemInExpression(INTEGER_TYPE, NULL, false, rv->restrictionList);
+        rv->integersAllowed = FindItemInExpression(INTEGER_TYPE, nullptr, false, rv->restrictionList);
     }
 
     if ((rv->instanceNameRestriction) && (rv->instanceNamesAllowed)) {
-        rv->instanceNamesAllowed = FindItemInExpression(INSTANCE_NAME_TYPE, NULL, false, rv->restrictionList);
+        rv->instanceNamesAllowed = FindItemInExpression(INSTANCE_NAME_TYPE, nullptr, false, rv->restrictionList);
     }
 }
 
@@ -548,7 +548,7 @@ static bool FindItemInExpression(
         void *theValue,
         bool useValue,
         struct expr *theList) {
-    while (theList != NULL) {
+    while (theList != nullptr) {
         if (theList->type == theType) {
             if (!useValue) return true;
             else if (theList->value == theValue) return true;
@@ -568,7 +568,7 @@ static bool FindItemInExpression(
 static bool RestrictionOnType(
         int theType,
         CONSTRAINT_RECORD *theConstraint) {
-    if (theConstraint == NULL) return false;
+    if (theConstraint == nullptr) return false;
 
     if ((theConstraint->anyRestriction) ||
         (theConstraint->symbolRestriction && (theType == SYMBOL_TYPE)) ||
@@ -594,24 +594,24 @@ struct constraintRecord *UnionConstraints(
     bool c1Changed = false, c2Changed = false;
 
     /*=================================================*/
-    /* If both constraint records are NULL,then create */
+    /* If both constraint records are nullptr,then create */
     /* a constraint record that allows any value.      */
     /*=================================================*/
 
-    if ((c1 == NULL) && (c2 == NULL)) return (GetConstraintRecord(theEnv));
+    if ((c1 == nullptr) && (c2 == nullptr)) return (GetConstraintRecord(theEnv));
 
     /*=====================================================*/
-    /* If one of the constraint records is NULL, then the  */
+    /* If one of the constraint records is nullptr, then the  */
     /* union is the other constraint record. Note that     */
     /* this is different from the way that intersections   */
-    /* were handled (a NULL constraint record implied that */
+    /* were handled (a nullptr constraint record implied that */
     /*  any value was legal which in turn would imply that */
     /* the union would allow any value as well).           */
     /*=====================================================*/
 
-    if (c1 == NULL) return (CopyConstraintRecord(theEnv, c2));
+    if (c1 == nullptr) return (CopyConstraintRecord(theEnv, c2));
 
-    if (c2 == NULL) return (CopyConstraintRecord(theEnv, c1));
+    if (c2 == nullptr) return (CopyConstraintRecord(theEnv, c1));
 
     /*=================================*/
     /* Create a new constraint record. */
@@ -710,8 +710,8 @@ static void UnionNumericExpressions(
     /* for the union of the constraints.       */
     /*=========================================*/
 
-    theMinList = NULL;
-    theMaxList = NULL;
+    theMinList = nullptr;
+    theMaxList = nullptr;
 
     /*=================================*/
     /* Determine the min/max values of */
@@ -732,7 +732,7 @@ static void UnionNumericExpressions(
     /*============================================*/
 
     for (;
-            tmpmin != NULL;
+            tmpmin != nullptr;
             tmpmin = tmpmin->nextArg, tmpmax = tmpmax->nextArg) {
         UnionRangeMinMaxValueWithList(theEnv, tmpmin, tmpmax, &theMinList, &theMaxList);
     }
@@ -756,7 +756,7 @@ static void UnionNumericExpressions(
     /*=============================================*/
 
     for (;
-            tmpmin != NULL;
+            tmpmin != nullptr;
             tmpmin = tmpmin->nextArg, tmpmax = tmpmax->nextArg) {
         UnionRangeMinMaxValueWithList(theEnv, tmpmin, tmpmax, &theMinList, &theMaxList);
     }
@@ -767,7 +767,7 @@ static void UnionNumericExpressions(
     /* constraint record to the new unioned values.        */
     /*=====================================================*/
 
-    if (theMinList != NULL) {
+    if (theMinList != nullptr) {
         if (range) {
             ReturnExpression(theEnv, newConstraint->minValue);
             ReturnExpression(theEnv, newConstraint->maxValue);
@@ -818,18 +818,18 @@ static void UnionRangeMinMaxValueWithList(
     /* If no values are on the lists, then use the new values. */
     /*=========================================================*/
 
-    if (*theMinList == NULL) {
+    if (*theMinList == nullptr) {
         *theMinList = GenConstant(theEnv, addmin->type, addmin->value);
         *theMaxList = GenConstant(theEnv, addmax->type, addmax->value);
         return;
     }
 
-    lastmin = NULL;
-    lastmax = NULL;
+    lastmin = nullptr;
+    lastmax = nullptr;
     tmpmin = (*theMinList);
     tmpmax = (*theMaxList);
 
-    while (tmpmin != NULL) {
+    while (tmpmin != nullptr) {
         cmaxmax = CompareNumbers(theEnv, addmax->type, addmax->value,
                                  tmpmax->type, tmpmax->value);
 
@@ -875,7 +875,7 @@ static void UnionRangeMinMaxValueWithList(
         /*====================*/
 
         if (cmaxmin == LESS_THAN) {
-            if (lastmax == NULL) {
+            if (lastmax == nullptr) {
                 themin = GenConstant(theEnv, addmin->type, addmin->value);
                 themax = GenConstant(theEnv, addmax->type, addmax->value);
                 themin->nextArg = *theMinList;
@@ -914,10 +914,10 @@ static void UnionRangeMinMaxValueWithList(
     tmpmin = (*theMinList);
     tmpmax = (*theMaxList);
 
-    while (tmpmin != NULL) {
+    while (tmpmin != nullptr) {
         nextmin = tmpmin->nextArg;
         nextmax = tmpmax->nextArg;
-        if (nextmin != NULL) {
+        if (nextmin != nullptr) {
             cmaxmin = CompareNumbers(theEnv, tmpmax->type, tmpmax->value,
                                      nextmin->type, nextmin->value);
             if ((cmaxmin == GREATER_THAN) || (cmaxmin == EQUAL)) {
@@ -948,7 +948,7 @@ static void UnionAllowedClassExpressions(
         CONSTRAINT_RECORD *constraint1,
         CONSTRAINT_RECORD *constraint2,
         CONSTRAINT_RECORD *newConstraint) {
-    struct expr *theHead = NULL;
+    struct expr *theHead = nullptr;
 
     theHead = AddToUnionList(theEnv, constraint1->classList, theHead, newConstraint);
     theHead = AddToUnionList(theEnv, constraint2->classList, theHead, newConstraint);
@@ -965,7 +965,7 @@ static void UnionAllowedValueExpressions(
         CONSTRAINT_RECORD *constraint1,
         CONSTRAINT_RECORD *constraint2,
         CONSTRAINT_RECORD *newConstraint) {
-    struct expr *theHead = NULL;
+    struct expr *theHead = nullptr;
 
     theHead = AddToUnionList(theEnv, constraint1->restrictionList, theHead, newConstraint);
     theHead = AddToUnionList(theEnv, constraint2->restrictionList, theHead, newConstraint);
@@ -991,7 +991,7 @@ static struct expr *AddToUnionList(
     /* being added to the unioned set.      */
     /*======================================*/
 
-    for (; theList1 != NULL; theList1 = theList1->nextArg) {
+    for (; theList1 != nullptr; theList1 = theList1->nextArg) {
         /*===================================*/
         /* Determine if the value is already */
         /* in the unioned list.              */
@@ -999,7 +999,7 @@ static struct expr *AddToUnionList(
 
         flag = true;
         for (theList2 = theHead;
-             theList2 != NULL;
+             theList2 != nullptr;
              theList2 = theList2->nextArg) {
             if ((theList1->type == theList2->type) &&
                 (theList1->value == theList2->value)) {
@@ -1041,24 +1041,24 @@ void RemoveConstantFromConstraint(
         int theType,
         void *theValue,
         CONSTRAINT_RECORD *theConstraint) {
-    struct expr *theList, *lastOne = NULL, *tmpList;
+    struct expr *theList, *lastOne = nullptr, *tmpList;
 
-    if (theConstraint == NULL) return;
+    if (theConstraint == nullptr) return;
 
     theList = theConstraint->restrictionList;
-    theConstraint->restrictionList = NULL;
+    theConstraint->restrictionList = nullptr;
 
-    while (theList != NULL) {
+    while (theList != nullptr) {
         if ((theList->type != theType) || (theList->value != theValue)) {
-            if (lastOne == NULL) { theConstraint->restrictionList = theList; }
+            if (lastOne == nullptr) { theConstraint->restrictionList = theList; }
             else { lastOne->nextArg = theList; }
             lastOne = theList;
             theList = theList->nextArg;
-            lastOne->nextArg = NULL;
+            lastOne->nextArg = nullptr;
         } else {
             tmpList = theList;
             theList = theList->nextArg;
-            tmpList->nextArg = NULL;
+            tmpList->nextArg = nullptr;
             ReturnExpression(theEnv, tmpList);
         }
     }

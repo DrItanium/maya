@@ -102,86 +102,86 @@ void InitializeFactReteFunctions(
         Environment *theEnv) {
     struct entityRecord factJNGV1Info = {"FACT_JN_VAR1", FACT_JN_VAR1, 0, 1, 0,
                                          PrintFactJNGetVar1,
-                                         PrintFactJNGetVar1, NULL,
+                                         PrintFactJNGetVar1, nullptr,
                                          FactJNGetVar1,
-                                         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+                                         nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
     struct entityRecord factJNGV2Info = {"FACT_JN_VAR2", FACT_JN_VAR2, 0, 1, 0,
                                          PrintFactJNGetVar2,
-                                         PrintFactJNGetVar2, NULL,
+                                         PrintFactJNGetVar2, nullptr,
                                          FactJNGetVar2,
-                                         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+                                         nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
     struct entityRecord factJNGV3Info = {"FACT_JN_VAR3", FACT_JN_VAR3, 0, 1, 0,
                                          PrintFactJNGetVar3,
-                                         PrintFactJNGetVar3, NULL,
+                                         PrintFactJNGetVar3, nullptr,
                                          FactJNGetVar3,
-                                         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+                                         nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
     struct entityRecord factPNGV1Info = {"FACT_PN_VAR1", FACT_PN_VAR1, 0, 1, 0,
                                          PrintFactPNGetVar1,
-                                         PrintFactPNGetVar1, NULL,
+                                         PrintFactPNGetVar1, nullptr,
                                          FactPNGetVar1,
-                                         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+                                         nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
     struct entityRecord factPNGV2Info = {"FACT_PN_VAR2", FACT_PN_VAR2, 0, 1, 0,
                                          PrintFactPNGetVar2,
-                                         PrintFactPNGetVar2, NULL,
+                                         PrintFactPNGetVar2, nullptr,
                                          FactPNGetVar2,
-                                         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+                                         nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
     struct entityRecord factPNGV3Info = {"FACT_PN_VAR3", FACT_PN_VAR3, 0, 1, 0,
                                          PrintFactPNGetVar3,
-                                         PrintFactPNGetVar3, NULL,
+                                         PrintFactPNGetVar3, nullptr,
                                          FactPNGetVar3,
-                                         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+                                         nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
     struct entityRecord factJNCV1Info = {"FACT_JN_CMP1", FACT_JN_CMP1, 0, 1, 1,
                                          PrintFactJNCompVars1,
-                                         PrintFactJNCompVars1, NULL,
+                                         PrintFactJNCompVars1, nullptr,
                                          FactJNCompVars1,
-                                         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+                                         nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
     struct entityRecord factJNCV2Info = {"FACT_JN_CMP2", FACT_JN_CMP2, 0, 1, 1,
                                          PrintFactJNCompVars2,
-                                         PrintFactJNCompVars2, NULL,
+                                         PrintFactJNCompVars2, nullptr,
                                          FactJNCompVars2,
-                                         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+                                         nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
     struct entityRecord factPNCV1Info = {"FACT_PN_CMP1", FACT_PN_CMP1, 0, 1, 1,
                                          PrintFactPNCompVars1,
-                                         PrintFactPNCompVars1, NULL,
+                                         PrintFactPNCompVars1, nullptr,
                                          FactPNCompVars1,
-                                         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+                                         nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
     struct entityRecord factStoreMFInfo = {"FACT_STORE_MULTIFIELD",
                                            FACT_STORE_MULTIFIELD, 0, 1, 0,
-                                           NULL, NULL, NULL,
+                                           nullptr, nullptr, nullptr,
                                            (EntityEvaluationFunction *) FactStoreMultifield,
-                                           NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+                                           nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
     struct entityRecord factSlotLengthInfo = {"FACT_SLOT_LENGTH",
                                               FACT_SLOT_LENGTH, 0, 1, 0,
                                               PrintFactSlotLength,
-                                              PrintFactSlotLength, NULL,
+                                              PrintFactSlotLength, nullptr,
                                               FactSlotLength,
-                                              NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+                                              nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
     struct entityRecord factPNConstant1Info = {"FACT_PN_CONSTANT1",
                                                FACT_PN_CONSTANT1, 0, 1, 1,
                                                PrintFactPNConstant1,
-                                               PrintFactPNConstant1, NULL,
+                                               PrintFactPNConstant1, nullptr,
                                                FactPNConstant1,
-                                               NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+                                               nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
     struct entityRecord factPNConstant2Info = {"FACT_PN_CONSTANT2",
                                                FACT_PN_CONSTANT2, 0, 1, 1,
                                                PrintFactPNConstant2,
-                                               PrintFactPNConstant2, NULL,
+                                               PrintFactPNConstant2, nullptr,
                                                FactPNConstant2,
-                                               NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+                                               nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    AllocateEnvironmentData(theEnv, FACTGEN_DATA, sizeof(struct factgenData), NULL);
+    AllocateEnvironmentData(theEnv, FACTGEN_DATA, sizeof(struct factgenData), nullptr);
 
     memcpy(&FactgenData(theEnv)->FactJNGV1Info, &factJNGV1Info, sizeof(struct entityRecord));
     memcpy(&FactgenData(theEnv)->FactJNGV2Info, &factJNGV2Info, sizeof(struct entityRecord));
@@ -407,7 +407,7 @@ struct expr *FactGenCheckLength(
 
     if ((theNode->singleFieldsAfter == 0) &&
         (theNode->pnType != SF_VARIABLE_NODE) &&
-        (theNode->pnType != SF_WILDCARD_NODE)) { return NULL; }
+        (theNode->pnType != SF_WILDCARD_NODE)) { return nullptr; }
 
     /*=======================================*/
     /* Initialize the length test arguments. */

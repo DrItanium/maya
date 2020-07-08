@@ -135,23 +135,23 @@ static void DeallocateConstructData(
     DeallocateVoidCallList(theEnv, ConstructData(theEnv)->ListOfClearFunctions);
     DeallocateBoolCallList(theEnv, ConstructData(theEnv)->ListOfClearReadyFunctions);
 
-    if (ConstructData(theEnv)->ErrorString != NULL) {
+    if (ConstructData(theEnv)->ErrorString != nullptr) {
         genfree(theEnv, ConstructData(theEnv)->ErrorString, sizeof(ConstructData(theEnv)->ErrorString) + 1);
     }
 
-    if (ConstructData(theEnv)->WarningString != NULL) {
+    if (ConstructData(theEnv)->WarningString != nullptr) {
         genfree(theEnv, ConstructData(theEnv)->WarningString, sizeof(ConstructData(theEnv)->WarningString) + 1);
     }
 
-    ConstructData(theEnv)->ErrorString = NULL;
-    ConstructData(theEnv)->WarningString = NULL;
+    ConstructData(theEnv)->ErrorString = nullptr;
+    ConstructData(theEnv)->WarningString = nullptr;
 
-    SetParsingFileName(theEnv, NULL);
-    SetWarningFileName(theEnv, NULL);
-    SetErrorFileName(theEnv, NULL);
+    SetParsingFileName(theEnv, nullptr);
+    SetWarningFileName(theEnv, nullptr);
+    SetErrorFileName(theEnv, nullptr);
 
     tmpPtr = ConstructData(theEnv)->ListOfConstructs;
-    while (tmpPtr != NULL) {
+    while (tmpPtr != nullptr) {
         nextPtr = tmpPtr->next;
         rtn_struct(theEnv, construct, tmpPtr);
         tmpPtr = nextPtr;
@@ -186,12 +186,12 @@ Construct *FindConstruct(
     Construct *currentPtr;
 
     for (currentPtr = ConstructData(theEnv)->ListOfConstructs;
-         currentPtr != NULL;
+         currentPtr != nullptr;
          currentPtr = currentPtr->next) {
         if (strcmp(name, currentPtr->constructName) == 0) { return currentPtr; }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /***********************************************************/
@@ -203,13 +203,13 @@ Construct *FindConstruct(
 bool RemoveConstruct(
         Environment *theEnv,
         const char *name) {
-    Construct *currentPtr, *lastPtr = NULL;
+    Construct *currentPtr, *lastPtr = nullptr;
 
     for (currentPtr = ConstructData(theEnv)->ListOfConstructs;
-         currentPtr != NULL;
+         currentPtr != nullptr;
          currentPtr = currentPtr->next) {
         if (strcmp(name, currentPtr->constructName) == 0) {
-            if (lastPtr == NULL) { ConstructData(theEnv)->ListOfConstructs = currentPtr->next; }
+            if (lastPtr == nullptr) { ConstructData(theEnv)->ListOfConstructs = currentPtr->next; }
             else { lastPtr->next = currentPtr->next; }
             rtn_struct(theEnv, construct, currentPtr);
             return true;
@@ -237,13 +237,13 @@ bool Save(
     /* If embedded, clear the error flags. */
     /*=====================================*/
 
-    if (EvaluationData(theEnv)->CurrentExpression == NULL) { ResetErrorFlags(theEnv); }
+    if (EvaluationData(theEnv)->CurrentExpression == nullptr) { ResetErrorFlags(theEnv); }
 
     /*=====================*/
     /* Open the save file. */
     /*=====================*/
 
-    if ((filePtr = GenOpen(theEnv, fileName, "w")) == NULL) { return false; }
+    if ((filePtr = GenOpen(theEnv, fileName, "w")) == nullptr) { return false; }
 
     /*===========================*/
     /* Bypass the router system. */
@@ -266,8 +266,8 @@ bool Save(
         unvisited = false;
         updated = false;
 
-        for (defmodulePtr = GetNextDefmodule(theEnv, NULL);
-             defmodulePtr != NULL;
+        for (defmodulePtr = GetNextDefmodule(theEnv, nullptr);
+             defmodulePtr != nullptr;
              defmodulePtr = GetNextDefmodule(theEnv, defmodulePtr)) {
             /*=================================================================*/
             /* We only want to save a module if all of the modules it imports  */
@@ -279,7 +279,7 @@ bool Save(
             if (defmodulePtr->visitedFlag) { /* Module has already been saved. */ }
             else if (AllImportedModulesVisited(theEnv, defmodulePtr)) {
                 for (saveFunction = ConstructData(theEnv)->ListOfSaveFunctions;
-                     saveFunction != NULL;
+                     saveFunction != nullptr;
                      saveFunction = saveFunction->next) {
                     (*saveFunction->func)(theEnv, defmodulePtr, (char *) filePtr, saveFunction->context);
                 }
@@ -316,7 +316,7 @@ bool Save(
     /* Remove the router bypass. */
     /*===========================*/
 
-    SetFastSave(theEnv, NULL);
+    SetFastSave(theEnv, nullptr);
 
     /*=========================*/
     /* Return true to indicate */
@@ -408,11 +408,11 @@ bool GetLoadInProgress(
 /*************************************/
 void InitializeConstructs(
         Environment *theEnv) {
-    AddUDF(theEnv, "clear", "v", 0, 0, NULL, ClearCommand, NULL);
-    AddUDF(theEnv, "reset", "v", 0, 0, NULL, ResetCommand, NULL);
+    AddUDF(theEnv, "clear", "v", 0, 0, nullptr, ClearCommand, nullptr);
+    AddUDF(theEnv, "reset", "v", 0, 0, nullptr, ResetCommand, nullptr);
 
 #if DEBUGGING_FUNCTIONS
-    AddWatchItem(theEnv, "compilations", 0, &ConstructData(theEnv)->WatchCompilations, 30, NULL, NULL);
+    AddWatchItem(theEnv, "compilations", 0, &ConstructData(theEnv)->WatchCompilations, 30, nullptr, nullptr);
 #endif
 }
 
@@ -461,8 +461,8 @@ void Reset(
     /* If embedded, clear the error flags. */
     /*=====================================*/
 
-    if (EvaluationData(theEnv)->CurrentExpression == NULL) { ResetErrorFlags(theEnv); }
-    SetErrorValue(theEnv, NULL);
+    if (EvaluationData(theEnv)->CurrentExpression == nullptr) { ResetErrorFlags(theEnv); }
+    SetErrorValue(theEnv, nullptr);
 
     /*========================================*/
     /* Set up the frame for tracking garbage. */
@@ -477,7 +477,7 @@ void Reset(
     /* reset should proceed with activations on the agenda.] */
     /*=======================================================*/
 
-    if ((ConstructData(theEnv)->BeforeResetCallback != NULL) ?
+    if ((ConstructData(theEnv)->BeforeResetCallback != nullptr) ?
         ((*ConstructData(theEnv)->BeforeResetCallback)(theEnv) == false) : false) {
         ConstructData(theEnv)->ResetReadyInProgress = false;
         ConstructData(theEnv)->ResetInProgress = false;
@@ -491,7 +491,7 @@ void Reset(
     /*===========================*/
 
     for (resetPtr = ConstructData(theEnv)->ListOfResetFunctions;
-         (resetPtr != NULL) && (GetHaltExecution(theEnv) == false);
+         (resetPtr != nullptr) && (GetHaltExecution(theEnv) == false);
          resetPtr = resetPtr->next) { (*resetPtr->func)(theEnv, resetPtr->context); }
 
     /*============================================*/
@@ -510,7 +510,7 @@ void Reset(
     /* If embedded, clean the topmost garbage frame. */
     /*===============================================*/
 
-    if (EvaluationData(theEnv)->CurrentExpression == NULL) { CleanCurrentGarbageFrame(theEnv, NULL); }
+    if (EvaluationData(theEnv)->CurrentExpression == nullptr) { CleanCurrentGarbageFrame(theEnv, nullptr); }
 
     /*======================*/
     /* Call periodic tasks. */
@@ -600,8 +600,8 @@ bool Clear(
     /* If embedded, clear the error flags. */
     /*=====================================*/
 
-    if (EvaluationData(theEnv)->CurrentExpression == NULL) { ResetErrorFlags(theEnv); }
-    SetErrorValue(theEnv, NULL);
+    if (EvaluationData(theEnv)->CurrentExpression == nullptr) { ResetErrorFlags(theEnv); }
+    SetErrorValue(theEnv, nullptr);
 
     /*===================================*/
     /* Determine if a clear is possible. */
@@ -631,7 +631,7 @@ bool Clear(
     ConstructData(theEnv)->ClearInProgress = true;
 
     for (theFunction = ConstructData(theEnv)->ListOfClearFunctions;
-         theFunction != NULL;
+         theFunction != nullptr;
          theFunction = theFunction->next) { (*theFunction->func)(theEnv, theFunction->context); }
 
     /*================================*/
@@ -644,7 +644,7 @@ bool Clear(
     /* If embedded, clean the garbage frame. */
     /*=======================================*/
 
-    if (EvaluationData(theEnv)->CurrentExpression == NULL) { CleanCurrentGarbageFrame(theEnv, NULL); }
+    if (EvaluationData(theEnv)->CurrentExpression == nullptr) { CleanCurrentGarbageFrame(theEnv, nullptr); }
 
     /*======================*/
     /* Call periodic tasks. */
@@ -658,8 +658,8 @@ bool Clear(
 
     ConstructData(theEnv)->ClearInProgress = false;
 
-    if ((DefruleData(theEnv)->RightPrimeJoins != NULL) ||
-        (DefruleData(theEnv)->LeftPrimeJoins != NULL)) { SystemError(theEnv, "CONSTRCT", 1); }
+    if ((DefruleData(theEnv)->RightPrimeJoins != nullptr) ||
+        (DefruleData(theEnv)->LeftPrimeJoins != nullptr)) { SystemError(theEnv, "CONSTRCT", 1); }
 
     /*============================*/
     /* Perform reset after clear. */
@@ -681,7 +681,7 @@ bool ClearReady(
     struct boolCallFunctionItem *theFunction;
 
     for (theFunction = ConstructData(theEnv)->ListOfClearReadyFunctions;
-         theFunction != NULL;
+         theFunction != nullptr;
          theFunction = theFunction->next) {
         if ((*theFunction->func)(theEnv, theFunction->context) == false) { return false; }
     }
@@ -787,15 +787,15 @@ void DeinstallConstructHeader(
         Environment *theEnv,
         ConstructHeader *theHeader) {
     ReleaseLexeme(theEnv, theHeader->name);
-    if (theHeader->ppForm != NULL) {
+    if (theHeader->ppForm != nullptr) {
         rm(theEnv, (void *) theHeader->ppForm,
            sizeof(char) * (strlen(theHeader->ppForm) + 1));
-        theHeader->ppForm = NULL;
+        theHeader->ppForm = nullptr;
     }
 
-    if (theHeader->usrData != NULL) {
+    if (theHeader->usrData != nullptr) {
         ClearUserDataList(theEnv, theHeader->usrData);
-        theHeader->usrData = NULL;
+        theHeader->usrData = nullptr;
     }
 }
 
@@ -808,15 +808,15 @@ void DeinstallConstructHeader(
 void DestroyConstructHeader(
         Environment *theEnv,
         ConstructHeader *theHeader) {
-    if (theHeader->ppForm != NULL) {
+    if (theHeader->ppForm != nullptr) {
         rm(theEnv, (void *) theHeader->ppForm,
            sizeof(char) * (strlen(theHeader->ppForm) + 1));
-        theHeader->ppForm = NULL;
+        theHeader->ppForm = nullptr;
     }
 
-    if (theHeader->usrData != NULL) {
+    if (theHeader->usrData != nullptr) {
         ClearUserDataList(theEnv, theHeader->usrData);
-        theHeader->usrData = NULL;
+        theHeader->usrData = nullptr;
     }
 }
 
@@ -900,7 +900,7 @@ SaveCallFunctionItem *AddSaveFunctionToCallList(
         SaveCallFunction *func,
         struct saveCallFunctionItem *head,
         void *context) {
-    struct saveCallFunctionItem *newPtr, *currentPtr, *lastPtr = NULL;
+    struct saveCallFunctionItem *newPtr, *currentPtr, *lastPtr = nullptr;
     char *nameCopy;
 
     newPtr = get_struct(theEnv, saveCallFunctionItem);
@@ -913,18 +913,18 @@ SaveCallFunctionItem *AddSaveFunctionToCallList(
     newPtr->priority = priority;
     newPtr->context = context;
 
-    if (head == NULL) {
-        newPtr->next = NULL;
+    if (head == nullptr) {
+        newPtr->next = nullptr;
         return (newPtr);
     }
 
     currentPtr = head;
-    while ((currentPtr != NULL) ? (priority < currentPtr->priority) : false) {
+    while ((currentPtr != nullptr) ? (priority < currentPtr->priority) : false) {
         lastPtr = currentPtr;
         currentPtr = currentPtr->next;
     }
 
-    if (lastPtr == NULL) {
+    if (lastPtr == nullptr) {
         newPtr->next = head;
         head = newPtr;
     } else {
@@ -948,13 +948,13 @@ struct saveCallFunctionItem *RemoveSaveFunctionFromCallList(
     struct saveCallFunctionItem *currentPtr, *lastPtr;
 
     *found = false;
-    lastPtr = NULL;
+    lastPtr = nullptr;
     currentPtr = head;
 
-    while (currentPtr != NULL) {
+    while (currentPtr != nullptr) {
         if (strcmp(name, currentPtr->name) == 0) {
             *found = true;
-            if (lastPtr == NULL) { head = currentPtr->next; }
+            if (lastPtr == nullptr) { head = currentPtr->next; }
             else { lastPtr->next = currentPtr->next; }
 
             genfree(theEnv, (void *) currentPtr->name, strlen(currentPtr->name) + 1);
@@ -980,7 +980,7 @@ void DeallocateSaveCallList(
     struct saveCallFunctionItem *tmpPtr, *nextPtr;
 
     tmpPtr = theList;
-    while (tmpPtr != NULL) {
+    while (tmpPtr != nullptr) {
         nextPtr = tmpPtr->next;
         genfree(theEnv, (void *) tmpPtr->name, strlen(tmpPtr->name) + 1);
         rtn_struct(theEnv, saveCallFunctionItem, tmpPtr);

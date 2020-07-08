@@ -89,7 +89,7 @@ static void PrintRange(Environment *, const char *, CONSTRAINT_RECORD *);
 static bool CheckFunctionReturnType(
         unsigned functionReturnType,
         CONSTRAINT_RECORD *constraints) {
-    if (constraints == NULL) return true;
+    if (constraints == nullptr) return true;
 
     if (constraints->anyAllowed) return true;
 
@@ -126,7 +126,7 @@ static bool CheckTypeConstraint(
         CONSTRAINT_RECORD *constraints) {
     if (type == VOID_TYPE) return false;
 
-    if (constraints == NULL) return true;
+    if (constraints == nullptr) return true;
 
     if (constraints->anyAllowed == true) return true;
 
@@ -161,18 +161,18 @@ bool CheckCardinalityConstraint(
         size_t number,
         CONSTRAINT_RECORD *constraints) {
     /*=========================================*/
-    /* If the constraint record is NULL, there */
+    /* If the constraint record is nullptr, there */
     /* are no cardinality restrictions.        */
     /*=========================================*/
 
-    if (constraints == NULL) return true;
+    if (constraints == nullptr) return true;
 
     /*==================================*/
     /* Determine if the integer is less */
     /* than the minimum cardinality.    */
     /*==================================*/
 
-    if (constraints->minFields != NULL) {
+    if (constraints->minFields != nullptr) {
         if (constraints->minFields->value != SymbolData(theEnv)->NegativeInfinity) {
             if (number < (size_t) constraints->minFields->integerValue->contents) { return false; }
         }
@@ -183,7 +183,7 @@ bool CheckCardinalityConstraint(
     /* than the maximum cardinality.       */
     /*=====================================*/
 
-    if (constraints->maxFields != NULL) {
+    if (constraints->maxFields != nullptr) {
         if (constraints->maxFields->value != SymbolData(theEnv)->PositiveInfinity) {
             if (number > (size_t) constraints->maxFields->integerValue->contents) { return false; }
         }
@@ -209,11 +209,11 @@ static bool CheckRangeAgainstCardinalityConstraint(
         int max,
         CONSTRAINT_RECORD *constraints) {
     /*=========================================*/
-    /* If the constraint record is NULL, there */
+    /* If the constraint record is nullptr, there */
     /* are no cardinality restrictions.        */
     /*=========================================*/
 
-    if (constraints == NULL) return true;
+    if (constraints == nullptr) return true;
 
     /*===============================================================*/
     /* If the minimum value of the range is greater than the maximum */
@@ -222,7 +222,7 @@ static bool CheckRangeAgainstCardinalityConstraint(
     /* false is returned.                                            */
     /*===============================================================*/
 
-    if (constraints->maxFields != NULL) {
+    if (constraints->maxFields != nullptr) {
         if (constraints->maxFields->value != SymbolData(theEnv)->PositiveInfinity) {
             if (min > constraints->maxFields->integerValue->contents) { return false; }
         }
@@ -236,7 +236,7 @@ static bool CheckRangeAgainstCardinalityConstraint(
     /* the maximum possible value of the range is positive infinity. */
     /*===============================================================*/
 
-    if ((constraints->minFields != NULL) && (max != -1)) {
+    if ((constraints->minFields != nullptr) && (max != -1)) {
         if (constraints->minFields->value != SymbolData(theEnv)->NegativeInfinity) {
             if (max < constraints->minFields->integerValue->contents) { return false; }
         }
@@ -263,11 +263,11 @@ bool CheckAllowedValuesConstraint(
     struct expr *tmpPtr;
 
     /*=========================================*/
-    /* If the constraint record is NULL, there */
+    /* If the constraint record is nullptr, there */
     /* are no allowed-... restrictions.        */
     /*=========================================*/
 
-    if (constraints == NULL) return true;
+    if (constraints == nullptr) return true;
 
     /*=====================================================*/
     /* Determine if there are any allowed-... restrictions */
@@ -310,7 +310,7 @@ bool CheckAllowedValuesConstraint(
     /*=========================================================*/
 
     for (tmpPtr = constraints->restrictionList;
-         tmpPtr != NULL;
+         tmpPtr != nullptr;
          tmpPtr = tmpPtr->nextArg) {
         if ((tmpPtr->type == type) && (tmpPtr->value == vPtr)) return true;
     }
@@ -339,18 +339,18 @@ bool CheckAllowedClassesConstraint(
     Defclass *insClass, *cmpClass;
 
     /*=========================================*/
-    /* If the constraint record is NULL, there */
+    /* If the constraint record is nullptr, there */
     /* is no allowed-classes restriction.      */
     /*=========================================*/
 
-    if (constraints == NULL) return true;
+    if (constraints == nullptr) return true;
 
     /*======================================*/
     /* The constraint is satisfied if there */
     /* aren't any class restrictions.       */
     /*======================================*/
 
-    if (constraints->classList == NULL) { return true; }
+    if (constraints->classList == nullptr) { return true; }
 
     /*==================================*/
     /* Class restrictions only apply to */
@@ -367,7 +367,7 @@ bool CheckAllowedClassesConstraint(
     if (type == INSTANCE_ADDRESS_TYPE) { ins = (Instance *) vPtr; }
     else { ins = FindInstanceBySymbol(theEnv, (CLIPSLexeme *) vPtr); }
 
-    if (ins == NULL) { return false; }
+    if (ins == nullptr) { return false; }
 
     /*======================================================*/
     /* Search through the class list to see if the instance */
@@ -376,10 +376,10 @@ bool CheckAllowedClassesConstraint(
 
     insClass = InstanceClass(ins);
     for (tmpPtr = constraints->classList;
-         tmpPtr != NULL;
+         tmpPtr != nullptr;
          tmpPtr = tmpPtr->nextArg) {
         cmpClass = LookupDefclassByMdlOrScope(theEnv, tmpPtr->lexemeValue->contents);
-        if (cmpClass == NULL) continue;
+        if (cmpClass == nullptr) continue;
         if (cmpClass == insClass) return true;
         if (SubclassP(insClass, cmpClass)) return true;
     }
@@ -404,11 +404,11 @@ static bool CheckRangeConstraint(
     struct expr *minList, *maxList;
 
     /*===================================*/
-    /* If the constraint record is NULL, */
+    /* If the constraint record is nullptr, */
     /* there are no range restrictions.  */
     /*===================================*/
 
-    if (constraints == NULL) return true;
+    if (constraints == nullptr) return true;
 
     /*============================================*/
     /* If the value being checked isn't a number, */
@@ -427,7 +427,7 @@ static bool CheckRangeConstraint(
     minList = constraints->minValue;
     maxList = constraints->maxValue;
 
-    while (minList != NULL) {
+    while (minList != nullptr) {
         if (CompareNumbers(theEnv, type, vPtr, minList->type, minList->value) == LESS_THAN) {
             minList = minList->nextArg;
             maxList = maxList->nextArg;
@@ -474,7 +474,7 @@ void ConstraintViolationErrorMessage(
         if (violationType == FUNCTION_RETURN_TYPE_VIOLATION) {
             PrintErrorID(theEnv, "CSTRNCHK", 1, true);
             WriteString(theEnv, STDERR, "The function return value");
-        } else if (theWhat != NULL) {
+        } else if (theWhat != nullptr) {
             PrintErrorID(theEnv, "CSTRNCHK", 1, true);
             WriteString(theEnv, STDERR, theWhat);
         }
@@ -484,7 +484,7 @@ void ConstraintViolationErrorMessage(
         /* caused the constraint violation.      */
         /*=======================================*/
 
-        if (thePlace != NULL) {
+        if (thePlace != nullptr) {
             WriteString(theEnv, STDERR, " found in ");
             if (command) WriteString(theEnv, STDERR, "the '");
             WriteString(theEnv, STDERR, thePlace);
@@ -520,7 +520,7 @@ void ConstraintViolationErrorMessage(
     /* where the constraint violation occured.      */
     /*==============================================*/
 
-    if (theSlot != NULL) {
+    if (theSlot != nullptr) {
         WriteString(theEnv, STDERR, " for slot '");
         WriteString(theEnv, STDERR, theSlot->contents);
         WriteString(theEnv, STDERR, "'");
@@ -564,7 +564,7 @@ ConstraintViolationType ConstraintCheckDataObject(
     ConstraintViolationType rv;
     CLIPSValue *theMultifield;
 
-    if (theConstraints == NULL) return NO_VIOLATION;
+    if (theConstraints == nullptr) return NO_VIOLATION;
 
     if (theData->header->type == MULTIFIELD_TYPE) {
         if (CheckCardinalityConstraint(theEnv, theData->range, theConstraints) == false) { return CARDINALITY_VIOLATION; }
@@ -626,7 +626,7 @@ ConstraintViolationType ConstraintCheckExpressionChain(
     /* positive infinity).                                       */
     /*===========================================================*/
 
-    for (theExp = theExpression; theExp != NULL; theExp = theExp->nextArg) {
+    for (theExp = theExpression; theExp != nullptr; theExp = theExp->nextArg) {
         if (ConstantType(theExp->type)) min++;
         else if (theExp->type == FCALL) {
             unsigned restriction = ExpressionUnknownFunctionType(theExp);
@@ -646,7 +646,7 @@ ConstraintViolationType ConstraintCheckExpressionChain(
     /* Check for other constraint violations. */
     /*========================================*/
 
-    for (theExp = theExpression; theExp != NULL; theExp = theExp->nextArg) {
+    for (theExp = theExpression; theExp != nullptr; theExp = theExp->nextArg) {
         vCode = ConstraintCheckValue(theEnv, theExp->type, theExp->value, theConstraints);
         if (vCode != NO_VIOLATION)
             return vCode;
@@ -667,9 +667,9 @@ ConstraintViolationType ConstraintCheckExpression(
         CONSTRAINT_RECORD *theConstraints) {
     ConstraintViolationType rv = NO_VIOLATION;
 
-    if (theConstraints == NULL) return (rv);
+    if (theConstraints == nullptr) return (rv);
 
-    while (theExpression != NULL) {
+    while (theExpression != nullptr) {
         rv = ConstraintCheckValue(theEnv, theExpression->type,
                                   theExpression->value,
                                   theConstraints);
@@ -689,7 +689,7 @@ ConstraintViolationType ConstraintCheckExpression(
 /*****************************************************/
 bool UnmatchableConstraint(
         CONSTRAINT_RECORD *theConstraint) {
-    if (theConstraint == NULL) return false;
+    if (theConstraint == nullptr) return false;
 
     if ((!theConstraint->anyAllowed) &&
         (!theConstraint->symbolsAllowed) &&

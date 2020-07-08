@@ -97,15 +97,15 @@ static void SaveDeftemplates(Environment *, Defmodule *, const char *, void *);
 /*********************************************************************/
 void DeftemplateBasicCommands(
         Environment *theEnv) {
-    AddSaveFunction(theEnv, "deftemplate", SaveDeftemplates, 10, NULL);
+    AddSaveFunction(theEnv, "deftemplate", SaveDeftemplates, 10, nullptr);
 
-    AddUDF(theEnv, "get-deftemplate-list", "m", 0, 1, "y", GetDeftemplateListFunction, NULL);
-    AddUDF(theEnv, "undeftemplate", "v", 1, 1, "y", UndeftemplateCommand, NULL);
-    AddUDF(theEnv, "deftemplate-module", "y", 1, 1, "y", DeftemplateModuleFunction, NULL);
+    AddUDF(theEnv, "get-deftemplate-list", "m", 0, 1, "y", GetDeftemplateListFunction, nullptr);
+    AddUDF(theEnv, "undeftemplate", "v", 1, 1, "y", UndeftemplateCommand, nullptr);
+    AddUDF(theEnv, "deftemplate-module", "y", 1, 1, "y", DeftemplateModuleFunction, nullptr);
 
 #if DEBUGGING_FUNCTIONS
-    AddUDF(theEnv, "list-deftemplates", "v", 0, 1, "y", ListDeftemplatesCommand, NULL);
-    AddUDF(theEnv, "ppdeftemplate", "vs", 1, 2, ";y;ldsyn", PPDeftemplateCommand, NULL);
+    AddUDF(theEnv, "list-deftemplates", "v", 0, 1, "y", ListDeftemplatesCommand, nullptr);
+    AddUDF(theEnv, "ppdeftemplate", "vs", 1, 2, ";y;ldsyn", PPDeftemplateCommand, nullptr);
 #endif
 
 #if (BLOAD_AND_BSAVE)
@@ -146,9 +146,9 @@ bool Undeftemplate(
         Environment *allEnv) {
     Environment *theEnv;
 
-    if (theDeftemplate == NULL) {
+    if (theDeftemplate == nullptr) {
         theEnv = allEnv;
-        return Undefconstruct(theEnv, NULL, DeftemplateData(theEnv)->DeftemplateConstruct);
+        return Undefconstruct(theEnv, nullptr, DeftemplateData(theEnv)->DeftemplateConstruct);
     } else {
         theEnv = theDeftemplate->header.env;
         return Undefconstruct(theEnv, &theDeftemplate->header, DeftemplateData(theEnv)->DeftemplateConstruct);

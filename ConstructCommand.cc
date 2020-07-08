@@ -110,11 +110,11 @@ static bool ConstructWatchSupport(Environment *, Construct *, const char *,
 /************************************/
 void AddConstructToModule(
         ConstructHeader *theConstruct) {
-    if (theConstruct->whichModule->lastItem == NULL) { theConstruct->whichModule->firstItem = theConstruct; }
+    if (theConstruct->whichModule->lastItem == nullptr) { theConstruct->whichModule->firstItem = theConstruct; }
     else { theConstruct->whichModule->lastItem->next = theConstruct; }
 
     theConstruct->whichModule->lastItem = theConstruct;
-    theConstruct->next = NULL;
+    theConstruct->next = nullptr;
 }
 
 
@@ -147,7 +147,7 @@ bool DeleteNamedConstruct(
     /* If the construct was found, delete it. */
     /*========================================*/
 
-    if (constructPtr != NULL) { return (*constructClass->deleteFunction)(constructPtr, theEnv); }
+    if (constructPtr != nullptr) { return (*constructClass->deleteFunction)(constructPtr, theEnv); }
 
     /*========================================*/
     /* If the construct wasn't found, but the */
@@ -156,7 +156,7 @@ bool DeleteNamedConstruct(
     /*========================================*/
 
     if (strcmp("*", constructName) == 0) {
-        (*constructClass->deleteFunction)(NULL, theEnv);
+        (*constructClass->deleteFunction)(nullptr, theEnv);
         return true;
     }
 
@@ -184,25 +184,25 @@ ConstructHeader *FindNamedConstructInModuleOrImports(
     /*================================================*/
 
     theConstruct = FindNamedConstructInModule(theEnv, constructName, constructClass);
-    if (theConstruct != NULL) return theConstruct;
+    if (theConstruct != nullptr) return theConstruct;
 
     /*=====================================*/
     /* If there's a module specifier, then */
     /* the construct does not exist.       */
     /*=====================================*/
 
-    if (FindModuleSeparator(constructName)) { return NULL; }
+    if (FindModuleSeparator(constructName)) { return nullptr; }
 
     /*========================================*/
     /* Otherwise, search in imported modules. */
     /*========================================*/
 
-    theConstruct = FindImportedConstruct(theEnv, constructClass->constructName, NULL,
-                                         constructName, &count, true, NULL);
+    theConstruct = FindImportedConstruct(theEnv, constructClass->constructName, nullptr,
+                                         constructName, &count, true, nullptr);
 
     if (count > 1) {
         AmbiguousReferenceErrorMessage(theEnv, constructClass->constructName, constructName);
-        return NULL;
+        return nullptr;
     }
 
     return theConstruct;
@@ -217,7 +217,7 @@ ConstructHeader *FindNamedConstructInModule(
         const char *constructName,
         Construct *constructClass) {
     ConstructHeader *theConstruct;
-    CLIPSLexeme *findValue = NULL;
+    CLIPSLexeme *findValue = nullptr;
 
     /*==========================*/
     /* Save the current module. */
@@ -237,15 +237,15 @@ ConstructHeader *FindNamedConstructInModule(
     /* If a valid construct name couldn't be extracted */
     /* or the construct name isn't in the symbol table */
     /* (which means the construct doesn't exist), then */
-    /* return NULL to indicate the specified construct */
+    /* return nullptr to indicate the specified construct */
     /* couldn't be found.                              */
     /*=================================================*/
 
-    if ((constructName == NULL) ?
+    if ((constructName == nullptr) ?
         true :
-        ((findValue = FindSymbolHN(theEnv, constructName, SYMBOL_BIT)) == NULL)) {
+        ((findValue = FindSymbolHN(theEnv, constructName, SYMBOL_BIT)) == nullptr)) {
         RestoreCurrentModule(theEnv);
-        return NULL;
+        return nullptr;
     }
 
     /*===============================================*/
@@ -256,7 +256,7 @@ ConstructHeader *FindNamedConstructInModule(
 
     if (findValue->count == 0) {
         RestoreCurrentModule(theEnv);
-        return NULL;
+        return nullptr;
     }
 
     /*===============================================*/
@@ -267,8 +267,8 @@ ConstructHeader *FindNamedConstructInModule(
     /* module and return a pointer to the construct. */
     /*===============================================*/
 
-    for (theConstruct = (*constructClass->getNextItemFunction)(theEnv, NULL);
-         theConstruct != NULL;
+    for (theConstruct = (*constructClass->getNextItemFunction)(theEnv, nullptr);
+         theConstruct != nullptr;
          theConstruct = (*constructClass->getNextItemFunction)(theEnv, theConstruct)) {
         if (findValue == (*constructClass->getConstructNameFunction)(theConstruct)) {
             RestoreCurrentModule(theEnv);
@@ -283,11 +283,11 @@ ConstructHeader *FindNamedConstructInModule(
     RestoreCurrentModule(theEnv);
 
     /*====================================*/
-    /* Return NULL to indicated the named */
+    /* Return nullptr to indicated the named */
     /* construct was not found.           */
     /*====================================*/
 
-    return NULL;
+    return nullptr;
 }
 
 /*****************************************/
@@ -309,14 +309,14 @@ void UndefconstructCommand(
     gensprintf(buffer, "%s name", constructClass->constructName);
 
     constructName = GetConstructName(context, command, buffer);
-    if (constructName == NULL) return;
+    if (constructName == nullptr) return;
 
 
     /*=============================================*/
     /* Check to see if the named construct exists. */
     /*=============================================*/
 
-    if (((*constructClass->findFunction)(theEnv, constructName) == NULL) &&
+    if (((*constructClass->findFunction)(theEnv, constructName) == nullptr) &&
         (strcmp("*", constructName) != 0)) {
         CantFindItemErrorMessage(theEnv, constructClass->constructName, constructName, true);
         return;
@@ -357,11 +357,11 @@ void PPConstructCommand(
     gensprintf(buffer, "%s name", constructClass->constructName);
 
     constructName = GetConstructName(context, command, buffer);
-    if (constructName == NULL) return;
+    if (constructName == nullptr) return;
 
     if (UDFHasNextArgument(context)) {
         logicalName = GetLogicalName(context, STDOUT);
-        if (logicalName == NULL) {
+        if (logicalName == nullptr) {
             IllegalLogicalNameMessage(theEnv, command);
             SetHaltExecution(theEnv, true);
             SetEvaluationError(theEnv, true);
@@ -377,7 +377,7 @@ void PPConstructCommand(
     if (strcmp(logicalName, "nil") == 0) {
         ppForm = PPConstructNil(theEnv, constructName, constructClass);
 
-        if (ppForm == NULL) { CantFindItemErrorMessage(theEnv, constructClass->constructName, constructName, true); }
+        if (ppForm == nullptr) { CantFindItemErrorMessage(theEnv, constructClass->constructName, constructName, true); }
 
         returnValue->lexemeValue = CreateString(theEnv, ppForm);
 
@@ -405,15 +405,15 @@ const char *PPConstructNil(
     /*==================================*/
 
     constructPtr = (*constructClass->findFunction)(theEnv, constructName);
-    if (constructPtr == NULL) return NULL;
+    if (constructPtr == nullptr) return nullptr;
 
     /*==============================================*/
-    /* If the pretty print form is NULL (because of */
+    /* If the pretty print form is nullptr (because of */
     /* conserve-mem), return "" (which indicates    */
     /* the construct was found).                    */
     /*==============================================*/
 
-    if ((*constructClass->getPPFormFunction)(constructPtr) == NULL) { return ""; }
+    if ((*constructClass->getPPFormFunction)(constructPtr) == nullptr) { return ""; }
 
     /*=================================*/
     /* Return the pretty print string. */
@@ -439,15 +439,15 @@ bool PPConstruct(
     /*==================================*/
 
     constructPtr = (*constructClass->findFunction)(theEnv, constructName);
-    if (constructPtr == NULL) return false;
+    if (constructPtr == nullptr) return false;
 
     /*==============================================*/
-    /* If the pretty print form is NULL (because of */
+    /* If the pretty print form is nullptr (because of */
     /* conserve-mem), return true (which indicates  */
     /* the construct was found).                    */
     /*==============================================*/
 
-    if ((*constructClass->getPPFormFunction)(constructPtr) == NULL) { return true; }
+    if ((*constructClass->getPPFormFunction)(constructPtr) == nullptr) { return true; }
 
     /*================================*/
     /* Print the pretty print string. */
@@ -484,14 +484,14 @@ CLIPSLexeme *GetConstructModuleCommand(
     gensprintf(buffer, "%s name", constructClass->constructName);
 
     constructName = GetConstructName(context, command, buffer);
-    if (constructName == NULL) return FalseSymbol(theEnv);
+    if (constructName == nullptr) return FalseSymbol(theEnv);
 
     /*==========================================*/
     /* Get a pointer to the construct's module. */
     /*==========================================*/
 
     constructModule = GetConstructModule(theEnv, constructName, constructClass);
-    if (constructModule == NULL) {
+    if (constructModule == nullptr) {
         CantFindItemErrorMessage(theEnv, constructClass->constructName, constructName, true);
         return FalseSymbol(theEnv);
     }
@@ -524,7 +524,7 @@ Defmodule *GetConstructModule(
 
     if ((position = FindModuleSeparator(constructName)) != 0) {
         theName = ExtractModuleName(theEnv, position, constructName);
-        if (theName != NULL) { return FindDefmodule(theEnv, theName->contents); }
+        if (theName != nullptr) { return FindDefmodule(theEnv, theName->contents); }
     }
 
     /*============================================*/
@@ -533,9 +533,9 @@ Defmodule *GetConstructModule(
     /* modules from which it imports.             */
     /*============================================*/
 
-    constructPtr = FindImportedConstruct(theEnv, constructClass->constructName, NULL, constructName,
-                                         &count, true, NULL);
-    if (constructPtr == NULL) return NULL;
+    constructPtr = FindImportedConstruct(theEnv, constructClass->constructName, nullptr, constructName,
+                                         &count, true, nullptr);
+    if (constructPtr == nullptr) return nullptr;
 
     return (constructPtr->whichModule->theModule);
 }
@@ -557,8 +557,8 @@ bool UndefconstructAll(
 
     GCBlockStart(theEnv, &gcb);
 
-    currentConstruct = (*constructClass->getNextItemFunction)(theEnv, NULL);
-    while (currentConstruct != NULL) {
+    currentConstruct = (*constructClass->getNextItemFunction)(theEnv, nullptr);
+    while (currentConstruct != nullptr) {
         /*==============================*/
         /* Remember the next construct. */
         /*==============================*/
@@ -608,10 +608,10 @@ bool Undefconstruct(
 
     /*================================================*/
     /* Delete all constructs of the specified type if */
-    /* the construct pointer is the NULL pointer.     */
+    /* the construct pointer is the nullptr pointer.     */
     /*================================================*/
 
-    if (theConstruct == NULL) { return UndefconstructAll(theEnv, constructClass); }
+    if (theConstruct == nullptr) { return UndefconstructAll(theEnv, constructClass); }
 
     /*==================================================*/
     /* Return false if the construct cannot be deleted. */
@@ -682,15 +682,15 @@ void SaveConstruct(
     /* construct class in the module.               */
     /*==============================================*/
 
-    for (theConstruct = (*constructClass->getNextItemFunction)(theEnv, NULL);
-         theConstruct != NULL;
+    for (theConstruct = (*constructClass->getNextItemFunction)(theEnv, nullptr);
+         theConstruct != nullptr;
          theConstruct = (*constructClass->getNextItemFunction)(theEnv, theConstruct)) {
         /*==========================================*/
         /* Print the construct's pretty print form. */
         /*==========================================*/
 
         ppform = (*constructClass->getPPFormFunction)(theConstruct);
-        if (ppform != NULL) {
+        if (ppform != nullptr) {
             WriteString(theEnv, logicalName, ppform);
             WriteString(theEnv, logicalName, "\n");
         }
@@ -756,14 +756,14 @@ void GetConstructListFunction(
         /* list for all modules).                    */
         /*===========================================*/
 
-        if ((theModule = FindDefmodule(theEnv, result.lexemeValue->contents)) == NULL) {
+        if ((theModule = FindDefmodule(theEnv, result.lexemeValue->contents)) == nullptr) {
             if (strcmp("*", result.lexemeValue->contents) != 0) {
                 SetMultifieldErrorValue(theEnv, returnValue);
                 ExpectedTypeError1(theEnv, UDFContextFunctionName(context), 1, "'defmodule name'");
                 return;
             }
 
-            theModule = NULL;
+            theModule = nullptr;
         }
     }
 
@@ -807,12 +807,12 @@ void GetConstructList(
     SaveCurrentModule(theEnv);
 
     /*=======================================*/
-    /* If the module specified is NULL, then */
+    /* If the module specified is nullptr, then */
     /* get all constructs in all modules.    */
     /*=======================================*/
 
-    if (theModule == NULL) {
-        theModule = GetNextDefmodule(theEnv, NULL);
+    if (theModule == nullptr) {
+        theModule = GetNextDefmodule(theEnv, nullptr);
         allModules = true;
     }
 
@@ -823,7 +823,7 @@ void GetConstructList(
     /*======================================================*/
 
     loopModule = theModule;
-    while (loopModule != NULL) {
+    while (loopModule != nullptr) {
         size_t tempSize;
 
         /*======================================================*/
@@ -836,10 +836,10 @@ void GetConstructList(
         /* Loop over every construct in the  module. */
         /*===========================================*/
 
-        theConstruct = NULL;
+        theConstruct = nullptr;
         largestConstructNameSize = 0;
 
-        while ((theConstruct = (*constructClass->getNextItemFunction)(theEnv, theConstruct)) != NULL) {
+        while ((theConstruct = (*constructClass->getNextItemFunction)(theEnv, theConstruct)) != nullptr) {
             /*================================*/
             /* Increment the construct count. */
             /*================================*/
@@ -872,7 +872,7 @@ void GetConstructList(
         /*=============================*/
 
         if (allModules) loopModule = GetNextDefmodule(theEnv, loopModule);
-        else loopModule = NULL;
+        else loopModule = nullptr;
     }
 
     /*===========================*/
@@ -898,7 +898,7 @@ void GetConstructList(
 
     loopModule = theModule;
     count = 0;
-    while (loopModule != NULL) {
+    while (loopModule != nullptr) {
         /*============================*/
         /* Set the current module to  */
         /* the module being examined. */
@@ -911,8 +911,8 @@ void GetConstructList(
         /* in the module to the list.    */
         /*===============================*/
 
-        theConstruct = NULL;
-        while ((theConstruct = (*constructClass->getNextItemFunction)(theEnv, theConstruct)) != NULL) {
+        theConstruct = nullptr;
+        while ((theConstruct = (*constructClass->getNextItemFunction)(theEnv, theConstruct)) != nullptr) {
             theName = (*constructClass->getConstructNameFunction)(theConstruct);
             if (allModules) {
                 genstrcpy(buffer, DefmoduleName(loopModule));
@@ -930,7 +930,7 @@ void GetConstructList(
         /*==================================*/
 
         if (allModules) loopModule = GetNextDefmodule(theEnv, loopModule);
-        else loopModule = NULL;
+        else loopModule = nullptr;
     }
 
     /*=========================*/
@@ -977,13 +977,13 @@ void ListConstructCommand(
         /* list for all modules).                    */
         /*===========================================*/
 
-        if ((theModule = FindDefmodule(theEnv, result.lexemeValue->contents)) == NULL) {
+        if ((theModule = FindDefmodule(theEnv, result.lexemeValue->contents)) == nullptr) {
             if (strcmp("*", result.lexemeValue->contents) != 0) {
                 ExpectedTypeError1(theEnv, UDFContextFunctionName(context), 1, "'defmodule name'");
                 return;
             }
 
-            theModule = NULL;
+            theModule = nullptr;
         }
     }
 
@@ -1023,12 +1023,12 @@ void ListConstruct(
     SaveCurrentModule(theEnv);
 
     /*=======================================*/
-    /* If the module specified is NULL, then */
+    /* If the module specified is nullptr, then */
     /* list all constructs in all modules.   */
     /*=======================================*/
 
-    if (theModule == NULL) {
-        theModule = GetNextDefmodule(theEnv, NULL);
+    if (theModule == nullptr) {
+        theModule = GetNextDefmodule(theEnv, nullptr);
         allModules = true;
     }
 
@@ -1036,7 +1036,7 @@ void ListConstruct(
     /* Loop through all of the modules. */
     /*==================================*/
 
-    while (theModule != NULL) {
+    while (theModule != nullptr) {
         /*========================================*/
         /* If we're printing the construct in all */
         /* modules, then preface each module      */
@@ -1059,14 +1059,14 @@ void ListConstruct(
         /* List all of the constructs in the module. */
         /*===========================================*/
 
-        for (constructPtr = (*constructClass->getNextItemFunction)(theEnv, NULL);
-             constructPtr != NULL;
+        for (constructPtr = (*constructClass->getNextItemFunction)(theEnv, nullptr);
+             constructPtr != nullptr;
              constructPtr = (*constructClass->getNextItemFunction)(theEnv, constructPtr)) {
             if (EvaluationData(theEnv)->HaltExecution == true) return;
 
             constructName = (*constructClass->getConstructNameFunction)(constructPtr);
 
-            if (constructName != NULL) {
+            if (constructName != nullptr) {
                 if (allModules) WriteString(theEnv, STDOUT, "   ");
                 WriteString(theEnv, logicalName, constructName->contents);
                 WriteString(theEnv, logicalName, "\n");
@@ -1082,7 +1082,7 @@ void ListConstruct(
         /*====================================*/
 
         if (allModules) theModule = GetNextDefmodule(theEnv, theModule);
-        else theModule = NULL;
+        else theModule = nullptr;
     }
 
     /*=================================================*/
@@ -1131,10 +1131,10 @@ ConstructHeader *GetNextConstructItem(
         unsigned moduleIndex) {
     struct defmoduleItemHeader *theModuleItem;
 
-    if (theConstruct == NULL) {
+    if (theConstruct == nullptr) {
         theModuleItem = (struct defmoduleItemHeader *)
-                GetModuleItem(theEnv, NULL, moduleIndex);
-        if (theModuleItem == NULL) return NULL;
+                GetModuleItem(theEnv, nullptr, moduleIndex);
+        if (theModuleItem == nullptr) return nullptr;
         return (theModuleItem->firstItem);
     }
 
@@ -1144,7 +1144,7 @@ ConstructHeader *GetNextConstructItem(
 /*******************************************************/
 /* GetConstructModuleItemByIndex: Returns a pointer to */
 /*  the defmodule item for the specified construct. If */
-/*  theModule is NULL, then the construct module item  */
+/*  theModule is nullptr, then the construct module item  */
 /*  for the current module is returned, otherwise the  */
 /*  construct module item for the specified construct  */
 /*  is returned.                                       */
@@ -1153,7 +1153,7 @@ struct defmoduleItemHeader *GetConstructModuleItemByIndex(
         Environment *theEnv,
         Defmodule *theModule,
         unsigned moduleIndex) {
-    if (theModule != NULL) {
+    if (theModule != nullptr) {
         return ((struct defmoduleItemHeader *)
                 GetModuleItem(theEnv, theModule, moduleIndex));
     }
@@ -1175,7 +1175,7 @@ void FreeConstructHeaderModule(
 
     thisOne = theModuleItem->firstItem;
 
-    while (thisOne != NULL) {
+    while (thisOne != nullptr) {
         nextOne = thisOne->next;
         (*constructClass->freeFunction)(theEnv, thisOne);
         thisOne = nextOne;
@@ -1192,7 +1192,7 @@ void DoForAllConstructs(
         unsigned moduleItemIndex,
         bool interruptable,
         void *userBuffer) {
-    ConstructHeader *theConstruct, *next = NULL;
+    ConstructHeader *theConstruct, *next = nullptr;
     struct defmoduleItemHeader *theModuleItem;
     Defmodule *theModule;
     long moduleCount = 0L;
@@ -1207,8 +1207,8 @@ void DoForAllConstructs(
     /* Loop through all of the modules. */
     /*==================================*/
 
-    for (theModule = GetNextDefmodule(theEnv, NULL);
-         theModule != NULL;
+    for (theModule = GetNextDefmodule(theEnv, nullptr);
+         theModule != nullptr;
          theModule = GetNextDefmodule(theEnv, theModule), moduleCount++) {
         /*=============================*/
         /* Set the current module to   */
@@ -1225,7 +1225,7 @@ void DoForAllConstructs(
                 GetModuleItem(theEnv, theModule, moduleItemIndex);
 
         for (theConstruct = theModuleItem->firstItem;
-             theConstruct != NULL;
+             theConstruct != nullptr;
              theConstruct = next) {
             /*==========================================*/
             /* Check to see iteration should be halted. */
@@ -1295,7 +1295,7 @@ void DoForAllConstructsInModule(
             GetModuleItem(theEnv, theModule, moduleItemIndex);
 
     for (theConstruct = theModuleItem->firstItem;
-         theConstruct != NULL;
+         theConstruct != nullptr;
          theConstruct = theConstruct->next) {
         if (interruptable) {
             if (GetHaltExecution(theEnv) == true) {
@@ -1330,14 +1330,14 @@ void InitializeConstructHeader(
 
     theModuleItem = FindModuleItem(theEnv, constructNameString);
     theItemHeader = (struct defmoduleItemHeader *)
-            GetModuleItem(theEnv, NULL, theModuleItem->moduleIndex);
+            GetModuleItem(theEnv, nullptr, theModuleItem->moduleIndex);
 
     theConstruct->whichModule = theItemHeader;
     theConstruct->name = theConstructName;
-    theConstruct->ppForm = NULL;
+    theConstruct->ppForm = nullptr;
     theConstruct->bsaveID = 0L;
-    theConstruct->next = NULL;
-    theConstruct->usrData = NULL;
+    theConstruct->next = nullptr;
+    theConstruct->usrData = nullptr;
     theConstruct->constructType = theType;
     theConstruct->env = theEnv;
 }
@@ -1350,7 +1350,7 @@ void SetConstructPPForm(
         Environment *theEnv,
         ConstructHeader *theConstruct,
         const char *ppForm) {
-    if (theConstruct->ppForm != NULL) {
+    if (theConstruct->ppForm != nullptr) {
         rm(theEnv, (void *) theConstruct->ppForm,
            ((strlen(theConstruct->ppForm) + 1) * sizeof(char)));
     }
@@ -1404,7 +1404,7 @@ static bool ConstructWatchSupport(
         ConstructGetWatchFunction *getWatchFunc,
         ConstructSetWatchFunction *setWatchFunc) {
     Defmodule *theModule;
-    ConstructHeader *theConstruct = NULL;
+    ConstructHeader *theConstruct = nullptr;
     UDFValue constructName;
     unsigned int argIndex = 2;
 
@@ -1413,7 +1413,7 @@ static bool ConstructWatchSupport(
     /* show/set the trace for all constructs. */
     /*========================================*/
 
-    if (argExprs == NULL) {
+    if (argExprs == nullptr) {
         /*==========================*/
         /* Save the current module. */
         /*==========================*/
@@ -1424,8 +1424,8 @@ static bool ConstructWatchSupport(
         /* Loop through each module. */
         /*===========================*/
 
-        for (theModule = GetNextDefmodule(theEnv, NULL);
-             theModule != NULL;
+        for (theModule = GetNextDefmodule(theEnv, nullptr);
+             theModule != nullptr;
              theModule = GetNextDefmodule(theEnv, theModule)) {
             /*============================*/
             /* Set the current module to  */
@@ -1449,8 +1449,8 @@ static bool ConstructWatchSupport(
             /* Loop through each construct in the module. */
             /*============================================*/
 
-            for (theConstruct = (*constructClass->getNextItemFunction)(theEnv, NULL);
-                 theConstruct != NULL;
+            for (theConstruct = (*constructClass->getNextItemFunction)(theEnv, nullptr);
+                 theConstruct != nullptr;
                  theConstruct = (*constructClass->getNextItemFunction)(theEnv, theConstruct)) {
                 /*=============================================*/
                 /* Either set the watch flag for the construct */
@@ -1483,7 +1483,7 @@ static bool ConstructWatchSupport(
     /* Show/set the trace for each specified construct. */
     /*==================================================*/
 
-    while (argExprs != NULL) {
+    while (argExprs != nullptr) {
         /*==========================================*/
         /* Evaluate the argument that should be a   */
         /* construct name. Return false is an error */
@@ -1498,7 +1498,7 @@ static bool ConstructWatchSupport(
 
         if ((constructName.header->type != SYMBOL_TYPE) ? true :
             ((theConstruct = LookupConstruct(theEnv, constructClass,
-                                             constructName.lexemeValue->contents, true)) == NULL)) {
+                                             constructName.lexemeValue->contents, true)) == nullptr)) {
             ExpectedTypeError1(theEnv, funcName, argIndex, constructClass->constructName);
             return false;
         }
@@ -1566,18 +1566,18 @@ ConstructHeader *LookupConstruct(
     /*============================================*/
 
     constructType = constructClass->constructName;
-    theConstruct = FindImportedConstruct(theEnv, constructType, NULL, constructName,
-                                         &moduleCount, true, NULL);
+    theConstruct = FindImportedConstruct(theEnv, constructType, nullptr, constructName,
+                                         &moduleCount, true, nullptr);
 
     /*===========================================*/
-    /* Return NULL if the reference is ambiguous */
+    /* Return nullptr if the reference is ambiguous */
     /* (it was found in more than one module).   */
     /*===========================================*/
 
-    if (theConstruct != NULL) {
+    if (theConstruct != nullptr) {
         if (moduleCount > 1) {
             AmbiguousReferenceErrorMessage(theEnv, constructType, constructName);
-            return NULL;
+            return nullptr;
         }
         return (theConstruct);
     }

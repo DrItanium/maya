@@ -138,7 +138,7 @@ void IncrementInstanceCallback(
 #if MAC_XCD
 #pragma unused(theEnv)
 #endif
-    if (theInstance == NULL) return;
+    if (theInstance == nullptr) return;
 
     theInstance->busy++;
 }
@@ -153,7 +153,7 @@ void DecrementInstanceCallback(
 #if MAC_XCD
 #pragma unused(theEnv)
 #endif
-    if (theInstance == NULL) return;
+    if (theInstance == nullptr) return;
 
     theInstance->busy--;
 }
@@ -169,7 +169,7 @@ void DecrementInstanceCallback(
  ***************************************************/
 void RetainInstance(
         Instance *theInstance) {
-    if (theInstance == NULL) return;
+    if (theInstance == nullptr) return;
 
     theInstance->busy++;
 }
@@ -185,7 +185,7 @@ void RetainInstance(
  ***************************************************/
 void ReleaseInstance(
         Instance *theInstance) {
-    if (theInstance == NULL) return;
+    if (theInstance == nullptr) return;
 
     theInstance->busy--;
 }
@@ -193,7 +193,7 @@ void ReleaseInstance(
 /***************************************************
   NAME         : InitializeInstanceTable
   DESCRIPTION  : Initializes instance hash table
-                  to all NULL addresses
+                  to all nullptr addresses
   INPUTS       : None
   RETURNS      : Nothing useful
   SIDE EFFECTS : Hash table initialized
@@ -206,7 +206,7 @@ void InitializeInstanceTable(
     InstanceData(theEnv)->InstanceTable = (Instance **)
             gm2(theEnv, sizeof(Instance *) * INSTANCE_TABLE_HASH_SIZE);
     for (i = 0; i < INSTANCE_TABLE_HASH_SIZE; i++)
-        InstanceData(theEnv)->InstanceTable[i] = NULL;
+        InstanceData(theEnv)->InstanceTable[i] = nullptr;
 }
 
 /*******************************************************
@@ -227,15 +227,15 @@ void CleanupInstances(
 
     if (InstanceData(theEnv)->MaintainGarbageInstances)
         return;
-    gprv = NULL;
+    gprv = nullptr;
     gtmp = InstanceData(theEnv)->InstanceGarbageList;
-    while (gtmp != NULL) {
+    while (gtmp != nullptr) {
         if ((gtmp->ins->busy == 0)
             && (gtmp->ins->patternHeader.busyCount == 0))
         {
             ReleaseLexeme(theEnv, gtmp->ins->name);
             rtn_struct(theEnv, instance, gtmp->ins);
-            if (gprv == NULL)
+            if (gprv == nullptr)
                 InstanceData(theEnv)->InstanceGarbageList = gtmp->nxt;
             else
                 gprv->nxt = gtmp->nxt;
@@ -289,11 +289,11 @@ void DestroyAllInstances(
     svmaintain = InstanceData(theEnv)->MaintainGarbageInstances;
     InstanceData(theEnv)->MaintainGarbageInstances = true;
     iptr = InstanceData(theEnv)->InstanceList;
-    while (iptr != NULL) {
+    while (iptr != nullptr) {
         SetCurrentModule(theEnv, iptr->cls->header.whichModule->theModule);
-        DirectMessage(theEnv, MessageHandlerData(theEnv)->DELETE_SYMBOL, iptr, NULL, NULL);
+        DirectMessage(theEnv, MessageHandlerData(theEnv)->DELETE_SYMBOL, iptr, nullptr, nullptr);
         iptr = iptr->nxtList;
-        while ((iptr != NULL) ? iptr->garbage : false)
+        while ((iptr != nullptr) ? iptr->garbage : false)
             iptr = iptr->nxtList;
     }
     InstanceData(theEnv)->MaintainGarbageInstances = svmaintain;
@@ -330,7 +330,7 @@ void RemoveInstanceData(
                 AddToMultifieldList(theEnv, sp->multifieldValue);
             } else
                 AtomDeinstall(theEnv, sp->type, sp->value);
-            sp->value = NULL;
+            sp->value = nullptr;
         }
     }
     if (ins->cls->instanceSlotCount != 0) {
@@ -340,15 +340,15 @@ void RemoveInstanceData(
             rm(theEnv, ins->slots,
                (ins->cls->localInstanceSlotCount * sizeof(InstanceSlot)));
     }
-    ins->slots = NULL;
-    ins->slotAddresses = NULL;
+    ins->slots = nullptr;
+    ins->slotAddresses = nullptr;
 }
 
 /***************************************************************************
   NAME         : FindInstanceBySymbol
   DESCRIPTION  : Looks up a specified instance in the instance hash table
   INPUTS       : The symbol for the name of the instance
-  RETURNS      : The address of the found instance, NULL otherwise
+  RETURNS      : The address of the found instance, nullptr otherwise
   SIDE EFFECTS : None
   NOTES        : An instance is searched for by name first in the
                  current module - then in imported modules according
@@ -378,11 +378,11 @@ Instance *FindInstanceBySymbol(
         }
 
         ins = InstanceData(theEnv)->InstanceTable[HashInstance(moduleAndInstanceName)];
-        while (ins != NULL) {
+        while (ins != nullptr) {
             if (ins->name == moduleAndInstanceName) { return ins; }
             ins = ins->nxtHash;
         }
-        return NULL;
+        return nullptr;
     }
 
         /* =========================================
@@ -404,8 +404,8 @@ Instance *FindInstanceBySymbol(
         moduleName = ExtractModuleName(theEnv, modulePosition, moduleAndInstanceName->contents);
         theModule = FindDefmodule(theEnv, moduleName->contents);
         instanceName = ExtractConstructName(theEnv, modulePosition, moduleAndInstanceName->contents, INSTANCE_NAME_TYPE);
-        if (theModule == NULL)
-            return NULL;
+        if (theModule == nullptr)
+            return nullptr;
         searchImports = false;
     }
     return (FindInstanceInModule(theEnv, instanceName, theModule, currentModule, searchImports));
@@ -424,7 +424,7 @@ Instance *FindInstanceBySymbol(
                  4) A flag indicating whether
                     to search imported modules of
                     given module as well
-  RETURNS      : The instance (NULL if none found)
+  RETURNS      : The instance (nullptr if none found)
   SIDE EFFECTS : None
   NOTES        : The class no longer needs to be in
                  scope of the current module if the
@@ -443,14 +443,14 @@ Instance *FindInstanceInModule(
        correct name in the hash chain
        =============================== */
     startInstance = InstanceData(theEnv)->InstanceTable[HashInstance(instanceName)];
-    while (startInstance != NULL) {
+    while (startInstance != nullptr) {
         if (startInstance->name == instanceName)
             break;
         startInstance = startInstance->nxtHash;
     }
 
-    if (startInstance == NULL)
-        return NULL;
+    if (startInstance == nullptr)
+        return nullptr;
 
     /* ===========================================
        Look for the instance in the specified
@@ -459,7 +459,7 @@ Instance *FindInstanceInModule(
        found the instance
        =========================================== */
     for (ins = startInstance;
-         (ins != NULL) ? (ins->name == startInstance->name) : false;
+         (ins != nullptr) ? (ins->name == startInstance->name) : false;
          ins = ins->nxtHash)
         //if ((ins->cls->header.whichModule->theModule == theModule) &&
         //     DefclassInScope(theEnv,ins->cls,currentModule))
@@ -471,7 +471,7 @@ Instance *FindInstanceInModule(
        search imported modules too
        ================================ */
     if (searchImports == false)
-        return NULL;
+        return nullptr;
     MarkModulesAsUnvisited(theEnv);
     return (FindImportedInstance(theEnv, theModule, currentModule, startInstance));
 }
@@ -481,7 +481,7 @@ Instance *FindInstanceInModule(
   DESCRIPTION  : Finds an instance slot by name
   INPUTS       : 1) The address of the instance
                  2) The symbolic name of the slot
-  RETURNS      : The address of the slot, NULL if not found
+  RETURNS      : The address of the slot, nullptr if not found
   SIDE EFFECTS : None
   NOTES        : None
  ********************************************************************/
@@ -492,7 +492,7 @@ InstanceSlot *FindInstanceSlot(
     int i;
 
     i = FindInstanceTemplateSlot(theEnv, ins->cls, sname);
-    return (i != -1) ? ins->slotAddresses[i] : NULL;
+    return (i != -1) ? ins->slotAddresses[i] : nullptr;
 }
 
 /********************************************************************
@@ -528,7 +528,7 @@ int FindInstanceTemplateSlot(
                    stores it as a multifield
                    variable for the slot.
   INPUTS       : 1) The address of the instance
-                    (NULL if no trace-messages desired)
+                    (nullptr if no trace-messages desired)
                  2) The address of the slot
                  3) The address of the value
                  4) UDFValue pointer to store the
@@ -561,7 +561,7 @@ PutSlotError PutSlotValue(
                    stores it as a multifield
                    variable for the slot.
   INPUTS       : 1) The address of the instance
-                    (NULL if no trace-messages desired)
+                    (nullptr if no trace-messages desired)
                  2) The address of the slot
                  3) The address of the value
                  4) UDFValue pointer to store the
@@ -584,7 +584,7 @@ PutSlotError DirectPutSlotValue(
     UDFValue tmpVal;
 
     setVal->value = FalseSymbol(theEnv);
-    if (val == NULL) {
+    if (val == nullptr) {
         SystemError(theEnv, "INSFUN", 1);
         ExitRouter(theEnv, EXIT_FAILURE);
     } else if (val->value == ProceduralPrimitiveData(theEnv)->NoParamValue) {
@@ -593,7 +593,7 @@ PutSlotError DirectPutSlotValue(
             if (!EvaluateAndStoreInDataObject(theEnv, sp->desc->multiple,
                                               (Expression *) sp->desc->defaultValue, val, true))
                 return PSE_EVALUATION_ERROR;
-        } else if (sp->desc->defaultValue != NULL) { val = (UDFValue *) sp->desc->defaultValue; }
+        } else if (sp->desc->defaultValue != nullptr) { val = (UDFValue *) sp->desc->defaultValue; }
         else {
             PrintErrorID(theEnv, "INSMNGR", 14, false);
             WriteString(theEnv, STDERR, "Override required for slot '");
@@ -619,10 +619,10 @@ PutSlotError DirectPutSlotValue(
        which is a basis for a firing rule, we need
        to make sure that slot is copied first
        ============================================= */
-    if (ins->basisSlots != NULL) {
+    if (ins->basisSlots != nullptr) {
         spaddr = &ins->slotAddresses[ins->cls->slotNameMap[sp->desc->slotName->id] - 1];
         bsp = ins->basisSlots + (spaddr - ins->slotAddresses);
-        if (bsp->value == NULL) {
+        if (bsp->value == nullptr) {
             bsp->type = sp->type;
             bsp->value = sp->value;
             if (sp->desc->multiple)
@@ -731,9 +731,9 @@ PutSlotError DirectPutSlotValue(
   INPUTS       : 1) The value buffer
                  2) Slot descriptor
                  3) Instance for which slot is being checked
-                    (can be NULL)
+                    (can be nullptr)
                  4) Buffer holding printout of the offending command
-                    (if NULL assumes message-handler is executing
+                    (if nullptr assumes message-handler is executing
                      and calls PrintHandler for CurrentCore instead)
   RETURNS      : True if value is OK, false otherwise
   SIDE EFFECTS : Sets EvaluationError if slot is not OK
@@ -784,7 +784,7 @@ PutSlotError ValidSlotValue(
                 WriteUDFValue(theEnv, STDERR, val);
             WriteString(theEnv, STDERR, " for ");
             PrintSlot(theEnv, STDERR, sd, ins, theCommand);
-            ConstraintViolationErrorMessage(theEnv, NULL, NULL, 0, 0, NULL, 0,
+            ConstraintViolationErrorMessage(theEnv, nullptr, nullptr, 0, 0, nullptr, 0,
                                             violationCode, sd->constraint, false);
             SetEvaluationError(theEnv, true);
 
@@ -837,20 +837,20 @@ Instance *CheckInstance(
         if (ins->garbage == 1) {
             StaleInstanceAddress(theEnv, UDFContextFunctionName(context), 0);
             SetEvaluationError(theEnv, true);
-            return NULL;
+            return nullptr;
         }
     } else if (temp.header->type == INSTANCE_NAME_TYPE) {
         ins = FindInstanceBySymbol(theEnv, temp.lexemeValue);
-        if (ins == NULL) {
+        if (ins == nullptr) {
             NoInstanceError(theEnv, temp.lexemeValue->contents, UDFContextFunctionName(context));
-            return NULL;
+            return nullptr;
         }
     } else if (temp.header->type == SYMBOL_TYPE) {
         temp.value = CreateInstanceName(theEnv, temp.lexemeValue->contents);
         ins = FindInstanceBySymbol(theEnv, temp.lexemeValue);
-        if (ins == NULL) {
+        if (ins == nullptr) {
             NoInstanceError(theEnv, temp.lexemeValue->contents, UDFContextFunctionName(context));
-            return NULL;
+            return nullptr;
         }
     } else {
         PrintErrorID(theEnv, "INSFUN", 1, false);
@@ -858,7 +858,7 @@ Instance *CheckInstance(
         WriteString(theEnv, STDERR, UDFContextFunctionName(context));
         WriteString(theEnv, STDERR, "'.\n");
         SetEvaluationError(theEnv, true);
-        return NULL;
+        return nullptr;
     }
     return (ins);
 }
@@ -946,9 +946,9 @@ void SetInstancesChanged(
   DESCRIPTION  : Displays the name and origin of a slot
   INPUTS       : 1) The logical output name
                  2) The slot descriptor
-                 3) The instance source (can be NULL)
+                 3) The instance source (can be nullptr)
                  4) Buffer holding printout of the offending command
-                    (if NULL assumes message-handler is executing
+                    (if nullptr assumes message-handler is executing
                      and calls PrintHandler for CurrentCore instead)
   RETURNS      : Nothing useful
   SIDE EFFECTS : Message printed
@@ -963,17 +963,17 @@ void PrintSlot(
     WriteString(theEnv, logName, "slot '");
     WriteString(theEnv, logName, sd->slotName->name->contents);
     WriteString(theEnv, logName, "'");
-    if (ins != NULL) {
+    if (ins != nullptr) {
         WriteString(theEnv, logName, " of instance [");
         WriteString(theEnv, logName, ins->name->contents);
         WriteString(theEnv, logName, "]");
-    } else if (sd->cls != NULL) {
+    } else if (sd->cls != nullptr) {
         WriteString(theEnv, logName, " of class '");
         WriteString(theEnv, logName, DefclassName(sd->cls));
         WriteString(theEnv, logName, " of class '");
     }
     WriteString(theEnv, logName, " found in ");
-    if (theCommand != NULL)
+    if (theCommand != nullptr)
         WriteString(theEnv, logName, theCommand);
     else
         PrintHandler(theEnv, logName, MessageHandlerData(theEnv)->CurrentCore->hnd, true, false);
@@ -1093,7 +1093,7 @@ void DecrementObjectBasisCount(
             RemoveInstanceData(theEnv, theInstance);
         if (theInstance->cls->instanceSlotCount != 0) {
             for (i = 0; i < theInstance->cls->instanceSlotCount; i++)
-                if (theInstance->basisSlots[i].value != NULL) {
+                if (theInstance->basisSlots[i].value != nullptr) {
                     if (theInstance->basisSlots[i].desc->multiple)
                         ReleaseMultifield(theEnv, theInstance->basisSlots[i].multifieldValue);
                     else
@@ -1102,7 +1102,7 @@ void DecrementObjectBasisCount(
                 }
             rm(theEnv, theInstance->basisSlots,
                (theInstance->cls->instanceSlotCount * sizeof(InstanceSlot)));
-            theInstance->basisSlots = NULL;
+            theInstance->basisSlots = nullptr;
         }
     }
 }
@@ -1134,7 +1134,7 @@ void IncrementObjectBasisCount(
                     gm2(theEnv, (sizeof(InstanceSlot) * theInstance->cls->instanceSlotCount));
             for (i = 0; i < theInstance->cls->instanceSlotCount; i++) {
                 theInstance->basisSlots[i].desc = theInstance->slotAddresses[i]->desc;
-                theInstance->basisSlots[i].value = NULL;
+                theInstance->basisSlots[i].value = nullptr;
             }
         }
     }
@@ -1216,7 +1216,7 @@ bool InstanceIsDeleted(
                     search imported modules
                  2) The currently active module
                  3) The first instance of the
-                    correct name (cannot be NULL)
+                    correct name (cannot be nullptr)
   RETURNS      : An instance of the correct name
                  imported from another module which
                  is in scope of the current module
@@ -1232,19 +1232,19 @@ static Instance *FindImportedInstance(
     Instance *ins;
 
     if (theModule->visitedFlag)
-        return NULL;
+        return nullptr;
     theModule->visitedFlag = true;
     importList = theModule->importList;
-    while (importList != NULL) {
+    while (importList != nullptr) {
         theModule = FindDefmodule(theEnv, importList->moduleName->contents);
         for (ins = startInstance;
-             (ins != NULL) ? (ins->name == startInstance->name) : false;
+             (ins != nullptr) ? (ins->name == startInstance->name) : false;
              ins = ins->nxtHash)
             if ((ins->cls->header.whichModule->theModule == theModule) &&
                 DefclassInScope(theEnv, ins->cls, currentModule))
                 return (ins);
         ins = FindImportedInstance(theEnv, theModule, currentModule, startInstance);
-        if (ins != NULL)
+        if (ins != nullptr)
             return (ins);
         importList = importList->next;
     }
@@ -1253,12 +1253,12 @@ static Instance *FindImportedInstance(
        Make sure instances of system classes are always visible
        ======================================================== */
     for (ins = startInstance;
-         (ins != NULL) ? (ins->name == startInstance->name) : false;
+         (ins != nullptr) ? (ins->name == startInstance->name) : false;
          ins = ins->nxtHash)
         if (ins->cls->system)
             return (ins);
 
-    return NULL;
+    return nullptr;
 }
 
 
@@ -1303,7 +1303,7 @@ static void NetworkModifyForSharedSlot(
     if ((sd->slotName->id > cls->maxSlotNameID) ? false :
         ((cls->slotNameMap[sd->slotName->id] == 0) ? false :
          (cls->instanceTemplate[cls->slotNameMap[sd->slotName->id] - 1] == sd))) {
-        for (ins = cls->instanceList; ins != NULL; ins = ins->nxtClass)
+        for (ins = cls->instanceList; ins != nullptr; ins = ins->nxtClass)
             ObjectNetworkAction(theEnv, OBJECT_MODIFY, ins, (int) sd->slotName->id);
     }
 

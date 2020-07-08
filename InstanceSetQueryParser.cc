@@ -107,7 +107,7 @@ static bool IsQueryFunction(Expression *);
                    (find-all-instances)
   INPUTS       : 1) The address of the top node of the query function
                  2) The logical name of the input
-  RETURNS      : The completed expression chain, or NULL on errors
+  RETURNS      : The completed expression chain, or nullptr on errors
   SIDE EFFECTS : The expression chain is extended, or the "top" node
                  is deleted on errors
   NOTES        : H/L Syntax :
@@ -136,14 +136,14 @@ Expression *ParseQueryNoAction(
     struct token queryInputToken;
 
     insQuerySetVars = ParseQueryRestrictions(theEnv, top, readSource, &queryInputToken);
-    if (insQuerySetVars == NULL)
-        return NULL;
+    if (insQuerySetVars == nullptr)
+        return nullptr;
     IncrementIndentDepth(theEnv, 3);
     PPCRAndIndent(theEnv);
     if (ParseQueryTestExpression(theEnv, top, readSource) == false) {
         DecrementIndentDepth(theEnv, 3);
         ReturnExpression(theEnv, insQuerySetVars);
-        return NULL;
+        return nullptr;
     }
     DecrementIndentDepth(theEnv, 3);
     GetToken(theEnv, readSource, &queryInputToken);
@@ -151,13 +151,13 @@ Expression *ParseQueryNoAction(
         SyntaxErrorMessage(theEnv, "instance-set query function");
         ReturnExpression(theEnv, top);
         ReturnExpression(theEnv, insQuerySetVars);
-        return NULL;
+        return nullptr;
     }
 
     if (ReplaceInstanceVariables(theEnv, insQuerySetVars, top->argList, true, 0)) {
         ReturnExpression(theEnv, top);
         ReturnExpression(theEnv, insQuerySetVars);
-        return NULL;
+        return nullptr;
     }
 
     ReturnExpression(theEnv, insQuerySetVars);
@@ -172,7 +172,7 @@ Expression *ParseQueryNoAction(
                    (delayed-do-for-all-instances)
   INPUTS       : 1) The address of the top node of the query function
                  2) The logical name of the input
-  RETURNS      : The completed expression chain, or NULL on errors
+  RETURNS      : The completed expression chain, or nullptr on errors
   SIDE EFFECTS : The expression chain is extended, or the "top" node
                  is deleted on errors
   NOTES        : H/L Syntax :
@@ -201,20 +201,20 @@ Expression *ParseQueryAction(
     struct token queryInputToken;
 
     insQuerySetVars = ParseQueryRestrictions(theEnv, top, readSource, &queryInputToken);
-    if (insQuerySetVars == NULL)
-        return NULL;
+    if (insQuerySetVars == nullptr)
+        return nullptr;
     IncrementIndentDepth(theEnv, 3);
     PPCRAndIndent(theEnv);
     if (ParseQueryTestExpression(theEnv, top, readSource) == false) {
         DecrementIndentDepth(theEnv, 3);
         ReturnExpression(theEnv, insQuerySetVars);
-        return NULL;
+        return nullptr;
     }
     PPCRAndIndent(theEnv);
     if (ParseQueryActionExpression(theEnv, top, readSource, insQuerySetVars, &queryInputToken) == false) {
         DecrementIndentDepth(theEnv, 3);
         ReturnExpression(theEnv, insQuerySetVars);
-        return NULL;
+        return nullptr;
     }
     DecrementIndentDepth(theEnv, 3);
 
@@ -222,19 +222,19 @@ Expression *ParseQueryAction(
         SyntaxErrorMessage(theEnv, "instance-set query function");
         ReturnExpression(theEnv, top);
         ReturnExpression(theEnv, insQuerySetVars);
-        return NULL;
+        return nullptr;
     }
 
     if (ReplaceInstanceVariables(theEnv, insQuerySetVars, top->argList, true, 0)) {
         ReturnExpression(theEnv, top);
         ReturnExpression(theEnv, insQuerySetVars);
-        return NULL;
+        return nullptr;
     }
 
     if (ReplaceInstanceVariables(theEnv, insQuerySetVars, top->argList->nextArg, false, 0)) {
         ReturnExpression(theEnv, top);
         ReturnExpression(theEnv, insQuerySetVars);
-        return NULL;
+        return nullptr;
     }
 
     ReturnExpression(theEnv, insQuerySetVars);
@@ -260,16 +260,16 @@ Expression *ParseQueryAction(
                    variable expressions
                  Class restrictions attached to query-expression
                    as arguments
-  NOTES        : Expects top != NULL
+  NOTES        : Expects top != nullptr
  ***************************************************************/
 static Expression *ParseQueryRestrictions(
         Environment *theEnv,
         Expression *top,
         const char *readSource,
         struct token *queryInputToken) {
-    Expression *insQuerySetVars = NULL, *lastInsQuerySetVars = NULL,
-            *classExp = NULL, *lastClassExp,
-            *tmp, *lastOne = NULL;
+    Expression *insQuerySetVars = nullptr, *lastInsQuerySetVars = nullptr,
+            *classExp = nullptr, *lastClassExp,
+            *tmp, *lastOne = nullptr;
     bool error = false;
 
     SavePPBuffer(theEnv, " ");
@@ -284,7 +284,7 @@ static Expression *ParseQueryRestrictions(
         if (queryInputToken->tknType != SF_VARIABLE_TOKEN)
             goto ParseQueryRestrictionsError1;
         tmp = insQuerySetVars;
-        while (tmp != NULL) {
+        while (tmp != nullptr) {
             if (tmp->value == queryInputToken->value) {
                 PrintErrorID(theEnv, "INSQYPSR", 1, false);
                 WriteString(theEnv, STDERR, "Duplicate instance member variable name in function '");
@@ -295,7 +295,7 @@ static Expression *ParseQueryRestrictions(
             tmp = tmp->nextArg;
         }
         tmp = GenConstant(theEnv, SF_VARIABLE, queryInputToken->value);
-        if (insQuerySetVars == NULL)
+        if (insQuerySetVars == nullptr)
             insQuerySetVars = tmp;
         else
             lastInsQuerySetVars->nextArg = tmp;
@@ -304,13 +304,13 @@ static Expression *ParseQueryRestrictions(
         classExp = ArgumentParse(theEnv, readSource, &error);
         if (error)
             goto ParseQueryRestrictionsError2;
-        if (classExp == NULL)
+        if (classExp == nullptr)
             goto ParseQueryRestrictionsError1;
         if (ReplaceClassNameWithReference(theEnv, classExp) == false)
             goto ParseQueryRestrictionsError2;
         lastClassExp = classExp;
         SavePPBuffer(theEnv, " ");
-        while ((tmp = ArgumentParse(theEnv, readSource, &error)) != NULL) {
+        while ((tmp = ArgumentParse(theEnv, readSource, &error)) != nullptr) {
             if (ReplaceClassNameWithReference(theEnv, tmp) == false)
                 goto ParseQueryRestrictionsError2;
             lastClassExp->nextArg = tmp;
@@ -325,12 +325,12 @@ static Expression *ParseQueryRestrictions(
         tmp = GenConstant(theEnv, SYMBOL_TYPE, InstanceQueryData(theEnv)->QUERY_DELIMITER_SYMBOL);
         lastClassExp->nextArg = tmp;
         lastClassExp = tmp;
-        if (top->argList == NULL)
+        if (top->argList == nullptr)
             top->argList = classExp;
         else
             lastOne->nextArg = classExp;
         lastOne = lastClassExp;
-        classExp = NULL;
+        classExp = nullptr;
         SavePPBuffer(theEnv, " ");
         GetToken(theEnv, readSource, queryInputToken);
     }
@@ -348,7 +348,7 @@ static Expression *ParseQueryRestrictions(
     ReturnExpression(theEnv, classExp);
     ReturnExpression(theEnv, top);
     ReturnExpression(theEnv, insQuerySetVars);
-    return NULL;
+    return nullptr;
 }
 
 /***************************************************
@@ -374,7 +374,7 @@ static bool ReplaceClassNameWithReference(
     if (theExp->type == SYMBOL_TYPE) {
         theClassName = theExp->lexemeValue->contents;
         theDefclass = LookupDefclassByMdlOrScope(theEnv, theClassName);
-        if (theDefclass == NULL) {
+        if (theDefclass == nullptr) {
             CantFindItemErrorMessage(theEnv, "class", theClassName, true);
             return false;
         }
@@ -396,7 +396,7 @@ static bool ReplaceClassNameWithReference(
                  Nodes allocated for new expression
                  Test shoved in front of class-restrictions on
                     query argument list
-  NOTES        : Expects top != NULL
+  NOTES        : Expects top != nullptr
  *************************************************************/
 static bool ParseQueryTestExpression(
         Environment *theEnv,
@@ -408,7 +408,7 @@ static bool ParseQueryTestExpression(
 
     error = false;
     oldBindList = GetParsedBindNames(theEnv);
-    SetParsedBindNames(theEnv, NULL);
+    SetParsedBindNames(theEnv, nullptr);
     qtest = ArgumentParse(theEnv, readSource, &error);
     if (error == true) {
         ClearParsedBindNames(theEnv);
@@ -416,7 +416,7 @@ static bool ParseQueryTestExpression(
         ReturnExpression(theEnv, top);
         return false;
     }
-    if (qtest == NULL) {
+    if (qtest == nullptr) {
         ClearParsedBindNames(theEnv);
         SetParsedBindNames(theEnv, oldBindList);
         SyntaxErrorMessage(theEnv, "instance-set query function");
@@ -451,7 +451,7 @@ static bool ParseQueryTestExpression(
                  Action shoved in front of class-restrictions
                     and in back of test-expression on query
                     argument list
-  NOTES        : Expects top != NULL && top->argList != NULL
+  NOTES        : Expects top != nullptr && top->argList != nullptr
  *************************************************************/
 static bool ParseQueryActionExpression(
         Environment *theEnv,
@@ -463,17 +463,17 @@ static bool ParseQueryActionExpression(
     struct BindInfo *oldBindList, *newBindList, *prev;
 
     oldBindList = GetParsedBindNames(theEnv);
-    SetParsedBindNames(theEnv, NULL);
+    SetParsedBindNames(theEnv, nullptr);
     ExpressionData(theEnv)->BreakContext = true;
     ExpressionData(theEnv)->ReturnContext = ExpressionData(theEnv)->svContexts->rtn;
 
-    qaction = GroupActions(theEnv, readSource, queryInputToken, true, NULL, false);
+    qaction = GroupActions(theEnv, readSource, queryInputToken, true, nullptr, false);
     PPBackup(theEnv);
     PPBackup(theEnv);
     SavePPBuffer(theEnv, queryInputToken->printForm);
 
     ExpressionData(theEnv)->BreakContext = false;
-    if (qaction == NULL) {
+    if (qaction == nullptr) {
         ClearParsedBindNames(theEnv);
         SetParsedBindNames(theEnv, oldBindList);
         SyntaxErrorMessage(theEnv, "instance-set query function");
@@ -483,10 +483,10 @@ static bool ParseQueryActionExpression(
     qaction->nextArg = top->argList->nextArg;
     top->argList->nextArg = qaction;
     newBindList = GetParsedBindNames(theEnv);
-    prev = NULL;
-    while (newBindList != NULL) {
+    prev = nullptr;
+    while (newBindList != nullptr) {
         tmpInsSetVars = insQuerySetVars;
-        while (tmpInsSetVars != NULL) {
+        while (tmpInsSetVars != nullptr) {
             if (tmpInsSetVars->value == (void *) newBindList->name) {
                 ClearParsedBindNames(theEnv);
                 SetParsedBindNames(theEnv, oldBindList);
@@ -504,7 +504,7 @@ static bool ParseQueryActionExpression(
         prev = newBindList;
         newBindList = newBindList->next;
     }
-    if (prev == NULL)
+    if (prev == nullptr)
         SetParsedBindNames(theEnv, oldBindList);
     else
         prev->next = oldBindList;
@@ -542,15 +542,15 @@ static bool ReplaceInstanceVariables(
 
     rindx_func = FindFunction(theEnv, "(query-instance)");
     rslot_func = FindFunction(theEnv, "(query-instance-slot)");
-    while (bexp != NULL) {
+    while (bexp != nullptr) {
         if (bexp->type == SF_VARIABLE) {
             eptr = vlist;
             posn = 0;
-            while ((eptr != NULL) ? (eptr->value != bexp->value) : false) {
+            while ((eptr != nullptr) ? (eptr->value != bexp->value) : false) {
                 eptr = eptr->nextArg;
                 posn++;
             }
-            if (eptr != NULL) {
+            if (eptr != nullptr) {
                 bexp->type = FCALL;
                 bexp->value = rindx_func;
                 eptr = GenConstant(theEnv, INTEGER_TYPE, CreateInteger(theEnv, ndepth));
@@ -560,7 +560,7 @@ static bool ReplaceInstanceVariables(
                 if (ReplaceSlotReference(theEnv, vlist, bexp, rslot_func, ndepth)) { return true; }
             }
         }
-        if (bexp->argList != NULL) {
+        if (bexp->argList != nullptr) {
             if (IsQueryFunction(bexp)) {
                 if (ReplaceInstanceVariables(theEnv, vlist, bexp->argList, sdirect, ndepth + 1)) { return true; }
             } else {
@@ -616,7 +616,7 @@ static bool ReplaceSlotReference(
                 eptr = eptr->nextArg;
                 posn++;
             }
-            if (eptr != NULL) {
+            if (eptr != nullptr) {
                 OpenStringSource(theEnv, "query-var", str + i + 1, 0);
                 oldpp = GetPPBufferStatus(theEnv);
                 SetPPBufferStatus(theEnv, false);

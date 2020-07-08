@@ -158,14 +158,14 @@ void InitializeAtomTables(
             gm2(theEnv, sizeof(CLIPSExternalAddress *) * EXTERNAL_ADDRESS_HASH_SIZE);
 
     /*===================================================*/
-    /* Initialize all of the hash table entries to NULL. */
+    /* Initialize all of the hash table entries to nullptr. */
     /*===================================================*/
 
-    for (i = 0; i < SYMBOL_HASH_SIZE; i++) SymbolData(theEnv)->SymbolTable[i] = NULL;
-    for (i = 0; i < FLOAT_HASH_SIZE; i++) SymbolData(theEnv)->FloatTable[i] = NULL;
-    for (i = 0; i < INTEGER_HASH_SIZE; i++) SymbolData(theEnv)->IntegerTable[i] = NULL;
-    for (i = 0; i < BITMAP_HASH_SIZE; i++) SymbolData(theEnv)->BitMapTable[i] = NULL;
-    for (i = 0; i < EXTERNAL_ADDRESS_HASH_SIZE; i++) SymbolData(theEnv)->ExternalAddressTable[i] = NULL;
+    for (i = 0; i < SYMBOL_HASH_SIZE; i++) SymbolData(theEnv)->SymbolTable[i] = nullptr;
+    for (i = 0; i < FLOAT_HASH_SIZE; i++) SymbolData(theEnv)->FloatTable[i] = nullptr;
+    for (i = 0; i < INTEGER_HASH_SIZE; i++) SymbolData(theEnv)->IntegerTable[i] = nullptr;
+    for (i = 0; i < BITMAP_HASH_SIZE; i++) SymbolData(theEnv)->BitMapTable[i] = nullptr;
+    for (i = 0; i < EXTERNAL_ADDRESS_HASH_SIZE; i++) SymbolData(theEnv)->ExternalAddressTable[i] = nullptr;
 
     /*========================*/
     /* Predefine some values. */
@@ -199,18 +199,18 @@ static void DeallocateSymbolData(
     CLIPSBitMap *bmhPtr, *nextBMHPtr;
     CLIPSExternalAddress *eahPtr, *nextEAHPtr;
 
-    if ((SymbolData(theEnv)->SymbolTable == NULL) ||
-        (SymbolData(theEnv)->FloatTable == NULL) ||
-        (SymbolData(theEnv)->IntegerTable == NULL) ||
-        (SymbolData(theEnv)->BitMapTable == NULL) ||
-        (SymbolData(theEnv)->ExternalAddressTable == NULL)) { return; }
+    if ((SymbolData(theEnv)->SymbolTable == nullptr) ||
+        (SymbolData(theEnv)->FloatTable == nullptr) ||
+        (SymbolData(theEnv)->IntegerTable == nullptr) ||
+        (SymbolData(theEnv)->BitMapTable == nullptr) ||
+        (SymbolData(theEnv)->ExternalAddressTable == nullptr)) { return; }
 
     genfree(theEnv, theEnv->VoidConstant, sizeof(TypeHeader));
 
     for (i = 0; i < SYMBOL_HASH_SIZE; i++) {
         shPtr = SymbolData(theEnv)->SymbolTable[i];
 
-        while (shPtr != NULL) {
+        while (shPtr != nullptr) {
             nextSHPtr = shPtr->next;
             if (!shPtr->permanent) {
                 rm(theEnv, (void *) shPtr->contents, strlen(shPtr->contents) + 1);
@@ -223,7 +223,7 @@ static void DeallocateSymbolData(
     for (i = 0; i < FLOAT_HASH_SIZE; i++) {
         fhPtr = SymbolData(theEnv)->FloatTable[i];
 
-        while (fhPtr != NULL) {
+        while (fhPtr != nullptr) {
             nextFHPtr = fhPtr->next;
             if (!fhPtr->permanent) { rtn_struct(theEnv, clipsFloat, fhPtr); }
             fhPtr = nextFHPtr;
@@ -233,7 +233,7 @@ static void DeallocateSymbolData(
     for (i = 0; i < INTEGER_HASH_SIZE; i++) {
         ihPtr = SymbolData(theEnv)->IntegerTable[i];
 
-        while (ihPtr != NULL) {
+        while (ihPtr != nullptr) {
             nextIHPtr = ihPtr->next;
             if (!ihPtr->permanent) { rtn_struct(theEnv, clipsInteger, ihPtr); }
             ihPtr = nextIHPtr;
@@ -243,7 +243,7 @@ static void DeallocateSymbolData(
     for (i = 0; i < BITMAP_HASH_SIZE; i++) {
         bmhPtr = SymbolData(theEnv)->BitMapTable[i];
 
-        while (bmhPtr != NULL) {
+        while (bmhPtr != nullptr) {
             nextBMHPtr = bmhPtr->next;
             if (!bmhPtr->permanent) {
                 rm(theEnv, (void *) bmhPtr->contents, bmhPtr->size);
@@ -256,7 +256,7 @@ static void DeallocateSymbolData(
     for (i = 0; i < EXTERNAL_ADDRESS_HASH_SIZE; i++) {
         eahPtr = SymbolData(theEnv)->ExternalAddressTable[i];
 
-        while (eahPtr != NULL) {
+        while (eahPtr != nullptr) {
             nextEAHPtr = eahPtr->next;
             if (!eahPtr->permanent) {
                 rtn_struct(theEnv, clipsExternalAddress, eahPtr);
@@ -284,13 +284,13 @@ static void DeallocateSymbolData(
     /*==============================*/
 
 #if BSAVE_INSTANCES
-    if (SymbolData(theEnv)->SymbolArray != NULL)
+    if (SymbolData(theEnv)->SymbolArray != nullptr)
         rm(theEnv, SymbolData(theEnv)->SymbolArray, sizeof(CLIPSLexeme *) * SymbolData(theEnv)->NumberOfSymbols);
-    if (SymbolData(theEnv)->FloatArray != NULL)
+    if (SymbolData(theEnv)->FloatArray != nullptr)
         rm(theEnv, SymbolData(theEnv)->FloatArray, sizeof(CLIPSFloat *) * SymbolData(theEnv)->NumberOfFloats);
-    if (SymbolData(theEnv)->IntegerArray != NULL)
+    if (SymbolData(theEnv)->IntegerArray != nullptr)
         rm(theEnv, SymbolData(theEnv)->IntegerArray, sizeof(CLIPSInteger *) * SymbolData(theEnv)->NumberOfIntegers);
-    if (SymbolData(theEnv)->BitMapArray != NULL)
+    if (SymbolData(theEnv)->BitMapArray != nullptr)
         rm(theEnv, SymbolData(theEnv)->BitMapArray, sizeof(CLIPSBitMap *) * SymbolData(theEnv)->NumberOfBitMaps);
 #endif
 }
@@ -345,14 +345,14 @@ CLIPSLexeme *AddSymbol(
         unsigned short theType) {
     size_t tally;
     size_t length;
-    CLIPSLexeme *past = NULL, *peek;
+    CLIPSLexeme *past = nullptr, *peek;
     char *buffer;
 
     /*====================================*/
     /* Get the hash value for the string. */
     /*====================================*/
 
-    if (str == NULL) {
+    if (str == nullptr) {
         SystemError(theEnv, "SYMBOL", 1);
         ExitRouter(theEnv, EXIT_FAILURE);
     }
@@ -366,7 +366,7 @@ CLIPSLexeme *AddSymbol(
     /* found, then return the address of the string.    */
     /*==================================================*/
 
-    while (peek != NULL) {
+    while (peek != nullptr) {
         if ((peek->header.type == theType) &&
             (strcmp(str, peek->contents) == 0)) { return peek; }
         past = peek;
@@ -380,14 +380,14 @@ CLIPSLexeme *AddSymbol(
 
     peek = get_struct(theEnv, clipsLexeme);
 
-    if (past == NULL) SymbolData(theEnv)->SymbolTable[tally] = peek;
+    if (past == nullptr) SymbolData(theEnv)->SymbolTable[tally] = peek;
     else past->next = peek;
 
     length = strlen(str) + 1;
     buffer = (char *) gm2(theEnv, length);
     genstrcpy(buffer, str);
     peek->contents = buffer;
-    peek->next = NULL;
+    peek->next = nullptr;
     peek->bucket = (unsigned int) tally;
     peek->count = 0;
     peek->permanent = false;
@@ -410,7 +410,7 @@ CLIPSLexeme *AddSymbol(
 
 /*****************************************************************/
 /* FindSymbolHN: Searches for the string in the symbol table and */
-/*   returns a pointer to it if found, otherwise returns NULL.   */
+/*   returns a pointer to it if found, otherwise returns nullptr.   */
 /*****************************************************************/
 CLIPSLexeme *FindSymbolHN(
         Environment *theEnv,
@@ -422,13 +422,13 @@ CLIPSLexeme *FindSymbolHN(
     tally = HashSymbol(str, SYMBOL_HASH_SIZE);
 
     for (peek = SymbolData(theEnv)->SymbolTable[tally];
-         peek != NULL;
+         peek != nullptr;
          peek = peek->next) {
         if (((1 << peek->header.type) & expectedType) &&
             (strcmp(str, peek->contents) == 0)) { return peek; }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /******************************************************************/
@@ -441,7 +441,7 @@ CLIPSFloat *CreateFloat(
         Environment *theEnv,
         double number) {
     size_t tally;
-    CLIPSFloat *past = NULL, *peek;
+    CLIPSFloat *past = nullptr, *peek;
 
     /*====================================*/
     /* Get the hash value for the double. */
@@ -456,7 +456,7 @@ CLIPSFloat *CreateFloat(
     /* then return the address of the double.           */
     /*==================================================*/
 
-    while (peek != NULL) {
+    while (peek != nullptr) {
         if (number == peek->contents) { return peek; }
         past = peek;
         peek = peek->next;
@@ -469,11 +469,11 @@ CLIPSFloat *CreateFloat(
 
     peek = get_struct(theEnv, clipsFloat);
 
-    if (past == NULL) SymbolData(theEnv)->FloatTable[tally] = peek;
+    if (past == nullptr) SymbolData(theEnv)->FloatTable[tally] = peek;
     else past->next = peek;
 
     peek->contents = number;
-    peek->next = NULL;
+    peek->next = nullptr;
     peek->bucket = (unsigned int) tally;
     peek->count = 0;
     peek->permanent = false;
@@ -504,7 +504,7 @@ CLIPSInteger *CreateInteger(
         Environment *theEnv,
         long long number) {
     size_t tally;
-    CLIPSInteger *past = NULL, *peek;
+    CLIPSInteger *past = nullptr, *peek;
 
     /*==================================*/
     /* Get the hash value for the long. */
@@ -519,7 +519,7 @@ CLIPSInteger *CreateInteger(
     /* return the address of the long.                */
     /*================================================*/
 
-    while (peek != NULL) {
+    while (peek != nullptr) {
         if (number == peek->contents) { return peek; }
         past = peek;
         peek = peek->next;
@@ -531,11 +531,11 @@ CLIPSInteger *CreateInteger(
     /*================================================*/
 
     peek = get_struct(theEnv, clipsInteger);
-    if (past == NULL) SymbolData(theEnv)->IntegerTable[tally] = peek;
+    if (past == nullptr) SymbolData(theEnv)->IntegerTable[tally] = peek;
     else past->next = peek;
 
     peek->contents = number;
-    peek->next = NULL;
+    peek->next = nullptr;
     peek->bucket = (unsigned int) tally;
     peek->count = 0;
     peek->permanent = false;
@@ -558,7 +558,7 @@ CLIPSInteger *CreateInteger(
 
 /*****************************************************************/
 /* FindLongHN: Searches for the integer in the integer table and */
-/*   returns a pointer to it if found, otherwise returns NULL.   */
+/*   returns a pointer to it if found, otherwise returns nullptr.   */
 /*****************************************************************/
 CLIPSInteger *FindLongHN(
         Environment *theEnv,
@@ -569,10 +569,10 @@ CLIPSInteger *FindLongHN(
     tally = HashInteger(theLong, INTEGER_HASH_SIZE);
 
     for (peek = SymbolData(theEnv)->IntegerTable[tally];
-         peek != NULL;
+         peek != nullptr;
          peek = peek->next) { if (peek->contents == theLong) return (peek); }
 
-    return NULL;
+    return nullptr;
 }
 
 /******************************************************************/
@@ -588,14 +588,14 @@ void *AddBitMap(
     char *theBitMap = (char *) vTheBitMap;
     size_t tally;
     unsigned short i;
-    CLIPSBitMap *past = NULL, *peek;
+    CLIPSBitMap *past = nullptr, *peek;
     char *buffer;
 
     /*====================================*/
     /* Get the hash value for the bitmap. */
     /*====================================*/
 
-    if (theBitMap == NULL) {
+    if (theBitMap == nullptr) {
         SystemError(theEnv, "SYMBOL", 2);
         ExitRouter(theEnv, EXIT_FAILURE);
     }
@@ -609,7 +609,7 @@ void *AddBitMap(
     /* found, then return the address of the bitmap.    */
     /*==================================================*/
 
-    while (peek != NULL) {
+    while (peek != nullptr) {
         if (peek->size == size) {
             for (i = 0; i < size; i++) { if (peek->contents[i] != theBitMap[i]) break; }
 
@@ -626,13 +626,13 @@ void *AddBitMap(
     /*==================================================*/
 
     peek = get_struct(theEnv, clipsBitMap);
-    if (past == NULL) SymbolData(theEnv)->BitMapTable[tally] = peek;
+    if (past == nullptr) SymbolData(theEnv)->BitMapTable[tally] = peek;
     else past->next = peek;
 
     buffer = (char *) gm2(theEnv, size);
     for (i = 0; i < size; i++) buffer[i] = theBitMap[i];
     peek->contents = buffer;
-    peek->next = NULL;
+    peek->next = nullptr;
     peek->bucket = (unsigned int) tally;
     peek->count = 0;
     peek->permanent = false;
@@ -676,7 +676,7 @@ CLIPSExternalAddress *CreateExternalAddress(
         void *theExternalAddress,
         unsigned short theType) {
     size_t tally;
-    CLIPSExternalAddress *past = NULL, *peek;
+    CLIPSExternalAddress *past = nullptr, *peek;
 
     /*====================================*/
     /* Get the hash value for the bitmap. */
@@ -692,7 +692,7 @@ CLIPSExternalAddress *CreateExternalAddress(
     /* then return the address of the external address.            */
     /*=============================================================*/
 
-    while (peek != NULL) {
+    while (peek != nullptr) {
         if ((peek->type == theType) &&
             (peek->contents == theExternalAddress)) { return peek; }
 
@@ -706,12 +706,12 @@ CLIPSExternalAddress *CreateExternalAddress(
     /*=================================================*/
 
     peek = get_struct(theEnv, clipsExternalAddress);
-    if (past == NULL) SymbolData(theEnv)->ExternalAddressTable[tally] = peek;
+    if (past == nullptr) SymbolData(theEnv)->ExternalAddressTable[tally] = peek;
     else past->next = peek;
 
     peek->contents = theExternalAddress;
     peek->type = theType;
-    peek->next = NULL;
+    peek->next = nullptr;
     peek->bucket = (unsigned int) tally;
     peek->count = 0;
     peek->permanent = false;
@@ -1071,14 +1071,14 @@ static void RemoveHashNode(
     /* Find the entry in the specified hash table. */
     /*=============================================*/
 
-    previousNode = NULL;
+    previousNode = nullptr;
     currentNode = theTable[theValue->bucket];
 
     while (currentNode != theValue) {
         previousNode = currentNode;
         currentNode = currentNode->next;
 
-        if (currentNode == NULL) {
+        if (currentNode == nullptr) {
             SystemError(theEnv, "SYMBOL", 11);
             ExitRouter(theEnv, EXIT_FAILURE);
         }
@@ -1089,7 +1089,7 @@ static void RemoveHashNode(
     /* stored in the hash table bucket.          */
     /*===========================================*/
 
-    if (previousNode == NULL) { theTable[theValue->bucket] = theValue->next; }
+    if (previousNode == nullptr) { theTable[theValue->bucket] = theValue->next; }
     else { previousNode->next = currentNode->next; }
 
     /*=================================================*/
@@ -1106,8 +1106,8 @@ static void RemoveHashNode(
     } else if (type == EXTERNAL_ADDRESS_TYPE) {
         theAddress = (CLIPSExternalAddress *) theValue;
 
-        if ((EvaluationData(theEnv)->ExternalAddressTypes[theAddress->type] != NULL) &&
-            (EvaluationData(theEnv)->ExternalAddressTypes[theAddress->type]->discardFunction != NULL)) {
+        if ((EvaluationData(theEnv)->ExternalAddressTypes[theAddress->type] != nullptr) &&
+            (EvaluationData(theEnv)->ExternalAddressTypes[theAddress->type]->discardFunction != nullptr)) {
             (*EvaluationData(theEnv)->ExternalAddressTypes[theAddress->type]->discardFunction)(theEnv, theAddress->contents);
         }
     }
@@ -1264,11 +1264,11 @@ static void RemoveEphemeralHashNodes(
         int hashNodeSize,
         int hashNodeType,
         int averageContentsSize) {
-    struct ephemeron *edPtr, *lastPtr = NULL, *nextPtr;
+    struct ephemeron *edPtr, *lastPtr = nullptr, *nextPtr;
 
     edPtr = *theEphemeralList;
 
-    while (edPtr != NULL) {
+    while (edPtr != nullptr) {
         /*======================================================*/
         /* Check through previous and current evaluation depth  */
         /* because these symbols can be interspersed, otherwise */
@@ -1286,7 +1286,7 @@ static void RemoveEphemeralHashNodes(
         if (edPtr->associatedValue->count == 0) {
             RemoveHashNode(theEnv, edPtr->associatedValue, theTable, hashNodeSize, hashNodeType);
             rtn_struct(theEnv, ephemeron, edPtr);
-            if (lastPtr == NULL) *theEphemeralList = nextPtr;
+            if (lastPtr == nullptr) *theEphemeralList = nextPtr;
             else lastPtr->next = nextPtr;
         }
 
@@ -1300,7 +1300,7 @@ static void RemoveEphemeralHashNodes(
 
             rtn_struct(theEnv, ephemeron, edPtr);
 
-            if (lastPtr == NULL) *theEphemeralList = nextPtr;
+            if (lastPtr == nullptr) *theEphemeralList = nextPtr;
             else lastPtr->next = nextPtr;
         }
 
@@ -1422,15 +1422,15 @@ struct symbolMatch *FindSymbolMatches(
         const char *searchString,
         unsigned *numberOfMatches,
         size_t *commonPrefixLength) {
-    struct symbolMatch *reply = NULL, *temp;
-    CLIPSLexeme *hashPtr = NULL;
+    struct symbolMatch *reply = nullptr, *temp;
+    CLIPSLexeme *hashPtr = nullptr;
     size_t searchLength;
 
     searchLength = strlen(searchString);
     *numberOfMatches = 0;
 
     while ((hashPtr = GetNextSymbolMatch(theEnv, searchString, searchLength, hashPtr,
-                                         false, commonPrefixLength)) != NULL) {
+                                         false, commonPrefixLength)) != nullptr) {
         *numberOfMatches = *numberOfMatches + 1;
         temp = get_struct(theEnv, symbolMatch);
         temp->match = hashPtr;
@@ -1449,7 +1449,7 @@ void ReturnSymbolMatches(
         struct symbolMatch *listOfMatches) {
     struct symbolMatch *temp;
 
-    while (listOfMatches != NULL) {
+    while (listOfMatches != nullptr) {
         temp = listOfMatches->next;
         rtn_struct(theEnv, symbolMatch, listOfMatches);
         listOfMatches = temp;
@@ -1506,15 +1506,15 @@ CLIPSLexeme *GetNextSymbolMatch(
     /* then there's no common prefix length.    */
     /*==========================================*/
 
-    if (anywhere && (commonPrefixLength != NULL))
+    if (anywhere && (commonPrefixLength != nullptr))
         *commonPrefixLength = 0;
 
     /*========================================================*/
     /* If we're starting the search from the beginning of the */
-    /* symbol table, the previous symbol argument is NULL.    */
+    /* symbol table, the previous symbol argument is nullptr.    */
     /*========================================================*/
 
-    if (prevSymbol == NULL) {
+    if (prevSymbol == nullptr) {
         i = 0;
         hashPtr = SymbolData(theEnv)->SymbolTable[0];
     }
@@ -1539,7 +1539,7 @@ CLIPSLexeme *GetNextSymbolMatch(
         /* in the bucket being examined.     */
         /*===================================*/
 
-        for (; hashPtr != NULL; hashPtr = hashPtr->next) {
+        for (; hashPtr != nullptr; hashPtr = hashPtr->next) {
             /*================================================*/
             /* Skip symbols that being with ( since these are */
             /* typically symbols for internal use. Also skip  */
@@ -1565,7 +1565,7 @@ CLIPSLexeme *GetNextSymbolMatch(
                 /* table entry.                                */
                 /*=============================================*/
 
-                if (prevSymbol != NULL)
+                if (prevSymbol != nullptr)
                     prefixLength = CommonPrefixLength(prevSymbol->contents, hashPtr->contents);
                 else
                     prefixLength = CommonPrefixLength(searchString, hashPtr->contents);
@@ -1580,8 +1580,8 @@ CLIPSLexeme *GetNextSymbolMatch(
                 /*===================================================*/
 
                 if (prefixLength >= searchLength) {
-                    if (commonPrefixLength != NULL) {
-                        if (prevSymbol == NULL)
+                    if (commonPrefixLength != nullptr) {
+                        if (prevSymbol == nullptr)
                             *commonPrefixLength = strlen(hashPtr->contents);
                         else if (prefixLength < *commonPrefixLength)
                             *commonPrefixLength = prefixLength;
@@ -1589,7 +1589,7 @@ CLIPSLexeme *GetNextSymbolMatch(
                     return (hashPtr);
                 }
             } else {
-                if (StringWithinString(hashPtr->contents, searchString) != NULL) { return (hashPtr); }
+                if (StringWithinString(hashPtr->contents, searchString) != nullptr) { return (hashPtr); }
             }
         }
 
@@ -1605,7 +1605,7 @@ CLIPSLexeme *GetNextSymbolMatch(
     /* There are no more matching symbols. */
     /*=====================================*/
 
-    return NULL;
+    return nullptr;
 }
 
 /**********************************************/
@@ -1622,7 +1622,7 @@ static const char *StringWithinString(
         if ((ct[k] == '\0') && (k != 0))
             return (cs + i);
     }
-    return NULL;
+    return nullptr;
 }
 
 /************************************************/
@@ -1667,7 +1667,7 @@ void SetAtomicValueIndices(
 
     for (i = 0; i < SYMBOL_HASH_SIZE; i++) {
         for (symbolPtr = symbolArray[i];
-             symbolPtr != NULL;
+             symbolPtr != nullptr;
              symbolPtr = symbolPtr->next) {
             if ((symbolPtr->neededSymbol == true) || setAll) { symbolPtr->bucket = count++; }
         }
@@ -1682,7 +1682,7 @@ void SetAtomicValueIndices(
 
     for (i = 0; i < FLOAT_HASH_SIZE; i++) {
         for (floatPtr = floatArray[i];
-             floatPtr != NULL;
+             floatPtr != nullptr;
              floatPtr = floatPtr->next) {
             if ((floatPtr->neededFloat == true) || setAll) { floatPtr->bucket = count++; }
         }
@@ -1697,7 +1697,7 @@ void SetAtomicValueIndices(
 
     for (i = 0; i < INTEGER_HASH_SIZE; i++) {
         for (integerPtr = integerArray[i];
-             integerPtr != NULL;
+             integerPtr != nullptr;
              integerPtr = integerPtr->next) {
             if ((integerPtr->neededInteger == true) || setAll) { integerPtr->bucket = count++; }
         }
@@ -1712,7 +1712,7 @@ void SetAtomicValueIndices(
 
     for (i = 0; i < BITMAP_HASH_SIZE; i++) {
         for (bitMapPtr = bitMapArray[i];
-             bitMapPtr != NULL;
+             bitMapPtr != nullptr;
              bitMapPtr = bitMapPtr->next) {
             if ((bitMapPtr->neededBitMap == true) || setAll) { bitMapPtr->bucket = count++; }
         }
@@ -1740,7 +1740,7 @@ void RestoreAtomicValueBuckets(
 
     for (i = 0; i < SYMBOL_HASH_SIZE; i++) {
         for (symbolPtr = symbolArray[i];
-             symbolPtr != NULL;
+             symbolPtr != nullptr;
              symbolPtr = symbolPtr->next) { symbolPtr->bucket = i; }
     }
 
@@ -1752,7 +1752,7 @@ void RestoreAtomicValueBuckets(
 
     for (i = 0; i < FLOAT_HASH_SIZE; i++) {
         for (floatPtr = floatArray[i];
-             floatPtr != NULL;
+             floatPtr != nullptr;
              floatPtr = floatPtr->next) { floatPtr->bucket = i; }
     }
 
@@ -1764,7 +1764,7 @@ void RestoreAtomicValueBuckets(
 
     for (i = 0; i < INTEGER_HASH_SIZE; i++) {
         for (integerPtr = integerArray[i];
-             integerPtr != NULL;
+             integerPtr != nullptr;
              integerPtr = integerPtr->next) { integerPtr->bucket = i; }
     }
 
@@ -1776,7 +1776,7 @@ void RestoreAtomicValueBuckets(
 
     for (i = 0; i < BITMAP_HASH_SIZE; i++) {
         for (bitMapPtr = bitMapArray[i];
-             bitMapPtr != NULL;
+             bitMapPtr != nullptr;
              bitMapPtr = bitMapPtr->next) { bitMapPtr->bucket = i; }
     }
 }

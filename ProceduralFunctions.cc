@@ -90,15 +90,15 @@ void ProceduralFunctionDefinitions(
         Environment *theEnv) {
     AllocateEnvironmentData(theEnv, PRCDRFUN_DATA, sizeof(struct procedureFunctionData), DeallocateProceduralFunctionData);
 
-    AddUDF(theEnv, "if", "*", 0, UNBOUNDED, NULL, IfFunction, NULL);
-    AddUDF(theEnv, "while", "*", 0, UNBOUNDED, NULL, WhileFunction, NULL);
-    AddUDF(theEnv, "loop-for-count", "*", 0, UNBOUNDED, NULL, LoopForCountFunction, NULL);
-    AddUDF(theEnv, "(get-loop-count)", "l", 1, 1, NULL, GetLoopCount, NULL);
-    AddUDF(theEnv, "bind", "*", 0, UNBOUNDED, NULL, BindFunction, NULL);
-    AddUDF(theEnv, "progn", "*", 0, UNBOUNDED, NULL, PrognFunction, NULL);
-    AddUDF(theEnv, "return", "*", 0, UNBOUNDED, NULL, ReturnFunction, NULL);
-    AddUDF(theEnv, "break", "v", 0, 0, NULL, BreakFunction, NULL);
-    AddUDF(theEnv, "switch", "*", 0, UNBOUNDED, NULL, SwitchFunction, NULL);
+    AddUDF(theEnv, "if", "*", 0, UNBOUNDED, nullptr, IfFunction, nullptr);
+    AddUDF(theEnv, "while", "*", 0, UNBOUNDED, nullptr, WhileFunction, nullptr);
+    AddUDF(theEnv, "loop-for-count", "*", 0, UNBOUNDED, nullptr, LoopForCountFunction, nullptr);
+    AddUDF(theEnv, "(get-loop-count)", "l", 1, 1, nullptr, GetLoopCount, nullptr);
+    AddUDF(theEnv, "bind", "*", 0, UNBOUNDED, nullptr, BindFunction, nullptr);
+    AddUDF(theEnv, "progn", "*", 0, UNBOUNDED, nullptr, PrognFunction, nullptr);
+    AddUDF(theEnv, "return", "*", 0, UNBOUNDED, nullptr, ReturnFunction, nullptr);
+    AddUDF(theEnv, "break", "v", 0, 0, nullptr, BreakFunction, nullptr);
+    AddUDF(theEnv, "switch", "*", 0, UNBOUNDED, nullptr, SwitchFunction, nullptr);
 
     ProceduralFunctionParsers(theEnv);
 
@@ -109,8 +109,8 @@ void ProceduralFunctionDefinitions(
     FuncSeqOvlFlags(theEnv, "return", false, false);
     FuncSeqOvlFlags(theEnv, "switch", false, false);
 
-    AddResetFunction(theEnv, "bind", FlushBindList, 0, NULL);
-    AddClearFunction(theEnv, "bind", FlushBindList, 0, NULL);
+    AddResetFunction(theEnv, "bind", FlushBindList, 0, nullptr);
+    AddClearFunction(theEnv, "bind", FlushBindList, 0, nullptr);
 }
 
 /*************************************************************/
@@ -123,7 +123,7 @@ static void DeallocateProceduralFunctionData(
 
     garbagePtr = ProcedureFunctionData(theEnv)->BindList;
 
-    while (garbagePtr != NULL) {
+    while (garbagePtr != nullptr) {
         nextPtr = garbagePtr->next;
         rtn_struct(theEnv, udfValue, garbagePtr);
         garbagePtr = nextPtr;
@@ -159,7 +159,7 @@ void WhileFunction(
         if ((ProcedureFunctionData(theEnv)->BreakFlag == true) || (ProcedureFunctionData(theEnv)->ReturnFlag == true))
             break;
 
-        CleanCurrentGarbageFrame(theEnv, NULL);
+        CleanCurrentGarbageFrame(theEnv, nullptr);
         CallPeriodicTasks(theEnv);
 
         UDFNthArgument(context, 1, ANY_TYPE_BITS, &theResult);
@@ -236,7 +236,7 @@ void LoopForCountFunction(
         if ((ProcedureFunctionData(theEnv)->BreakFlag == true) || (ProcedureFunctionData(theEnv)->ReturnFlag == true))
             break;
 
-        CleanCurrentGarbageFrame(theEnv, NULL);
+        CleanCurrentGarbageFrame(theEnv, nullptr);
         CallPeriodicTasks(theEnv);
 
         tmpCounter->loopCounter++;
@@ -347,9 +347,9 @@ void BindFunction(
     UDFValue *theBind, *lastBind;
     bool found = false,
             unbindVar = false;
-    CLIPSLexeme *variableName = NULL;
+    CLIPSLexeme *variableName = nullptr;
 #if DEFGLOBAL_CONSTRUCT
-    Defglobal *theGlobal = NULL;
+    Defglobal *theGlobal = nullptr;
 #endif
 
     /*===============================================*/
@@ -369,8 +369,8 @@ void BindFunction(
     /* Determine the new value for the variable. */
     /*===========================================*/
 
-    if (GetFirstArgument()->nextArg == NULL) { unbindVar = true; }
-    else if (GetFirstArgument()->nextArg->nextArg == NULL) { EvaluateExpression(theEnv, GetFirstArgument()->nextArg, returnValue); }
+    if (GetFirstArgument()->nextArg == nullptr) { unbindVar = true; }
+    else if (GetFirstArgument()->nextArg->nextArg == nullptr) { EvaluateExpression(theEnv, GetFirstArgument()->nextArg, returnValue); }
     else { StoreInMultifield(theEnv, returnValue, GetFirstArgument()->nextArg, true); }
 
     /*==================================*/
@@ -378,7 +378,7 @@ void BindFunction(
     /*==================================*/
 
 #if DEFGLOBAL_CONSTRUCT
-    if (theGlobal != NULL) {
+    if (theGlobal != nullptr) {
         QSetDefglobalValue(theEnv, theGlobal, returnValue, unbindVar);
         return;
     }
@@ -389,9 +389,9 @@ void BindFunction(
     /*===============================================*/
 
     theBind = ProcedureFunctionData(theEnv)->BindList;
-    lastBind = NULL;
+    lastBind = nullptr;
 
-    while ((theBind != NULL) && (found == false)) {
+    while ((theBind != nullptr) && (found == false)) {
         if (theBind->supplementalInfo == (void *) variableName) { found = true; }
         else {
             lastBind = theBind;
@@ -410,8 +410,8 @@ void BindFunction(
             theBind = get_struct(theEnv, udfValue);
             theBind->supplementalInfo = (void *) variableName;
             IncrementLexemeCount(variableName);
-            theBind->next = NULL;
-            if (lastBind == NULL) { ProcedureFunctionData(theEnv)->BindList = theBind; }
+            theBind->next = nullptr;
+            if (lastBind == nullptr) { ProcedureFunctionData(theEnv)->BindList = theBind; }
             else { lastBind->next = theBind; }
         } else {
             returnValue->value = FalseSymbol(theEnv);
@@ -429,7 +429,7 @@ void BindFunction(
         theBind->range = returnValue->range;
         RetainUDFV(theEnv, returnValue);
     } else {
-        if (lastBind == NULL) ProcedureFunctionData(theEnv)->BindList = theBind->next;
+        if (lastBind == nullptr) ProcedureFunctionData(theEnv)->BindList = theBind->next;
         else lastBind->next = theBind->next;
         ReleaseLexeme(theEnv, (CLIPSLexeme *) theBind->supplementalInfo);
         rtn_struct(theEnv, udfValue, theBind);
@@ -447,7 +447,7 @@ bool GetBoundVariable(
         CLIPSLexeme *varName) {
     UDFValue *bindPtr;
 
-    for (bindPtr = ProcedureFunctionData(theEnv)->BindList; bindPtr != NULL; bindPtr = bindPtr->next) {
+    for (bindPtr = ProcedureFunctionData(theEnv)->BindList; bindPtr != nullptr; bindPtr = bindPtr->next) {
         if (bindPtr->supplementalInfo == (void *) varName) {
             vPtr->value = bindPtr->value;
             vPtr->begin = bindPtr->begin;
@@ -467,7 +467,7 @@ void FlushBindList(
         Environment *theEnv,
         void *context) {
     ReturnValues(theEnv, ProcedureFunctionData(theEnv)->BindList, true);
-    ProcedureFunctionData(theEnv)->BindList = NULL;
+    ProcedureFunctionData(theEnv)->BindList = nullptr;
 }
 
 /***************************************/
@@ -482,12 +482,12 @@ void PrognFunction(
 
     argPtr = EvaluationData(theEnv)->CurrentExpression->argList;
 
-    if (argPtr == NULL) {
+    if (argPtr == nullptr) {
         returnValue->value = FalseSymbol(theEnv);
         return;
     }
 
-    while ((argPtr != NULL) && (GetHaltExecution(theEnv) != true)) {
+    while ((argPtr != nullptr) && (GetHaltExecution(theEnv) != true)) {
         EvaluateExpression(theEnv, argPtr, returnValue);
 
         if ((ProcedureFunctionData(theEnv)->BreakFlag == true) || (ProcedureFunctionData(theEnv)->ReturnFlag == true))
@@ -544,7 +544,7 @@ void SwitchFunction(
     EvaluateExpression(theEnv, GetFirstArgument(), &switch_val);
     if (EvaluationData(theEnv)->EvaluationError)
         return;
-    for (theExp = GetFirstArgument()->nextArg; theExp != NULL; theExp = theExp->nextArg->nextArg) {
+    for (theExp = GetFirstArgument()->nextArg; theExp != nullptr; theExp = theExp->nextArg->nextArg) {
         /* =================================================
            VOID_TYPE is the default case (if any) for the switch
            ================================================= */

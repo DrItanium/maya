@@ -114,13 +114,13 @@ void InitializeDefrules(
     InitializePatterns(theEnv);
     InitializeDefruleModules(theEnv);
 
-    AddReservedPatternSymbol(theEnv, "and", NULL);
-    AddReservedPatternSymbol(theEnv, "not", NULL);
-    AddReservedPatternSymbol(theEnv, "or", NULL);
-    AddReservedPatternSymbol(theEnv, "test", NULL);
-    AddReservedPatternSymbol(theEnv, "logical", NULL);
-    AddReservedPatternSymbol(theEnv, "exists", NULL);
-    AddReservedPatternSymbol(theEnv, "forall", NULL);
+    AddReservedPatternSymbol(theEnv, "and", nullptr);
+    AddReservedPatternSymbol(theEnv, "not", nullptr);
+    AddReservedPatternSymbol(theEnv, "or", nullptr);
+    AddReservedPatternSymbol(theEnv, "test", nullptr);
+    AddReservedPatternSymbol(theEnv, "logical", nullptr);
+    AddReservedPatternSymbol(theEnv, "exists", nullptr);
+    AddReservedPatternSymbol(theEnv, "forall", nullptr);
 
     DefruleBasicCommands(theEnv);
 
@@ -141,12 +141,12 @@ void InitializeDefrules(
     DefruleData(theEnv)->AlphaMemoryTable = (ALPHA_MEMORY_HASH **)
             gm2(theEnv, sizeof(ALPHA_MEMORY_HASH *) * ALPHA_MEMORY_HASH_SIZE);
 
-    for (i = 0; i < ALPHA_MEMORY_HASH_SIZE; i++) DefruleData(theEnv)->AlphaMemoryTable[i] = NULL;
+    for (i = 0; i < ALPHA_MEMORY_HASH_SIZE; i++) DefruleData(theEnv)->AlphaMemoryTable[i] = nullptr;
 
     DefruleData(theEnv)->BetaMemoryResizingFlag = true;
 
-    DefruleData(theEnv)->RightPrimeJoins = NULL;
-    DefruleData(theEnv)->LeftPrimeJoins = NULL;
+    DefruleData(theEnv)->RightPrimeJoins = nullptr;
+    DefruleData(theEnv)->LeftPrimeJoins = nullptr;
 }
 
 /**************************************************/
@@ -165,17 +165,17 @@ static void DeallocateDefruleData(
 #endif
 
     DoForAllConstructs(theEnv, DestroyDefruleAction,
-                       DefruleData(theEnv)->DefruleModuleIndex, false, NULL);
+                       DefruleData(theEnv)->DefruleModuleIndex, false, nullptr);
 
-    for (theModule = GetNextDefmodule(theEnv, NULL);
-         theModule != NULL;
+    for (theModule = GetNextDefmodule(theEnv, nullptr);
+         theModule != nullptr;
          theModule = GetNextDefmodule(theEnv, theModule)) {
         theModuleItem = (struct defruleModule *)
                 GetModuleItem(theEnv, theModule,
                               DefruleData(theEnv)->DefruleModuleIndex);
 
         theActivation = theModuleItem->agenda;
-        while (theActivation != NULL) {
+        while (theActivation != nullptr) {
             tmpActivation = theActivation->next;
 
             rtn_struct(theEnv, activation, theActivation);
@@ -184,7 +184,7 @@ static void DeallocateDefruleData(
         }
 
         theGroup = theModuleItem->groupings;
-        while (theGroup != NULL) {
+        while (theGroup != nullptr) {
             tmpGroup = theGroup->next;
 
             rtn_struct(theEnv, salienceGroup, theGroup);
@@ -226,7 +226,7 @@ static void InitializeDefruleModules(
 #if BLOAD_AND_BSAVE
                                                                  BloadDefruleModuleReference,
 #else
-            NULL,
+            nullptr,
 #endif
                                                                  (FindConstructFunction *) FindDefruleInModule);
 }
@@ -239,8 +239,8 @@ static void *AllocateModule(
     struct defruleModule *theItem;
 
     theItem = get_struct(theEnv, defruleModule);
-    theItem->agenda = NULL;
-    theItem->groupings = NULL;
+    theItem->agenda = nullptr;
+    theItem->groupings = nullptr;
     return ((void *) theItem);
 }
 
@@ -266,7 +266,7 @@ struct defruleModule *GetDefruleModuleItem(
 
 /****************************************************************/
 /* FindDefrule: Searches for a defrule in the list of defrules. */
-/*   Returns a pointer to the defrule if found, otherwise NULL. */
+/*   Returns a pointer to the defrule if found, otherwise nullptr. */
 /****************************************************************/
 Defrule *FindDefrule(
         Environment *theEnv,
@@ -276,7 +276,7 @@ Defrule *FindDefrule(
 
 /************************************************************************/
 /* FindDefruleInModule: Searches for a defrule in the list of defrules. */
-/*   Returns a pointer to the defrule if found, otherwise NULL.         */
+/*   Returns a pointer to the defrule if found, otherwise nullptr.         */
 /************************************************************************/
 Defrule *FindDefruleInModule(
         Environment *theEnv,
@@ -285,7 +285,7 @@ Defrule *FindDefruleInModule(
 }
 
 /************************************************************/
-/* GetNextDefrule: If passed a NULL pointer, returns the    */
+/* GetNextDefrule: If passed a nullptr pointer, returns the    */
 /*   first defrule in the ListOfDefrules. Otherwise returns */
 /*   the next defrule following the defrule passed as an    */
 /*   argument.                                              */
@@ -307,7 +307,7 @@ bool DefruleIsDeletable(
     if (!ConstructsDeletable(theEnv)) { return false; }
 
     for (;
-            theDefrule != NULL;
+            theDefrule != nullptr;
             theDefrule = theDefrule->disjunct) { if (theDefrule->executing) return false; }
 
     if (EngineData(theEnv)->JoinOperationInProgress) return false;
@@ -325,7 +325,7 @@ long GetDisjunctCount(
     long count = 0;
 
     for (;
-            theDefrule != NULL;
+            theDefrule != nullptr;
             theDefrule = theDefrule->disjunct) { count++; }
 
     return (count);
@@ -343,13 +343,13 @@ Defrule *GetNthDisjunct(
     long count = 0;
 
     for (;
-            theDefrule != NULL;
+            theDefrule != nullptr;
             theDefrule = theDefrule->disjunct) {
         count++;
         if (count == index) { return theDefrule; }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 #if BLOAD_AND_BSAVE
@@ -360,38 +360,38 @@ Defrule *GetNthDisjunct(
 void AddBetaMemoriesToJoin(
         Environment *theEnv,
         struct joinNode *theNode) {
-    if ((theNode->leftMemory != NULL) || (theNode->rightMemory != NULL)) { return; }
+    if ((theNode->leftMemory != nullptr) || (theNode->rightMemory != nullptr)) { return; }
 
     if ((!theNode->firstJoin) || theNode->patternIsExists || theNode->patternIsNegated || theNode->joinFromTheRight) {
-        if (theNode->leftHash == NULL) {
+        if (theNode->leftHash == nullptr) {
             theNode->leftMemory = get_struct(theEnv, betaMemory);
             theNode->leftMemory->beta = (struct partialMatch **) genalloc(theEnv, sizeof(struct partialMatch *));
-            theNode->leftMemory->beta[0] = NULL;
+            theNode->leftMemory->beta[0] = nullptr;
             theNode->leftMemory->size = 1;
             theNode->leftMemory->count = 0;
-            theNode->leftMemory->last = NULL;
+            theNode->leftMemory->last = nullptr;
         } else {
             theNode->leftMemory = get_struct(theEnv, betaMemory);
             theNode->leftMemory->beta = (struct partialMatch **) genalloc(theEnv, sizeof(struct partialMatch *) * INITIAL_BETA_HASH_SIZE);
             memset(theNode->leftMemory->beta, 0, sizeof(struct partialMatch *) * INITIAL_BETA_HASH_SIZE);
             theNode->leftMemory->size = INITIAL_BETA_HASH_SIZE;
             theNode->leftMemory->count = 0;
-            theNode->leftMemory->last = NULL;
+            theNode->leftMemory->last = nullptr;
         }
 
         if (theNode->firstJoin && (theNode->patternIsExists || theNode->patternIsNegated || theNode->joinFromTheRight)) {
             theNode->leftMemory->beta[0] = CreateEmptyPartialMatch(theEnv);
             theNode->leftMemory->beta[0]->owner = theNode;
         }
-    } else { theNode->leftMemory = NULL; }
+    } else { theNode->leftMemory = nullptr; }
 
     if (theNode->joinFromTheRight) {
-        if (theNode->leftHash == NULL) {
+        if (theNode->leftHash == nullptr) {
             theNode->rightMemory = get_struct(theEnv, betaMemory);
             theNode->rightMemory->beta = (struct partialMatch **) genalloc(theEnv, sizeof(struct partialMatch *));
             theNode->rightMemory->last = (struct partialMatch **) genalloc(theEnv, sizeof(struct partialMatch *));
-            theNode->rightMemory->beta[0] = NULL;
-            theNode->rightMemory->last[0] = NULL;
+            theNode->rightMemory->beta[0] = nullptr;
+            theNode->rightMemory->last[0] = nullptr;
             theNode->rightMemory->size = 1;
             theNode->rightMemory->count = 0;
         } else {
@@ -403,7 +403,7 @@ void AddBetaMemoriesToJoin(
             theNode->rightMemory->size = INITIAL_BETA_HASH_SIZE;
             theNode->rightMemory->count = 0;
         }
-    } else if (theNode->rightSideEntryStructure == NULL) {
+    } else if (theNode->rightSideEntryStructure == nullptr) {
         theNode->rightMemory = get_struct(theEnv, betaMemory);
         theNode->rightMemory->beta = (struct partialMatch **) genalloc(theEnv, sizeof(struct partialMatch *));
         theNode->rightMemory->last = (struct partialMatch **) genalloc(theEnv, sizeof(struct partialMatch *));
@@ -413,7 +413,7 @@ void AddBetaMemoriesToJoin(
         theNode->rightMemory->last[0] = theNode->rightMemory->beta[0];
         theNode->rightMemory->size = 1;
         theNode->rightMemory->count = 1;
-    } else { theNode->rightMemory = NULL; }
+    } else { theNode->rightMemory = nullptr; }
 }
 
 #endif /* BLOAD_AND_BSAVE */

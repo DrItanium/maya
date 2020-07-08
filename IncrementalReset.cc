@@ -114,7 +114,7 @@ void IncrementalReset(
     /*============================================================*/
 
     for (tempPtr = tempRule;
-         tempPtr != NULL;
+         tempPtr != nullptr;
          tempPtr = tempPtr->disjunct) { CheckForPrimableJoins(theEnv, tempPtr, tempPtr->lastJoin); }
 
     /*===============================================*/
@@ -123,9 +123,9 @@ void IncrementalReset(
     /*===============================================*/
 
     for (theParser = PatternData(theEnv)->ListOfPatternParsers;
-         theParser != NULL;
+         theParser != nullptr;
          theParser = theParser->next) {
-        if (theParser->incrementalResetFunction != NULL) { (*theParser->incrementalResetFunction)(theEnv); }
+        if (theParser->incrementalResetFunction != nullptr) { (*theParser->incrementalResetFunction)(theEnv); }
     }
 
     /*========================*/
@@ -156,7 +156,7 @@ static void MarkNetworkForIncrementalReset(
     /*============================================*/
 
     for (;
-            tempRule != NULL;
+            tempRule != nullptr;
             tempRule = tempRule->disjunct) { MarkJoinsForIncrementalReset(theEnv, tempRule->lastJoin, value); }
 }
 
@@ -172,9 +172,9 @@ static void MarkJoinsForIncrementalReset(
     struct patternNodeHeader *patternPtr;
 
     for (;
-            joinPtr != NULL;
+            joinPtr != nullptr;
             joinPtr = GetPreviousJoin(joinPtr)) {
-        if (joinPtr->ruleToActivate != NULL) {
+        if (joinPtr->ruleToActivate != nullptr) {
             joinPtr->marked = false;
             joinPtr->initialize = value;
             continue;
@@ -193,7 +193,7 @@ static void MarkJoinsForIncrementalReset(
             joinPtr->initialize = value;
             if (joinPtr->joinFromTheRight == false) {
                 patternPtr = (struct patternNodeHeader *) GetPatternForJoin(joinPtr);
-                if (patternPtr != NULL) { MarkPatternForIncrementalReset(theEnv, joinPtr->rhsType, patternPtr, value); }
+                if (patternPtr != nullptr) { MarkPatternForIncrementalReset(theEnv, joinPtr->rhsType, patternPtr, value); }
             }
         }
     }
@@ -216,7 +216,7 @@ static void CheckForPrimableJoins(
     /*========================================*/
 
     for (;
-            joinPtr != NULL;
+            joinPtr != nullptr;
             joinPtr = GetPreviousJoin(joinPtr)) {
         /*===============================*/
         /* Update the join if necessary. */
@@ -225,7 +225,7 @@ static void CheckForPrimableJoins(
         if ((joinPtr->initialize) && (!joinPtr->marked)) {
             if (joinPtr->firstJoin == true) {
                 if (joinPtr->joinFromTheRight == false) {
-                    if ((joinPtr->rightSideEntryStructure == NULL) ||
+                    if ((joinPtr->rightSideEntryStructure == nullptr) ||
                         (joinPtr->patternIsNegated) ||
                         (((struct patternNodeHeader *) joinPtr->rightSideEntryStructure)->initialize == false)) {
                         PrimeJoinFromLeftMemory(theEnv, joinPtr);
@@ -277,18 +277,18 @@ static void PrimeJoinFromLeftMemory(
     /*===========================================================*/
 
     if (joinPtr->firstJoin == true) {
-        if (joinPtr->rightSideEntryStructure == NULL) { NetworkAssert(theEnv, joinPtr->rightMemory->beta[0], joinPtr); }
+        if (joinPtr->rightSideEntryStructure == nullptr) { NetworkAssert(theEnv, joinPtr->rightMemory->beta[0], joinPtr); }
         else if (joinPtr->patternIsNegated) {
             notParent = joinPtr->leftMemory->beta[0];
 
-            if (joinPtr->secondaryNetworkTest != NULL) {
+            if (joinPtr->secondaryNetworkTest != nullptr) {
                 if (EvaluateSecondaryNetworkTest(theEnv, notParent, joinPtr) == false) { return; }
             }
 
             for (listOfHashNodes = ((struct patternNodeHeader *) joinPtr->rightSideEntryStructure)->firstHash;
-                 listOfHashNodes != NULL;
+                 listOfHashNodes != nullptr;
                  listOfHashNodes = listOfHashNodes->nextHash) {
-                if (listOfHashNodes->alphaMemory != NULL) {
+                if (listOfHashNodes->alphaMemory != nullptr) {
                     AddBlockedLink(notParent, listOfHashNodes->alphaMemory);
                     return;
                 }
@@ -297,10 +297,10 @@ static void PrimeJoinFromLeftMemory(
             EPMDrive(theEnv, notParent, joinPtr, NETWORK_ASSERT);
         } else {
             for (listOfHashNodes = ((struct patternNodeHeader *) joinPtr->rightSideEntryStructure)->firstHash;
-                 listOfHashNodes != NULL;
+                 listOfHashNodes != nullptr;
                  listOfHashNodes = listOfHashNodes->nextHash) {
                 for (theList = listOfHashNodes->alphaMemory;
-                     theList != NULL;
+                     theList != nullptr;
                      theList = theList->nextInMemory) { NetworkAssert(theEnv, theList, joinPtr); }
             }
         }
@@ -314,14 +314,14 @@ static void PrimeJoinFromLeftMemory(
 
     tempLink = joinPtr->lastLevel->nextLinks;
 
-    while (tempLink != NULL) {
+    while (tempLink != nullptr) {
         if ((tempLink->join != joinPtr) &&
             (tempLink->join->initialize == false)) { break; }
 
         tempLink = tempLink->next;
     }
 
-    if (tempLink == NULL) return;
+    if (tempLink == nullptr) return;
 
     if (tempLink->enterDirection == CLIPS_LHS) { theMemory = tempLink->join->leftMemory; }
     else { theMemory = tempLink->join->rightMemory; }
@@ -333,11 +333,11 @@ static void PrimeJoinFromLeftMemory(
 
     for (b = 0; b < theMemory->size; b++) {
         for (theList = theMemory->beta[b];
-             theList != NULL;
+             theList != nullptr;
              theList = theList->nextInMemory) {
             linker = CopyPartialMatch(theEnv, theList);
 
-            if (joinPtr->leftHash != NULL) { hashValue = BetaMemoryHashValue(theEnv, joinPtr->leftHash, linker, NULL, joinPtr); }
+            if (joinPtr->leftHash != nullptr) { hashValue = BetaMemoryHashValue(theEnv, joinPtr->leftHash, linker, nullptr, joinPtr); }
             else { hashValue = 0; }
 
             UpdateBetaPMLinks(theEnv, linker, theList->leftParent, theList->rightParent, joinPtr, hashValue, CLIPS_LHS);
@@ -377,20 +377,20 @@ static void PrimeJoinFromRightMemory(
     /*========================================*/
 
     tempLink = ((struct joinNode *) joinPtr->rightSideEntryStructure)->nextLinks;
-    while (tempLink != NULL) {
+    while (tempLink != nullptr) {
         if ((tempLink->join != joinPtr) &&
             (tempLink->join->initialize == false)) { break; }
 
         tempLink = tempLink->next;
     }
 
-    if (tempLink == NULL) {
+    if (tempLink == nullptr) {
         if (joinPtr->firstJoin &&
-            (joinPtr->rightMemory->beta[0] == NULL) &&
+            (joinPtr->rightMemory->beta[0] == nullptr) &&
             (!joinPtr->patternIsExists)) {
             notParent = joinPtr->leftMemory->beta[0];
 
-            if (joinPtr->secondaryNetworkTest != NULL) {
+            if (joinPtr->secondaryNetworkTest != nullptr) {
                 if (EvaluateSecondaryNetworkTest(theEnv, notParent, joinPtr) == false) { return; }
             }
 
@@ -410,11 +410,11 @@ static void PrimeJoinFromRightMemory(
 
     for (b = 0; b < theMemory->size; b++) {
         for (theList = theMemory->beta[b];
-             theList != NULL;
+             theList != nullptr;
              theList = theList->nextInMemory) {
             linker = CopyPartialMatch(theEnv, theList);
 
-            if (joinPtr->rightHash != NULL) { hashValue = BetaMemoryHashValue(theEnv, joinPtr->rightHash, linker, NULL, joinPtr); }
+            if (joinPtr->rightHash != nullptr) { hashValue = BetaMemoryHashValue(theEnv, joinPtr->rightHash, linker, nullptr, joinPtr); }
             else { hashValue = 0; }
 
             UpdateBetaPMLinks(theEnv, linker, theList->leftParent, theList->rightParent, joinPtr, hashValue, CLIPS_RHS);
@@ -423,11 +423,11 @@ static void PrimeJoinFromRightMemory(
     }
 
     if (joinPtr->firstJoin &&
-        (joinPtr->rightMemory->beta[0] == NULL) &&
+        (joinPtr->rightMemory->beta[0] == nullptr) &&
         (!joinPtr->patternIsExists)) {
         notParent = joinPtr->leftMemory->beta[0];
 
-        if (joinPtr->secondaryNetworkTest != NULL) {
+        if (joinPtr->secondaryNetworkTest != nullptr) {
             if (EvaluateSecondaryNetworkTest(theEnv, notParent, joinPtr) == false) { return; }
         }
 
@@ -450,8 +450,8 @@ static void MarkPatternForIncrementalReset(
 
     tempParser = GetPatternParser(theEnv, rhsType);
 
-    if (tempParser != NULL) {
-        if (tempParser->markIRPatternFunction != NULL) { (*tempParser->markIRPatternFunction)(theEnv, theHeader, value); }
+    if (tempParser != nullptr) {
+        if (tempParser->markIRPatternFunction != nullptr) { (*tempParser->markIRPatternFunction)(theEnv, theHeader, value); }
     }
 }
 

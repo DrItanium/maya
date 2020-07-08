@@ -116,10 +116,10 @@ static void DeallocateDeffactsData(
     DoForAllConstructs(theEnv,
                        DestroyDeffactsAction,
                        DeffactsData(theEnv)->DeffactsModuleIndex,
-                       false, NULL);
+                       false, nullptr);
 
-    for (theModule = GetNextDefmodule(theEnv, NULL);
-         theModule != NULL;
+    for (theModule = GetNextDefmodule(theEnv, nullptr);
+         theModule != nullptr;
          theModule = GetNextDefmodule(theEnv, theModule)) {
         theModuleItem = (struct deffactsModule *)
                 GetModuleItem(theEnv, theModule,
@@ -141,7 +141,7 @@ static void DestroyDeffactsAction(
 #endif
     Deffacts *theDeffacts = (Deffacts *) theConstruct;
 
-    if (theDeffacts == NULL) return;
+    if (theDeffacts == nullptr) return;
 
     ReturnPackedExpression(theEnv, theDeffacts->assertList);
 
@@ -163,7 +163,7 @@ static void InitializeDeffactsModules(
 #if BLOAD_AND_BSAVE
                                BloadDeffactsModuleReference,
 #else
-                    NULL,
+                    nullptr,
 #endif
                                (FindConstructFunction *) FindDeffactsInModule);
 }
@@ -199,7 +199,7 @@ struct deffactsModule *GetDeffactsModuleItem(
 /************************************************/
 /* FindDeffacts: Searches for a deffact in the  */
 /*   list of deffacts. Returns a pointer to the */
-/*   deffact if found, otherwise NULL.          */
+/*   deffact if found, otherwise nullptr.          */
 /************************************************/
 Deffacts *FindDeffacts(
         Environment *theEnv,
@@ -210,7 +210,7 @@ Deffacts *FindDeffacts(
 /************************************************/
 /* FindDeffactsInModule: Searches for a deffact */
 /*   in the list of deffacts. Returns a pointer */
-/*   to the deffact if found, otherwise NULL.   */
+/*   to the deffact if found, otherwise nullptr.   */
 /************************************************/
 Deffacts *FindDeffactsInModule(
         Environment *theEnv,
@@ -219,7 +219,7 @@ Deffacts *FindDeffactsInModule(
 }
 
 /*********************************************************/
-/* GetNextDeffacts: If passed a NULL pointer, returns    */
+/* GetNextDeffacts: If passed a nullptr pointer, returns    */
 /*   the first deffacts in the ListOfDeffacts. Otherwise */
 /*   returns the next deffacts following the deffacts    */
 /*   passed as an argument.                              */
@@ -252,7 +252,7 @@ bool DeffactsIsDeletable(
 static void ReturnDeffacts(
         Environment *theEnv,
         Deffacts *theDeffacts) {
-    if (theDeffacts == NULL) return;
+    if (theDeffacts == nullptr) return;
 
     ExpressionDeinstall(theEnv, theDeffacts->assertList);
     ReturnPackedExpression(theEnv, theDeffacts->assertList);

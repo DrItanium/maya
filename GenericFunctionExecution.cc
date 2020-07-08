@@ -108,8 +108,8 @@ static Defclass *DetermineRestrictionClass(Environment *, UDFValue *);
   DESCRIPTION  : Executes the most specific applicable method
   INPUTS       : 1) The generic function
                  2) The method to start after in the search for an applicable
-                    method (ignored if arg #3 is not NULL).
-                 3) A specific method to call (NULL if want highest precedence
+                    method (ignored if arg #3 is not nullptr).
+                 3) A specific method to call (nullptr if want highest precedence
                     method to be called)
                  4) The generic function argument expressions
                  5) The caller's result value buffer
@@ -176,14 +176,14 @@ void GenericDispatch(
         SetExecutingConstruct(theEnv, oldce);
         return;
     }
-    if (meth != NULL) {
+    if (meth != nullptr) {
         if (IsMethodApplicable(theEnv, meth)) {
             meth->busy++;
             DefgenericData(theEnv)->CurrentMethod = meth;
         } else {
             PrintErrorID(theEnv, "GENRCEXE", 4, false);
             SetEvaluationError(theEnv, true);
-            DefgenericData(theEnv)->CurrentMethod = NULL;
+            DefgenericData(theEnv)->CurrentMethod = nullptr;
             WriteString(theEnv, STDERR, "Generic function '");
             WriteString(theEnv, STDERR, DefgenericName(gfunc));
             WriteString(theEnv, STDERR, "' method #");
@@ -192,7 +192,7 @@ void GenericDispatch(
         }
     } else
         DefgenericData(theEnv)->CurrentMethod = FindApplicableMethod(theEnv, gfunc, prevmeth);
-    if (DefgenericData(theEnv)->CurrentMethod != NULL) {
+    if (DefgenericData(theEnv)->CurrentMethod != nullptr) {
 #if DEBUGGING_FUNCTIONS
         if (DefgenericData(theEnv)->CurrentGeneric->trace)
             WatchGeneric(theEnv, BEGIN_TRACE);
@@ -204,7 +204,7 @@ void GenericDispatch(
 
             fcall.type = FCALL;
             fcall.value = DefgenericData(theEnv)->CurrentMethod->actions->value;
-            fcall.nextArg = NULL;
+            fcall.nextArg = nullptr;
             fcall.argList = GetProcParamExpressions(theEnv);
             EvaluateExpression(theEnv, &fcall, returnValue);
         } else {
@@ -297,7 +297,7 @@ bool IsMethodApplicable(
         rp = &meth->restrictions[k];
         if (rp->tcnt != 0) {
             type = DetermineRestrictionClass(theEnv, &ProceduralPrimitiveData(theEnv)->ProcParamArray[i]);
-            if (type == NULL)
+            if (type == nullptr)
                 return false;
             for (j = 0; j < rp->tcnt; j++) {
                 if (type == rp->types[j])
@@ -320,7 +320,7 @@ bool IsMethodApplicable(
             if (j == rp->tcnt)
                 return false;
         }
-        if (rp->query != NULL) {
+        if (rp->query != nullptr) {
             DefgenericData(theEnv)->GenericCurrentArgument = &ProceduralPrimitiveData(theEnv)->ProcParamArray[i];
             EvaluateExpression(theEnv, rp->query, &temp);
             if (temp.value == FalseSymbol(theEnv))
@@ -347,10 +347,10 @@ bool NextMethodP(
         Environment *theEnv) {
     Defmethod *meth;
 
-    if (DefgenericData(theEnv)->CurrentMethod == NULL) { return false; }
+    if (DefgenericData(theEnv)->CurrentMethod == nullptr) { return false; }
 
     meth = FindApplicableMethod(theEnv, DefgenericData(theEnv)->CurrentGeneric, DefgenericData(theEnv)->CurrentMethod);
-    if (meth != NULL) {
+    if (meth != nullptr) {
         meth->busy--;
         return true;
     } else { return false; }
@@ -388,10 +388,10 @@ void CallNextMethod(
     if (EvaluationData(theEnv)->HaltExecution)
         return;
     oldMethod = DefgenericData(theEnv)->CurrentMethod;
-    if (DefgenericData(theEnv)->CurrentMethod != NULL)
+    if (DefgenericData(theEnv)->CurrentMethod != nullptr)
         DefgenericData(theEnv)->CurrentMethod = FindApplicableMethod(theEnv, DefgenericData(theEnv)->CurrentGeneric,
                                                                      DefgenericData(theEnv)->CurrentMethod);
-    if (DefgenericData(theEnv)->CurrentMethod == NULL) {
+    if (DefgenericData(theEnv)->CurrentMethod == nullptr) {
         DefgenericData(theEnv)->CurrentMethod = oldMethod;
         PrintErrorID(theEnv, "GENRCEXE", 2, false);
         WriteString(theEnv, STDERR, "Shadowed methods not applicable in current context.\n");
@@ -408,7 +408,7 @@ void CallNextMethod(
 
         fcall.type = FCALL;
         fcall.value = DefgenericData(theEnv)->CurrentMethod->actions->value;
-        fcall.nextArg = NULL;
+        fcall.nextArg = nullptr;
         fcall.argList = GetProcParamExpressions(theEnv);
         EvaluateExpression(theEnv, &fcall, returnValue);
     } else {
@@ -461,7 +461,7 @@ void CallSpecificMethod(
     if (!UDFFirstArgument(context, SYMBOL_BIT, &theArg)) return;
 
     gfunc = CheckGenericExists(theEnv, "call-specific-method", theArg.lexemeValue->contents);
-    if (gfunc == NULL) return;
+    if (gfunc == nullptr) return;
 
     if (!UDFNextArgument(context, INTEGER_BIT, &theArg)) return;
 
@@ -469,7 +469,7 @@ void CallSpecificMethod(
     if (mi == METHOD_NOT_FOUND)
         return;
     gfunc->methods[mi].busy++;
-    GenericDispatch(theEnv, gfunc, NULL, &gfunc->methods[mi],
+    GenericDispatch(theEnv, gfunc, nullptr, &gfunc->methods[mi],
                     GetFirstArgument()->nextArg->nextArg, returnValue);
     gfunc->methods[mi].busy--;
 }
@@ -490,13 +490,13 @@ void OverrideNextMethod(
     returnValue->lexemeValue = FalseSymbol(theEnv);
     if (EvaluationData(theEnv)->HaltExecution)
         return;
-    if (DefgenericData(theEnv)->CurrentMethod == NULL) {
+    if (DefgenericData(theEnv)->CurrentMethod == nullptr) {
         PrintErrorID(theEnv, "GENRCEXE", 2, false);
         WriteString(theEnv, STDERR, "Shadowed methods not applicable in current context.\n");
         SetEvaluationError(theEnv, true);
         return;
     }
-    GenericDispatch(theEnv, DefgenericData(theEnv)->CurrentGeneric, DefgenericData(theEnv)->CurrentMethod, NULL,
+    GenericDispatch(theEnv, DefgenericData(theEnv)->CurrentGeneric, DefgenericData(theEnv)->CurrentMethod, nullptr,
                     GetFirstArgument(), returnValue);
 }
 
@@ -531,9 +531,9 @@ void GetGenericCurrentArgument(
                    method for a generic function call
   INPUTS       : 1) The generic function pointer
                  2) The address of the current method
-                    (NULL to find the first)
+                    (nullptr to find the first)
   RETURNS      : The address of the first/next
-                   applicable method (NULL on errors)
+                   applicable method (nullptr on errors)
   SIDE EFFECTS : Any from evaluating query restrictions
                  Methoid busy count incremented if applicable
   NOTES        : None
@@ -542,7 +542,7 @@ static Defmethod *FindApplicableMethod(
         Environment *theEnv,
         Defgeneric *gfunc,
         Defmethod *meth) {
-    if (meth != NULL)
+    if (meth != nullptr)
         meth++;
     else
         meth = gfunc->methods;
@@ -552,7 +552,7 @@ static Defmethod *FindApplicableMethod(
             return (meth);
         meth->busy--;
     }
-    return NULL;
+    return nullptr;
 }
 
 #if DEBUGGING_FUNCTIONS
@@ -631,7 +631,7 @@ static void WatchMethod(
   DESCRIPTION  : Finds the class of an argument in
                    the ProcParamArray
   INPUTS       : The argument data object
-  RETURNS      : The class address, NULL if error
+  RETURNS      : The class address, nullptr if error
   SIDE EFFECTS : EvaluationError set on errors
   NOTES        : None
  ***************************************************/
@@ -643,13 +643,13 @@ static Defclass *DetermineRestrictionClass(
 
     if (dobj->header->type == INSTANCE_NAME_TYPE) {
         ins = FindInstanceBySymbol(theEnv, dobj->lexemeValue);
-        cls = (ins != NULL) ? ins->cls : NULL;
+        cls = (ins != nullptr) ? ins->cls : nullptr;
     } else if (dobj->header->type == INSTANCE_ADDRESS_TYPE) {
         ins = dobj->instanceValue;
-        cls = (ins->garbage == 0) ? ins->cls : NULL;
+        cls = (ins->garbage == 0) ? ins->cls : nullptr;
     } else
         return (DefclassData(theEnv)->PrimitiveClassMap[dobj->header->type]);
-    if (cls == NULL) {
+    if (cls == nullptr) {
         SetEvaluationError(theEnv, true);
         PrintErrorID(theEnv, "GENRCEXE", 3, false);
         WriteString(theEnv, STDERR, "Unable to determine class of ");

@@ -80,7 +80,7 @@ struct memoryPtr {
  */
 
 #define get_struct(theEnv, type) \
-  ((MemoryData(theEnv)->MemoryTable[sizeof(struct type)] == NULL) ? \
+  ((MemoryData(theEnv)->MemoryTable[sizeof(struct type)] == nullptr) ? \
    ((struct type *) genalloc(theEnv,sizeof(struct type))) :\
    ((MemoryData(theEnv)->TempMemoryPtr = MemoryData(theEnv)->MemoryTable[sizeof(struct type)]),\
     MemoryData(theEnv)->MemoryTable[sizeof(struct type)] = MemoryData(theEnv)->TempMemoryPtr->next,\
@@ -98,7 +98,7 @@ struct memoryPtr {
 
 #define get_var_struct(theEnv, type, vsize) \
   ((((sizeof(struct type) + vsize) <  MEM_TABLE_SIZE) ? \
-    (MemoryData(theEnv)->MemoryTable[sizeof(struct type) + vsize] == NULL) : 1) ? \
+    (MemoryData(theEnv)->MemoryTable[sizeof(struct type) + vsize] == nullptr) : 1) ? \
    ((struct type *) genalloc(theEnv,(sizeof(struct type) + vsize))) :\
    ((MemoryData(theEnv)->TempMemoryPtr = MemoryData(theEnv)->MemoryTable[sizeof(struct type) + vsize]),\
     MemoryData(theEnv)->MemoryTable[sizeof(struct type) + vsize] = MemoryData(theEnv)->TempMemoryPtr->next,\
@@ -114,7 +114,7 @@ struct memoryPtr {
 
 #define get_mem(theEnv, size) \
   (((size <  MEM_TABLE_SIZE) ? \
-    (MemoryData(theEnv)->MemoryTable[size] == NULL) : 1) ? \
+    (MemoryData(theEnv)->MemoryTable[size] == nullptr) : 1) ? \
    ((void *) genalloc(theEnv,(size_t) (size))) :\
    ((MemoryData(theEnv)->TempMemoryPtr = MemoryData(theEnv)->MemoryTable[size]),\
     MemoryData(theEnv)->MemoryTable[size] = MemoryData(theEnv)->TempMemoryPtr->next,\

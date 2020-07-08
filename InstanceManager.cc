@@ -145,7 +145,7 @@ void InitializeInstanceCommand(
 
     returnValue->lexemeValue = FalseSymbol(theEnv);
     ins = CheckInstance(context);
-    if (ins == NULL)
+    if (ins == nullptr)
         return;
     if (CoreInitializeInstance(theEnv, ins, GetFirstArgument()->nextArg) == true) { returnValue->value = ins->name; }
 }
@@ -199,7 +199,7 @@ void MakeInstanceCommand(
 
         cls = LookupDefclassByMdlOrScope(theEnv, temp.lexemeValue->contents); // Module or scope is now allowed
 
-        if (cls == NULL) {
+        if (cls == nullptr) {
             ClassExistError(theEnv, ExpressionFunctionCallName(EvaluationData(theEnv)->CurrentExpression)->contents,
                             temp.lexemeValue->contents);
             SetEvaluationError(theEnv, true);
@@ -209,7 +209,7 @@ void MakeInstanceCommand(
     }
 
     ins = BuildInstance(theEnv, iname, cls, true);
-    if (ins == NULL) return;
+    if (ins == nullptr) return;
 
     if (CoreInitializeInstance(theEnv, ins, GetFirstArgument()->nextArg->nextArg) == true) {
         returnValue->value = GetFullInstanceName(theEnv, ins);
@@ -257,7 +257,7 @@ CLIPSLexeme *GetFullInstanceName(
                     message will be called for
                     this instance or not
   RETURNS      : The address of the new instance,
-                   NULL on errors (or when a
+                   nullptr on errors (or when a
                    a logical basis in a rule was
                    deleted int the same RHS in
                    which the instance creation
@@ -284,7 +284,7 @@ Instance *BuildInstance(
         WriteString(theEnv, STDERR, "pattern-matching is in process.\n");
         SetEvaluationError(theEnv, true);
         InstanceData(theEnv)->makeInstanceError = MIE_COULD_NOT_CREATE_ERROR;
-        return NULL;
+        return nullptr;
     }
     if (cls->abstract) {
         PrintErrorID(theEnv, "INSMNGR", 3, false);
@@ -293,24 +293,24 @@ Instance *BuildInstance(
         WriteString(theEnv, STDERR, "'.\n");
         SetEvaluationError(theEnv, true);
         InstanceData(theEnv)->makeInstanceError = MIE_COULD_NOT_CREATE_ERROR;
-        return NULL;
+        return nullptr;
     }
     modulePosition = FindModuleSeparator(iname->contents);
     if (modulePosition) {
         moduleName = ExtractModuleName(theEnv, modulePosition, iname->contents);
-        if ((moduleName == NULL) ||
+        if ((moduleName == nullptr) ||
             (moduleName != cls->header.whichModule->theModule->header.name)) {
             PrintErrorID(theEnv, "INSMNGR", 11, true);
             WriteString(theEnv, STDERR, "Invalid module specifier in new instance name.\n");
             SetEvaluationError(theEnv, true);
             InstanceData(theEnv)->makeInstanceError = MIE_COULD_NOT_CREATE_ERROR;
-            return NULL;
+            return nullptr;
         }
         iname = ExtractConstructName(theEnv, modulePosition, iname->contents, INSTANCE_NAME_TYPE);
     }
     ins = InstanceLocationInfo(theEnv, cls, iname, &iprv, &hashTableIndex);
 
-    if (ins != NULL) {
+    if (ins != nullptr) {
         if (ins->cls != cls) {
             PrintErrorID(theEnv, "INSMNGR", 16, false);
             WriteString(theEnv, STDERR, "The instance name [");
@@ -320,7 +320,7 @@ Instance *BuildInstance(
             WriteString(theEnv, STDERR, "'.\n");
             SetEvaluationError(theEnv, true);
             InstanceData(theEnv)->makeInstanceError = MIE_COULD_NOT_CREATE_ERROR;
-            return NULL;
+            return nullptr;
         }
 
         if (ins->installed == 0) {
@@ -330,13 +330,13 @@ Instance *BuildInstance(
             WriteString(theEnv, STDERR, "] has a slot-value which depends on the instance definition.\n");
             SetEvaluationError(theEnv, true);
             InstanceData(theEnv)->makeInstanceError = MIE_COULD_NOT_CREATE_ERROR;
-            return NULL;
+            return nullptr;
         }
         ins->busy++;
         IncrementLexemeCount(iname);
         if (ins->garbage == 0) {
             if (InstanceData(theEnv)->MkInsMsgPass)
-                DirectMessage(theEnv, MessageHandlerData(theEnv)->DELETE_SYMBOL, ins, NULL, NULL);
+                DirectMessage(theEnv, MessageHandlerData(theEnv)->DELETE_SYMBOL, ins, nullptr, nullptr);
             else
                 QuashInstance(theEnv, ins);
         }
@@ -349,7 +349,7 @@ Instance *BuildInstance(
             WriteString(theEnv, STDERR, "].\n");
             SetEvaluationError(theEnv, true);
             InstanceData(theEnv)->makeInstanceError = MIE_COULD_NOT_CREATE_ERROR;
-            return NULL;
+            return nullptr;
         }
     }
 
@@ -367,8 +367,8 @@ Instance *BuildInstance(
     if (AddLogicalDependencies(theEnv, (struct patternEntity *) InstanceData(theEnv)->CurrentInstance, false)
         == false) {
         rtn_struct(theEnv, instance, InstanceData(theEnv)->CurrentInstance);
-        InstanceData(theEnv)->CurrentInstance = NULL;
-        return NULL;
+        InstanceData(theEnv)->CurrentInstance = nullptr;
+        return nullptr;
     }
 
     InstanceData(theEnv)->CurrentInstance->name = iname;
@@ -380,14 +380,14 @@ Instance *BuildInstance(
          class's instance list
        ============================================================ */
     InstanceData(theEnv)->CurrentInstance->hashTableIndex = hashTableIndex;
-    if (iprv == NULL) {
+    if (iprv == nullptr) {
         InstanceData(theEnv)->CurrentInstance->nxtHash = InstanceData(theEnv)->InstanceTable[hashTableIndex];
-        if (InstanceData(theEnv)->InstanceTable[hashTableIndex] != NULL)
+        if (InstanceData(theEnv)->InstanceTable[hashTableIndex] != nullptr)
             InstanceData(theEnv)->InstanceTable[hashTableIndex]->prvHash = InstanceData(theEnv)->CurrentInstance;
         InstanceData(theEnv)->InstanceTable[hashTableIndex] = InstanceData(theEnv)->CurrentInstance;
     } else {
         InstanceData(theEnv)->CurrentInstance->nxtHash = iprv->nxtHash;
-        if (iprv->nxtHash != NULL)
+        if (iprv->nxtHash != nullptr)
             iprv->nxtHash->prvHash = InstanceData(theEnv)->CurrentInstance;
         iprv->nxtHash = InstanceData(theEnv)->CurrentInstance;
         InstanceData(theEnv)->CurrentInstance->prvHash = iprv;
@@ -396,14 +396,14 @@ Instance *BuildInstance(
     /* ======================================
        Put instance in global and class lists
        ====================================== */
-    if (InstanceData(theEnv)->CurrentInstance->cls->instanceList == NULL)
+    if (InstanceData(theEnv)->CurrentInstance->cls->instanceList == nullptr)
         InstanceData(theEnv)->CurrentInstance->cls->instanceList = InstanceData(theEnv)->CurrentInstance;
     else
         InstanceData(theEnv)->CurrentInstance->cls->instanceListBottom->nxtClass = InstanceData(theEnv)->CurrentInstance;
     InstanceData(theEnv)->CurrentInstance->prvClass = InstanceData(theEnv)->CurrentInstance->cls->instanceListBottom;
     InstanceData(theEnv)->CurrentInstance->cls->instanceListBottom = InstanceData(theEnv)->CurrentInstance;
 
-    if (InstanceData(theEnv)->InstanceList == NULL)
+    if (InstanceData(theEnv)->InstanceList == nullptr)
         InstanceData(theEnv)->InstanceList = InstanceData(theEnv)->CurrentInstance;
     else
         InstanceData(theEnv)->InstanceListBottom->nxtList = InstanceData(theEnv)->CurrentInstance;
@@ -418,9 +418,9 @@ Instance *BuildInstance(
     InstallInstance(theEnv, InstanceData(theEnv)->CurrentInstance, true);
 
     ins = InstanceData(theEnv)->CurrentInstance;
-    InstanceData(theEnv)->CurrentInstance = NULL;
+    InstanceData(theEnv)->CurrentInstance = nullptr;
 
-    if (InstanceData(theEnv)->MkInsMsgPass) { DirectMessage(theEnv, MessageHandlerData(theEnv)->CREATE_SYMBOL, ins, &temp, NULL); }
+    if (InstanceData(theEnv)->MkInsMsgPass) { DirectMessage(theEnv, MessageHandlerData(theEnv)->CREATE_SYMBOL, ins, &temp, nullptr); }
 
     if (ins->cls->reactive) {
         ObjectNetworkAction(theEnv, OBJECT_ASSERT, ins, -1);
@@ -523,27 +523,27 @@ UnmakeInstanceError QuashInstance(
         ins->garbage = 0;
     }
 
-    if (ins->prvHash != NULL)
+    if (ins->prvHash != nullptr)
         ins->prvHash->nxtHash = ins->nxtHash;
     else
         InstanceData(theEnv)->InstanceTable[ins->hashTableIndex] = ins->nxtHash;
-    if (ins->nxtHash != NULL)
+    if (ins->nxtHash != nullptr)
         ins->nxtHash->prvHash = ins->prvHash;
 
-    if (ins->prvClass != NULL)
+    if (ins->prvClass != nullptr)
         ins->prvClass->nxtClass = ins->nxtClass;
     else
         ins->cls->instanceList = ins->nxtClass;
-    if (ins->nxtClass != NULL)
+    if (ins->nxtClass != nullptr)
         ins->nxtClass->prvClass = ins->prvClass;
     else
         ins->cls->instanceListBottom = ins->prvClass;
 
-    if (ins->prvList != NULL)
+    if (ins->prvList != nullptr)
         ins->prvList->nxtList = ins->nxtList;
     else
         InstanceData(theEnv)->InstanceList = ins->nxtList;
-    if (ins->nxtList != NULL)
+    if (ins->nxtList != nullptr)
         ins->nxtList->prvList = ins->prvList;
     else
         InstanceData(theEnv)->InstanceListBottom = ins->prvList;
@@ -656,12 +656,12 @@ static Instance *NewInstance(
     instance = get_struct(theEnv, instance);
     instance->patternHeader.theInfo = &InstanceData(theEnv)->InstanceInfo;
 
-    instance->patternHeader.dependents = NULL;
+    instance->patternHeader.dependents = nullptr;
     instance->patternHeader.busyCount = 0;
     instance->patternHeader.timeTag = 0L;
 
-    instance->partialMatchList = NULL;
-    instance->basisSlots = NULL;
+    instance->partialMatchList = nullptr;
+    instance->basisSlots = nullptr;
     instance->reteSynchronized = false;
     instance->patternHeader.header.type = INSTANCE_ADDRESS_TYPE;
     instance->busy = 0;
@@ -669,17 +669,17 @@ static Instance *NewInstance(
     instance->garbage = 0;
     instance->initSlotsCalled = 0;
     instance->initializeInProgress = 0;
-    instance->name = NULL;
+    instance->name = nullptr;
     instance->hashTableIndex = 0;
-    instance->cls = NULL;
-    instance->slots = NULL;
-    instance->slotAddresses = NULL;
-    instance->prvClass = NULL;
-    instance->nxtClass = NULL;
-    instance->prvHash = NULL;
-    instance->nxtHash = NULL;
-    instance->prvList = NULL;
-    instance->nxtList = NULL;
+    instance->cls = nullptr;
+    instance->slots = nullptr;
+    instance->slotAddresses = nullptr;
+    instance->prvClass = nullptr;
+    instance->nxtClass = nullptr;
+    instance->prvHash = nullptr;
+    instance->nxtHash = nullptr;
+    instance->prvList = nullptr;
+    instance->nxtList = nullptr;
     return (instance);
 }
 
@@ -691,7 +691,7 @@ static Instance *NewInstance(
                  2) The symbol for the name of the instance
                  3) Caller's buffer for previous node address
                  4) Caller's buffer for hash value
-  RETURNS      : The address of the found instance, NULL otherwise
+  RETURNS      : The address of the found instance, nullptr otherwise
   SIDE EFFECTS : None
   NOTES        : Instance names only have to be unique within
                  a module.
@@ -714,20 +714,20 @@ static Instance *InstanceLocationInfo(
        are grouped together regardless of what
        module their classes are in
        ======================================== */
-    *prv = NULL;
-    while (ins != NULL) {
+    *prv = nullptr;
+    while (ins != nullptr) {
         if (ins->name == iname) { return (ins); }
         *prv = ins;
         ins = ins->nxtHash;
     }
 
     /*
-    while ((ins != NULL) ? (ins->name != iname) : false)
+    while ((ins != nullptr) ? (ins->name != iname) : false)
       {
        *prv = ins;
        ins = ins->nxtHash;
       }
-    while ((ins != NULL) ? (ins->name == iname) : false)
+    while ((ins != nullptr) ? (ins->name == iname) : false)
       {
        if (ins->cls->header.whichModule->theModule ==
            cls->header.whichModule->theModule)
@@ -736,7 +736,7 @@ static Instance *InstanceLocationInfo(
        ins = ins->nxtHash;
       }
     */
-    return NULL;
+    return nullptr;
 }
 
 /********************************************************
@@ -805,7 +805,7 @@ static void BuildDefaultSlots(
     unsigned i, j;
     unsigned scnt;
     unsigned lscnt;
-    InstanceSlot *dst = NULL, **adst;
+    InstanceSlot *dst = nullptr, **adst;
     SlotDescriptor **src;
 
     scnt = InstanceData(theEnv)->CurrentInstance->cls->instanceSlotCount;
@@ -834,10 +834,10 @@ static void BuildDefaultSlots(
                 adst[i] = &(src[i]->sharedValue);
             } else {
                 dst[j].desc = src[i];
-                dst[j].value = NULL;
+                dst[j].value = nullptr;
                 adst[i] = &dst[j++];
             }
-            if (adst[i]->value == NULL) {
+            if (adst[i]->value == nullptr) {
                 adst[i]->valueRequired = initMessage;
                 if (adst[i]->desc->multiple) {
                     adst[i]->type = MULTIFIELD_TYPE;
@@ -904,7 +904,7 @@ static bool CoreInitializeInstance(
        ================================================================= */
 
     if (InstanceData(theEnv)->MkInsMsgPass)
-        DirectMessage(theEnv, MessageHandlerData(theEnv)->INIT_SYMBOL, ins, &temp, NULL);
+        DirectMessage(theEnv, MessageHandlerData(theEnv)->INIT_SYMBOL, ins, &temp, nullptr);
     else
         EvaluateClassDefaults(theEnv, ins);
 
@@ -972,7 +972,7 @@ static bool CoreInitializeInstanceCV(
     /* replace them  with their evaluation.               */
     /*====================================================*/
 
-    if (InstanceData(theEnv)->MkInsMsgPass) { DirectMessage(theEnv, MessageHandlerData(theEnv)->INIT_SYMBOL, ins, &temp, NULL); }
+    if (InstanceData(theEnv)->MkInsMsgPass) { DirectMessage(theEnv, MessageHandlerData(theEnv)->INIT_SYMBOL, ins, &temp, nullptr); }
     else { EvaluateClassDefaults(theEnv, ins); }
 
     ins->busy--;
@@ -1009,7 +1009,7 @@ static bool InsertSlotOverrides(
     UDFValue temp, junk;
 
     EvaluationData(theEnv)->EvaluationError = false;
-    while (slot_exp != NULL) {
+    while (slot_exp != nullptr) {
         if ((EvaluateExpression(theEnv, slot_exp, &temp) == true) ? true :
             (temp.header->type != SYMBOL_TYPE)) {
             PrintErrorID(theEnv, "INSMNGR", 9, false);
@@ -1018,7 +1018,7 @@ static bool InsertSlotOverrides(
             return false;
         }
         slot = FindInstanceSlot(theEnv, ins, temp.lexemeValue);
-        if (slot == NULL) {
+        if (slot == nullptr) {
             PrintErrorID(theEnv, "INSMNGR", 13, false);
             WriteString(theEnv, STDERR, "Slot '");
             WriteString(theEnv, STDERR, temp.lexemeValue->contents);
@@ -1031,7 +1031,7 @@ static bool InsertSlotOverrides(
 
         if (InstanceData(theEnv)->MkInsMsgPass) {
             DirectMessage(theEnv, slot->desc->overrideMessage,
-                          ins, NULL, slot_exp->nextArg->argList);
+                          ins, nullptr, slot_exp->nextArg->argList);
         } else if (slot_exp->nextArg->argList) {
             if (EvaluateAndStoreInDataObject(theEnv, slot->desc->multiple,
                                              slot_exp->nextArg->argList, &temp, true))
@@ -1190,21 +1190,21 @@ InstanceBuilder *CreateInstanceBuilder(
     Defclass *theDefclass;
     unsigned int i;
 
-    if (theEnv == NULL) return NULL;
+    if (theEnv == nullptr) return nullptr;
 
-    if (defclassName != NULL) {
+    if (defclassName != nullptr) {
         theDefclass = FindDefclass(theEnv, defclassName);
-        if (theDefclass == NULL) {
+        if (theDefclass == nullptr) {
             InstanceData(theEnv)->instanceBuilderError = IBE_DEFCLASS_NOT_FOUND_ERROR;
-            return NULL;
+            return nullptr;
         }
-    } else { theDefclass = NULL; }
+    } else { theDefclass = nullptr; }
 
     theIB = get_struct(theEnv, instanceBuilder);
     theIB->ibEnv = theEnv;
     theIB->ibDefclass = theDefclass;
 
-    if ((theDefclass == NULL) || (theDefclass->slotCount == 0)) { theIB->ibValueArray = NULL; }
+    if ((theDefclass == nullptr) || (theDefclass->slotCount == 0)) { theIB->ibValueArray = nullptr; }
     else {
         theIB->ibValueArray = (CLIPSValue *) gm2(theEnv, sizeof(CLIPSValue) * theDefclass->slotCount);
 
@@ -1238,7 +1238,7 @@ PutSlotError IBPutSlotInteger(
         long long longLongValue) {
     CLIPSValue theValue;
 
-    if (theIB == NULL) { return PSE_NULL_POINTER_ERROR; }
+    if (theIB == nullptr) { return PSE_nullptr_POINTER_ERROR; }
 
     theValue.integerValue = CreateInteger(theIB->ibEnv, longLongValue);
     return IBPutSlot(theIB, slotName, &theValue);
@@ -1266,7 +1266,7 @@ PutSlotError IBPutSlotSymbol(
         const char *stringValue) {
     CLIPSValue theValue;
 
-    if (theIB == NULL) { return PSE_NULL_POINTER_ERROR; }
+    if (theIB == nullptr) { return PSE_nullptr_POINTER_ERROR; }
 
     theValue.lexemeValue = CreateSymbol(theIB->ibEnv, stringValue);
     return IBPutSlot(theIB, slotName, &theValue);
@@ -1281,7 +1281,7 @@ PutSlotError IBPutSlotString(
         const char *stringValue) {
     CLIPSValue theValue;
 
-    if (theIB == NULL) { return PSE_NULL_POINTER_ERROR; }
+    if (theIB == nullptr) { return PSE_nullptr_POINTER_ERROR; }
 
     theValue.lexemeValue = CreateString(theIB->ibEnv, stringValue);
     return IBPutSlot(theIB, slotName, &theValue);
@@ -1296,7 +1296,7 @@ PutSlotError IBPutSlotInstanceName(
         const char *stringValue) {
     CLIPSValue theValue;
 
-    if (theIB == NULL) { return PSE_NULL_POINTER_ERROR; }
+    if (theIB == nullptr) { return PSE_nullptr_POINTER_ERROR; }
 
     theValue.lexemeValue = CreateInstanceName(theIB->ibEnv, stringValue);
     return IBPutSlot(theIB, slotName, &theValue);
@@ -1324,7 +1324,7 @@ PutSlotError IBPutSlotFloat(
         double doubleValue) {
     CLIPSValue theValue;
 
-    if (theIB == NULL) { return PSE_NULL_POINTER_ERROR; }
+    if (theIB == nullptr) { return PSE_nullptr_POINTER_ERROR; }
 
     theValue.floatValue = CreateFloat(theIB->ibEnv, doubleValue);
     return IBPutSlot(theIB, slotName, &theValue);
@@ -1397,12 +1397,12 @@ PutSlotError IBPutSlot(
     ConstraintViolationType cvType;
 
     /*==========================*/
-    /* Check for NULL pointers. */
+    /* Check for nullptr pointers. */
     /*==========================*/
 
-    if ((theIB == NULL) || (slotName == NULL) || (slotValue == NULL)) { return PSE_NULL_POINTER_ERROR; }
+    if ((theIB == nullptr) || (slotName == nullptr) || (slotValue == nullptr)) { return PSE_nullptr_POINTER_ERROR; }
 
-    if ((theIB->ibDefclass == NULL) || (slotValue->value == NULL)) { return PSE_NULL_POINTER_ERROR; }
+    if ((theIB->ibDefclass == nullptr) || (slotValue->value == nullptr)) { return PSE_nullptr_POINTER_ERROR; }
 
     theEnv = theIB->ibEnv;
 
@@ -1427,7 +1427,7 @@ PutSlotError IBPutSlot(
     /* Check constraints for the slot. */
     /*=================================*/
 
-    if (theSlot->constraint != NULL) {
+    if (theSlot->constraint != nullptr) {
         if ((cvType = ConstraintCheckValue(theEnv, slotValue->header->type, slotValue->value, theSlot->constraint)) != NO_VIOLATION) {
             switch (cvType) {
                 case NO_VIOLATION:
@@ -1458,7 +1458,7 @@ PutSlotError IBPutSlot(
     /* Create the value array if needed. */
     /*===================================*/
 
-    if (theIB->ibValueArray == NULL) {
+    if (theIB->ibValueArray == nullptr) {
         theIB->ibValueArray = (CLIPSValue *) gm2(theIB->ibEnv, sizeof(CLIPSValue) * theIB->ibDefclass->slotCount);
         for (i = 0; i < theIB->ibDefclass->slotCount; i++) { theIB->ibValueArray[i].voidValue = theIB->ibEnv->VoidConstant; }
     }
@@ -1501,15 +1501,15 @@ Instance *IBMake(
     unsigned int i;
     bool ov;
 
-    if (theIB == NULL) return NULL;
+    if (theIB == nullptr) return nullptr;
     theEnv = theIB->ibEnv;
 
-    if (theIB->ibDefclass == NULL) {
-        InstanceData(theEnv)->instanceBuilderError = IBE_NULL_POINTER_ERROR;
-        return NULL;
+    if (theIB->ibDefclass == nullptr) {
+        InstanceData(theEnv)->instanceBuilderError = IBE_nullptr_POINTER_ERROR;
+        return nullptr;
     }
 
-    if (instanceName == NULL) {
+    if (instanceName == nullptr) {
         GensymStar(theEnv, &rv);
         instanceLexeme = CreateInstanceName(theEnv, rv.lexemeValue->contents);
     } else { instanceLexeme = CreateInstanceName(theEnv, instanceName); }
@@ -1518,7 +1518,7 @@ Instance *IBMake(
 
     theInstance = BuildInstance(theEnv, instanceLexeme, theIB->ibDefclass, true);
 
-    if (theInstance == NULL) {
+    if (theInstance == nullptr) {
         if (InstanceData(theEnv)->makeInstanceError == MIE_COULD_NOT_CREATE_ERROR) {
             InstanceData(theEnv)->instanceBuilderError = IBE_COULD_NOT_CREATE_ERROR;
         } else if (InstanceData(theEnv)->makeInstanceError == MIE_RULE_NETWORK_ERROR) {
@@ -1530,14 +1530,14 @@ Instance *IBMake(
 
         SetDelayObjectPatternMatching(theEnv, ov);
 
-        return NULL;
+        return nullptr;
     }
 
     if (CoreInitializeInstanceCV(theIB->ibEnv, theInstance, theIB->ibValueArray) == false) {
         InstanceData(theEnv)->instanceBuilderError = IBE_COULD_NOT_CREATE_ERROR;
         QuashInstance(theIB->ibEnv, theInstance);
         SetDelayObjectPatternMatching(theEnv, ov);
-        return NULL;
+        return nullptr;
     }
 
     SetDelayObjectPatternMatching(theEnv, ov);
@@ -1566,13 +1566,13 @@ void IBDispose(
         InstanceBuilder *theIB) {
     Environment *theEnv;
 
-    if (theIB == NULL) return;
+    if (theIB == nullptr) return;
 
     theEnv = theIB->ibEnv;
 
     IBAbort(theIB);
 
-    if (theIB->ibValueArray != NULL) { rm(theEnv, theIB->ibValueArray, sizeof(CLIPSValue) * theIB->ibDefclass->slotCount); }
+    if (theIB->ibValueArray != nullptr) { rm(theEnv, theIB->ibValueArray, sizeof(CLIPSValue) * theIB->ibDefclass->slotCount); }
 
     rtn_struct(theEnv, instanceBuilder, theIB);
 }
@@ -1585,9 +1585,9 @@ void IBAbort(
     Environment *theEnv;
     unsigned int i;
 
-    if (theIB == NULL) return;
+    if (theIB == nullptr) return;
 
-    if (theIB->ibDefclass == NULL) return;
+    if (theIB->ibDefclass == nullptr) return;
 
     theEnv = theIB->ibEnv;
 
@@ -1610,26 +1610,26 @@ InstanceBuilderError IBSetDefclass(
     Environment *theEnv;
     unsigned int i;
 
-    if (theIB == NULL) { return IBE_NULL_POINTER_ERROR; }
+    if (theIB == nullptr) { return IBE_nullptr_POINTER_ERROR; }
 
     theEnv = theIB->ibEnv;
 
     IBAbort(theIB);
 
-    if (defclassName != NULL) {
+    if (defclassName != nullptr) {
         theDefclass = FindDefclass(theIB->ibEnv, defclassName);
 
-        if (theDefclass == NULL) {
+        if (theDefclass == nullptr) {
             InstanceData(theEnv)->instanceBuilderError = IBE_DEFCLASS_NOT_FOUND_ERROR;
             return IBE_DEFCLASS_NOT_FOUND_ERROR;
         }
-    } else { theDefclass = NULL; }
+    } else { theDefclass = nullptr; }
 
-    if (theIB->ibValueArray != NULL) { rm(theEnv, theIB->ibValueArray, sizeof(CLIPSValue) * theIB->ibDefclass->slotCount); }
+    if (theIB->ibValueArray != nullptr) { rm(theEnv, theIB->ibValueArray, sizeof(CLIPSValue) * theIB->ibDefclass->slotCount); }
 
     theIB->ibDefclass = theDefclass;
 
-    if ((theDefclass == NULL) || (theDefclass->slotCount == 0)) { theIB->ibValueArray = NULL; }
+    if ((theDefclass == nullptr) || (theDefclass->slotCount == 0)) { theIB->ibValueArray = nullptr; }
     else {
         theIB->ibValueArray = (CLIPSValue *) gm2(theEnv, sizeof(CLIPSValue) * theDefclass->slotCount);
 
@@ -1657,12 +1657,12 @@ InstanceModifier *CreateInstanceModifier(
     InstanceModifier *theIM;
     unsigned int i;
 
-    if (theEnv == NULL) return NULL;
+    if (theEnv == nullptr) return nullptr;
 
-    if (oldInstance != NULL) {
+    if (oldInstance != nullptr) {
         if (oldInstance->garbage) {
             InstanceData(theEnv)->instanceModifierError = IME_DELETED_ERROR;
-            return NULL;
+            return nullptr;
         }
 
         RetainInstance(oldInstance);
@@ -1672,9 +1672,9 @@ InstanceModifier *CreateInstanceModifier(
     theIM->imEnv = theEnv;
     theIM->imOldInstance = oldInstance;
 
-    if ((oldInstance == NULL) || (oldInstance->cls->slotCount == 0)) {
-        theIM->imValueArray = NULL;
-        theIM->changeMap = NULL;
+    if ((oldInstance == nullptr) || (oldInstance->cls->slotCount == 0)) {
+        theIM->imValueArray = nullptr;
+        theIM->changeMap = nullptr;
     } else {
         theIM->imValueArray = (CLIPSValue *) gm2(theEnv, sizeof(CLIPSValue) * oldInstance->cls->slotCount);
 
@@ -1710,7 +1710,7 @@ PutSlotError IMPutSlotInteger(
         long long longLongValue) {
     CLIPSValue theValue;
 
-    if (theIM == NULL) { return PSE_NULL_POINTER_ERROR; }
+    if (theIM == nullptr) { return PSE_nullptr_POINTER_ERROR; }
 
     theValue.integerValue = CreateInteger(theIM->imEnv, longLongValue);
     return IMPutSlot(theIM, slotName, &theValue);
@@ -1738,7 +1738,7 @@ PutSlotError IMPutSlotSymbol(
         const char *stringValue) {
     CLIPSValue theValue;
 
-    if (theIM == NULL) { return PSE_NULL_POINTER_ERROR; }
+    if (theIM == nullptr) { return PSE_nullptr_POINTER_ERROR; }
 
     theValue.lexemeValue = CreateSymbol(theIM->imEnv, stringValue);
     return IMPutSlot(theIM, slotName, &theValue);
@@ -1753,7 +1753,7 @@ PutSlotError IMPutSlotString(
         const char *stringValue) {
     CLIPSValue theValue;
 
-    if (theIM == NULL) { return PSE_NULL_POINTER_ERROR; }
+    if (theIM == nullptr) { return PSE_nullptr_POINTER_ERROR; }
 
     theValue.lexemeValue = CreateString(theIM->imEnv, stringValue);
     return IMPutSlot(theIM, slotName, &theValue);
@@ -1768,7 +1768,7 @@ PutSlotError IMPutSlotInstanceName(
         const char *stringValue) {
     CLIPSValue theValue;
 
-    if (theIM == NULL) { return PSE_NULL_POINTER_ERROR; }
+    if (theIM == nullptr) { return PSE_nullptr_POINTER_ERROR; }
 
     theValue.lexemeValue = CreateInstanceName(theIM->imEnv, stringValue);
     return IMPutSlot(theIM, slotName, &theValue);
@@ -1796,7 +1796,7 @@ PutSlotError IMPutSlotFloat(
         double doubleValue) {
     CLIPSValue theValue;
 
-    if (theIM == NULL) { return PSE_NULL_POINTER_ERROR; }
+    if (theIM == nullptr) { return PSE_nullptr_POINTER_ERROR; }
 
     theValue.floatValue = CreateFloat(theIM->imEnv, doubleValue);
     return IMPutSlot(theIM, slotName, &theValue);
@@ -1870,12 +1870,12 @@ PutSlotError IMPutSlot(
     ConstraintViolationType cvType;
 
     /*==========================*/
-    /* Check for NULL pointers. */
+    /* Check for nullptr pointers. */
     /*==========================*/
 
-    if ((theIM == NULL) || (slotName == NULL) || (slotValue == NULL)) { return PSE_NULL_POINTER_ERROR; }
+    if ((theIM == nullptr) || (slotName == nullptr) || (slotValue == nullptr)) { return PSE_nullptr_POINTER_ERROR; }
 
-    if ((theIM->imOldInstance == NULL) || (slotValue->value == NULL)) { return PSE_NULL_POINTER_ERROR; }
+    if ((theIM->imOldInstance == nullptr) || (slotValue->value == nullptr)) { return PSE_nullptr_POINTER_ERROR; }
 
     theEnv = theIM->imEnv;
 
@@ -1906,7 +1906,7 @@ PutSlotError IMPutSlot(
     /* Check constraints for the slot. */
     /*=================================*/
 
-    if (theSlot->constraint != NULL) {
+    if (theSlot->constraint != nullptr) {
         if ((cvType = ConstraintCheckValue(theEnv, slotValue->header->type, slotValue->value, theSlot->constraint)) != NO_VIOLATION) {
             switch (cvType) {
                 case NO_VIOLATION:
@@ -1937,12 +1937,12 @@ PutSlotError IMPutSlot(
     /* Set up the change arrays. */
     /*===========================*/
 
-    if (theIM->imValueArray == NULL) {
+    if (theIM->imValueArray == nullptr) {
         theIM->imValueArray = (CLIPSValue *) gm2(theIM->imEnv, sizeof(CLIPSValue) * theIM->imOldInstance->cls->slotCount);
         for (i = 0; i < theIM->imOldInstance->cls->slotCount; i++) { theIM->imValueArray[i].voidValue = theIM->imEnv->VoidConstant; }
     }
 
-    if (theIM->changeMap == NULL) {
+    if (theIM->changeMap == nullptr) {
         theIM->changeMap = (char *) gm2(theIM->imEnv, CountToBitMapSize(theIM->imOldInstance->cls->slotCount));
         ClearBitString((void *) theIM->changeMap, CountToBitMapSize(theIM->imOldInstance->cls->slotCount));
     }
@@ -1998,21 +1998,21 @@ Instance *IMModify(
     Environment *theEnv;
     bool ov;
 
-    if (theIM == NULL) { return NULL; }
+    if (theIM == nullptr) { return nullptr; }
 
     theEnv = theIM->imEnv;
 
-    if (theIM->imOldInstance == NULL) {
-        InstanceData(theEnv)->instanceModifierError = IME_NULL_POINTER_ERROR;
-        return NULL;
+    if (theIM->imOldInstance == nullptr) {
+        InstanceData(theEnv)->instanceModifierError = IME_nullptr_POINTER_ERROR;
+        return nullptr;
     }
 
     if (theIM->imOldInstance->garbage) {
         InstanceData(theEnv)->instanceModifierError = IME_DELETED_ERROR;
-        return NULL;
+        return nullptr;
     }
 
-    if (theIM->changeMap == NULL) { return theIM->imOldInstance; }
+    if (theIM->changeMap == nullptr) { return theIM->imOldInstance; }
 
     if (!BitStringHasBitsSet(theIM->changeMap, CountToBitMapSize(theIM->imOldInstance->cls->slotCount))) { return theIM->imOldInstance; }
 
@@ -2076,7 +2076,7 @@ void IMDispose(
     /* Clear the value array. */
     /*========================*/
 
-    if (theIM->imOldInstance != NULL) {
+    if (theIM->imOldInstance != nullptr) {
         for (i = 0; i < theIM->imOldInstance->cls->slotCount; i++) {
             Release(theEnv, theIM->imValueArray[i].header);
 
@@ -2090,9 +2090,9 @@ void IMDispose(
     /* Return the value and change arrays. */
     /*=====================================*/
 
-    if (theIM->imValueArray != NULL) { rm(theEnv, theIM->imValueArray, sizeof(CLIPSValue) * theIM->imOldInstance->cls->slotCount); }
+    if (theIM->imValueArray != nullptr) { rm(theEnv, theIM->imValueArray, sizeof(CLIPSValue) * theIM->imOldInstance->cls->slotCount); }
 
-    if (theIM->changeMap != NULL) { rm(theEnv, (void *) theIM->changeMap, CountToBitMapSize(theIM->imOldInstance->cls->slotCount)); }
+    if (theIM->changeMap != nullptr) { rm(theEnv, (void *) theIM->changeMap, CountToBitMapSize(theIM->imOldInstance->cls->slotCount)); }
 
     /*========================================*/
     /* Return the InstanceModifier structure. */
@@ -2112,9 +2112,9 @@ void IMAbort(
     Environment *theEnv;
     unsigned int i;
 
-    if (theIM == NULL) return;
+    if (theIM == nullptr) return;
 
-    if (theIM->imOldInstance == NULL) return;
+    if (theIM->imOldInstance == nullptr) return;
 
     theEnv = theIM->imEnv;
 
@@ -2128,7 +2128,7 @@ void IMAbort(
         theIM->imValueArray[i].voidValue = theIM->imEnv->VoidConstant;
     }
 
-    if (theIM->changeMap != NULL) { ClearBitString((void *) theIM->changeMap, CountToBitMapSize(theIM->imOldInstance->cls->slotCount)); }
+    if (theIM->changeMap != nullptr) { ClearBitString((void *) theIM->changeMap, CountToBitMapSize(theIM->imOldInstance->cls->slotCount)); }
 
     GCBlockEnd(theEnv, &gcb);
 }
@@ -2143,7 +2143,7 @@ InstanceModifierError IMSetInstance(
     unsigned int currentSlotCount, newSlotCount;
     unsigned int i;
 
-    if (theIM == NULL) { return IME_NULL_POINTER_ERROR; }
+    if (theIM == nullptr) { return IME_nullptr_POINTER_ERROR; }
 
     theEnv = theIM->imEnv;
 
@@ -2152,7 +2152,7 @@ InstanceModifierError IMSetInstance(
     /* that have not been deleted.                 */
     /*=============================================*/
 
-    if (oldInstance != NULL) {
+    if (oldInstance != nullptr) {
         if (oldInstance->garbage) {
             InstanceData(theEnv)->instanceModifierError = IME_DELETED_ERROR;
             return IME_DELETED_ERROR;
@@ -2163,7 +2163,7 @@ InstanceModifierError IMSetInstance(
     /* Clear the value array. */
     /*========================*/
 
-    if (theIM->imValueArray != NULL) {
+    if (theIM->imValueArray != nullptr) {
         for (i = 0; i < theIM->imOldInstance->cls->slotCount; i++) {
             Release(theEnv, theIM->imValueArray[i].header);
 
@@ -2177,20 +2177,20 @@ InstanceModifierError IMSetInstance(
     /* Resize the value and change arrays if necessary. */
     /*==================================================*/
 
-    if (theIM->imOldInstance == NULL) { currentSlotCount = 0; }
+    if (theIM->imOldInstance == nullptr) { currentSlotCount = 0; }
     else { currentSlotCount = theIM->imOldInstance->cls->slotCount; }
 
-    if (oldInstance == NULL) { newSlotCount = 0; }
+    if (oldInstance == nullptr) { newSlotCount = 0; }
     else { newSlotCount = oldInstance->cls->slotCount; }
 
     if (newSlotCount != currentSlotCount) {
-        if (theIM->imValueArray != NULL) { rm(theEnv, theIM->imValueArray, sizeof(CLIPSValue) * currentSlotCount); }
+        if (theIM->imValueArray != nullptr) { rm(theEnv, theIM->imValueArray, sizeof(CLIPSValue) * currentSlotCount); }
 
-        if (theIM->changeMap != NULL) { rm(theEnv, (void *) theIM->changeMap, currentSlotCount); }
+        if (theIM->changeMap != nullptr) { rm(theEnv, (void *) theIM->changeMap, currentSlotCount); }
 
         if (oldInstance->cls->slotCount == 0) {
-            theIM->imValueArray = NULL;
-            theIM->changeMap = NULL;
+            theIM->imValueArray = nullptr;
+            theIM->changeMap = nullptr;
         } else {
             theIM->imValueArray = (CLIPSValue *) gm2(theEnv, sizeof(CLIPSValue) * newSlotCount);
             theIM->changeMap = (char *) gm2(theEnv, CountToBitMapSize(newSlotCount));

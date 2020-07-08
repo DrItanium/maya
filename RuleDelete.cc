@@ -82,7 +82,7 @@ void ReturnDefrule(
     bool first = true;
     Defrule *nextPtr, *tmpPtr;
 
-    if (theDefrule == NULL) return;
+    if (theDefrule == nullptr) return;
 
         /*======================================*/
         /* If a rule is redefined, then we want */
@@ -107,7 +107,7 @@ void ReturnDefrule(
     /* Get rid of the rule. */
     /*======================*/
 
-    while (theDefrule != NULL) {
+    while (theDefrule != nullptr) {
         /*================================================*/
         /* Remove the rule's joins from the join network. */
         /*================================================*/
@@ -120,21 +120,21 @@ void ReturnDefrule(
         /*=============================================*/
 
         if (first) {
-            if (theDefrule->dynamicSalience != NULL) {
+            if (theDefrule->dynamicSalience != nullptr) {
                 ExpressionDeinstall(theEnv, theDefrule->dynamicSalience);
                 ReturnPackedExpression(theEnv, theDefrule->dynamicSalience);
-                theDefrule->dynamicSalience = NULL;
+                theDefrule->dynamicSalience = nullptr;
             }
-            if (theDefrule->header.ppForm != NULL) {
+            if (theDefrule->header.ppForm != nullptr) {
                 rm(theEnv, (void *) theDefrule->header.ppForm, strlen(theDefrule->header.ppForm) + 1);
-                theDefrule->header.ppForm = NULL;
+                theDefrule->header.ppForm = nullptr;
 
                 /*=======================================================*/
                 /* All of the rule disjuncts share the same pretty print */
                 /* form, so we want to avoid deleting it again.          */
                 /*=======================================================*/
 
-                for (tmpPtr = theDefrule->disjunct; tmpPtr != NULL; tmpPtr = tmpPtr->disjunct) { tmpPtr->header.ppForm = NULL; }
+                for (tmpPtr = theDefrule->disjunct; tmpPtr != nullptr; tmpPtr = tmpPtr->disjunct) { tmpPtr->header.ppForm = nullptr; }
             }
 
             first = false;
@@ -144,7 +144,7 @@ void ReturnDefrule(
         /* Get rid of any user data. */
         /*===========================*/
 
-        if (theDefrule->header.usrData != NULL) { ClearUserDataList(theEnv, theDefrule->header.usrData); }
+        if (theDefrule->header.usrData != nullptr) { ClearUserDataList(theEnv, theDefrule->header.usrData); }
 
         /*===========================================*/
         /* Decrement the count for the defrule name. */
@@ -156,7 +156,7 @@ void ReturnDefrule(
         /* Get rid of the the rule's RHS actions. */
         /*========================================*/
 
-        if (theDefrule->actions != NULL) {
+        if (theDefrule->actions != nullptr) {
             ExpressionDeinstall(theEnv, theDefrule->actions);
             ReturnPackedExpression(theEnv, theDefrule->actions);
         }
@@ -174,7 +174,7 @@ void ReturnDefrule(
     /* Free up partial matches. */
     /*==========================*/
 
-    if (EngineData(theEnv)->ExecutingRule == NULL) FlushGarbagePartialMatches(theEnv);
+    if (EngineData(theEnv)->ExecutingRule == nullptr) FlushGarbagePartialMatches(theEnv);
 }
 
 /********************************************************/
@@ -187,15 +187,15 @@ void DestroyDefrule(
     Defrule *nextDisjunct;
     bool first = true;
 
-    if (theDefrule == NULL) return;
+    if (theDefrule == nullptr) return;
 
-    while (theDefrule != NULL) {
+    while (theDefrule != nullptr) {
         DetachJoinsDriver(theEnv, theDefrule, true);
 
         if (first) {
-            if (theDefrule->dynamicSalience != NULL) { ReturnPackedExpression(theEnv, theDefrule->dynamicSalience); }
+            if (theDefrule->dynamicSalience != nullptr) { ReturnPackedExpression(theEnv, theDefrule->dynamicSalience); }
 
-            if (theDefrule->header.ppForm != NULL) {
+            if (theDefrule->header.ppForm != nullptr) {
                 Defrule *tmpPtr;
 
                 rm(theEnv, (void *) theDefrule->header.ppForm, strlen(theDefrule->header.ppForm) + 1);
@@ -205,15 +205,15 @@ void DestroyDefrule(
                 /* form, so we want to avoid deleting it again.          */
                 /*=======================================================*/
 
-                for (tmpPtr = theDefrule->disjunct; tmpPtr != NULL; tmpPtr = tmpPtr->disjunct) { tmpPtr->header.ppForm = NULL; }
+                for (tmpPtr = theDefrule->disjunct; tmpPtr != nullptr; tmpPtr = tmpPtr->disjunct) { tmpPtr->header.ppForm = nullptr; }
             }
 
             first = false;
         }
 
-        if (theDefrule->header.usrData != NULL) { ClearUserDataList(theEnv, theDefrule->header.usrData); }
+        if (theDefrule->header.usrData != nullptr) { ClearUserDataList(theEnv, theDefrule->header.usrData); }
 
-        if (theDefrule->actions != NULL) { ReturnPackedExpression(theEnv, theDefrule->actions); }
+        if (theDefrule->actions != nullptr) { ReturnPackedExpression(theEnv, theDefrule->actions); }
 
         nextDisjunct = theDefrule->disjunct;
 
@@ -237,8 +237,8 @@ static void DetachJoinsDriver(
     /*==================================*/
 
     join = theRule->lastJoin;
-    theRule->lastJoin = NULL;
-    if (join == NULL) return;
+    theRule->lastJoin = nullptr;
+    if (join == nullptr) return;
 
     /*===================================================*/
     /* Remove the activation link from the last join. If */
@@ -247,8 +247,8 @@ static void DetachJoinsDriver(
     /* and thus no joins can be deleted.                 */
     /*===================================================*/
 
-    join->ruleToActivate = NULL;
-    if (join->nextLinks != NULL) return;
+    join->ruleToActivate = nullptr;
+    if (join->nextLinks != nullptr) return;
 
     DetachJoins(theEnv, join, destroy);
 }
@@ -274,7 +274,7 @@ static void DetachJoins(
     /* Begin removing the joins. */
     /*===========================*/
 
-    while (join != NULL) {
+    while (join != nullptr) {
         if (join->marked) return;
 
         /*==========================================================*/
@@ -285,7 +285,7 @@ static void DetachJoins(
 
         prevJoin = join->lastLevel;
         if (join->joinFromTheRight) { rightJoin = (struct joinNode *) join->rightSideEntryStructure; }
-        else { rightJoin = NULL; }
+        else { rightJoin = nullptr; }
 
         /*=================================================*/
         /* If the join was attached to a pattern, remove   */
@@ -294,7 +294,7 @@ static void DetachJoins(
         /*=================================================*/
 
         if (!destroy) {
-            if ((join->rightSideEntryStructure != NULL) && (join->joinFromTheRight == false)) { RemoveIntranetworkLink(theEnv, join); }
+            if ((join->rightSideEntryStructure != nullptr) && (join->joinFromTheRight == false)) { RemoveIntranetworkLink(theEnv, join); }
         }
 
         /*======================================*/
@@ -329,18 +329,18 @@ static void DetachJoins(
         /* Fix the right prime links. */
         /*============================*/
 
-        if (join->firstJoin && (join->rightSideEntryStructure == NULL)) {
-            lastLink = NULL;
+        if (join->firstJoin && (join->rightSideEntryStructure == nullptr)) {
+            lastLink = nullptr;
 
             theLink = DefruleData(theEnv)->RightPrimeJoins;
-            while (theLink != NULL) {
+            while (theLink != nullptr) {
                 if (theLink->join == join) {
-                    if (lastLink == NULL) { DefruleData(theEnv)->RightPrimeJoins = theLink->next; }
+                    if (lastLink == nullptr) { DefruleData(theEnv)->RightPrimeJoins = theLink->next; }
                     else { lastLink->next = theLink->next; }
 
                     rtn_struct(theEnv, joinLink, theLink);
 
-                    theLink = NULL;
+                    theLink = nullptr;
                 } else {
                     lastLink = theLink;
                     theLink = lastLink->next;
@@ -353,16 +353,16 @@ static void DetachJoins(
         /*===========================*/
 
         if (join->firstJoin && (join->patternIsNegated || join->joinFromTheRight) && (!join->patternIsExists)) {
-            lastLink = NULL;
+            lastLink = nullptr;
             theLink = DefruleData(theEnv)->LeftPrimeJoins;
-            while (theLink != NULL) {
+            while (theLink != nullptr) {
                 if (theLink->join == join) {
-                    if (lastLink == NULL) { DefruleData(theEnv)->LeftPrimeJoins = theLink->next; }
+                    if (lastLink == nullptr) { DefruleData(theEnv)->LeftPrimeJoins = theLink->next; }
                     else { lastLink->next = theLink->next; }
 
                     rtn_struct(theEnv, joinLink, theLink);
 
-                    theLink = NULL;
+                    theLink = nullptr;
                 } else {
                     lastLink = theLink;
                     theLink = theLink->next;
@@ -374,17 +374,17 @@ static void DetachJoins(
         /* Remove the link to the join from the join above. */
         /*==================================================*/
 
-        if (prevJoin != NULL) {
-            lastLink = NULL;
+        if (prevJoin != nullptr) {
+            lastLink = nullptr;
             theLink = prevJoin->nextLinks;
-            while (theLink != NULL) {
+            while (theLink != nullptr) {
                 if (theLink->join == join) {
-                    if (lastLink == NULL) { prevJoin->nextLinks = theLink->next; }
+                    if (lastLink == nullptr) { prevJoin->nextLinks = theLink->next; }
                     else { lastLink->next = theLink->next; }
 
                     rtn_struct(theEnv, joinLink, theLink);
 
-                    theLink = NULL;
+                    theLink = nullptr;
                 } else {
                     lastLink = theLink;
                     theLink = theLink->next;
@@ -396,25 +396,25 @@ static void DetachJoins(
         /* Remove the right join link if it exists. */
         /*==========================================*/
 
-        if (rightJoin != NULL) {
-            lastLink = NULL;
+        if (rightJoin != nullptr) {
+            lastLink = nullptr;
             theLink = rightJoin->nextLinks;
-            while (theLink != NULL) {
+            while (theLink != nullptr) {
                 if (theLink->join == join) {
-                    if (lastLink == NULL) { rightJoin->nextLinks = theLink->next; }
+                    if (lastLink == nullptr) { rightJoin->nextLinks = theLink->next; }
                     else { lastLink->next = theLink->next; }
 
                     rtn_struct(theEnv, joinLink, theLink);
-                    theLink = NULL;
+                    theLink = nullptr;
                 } else {
                     lastLink = theLink;
                     theLink = theLink->next;
                 }
             }
 
-            if ((rightJoin->nextLinks == NULL) &&
-                (rightJoin->ruleToActivate == NULL)) {
-                if (prevJoin != NULL) {
+            if ((rightJoin->nextLinks == nullptr) &&
+                (rightJoin->ruleToActivate == nullptr)) {
+                if (prevJoin != nullptr) {
                     lastMark = prevJoin->marked;
                     prevJoin->marked = true;
                     DetachJoins(theEnv, rightJoin, destroy);
@@ -438,9 +438,9 @@ static void DetachJoins(
         /* to the join which enters join B from the left.            */
         /*===========================================================*/
 
-        if (prevJoin == NULL) { return; }
-        else if (prevJoin->ruleToActivate != NULL) { return; }
-        else if (prevJoin->nextLinks == NULL) { join = prevJoin; }
+        if (prevJoin == nullptr) { return; }
+        else if (prevJoin->ruleToActivate != nullptr) { return; }
+        else if (prevJoin->nextLinks == nullptr) { join = prevJoin; }
         else { return; }
     }
 }
@@ -466,7 +466,7 @@ static void RemoveIntranetworkLink(
 
     patternPtr = (struct patternNodeHeader *) join->rightSideEntryStructure;
     joinPtr = patternPtr->entryJoin;
-    lastJoin = NULL;
+    lastJoin = nullptr;
 
     /*=================================================*/
     /* Loop through the list of joins that the pattern */
@@ -474,12 +474,12 @@ static void RemoveIntranetworkLink(
     /* Remove this join from the list.                 */
     /*=================================================*/
 
-    while (joinPtr != NULL) {
+    while (joinPtr != nullptr) {
         if (joinPtr == join) {
-            if (lastJoin == NULL) { patternPtr->entryJoin = joinPtr->rightMatchNode; }
+            if (lastJoin == nullptr) { patternPtr->entryJoin = joinPtr->rightMatchNode; }
             else { lastJoin->rightMatchNode = joinPtr->rightMatchNode; }
 
-            joinPtr = NULL;
+            joinPtr = nullptr;
         } else {
             lastJoin = joinPtr;
             joinPtr = joinPtr->rightMatchNode;
@@ -491,7 +491,7 @@ static void RemoveIntranetworkLink(
     /* to any joins, then start removing the pattern.    */
     /*===================================================*/
 
-    if (patternPtr->entryJoin == NULL) { DetachPattern(theEnv, join->rhsType, patternPtr); }
+    if (patternPtr->entryJoin == nullptr) { DetachPattern(theEnv, join->rhsType, patternPtr); }
 }
 
 

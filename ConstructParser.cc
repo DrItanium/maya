@@ -113,7 +113,7 @@ LoadError Load(
     /* Open the file specified by file name. */
     /*=======================================*/
 
-    if ((theFile = GenOpen(theEnv, fileName, "r")) == NULL) { return LE_OPEN_FILE_ERROR; }
+    if ((theFile = GenOpen(theEnv, fileName, "r")) == nullptr) { return LE_OPEN_FILE_ERROR; }
 
     /*===================================================*/
     /* Read in the constructs. Enabling fast load allows */
@@ -133,10 +133,10 @@ LoadError Load(
     SetParsingFileName(theEnv, oldParsingFileName);
     DeleteString(theEnv, oldParsingFileName);
 
-    SetWarningFileName(theEnv, NULL);
-    SetErrorFileName(theEnv, NULL);
+    SetWarningFileName(theEnv, nullptr);
+    SetErrorFileName(theEnv, nullptr);
 
-    SetFastLoad(theEnv, NULL);
+    SetFastLoad(theEnv, nullptr);
 
     /*=================*/
     /* Close the file. */
@@ -194,14 +194,14 @@ bool LoadFromString(
 void SetParsingFileName(
         Environment *theEnv,
         const char *fileName) {
-    char *fileNameCopy = NULL;
+    char *fileNameCopy = nullptr;
 
-    if (fileName != NULL) {
+    if (fileName != nullptr) {
         fileNameCopy = (char *) genalloc(theEnv, strlen(fileName) + 1);
         genstrcpy(fileNameCopy, fileName);
     }
 
-    if (ConstructData(theEnv)->ParsingFileName != NULL) {
+    if (ConstructData(theEnv)->ParsingFileName != nullptr) {
         genfree(theEnv, ConstructData(theEnv)->ParsingFileName, strlen(ConstructData(theEnv)->ParsingFileName) + 1);
     }
 
@@ -224,14 +224,14 @@ char *GetParsingFileName(
 void SetErrorFileName(
         Environment *theEnv,
         const char *fileName) {
-    char *fileNameCopy = NULL;
+    char *fileNameCopy = nullptr;
 
-    if (fileName != NULL) {
+    if (fileName != nullptr) {
         fileNameCopy = (char *) genalloc(theEnv, strlen(fileName) + 1);
         genstrcpy(fileNameCopy, fileName);
     }
 
-    if (ConstructData(theEnv)->ErrorFileName != NULL) {
+    if (ConstructData(theEnv)->ErrorFileName != nullptr) {
         genfree(theEnv, ConstructData(theEnv)->ErrorFileName, strlen(ConstructData(theEnv)->ErrorFileName) + 1);
     }
 
@@ -254,14 +254,14 @@ char *GetErrorFileName(
 void SetWarningFileName(
         Environment *theEnv,
         const char *fileName) {
-    char *fileNameCopy = NULL;
+    char *fileNameCopy = nullptr;
 
-    if (fileName != NULL) {
+    if (fileName != nullptr) {
         fileNameCopy = (char *) genalloc(theEnv, strlen(fileName) + 1);
         genstrcpy(fileNameCopy, fileName);
     }
 
-    if (ConstructData(theEnv)->WarningFileName != NULL) {
+    if (ConstructData(theEnv)->WarningFileName != nullptr) {
         genfree(theEnv, ConstructData(theEnv)->WarningFileName, strlen(ConstructData(theEnv)->WarningFileName) + 1);
     }
 
@@ -310,7 +310,7 @@ bool LoadConstructsFromLogicalName(
     /* If embedded, clear the error flags. */
     /*=====================================*/
 
-    if (EvaluationData(theEnv)->CurrentExpression == NULL) { ResetErrorFlags(theEnv); }
+    if (EvaluationData(theEnv)->CurrentExpression == nullptr) { ResetErrorFlags(theEnv); }
 
     /*==========================================*/
     /* Set up the frame for garbage collection. */
@@ -377,7 +377,7 @@ bool LoadConstructsFromLogicalName(
 
         if (foundConstruct) { IncrementLexemeCount(theToken.value); }
 
-        CleanCurrentGarbageFrame(theEnv, NULL);
+        CleanCurrentGarbageFrame(theEnv, nullptr);
         CallPeriodicTasks(theEnv);
 
         YieldTime(theEnv);
@@ -479,7 +479,7 @@ static bool FindConstructBeginning(
             /* Is this a valid construct name (e.g., defrule, deffacts). */
             /*===========================================================*/
 
-            if (FindConstruct(theEnv, theToken->lexemeValue->contents) != NULL) return true;
+            if (FindConstruct(theEnv, theToken->lexemeValue->contents) != nullptr) return true;
 
             /*===============================================*/
             /* The construct name is invalid. Print an error */
@@ -590,7 +590,7 @@ void CreateErrorCaptureRouter(
     /* which could generate errors are called.                   */
     /*===========================================================*/
 
-    if (ConstructData(theEnv)->ParserErrorCallback == NULL) return;
+    if (ConstructData(theEnv)->ParserErrorCallback == nullptr) return;
 
     /*=======================================================*/
     /* If the router hasn't already been created, create it. */
@@ -599,7 +599,7 @@ void CreateErrorCaptureRouter(
     if (ConstructData(theEnv)->errorCaptureRouterCount == 0) {
         AddRouter(theEnv, "error-capture", 40,
                   QueryErrorCallback, WriteErrorCallback,
-                  NULL, NULL, NULL, NULL);
+                  nullptr, nullptr, nullptr, nullptr);
     }
 
     /*==================================================*/
@@ -623,7 +623,7 @@ void DeleteErrorCaptureRouter(
     /* which could generate errors are called.                   */
     /*===========================================================*/
 
-    if (ConstructData(theEnv)->ParserErrorCallback == NULL) return;
+    if (ConstructData(theEnv)->ParserErrorCallback == nullptr) return;
 
     ConstructData(theEnv)->errorCaptureRouterCount--;
 
@@ -643,23 +643,23 @@ void FlushParsingMessages(
     /* which could generate errors are called.                   */
     /*===========================================================*/
 
-    if (ConstructData(theEnv)->ParserErrorCallback == NULL) return;
+    if (ConstructData(theEnv)->ParserErrorCallback == nullptr) return;
 
     /*=================================*/
     /* If an error occurred invoke the */
     /* parser error callback function. */
     /*=================================*/
 
-    if (ConstructData(theEnv)->ErrorString != NULL) {
+    if (ConstructData(theEnv)->ErrorString != nullptr) {
         (*ConstructData(theEnv)->ParserErrorCallback)(theEnv, GetErrorFileName(theEnv),
-                                                      NULL, ConstructData(theEnv)->ErrorString,
+                                                      nullptr, ConstructData(theEnv)->ErrorString,
                                                       ConstructData(theEnv)->ErrLineNumber,
                                                       ConstructData(theEnv)->ParserErrorContext);
     }
 
-    if (ConstructData(theEnv)->WarningString != NULL) {
+    if (ConstructData(theEnv)->WarningString != nullptr) {
         (*ConstructData(theEnv)->ParserErrorCallback)(theEnv, GetWarningFileName(theEnv),
-                                                      ConstructData(theEnv)->WarningString, NULL,
+                                                      ConstructData(theEnv)->WarningString, nullptr,
                                                       ConstructData(theEnv)->WrnLineNumber,
                                                       ConstructData(theEnv)->ParserErrorContext);
     }
@@ -668,19 +668,19 @@ void FlushParsingMessages(
     /* Delete the error capture strings. */
     /*===================================*/
 
-    SetErrorFileName(theEnv, NULL);
-    if (ConstructData(theEnv)->ErrorString != NULL) {
+    SetErrorFileName(theEnv, nullptr);
+    if (ConstructData(theEnv)->ErrorString != nullptr) {
         genfree(theEnv, ConstructData(theEnv)->ErrorString, strlen(ConstructData(theEnv)->ErrorString) + 1);
     }
-    ConstructData(theEnv)->ErrorString = NULL;
+    ConstructData(theEnv)->ErrorString = nullptr;
     ConstructData(theEnv)->CurErrPos = 0;
     ConstructData(theEnv)->MaxErrChars = 0;
 
-    SetWarningFileName(theEnv, NULL);
-    if (ConstructData(theEnv)->WarningString != NULL) {
+    SetWarningFileName(theEnv, nullptr);
+    if (ConstructData(theEnv)->WarningString != nullptr) {
         genfree(theEnv, ConstructData(theEnv)->WarningString, strlen(ConstructData(theEnv)->WarningString) + 1);
     }
-    ConstructData(theEnv)->WarningString = NULL;
+    ConstructData(theEnv)->WarningString = nullptr;
     ConstructData(theEnv)->CurWrnPos = 0;
     ConstructData(theEnv)->MaxWrnChars = 0;
 }
@@ -703,7 +703,7 @@ BuildError ParseConstruct(
     /*=================================*/
 
     currentPtr = FindConstruct(theEnv, name);
-    if (currentPtr == NULL) return BE_CONSTRUCT_NOT_FOUND_ERROR;
+    if (currentPtr == nullptr) return BE_CONSTRUCT_NOT_FOUND_ERROR;
 
     /*==========================================*/
     /* Set up the frame for garbage collection. */
@@ -777,7 +777,7 @@ void ImportExportConflictMessage(
     WriteString(theEnv, STDERR, itemName);
     WriteString(theEnv, STDERR, "' because of an import/export conflict");
 
-    if (causedByConstruct == NULL) WriteString(theEnv, STDERR, ".\n");
+    if (causedByConstruct == nullptr) WriteString(theEnv, STDERR, ".\n");
     else {
         WriteString(theEnv, STDERR, " caused by the ");
         WriteString(theEnv, STDERR, causedByConstruct);

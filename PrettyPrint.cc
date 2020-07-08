@@ -31,7 +31,7 @@
 /*                                                           */
 /*      6.31: Fix for pretty print buffer overflow.          */
 /*                                                           */
-/*      6.40: Added NULL pointer check in CopyPPBuffer.      */
+/*      6.40: Added nullptr pointer check in CopyPPBuffer.      */
 /*                                                           */
 /*            Pragma once and other inclusion changes.       */
 /*                                                           */
@@ -81,7 +81,7 @@ void InitializePrettyPrintData(
 /******************************************************/
 static void DeallocatePrettyPrintData(
         Environment *theEnv) {
-    if (PrettyPrintData(theEnv)->PrettyPrintBuffer != NULL) {
+    if (PrettyPrintData(theEnv)->PrettyPrintBuffer != nullptr) {
         rm(theEnv, PrettyPrintData(theEnv)->PrettyPrintBuffer, PrettyPrintData(theEnv)->PPBufferMax);
     }
 }
@@ -91,7 +91,7 @@ static void DeallocatePrettyPrintData(
 /*******************************************************/
 void FlushPPBuffer(
         Environment *theEnv) {
-    if (PrettyPrintData(theEnv)->PrettyPrintBuffer == NULL) return;
+    if (PrettyPrintData(theEnv)->PrettyPrintBuffer == nullptr) return;
     PrettyPrintData(theEnv)->PPBackupOnce = 0;
     PrettyPrintData(theEnv)->PPBackupTwice = 0;
     PrettyPrintData(theEnv)->PPBufferPos = 0;
@@ -107,9 +107,9 @@ void DestroyPPBuffer(
     PrettyPrintData(theEnv)->PPBackupOnce = 0;
     PrettyPrintData(theEnv)->PPBackupTwice = 0;
     PrettyPrintData(theEnv)->PPBufferPos = 0;
-    if (PrettyPrintData(theEnv)->PrettyPrintBuffer != NULL)
+    if (PrettyPrintData(theEnv)->PrettyPrintBuffer != nullptr)
         rm(theEnv, PrettyPrintData(theEnv)->PrettyPrintBuffer, PrettyPrintData(theEnv)->PPBufferMax);
-    PrettyPrintData(theEnv)->PrettyPrintBuffer = NULL;
+    PrettyPrintData(theEnv)->PrettyPrintBuffer = nullptr;
     PrettyPrintData(theEnv)->PPBufferMax = 0;
 }
 
@@ -174,7 +174,7 @@ void SavePPBuffer(
 void PPBackup(
         Environment *theEnv) {
     if ((PrettyPrintData(theEnv)->PPBufferStatus == false) ||
-        (PrettyPrintData(theEnv)->PrettyPrintBuffer == NULL) ||
+        (PrettyPrintData(theEnv)->PrettyPrintBuffer == nullptr) ||
         (!PrettyPrintData(theEnv)->PPBufferEnabled)) { return; }
 
     PrettyPrintData(theEnv)->PPBufferPos = PrettyPrintData(theEnv)->PPBackupOnce;
@@ -192,7 +192,7 @@ char *CopyPPBuffer(
     char *newString;
     char *theBuffer = PrettyPrintData(theEnv)->PrettyPrintBuffer;
 
-    if (theBuffer == NULL) return NULL;
+    if (theBuffer == nullptr) return nullptr;
 
     length = (1 + strlen(theBuffer)) * sizeof(char);
     newString = (char *) gm2(theEnv, length);

@@ -29,7 +29,7 @@
 /*            Added pragmas to remove compilation warnings.   */
 /*                                                            */
 /*      6.30: Updated ENTITY_RECORD definitions to include    */
-/*            additional NULL initializers.                   */
+/*            additional nullptr initializers.                   */
 /*                                                            */
 /*            Added ReleaseProcParameters call.               */
 /*                                                            */
@@ -142,32 +142,32 @@ static bool                    EvaluateBadCall(Environment *,void *,UDFValue *);
  ****************************************************/
 void InstallProcedurePrimitives(
         Environment *theEnv) {
-    EntityRecord procParameterInfo = {"PROC_PARAM", PROC_PARAM, 0, 1, 0, NULL, NULL, NULL,
+    EntityRecord procParameterInfo = {"PROC_PARAM", PROC_PARAM, 0, 1, 0, nullptr, nullptr, nullptr,
                                       (EntityEvaluationFunction *) RtnProcParam,
-                                      NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
-            procWildInfo = {"PROC_WILD_PARAM", PROC_WILD_PARAM, 0, 1, 0, NULL, NULL, NULL,
+                                      nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr},
+            procWildInfo = {"PROC_WILD_PARAM", PROC_WILD_PARAM, 0, 1, 0, nullptr, nullptr, nullptr,
                             (EntityEvaluationFunction *) RtnProcWild,
-                            NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
-            procGetInfo = {"PROC_GET_BIND", PROC_GET_BIND, 0, 1, 0, NULL, NULL, NULL,
+                            nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr},
+            procGetInfo = {"PROC_GET_BIND", PROC_GET_BIND, 0, 1, 0, nullptr, nullptr, nullptr,
                            (EntityEvaluationFunction *) GetProcBind,
-                           NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL},
-            procBindInfo = {"PROC_BIND", PROC_BIND, 0, 1, 0, NULL, NULL, NULL,
+                           nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr},
+            procBindInfo = {"PROC_BIND", PROC_BIND, 0, 1, 0, nullptr, nullptr, nullptr,
                             (EntityEvaluationFunction *) PutProcBind,
-                            NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+                            nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
 #if !DEFFUNCTION_CONSTRUCT
     EntityRecord deffunctionEntityRecord =
                       { "PCALL", PCALL,0,0,1,
-                        NULL,NULL,NULL,
+                        nullptr,nullptr,nullptr,
                         EvaluateBadCall,
-                        NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL };
+                        nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr };
 #endif
 #if !DEFGENERIC_CONSTRUCT
     EntityRecord genericEntityRecord =
                       { "GCALL", GCALL,0,0,1,
-                        NULL,NULL,NULL,
+                        nullptr,nullptr,nullptr,
                         EvaluateBadCall,
-                        NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL };
+                        nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr };
 #endif
 
     AllocateEnvironmentData(theEnv, PROCEDURAL_PRIMITIVE_DATA, sizeof(struct proceduralPrimitiveData), DeallocateProceduralPrimitiveData);
@@ -230,14 +230,14 @@ static void DeallocateProceduralPrimitiveData(
   INPUTS       : 1) The logical name of the input
                  2) A buffer for scanned tokens
                  3) The partial list of parameters so far
-                    (can be NULL)
+                    (can be nullptr)
                  3) A buffer for a wildcard symbol (if any)
                  4) A buffer for a minimum of parameters
                  5) A buffer for a maximum of parameters
                     (will be set to -1 if there is a wilcard)
                  6) A buffer for an error flag
                  7) The address of a function to do specialized
-                    checking on a parameter (can be NULL)
+                    checking on a parameter (can be nullptr)
                     The function should accept a string and
                     return false if the parameter is OK, true
                     otherwise.
@@ -259,11 +259,11 @@ Expression *ParseProcParameters(
     Expression *nextOne, *lastOne, *check;
     int paramprintp = 0;
 
-    *wildcard = NULL;
+    *wildcard = nullptr;
     *min = 0;
     *error = true;
     lastOne = nextOne = parameterList;
-    while (nextOne != NULL) {
+    while (nextOne != nullptr) {
         (*min)++;
         lastOne = nextOne;
         nextOne = nextOne->nextArg;
@@ -271,33 +271,33 @@ Expression *ParseProcParameters(
     if (tkn->tknType != LEFT_PARENTHESIS_TOKEN) {
         SyntaxErrorMessage(theEnv, "parameter list");
         ReturnExpression(theEnv, parameterList);
-        return NULL;
+        return nullptr;
     }
     GetToken(theEnv, readSource, tkn);
     while ((tkn->tknType == SF_VARIABLE_TOKEN) || (tkn->tknType == MF_VARIABLE_TOKEN)) {
-        for (check = parameterList; check != NULL; check = check->nextArg)
+        for (check = parameterList; check != nullptr; check = check->nextArg)
             if (check->value == tkn->value) {
                 PrintErrorID(theEnv, "PRCCODE", 7, false);
                 WriteString(theEnv, STDERR, "Duplicate parameter names not allowed.\n");
                 ReturnExpression(theEnv, parameterList);
-                return NULL;
+                return nullptr;
             }
-        if (*wildcard != NULL) {
+        if (*wildcard != nullptr) {
             PrintErrorID(theEnv, "PRCCODE", 8, false);
             WriteString(theEnv, STDERR, "No parameters allowed after wildcard parameter.\n");
             ReturnExpression(theEnv, parameterList);
-            return NULL;
+            return nullptr;
         }
-        if ((checkfunc != NULL) ? (*checkfunc)(theEnv, tkn->lexemeValue->contents) : false) {
+        if ((checkfunc != nullptr) ? (*checkfunc)(theEnv, tkn->lexemeValue->contents) : false) {
             ReturnExpression(theEnv, parameterList);
-            return NULL;
+            return nullptr;
         }
         nextOne = GenConstant(theEnv, TokenTypeToType(tkn->tknType), tkn->value);
         if (tkn->tknType == MF_VARIABLE_TOKEN)
             *wildcard = tkn->lexemeValue;
         else
             (*min)++;
-        if (lastOne == NULL) { parameterList = nextOne; }
+        if (lastOne == nullptr) { parameterList = nextOne; }
         else { lastOne->nextArg = nextOne; }
         lastOne = nextOne;
         SavePPBuffer(theEnv, " ");
@@ -307,7 +307,7 @@ Expression *ParseProcParameters(
     if (tkn->tknType != RIGHT_PARENTHESIS_TOKEN) {
         SyntaxErrorMessage(theEnv, "parameter list");
         ReturnExpression(theEnv, parameterList);
-        return NULL;
+        return nullptr;
     }
     if (paramprintp) {
         PPBackup(theEnv);
@@ -315,7 +315,7 @@ Expression *ParseProcParameters(
         SavePPBuffer(theEnv, ")");
     }
     *error = false;
-    *max = (*wildcard != NULL) ? PARAMETERS_UNBOUNDED : *min;
+    *max = (*wildcard != nullptr) ? PARAMETERS_UNBOUNDED : *min;
     return (parameterList);
 }
 
@@ -331,16 +331,16 @@ Expression *ParseProcParameters(
                  4) A buffer for scanned tokens
                  5) A list of expressions containing the names
                     of the parameters
-                 6) The wilcard parameter symbol (NULL if none)
+                 6) The wilcard parameter symbol (nullptr if none)
                  7) A pointer to a function to parse variables not
                     recognized by the standard parser
                     The function should accept the variable
                     expression and a generic pointer for special
-                    data (can be NULL) as arguments.  If the variable
+                    data (can be nullptr) as arguments.  If the variable
                     is recognized, the function should modify the
                     expression to access this variable.  Return 1
                     if recognized, 0 if not, -1 on errors
-                    This argument can be NULL.
+                    This argument can be nullptr.
                  8) A pointer to a function to handle binds in a
                     special way. The function should accept the
                     bind function call expression as an argument.
@@ -349,12 +349,12 @@ Expression *ParseProcParameters(
                     appropriately (including attaching/removing
                     any necessary argument expressions).  Return 1
                     if recognized, 0 if not, -1 on errors.
-                    This argument can be NULL.
+                    This argument can be nullptr.
                  9) A buffer for holding the number of local vars
                     used by this procedure body.
                 10) Special user data buffer to pass to variable
                     reference and bind replacement functions
-RETURNS      : A packed expression containing the body, NULL on
+RETURNS      : A packed expression containing the body, nullptr on
                    errors.
 SIDE EFFECTS : Variable references replaced with runtime calls
                   to access the paramter and local variable array
@@ -380,9 +380,9 @@ Expression *ParseProcActions(
        "bind" function adds vars to this list.
        ==================================================================== */
     ClearParsedBindNames(theEnv);
-    actions = GroupActions(theEnv, readSource, tkn, true, NULL, false);
-    if (actions == NULL)
-        return NULL;
+    actions = GroupActions(theEnv, readSource, tkn, true, nullptr, false);
+    if (actions == nullptr)
+        return nullptr;
 
     /* ====================================================================
        Replace any bind functions with special functions before replacing
@@ -390,11 +390,11 @@ Expression *ParseProcActions(
        before they can be seen by variable replacement and thus generate
        incorrect indices.
        ==================================================================== */
-    if (altbindfunc != NULL) {
+    if (altbindfunc != nullptr) {
         if (ReplaceProcBinds(theEnv, actions, altbindfunc, userBuffer)) {
             ClearParsedBindNames(theEnv);
             ReturnExpression(theEnv, actions);
-            return NULL;
+            return nullptr;
         }
     }
 
@@ -409,7 +409,7 @@ Expression *ParseProcActions(
     if (ReplaceProcVars(theEnv, bodytype, actions, params, wildcard, altvarfunc, userBuffer)) {
         ClearParsedBindNames(theEnv);
         ReturnExpression(theEnv, actions);
-        return NULL;
+        return nullptr;
     }
 
     /* =======================================================================
@@ -440,16 +440,16 @@ Expression *ParseProcActions(
   INPUTS       : 1) The type of procedure being parsed
                  2) The expression-actions to be examined
                  3) The parameter list
-                 4) The wildcard parameter symbol (NULL if none)
+                 4) The wildcard parameter symbol (nullptr if none)
                  5) A pointer to a function to parse variables not
                     recognized by the standard parser
                     The function should accept the variable
                     expression and a generic pointer for special
-                    data (can be NULL) as arguments.  If the variable
+                    data (can be nullptr) as arguments.  If the variable
                     is recognized, the function should modify the
                     expression to access this variable.  Return 1
                     if recognized, 0 if not, -1 on errors
-                    This argument can be NULL.
+                    This argument can be nullptr.
                  6) Data buffer to be passed to alternate parsing
                     function
   RETURNS      : False if OK, true on errors
@@ -475,7 +475,7 @@ int ReplaceProcVars(
     PACKED_PROC_VAR pvar;
     int errorCode;
 
-    while (actions != NULL) {
+    while (actions != nullptr) {
         if (actions->type == SF_VARIABLE) {
             /*===============================================*/
             /* See if the variable is in the parameter list. */
@@ -501,7 +501,7 @@ int ReplaceProcVars(
                 /* such as direct slot reference or a rule RHS pattern reference. */
                 /*================================================================*/
 
-                if (altvarfunc == NULL) { errorCode = 0; }
+                if (altvarfunc == nullptr) { errorCode = 0; }
                 else { errorCode = (*altvarfunc)(theEnv, actions, specdata); }
 
                 if (errorCode != 1) {
@@ -532,18 +532,18 @@ int ReplaceProcVars(
                 /*=========================================================*/
 
             else {
-                if (altvarfunc != NULL) {
+                if (altvarfunc != nullptr) {
                     altvarexp = GenConstant(theEnv, actions->type, actions->value);
                     altcode = (*altvarfunc)(theEnv, altvarexp, specdata);
                     if (altcode == 0) {
                         rtn_struct(theEnv, expr, altvarexp);
-                        altvarexp = NULL;
+                        altvarexp = nullptr;
                     } else if (altcode == -1) {
                         rtn_struct(theEnv, expr, altvarexp);
                         return true;
                     }
                 } else
-                    altvarexp = NULL;
+                    altvarexp = nullptr;
                 actions->type = PROC_GET_BIND;
                 ClearBitString(&pvar, sizeof(PACKED_PROC_VAR));
                 pvar.first = boundPosn;
@@ -560,9 +560,9 @@ int ReplaceProcVars(
                 return (-1);
         }
 #endif
-        if ((altvarfunc != NULL) ? ((*altvarfunc)(theEnv, actions, specdata) == -1) : false)
+        if ((altvarfunc != nullptr) ? ((*altvarfunc)(theEnv, actions, specdata) == -1) : false)
             return 1;
-        if (actions->argList != NULL) {
+        if (actions->argList != nullptr) {
             if (ReplaceProcVars(theEnv, bodytype, actions->argList, parameterList,
                                 wildcard, altvarfunc, specdata))
                 return 1;
@@ -664,15 +664,15 @@ void PushProcParameters(
     /* ================================================================
        Record ProcParamExpressions and WildcardValue for previous frame
        AFTER evaluating arguments for the new frame, because they could
-       have gone from NULL to non-NULL (if they were already non-NULL,
+       have gone from nullptr to non-nullptr (if they were already non-nullptr,
        they would remain unchanged.)
        ================================================================ */
 #if DEFGENERIC_CONSTRUCT
     ptmp->ParamExpressions = ProceduralPrimitiveData(theEnv)->ProcParamExpressions;
-    ProceduralPrimitiveData(theEnv)->ProcParamExpressions = NULL;
+    ProceduralPrimitiveData(theEnv)->ProcParamExpressions = nullptr;
 #endif
     ptmp->WildcardValue = ProceduralPrimitiveData(theEnv)->WildcardValue;
-    ProceduralPrimitiveData(theEnv)->WildcardValue = NULL;
+    ProceduralPrimitiveData(theEnv)->WildcardValue = nullptr;
     ProceduralPrimitiveData(theEnv)->ProcUnboundErrFunc = UnboundErrFunc;
 }
 
@@ -682,18 +682,18 @@ void PushProcParameters(
   INPUTS       : None
   RETURNS      : Nothing useful
   SIDE EFFECTS : Stack popped and globals restored
-  NOTES        : Assumes pstack != NULL
+  NOTES        : Assumes pstack != nullptr
  ******************************************************************/
 void PopProcParameters(
         Environment *theEnv) {
     PROC_PARAM_STACK *ptmp;
 
-    if (ProceduralPrimitiveData(theEnv)->ProcParamArray != NULL)
+    if (ProceduralPrimitiveData(theEnv)->ProcParamArray != nullptr)
         rm(theEnv, ProceduralPrimitiveData(theEnv)->ProcParamArray,
            (sizeof(UDFValue) * ProceduralPrimitiveData(theEnv)->ProcParamArraySize));
 
 #if DEFGENERIC_CONSTRUCT
-    if (ProceduralPrimitiveData(theEnv)->ProcParamExpressions != NULL)
+    if (ProceduralPrimitiveData(theEnv)->ProcParamExpressions != nullptr)
         rm(theEnv, ProceduralPrimitiveData(theEnv)->ProcParamExpressions,
            (sizeof(Expression) * ProceduralPrimitiveData(theEnv)->ProcParamArraySize));
 #endif
@@ -707,7 +707,7 @@ void PopProcParameters(
     ProceduralPrimitiveData(theEnv)->ProcParamExpressions = ptmp->ParamExpressions;
 #endif
 
-    if (ProceduralPrimitiveData(theEnv)->WildcardValue != NULL) {
+    if (ProceduralPrimitiveData(theEnv)->WildcardValue != nullptr) {
         ReleaseMultifield(theEnv, ProceduralPrimitiveData(theEnv)->WildcardValue->multifieldValue);
         if (ProceduralPrimitiveData(theEnv)->WildcardValue->value != ProceduralPrimitiveData(theEnv)->NoParamValue)
             AddToMultifieldList(theEnv, ProceduralPrimitiveData(theEnv)->WildcardValue->multifieldValue);
@@ -724,17 +724,17 @@ void PopProcParameters(
   INPUTS       : None
   RETURNS      : Nothing useful
   SIDE EFFECTS : Stack popped and globals restored
-  NOTES        : Assumes pstack != NULL
+  NOTES        : Assumes pstack != nullptr
  ******************************************************************/
 static void ReleaseProcParameters(
         Environment *theEnv) {
     PROC_PARAM_STACK *ptmp, *next;
 
-    if (ProceduralPrimitiveData(theEnv)->ProcParamArray != NULL)
+    if (ProceduralPrimitiveData(theEnv)->ProcParamArray != nullptr)
         rm(theEnv, ProceduralPrimitiveData(theEnv)->ProcParamArray,
            (sizeof(UDFValue) * ProceduralPrimitiveData(theEnv)->ProcParamArraySize));
 
-    if (ProceduralPrimitiveData(theEnv)->WildcardValue != NULL) {
+    if (ProceduralPrimitiveData(theEnv)->WildcardValue != nullptr) {
         if (ProceduralPrimitiveData(theEnv)->WildcardValue->value != ProceduralPrimitiveData(theEnv)->NoParamValue) {
             ReturnMultifield(theEnv, ProceduralPrimitiveData(theEnv)->WildcardValue->multifieldValue);
         }
@@ -743,23 +743,23 @@ static void ReleaseProcParameters(
     }
 
 #if DEFGENERIC_CONSTRUCT
-    if (ProceduralPrimitiveData(theEnv)->ProcParamExpressions != NULL)
+    if (ProceduralPrimitiveData(theEnv)->ProcParamExpressions != nullptr)
         rm(theEnv, ProceduralPrimitiveData(theEnv)->ProcParamExpressions,
            (sizeof(Expression) * ProceduralPrimitiveData(theEnv)->ProcParamArraySize));
 #endif
 
     ptmp = ProceduralPrimitiveData(theEnv)->pstack;
 
-    while (ptmp != NULL) {
+    while (ptmp != nullptr) {
         next = ptmp->nxt;
 
-        if (ptmp->ParamArray != NULL) { rm(theEnv, ptmp->ParamArray, (sizeof(UDFValue) * ptmp->ParamArraySize)); }
+        if (ptmp->ParamArray != nullptr) { rm(theEnv, ptmp->ParamArray, (sizeof(UDFValue) * ptmp->ParamArraySize)); }
 
 #if DEFGENERIC_CONSTRUCT
-        if (ptmp->ParamExpressions != NULL) { rm(theEnv, ptmp->ParamExpressions, (sizeof(Expression) * ptmp->ParamArraySize)); }
+        if (ptmp->ParamExpressions != nullptr) { rm(theEnv, ptmp->ParamExpressions, (sizeof(Expression) * ptmp->ParamArraySize)); }
 #endif
 
-        if (ptmp->WildcardValue != NULL) {
+        if (ptmp->WildcardValue != nullptr) {
             if (ptmp->WildcardValue->value != ProceduralPrimitiveData(theEnv)->NoParamValue) {
                 ReturnMultifield(theEnv, ptmp->WildcardValue->multifieldValue);
             }
@@ -790,7 +790,7 @@ Expression *GetProcParamExpressions(
         Environment *theEnv) {
     unsigned int i;
 
-    if ((ProceduralPrimitiveData(theEnv)->ProcParamArray == NULL) || (ProceduralPrimitiveData(theEnv)->ProcParamExpressions != NULL))
+    if ((ProceduralPrimitiveData(theEnv)->ProcParamArray == nullptr) || (ProceduralPrimitiveData(theEnv)->ProcParamExpressions != nullptr))
         return (ProceduralPrimitiveData(theEnv)->ProcParamExpressions);
     ProceduralPrimitiveData(theEnv)->ProcParamExpressions = (Expression *)
             gm2(theEnv, (sizeof(Expression) * ProceduralPrimitiveData(theEnv)->ProcParamArraySize));
@@ -801,10 +801,10 @@ Expression *GetProcParamExpressions(
             ProceduralPrimitiveData(theEnv)->ProcParamExpressions[i].value = ProceduralPrimitiveData(theEnv)->ProcParamArray[i].value;
         else
             ProceduralPrimitiveData(theEnv)->ProcParamExpressions[i].value = &ProceduralPrimitiveData(theEnv)->ProcParamArray[i];
-        ProceduralPrimitiveData(theEnv)->ProcParamExpressions[i].argList = NULL;
+        ProceduralPrimitiveData(theEnv)->ProcParamExpressions[i].argList = nullptr;
         ProceduralPrimitiveData(theEnv)->ProcParamExpressions[i].nextArg =
                 ((i + 1) != ProceduralPrimitiveData(theEnv)->ProcParamArraySize) ? &ProceduralPrimitiveData(theEnv)->ProcParamExpressions[
-                        i + 1] : NULL;
+                        i + 1] : nullptr;
     }
     return (ProceduralPrimitiveData(theEnv)->ProcParamExpressions);
 }
@@ -824,7 +824,7 @@ Expression *GetProcParamExpressions(
                     the actions.
                  5) A function which prints out the name of
                     the currently executing body for error
-                    messages (can be NULL).
+                    messages (can be nullptr).
   RETURNS      : Nothing useful
   SIDE EFFECTS : Allocates and deallocates space for
                  local variable array.
@@ -844,11 +844,11 @@ void EvaluateProcActions(
     struct trackedMemory *theTM;
 
     oldLocalVarArray = ProceduralPrimitiveData(theEnv)->LocalVarArray;
-    ProceduralPrimitiveData(theEnv)->LocalVarArray = (lvarcnt == 0) ? NULL :
+    ProceduralPrimitiveData(theEnv)->LocalVarArray = (lvarcnt == 0) ? nullptr :
                                                      (UDFValue *) gm2(theEnv, (sizeof(UDFValue) * lvarcnt));
 
     if (lvarcnt != 0) { theTM = AddTrackedMemory(theEnv, ProceduralPrimitiveData(theEnv)->LocalVarArray, sizeof(UDFValue) * lvarcnt); }
-    else { theTM = NULL; }
+    else { theTM = nullptr; }
 
     for (i = 0; i < lvarcnt; i++)
         ProceduralPrimitiveData(theEnv)->LocalVarArray[i].supplementalInfo = FalseSymbol(theEnv);
@@ -866,7 +866,7 @@ void EvaluateProcActions(
     ProceduralPrimitiveData(theEnv)->CurrentProcActions = oldActions;
     if (oldModule != GetCurrentModule(theEnv))
         SetCurrentModule(theEnv, oldModule);
-    if ((crtproc != NULL) ? EvaluationData(theEnv)->HaltExecution : false) {
+    if ((crtproc != nullptr) ? EvaluationData(theEnv)->HaltExecution : false) {
         const char *logName;
 
         if (GetEvaluationError(theEnv)) {
@@ -880,13 +880,13 @@ void EvaluateProcActions(
         (*crtproc)(theEnv, logName);
     }
 
-    if ((ProceduralPrimitiveData(theEnv)->WildcardValue != NULL) ? (returnValue->value ==
+    if ((ProceduralPrimitiveData(theEnv)->WildcardValue != nullptr) ? (returnValue->value ==
                                                                     ProceduralPrimitiveData(theEnv)->WildcardValue->value) : false) {
         ReleaseMultifield(theEnv, ProceduralPrimitiveData(theEnv)->WildcardValue->multifieldValue);
         if (ProceduralPrimitiveData(theEnv)->WildcardValue->value != ProceduralPrimitiveData(theEnv)->NoParamValue)
             AddToMultifieldList(theEnv, ProceduralPrimitiveData(theEnv)->WildcardValue->multifieldValue);
         rtn_struct(theEnv, udfValue, ProceduralPrimitiveData(theEnv)->WildcardValue);
-        ProceduralPrimitiveData(theEnv)->WildcardValue = NULL;
+        ProceduralPrimitiveData(theEnv)->WildcardValue = nullptr;
     }
 
     if (lvarcnt != 0) {
@@ -946,7 +946,7 @@ void GrabProcWildargs(
     UDFValue *val;
 
     returnValue->begin = 0;
-    if (ProceduralPrimitiveData(theEnv)->WildcardValue == NULL) {
+    if (ProceduralPrimitiveData(theEnv)->WildcardValue == nullptr) {
         ProceduralPrimitiveData(theEnv)->WildcardValue = get_struct(theEnv, udfValue);
         ProceduralPrimitiveData(theEnv)->WildcardValue->begin = 0;
     } else if (theIndex == ProceduralPrimitiveData(theEnv)->Oldindex) {
@@ -1025,13 +1025,13 @@ static void EvaluateProcParameters(
     int i = 0;
 
     if (numberOfParameters == 0) {
-        ProceduralPrimitiveData(theEnv)->ProcParamArray = NULL;
+        ProceduralPrimitiveData(theEnv)->ProcParamArray = nullptr;
         ProceduralPrimitiveData(theEnv)->ProcParamArraySize = 0;
         return;
     }
 
     rva = (UDFValue *) gm2(theEnv, (sizeof(UDFValue) * numberOfParameters));
-    while (parameterList != NULL) {
+    while (parameterList != nullptr) {
         if ((EvaluateExpression(theEnv, parameterList, &temp) == true) ? true :
             (temp.header->type == VOID_TYPE)) {
             if (temp.header->type == VOID_TYPE) {
@@ -1115,7 +1115,7 @@ static bool GetProcBind(
         returnValue->range = src->range;
         return true;
     }
-    if (GetFirstArgument()->nextArg != NULL) {
+    if (GetFirstArgument()->nextArg != nullptr) {
         EvaluateExpression(theEnv, GetFirstArgument()->nextArg, returnValue);
         return true;
     }
@@ -1124,7 +1124,7 @@ static bool GetProcBind(
         SetEvaluationError(theEnv, true);
         WriteString(theEnv, STDERR, "Variable ?");
         WriteString(theEnv, STDERR, GetFirstArgument()->lexemeValue->contents);
-        if (ProceduralPrimitiveData(theEnv)->ProcUnboundErrFunc != NULL) {
+        if (ProceduralPrimitiveData(theEnv)->ProcUnboundErrFunc != nullptr) {
             WriteString(theEnv, STDERR, " unbound in ");
             (*ProceduralPrimitiveData(theEnv)->ProcUnboundErrFunc)(theEnv, STDERR);
         } else
@@ -1161,13 +1161,13 @@ static bool PutProcBind(
     UDFValue *dst;
 
     dst = &ProceduralPrimitiveData(theEnv)->LocalVarArray[*((int *) ((CLIPSBitMap *) value)->contents) - 1];
-    if (GetFirstArgument() == NULL) {
+    if (GetFirstArgument() == nullptr) {
         if (dst->supplementalInfo == TrueSymbol(theEnv))
             ReleaseUDFV(theEnv, dst);
         dst->supplementalInfo = FalseSymbol(theEnv);
         returnValue->value = FalseSymbol(theEnv);
     } else {
-        if (GetFirstArgument()->nextArg != NULL)
+        if (GetFirstArgument()->nextArg != nullptr)
             StoreInMultifield(theEnv, returnValue, GetFirstArgument(), true);
         else
             EvaluateExpression(theEnv, GetFirstArgument(), returnValue);
@@ -1210,7 +1210,7 @@ static bool RtnProcWild(
                    parameter.  The index is 1..n.
   INPUTS       : 1) Parameter name
                  2) Parameter list
-                 3) Wildcard symbol (NULL if none)
+                 3) Wildcard symbol (nullptr if none)
   RETURNS      : Index of parameter in list, 0 if
                    not found
   SIDE EFFECTS : None
@@ -1222,7 +1222,7 @@ static unsigned int FindProcParameter(
         CLIPSLexeme *wildcard) {
     unsigned int i = 1;
 
-    while (parameterList != NULL) {
+    while (parameterList != nullptr) {
         if (parameterList->value == (void *) name) { return i; }
         i++;
         parameterList = parameterList->nextArg;
@@ -1255,13 +1255,13 @@ static unsigned int FindProcParameter(
                  2) A pointer to a function to handle binds in a
                     special way. The function should accept the
                     bind function call expression and a specialized
-                    data buffer (can be NULL) as arguments.
+                    data buffer (can be nullptr) as arguments.
                     If the variable is recognized and treated specially,
                     the function should modify the expression
                     appropriately (including attaching/removing
                     any necessary argument expressions).  Return 1
                     if recognized, 0 if not, -1 on errors.
-                    This argument CANNOT be NULL.
+                    This argument CANNOT be nullptr.
                  3) Specialized user data buffer
   RETURNS      : False if OK, true on errors
   SIDE EFFECTS : Some binds replaced with specialized calls
@@ -1278,8 +1278,8 @@ static bool ReplaceProcBinds(
     int bcode;
     CLIPSLexeme *bname;
 
-    while (actions != NULL) {
-        if (actions->argList != NULL) {
+    while (actions != nullptr) {
+        if (actions->argList != nullptr) {
             if (ReplaceProcBinds(theEnv, actions->argList, altbindfunc, userBuffer))
                 return true;
             if ((actions->value == (void *) FindFunction(theEnv, "bind")) &&
@@ -1311,17 +1311,17 @@ static bool ReplaceProcBinds(
   RETURNS      : The compacted expression
   SIDE EFFECTS : Some expressions possibly deallocated
   NOTES        : Assumes actions is a progn expression
-                 and actions->nextArg == NULL
+                 and actions->nextArg == nullptr
  *****************************************************/
 static Expression *CompactActions(
         Environment *theEnv,
         Expression *actions) {
     struct expr *tmp;
 
-    if (actions->argList == NULL) {
+    if (actions->argList == nullptr) {
         actions->type = SYMBOL_TYPE;
         actions->value = FalseSymbol(theEnv);
-    } else if (actions->argList->nextArg == NULL) {
+    } else if (actions->argList->nextArg == nullptr) {
         tmp = actions;
         actions = actions->argList;
         rtn_struct(theEnv, expr, tmp);

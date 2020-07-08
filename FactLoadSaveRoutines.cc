@@ -102,11 +102,11 @@ static void *GetBinaryAtomValue(Environment *, struct bsaveSlotValueAtom *);
 /********************************************************/
 void FactFileCommandDefinitions(
         Environment *theEnv) {
-    AddUDF(theEnv, "save-facts", "l", 1, UNBOUNDED, "y;sy", SaveFactsCommand, NULL);
-    AddUDF(theEnv, "load-facts", "l", 1, 1, "sy", LoadFactsCommand, NULL);
+    AddUDF(theEnv, "save-facts", "l", 1, UNBOUNDED, "y;sy", SaveFactsCommand, nullptr);
+    AddUDF(theEnv, "load-facts", "l", 1, 1, "sy", LoadFactsCommand, nullptr);
 
-    AddUDF(theEnv, "bsave-facts", "l", 1, UNBOUNDED, "y;sy", BinarySaveFactsCommand, NULL);
-    AddUDF(theEnv, "bload-facts", "l", 1, 1, "sy", BinaryLoadFactsCommand, NULL);
+    AddUDF(theEnv, "bsave-facts", "l", 1, UNBOUNDED, "y;sy", BinarySaveFactsCommand, nullptr);
+    AddUDF(theEnv, "bload-facts", "l", 1, 1, "sy", BinaryLoadFactsCommand, nullptr);
 }
 
 /******************************************/
@@ -122,7 +122,7 @@ void SaveFactsCommand(
     SaveScope saveCode = LOCAL_SAVE;
     const char *argument;
     UDFValue theValue;
-    struct expr *theList = NULL;
+    struct expr *theList = nullptr;
     long factCount = 0;
 
     /*============================================*/
@@ -135,7 +135,7 @@ void SaveFactsCommand(
     /* Get the file name to which facts will be saved. */
     /*=================================================*/
 
-    if ((fileName = GetFileName(context)) == NULL) {
+    if ((fileName = GetFileName(context)) == nullptr) {
         returnValue->integerValue = CreateInteger(theEnv, -1);
         return;
     }
@@ -186,7 +186,7 @@ long SaveFacts(
         Environment *theEnv,
         const char *fileName,
         SaveScope saveCode) {
-    return SaveFactsDriver(theEnv, fileName, saveCode, NULL);
+    return SaveFactsDriver(theEnv, fileName, saveCode, nullptr);
 }
 
 /*****************************************************************/
@@ -210,7 +210,7 @@ long SaveFactsDriver(
     /* Open the file. Use either "fast save" or I/O Router. */
     /*======================================================*/
 
-    if ((filePtr = GenOpen(theEnv, fileName, "w")) == NULL) {
+    if ((filePtr = GenOpen(theEnv, fileName, "w")) == nullptr) {
         OpenErrorMessage(theEnv, "save-facts", fileName);
         return -1;
     }
@@ -240,7 +240,7 @@ long SaveFactsDriver(
         PrintUtilityData(theEnv)->AddressesToStrings = tempValue2;
         PrintUtilityData(theEnv)->InstanceAddressesToNames = tempValue3;
         GenClose(theEnv, filePtr);
-        SetFastSave(theEnv, NULL);
+        SetFastSave(theEnv, nullptr);
         return -1;
     }
 
@@ -250,8 +250,8 @@ long SaveFactsDriver(
 
     theModule = GetCurrentModule(theEnv);
 
-    for (theFact = GetNextFactInScope(theEnv, NULL);
-         theFact != NULL;
+    for (theFact = GetNextFactInScope(theEnv, nullptr);
+         theFact != nullptr;
          theFact = GetNextFactInScope(theEnv, theFact)) {
         /*===========================================================*/
         /* If we're doing a local save and the facts's corresponding */
@@ -267,7 +267,7 @@ long SaveFactsDriver(
             /* restricted, then set the print flag to true.        */
             /*=====================================================*/
 
-        else if (theList == NULL) { printFact = true; }
+        else if (theList == nullptr) { printFact = true; }
 
             /*=======================================================*/
             /* Otherwise see if the fact's corresponding deftemplate */
@@ -293,7 +293,7 @@ long SaveFactsDriver(
 
         if (printFact) {
             factCount++;
-            PrintFact(theEnv, (char *) filePtr, theFact, false, false, NULL);
+            PrintFact(theEnv, (char *) filePtr, theFact, false, false, nullptr);
             WriteString(theEnv, (char *) filePtr, "\n");
         }
     }
@@ -311,13 +311,13 @@ long SaveFactsDriver(
     /*=================*/
 
     GenClose(theEnv, filePtr);
-    SetFastSave(theEnv, NULL);
+    SetFastSave(theEnv, nullptr);
 
     /*==================================*/
     /* Free the deftemplate name array. */
     /*==================================*/
 
-    if (theList != NULL) { rm(theEnv, deftemplateArray, sizeof(Deftemplate *) * count); }
+    if (theList != nullptr) { rm(theEnv, deftemplateArray, sizeof(Deftemplate *) * count); }
 
     /*=========================================*/
     /* Return the fact count to indicate no    */
@@ -342,7 +342,7 @@ static Deftemplate **GetSaveFactsDeftemplateNames(
     Deftemplate **deftemplateArray;
     UDFValue tempArg;
     unsigned int i, tempCount;
-    Deftemplate *theDeftemplate = NULL;
+    Deftemplate *theDeftemplate = nullptr;
 
     /*=============================*/
     /* Initialize the error state. */
@@ -355,9 +355,9 @@ static Deftemplate **GetSaveFactsDeftemplateNames(
     /* then the deftemplate name list is empty.            */
     /*=====================================================*/
 
-    if (theList == NULL) {
+    if (theList == nullptr) {
         *count = 0;
-        return NULL;
+        return nullptr;
     }
 
     /*======================================*/
@@ -366,7 +366,7 @@ static Deftemplate **GetSaveFactsDeftemplateNames(
     /*======================================*/
 
     for (tempList = theList, *count = 0;
-         tempList != NULL;
+         tempList != nullptr;
          tempList = tempList->nextArg, (*count)++) { /* Do Nothing */ }
 
     /*=========================================*/
@@ -391,7 +391,7 @@ static Deftemplate **GetSaveFactsDeftemplateNames(
         if (EvaluationData(theEnv)->EvaluationError) {
             *error = true;
             rm(theEnv, deftemplateArray, sizeof(Deftemplate *) * *count);
-            return NULL;
+            return nullptr;
         }
 
         /*======================================*/
@@ -402,7 +402,7 @@ static Deftemplate **GetSaveFactsDeftemplateNames(
             *error = true;
             ExpectedTypeError1(theEnv, functionName, 3 + i, "symbol");
             rm(theEnv, deftemplateArray, sizeof(Deftemplate *) * *count);
-            return NULL;
+            return nullptr;
         }
 
         /*===================================================*/
@@ -413,22 +413,22 @@ static Deftemplate **GetSaveFactsDeftemplateNames(
 
         if (saveCode == LOCAL_SAVE) {
             theDeftemplate = FindDeftemplateInModule(theEnv, tempArg.lexemeValue->contents);
-            if (theDeftemplate == NULL) {
+            if (theDeftemplate == nullptr) {
                 *error = true;
                 ExpectedTypeError1(theEnv, functionName, 3 + i, "'local deftemplate name'");
                 rm(theEnv, deftemplateArray, sizeof(Deftemplate *) * *count);
-                return NULL;
+                return nullptr;
             }
         } else if (saveCode == VISIBLE_SAVE) {
             theDeftemplate = (Deftemplate *)
-                    FindImportedConstruct(theEnv, "deftemplate", NULL,
+                    FindImportedConstruct(theEnv, "deftemplate", nullptr,
                                           tempArg.lexemeValue->contents,
-                                          &tempCount, true, NULL);
-            if (theDeftemplate == NULL) {
+                                          &tempCount, true, nullptr);
+            if (theDeftemplate == nullptr) {
                 *error = true;
                 ExpectedTypeError1(theEnv, functionName, 3 + i, "'visible deftemplate name'");
                 rm(theEnv, deftemplateArray, sizeof(Deftemplate *) * *count);
-                return NULL;
+                return nullptr;
             }
         }
 
@@ -462,7 +462,7 @@ void LoadFactsCommand(
     /* Get the file name from which facts will be loaded. */
     /*====================================================*/
 
-    if ((fileName = GetFileName(context)) == NULL) {
+    if ((fileName = GetFileName(context)) == nullptr) {
         returnValue->integerValue = CreateInteger(theEnv, -1);
         return;
     }
@@ -493,13 +493,13 @@ long LoadFacts(
     /* If embedded, clear the error flags. */
     /*=====================================*/
 
-    if (EvaluationData(theEnv)->CurrentExpression == NULL) { ResetErrorFlags(theEnv); }
+    if (EvaluationData(theEnv)->CurrentExpression == nullptr) { ResetErrorFlags(theEnv); }
 
     /*======================================================*/
     /* Open the file. Use either "fast save" or I/O Router. */
     /*======================================================*/
 
-    if ((filePtr = GenOpen(theEnv, fileName, "r")) == NULL) {
+    if ((filePtr = GenOpen(theEnv, fileName, "r")) == nullptr) {
         OpenErrorMessage(theEnv, "load-facts", fileName);
         return -1;
     }
@@ -521,7 +521,7 @@ long LoadFacts(
     theToken.tknType = LEFT_PARENTHESIS_TOKEN;
     while (theToken.tknType != STOP_TOKEN) {
         testPtr = StandardLoadFact(theEnv, (char *) filePtr, &theToken);
-        if (testPtr == NULL) theToken.tknType = STOP_TOKEN;
+        if (testPtr == nullptr) theToken.tknType = STOP_TOKEN;
         else {
             factCount++;
             EvaluateExpression(theEnv, testPtr, &rv);
@@ -539,8 +539,8 @@ long LoadFacts(
     /* If embedded, clean the topmost garbage frame. */
     /*===============================================*/
 
-    if (EvaluationData(theEnv)->CurrentExpression == NULL) {
-        CleanCurrentGarbageFrame(theEnv, NULL);
+    if (EvaluationData(theEnv)->CurrentExpression == nullptr) {
+        CleanCurrentGarbageFrame(theEnv, nullptr);
         ConstructData(theEnv)->DanglingConstructs = danglingConstructs;
     }
 
@@ -554,7 +554,7 @@ long LoadFacts(
     /* Close the file. */
     /*=================*/
 
-    SetFastLoad(theEnv, NULL);
+    SetFastLoad(theEnv, nullptr);
     GenClose(theEnv, filePtr);
 
     /*================================================*/
@@ -583,7 +583,7 @@ long LoadFactsFromString(
     /* If embedded, clear the error flags. */
     /*=====================================*/
 
-    if (EvaluationData(theEnv)->CurrentExpression == NULL) { ResetErrorFlags(theEnv); }
+    if (EvaluationData(theEnv)->CurrentExpression == nullptr) { ResetErrorFlags(theEnv); }
 
     /*==========================*/
     /* Initialize string router */
@@ -599,7 +599,7 @@ long LoadFactsFromString(
     theToken.tknType = LEFT_PARENTHESIS_TOKEN;
     while (theToken.tknType != STOP_TOKEN) {
         testPtr = StandardLoadFact(theEnv, theStrRouter, &theToken);
-        if (testPtr == NULL) theToken.tknType = STOP_TOKEN;
+        if (testPtr == nullptr) theToken.tknType = STOP_TOKEN;
         else {
             factCount++;
             EvaluateExpression(theEnv, testPtr, &rv);
@@ -633,7 +633,7 @@ static struct expr *StandardLoadFact(
     struct expr *temp;
 
     GetToken(theEnv, logicalName, theToken);
-    if (theToken->tknType != LEFT_PARENTHESIS_TOKEN) return NULL;
+    if (theToken->tknType != LEFT_PARENTHESIS_TOKEN) return nullptr;
 
     temp = GenConstant(theEnv, FCALL, FindFunction(theEnv, "assert"));
     temp->argList = GetRHSPattern(theEnv, logicalName, theToken, &error,
@@ -643,12 +643,12 @@ static struct expr *StandardLoadFact(
         WriteString(theEnv, STDERR, "Function load-facts encountered an error\n");
         SetEvaluationError(theEnv, true);
         ReturnExpression(theEnv, temp);
-        return NULL;
+        return nullptr;
     }
 
     if (ExpressionContainsVariables(temp, true)) {
         ReturnExpression(theEnv, temp);
-        return NULL;
+        return nullptr;
     }
 
     return (temp);
@@ -669,7 +669,7 @@ void BinaryLoadFactsCommand(
     /* Get the file name from which facts will be loaded. */
     /*====================================================*/
 
-    if ((fileName = GetFileName(context)) == NULL) {
+    if ((fileName = GetFileName(context)) == nullptr) {
         returnValue->integerValue = CreateInteger(theEnv, -1);
         return;
     }
@@ -696,7 +696,7 @@ long BinaryLoadFacts(
     /* If embedded, clear the error flags. */
     /*=====================================*/
 
-    if (EvaluationData(theEnv)->CurrentExpression == NULL) { ResetErrorFlags(theEnv); }
+    if (EvaluationData(theEnv)->CurrentExpression == nullptr) { ResetErrorFlags(theEnv); }
 
     /*======================================================*/
     /* Open the file. Use either "fast save" or I/O Router. */
@@ -761,7 +761,7 @@ long BinaryLoadFacts(
     /* If embedded, clean the topmost garbage frame. */
     /*===============================================*/
 
-    if (EvaluationData(theEnv)->CurrentExpression == NULL) { CleanCurrentGarbageFrame(theEnv, NULL); }
+    if (EvaluationData(theEnv)->CurrentExpression == nullptr) { CleanCurrentGarbageFrame(theEnv, nullptr); }
 
     /*======================*/
     /* Call periodic tasks. */
@@ -818,7 +818,7 @@ static bool LoadSingleBinaryFact(
     Deftemplate *theDeftemplate;
     Fact *newFact;
     struct bsaveSlotValue *bsArray;
-    struct bsaveSlotValueAtom *bsaArray = NULL;
+    struct bsaveSlotValueAtom *bsaArray = nullptr;
     unsigned long nameIndex;
     unsigned long totalValueCount;
     long i, j;
@@ -853,13 +853,13 @@ static bool LoadSingleBinaryFact(
     /*==================================*/
 
     theDeftemplate = (Deftemplate *)
-            FindImportedConstruct(theEnv, "deftemplate", NULL, deftemplateName->contents,
-                                  &count, true, NULL);
+            FindImportedConstruct(theEnv, "deftemplate", nullptr, deftemplateName->contents,
+                                  &count, true, nullptr);
 
-    if (theDeftemplate == NULL) {
+    if (theDeftemplate == nullptr) {
         if (implied) {
             theDeftemplate = BloadFactsCreateImpliedDeftemplate(theEnv, deftemplateName);
-            if (theDeftemplate == NULL) { return false; }
+            if (theDeftemplate == nullptr) { return false; }
         } else {
             CantFindItemInFunctionErrorMessage(theEnv, "deftemplate", deftemplateName->contents, "bload-facts", true);
             return false;
@@ -960,13 +960,13 @@ static Deftemplate *BloadFactsCreateImpliedDeftemplate(
 #if BLOAD_AND_BSAVE
     if (Bloaded(theEnv)) {
         CantFindItemInFunctionErrorMessage(theEnv, "deftemplate", deftemplateName->contents, "bload-facts", true);
-        return NULL;
+        return nullptr;
     }
 #endif
 #if DEFMODULE_CONSTRUCT
     if (FindImportExportConflict(theEnv, "deftemplate", GetCurrentModule(theEnv), deftemplateName->contents)) {
-        ImportExportConflictMessage(theEnv, "implied deftemplate", deftemplateName->contents, NULL, NULL);
-        return NULL;
+        ImportExportConflictMessage(theEnv, "implied deftemplate", deftemplateName->contents, nullptr, nullptr);
+        return nullptr;
     }
 #endif
     return CreateImpliedDeftemplate(theEnv, deftemplateName, true);
@@ -1025,18 +1025,18 @@ static void *GetBinaryAtomValue(
 #if DEFTEMPLATE_CONSTRUCT
             return ((void *) &FactData(theEnv)->DummyFact);
 #else
-            return NULL;
+            return nullptr;
 #endif
 
         case EXTERNAL_ADDRESS_TYPE:
-            return CreateExternalAddress(theEnv, NULL, 0);
+            return CreateExternalAddress(theEnv, nullptr, 0);
 
         default: {
             SystemError(theEnv, "INSFILE", 1);
             ExitRouter(theEnv, EXIT_FAILURE);
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 /***********************/
@@ -1064,7 +1064,7 @@ void BinarySaveFactsCommand(
     SaveScope saveCode = LOCAL_SAVE;
     const char *argument;
     UDFValue theValue;
-    struct expr *theList = NULL;
+    struct expr *theList = nullptr;
     long factCount;
 
     /*============================================*/
@@ -1077,7 +1077,7 @@ void BinarySaveFactsCommand(
     /* Get the file name to which facts will be saved. */
     /*=================================================*/
 
-    if ((fileName = GetFileName(context)) == NULL) {
+    if ((fileName = GetFileName(context)) == nullptr) {
         returnValue->integerValue = CreateInteger(theEnv, -1);
         return;
     }
@@ -1128,7 +1128,7 @@ long BinarySaveFacts(
         Environment *theEnv,
         const char *file,
         SaveScope saveCode) {
-    return BinarySaveFactsDriver(theEnv, file, saveCode, NULL);
+    return BinarySaveFactsDriver(theEnv, file, saveCode, nullptr);
 }
 
 /**************************/
@@ -1150,13 +1150,13 @@ long BinarySaveFactsDriver(
     /* If embedded, clear the error flags. */
     /*=====================================*/
 
-    if (EvaluationData(theEnv)->CurrentExpression == NULL) { ResetErrorFlags(theEnv); }
+    if (EvaluationData(theEnv)->CurrentExpression == nullptr) { ResetErrorFlags(theEnv); }
 
     /*======================================================*/
     /* Open the file. Use either "fast save" or I/O Router. */
     /*======================================================*/
 
-    if ((filePtr = GenOpen(theEnv, fileName, "wb")) == NULL) {
+    if ((filePtr = GenOpen(theEnv, fileName, "wb")) == nullptr) {
         OpenErrorMessage(theEnv, "bsave-facts", fileName);
         return -1;
     }
@@ -1199,7 +1199,7 @@ long BinarySaveFactsDriver(
     /* Free the deftemplate name array. */
     /*==================================*/
 
-    if (theList != NULL) { rm(theEnv, deftemplateArray, sizeof(Deftemplate *) * templateCount); }
+    if (theList != nullptr) { rm(theEnv, deftemplateArray, sizeof(Deftemplate *) * templateCount); }
 
     /*=========================================*/
     /* Return the fact count to indicate no    */
@@ -1230,8 +1230,8 @@ static long MarkFacts(
 
     theModule = GetCurrentModule(theEnv);
 
-    for (theFact = GetNextFactInScope(theEnv, NULL);
-         theFact != NULL;
+    for (theFact = GetNextFactInScope(theEnv, nullptr);
+         theFact != nullptr;
          theFact = GetNextFactInScope(theEnv, theFact)) {
         /*===========================================================*/
         /* If we're doing a local save and the facts's corresponding */
@@ -1247,7 +1247,7 @@ static long MarkFacts(
             /* restricted, then set the mark flag to true.       */
             /*===================================================*/
 
-        else if (deftemplateArray == NULL) { markFact = true; }
+        else if (deftemplateArray == nullptr) { markFact = true; }
 
             /*=======================================================*/
             /* Otherwise see if the fact's corresponding deftemplate */
@@ -1397,8 +1397,8 @@ static long SaveBinaryFacts(
 
     theModule = GetCurrentModule(theEnv);
 
-    for (theFact = GetNextFactInScope(theEnv, NULL);
-         theFact != NULL;
+    for (theFact = GetNextFactInScope(theEnv, nullptr);
+         theFact != nullptr;
          theFact = GetNextFactInScope(theEnv, theFact)) {
         /*===========================================================*/
         /* If we're doing a local save and the facts's corresponding */
@@ -1414,7 +1414,7 @@ static long SaveBinaryFacts(
             /* restricted, then set the mark flag to true.       */
             /*===================================================*/
 
-        else if (deftemplateArray == NULL) { saveFact = true; }
+        else if (deftemplateArray == nullptr) { saveFact = true; }
 
             /*=======================================================*/
             /* Otherwise see if the fact's corresponding deftemplate */

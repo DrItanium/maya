@@ -105,13 +105,13 @@ void InitializeDeftemplates(
     struct entityRecord deftemplatePtrRecord =
             {"DEFTEMPLATE_PTR",
              DEFTEMPLATE_PTR, 1, 0, 0,
-             NULL,
-             NULL, NULL,
-             NULL,
-             NULL,
+             nullptr,
+             nullptr, nullptr,
+             nullptr,
+             nullptr,
              (EntityBusyCountFunction *) DecrementDeftemplateBusyCount,
              (EntityBusyCountFunction *) IncrementDeftemplateBusyCount,
-             NULL, NULL, NULL, NULL, NULL};
+             nullptr, nullptr, nullptr, nullptr, nullptr};
     AllocateEnvironmentData(theEnv, DEFTEMPLATE_DATA, sizeof(struct deftemplateData), DeallocateDeftemplateData);
 
     memcpy(&DeftemplateData(theEnv)->DeftemplatePtrRecord, &deftemplatePtrRecord, sizeof(struct entityRecord));
@@ -150,10 +150,10 @@ static void DeallocateDeftemplateData(
     if (Bloaded(theEnv)) return;
 #endif
 
-    DoForAllConstructs(theEnv, DestroyDeftemplateAction, DeftemplateData(theEnv)->DeftemplateModuleIndex, false, NULL);
+    DoForAllConstructs(theEnv, DestroyDeftemplateAction, DeftemplateData(theEnv)->DeftemplateModuleIndex, false, nullptr);
 
-    for (theModule = GetNextDefmodule(theEnv, NULL);
-         theModule != NULL;
+    for (theModule = GetNextDefmodule(theEnv, nullptr);
+         theModule != nullptr;
          theModule = GetNextDefmodule(theEnv, theModule)) {
         theModuleItem = (struct deftemplateModule *)
                 GetModuleItem(theEnv, theModule,
@@ -175,7 +175,7 @@ static void DestroyDeftemplateAction(
 #endif
     Deftemplate *theDeftemplate = (Deftemplate *) theConstruct;
 
-    if (theDeftemplate == NULL) return;
+    if (theDeftemplate == nullptr) return;
 
     DestroyDeftemplate(theEnv, theDeftemplate);
 }
@@ -193,7 +193,7 @@ static void InitializeDeftemplateModules(
 #if BLOAD_AND_BSAVE
                                                                          BloadDeftemplateModuleReference,
 #else
-            NULL,
+            nullptr,
 #endif
                                                                          (FindConstructFunction *) FindDeftemplateInModule);
 
@@ -233,7 +233,7 @@ struct deftemplateModule *GetDeftemplateModuleItem(
 /***************************************************/
 /* FindDeftemplate: Searches for a deftemplate in  */
 /*   the list of deftemplates. Returns a pointer   */
-/*   to the deftemplate if  found, otherwise NULL. */
+/*   to the deftemplate if  found, otherwise nullptr. */
 /***************************************************/
 Deftemplate *FindDeftemplate(
         Environment *theEnv,
@@ -244,7 +244,7 @@ Deftemplate *FindDeftemplate(
 /*******************************************************/
 /* FindDeftemplateInModule: Searches for a deftemplate */
 /*   in the list of deftemplates. Returns a pointer    */
-/*   to the deftemplate if  found, otherwise NULL.     */
+/*   to the deftemplate if  found, otherwise nullptr.     */
 /*******************************************************/
 Deftemplate *FindDeftemplateInModule(
         Environment *theEnv,
@@ -253,7 +253,7 @@ Deftemplate *FindDeftemplateInModule(
 }
 
 /***********************************************************************/
-/* GetNextDeftemplate: If passed a NULL pointer, returns the first     */
+/* GetNextDeftemplate: If passed a nullptr pointer, returns the first     */
 /*   deftemplate in the ListOfDeftemplates. Otherwise returns the next */
 /*   deftemplate following the deftemplate passed as an argument.      */
 /***********************************************************************/
@@ -274,7 +274,7 @@ bool DeftemplateIsDeletable(
     if (!ConstructsDeletable(theEnv)) { return false; }
 
     if (theDeftemplate->busyCount > 0) return false;
-    if (theDeftemplate->patternNetwork != NULL) return false;
+    if (theDeftemplate->patternNetwork != nullptr) return false;
 
     return true;
 }
@@ -288,7 +288,7 @@ static void ReturnDeftemplate(
         Deftemplate *theDeftemplate) {
     struct templateSlot *slotPtr;
 
-    if (theDeftemplate == NULL) return;
+    if (theDeftemplate == nullptr) return;
 
         /*====================================================================*/
         /* If a template is redefined, then we want to save its debug status. */
@@ -304,14 +304,14 @@ static void ReturnDeftemplate(
     /*===========================================*/
 
     slotPtr = theDeftemplate->slotList;
-    while (slotPtr != NULL) {
+    while (slotPtr != nullptr) {
         ReleaseLexeme(theEnv, slotPtr->slotName);
         RemoveHashedExpression(theEnv, slotPtr->defaultList);
-        slotPtr->defaultList = NULL;
+        slotPtr->defaultList = nullptr;
         RemoveHashedExpression(theEnv, slotPtr->facetList);
-        slotPtr->facetList = NULL;
+        slotPtr->facetList = nullptr;
         RemoveConstraint(theEnv, slotPtr->constraints);
-        slotPtr->constraints = NULL;
+        slotPtr->constraints = nullptr;
         slotPtr = slotPtr->next;
     }
 
@@ -334,11 +334,11 @@ static void DestroyDeftemplate(
         Environment *theEnv,
         Deftemplate *theDeftemplate) {
     struct templateSlot *slotPtr, *nextSlot;
-    if (theDeftemplate == NULL) return;
+    if (theDeftemplate == nullptr) return;
 
     slotPtr = theDeftemplate->slotList;
 
-    while (slotPtr != NULL) {
+    while (slotPtr != nullptr) {
         nextSlot = slotPtr->next;
         rtn_struct(theEnv, templateSlot, slotPtr);
         slotPtr = nextSlot;
@@ -364,7 +364,7 @@ void ReturnSlots(
         struct templateSlot *slotPtr) {
     struct templateSlot *nextSlot;
 
-    while (slotPtr != NULL) {
+    while (slotPtr != nullptr) {
         nextSlot = slotPtr->next;
         ReturnExpression(theEnv, slotPtr->defaultList);
         ReturnExpression(theEnv, slotPtr->facetList);
@@ -399,16 +399,16 @@ void IncrementDeftemplateBusyCount(
 }
 
 /*******************************************************************/
-/* GetNextFactInTemplate: If passed a NULL pointer, returns the    */
+/* GetNextFactInTemplate: If passed a nullptr pointer, returns the    */
 /*   first fact in the template's fact-list. Otherwise returns the */
 /*   next template fact following the fact passed as an argument.  */
 /*******************************************************************/
 Fact *GetNextFactInTemplate(
         Deftemplate *theTemplate,
         Fact *factPtr) {
-    if (factPtr == NULL) { return (theTemplate->factList); }
+    if (factPtr == nullptr) { return (theTemplate->factList); }
 
-    if (factPtr->garbage) return NULL;
+    if (factPtr->garbage) return nullptr;
 
     return (factPtr->nextTemplateFact);
 }
@@ -436,13 +436,13 @@ void *CreateDeftemplateScopeMap(
 
     ClearBitString((void *) scopeMap, scopeMapSize);
     SaveCurrentModule(theEnv);
-    for (theModule = GetNextDefmodule(theEnv, NULL);
-         theModule != NULL;
+    for (theModule = GetNextDefmodule(theEnv, nullptr);
+         theModule != nullptr;
          theModule = GetNextDefmodule(theEnv, theModule)) {
         SetCurrentModule(theEnv, theModule);
         moduleID = theModule->header.bsaveID;
         if (FindImportedConstruct(theEnv, "deftemplate", matchModule,
-                                  templateName, &count, true, NULL) != NULL)
+                                  templateName, &count, true, nullptr) != nullptr)
             SetBitMap(scopeMap, moduleID);
     }
     RestoreCurrentModule(theEnv);

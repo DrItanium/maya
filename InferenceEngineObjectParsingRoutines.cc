@@ -88,7 +88,7 @@ Expression *GenGetJNObjectValue(
         int side) {
     Expression *theItem;
 
-    theItem = GenConstant(theEnv, 0, NULL);
+    theItem = GenConstant(theEnv, 0, nullptr);
     GenObjectGetVar(theEnv, true, theItem, theNode, side);
     return (theItem);
 }
@@ -148,7 +148,7 @@ Expression *GenObjectPNConstantCompare(
         hack.general = 1;
         theExp = GenConstant(theEnv, OBJ_PN_CONSTANT, AddBitMap(theEnv, &hack,
                                                                 sizeof(struct ObjectCmpPNConstant)));
-        theExp->argList = GenConstant(theEnv, 0, NULL);
+        theExp->argList = GenConstant(theEnv, 0, nullptr);
         tmpType = theNode->pnType;
         theNode->pnType = SF_VARIABLE_NODE;
         GenObjectGetVar(theEnv, false, theExp->argList, theNode, -1);
@@ -170,7 +170,7 @@ Expression *GenGetPNObjectValue(
         struct lhsParseNode *theNode) {
     Expression *theItem;
 
-    theItem = GenConstant(theEnv, 0, NULL);
+    theItem = GenConstant(theEnv, 0, nullptr);
     GenObjectGetVar(theEnv, false, theItem, theNode, -1);
     return (theItem);
 }
@@ -221,7 +221,7 @@ void GenObjectLengthTest(
     theTest = GenConstant(theEnv, OBJ_SLOT_LENGTH, AddBitMap(theEnv, &hack,
                                                              sizeof(struct ObjectMatchLength)));
 
-    if (theNode->constantSelector != NULL) { theNode->constantSelector->nextArg = CopyExpression(theEnv, theTest); }
+    if (theNode->constantSelector != nullptr) { theNode->constantSelector->nextArg = CopyExpression(theEnv, theTest); }
 
     theNode->networkTest = CombineExpressions(theEnv, theTest, theNode->networkTest);
 }
@@ -627,12 +627,12 @@ static Expression *GenerateSlotComparisonTest(
            ================================================== */
     else {
         theExp = GenConstant(theEnv, FCALL, selfNode->negated ? ExpressionData(theEnv)->PTR_NEQ : ExpressionData(theEnv)->PTR_EQ);
-        theExp->argList = GenConstant(theEnv, 0, NULL);
+        theExp->argList = GenConstant(theEnv, 0, nullptr);
 
         if (isNand) { GenObjectGetVar(theEnv, joinTest, theExp->argList, selfNode, NESTED_RHS); }
         else { GenObjectGetVar(theEnv, joinTest, theExp->argList, selfNode, CLIPS_RHS); }
 
-        theExp->argList->nextArg = GenConstant(theEnv, 0, NULL);
+        theExp->argList->nextArg = GenConstant(theEnv, 0, nullptr);
 
         if ((!isNand) && (selfNode->joinDepth == referringNode->joinDepth)) {
             GenObjectGetVar(theEnv, joinTest, theExp->argList->nextArg, referringNode, CLIPS_RHS);

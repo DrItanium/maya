@@ -97,24 +97,24 @@ static void ClearDefrules(Environment *, void *);
 /*************************************************************/
 void DefruleBasicCommands(
         Environment *theEnv) {
-    AddResetFunction(theEnv, "defrule", ResetDefrules, 70, NULL);
-    AddResetFunction(theEnv, "defrule", ResetDefrulesPrime, 10, NULL);
-    AddSaveFunction(theEnv, "defrule", SaveDefrules, 0, NULL);
-    AddClearReadyFunction(theEnv, "defrule", ClearDefrulesReady, 0, NULL);
-    AddClearFunction(theEnv, "defrule", ClearDefrules, 0, NULL);
+    AddResetFunction(theEnv, "defrule", ResetDefrules, 70, nullptr);
+    AddResetFunction(theEnv, "defrule", ResetDefrulesPrime, 10, nullptr);
+    AddSaveFunction(theEnv, "defrule", SaveDefrules, 0, nullptr);
+    AddClearReadyFunction(theEnv, "defrule", ClearDefrulesReady, 0, nullptr);
+    AddClearFunction(theEnv, "defrule", ClearDefrules, 0, nullptr);
 
 #if DEBUGGING_FUNCTIONS
     AddWatchItem(theEnv, "rules", 0, &DefruleData(theEnv)->WatchRules, 70, DefruleWatchAccess, DefruleWatchPrint);
 #endif
 
-    AddUDF(theEnv, "get-defrule-list", "m", 0, 1, "y", GetDefruleListFunction, NULL);
-    AddUDF(theEnv, "undefrule", "v", 1, 1, "y", UndefruleCommand, NULL);
-    AddUDF(theEnv, "defrule-module", "y", 1, 1, "y", DefruleModuleFunction, NULL);
+    AddUDF(theEnv, "get-defrule-list", "m", 0, 1, "y", GetDefruleListFunction, nullptr);
+    AddUDF(theEnv, "undefrule", "v", 1, 1, "y", UndefruleCommand, nullptr);
+    AddUDF(theEnv, "defrule-module", "y", 1, 1, "y", DefruleModuleFunction, nullptr);
 
 #if DEBUGGING_FUNCTIONS
-    AddUDF(theEnv, "rules", "v", 0, 1, "y", ListDefrulesCommand, NULL);
-    AddUDF(theEnv, "list-defrules", "v", 0, 1, "y", ListDefrulesCommand, NULL);
-    AddUDF(theEnv, "ppdefrule", "vs", 1, 2, ";y;ldsyn", PPDefruleCommand, NULL);
+    AddUDF(theEnv, "rules", "v", 0, 1, "y", ListDefrulesCommand, nullptr);
+    AddUDF(theEnv, "list-defrules", "v", 0, 1, "y", ListDefrulesCommand, nullptr);
+    AddUDF(theEnv, "ppdefrule", "vs", 1, 2, ";y;ldsyn", PPDefruleCommand, nullptr);
 #endif
 
 #if BLOAD_AND_BSAVE
@@ -143,11 +143,11 @@ static void ResetDefrules(
     Focus(theModule);
 
     for (theLink = DefruleData(theEnv)->RightPrimeJoins;
-         theLink != NULL;
+         theLink != nullptr;
          theLink = theLink->next) { PosEntryRetractAlpha(theEnv, theLink->join->rightMemory->beta[0], NETWORK_ASSERT); }
 
     for (theLink = DefruleData(theEnv)->LeftPrimeJoins;
-         theLink != NULL;
+         theLink != nullptr;
          theLink = theLink->next) {
         if ((theLink->join->patternIsNegated || theLink->join->joinFromTheRight) &&
             (!theLink->join->patternIsExists)) {
@@ -161,9 +161,9 @@ static void ResetDefrules(
 
             notParent->marker = notParent;
 
-            if (notParent->children != NULL) { PosEntryRetractBeta(theEnv, notParent, notParent->children, NETWORK_ASSERT); }
+            if (notParent->children != nullptr) { PosEntryRetractBeta(theEnv, notParent, notParent->children, NETWORK_ASSERT); }
             /*
-          if (notParent->dependents != NULL)
+          if (notParent->dependents != nullptr)
             { RemoveLogicalSupport(theEnv,notParent); } */
         }
     }
@@ -179,21 +179,21 @@ static void ResetDefrulesPrime(
     struct partialMatch *notParent;
 
     for (theLink = DefruleData(theEnv)->RightPrimeJoins;
-         theLink != NULL;
+         theLink != nullptr;
          theLink = theLink->next) { NetworkAssert(theEnv, theLink->join->rightMemory->beta[0], theLink->join); }
 
     for (theLink = DefruleData(theEnv)->LeftPrimeJoins;
-         theLink != NULL;
+         theLink != nullptr;
          theLink = theLink->next) {
         if ((theLink->join->patternIsNegated || theLink->join->joinFromTheRight) &&
             (!theLink->join->patternIsExists)) {
             notParent = theLink->join->leftMemory->beta[0];
 
-            if (theLink->join->secondaryNetworkTest != NULL) {
+            if (theLink->join->secondaryNetworkTest != nullptr) {
                 if (EvaluateSecondaryNetworkTest(theEnv, notParent, theLink->join) == false) { continue; }
             }
 
-            notParent->marker = NULL;
+            notParent->marker = nullptr;
 
             EPMDrive(theEnv, notParent, theLink->join, NETWORK_ASSERT);
         }
@@ -208,12 +208,12 @@ static void ResetDefrulesPrime(
 static bool ClearDefrulesReady(
         Environment *theEnv,
         void *context) {
-    if (EngineData(theEnv)->ExecutingRule != NULL) return false;
+    if (EngineData(theEnv)->ExecutingRule != nullptr) return false;
 
     if (EngineData(theEnv)->JoinOperationInProgress) return false;
 
     ClearFocusStack(theEnv);
-    if (GetCurrentModule(theEnv) == NULL) return false;
+    if (GetCurrentModule(theEnv) == nullptr) return false;
 
     DefruleData(theEnv)->CurrentEntityTimeTag = 1L;
 
@@ -265,9 +265,9 @@ bool Undefrule(
         Environment *allEnv) {
     Environment *theEnv;
 
-    if (theDefrule == NULL) {
+    if (theDefrule == nullptr) {
         theEnv = allEnv;
-        return Undefconstruct(theEnv, NULL, DefruleData(theEnv)->DefruleConstruct);
+        return Undefconstruct(theEnv, nullptr, DefruleData(theEnv)->DefruleConstruct);
     } else {
         theEnv = theDefrule->header.env;
         return Undefconstruct(theEnv, &theDefrule->header, DefruleData(theEnv)->DefruleConstruct);
@@ -367,7 +367,7 @@ bool DefruleGetWatchActivations(
     Defrule *thePtr;
 
     for (thePtr = rulePtr;
-         thePtr != NULL;
+         thePtr != nullptr;
          thePtr = thePtr->disjunct) { if (thePtr->watchActivation) return true; }
 
     return false;
@@ -383,7 +383,7 @@ bool DefruleGetWatchFirings(
     Defrule *thePtr;
 
     for (thePtr = rulePtr;
-         thePtr != NULL;
+         thePtr != nullptr;
          thePtr = thePtr->disjunct) { if (thePtr->watchFiring) return true; }
 
     return false;
@@ -400,7 +400,7 @@ void DefruleSetWatchActivations(
     Defrule *thePtr;
 
     for (thePtr = rulePtr;
-         thePtr != NULL;
+         thePtr != nullptr;
          thePtr = thePtr->disjunct) { thePtr->watchActivation = newState; }
 }
 
@@ -415,7 +415,7 @@ void DefruleSetWatchFirings(
     Defrule *thePtr;
 
     for (thePtr = rulePtr;
-         thePtr != NULL;
+         thePtr != nullptr;
          thePtr = thePtr->disjunct) { thePtr->watchFiring = newState; }
 }
 

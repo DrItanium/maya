@@ -103,7 +103,7 @@ struct lhsParseNode *SequenceRestrictionParse(
         (theToken->tknType == AND_CONSTRAINT_TOKEN)) {
         ReturnLHSParseNodes(theEnv, topNode);
         SyntaxErrorMessage(theEnv, "the first field of a pattern");
-        return NULL;
+        return nullptr;
     }
 
     /*============================================================*/
@@ -111,10 +111,10 @@ struct lhsParseNode *SequenceRestrictionParse(
     /* as if they were contained in a multifield slot.            */
     /*============================================================*/
 
-    nextField = RestrictionParse(theEnv, readSource, theToken, true, NULL, 1, NULL, 1);
-    if (nextField == NULL) {
+    nextField = RestrictionParse(theEnv, readSource, theToken, true, nullptr, 1, nullptr, 1);
+    if (nextField == nullptr) {
         ReturnLHSParseNodes(theEnv, topNode);
-        return NULL;
+        return nullptr;
     }
     topNode->right = nextField;
 
@@ -128,7 +128,7 @@ struct lhsParseNode *SequenceRestrictionParse(
         SavePPBuffer(theEnv, theToken->printForm);
         SyntaxErrorMessage(theEnv, "fact patterns");
         ReturnLHSParseNodes(theEnv, topNode);
-        return NULL;
+        return nullptr;
     }
 
     /*====================================*/
@@ -136,7 +136,7 @@ struct lhsParseNode *SequenceRestrictionParse(
     /* slot contained no restrictions.    */
     /*====================================*/
 
-    if (nextField->bottom == NULL) {
+    if (nextField->bottom == nullptr) {
         PPBackup(theEnv);
         PPBackup(theEnv);
         SavePPBuffer(theEnv, ")");
@@ -183,7 +183,7 @@ struct lhsParseNode *FactPatternParse(
 
     if (FindModuleSeparator(theToken->lexemeValue->contents)) {
         IllegalModuleSpecifierMessage(theEnv);
-        return NULL;
+        return nullptr;
     }
 
     /*=========================================================*/
@@ -191,12 +191,12 @@ struct lhsParseNode *FactPatternParse(
     /*=========================================================*/
 
     theDeftemplate = (Deftemplate *)
-            FindImportedConstruct(theEnv, "deftemplate", NULL, theToken->lexemeValue->contents,
-                                  &count, true, NULL);
+            FindImportedConstruct(theEnv, "deftemplate", nullptr, theToken->lexemeValue->contents,
+                                  &count, true, nullptr);
 
     if (count > 1) {
         AmbiguousReferenceErrorMessage(theEnv, "deftemplate", theToken->lexemeValue->contents);
-        return NULL;
+        return nullptr;
     }
 
     /*======================================================*/
@@ -204,16 +204,16 @@ struct lhsParseNode *FactPatternParse(
     /* name, then create an implied deftemplate.            */
     /*======================================================*/
 
-    if (theDeftemplate == NULL) {
+    if (theDeftemplate == nullptr) {
 #if DEFMODULE_CONSTRUCT
         if (FindImportExportConflict(theEnv, "deftemplate", GetCurrentModule(theEnv), theToken->lexemeValue->contents)) {
-            ImportExportConflictMessage(theEnv, "implied deftemplate", theToken->lexemeValue->contents, NULL, NULL);
-            return NULL;
+            ImportExportConflictMessage(theEnv, "implied deftemplate", theToken->lexemeValue->contents, nullptr, nullptr);
+            return nullptr;
         }
 #endif /* DEFMODULE_CONSTRUCT */
 
         if (!ConstructData(theEnv)->CheckSyntaxMode) { theDeftemplate = CreateImpliedDeftemplate(theEnv, theToken->lexemeValue, true); }
-        else { theDeftemplate = NULL; }
+        else { theDeftemplate = nullptr; }
     }
 
     /*===============================================*/
@@ -221,7 +221,7 @@ struct lhsParseNode *FactPatternParse(
     /* the pattern as a deftemplate pattern.         */
     /*===============================================*/
 
-    if ((theDeftemplate != NULL) && (theDeftemplate->implied == false)) {
+    if ((theDeftemplate != nullptr) && (theDeftemplate->implied == false)) {
         return (DeftemplateLHSParse(theEnv, readSource, theDeftemplate));
     }
 

@@ -67,16 +67,16 @@
 /***************************************************************/
 void BasicMathFunctionDefinitions(
         Environment *theEnv) {
-    AddUDF(theEnv, "+", "ld", 2, UNBOUNDED, "ld", AdditionFunction, NULL);
-    AddUDF(theEnv, "*", "ld", 2, UNBOUNDED, "ld", MultiplicationFunction, NULL);
-    AddUDF(theEnv, "-", "ld", 2, UNBOUNDED, "ld", SubtractionFunction, NULL);
-    AddUDF(theEnv, "/", "d", 2, UNBOUNDED, "ld", DivisionFunction, NULL);
-    AddUDF(theEnv, "div", "l", 2, UNBOUNDED, "ld", DivFunction, NULL);
-    AddUDF(theEnv, "integer", "l", 1, 1, "ld", IntegerFunction, NULL);
-    AddUDF(theEnv, "float", "d", 1, 1, "ld", FloatFunction, NULL);
-    AddUDF(theEnv, "abs", "ld", 1, 1, "ld", AbsFunction, NULL);
-    AddUDF(theEnv, "min", "ld", 1, UNBOUNDED, "ld", MinFunction, NULL);
-    AddUDF(theEnv, "max", "ld", 1, UNBOUNDED, "ld", MaxFunction, NULL);
+    AddUDF(theEnv, "+", "ld", 2, UNBOUNDED, "ld", AdditionFunction, nullptr);
+    AddUDF(theEnv, "*", "ld", 2, UNBOUNDED, "ld", MultiplicationFunction, nullptr);
+    AddUDF(theEnv, "-", "ld", 2, UNBOUNDED, "ld", SubtractionFunction, nullptr);
+    AddUDF(theEnv, "/", "d", 2, UNBOUNDED, "ld", DivisionFunction, nullptr);
+    AddUDF(theEnv, "div", "l", 2, UNBOUNDED, "ld", DivFunction, nullptr);
+    AddUDF(theEnv, "integer", "l", 1, 1, "ld", IntegerFunction, nullptr);
+    AddUDF(theEnv, "float", "d", 1, 1, "ld", FloatFunction, nullptr);
+    AddUDF(theEnv, "abs", "ld", 1, 1, "ld", AbsFunction, nullptr);
+    AddUDF(theEnv, "min", "ld", 1, UNBOUNDED, "ld", MinFunction, nullptr);
+    AddUDF(theEnv, "max", "ld", 1, UNBOUNDED, "ld", MaxFunction, nullptr);
 }
 
 /**********************************/

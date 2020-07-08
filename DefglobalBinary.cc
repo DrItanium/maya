@@ -70,11 +70,11 @@ void DefglobalBinarySetup(
         Environment *theEnv) {
     AllocateEnvironmentData(theEnv, GLOBLBIN_DATA, sizeof(struct defglobalBinaryData), DeallocateDefglobalBloadData);
 #if (BLOAD_AND_BSAVE)
-    AddAfterBloadFunction(theEnv, "defglobal", ResetDefglobals, 50, NULL);
+    AddAfterBloadFunction(theEnv, "defglobal", ResetDefglobals, 50, nullptr);
 #endif
 
 #if BLOAD_AND_BSAVE
-    AddBinaryItem(theEnv, "defglobal", 0, BsaveFind, NULL,
+    AddBinaryItem(theEnv, "defglobal", 0, BsaveFind, nullptr,
                   BsaveStorage, BsaveBinaryItem,
                   BloadStorageDefglobals, BloadBinaryItem,
                   ClearBload);
@@ -137,8 +137,8 @@ static void BsaveFind(
     DefglobalBinaryData(theEnv)->NumberOfDefglobals = 0;
     DefglobalBinaryData(theEnv)->NumberOfDefglobalModules = 0;
 
-    for (theModule = GetNextDefmodule(theEnv, NULL);
-         theModule != NULL;
+    for (theModule = GetNextDefmodule(theEnv, nullptr);
+         theModule != nullptr;
          theModule = GetNextDefmodule(theEnv, theModule)) {
         /*================================================*/
         /* Set the current module to the module being     */
@@ -153,8 +153,8 @@ static void BsaveFind(
         /* Loop through each defglobal in the current module. */
         /*====================================================*/
 
-        for (defglobalPtr = GetNextDefglobal(theEnv, NULL);
-             defglobalPtr != NULL;
+        for (defglobalPtr = GetNextDefglobal(theEnv, nullptr);
+             defglobalPtr != nullptr;
              defglobalPtr = GetNextDefglobal(theEnv, defglobalPtr)) {
             /*======================================================*/
             /* Initialize the construct header for the binary save. */
@@ -214,13 +214,13 @@ static void BsaveBinaryItem(
     /*=================================================*/
 
     DefglobalBinaryData(theEnv)->NumberOfDefglobals = 0;
-    for (theModule = GetNextDefmodule(theEnv, NULL);
-         theModule != NULL;
+    for (theModule = GetNextDefmodule(theEnv, nullptr);
+         theModule != nullptr;
          theModule = GetNextDefmodule(theEnv, theModule)) {
         SetCurrentModule(theEnv, theModule);
 
         theModuleItem = (struct defglobalModule *)
-                GetModuleItem(theEnv, NULL, FindModuleItem(theEnv, "defglobal")->moduleIndex);
+                GetModuleItem(theEnv, nullptr, FindModuleItem(theEnv, "defglobal")->moduleIndex);
         AssignBsaveDefmdlItemHdrVals(&tempDefglobalModule.header,
                                      &theModuleItem->header);
         GenWrite(&tempDefglobalModule, sizeof(struct bsaveDefglobalModule), fp);
@@ -231,13 +231,13 @@ static void BsaveBinaryItem(
     /*===========================*/
 
     DefglobalBinaryData(theEnv)->NumberOfDefglobals = 0;
-    for (theModule = GetNextDefmodule(theEnv, NULL);
-         theModule != NULL;
+    for (theModule = GetNextDefmodule(theEnv, nullptr);
+         theModule != nullptr;
          theModule = GetNextDefmodule(theEnv, theModule)) {
         SetCurrentModule(theEnv, theModule);
 
-        for (theDefglobal = GetNextDefglobal(theEnv, NULL);
-             theDefglobal != NULL;
+        for (theDefglobal = GetNextDefglobal(theEnv, nullptr);
+             theDefglobal != nullptr;
              theDefglobal = GetNextDefglobal(theEnv, theDefglobal)) {
             AssignBsaveConstructHeaderVals(&newDefglobal.header,
                                            &theDefglobal->header);
@@ -283,8 +283,8 @@ static void BloadStorageDefglobals(
     /*===================================*/
 
     if (DefglobalBinaryData(theEnv)->NumberOfDefglobalModules == 0) {
-        DefglobalBinaryData(theEnv)->DefglobalArray = NULL;
-        DefglobalBinaryData(theEnv)->ModuleArray = NULL;
+        DefglobalBinaryData(theEnv)->DefglobalArray = nullptr;
+        DefglobalBinaryData(theEnv)->ModuleArray = nullptr;
     }
 
     space = DefglobalBinaryData(theEnv)->NumberOfDefglobalModules * sizeof(struct defglobalModule);
@@ -296,7 +296,7 @@ static void BloadStorageDefglobals(
     /*===================================*/
 
     if (DefglobalBinaryData(theEnv)->NumberOfDefglobals == 0) {
-        DefglobalBinaryData(theEnv)->DefglobalArray = NULL;
+        DefglobalBinaryData(theEnv)->DefglobalArray = nullptr;
         return;
     }
 

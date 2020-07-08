@@ -75,7 +75,7 @@ unsigned FindModuleSeparator(
 
     sep = strstr(theString, "::");
 
-    if (sep == NULL) { return 0; }
+    if (sep == nullptr) { return 0; }
 
     return ((unsigned) (sep - theString) + 1);
 }
@@ -83,7 +83,7 @@ unsigned FindModuleSeparator(
 /*******************************************************************/
 /* ExtractModuleName: Given the position of the :: separator and a */
 /*   module/construct name joined using the separator, returns a   */
-/*   symbol reference to the module name (or NULL if a module name */
+/*   symbol reference to the module name (or nullptr if a module name */
 /*   cannot be extracted).                                         */
 /*******************************************************************/
 CLIPSLexeme *ExtractModuleName(
@@ -94,11 +94,11 @@ CLIPSLexeme *ExtractModuleName(
     CLIPSLexeme *returnValue;
 
     /*=============================================*/
-    /* Return NULL if the :: is in a position such */
+    /* Return nullptr if the :: is in a position such */
     /* that a module name can't be extracted.      */
     /*=============================================*/
 
-    if (thePosition <= 1) return NULL;
+    if (thePosition <= 1) return nullptr;
 
     /*==========================================*/
     /* Allocate storage for a temporary string. */
@@ -142,7 +142,7 @@ CLIPSLexeme *ExtractModuleName(
 /********************************************************************/
 /* ExtractConstructName: Given the position of the :: separator and */
 /*   a module/construct name joined using the separator, returns a  */
-/*   symbol reference to the construct name (or NULL if a construct */
+/*   symbol reference to the construct name (or nullptr if a construct */
 /*   name cannot be extracted).                                     */
 /********************************************************************/
 CLIPSLexeme *ExtractConstructName(
@@ -168,11 +168,11 @@ CLIPSLexeme *ExtractConstructName(
     theLength = strlen(theString);
 
     /*=================================================*/
-    /* Return NULL if the :: is at the very end of the */
+    /* Return nullptr if the :: is at the very end of the */
     /* string (and thus there is no construct name).   */
     /*=================================================*/
 
-    if (theLength <= (thePosition + 1)) return NULL;
+    if (theLength <= (thePosition + 1)) return nullptr;
 
     /*====================================*/
     /* Allocate a temporary string large  */
@@ -234,14 +234,14 @@ const char *ExtractModuleAndConstructName(
     /*==========================*/
 
     moduleName = ExtractModuleName(theEnv, separatorPosition, theName);
-    if (moduleName == NULL) return NULL;
+    if (moduleName == nullptr) return nullptr;
 
     /*====================================*/
     /* Check to see if the module exists. */
     /*====================================*/
 
     theModule = FindDefmodule(theEnv, moduleName->contents);
-    if (theModule == NULL) return NULL;
+    if (theModule == nullptr) return nullptr;
 
     /*============================*/
     /* Change the current module. */
@@ -254,7 +254,7 @@ const char *ExtractModuleAndConstructName(
     /*=============================*/
 
     shortName = ExtractConstructName(theEnv, separatorPosition, theName, SYMBOL_TYPE);
-    if (shortName == NULL) return NULL;
+    if (shortName == nullptr) return nullptr;
     return shortName->contents;
 }
 
@@ -285,7 +285,7 @@ ConstructHeader *FindImportedConstruct(
     /* in the construct's name.      */
     /*===============================*/
 
-    if (FindModuleSeparator(findName)) return NULL;
+    if (FindModuleSeparator(findName)) return nullptr;
 
     /*=============================================*/
     /* Remember the current module since we'll be  */
@@ -300,9 +300,9 @@ ConstructHeader *FindImportedConstruct(
     /* for the construct type being sought.     */
     /*==========================================*/
 
-    if ((theModuleItem = FindModuleItem(theEnv, constructName)) == NULL) {
+    if ((theModuleItem = FindModuleItem(theEnv, constructName)) == nullptr) {
         RestoreCurrentModule(theEnv);
-        return NULL;
+        return nullptr;
     }
 
     /*===========================================*/
@@ -310,9 +310,9 @@ ConstructHeader *FindImportedConstruct(
     /* function, then we can't look for it.      */
     /*===========================================*/
 
-    if (theModuleItem->findFunction == NULL) {
+    if (theModuleItem->findFunction == nullptr) {
         RestoreCurrentModule(theEnv);
-        return NULL;
+        return nullptr;
     }
 
     /*==================================*/
@@ -370,8 +370,8 @@ void MarkModulesAsUnvisited(
     Defmodule *theModule;
 
     DefmoduleData(theEnv)->CurrentModule->visitedFlag = false;
-    for (theModule = GetNextDefmodule(theEnv, NULL);
-         theModule != NULL;
+    for (theModule = GetNextDefmodule(theEnv, nullptr);
+         theModule != nullptr;
          theModule = GetNextDefmodule(theEnv, theModule)) { theModule->visitedFlag = false; }
 }
 
@@ -391,7 +391,7 @@ static ConstructHeader *SearchImportedConstructModules(
         Defmodule *notYetDefinedInModule) {
     Defmodule *theModule;
     struct portItem *theImportList, *theExportList;
-    ConstructHeader *rv, *arv = NULL;
+    ConstructHeader *rv, *arv = nullptr;
     bool searchModule, exported;
     Defmodule *currentModule;
 
@@ -402,18 +402,18 @@ static ConstructHeader *SearchImportedConstructModules(
     /*=========================================*/
 
     currentModule = GetCurrentModule(theEnv);
-    if (currentModule->visitedFlag) return NULL;
+    if (currentModule->visitedFlag) return nullptr;
 
     /*=======================================================*/
     /* The searchCurrent flag indicates whether the current  */
     /* module should be included in the search. In addition, */
-    /* if matchModule is non-NULL, the current module will   */
+    /* if matchModule is non-nullptr, the current module will   */
     /* only be searched if it is the specific module from    */
     /* which we want the construct imported.                 */
     /*=======================================================*/
 
     if ((searchCurrent) &&
-        ((matchModule == NULL) || (currentModule == matchModule))) {
+        ((matchModule == nullptr) || (currentModule == matchModule))) {
         /*===============================================*/
         /* Look for the construct in the current module. */
         /*===============================================*/
@@ -440,7 +440,7 @@ static ConstructHeader *SearchImportedConstructModules(
             /* actually belong to the MAIN module.]                    */
             /*=========================================================*/
 
-        else if (rv != NULL) {
+        else if (rv != nullptr) {
             if (rv->whichModule->theModule == currentModule) { (*count)++; }
             arv = rv;
         }
@@ -460,7 +460,7 @@ static ConstructHeader *SearchImportedConstructModules(
     theModule = GetCurrentModule(theEnv);
     theImportList = theModule->importList;
 
-    while (theImportList != NULL) {
+    while (theImportList != nullptr) {
         /*===================================================*/
         /* Determine if the module should be searched (based */
         /* upon whether the entire module, all constructs of */
@@ -469,9 +469,9 @@ static ConstructHeader *SearchImportedConstructModules(
         /*===================================================*/
 
         searchModule = false;
-        if ((theImportList->constructType == NULL) ||
+        if ((theImportList->constructType == nullptr) ||
             (theImportList->constructType == constructType)) {
-            if ((theImportList->constructName == NULL) ||
+            if ((theImportList->constructName == nullptr) ||
                 (theImportList->constructName == findName)) { searchModule = true; }
         }
 
@@ -481,7 +481,7 @@ static ConstructHeader *SearchImportedConstructModules(
 
         if (searchModule) {
             theModule = FindDefmodule(theEnv, theImportList->moduleName->contents);
-            if (theModule == NULL) searchModule = false;
+            if (theModule == nullptr) searchModule = false;
         }
 
         /*=======================================================*/
@@ -491,10 +491,10 @@ static ConstructHeader *SearchImportedConstructModules(
         if (searchModule) {
             exported = false;
             theExportList = theModule->exportList;
-            while ((theExportList != NULL) && (!exported)) {
-                if ((theExportList->constructType == NULL) ||
+            while ((theExportList != nullptr) && (!exported)) {
+                if ((theExportList->constructType == nullptr) ||
                     (theExportList->constructType == constructType)) {
-                    if ((theExportList->constructName == NULL) ||
+                    if ((theExportList->constructName == nullptr) ||
                         (theExportList->constructName == findName)) { exported = true; }
                 }
 
@@ -513,7 +513,7 @@ static ConstructHeader *SearchImportedConstructModules(
             if ((rv = SearchImportedConstructModules(theEnv, constructType, matchModule,
                                                      theModuleItem, findName,
                                                      count, true,
-                                                     notYetDefinedInModule)) != NULL) { arv = rv; }
+                                                     notYetDefinedInModule)) != nullptr) { arv = rv; }
         }
 
         /*====================================*/
@@ -547,13 +547,13 @@ bool ConstructExported(
     constructType = FindSymbolHN(theEnv, constructTypeStr, SYMBOL_BIT);
     theModule = FindDefmodule(theEnv, moduleName->contents);
 
-    if ((constructType == NULL) || (theModule == NULL) || (findName == NULL)) { return false; }
+    if ((constructType == nullptr) || (theModule == nullptr) || (findName == nullptr)) { return false; }
 
     theExportList = theModule->exportList;
-    while (theExportList != NULL) {
-        if ((theExportList->constructType == NULL) ||
+    while (theExportList != nullptr) {
+        if ((theExportList->constructType == nullptr) ||
             (theExportList->constructType == constructType)) {
-            if ((theExportList->constructName == NULL) ||
+            if ((theExportList->constructName == nullptr) ||
                 (theExportList->constructName == findName)) { return true; }
         }
 
@@ -574,7 +574,7 @@ bool AllImportedModulesVisited(
     Defmodule *theImportModule;
 
     theImportList = theModule->importList;
-    while (theImportList != NULL) {
+    while (theImportList != nullptr) {
         theImportModule = FindDefmodule(theEnv, theImportList->moduleName->contents);
 
         if (!theImportModule->visitedFlag) return false;
@@ -615,34 +615,34 @@ void ListItemsDriver(
     /* Print out the items. */
     /*======================*/
 
-    if (theModule == NULL) {
-        theModule = GetNextDefmodule(theEnv, NULL);
+    if (theModule == nullptr) {
+        theModule = GetNextDefmodule(theEnv, nullptr);
         allModules = true;
     }
 
-    while (theModule != NULL) {
+    while (theModule != nullptr) {
         if (allModules) {
             WriteString(theEnv, logicalName, DefmoduleName(theModule));
             WriteString(theEnv, logicalName, ":\n");
         }
 
         SetCurrentModule(theEnv, theModule);
-        constructPtr = (*nextFunction)(theEnv, NULL);
-        while (constructPtr != NULL) {
+        constructPtr = (*nextFunction)(theEnv, nullptr);
+        while (constructPtr != nullptr) {
             if (EvaluationData(theEnv)->HaltExecution == true) return;
 
-            if (doItFunction == NULL) doIt = true;
+            if (doItFunction == nullptr) doIt = true;
             else doIt = (*doItFunction)(constructPtr);
 
             if (!doIt) {}
-            else if (nameFunction != NULL) {
+            else if (nameFunction != nullptr) {
                 constructName = (*nameFunction)(constructPtr);
-                if (constructName != NULL) {
+                if (constructName != nullptr) {
                     if (allModules) WriteString(theEnv, logicalName, "   ");
                     WriteString(theEnv, logicalName, constructName);
                     WriteString(theEnv, logicalName, "\n");
                 }
-            } else if (printFunction != NULL) {
+            } else if (printFunction != nullptr) {
                 if (allModules) WriteString(theEnv, logicalName, "   ");
                 (*printFunction)(theEnv, logicalName, constructPtr);
                 WriteString(theEnv, logicalName, "\n");
@@ -653,14 +653,14 @@ void ListItemsDriver(
         }
 
         if (allModules) theModule = GetNextDefmodule(theEnv, theModule);
-        else theModule = NULL;
+        else theModule = nullptr;
     }
 
     /*=================================================*/
     /* Print the tally and restore the current module. */
     /*=================================================*/
 
-    if (singleName != NULL) PrintTally(theEnv, logicalName, count, singleName, pluralName);
+    if (singleName != nullptr) PrintTally(theEnv, logicalName, count, singleName, pluralName);
 
     RestoreCurrentModule(theEnv);
 }
@@ -686,8 +686,8 @@ long DoForAllModules(
     /* Loop through all of the modules. */
     /*==================================*/
 
-    for (theModule = GetNextDefmodule(theEnv, NULL);
-         theModule != NULL;
+    for (theModule = GetNextDefmodule(theEnv, nullptr);
+         theModule != nullptr;
          theModule = GetNextDefmodule(theEnv, theModule), moduleCount++) {
         SetCurrentModule(theEnv, theModule);
 
@@ -727,7 +727,7 @@ void RemoveConstructFromModule(
     /* in the module's list.        */
     /*==============================*/
 
-    lastConstruct = NULL;
+    lastConstruct = nullptr;
     currentConstruct = theConstruct->whichModule->firstItem;
     while (currentConstruct != theConstruct) {
         lastConstruct = currentConstruct;
@@ -738,7 +738,7 @@ void RemoveConstructFromModule(
     /* If it wasn't there, something's wrong. */
     /*========================================*/
 
-    if (currentConstruct == NULL) {
+    if (currentConstruct == nullptr) {
         SystemError(theEnv, "CSTRCPSR", 1);
         ExitRouter(theEnv, EXIT_FAILURE);
     }
@@ -747,7 +747,7 @@ void RemoveConstructFromModule(
     /* Remove it from the list. */
     /*==========================*/
 
-    if (lastConstruct == NULL) { theConstruct->whichModule->firstItem = theConstruct->next; }
+    if (lastConstruct == nullptr) { theConstruct->whichModule->firstItem = theConstruct->next; }
     else { lastConstruct->next = theConstruct->next; }
 
     /*=================================================*/
@@ -761,7 +761,7 @@ void RemoveConstructFromModule(
 /*********************************************************/
 /* GetConstructNameAndComment: Get the name and comment  */
 /*   field of a construct. Returns name of the construct */
-/*   if no errors are detected, otherwise returns NULL.  */
+/*   if no errors are detected, otherwise returns nullptr.  */
 /*********************************************************/
 CLIPSLexeme *GetConstructNameAndComment(
         Environment *theEnv,
@@ -795,7 +795,7 @@ CLIPSLexeme *GetConstructNameAndComment(
         WriteString(theEnv, STDERR, "Missing name for ");
         WriteString(theEnv, STDERR, constructName);
         WriteString(theEnv, STDERR, " construct.\n");
-        return NULL;
+        return nullptr;
     }
 
     name = inputToken->lexemeValue;
@@ -808,31 +808,31 @@ CLIPSLexeme *GetConstructNameAndComment(
     if (separatorPosition) {
         if (moduleNameAllowed == false) {
             SyntaxErrorMessage(theEnv, "module specifier");
-            return NULL;
+            return nullptr;
         }
 
         moduleName = ExtractModuleName(theEnv, separatorPosition, name->contents);
-        if (moduleName == NULL) {
+        if (moduleName == nullptr) {
             SyntaxErrorMessage(theEnv, "construct name");
-            return NULL;
+            return nullptr;
         }
 
         theModule = FindDefmodule(theEnv, moduleName->contents);
-        if (theModule == NULL) {
+        if (theModule == nullptr) {
             CantFindItemErrorMessage(theEnv, "defmodule", moduleName->contents, true);
-            return NULL;
+            return nullptr;
         }
 
         SetCurrentModule(theEnv, theModule);
         name = ExtractConstructName(theEnv, separatorPosition, name->contents, SYMBOL_TYPE);
-        if (name == NULL) {
+        if (name == nullptr) {
             SyntaxErrorMessage(theEnv, "construct name");
-            return NULL;
+            return nullptr;
         }
 
         if (FindModuleSeparator(name->contents) != 0) {
             SyntaxErrorMessage(theEnv, "module specifier");
-            return NULL;
+            return nullptr;
         }
     }
 
@@ -857,8 +857,8 @@ CLIPSLexeme *GetConstructNameAndComment(
 
 #if DEFMODULE_CONSTRUCT
     if (FindImportExportConflict(theEnv, constructName, theModule, name->contents)) {
-        ImportExportConflictMessage(theEnv, constructName, name->contents, NULL, NULL);
-        return NULL;
+        ImportExportConflictMessage(theEnv, constructName, name->contents, nullptr, nullptr);
+        return nullptr;
     }
 #endif
 
@@ -867,11 +867,11 @@ CLIPSLexeme *GetConstructNameAndComment(
     /* base and we're not just checking syntax.               */
     /*========================================================*/
 
-    if ((findFunction != NULL) && (!ConstructData(theEnv)->CheckSyntaxMode)) {
+    if ((findFunction != nullptr) && (!ConstructData(theEnv)->CheckSyntaxMode)) {
         theConstruct = (*findFunction)(theEnv, name->contents);
-        if (theConstruct != NULL) {
+        if (theConstruct != nullptr) {
             redefining = true;
-            if (deleteFunction != NULL) {
+            if (deleteFunction != nullptr) {
                 RetainLexeme(theEnv, name);
                 if ((*deleteFunction)(theConstruct, theEnv) == false) {
                     PrintErrorID(theEnv, "CSTRCPSR", 4, true);
@@ -881,7 +881,7 @@ CLIPSLexeme *GetConstructNameAndComment(
                     WriteString(theEnv, STDERR, name->contents);
                     WriteString(theEnv, STDERR, "' while it is in use.\n");
                     ReleaseLexeme(theEnv, name);
-                    return NULL;
+                    return nullptr;
                 }
                 ReleaseLexeme(theEnv, name);
             }

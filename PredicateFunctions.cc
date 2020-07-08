@@ -64,32 +64,32 @@
 /**************************************************/
 void PredicateFunctionDefinitions(
         Environment *theEnv) {
-    AddUDF(theEnv, "not", "b", 1, 1, NULL, NotFunction, NULL);
-    AddUDF(theEnv, "and", "b", 2, UNBOUNDED, NULL, AndFunction, NULL);
-    AddUDF(theEnv, "or", "b", 2, UNBOUNDED, NULL, OrFunction, NULL);
+    AddUDF(theEnv, "not", "b", 1, 1, nullptr, NotFunction, nullptr);
+    AddUDF(theEnv, "and", "b", 2, UNBOUNDED, nullptr, AndFunction, nullptr);
+    AddUDF(theEnv, "or", "b", 2, UNBOUNDED, nullptr, OrFunction, nullptr);
 
-    AddUDF(theEnv, "eq", "b", 2, UNBOUNDED, NULL, EqFunction, NULL);
-    AddUDF(theEnv, "neq", "b", 2, UNBOUNDED, NULL, NeqFunction, NULL);
+    AddUDF(theEnv, "eq", "b", 2, UNBOUNDED, nullptr, EqFunction, nullptr);
+    AddUDF(theEnv, "neq", "b", 2, UNBOUNDED, nullptr, NeqFunction, nullptr);
 
-    AddUDF(theEnv, "<=", "b", 2, UNBOUNDED, "ld", LessThanOrEqualFunction, NULL);
-    AddUDF(theEnv, ">=", "b", 2, UNBOUNDED, "ld", GreaterThanOrEqualFunction, NULL);
-    AddUDF(theEnv, "<", "b", 2, UNBOUNDED, "ld", LessThanFunction, NULL);
-    AddUDF(theEnv, ">", "b", 2, UNBOUNDED, "ld", GreaterThanFunction, NULL);
-    AddUDF(theEnv, "=", "b", 2, UNBOUNDED, "ld", NumericEqualFunction, NULL);
-    AddUDF(theEnv, "<>", "b", 2, UNBOUNDED, "ld", NumericNotEqualFunction, NULL);
-    AddUDF(theEnv, "!=", "b", 2, UNBOUNDED, "ld", NumericNotEqualFunction, NULL);
+    AddUDF(theEnv, "<=", "b", 2, UNBOUNDED, "ld", LessThanOrEqualFunction, nullptr);
+    AddUDF(theEnv, ">=", "b", 2, UNBOUNDED, "ld", GreaterThanOrEqualFunction, nullptr);
+    AddUDF(theEnv, "<", "b", 2, UNBOUNDED, "ld", LessThanFunction, nullptr);
+    AddUDF(theEnv, ">", "b", 2, UNBOUNDED, "ld", GreaterThanFunction, nullptr);
+    AddUDF(theEnv, "=", "b", 2, UNBOUNDED, "ld", NumericEqualFunction, nullptr);
+    AddUDF(theEnv, "<>", "b", 2, UNBOUNDED, "ld", NumericNotEqualFunction, nullptr);
+    AddUDF(theEnv, "!=", "b", 2, UNBOUNDED, "ld", NumericNotEqualFunction, nullptr);
 
-    AddUDF(theEnv, "symbolp", "b", 1, 1, NULL, SymbolpFunction, NULL);
-    AddUDF(theEnv, "stringp", "b", 1, 1, NULL, StringpFunction, NULL);
-    AddUDF(theEnv, "lexemep", "b", 1, 1, NULL, LexemepFunction, NULL);
-    AddUDF(theEnv, "numberp", "b", 1, 1, NULL, NumberpFunction, NULL);
-    AddUDF(theEnv, "integerp", "b", 1, 1, NULL, IntegerpFunction, NULL);
-    AddUDF(theEnv, "floatp", "b", 1, 1, NULL, FloatpFunction, NULL);
-    AddUDF(theEnv, "oddp", "b", 1, 1, "l", OddpFunction, NULL);
-    AddUDF(theEnv, "evenp", "b", 1, 1, "l", EvenpFunction, NULL);
-    AddUDF(theEnv, "multifieldp", "b", 1, 1, NULL, MultifieldpFunction, NULL);
-    AddUDF(theEnv, "pointerp", "b", 1, 1, NULL, ExternalAddresspFunction, NULL);
-    AddUDF(theEnv, "external-addressp", "b", 1, 1, NULL, ExternalAddresspFunction, NULL);
+    AddUDF(theEnv, "symbolp", "b", 1, 1, nullptr, SymbolpFunction, nullptr);
+    AddUDF(theEnv, "stringp", "b", 1, 1, nullptr, StringpFunction, nullptr);
+    AddUDF(theEnv, "lexemep", "b", 1, 1, nullptr, LexemepFunction, nullptr);
+    AddUDF(theEnv, "numberp", "b", 1, 1, nullptr, NumberpFunction, nullptr);
+    AddUDF(theEnv, "integerp", "b", 1, 1, nullptr, IntegerpFunction, nullptr);
+    AddUDF(theEnv, "floatp", "b", 1, 1, nullptr, FloatpFunction, nullptr);
+    AddUDF(theEnv, "oddp", "b", 1, 1, "l", OddpFunction, nullptr);
+    AddUDF(theEnv, "evenp", "b", 1, 1, "l", EvenpFunction, nullptr);
+    AddUDF(theEnv, "multifieldp", "b", 1, 1, nullptr, MultifieldpFunction, nullptr);
+    AddUDF(theEnv, "pointerp", "b", 1, 1, nullptr, ExternalAddresspFunction, nullptr);
+    AddUDF(theEnv, "external-addressp", "b", 1, 1, nullptr, ExternalAddresspFunction, nullptr);
 }
 
 /************************************/

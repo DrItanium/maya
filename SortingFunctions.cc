@@ -74,7 +74,7 @@ static void DeallocateSortFunctionData(Environment *);
 void SortFunctionDefinitions(
         Environment *theEnv) {
     AllocateEnvironmentData(theEnv, SORTFUN_DATA, sizeof(struct sortFunctionData), DeallocateSortFunctionData);
-    AddUDF(theEnv, "sort", "bm", 1, UNBOUNDED, "*;y", SortFunction, NULL);
+    AddUDF(theEnv, "sort", "bm", 1, UNBOUNDED, "*;y", SortFunction, nullptr);
 }
 
 /*******************************************************/
@@ -101,7 +101,7 @@ static bool DefaultCompareSwapFunction(
     EvaluateExpression(theEnv, SortFunctionData(theEnv)->SortComparisonFunction, &returnValue);
     ExpressionDeinstall(theEnv, SortFunctionData(theEnv)->SortComparisonFunction);
     ReturnExpression(theEnv, SortFunctionData(theEnv)->SortComparisonFunction->argList);
-    SortFunctionData(theEnv)->SortComparisonFunction->argList = NULL;
+    SortFunctionData(theEnv)->SortComparisonFunction->argList = nullptr;
 
     if (returnValue.value == FalseSymbol(theEnv)) { return false; }
 
@@ -144,7 +144,7 @@ void SortFunction(
 
     functionName = theArg.lexemeValue->contents;
     functionReference = FunctionReferenceExpression(theEnv, functionName);
-    if (functionReference == NULL) {
+    if (functionReference == nullptr) {
         ExpectedTypeError1(theEnv, "sort", 1, "function name, deffunction name, or defgeneric name");
         return;
     }
@@ -248,7 +248,7 @@ void SortFunction(
     for (i = 0; i < argumentSize; i++) { ReleaseUDFV(theEnv, &theArguments2[i]); }
 
     SortFunctionData(theEnv)->SortComparisonFunction = SortFunctionData(theEnv)->SortComparisonFunction->nextArg;
-    functionReference->nextArg = NULL;
+    functionReference->nextArg = nullptr;
     ReturnExpression(theEnv, functionReference);
 
     theMultifield = CreateMultifield(theEnv, argumentSize);

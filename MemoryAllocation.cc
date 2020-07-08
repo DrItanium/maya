@@ -78,7 +78,7 @@
 /********************************************/
 void InitializeMemory(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, MEMORY_DATA, sizeof(struct memoryData), NULL);
+    AllocateEnvironmentData(theEnv, MEMORY_DATA, sizeof(struct memoryData), nullptr);
 
     MemoryData(theEnv)->OutOfMemoryCallback = DefaultOutOfMemoryFunction;
 
@@ -86,17 +86,17 @@ void InitializeMemory(
     MemoryData(theEnv)->MemoryTable = (struct memoryPtr **)
             malloc((STD_SIZE) (sizeof(struct memoryPtr *) * MEM_TABLE_SIZE));
 
-    if (MemoryData(theEnv)->MemoryTable == NULL) {
+    if (MemoryData(theEnv)->MemoryTable == nullptr) {
         PrintErrorID(theEnv, "MEMORY", 1, true);
         WriteString(theEnv, STDERR, "Out of memory.\n");
         ExitRouter(theEnv, EXIT_FAILURE);
     } else {
         int i;
 
-        for (i = 0; i < MEM_TABLE_SIZE; i++) MemoryData(theEnv)->MemoryTable[i] = NULL;
+        for (i = 0; i < MEM_TABLE_SIZE; i++) MemoryData(theEnv)->MemoryTable[i] = nullptr;
     }
 #else // MEM_TABLE_SIZE == 0
-    MemoryData(theEnv)->MemoryTable = NULL;
+    MemoryData(theEnv)->MemoryTable = nullptr;
 #endif
 }
 
@@ -110,15 +110,15 @@ void *genalloc(
 
     memPtr = malloc(size);
 
-    if (memPtr == NULL) {
+    if (memPtr == nullptr) {
         ReleaseMem(theEnv, (long long) ((size * 5 > 4096) ? size * 5 : 4096));
         memPtr = malloc(size);
-        if (memPtr == NULL) {
+        if (memPtr == nullptr) {
             ReleaseMem(theEnv, -1);
             memPtr = malloc(size);
-            while (memPtr == NULL) {
+            while (memPtr == nullptr) {
                 if ((*MemoryData(theEnv)->OutOfMemoryCallback)(theEnv, size))
-                    return NULL;
+                    return nullptr;
                 memPtr = malloc(size);
             }
         }
@@ -186,9 +186,9 @@ void *genrealloc(
     unsigned i;
     size_t limit;
 
-    newaddr = ((newsz != 0) ? (char *) gm2(theEnv, newsz) : NULL);
+    newaddr = ((newsz != 0) ? (char *) gm2(theEnv, newsz) : nullptr);
 
-    if (oldaddr != NULL) {
+    if (oldaddr != nullptr) {
         limit = (oldsz < newsz) ? oldsz : newsz;
         for (i = 0; i < limit; i++) { newaddr[i] = ((char *) oldaddr)[i]; }
         for (; i < newsz; i++) { newaddr[i] = '\0'; }
@@ -253,7 +253,7 @@ long long ReleaseMem(
     for (i = (MEM_TABLE_SIZE - 1); i >= sizeof(char *); i--) {
         YieldTime(theEnv);
         memPtr = MemoryData(theEnv)->MemoryTable[i];
-        while (memPtr != NULL) {
+        while (memPtr != nullptr) {
             tmpPtr = memPtr->next;
             genfree(theEnv, memPtr, i);
             memPtr = tmpPtr;
@@ -261,7 +261,7 @@ long long ReleaseMem(
             returns++;
             if ((returns % 100) == 0) { YieldTime(theEnv); }
         }
-        MemoryData(theEnv)->MemoryTable[i] = NULL;
+        MemoryData(theEnv)->MemoryTable[i] = nullptr;
         if ((amount > maximum) && (maximum > 0)) { return amount; }
     }
 
@@ -286,7 +286,7 @@ void *gm1(
     }
 
     memPtr = (struct memoryPtr *) MemoryData(theEnv)->MemoryTable[size];
-    if (memPtr == NULL) {
+    if (memPtr == nullptr) {
         tmpPtr = (char *) genalloc(theEnv, size);
         for (i = 0; i < size; i++) { tmpPtr[i] = '\0'; }
         return ((void *) tmpPtr);
@@ -316,7 +316,7 @@ void *gm2(
     if (size >= MEM_TABLE_SIZE) return genalloc(theEnv, size);
 
     memPtr = (struct memoryPtr *) MemoryData(theEnv)->MemoryTable[size];
-    if (memPtr == NULL) { return genalloc(theEnv, size); }
+    if (memPtr == nullptr) { return genalloc(theEnv, size); }
 
     MemoryData(theEnv)->MemoryTable[size] = memPtr->next;
 
@@ -376,7 +376,7 @@ unsigned long PoolSize(
 
     for (i = sizeof(char *); i < MEM_TABLE_SIZE; i++) {
         memPtr = MemoryData(theEnv)->MemoryTable[i];
-        while (memPtr != NULL) {
+        while (memPtr != nullptr) {
             cnt += (unsigned long) i;
             memPtr = memPtr->next;
         }

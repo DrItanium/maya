@@ -142,7 +142,7 @@ bool AllocateEnvironmentData(
     /* Check if the environment data has already been registered. */
     /*============================================================*/
 
-    if (theEnvironment->theData[position] != NULL) {
+    if (theEnvironment->theData[position] != nullptr) {
         printf("\n[ENVRNMNT3] Environment data position %d already allocated.\n", position);
         return false;
     }
@@ -152,7 +152,7 @@ bool AllocateEnvironmentData(
     /*====================*/
 
     theEnvironment->theData[position] = malloc(size);
-    if (theEnvironment->theData[position] == NULL) {
+    if (theEnvironment->theData[position] == nullptr) {
         printf("\n[ENVRNMNT4] Environment data position %d could not be allocated.\n", position);
         return false;
     }
@@ -206,28 +206,28 @@ bool AddEnvironmentCleanupFunction(
         const char *name,
         EnvironmentCleanupFunction *functionPtr,
         int priority) {
-    struct environmentCleanupFunction *newPtr, *currentPtr, *lastPtr = NULL;
+    struct environmentCleanupFunction *newPtr, *currentPtr, *lastPtr = nullptr;
 
     newPtr = (struct environmentCleanupFunction *) malloc(sizeof(struct environmentCleanupFunction));
-    if (newPtr == NULL) { return false; }
+    if (newPtr == nullptr) { return false; }
 
     newPtr->name = name;
     newPtr->func = functionPtr;
     newPtr->priority = priority;
 
-    if (theEnv->listOfCleanupEnvironmentFunctions == NULL) {
-        newPtr->next = NULL;
+    if (theEnv->listOfCleanupEnvironmentFunctions == nullptr) {
+        newPtr->next = nullptr;
         theEnv->listOfCleanupEnvironmentFunctions = newPtr;
         return true;
     }
 
     currentPtr = theEnv->listOfCleanupEnvironmentFunctions;
-    while ((currentPtr != NULL) ? (priority < currentPtr->priority) : false) {
+    while ((currentPtr != nullptr) ? (priority < currentPtr->priority) : false) {
         lastPtr = currentPtr;
         currentPtr = currentPtr->next;
     }
 
-    if (lastPtr == NULL) {
+    if (lastPtr == nullptr) {
         newPtr->next = theEnv->listOfCleanupEnvironmentFunctions;
         theEnv->listOfCleanupEnvironmentFunctions = newPtr;
     } else {

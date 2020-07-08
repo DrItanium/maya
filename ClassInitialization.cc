@@ -152,12 +152,12 @@ static void UpdateDefclassesScope(Environment *, void *);
 void SetupObjectSystem(
         Environment *theEnv) {
     EntityRecord defclassEntityRecord = {"DEFCLASS_PTR", DEFCLASS_PTR, 1, 0, 0,
-                                         NULL, NULL, NULL, NULL, NULL,
+                                         nullptr, nullptr, nullptr, nullptr, nullptr,
                                          (EntityBusyCountFunction *) DecrementDefclassBusyCount,
                                          (EntityBusyCountFunction *) IncrementDefclassBusyCount,
-                                         NULL, NULL, NULL, NULL, NULL};
+                                         nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    AllocateEnvironmentData(theEnv, DEFCLASS_DATA, sizeof(struct defclassData), NULL);
+    AllocateEnvironmentData(theEnv, DEFCLASS_DATA, sizeof(struct defclassData), nullptr);
     AddEnvironmentCleanupFunction(theEnv, "defclasses", DeallocateDefclassData, -500);
 
     memcpy(&DefclassData(theEnv)->DefclassEntityRecord, &defclassEntityRecord, sizeof(struct entityRecord));
@@ -210,10 +210,10 @@ static void DeallocateDefclassData(
     /*=============================*/
 
     if (!bloaded) {
-        DoForAllConstructs(theEnv, DestroyDefclassAction, DefclassData(theEnv)->DefclassModuleIndex, false, NULL);
+        DoForAllConstructs(theEnv, DestroyDefclassAction, DefclassData(theEnv)->DefclassModuleIndex, false, nullptr);
 
-        for (theModule = GetNextDefmodule(theEnv, NULL);
-             theModule != NULL;
+        for (theModule = GetNextDefmodule(theEnv, nullptr);
+             theModule != nullptr;
              theModule = GetNextDefmodule(theEnv, theModule)) {
             theModuleItem = (struct defclassModule *)
                     GetModuleItem(theEnv, theModule,
@@ -227,12 +227,12 @@ static void DeallocateDefclassData(
     /*==========================*/
 
     if (!bloaded) {
-        if (DefclassData(theEnv)->ClassIDMap != NULL) {
+        if (DefclassData(theEnv)->ClassIDMap != nullptr) {
             genfree(theEnv, DefclassData(theEnv)->ClassIDMap, DefclassData(theEnv)->AvailClassID * sizeof(Defclass *));
         }
     }
 
-    if (DefclassData(theEnv)->ClassTable != NULL) {
+    if (DefclassData(theEnv)->ClassTable != nullptr) {
         genfree(theEnv, DefclassData(theEnv)->ClassTable, sizeof(Defclass *) * CLASS_TABLE_HASH_SIZE);
     }
 
@@ -244,7 +244,7 @@ static void DeallocateDefclassData(
         for (i = 0; i < SLOT_NAME_TABLE_HASH_SIZE; i++) {
             tmpSNPPtr = DefclassData(theEnv)->SlotNameTable[i];
 
-            while (tmpSNPPtr != NULL) {
+            while (tmpSNPPtr != nullptr) {
                 nextSNPPtr = tmpSNPPtr->nxt;
                 rtn_struct(theEnv, slotName, tmpSNPPtr);
                 tmpSNPPtr = nextSNPPtr;
@@ -252,7 +252,7 @@ static void DeallocateDefclassData(
         }
     }
 
-    if (DefclassData(theEnv)->SlotNameTable != NULL) {
+    if (DefclassData(theEnv)->SlotNameTable != nullptr) {
         genfree(theEnv, DefclassData(theEnv)->SlotNameTable, sizeof(SLOT_NAME *) * SLOT_NAME_TABLE_HASH_SIZE);
     }
 }
@@ -270,7 +270,7 @@ static void DestroyDefclassAction(
 #endif
     Defclass *theDefclass = (Defclass *) theConstruct;
 
-    if (theDefclass == NULL) return;
+    if (theDefclass == nullptr) return;
 
     DestroyDefclass(theEnv, theDefclass);
 }
@@ -316,7 +316,7 @@ void CreateSystemClasses(
                 fact-address = 6, instance-adress = 7 and
                 instance-name = 8.
        ========================================================= */
-    any = AddSystemClass(theEnv, OBJECT_TYPE_NAME, NULL);
+    any = AddSystemClass(theEnv, OBJECT_TYPE_NAME, nullptr);
     primitive = AddSystemClass(theEnv, PRIMITIVE_TYPE_NAME, any);
     user = AddSystemClass(theEnv, USER_TYPE_NAME, any);
 
@@ -363,8 +363,8 @@ void CreateSystemClasses(
     AddConstructToModule(&instance->header);
     AddConstructToModule(&user->header);
 
-    for (any = GetNextDefclass(theEnv, NULL);
-         any != NULL;
+    for (any = GetNextDefclass(theEnv, nullptr);
+         any != nullptr;
          any = GetNextDefclass(theEnv, any))
         AssignClassID(theEnv, any);
 }
@@ -395,7 +395,7 @@ static void SetupDefclasses(
 #if BLOAD_AND_BSAVE
                                BloadDefclassModuleReference,
 #else
-                    NULL,
+                    nullptr,
 #endif
                                (FindConstructFunction *) FindDefclassInModule);
 
@@ -411,53 +411,53 @@ static void SetupDefclasses(
                                                            (FreeConstructFunction *) RemoveDefclass
     );
 
-    AddClearReadyFunction(theEnv, "defclass", InstancesPurge, 0, NULL);
+    AddClearReadyFunction(theEnv, "defclass", InstancesPurge, 0, nullptr);
 
-    AddClearFunction(theEnv, "defclass", CreateSystemClasses, 0, NULL);
+    AddClearFunction(theEnv, "defclass", CreateSystemClasses, 0, nullptr);
     InitializeClasses(theEnv);
 
 #if DEFMODULE_CONSTRUCT
     AddPortConstructItem(theEnv, "defclass", SYMBOL_TOKEN);
-    AddAfterModuleDefinedFunction(theEnv, "defclass", UpdateDefclassesScope, 0, NULL);
+    AddAfterModuleDefinedFunction(theEnv, "defclass", UpdateDefclassesScope, 0, nullptr);
 #endif
-    AddUDF(theEnv, "undefclass", "v", 1, 1, "y", UndefclassCommand, NULL);
+    AddUDF(theEnv, "undefclass", "v", 1, 1, "y", UndefclassCommand, nullptr);
 
-    AddSaveFunction(theEnv, "defclass", SaveDefclasses, 10, NULL);
+    AddSaveFunction(theEnv, "defclass", SaveDefclasses, 10, nullptr);
 
 #if DEBUGGING_FUNCTIONS
-    AddUDF(theEnv, "list-defclasses", "v", 0, 1, "y", ListDefclassesCommand, NULL);
-    AddUDF(theEnv, "ppdefclass", "vs", 1, 2, ";y;ldsyn", PPDefclassCommand, NULL);
-    AddUDF(theEnv, "describe-class", "v", 1, 1, "y", DescribeClassCommand, NULL);
-    AddUDF(theEnv, "browse-classes", "v", 0, 1, "y", BrowseClassesCommand, NULL);
+    AddUDF(theEnv, "list-defclasses", "v", 0, 1, "y", ListDefclassesCommand, nullptr);
+    AddUDF(theEnv, "ppdefclass", "vs", 1, 2, ";y;ldsyn", PPDefclassCommand, nullptr);
+    AddUDF(theEnv, "describe-class", "v", 1, 1, "y", DescribeClassCommand, nullptr);
+    AddUDF(theEnv, "browse-classes", "v", 0, 1, "y", BrowseClassesCommand, nullptr);
 #endif
 
-    AddUDF(theEnv, "get-defclass-list", "m", 0, 1, "y", GetDefclassListFunction, NULL);
-    AddUDF(theEnv, "superclassp", "b", 2, 2, "y", SuperclassPCommand, NULL);
-    AddUDF(theEnv, "subclassp", "b", 2, 2, "y", SubclassPCommand, NULL);
-    AddUDF(theEnv, "class-existp", "b", 1, 1, "y", ClassExistPCommand, NULL);
-    AddUDF(theEnv, "message-handler-existp", "b", 2, 3, "y", MessageHandlerExistPCommand, NULL);
-    AddUDF(theEnv, "class-abstractp", "b", 1, 1, "y", ClassAbstractPCommand, NULL);
-    AddUDF(theEnv, "class-reactivep", "b", 1, 1, "y", ClassReactivePCommand, NULL);
-    AddUDF(theEnv, "class-slots", "m", 1, 2, "y", ClassSlotsCommand, NULL);
-    AddUDF(theEnv, "class-superclasses", "m", 1, 2, "y", ClassSuperclassesCommand, NULL);
-    AddUDF(theEnv, "class-subclasses", "m", 1, 2, "y", ClassSubclassesCommand, NULL);
-    AddUDF(theEnv, "get-defmessage-handler-list", "m", 0, 2, "y", GetDefmessageHandlersListCmd, NULL);
-    AddUDF(theEnv, "slot-existp", "b", 2, 3, "y", SlotExistPCommand, NULL);
-    AddUDF(theEnv, "slot-facets", "m", 2, 2, "y", SlotFacetsCommand, NULL);
-    AddUDF(theEnv, "slot-sources", "m", 2, 2, "y", SlotSourcesCommand, NULL);
-    AddUDF(theEnv, "slot-types", "m", 2, 2, "y", SlotTypesCommand, NULL);
-    AddUDF(theEnv, "slot-allowed-values", "m", 2, 2, "y", SlotAllowedValuesCommand, NULL);
-    AddUDF(theEnv, "slot-allowed-classes", "m", 2, 2, "y", SlotAllowedClassesCommand, NULL);
-    AddUDF(theEnv, "slot-range", "m", 2, 2, "y", SlotRangeCommand, NULL);
-    AddUDF(theEnv, "slot-cardinality", "m", 2, 2, "y", SlotCardinalityCommand, NULL);
-    AddUDF(theEnv, "slot-writablep", "b", 2, 2, "y", SlotWritablePCommand, NULL);
-    AddUDF(theEnv, "slot-initablep", "b", 2, 2, "y", SlotInitablePCommand, NULL);
-    AddUDF(theEnv, "slot-publicp", "b", 2, 2, "y", SlotPublicPCommand, NULL);
-    AddUDF(theEnv, "slot-direct-accessp", "b", 2, 2, "y", SlotDirectAccessPCommand, NULL);
-    AddUDF(theEnv, "slot-default-value", "*", 2, 2, "y", SlotDefaultValueCommand, NULL);
-    AddUDF(theEnv, "defclass-module", "y", 1, 1, "y", GetDefclassModuleCommand, NULL);
-    AddUDF(theEnv, "get-class-defaults-mode", "y", 0, 0, NULL, GetClassDefaultsModeCommand, NULL);
-    AddUDF(theEnv, "set-class-defaults-mode", "y", 1, 1, "y", SetClassDefaultsModeCommand, NULL);
+    AddUDF(theEnv, "get-defclass-list", "m", 0, 1, "y", GetDefclassListFunction, nullptr);
+    AddUDF(theEnv, "superclassp", "b", 2, 2, "y", SuperclassPCommand, nullptr);
+    AddUDF(theEnv, "subclassp", "b", 2, 2, "y", SubclassPCommand, nullptr);
+    AddUDF(theEnv, "class-existp", "b", 1, 1, "y", ClassExistPCommand, nullptr);
+    AddUDF(theEnv, "message-handler-existp", "b", 2, 3, "y", MessageHandlerExistPCommand, nullptr);
+    AddUDF(theEnv, "class-abstractp", "b", 1, 1, "y", ClassAbstractPCommand, nullptr);
+    AddUDF(theEnv, "class-reactivep", "b", 1, 1, "y", ClassReactivePCommand, nullptr);
+    AddUDF(theEnv, "class-slots", "m", 1, 2, "y", ClassSlotsCommand, nullptr);
+    AddUDF(theEnv, "class-superclasses", "m", 1, 2, "y", ClassSuperclassesCommand, nullptr);
+    AddUDF(theEnv, "class-subclasses", "m", 1, 2, "y", ClassSubclassesCommand, nullptr);
+    AddUDF(theEnv, "get-defmessage-handler-list", "m", 0, 2, "y", GetDefmessageHandlersListCmd, nullptr);
+    AddUDF(theEnv, "slot-existp", "b", 2, 3, "y", SlotExistPCommand, nullptr);
+    AddUDF(theEnv, "slot-facets", "m", 2, 2, "y", SlotFacetsCommand, nullptr);
+    AddUDF(theEnv, "slot-sources", "m", 2, 2, "y", SlotSourcesCommand, nullptr);
+    AddUDF(theEnv, "slot-types", "m", 2, 2, "y", SlotTypesCommand, nullptr);
+    AddUDF(theEnv, "slot-allowed-values", "m", 2, 2, "y", SlotAllowedValuesCommand, nullptr);
+    AddUDF(theEnv, "slot-allowed-classes", "m", 2, 2, "y", SlotAllowedClassesCommand, nullptr);
+    AddUDF(theEnv, "slot-range", "m", 2, 2, "y", SlotRangeCommand, nullptr);
+    AddUDF(theEnv, "slot-cardinality", "m", 2, 2, "y", SlotCardinalityCommand, nullptr);
+    AddUDF(theEnv, "slot-writablep", "b", 2, 2, "y", SlotWritablePCommand, nullptr);
+    AddUDF(theEnv, "slot-initablep", "b", 2, 2, "y", SlotInitablePCommand, nullptr);
+    AddUDF(theEnv, "slot-publicp", "b", 2, 2, "y", SlotPublicPCommand, nullptr);
+    AddUDF(theEnv, "slot-direct-accessp", "b", 2, 2, "y", SlotDirectAccessPCommand, nullptr);
+    AddUDF(theEnv, "slot-default-value", "*", 2, 2, "y", SlotDefaultValueCommand, nullptr);
+    AddUDF(theEnv, "defclass-module", "y", 1, 1, "y", GetDefclassModuleCommand, nullptr);
+    AddUDF(theEnv, "get-class-defaults-mode", "y", 0, 0, nullptr, GetClassDefaultsModeCommand, nullptr);
+    AddUDF(theEnv, "set-class-defaults-mode", "y", 1, 1, "y", SetClassDefaultsModeCommand, nullptr);
 
 #if DEBUGGING_FUNCTIONS
     AddWatchItem(theEnv, "instances", 0, &DefclassData(theEnv)->WatchInstances, 75, DefclassWatchAccess, DefclassWatchPrint);
@@ -471,7 +471,7 @@ static void SetupDefclasses(
                    for adding a system class
   INPUTS       : 1) The name-string of the system class
                  2) The address of the parent class
-                    (NULL if none)
+                    (nullptr if none)
   RETURNS      : The address of the new system class
   SIDE EFFECTS : Allocations performed
   NOTES        : Assumes system-class name is unique
@@ -499,7 +499,7 @@ static Defclass *AddSystemClass(
     sys->hashTableIndex = HashClass(sys->header.name);
 
     AddClassLink(theEnv, &sys->allSuperclasses, sys, true, 0);
-    if (parent != NULL) {
+    if (parent != nullptr) {
         AddClassLink(theEnv, &sys->directSuperclasses, parent, true, 0);
         AddClassLink(theEnv, &parent->directSubclasses, sys, true, 0);
         AddClassLink(theEnv, &sys->allSuperclasses, parent, true, 0);
@@ -584,7 +584,7 @@ static void UpdateDefclassesScope(
     newScopeMap = (char *) gm2(theEnv, newScopeMapSize);
     for (i = 0; i < CLASS_TABLE_HASH_SIZE; i++)
         for (theDefclass = DefclassData(theEnv)->ClassTable[i];
-             theDefclass != NULL;
+             theDefclass != nullptr;
              theDefclass = theDefclass->nxtHash) {
             matchModule = theDefclass->header.whichModule->theModule;
             className = theDefclass->header.name->contents;
@@ -595,7 +595,7 @@ static void UpdateDefclassesScope(
             if (theDefclass->system)
                 SetBitMap(newScopeMap, newModuleID);
             else if (FindImportedConstruct(theEnv, "defclass", matchModule,
-                                           className, &count, true, NULL) != NULL)
+                                           className, &count, true, nullptr) != nullptr)
                 SetBitMap(newScopeMap, newModuleID);
             theDefclass->scopeMap = (CLIPSBitMap *) AddBitMap(theEnv, newScopeMap, newScopeMapSize);
             IncrementBitMapCount(theDefclass->scopeMap);

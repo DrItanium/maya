@@ -101,15 +101,15 @@ static void InitializeEnvironment(Environment *, CLIPSLexeme **, CLIPSFloat **,
 
 /************************************************************/
 /* CreateEnvironment: Creates an environment data structure */
-/*   and initializes its content to zero/null.              */
+/*   and initializes its content to zero/nullptr.              */
 /************************************************************/
 Environment *CreateEnvironment() {
-    return CreateEnvironmentDriver(NULL, NULL, NULL, NULL, NULL, NULL);
+    return CreateEnvironmentDriver(nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
 }
 
 /**********************************************************/
 /* CreateRuntimeEnvironment: Creates an environment data  */
-/*   structure and initializes its content to zero/null.  */
+/*   structure and initializes its content to zero/nullptr.  */
 /**********************************************************/
 Environment *CreateRuntimeEnvironment(
         CLIPSLexeme **symbolTable,
@@ -117,12 +117,12 @@ Environment *CreateRuntimeEnvironment(
         CLIPSInteger **integerTable,
         CLIPSBitMap **bitmapTable,
         struct functionDefinition *functions) {
-    return CreateEnvironmentDriver(symbolTable, floatTable, integerTable, bitmapTable, NULL, functions);
+    return CreateEnvironmentDriver(symbolTable, floatTable, integerTable, bitmapTable, nullptr, functions);
 }
 
 /*********************************************************/
 /* CreateEnvironmentDriver: Creates an environment data  */
-/*   structure and initializes its content to zero/null. */
+/*   structure and initializes its content to zero/nullptr. */
 /*********************************************************/
 Environment *CreateEnvironmentDriver(
         CLIPSLexeme **symbolTable,
@@ -136,26 +136,26 @@ Environment *CreateEnvironmentDriver(
 
     theEnvironment = (struct environmentData *) malloc(sizeof(struct environmentData));
 
-    if (theEnvironment == NULL) {
+    if (theEnvironment == nullptr) {
         printf("\n[ENVRNMNT5] Unable to create new environment.\n");
-        return NULL;
+        return nullptr;
     }
 
     theData = malloc(sizeof(void *) * MAXIMUM_ENVIRONMENT_POSITIONS);
 
-    if (theData == NULL) {
+    if (theData == nullptr) {
         free(theEnvironment);
         printf("\n[ENVRNMNT6] Unable to create environment data.\n");
-        return NULL;
+        return nullptr;
     }
 
     memset(theData, 0, sizeof(void *) * MAXIMUM_ENVIRONMENT_POSITIONS);
 
     theEnvironment->initialized = false;
     theEnvironment->theData = (void **) theData;
-    theEnvironment->next = NULL;
-    theEnvironment->listOfCleanupEnvironmentFunctions = NULL;
-    theEnvironment->context = NULL;
+    theEnvironment->next = nullptr;
+    theEnvironment->listOfCleanupEnvironmentFunctions = nullptr;
+    theEnvironment->context = nullptr;
 
     /*=============================================*/
     /* Allocate storage for the cleanup functions. */
@@ -163,11 +163,11 @@ Environment *CreateEnvironmentDriver(
 
     theData = malloc(sizeof(void (*)(struct environmentData *)) * MAXIMUM_ENVIRONMENT_POSITIONS);
 
-    if (theData == NULL) {
+    if (theData == nullptr) {
         free(theEnvironment->theData);
         free(theEnvironment);
         printf("\n[ENVRNMNT7] Unable to create environment data.\n");
-        return NULL;
+        return nullptr;
     }
 
     memset(theData, 0, sizeof(void (*)(struct environmentData *)) * MAXIMUM_ENVIRONMENT_POSITIONS);
@@ -176,7 +176,7 @@ Environment *CreateEnvironmentDriver(
     InitializeEnvironment(theEnvironment, symbolTable, floatTable, integerTable,
                           bitmapTable, externalAddressTable, functions);
 
-    CleanCurrentGarbageFrame(theEnvironment, NULL);
+    CleanCurrentGarbageFrame(theEnvironment, nullptr);
 
     return theEnvironment;
 }
@@ -197,13 +197,13 @@ bool DestroyEnvironment(
     ReleaseMem(theEnvironment, -1);
 
     for (i = 0; i < MAXIMUM_ENVIRONMENT_POSITIONS; i++) {
-        if (theEnvironment->cleanupFunctions[i] != NULL) { (*theEnvironment->cleanupFunctions[i])(theEnvironment); }
+        if (theEnvironment->cleanupFunctions[i] != nullptr) { (*theEnvironment->cleanupFunctions[i])(theEnvironment); }
     }
 
     free(theEnvironment->cleanupFunctions);
 
     for (cleanupPtr = theEnvironment->listOfCleanupEnvironmentFunctions;
-         cleanupPtr != NULL;
+         cleanupPtr != nullptr;
          cleanupPtr = cleanupPtr->next) { (*cleanupPtr->func)(theEnvironment); }
 
     RemoveEnvironmentCleanupFunctions(theEnvironment);
@@ -222,9 +222,9 @@ bool DestroyEnvironment(
 #endif
 
     for (i = 0; i < MAXIMUM_ENVIRONMENT_POSITIONS; i++) {
-        if (theEnvironment->theData[i] != NULL) {
+        if (theEnvironment->theData[i] != nullptr) {
             free(theEnvironment->theData[i]);
-            theEnvironment->theData[i] = NULL;
+            theEnvironment->theData[i] = nullptr;
         }
     }
 
@@ -243,7 +243,7 @@ static void RemoveEnvironmentCleanupFunctions(
         struct environmentData *theEnv) {
     struct environmentCleanupFunction *nextPtr;
 
-    while (theEnv->listOfCleanupEnvironmentFunctions != NULL) {
+    while (theEnv->listOfCleanupEnvironmentFunctions != nullptr) {
         nextPtr = theEnv->listOfCleanupEnvironmentFunctions->next;
         free(theEnv->listOfCleanupEnvironmentFunctions);
         theEnv->listOfCleanupEnvironmentFunctions = nextPtr;
@@ -314,7 +314,7 @@ static void InitializeEnvironment(
     /* Register system and user defined functions. */
     /*=============================================*/
 
-    if (functions != NULL) { InstallFunctionList(theEnvironment, functions); }
+    if (functions != nullptr) { InstallFunctionList(theEnvironment, functions); }
 
     SystemFunctionDefinitions(theEnvironment);
     UserFunctions(theEnvironment);

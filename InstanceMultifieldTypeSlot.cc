@@ -100,12 +100,12 @@ static void AssignSlotToDataObject(UDFValue *, InstanceSlot *);
  ***************************************************/
 void SetupInstanceMultifieldCommands(
         Environment *theEnv) {
-    AddUDF(theEnv, "slot-direct-replace$", "b", 4, UNBOUNDED, "*;y;l;l", DirectMVReplaceCommand, NULL);
-    AddUDF(theEnv, "slot-direct-insert$", "b", 3, UNBOUNDED, "*;y;l", DirectMVInsertCommand, NULL);
-    AddUDF(theEnv, "slot-direct-delete$", "b", 3, 3, "l;y", DirectMVDeleteCommand, NULL);
-    AddUDF(theEnv, "slot-replace$", "*", 5, UNBOUNDED, "*;iny;y;l;l", MVSlotReplaceCommand, NULL);
-    AddUDF(theEnv, "slot-insert$", "*", 4, UNBOUNDED, "*;iny;y;l", MVSlotInsertCommand, NULL);
-    AddUDF(theEnv, "slot-delete$", "*", 4, 4, "l;iny;y", MVSlotDeleteCommand, NULL);
+    AddUDF(theEnv, "slot-direct-replace$", "b", 4, UNBOUNDED, "*;y;l;l", DirectMVReplaceCommand, nullptr);
+    AddUDF(theEnv, "slot-direct-insert$", "b", 3, UNBOUNDED, "*;y;l", DirectMVInsertCommand, nullptr);
+    AddUDF(theEnv, "slot-direct-delete$", "b", 3, 3, "l;y", DirectMVDeleteCommand, nullptr);
+    AddUDF(theEnv, "slot-replace$", "*", 5, UNBOUNDED, "*;iny;y;l;l", MVSlotReplaceCommand, nullptr);
+    AddUDF(theEnv, "slot-insert$", "*", 4, UNBOUNDED, "*;iny;y;l", MVSlotInsertCommand, nullptr);
+    AddUDF(theEnv, "slot-delete$", "*", 4, 4, "l;iny;y", MVSlotDeleteCommand, nullptr);
 }
 
 /***********************************************************************************
@@ -135,11 +135,11 @@ void MVSlotReplaceCommand(
 
     returnValue->lexemeValue = FalseSymbol(theEnv);
     ins = CheckMultifieldSlotInstance(context);
-    if (ins == NULL)
+    if (ins == nullptr)
         return;
     sp = CheckMultifieldSlotModify(theEnv, REPLACE, "slot-replace$", ins,
                                    GetFirstArgument()->nextArg, &start, &end, &newval);
-    if (sp == NULL)
+    if (sp == nullptr)
         return;
     AssignSlotToDataObject(&oldseg, sp);
 
@@ -206,8 +206,8 @@ void MVSlotReplaceCommand(
 
     arg.type = MULTIFIELD_TYPE;
     arg.value = &newseg;
-    arg.nextArg = NULL;
-    arg.argList = NULL;
+    arg.nextArg = nullptr;
+    arg.argList = nullptr;
     DirectMessage(theEnv, sp->desc->overrideMessage, ins, returnValue, &arg);
 }
 
@@ -235,11 +235,11 @@ void MVSlotInsertCommand(
 
     returnValue->lexemeValue = FalseSymbol(theEnv);
     ins = CheckMultifieldSlotInstance(context);
-    if (ins == NULL)
+    if (ins == nullptr)
         return;
     sp = CheckMultifieldSlotModify(theEnv, INSERT, "slot-insert$", ins,
-                                   GetFirstArgument()->nextArg, &theIndex, NULL, &newval);
-    if (sp == NULL)
+                                   GetFirstArgument()->nextArg, &theIndex, nullptr, &newval);
+    if (sp == nullptr)
         return;
 
     AssignSlotToDataObject(&oldseg, sp);
@@ -257,8 +257,8 @@ void MVSlotInsertCommand(
 
     arg.type = MULTIFIELD_TYPE;
     arg.value = &newseg;
-    arg.nextArg = NULL;
-    arg.argList = NULL;
+    arg.nextArg = nullptr;
+    arg.argList = nullptr;
     DirectMessage(theEnv, sp->desc->overrideMessage, ins, returnValue, &arg);
 }
 
@@ -287,11 +287,11 @@ void MVSlotDeleteCommand(
 
     returnValue->lexemeValue = FalseSymbol(theEnv);
     ins = CheckMultifieldSlotInstance(context);
-    if (ins == NULL)
+    if (ins == nullptr)
         return;
     sp = CheckMultifieldSlotModify(theEnv, DELETE_OP, "slot-delete$", ins,
-                                   GetFirstArgument()->nextArg, &start, &end, NULL);
-    if (sp == NULL)
+                                   GetFirstArgument()->nextArg, &start, &end, nullptr);
+    if (sp == nullptr)
         return;
     AssignSlotToDataObject(&oldseg, sp);
 
@@ -346,8 +346,8 @@ void MVSlotDeleteCommand(
 
     arg.type = MULTIFIELD_TYPE;
     arg.value = &newseg;
-    arg.nextArg = NULL;
-    arg.argList = NULL;
+    arg.nextArg = nullptr;
+    arg.argList = nullptr;
     DirectMessage(theEnv, sp->desc->overrideMessage, ins, returnValue, &arg);
 }
 
@@ -379,7 +379,7 @@ void DirectMVReplaceCommand(
     ins = GetActiveInstance(theEnv);
     sp = CheckMultifieldSlotModify(theEnv, REPLACE, "direct-slot-replace$", ins,
                                    GetFirstArgument(), &start, &end, &newval);
-    if (sp == NULL) {
+    if (sp == nullptr) {
         returnValue->lexemeValue = FalseSymbol(theEnv);
         return;
     }
@@ -478,8 +478,8 @@ void DirectMVInsertCommand(
 
     ins = GetActiveInstance(theEnv);
     sp = CheckMultifieldSlotModify(theEnv, INSERT, "direct-slot-insert$", ins,
-                                   GetFirstArgument(), &theIndex, NULL, &newval);
-    if (sp == NULL) {
+                                   GetFirstArgument(), &theIndex, nullptr, &newval);
+    if (sp == nullptr) {
         returnValue->lexemeValue = FalseSymbol(theEnv);
         return;
     }
@@ -530,8 +530,8 @@ void DirectMVDeleteCommand(
 
     ins = GetActiveInstance(theEnv);
     sp = CheckMultifieldSlotModify(theEnv, DELETE_OP, "direct-slot-delete$", ins,
-                                   GetFirstArgument(), &start, &end, NULL);
-    if (sp == NULL) {
+                                   GetFirstArgument(), &start, &end, nullptr);
+    if (sp == nullptr) {
         returnValue->lexemeValue = FalseSymbol(theEnv);
         return;
     }
@@ -602,7 +602,7 @@ void DirectMVDeleteCommand(
   DESCRIPTION  : Gets the instance for the functions slot-replace$,
                     insert and delete
   INPUTS       : The function name
-  RETURNS      : The instance address, NULL on errors
+  RETURNS      : The instance address, nullptr on errors
   SIDE EFFECTS : None
   NOTES        : None
  **********************************************************************/
@@ -612,18 +612,18 @@ static Instance *CheckMultifieldSlotInstance(
     UDFValue temp;
     Environment *theEnv = context->environment;
 
-    if (!UDFFirstArgument(context, INSTANCE_BITS | SYMBOL_BIT, &temp)) { return NULL; }
+    if (!UDFFirstArgument(context, INSTANCE_BITS | SYMBOL_BIT, &temp)) { return nullptr; }
 
     if (temp.header->type == INSTANCE_ADDRESS_TYPE) {
         ins = temp.instanceValue;
         if (ins->garbage == 1) {
             StaleInstanceAddress(theEnv, UDFContextFunctionName(context), 0);
             SetEvaluationError(theEnv, true);
-            return NULL;
+            return nullptr;
         }
     } else {
         ins = FindInstanceBySymbol(theEnv, temp.lexemeValue);
-        if (ins == NULL)
+        if (ins == nullptr)
             NoInstanceError(theEnv, temp.lexemeValue->contents, UDFContextFunctionName(context));
     }
     return ins;
@@ -644,13 +644,13 @@ static Instance *CheckMultifieldSlotInstance(
                  4) Argument expression chain
                  5) Caller's buffer for index (or beginning of range)
                  6) Caller's buffer for end of range
-                     (can be NULL for INSERT)
+                     (can be nullptr for INSERT)
                  7) Caller's new-field value buffer
-                     (can be NULL for DELETE_OP)
+                     (can be nullptr for DELETE_OP)
   RETURNS      : The address of the instance-slot,
-                    NULL on errors
+                    nullptr on errors
   SIDE EFFECTS : Caller's index buffer set
-                 Caller's new-field value buffer set (if not NULL)
+                 Caller's new-field value buffer set (if not nullptr)
                    Will allocate an ephemeral segment to store more
                      than 1 new field value
                  EvaluationError set on errors
@@ -676,12 +676,12 @@ static InstanceSlot *CheckMultifieldSlotModify(
     if (temp.header->type != SYMBOL_TYPE) {
         ExpectedTypeError1(theEnv, func, start, "symbol");
         SetEvaluationError(theEnv, true);
-        return NULL;
+        return nullptr;
     }
     sp = FindInstanceSlot(theEnv, ins, temp.lexemeValue);
-    if (sp == NULL) {
+    if (sp == nullptr) {
         SlotExistError(theEnv, temp.lexemeValue->contents, func);
-        return NULL;
+        return nullptr;
     }
     if (sp->desc->multiple == 0) {
         PrintErrorID(theEnv, "INSMULT", 1, false);
@@ -693,13 +693,13 @@ static InstanceSlot *CheckMultifieldSlotModify(
         WriteString(theEnv, STDERR, ins->name->contents);
         WriteString(theEnv, STDERR, "].\n");
         SetEvaluationError(theEnv, true);
-        return NULL;
+        return nullptr;
     }
     EvaluateExpression(theEnv, args->nextArg, &temp);
     if (temp.header->type != INTEGER_TYPE) {
         ExpectedTypeError1(theEnv, func, start + 1, "integer");
         SetEvaluationError(theEnv, true);
-        return NULL;
+        return nullptr;
     }
     args = args->nextArg->nextArg;
     *rb = temp.integerValue->contents;
@@ -708,14 +708,14 @@ static InstanceSlot *CheckMultifieldSlotModify(
         if (temp.header->type != INTEGER_TYPE) {
             ExpectedTypeError1(theEnv, func, start + 2, "integer");
             SetEvaluationError(theEnv, true);
-            return NULL;
+            return nullptr;
         }
         *re = temp.integerValue->contents;
         args = args->nextArg;
     }
     if ((code == INSERT) || (code == REPLACE)) {
         if (EvaluateAndStoreInDataObject(theEnv, 1, args, newval, true) == false)
-            return NULL;
+            return nullptr;
     }
     return (sp);
 }

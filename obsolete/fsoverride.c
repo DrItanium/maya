@@ -41,7 +41,7 @@ void DefineFSOverrideFunctions(void* theEnv) {
         exit(EXIT_FAILURE);
     }
     base = getenv((const char*)FILE_SYSTEM_BASE);
-    if (base == NULL) {
+    if (base == nullptr) {
         size = 1;
         tmp = gm1(theEnv, 1);
         tmp[0] = '\0';
@@ -141,7 +141,7 @@ int FS_RemoveFunction(void *theEnv) {
         return(FALSE);
 
 
-    if ((theFileName = GetFileName(theEnv,"remove",1)) == NULL)
+    if ((theFileName = GetFileName(theEnv,"remove",1)) == nullptr)
         return(FALSE);
 
     if(FileSystemRootData(theEnv)->rootingenabled) {
@@ -171,10 +171,10 @@ int FS_RenameFunction(void *theEnv) {
     }
 
 
-    if((oldFileName = GetFileName(theEnv,"rename",1)) == NULL) {
+    if((oldFileName = GetFileName(theEnv,"rename",1)) == nullptr) {
         return(FALSE);
     }
-    if((newFileName = GetFileName(theEnv,"rename",2)) == NULL) {
+    if((newFileName = GetFileName(theEnv,"rename",2)) == nullptr) {
         return(FALSE);
     }
     if(FileSystemRootData(theEnv)->rootingenabled) {

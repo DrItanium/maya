@@ -94,7 +94,7 @@ void FactBinarySetup(
     AllocateEnvironmentData(theEnv, FACTBIN_DATA, sizeof(struct factBinaryData), DeallocateFactBloadData);
 
 #if BLOAD_AND_BSAVE
-    AddBinaryItem(theEnv, "facts", 0, BsaveFind, NULL,
+    AddBinaryItem(theEnv, "facts", 0, BsaveFind, nullptr,
                   BsaveStorage, BsaveFactPatterns,
                   BloadStorage, BloadBinaryItem,
                   ClearBload);
@@ -149,8 +149,8 @@ static void BsaveFind(
     /* Loop through each module. */
     /*===========================*/
 
-    for (theModule = GetNextDefmodule(theEnv, NULL);
-         theModule != NULL;
+    for (theModule = GetNextDefmodule(theEnv, nullptr);
+         theModule != nullptr;
          theModule = GetNextDefmodule(theEnv, theModule)) {
         /*===============================*/
         /* Set the current module to the */
@@ -165,10 +165,10 @@ static void BsaveFind(
         /* be saved for its pattern network.                   */
         /*=====================================================*/
 
-        for (theDeftemplate = GetNextDeftemplate(theEnv, NULL);
-             theDeftemplate != NULL;
+        for (theDeftemplate = GetNextDeftemplate(theEnv, nullptr);
+             theDeftemplate != nullptr;
              theDeftemplate = GetNextDeftemplate(theEnv, theDeftemplate)) {
-            BsaveDriver(theEnv, BSAVE_FIND, NULL, theDeftemplate->patternNetwork);
+            BsaveDriver(theEnv, BSAVE_FIND, nullptr, theDeftemplate->patternNetwork);
         }
     }
 }
@@ -183,7 +183,7 @@ static void BsaveDriver(
         int action,
         FILE *fp,
         struct factPatternNode *thePattern) {
-    while (thePattern != NULL) {
+    while (thePattern != nullptr) {
         switch (action) {
             case BSAVE_FIND:
                 thePattern->bsaveID = FactBinaryData(theEnv)->NumberOfPatterns++;
@@ -197,10 +197,10 @@ static void BsaveDriver(
                 break;
         }
 
-        if (thePattern->nextLevel == NULL) {
-            while (thePattern->rightNode == NULL) {
+        if (thePattern->nextLevel == nullptr) {
+            while (thePattern->rightNode == nullptr) {
                 thePattern = thePattern->lastLevel;
-                if (thePattern == NULL) return;
+                if (thePattern == nullptr) return;
             }
             thePattern = thePattern->rightNode;
         } else { thePattern = thePattern->nextLevel; }
@@ -245,8 +245,8 @@ static void BsaveFactPatterns(
     /* Loop through each module. */
     /*===========================*/
 
-    for (theModule = GetNextDefmodule(theEnv, NULL);
-         theModule != NULL;
+    for (theModule = GetNextDefmodule(theEnv, nullptr);
+         theModule != nullptr;
          theModule = GetNextDefmodule(theEnv, theModule)) {
         /*=====================================================*/
         /* Loop through each deftemplate in the current module */
@@ -254,8 +254,8 @@ static void BsaveFactPatterns(
         /*=====================================================*/
 
         SetCurrentModule(theEnv, theModule);
-        for (theDeftemplate = GetNextDeftemplate(theEnv, NULL);
-             theDeftemplate != NULL;
+        for (theDeftemplate = GetNextDeftemplate(theEnv, nullptr);
+             theDeftemplate != nullptr;
              theDeftemplate = GetNextDeftemplate(theEnv, theDeftemplate)) {
             BsaveDriver(theEnv, BSAVE_PATTERNS, fp, theDeftemplate->patternNetwork);
         }
@@ -319,7 +319,7 @@ static void BloadStorage(
     /*===================================*/
 
     if (FactBinaryData(theEnv)->NumberOfPatterns == 0) {
-        FactBinaryData(theEnv)->FactPatternArray = NULL;
+        FactBinaryData(theEnv)->FactPatternArray = nullptr;
         return;
     }
 
@@ -353,7 +353,7 @@ static void BloadBinaryItem(
                     UpdateFactPatterns);
 
     for (i = 0; i < FactBinaryData(theEnv)->NumberOfPatterns; i++) {
-        if ((FactBinaryData(theEnv)->FactPatternArray[i].lastLevel != NULL) &&
+        if ((FactBinaryData(theEnv)->FactPatternArray[i].lastLevel != nullptr) &&
             (FactBinaryData(theEnv)->FactPatternArray[i].lastLevel->header.selector)) {
             AddHashedPatternNode(theEnv, FactBinaryData(theEnv)->FactPatternArray[i].lastLevel,
                                  &FactBinaryData(theEnv)->FactPatternArray[i],
@@ -399,7 +399,7 @@ static void ClearBload(
     unsigned long i;
 
     for (i = 0; i < FactBinaryData(theEnv)->NumberOfPatterns; i++) {
-        if ((FactBinaryData(theEnv)->FactPatternArray[i].lastLevel != NULL) &&
+        if ((FactBinaryData(theEnv)->FactPatternArray[i].lastLevel != nullptr) &&
             (FactBinaryData(theEnv)->FactPatternArray[i].lastLevel->header.selector)) {
             RemoveHashedPatternNode(theEnv, FactBinaryData(theEnv)->FactPatternArray[i].lastLevel,
                                     &FactBinaryData(theEnv)->FactPatternArray[i],

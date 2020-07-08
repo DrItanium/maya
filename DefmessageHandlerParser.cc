@@ -148,11 +148,11 @@ bool ParseDefmessageHandler(
     }
 #endif
     cname = GetConstructNameAndComment(theEnv, readSource, &DefclassData(theEnv)->ObjectParseToken, "defmessage-handler",
-                                       NULL, NULL, "~", true, false, true, false);
-    if (cname == NULL)
+                                       nullptr, nullptr, "~", true, false, true, false);
+    if (cname == nullptr)
         return true;
     cls = LookupDefclassByMdlOrScope(theEnv, cname->contents);
-    if (cls == NULL) {
+    if (cls == nullptr) {
         PrintErrorID(theEnv, "MSGPSR", 1, false);
         WriteString(theEnv, STDERR, "A class must be defined before its message-handlers.\n");
         return true;
@@ -215,13 +215,13 @@ bool ParseDefmessageHandler(
         WriteString(theEnv, STDOUT, mname->contents);
         WriteString(theEnv, STDOUT, " ");
         WriteString(theEnv, STDOUT, MessageHandlerData(theEnv)->hndquals[mtype]);
-        if (hnd == NULL)
+        if (hnd == nullptr)
             WriteString(theEnv, STDOUT, " defined.\n");
         else
             WriteString(theEnv, STDOUT, " redefined.\n");
     }
 
-    if ((hnd != NULL) ? hnd->system : false) {
+    if ((hnd != nullptr) ? hnd->system : false) {
         PrintErrorID(theEnv, "MSGPSR", 3, false);
         WriteString(theEnv, STDERR, "System message-handlers may not be modified.\n");
         return true;
@@ -238,7 +238,7 @@ bool ParseDefmessageHandler(
                                &DefclassData(theEnv)->ObjectParseToken, hndParams, wildcard,
                                SlotReferenceVar, BindSlotReference, &lvars,
                                cls);
-    if (actions == NULL) {
+    if (actions == nullptr) {
         ReturnExpression(theEnv, hndParams);
         return true;
     }
@@ -264,10 +264,10 @@ bool ParseDefmessageHandler(
         return false;
     }
 
-    if (hnd != NULL) {
+    if (hnd != nullptr) {
         ExpressionDeinstall(theEnv, hnd->actions);
         ReturnPackedExpression(theEnv, hnd->actions);
-        if (hnd->header.ppForm != NULL)
+        if (hnd->header.ppForm != nullptr)
             rm(theEnv, (void *) hnd->header.ppForm,
                (sizeof(char) * (strlen(hnd->header.ppForm) + 1)));
     } else {
@@ -290,7 +290,7 @@ bool ParseDefmessageHandler(
         hnd->header.ppForm = CopyPPBuffer(theEnv);
     else
 #endif
-        hnd->header.ppForm = NULL;
+        hnd->header.ppForm = nullptr;
     return false;
 }
 
@@ -469,8 +469,8 @@ static int SlotReferenceVar(
         CloseStringSource(theEnv, "hnd-var");
         if (itkn.tknType != STOP_TOKEN) {
             sd = CheckSlotReference(theEnv, (Defclass *) userBuffer, TokenTypeToType(itkn.tknType), itkn.value,
-                                    false, NULL);
-            if (sd == NULL) { return -1; }
+                                    false, nullptr);
+            if (sd == nullptr) { return -1; }
             GenHandlerSlotReference(theEnv, varexp, HANDLER_GET, sd);
             return 1;
         }
@@ -526,9 +526,9 @@ static int BindSlotReference(
             saveExp = bindExp->argList->nextArg;
             sd = CheckSlotReference(theEnv, (Defclass *) userBuffer, TokenTypeToType(itkn.tknType), itkn.value,
                                     true, saveExp);
-            if (sd == NULL) { return -1; }
+            if (sd == nullptr) { return -1; }
             GenHandlerSlotReference(theEnv, bindExp, HANDLER_PUT, sd);
-            bindExp->argList->nextArg = NULL;
+            bindExp->argList->nextArg = nullptr;
             ReturnExpression(theEnv, bindExp->argList);
             bindExp->argList = saveExp;
             return 1;
@@ -556,7 +556,7 @@ static int BindSlotReference(
                  4) A flag indicating if this is a read
                     or write access
                  5) Value expression for write
-  RETURNS      : Class slot on success, NULL on errors
+  RETURNS      : Class slot on success, nullptr on errors
   SIDE EFFECTS : Messages printed on errors.
   NOTES        : For static references, this function
                  insures that the slot is either
@@ -578,7 +578,7 @@ static SlotDescriptor *CheckSlotReference(
     if (theType != SYMBOL_TYPE) {
         PrintErrorID(theEnv, "MSGPSR", 7, false);
         WriteString(theEnv, STDERR, "Illegal value for ?self reference.\n");
-        return NULL;
+        return nullptr;
     }
     slotIndex = FindInstanceTemplateSlot(theEnv, theDefclass, (CLIPSLexeme *) theValue);
     if (slotIndex == -1) {
@@ -588,12 +588,12 @@ static SlotDescriptor *CheckSlotReference(
         WriteString(theEnv, STDERR, "' in class '");
         WriteString(theEnv, STDERR, DefclassName(theDefclass));
         WriteString(theEnv, STDERR, "' for ?self reference.\n");
-        return NULL;
+        return nullptr;
     }
     sd = theDefclass->instanceTemplate[slotIndex];
     if ((sd->publicVisibility == 0) && (sd->cls != theDefclass)) {
         SlotVisibilityViolationError(theEnv, sd, theDefclass, true);
-        return NULL;
+        return nullptr;
     }
     if (!writeFlag)
         return (sd);
@@ -606,18 +606,18 @@ static SlotDescriptor *CheckSlotReference(
        ================================================= */
     if (sd->noWrite && (sd->initializeOnly == 0)) {
         SlotAccessViolationError(theEnv, ((CLIPSLexeme *) theValue)->contents,
-                                 NULL, theDefclass);
-        return NULL;
+                                 nullptr, theDefclass);
+        return nullptr;
     }
 
     vCode = ConstraintCheckExpressionChain(theEnv, writeExpression, sd->constraint);
     if (vCode != NO_VIOLATION) {
         PrintErrorID(theEnv, "CSTRNCHK", 1, false);
         WriteString(theEnv, STDERR, "Expression for ");
-        PrintSlot(theEnv, STDERR, sd, NULL, "direct slot write");
-        ConstraintViolationErrorMessage(theEnv, NULL, NULL, 0, 0, NULL, 0,
+        PrintSlot(theEnv, STDERR, sd, nullptr, "direct slot write");
+        ConstraintViolationErrorMessage(theEnv, nullptr, nullptr, 0, 0, nullptr, 0,
                                         vCode, sd->constraint, false);
-        return NULL;
+        return nullptr;
     }
     return (sd);
 }

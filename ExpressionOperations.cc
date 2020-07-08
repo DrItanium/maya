@@ -117,7 +117,7 @@ bool CheckArgumentAgainstRestriction(
 /******************************************************/
 bool ConstantExpression(
         struct expr *testPtr) {
-    while (testPtr != NULL) {
+    while (testPtr != nullptr) {
         if ((testPtr->type != SYMBOL_TYPE) && (testPtr->type != STRING_TYPE) &&
             (testPtr->type != INSTANCE_NAME_TYPE) && (testPtr->type != INSTANCE_ADDRESS_TYPE) &&
             (testPtr->type != INTEGER_TYPE) && (testPtr->type != FLOAT_TYPE)) { return false; }
@@ -159,7 +159,7 @@ bool IdenticalExpression(
     /*==============================================*/
 
     for (;
-            (firstList != NULL) && (secondList != NULL);
+            (firstList != nullptr) && (secondList != nullptr);
             firstList = firstList->nextArg, secondList = secondList->nextArg) {
         /*=========================*/
         /* Compare type and value. */
@@ -177,7 +177,7 @@ bool IdenticalExpression(
     }
 
     /*=====================================================*/
-    /* If firstList and secondList aren't both NULL, then  */
+    /* If firstList and secondList aren't both nullptr, then  */
     /* one of the lists contains more expressions than the */
     /* other.                                              */
     /*=====================================================*/
@@ -201,7 +201,7 @@ unsigned short CountArguments(
         struct expr *testPtr) {
     unsigned short size = 0;
 
-    while (testPtr != NULL) {
+    while (testPtr != nullptr) {
         size++;
         testPtr = testPtr->nextArg;
     }
@@ -217,14 +217,14 @@ struct expr *CopyExpression(
         struct expr *original) {
     struct expr *topLevel, *next, *last;
 
-    if (original == NULL) return NULL;
+    if (original == nullptr) return nullptr;
 
     topLevel = GenConstant(theEnv, original->type, original->value);
     topLevel->argList = CopyExpression(theEnv, original->argList);
 
     last = topLevel;
     original = original->nextArg;
-    while (original != NULL) {
+    while (original != nullptr) {
         next = GenConstant(theEnv, original->type, original->value);
         next->argList = CopyExpression(theEnv, original->argList);
 
@@ -244,8 +244,8 @@ struct expr *CopyExpression(
 bool ExpressionContainsVariables(
         struct expr *theExpression,
         bool globalsAreVariables) {
-    while (theExpression != NULL) {
-        if (theExpression->argList != NULL) {
+    while (theExpression != nullptr) {
+        if (theExpression->argList != nullptr) {
             if (ExpressionContainsVariables(theExpression->argList, globalsAreVariables)) { return true; }
         }
 
@@ -269,9 +269,9 @@ unsigned long ExpressionSize(
         struct expr *testPtr) {
     unsigned long size = 0;
 
-    while (testPtr != NULL) {
+    while (testPtr != nullptr) {
         size++;
-        if (testPtr->argList != NULL) { size += ExpressionSize(testPtr->argList); }
+        if (testPtr->argList != nullptr) { size += ExpressionSize(testPtr->argList); }
         testPtr = testPtr->nextArg;
     }
     return size;
@@ -288,8 +288,8 @@ struct expr *GenConstant(
     struct expr *top;
 
     top = get_struct(theEnv, expr);
-    top->nextArg = NULL;
-    top->argList = NULL;
+    top->nextArg = nullptr;
+    top->argList = nullptr;
     top->type = type;
     top->value = value;
 
@@ -305,9 +305,9 @@ void PrintExpression(
         struct expr *theExpression) {
     struct expr *oldExpression;
 
-    if (theExpression == NULL) { return; }
+    if (theExpression == nullptr) { return; }
 
-    while (theExpression != NULL) {
+    while (theExpression != nullptr) {
         switch (theExpression->type) {
             case SF_VARIABLE:
             case GBL_VARIABLE:
@@ -324,7 +324,7 @@ void PrintExpression(
             case FCALL:
                 WriteString(theEnv, fileid, "(");
                 WriteString(theEnv, fileid, ExpressionFunctionCallName(theExpression)->contents);
-                if (theExpression->argList != NULL) { WriteString(theEnv, fileid, " "); }
+                if (theExpression->argList != nullptr) { WriteString(theEnv, fileid, " "); }
                 PrintExpression(theEnv, fileid, theExpression->argList);
                 WriteString(theEnv, fileid, ")");
                 break;
@@ -338,7 +338,7 @@ void PrintExpression(
         }
 
         theExpression = theExpression->nextArg;
-        if (theExpression != NULL) WriteString(theEnv, fileid, " ");
+        if (theExpression != nullptr) WriteString(theEnv, fileid, " ");
     }
 
 }
@@ -359,16 +359,16 @@ struct expr *CombineExpressions(
     struct expr *tempPtr;
 
     /*===========================================================*/
-    /* If the 1st expression is NULL, return the 2nd expression. */
+    /* If the 1st expression is nullptr, return the 2nd expression. */
     /*===========================================================*/
 
-    if (expr1 == NULL) return (expr2);
+    if (expr1 == nullptr) return (expr2);
 
     /*===========================================================*/
-    /* If the 2nd expression is NULL, return the 1st expression. */
+    /* If the 2nd expression is nullptr, return the 1st expression. */
     /*===========================================================*/
 
-    if (expr2 == NULL) return (expr1);
+    if (expr2 == nullptr) return (expr1);
 
     /*============================================================*/
     /* If the 1st expression is an "and" expression, and the 2nd  */
@@ -379,12 +379,12 @@ struct expr *CombineExpressions(
     if ((expr1->value == ExpressionData(theEnv)->PTR_AND) &&
         (expr2->value != ExpressionData(theEnv)->PTR_AND)) {
         tempPtr = expr1->argList;
-        if (tempPtr == NULL) {
+        if (tempPtr == nullptr) {
             rtn_struct(theEnv, expr, expr1);
             return (expr2);
         }
 
-        while (tempPtr->nextArg != NULL) { tempPtr = tempPtr->nextArg; }
+        while (tempPtr->nextArg != nullptr) { tempPtr = tempPtr->nextArg; }
 
         tempPtr->nextArg = expr2;
         return (expr1);
@@ -399,7 +399,7 @@ struct expr *CombineExpressions(
     if ((expr1->value != ExpressionData(theEnv)->PTR_AND) &&
         (expr2->value == ExpressionData(theEnv)->PTR_AND)) {
         tempPtr = expr2->argList;
-        if (tempPtr == NULL) {
+        if (tempPtr == nullptr) {
             rtn_struct(theEnv, expr, expr2);
             return (expr1);
         }
@@ -419,12 +419,12 @@ struct expr *CombineExpressions(
     if ((expr1->value == ExpressionData(theEnv)->PTR_AND) &&
         (expr2->value == ExpressionData(theEnv)->PTR_AND)) {
         tempPtr = expr1->argList;
-        if (tempPtr == NULL) {
+        if (tempPtr == nullptr) {
             rtn_struct(theEnv, expr, expr1);
             return (expr2);
         }
 
-        while (tempPtr->nextArg != NULL) { tempPtr = tempPtr->nextArg; }
+        while (tempPtr->nextArg != nullptr) { tempPtr = tempPtr->nextArg; }
 
         tempPtr->nextArg = expr2->argList;
         rtn_struct(theEnv, expr, expr2);
@@ -453,10 +453,10 @@ struct expr *NegateExpression(
     struct expr *tempPtr;
 
     /*=========================================*/
-    /* If the expression is NULL, return NULL. */
+    /* If the expression is nullptr, return nullptr. */
     /*=========================================*/
 
-    if (theExpression == NULL) return NULL;
+    if (theExpression == nullptr) return nullptr;
 
     /*==================================================*/
     /* The expression is already wrapped within a "not" */
@@ -489,16 +489,16 @@ struct expr *AppendExpressions(
     struct expr *tempPtr;
 
     /*===========================================================*/
-    /* If the 1st expression is NULL, return the 2nd expression. */
+    /* If the 1st expression is nullptr, return the 2nd expression. */
     /*===========================================================*/
 
-    if (expr1 == NULL) return (expr2);
+    if (expr1 == nullptr) return (expr2);
 
     /*===========================================================*/
-    /* If the 2nd expression is NULL, return the 1st expression. */
+    /* If the 2nd expression is nullptr, return the 1st expression. */
     /*===========================================================*/
 
-    if (expr2 == NULL) return (expr1);
+    if (expr2 == nullptr) return (expr1);
 
     /*====================================*/
     /* Find the end of the 1st expression */
@@ -506,7 +506,7 @@ struct expr *AppendExpressions(
     /*====================================*/
 
     tempPtr = expr1;
-    while (tempPtr->nextArg != NULL) tempPtr = tempPtr->nextArg;
+    while (tempPtr->nextArg != nullptr) tempPtr = tempPtr->nextArg;
     tempPtr->nextArg = expr2;
 
     /*===============================*/

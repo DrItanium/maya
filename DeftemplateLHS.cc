@@ -88,7 +88,7 @@ struct lhsParseNode *DeftemplateLHSParse(
     if ((theToken.tknType == OR_CONSTRAINT_TOKEN) ||
         (theToken.tknType == AND_CONSTRAINT_TOKEN)) {
         SyntaxErrorMessage(theEnv, "deftemplate patterns");
-        return NULL;
+        return nullptr;
     }
 
     /*===================================================*/
@@ -116,7 +116,7 @@ struct lhsParseNode *DeftemplateLHSParse(
     if (error) {
         ReturnLHSParseNodes(theEnv, firstSlot);
         ReturnLHSParseNodes(theEnv, head);
-        return NULL;
+        return nullptr;
     }
 
     /*=========================*/
@@ -137,7 +137,7 @@ static struct lhsParseNode *GetLHSSlots(
         struct token *tempToken,
         Deftemplate *theDeftemplate,
         bool *error) {
-    struct lhsParseNode *firstSlot = NULL, *nextSlot, *lastSlot = NULL;
+    struct lhsParseNode *firstSlot = nullptr, *nextSlot, *lastSlot = nullptr;
     struct templateSlot *slotPtr;
     unsigned short position;
 
@@ -159,7 +159,7 @@ static struct lhsParseNode *GetLHSSlots(
             *error = true;
             SyntaxErrorMessage(theEnv, "deftemplate patterns");
             ReturnLHSParseNodes(theEnv, firstSlot);
-            return NULL;
+            return nullptr;
         }
 
         /*====================*/
@@ -171,19 +171,19 @@ static struct lhsParseNode *GetLHSSlots(
             *error = true;
             SyntaxErrorMessage(theEnv, "deftemplate patterns");
             ReturnLHSParseNodes(theEnv, firstSlot);
-            return NULL;
+            return nullptr;
         }
 
         /*==========================================================*/
         /* Determine if the slot name is valid for the deftemplate. */
         /*==========================================================*/
 
-        if ((slotPtr = FindSlot(theDeftemplate, tempToken->lexemeValue, &position)) == NULL) {
+        if ((slotPtr = FindSlot(theDeftemplate, tempToken->lexemeValue, &position)) == nullptr) {
             *error = true;
             InvalidDeftemplateSlotMessage(theEnv, tempToken->lexemeValue->contents,
                                           theDeftemplate->header.name->contents, true);
             ReturnLHSParseNodes(theEnv, firstSlot);
-            return NULL;
+            return nullptr;
         }
 
         /*============================================*/
@@ -193,7 +193,7 @@ static struct lhsParseNode *GetLHSSlots(
         if (MultiplyDefinedLHSSlots(theEnv, firstSlot, tempToken->lexemeValue) == true) {
             *error = true;
             ReturnLHSParseNodes(theEnv, firstSlot);
-            return NULL;
+            return nullptr;
         }
 
         /*==============================================================*/
@@ -204,7 +204,7 @@ static struct lhsParseNode *GetLHSSlots(
         if (*error) {
             ReturnLHSParseNodes(theEnv, firstSlot);
             ReturnLHSParseNodes(theEnv, nextSlot);
-            return NULL;
+            return nullptr;
         }
 
         /*=====================================*/
@@ -212,10 +212,10 @@ static struct lhsParseNode *GetLHSSlots(
         /* of slot definitions already parsed. */
         /*=====================================*/
 
-        if (lastSlot == NULL) { firstSlot = nextSlot; }
+        if (lastSlot == nullptr) { firstSlot = nextSlot; }
         else { lastSlot->right = nextSlot; }
 
-        while (nextSlot->right != NULL) nextSlot = nextSlot->right;
+        while (nextSlot->right != nullptr) nextSlot = nextSlot->right;
         lastSlot = nextSlot;
 
         /*==============================*/
@@ -266,9 +266,9 @@ static struct lhsParseNode *GetSingleLHSSlot(
         nextSlot = RestrictionParse(theEnv, readSource, tempToken, false,
                                     slotPtr->slotName, position,
                                     slotPtr->constraints, 0);
-        if (nextSlot == NULL) {
+        if (nextSlot == nullptr) {
             *error = true;
-            return NULL;
+            return nullptr;
         }
 
         /*======================================*/
@@ -281,7 +281,7 @@ static struct lhsParseNode *GetSingleLHSSlot(
             SingleFieldSlotCardinalityError(theEnv, slotPtr->slotName->contents);
             *error = true;
             ReturnLHSParseNodes(theEnv, nextSlot);
-            return NULL;
+            return nullptr;
         }
     }
 
@@ -292,9 +292,9 @@ static struct lhsParseNode *GetSingleLHSSlot(
     else {
         nextSlot = RestrictionParse(theEnv, readSource, tempToken, true, slotName, position,
                                     slotPtr->constraints, 1);
-        if (nextSlot == NULL) {
+        if (nextSlot == nullptr) {
             *error = true;
-            return NULL;
+            return nullptr;
         }
     }
 
@@ -309,7 +309,7 @@ static struct lhsParseNode *GetSingleLHSSlot(
         SyntaxErrorMessage(theEnv, "deftemplate patterns");
         *error = true;
         ReturnLHSParseNodes(theEnv, nextSlot);
-        return NULL;
+        return nullptr;
     }
 
     /*===============================================*/
@@ -317,7 +317,7 @@ static struct lhsParseNode *GetSingleLHSSlot(
     /* slot contained no restrictions.               */
     /*===============================================*/
 
-    if ((nextSlot->bottom == NULL) && slotPtr->multislot) {
+    if ((nextSlot->bottom == nullptr) && slotPtr->multislot) {
         PPBackup(theEnv);
         PPBackup(theEnv);
         SavePPBuffer(theEnv, ")");
@@ -340,7 +340,7 @@ static bool MultiplyDefinedLHSSlots(
         struct lhsParseNode *theSlots,
         CLIPSLexeme *slotName) {
     for (;
-            theSlots != NULL;
+            theSlots != nullptr;
             theSlots = theSlots->right) {
         if (theSlots->slot == slotName) {
             AlreadyParsedErrorMessage(theEnv, "slot ", slotName->contents);

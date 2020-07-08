@@ -105,7 +105,7 @@ bool ParseDeffacts(
                                               (FindConstructFunction *) FindDeffactsInModule,
                                               (DeleteConstructFunction *) Undeffacts, "$", true,
                                               true, true, false);
-    if (deffactsName == NULL) { return true; }
+    if (deffactsName == nullptr) { return true; }
 
     /*===============================================*/
     /* Parse the list of facts in the deffacts body. */
@@ -149,7 +149,7 @@ bool ParseDeffacts(
     /* Save the pretty print representation of the deffacts. */
     /*=======================================================*/
 
-    if (GetConserveMemory(theEnv) == true) { newDeffacts->header.ppForm = NULL; }
+    if (GetConserveMemory(theEnv) == true) { newDeffacts->header.ppForm = nullptr; }
     else { newDeffacts->header.ppForm = CopyPPBuffer(theEnv); }
 
     /*=============================================*/

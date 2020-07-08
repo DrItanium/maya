@@ -81,7 +81,7 @@ typedef enum {
 
 typedef enum {
     PSE_NO_ERROR = 0,
-    PSE_NULL_POINTER_ERROR,
+    PSE_nullptr_POINTER_ERROR,
     PSE_INVALID_TARGET_ERROR,
     PSE_SLOT_NOT_FOUND_ERROR,
     PSE_TYPE_ERROR,
@@ -95,7 +95,7 @@ typedef enum {
 
 typedef enum {
     GSE_NO_ERROR = 0,
-    GSE_NULL_POINTER_ERROR,
+    GSE_nullptr_POINTER_ERROR,
     GSE_INVALID_TARGET_ERROR,
     GSE_SLOT_NOT_FOUND_ERROR
 } GetSlotError;

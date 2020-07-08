@@ -79,7 +79,7 @@ static void DeallocateConstraintData(Environment *);
 
 /*****************************************************/
 /* InitializeConstraints: Initializes the constraint */
-/*   hash table to NULL and defines the static and   */
+/*   hash table to nullptr and defines the static and   */
 /*   dynamic constraint access functions.            */
 /*****************************************************/
 void InitializeConstraints(
@@ -92,12 +92,12 @@ void InitializeConstraints(
             gm2(theEnv, sizeof(struct constraintRecord *) *
                         SIZE_CONSTRAINT_HASH);
 
-    if (ConstraintData(theEnv)->ConstraintHashtable == NULL) ExitRouter(theEnv, EXIT_FAILURE);
+    if (ConstraintData(theEnv)->ConstraintHashtable == nullptr) ExitRouter(theEnv, EXIT_FAILURE);
 
-    for (i = 0; i < SIZE_CONSTRAINT_HASH; i++) ConstraintData(theEnv)->ConstraintHashtable[i] = NULL;
+    for (i = 0; i < SIZE_CONSTRAINT_HASH; i++) ConstraintData(theEnv)->ConstraintHashtable[i] = nullptr;
 
-    AddUDF(theEnv, "get-dynamic-constraint-checking", "b", 0, 0, NULL, GDCCommand, NULL);
-    AddUDF(theEnv, "set-dynamic-constraint-checking", "b", 1, 1, NULL, SDCCommand, NULL);
+    AddUDF(theEnv, "get-dynamic-constraint-checking", "b", 0, 0, nullptr, GDCCommand, nullptr);
+    AddUDF(theEnv, "set-dynamic-constraint-checking", "b", 1, 1, nullptr, SDCCommand, nullptr);
 }
 
 /*****************************************************/
@@ -111,7 +111,7 @@ static void DeallocateConstraintData(
 
     for (i = 0; i < SIZE_CONSTRAINT_HASH; i++) {
         tmpPtr = ConstraintData(theEnv)->ConstraintHashtable[i];
-        while (tmpPtr != NULL) {
+        while (tmpPtr != nullptr) {
             nextPtr = tmpPtr->next;
             ReturnConstraintRecord(theEnv, tmpPtr);
             tmpPtr = nextPtr;
@@ -137,7 +137,7 @@ static void DeallocateConstraintData(
 static void ReturnConstraintRecord(
         Environment *theEnv,
         CONSTRAINT_RECORD *constraints) {
-    if (constraints == NULL) return;
+    if (constraints == nullptr) return;
 
     if (!constraints->installed) {
         ReturnExpression(theEnv, constraints->classList);
@@ -177,7 +177,7 @@ static void DeinstallConstraintRecord(
         ExpressionDeinstall(theEnv, constraints->maxFields);
     }
 
-    if (constraints->multifield != NULL) { DeinstallConstraintRecord(theEnv, constraints->multifield); }
+    if (constraints->multifield != nullptr) { DeinstallConstraintRecord(theEnv, constraints->multifield); }
 }
 
 /******************************************/
@@ -187,9 +187,9 @@ static void DeinstallConstraintRecord(
 void RemoveConstraint(
         Environment *theEnv,
         struct constraintRecord *theConstraint) {
-    struct constraintRecord *tmpPtr, *prevPtr = NULL;
+    struct constraintRecord *tmpPtr, *prevPtr = nullptr;
 
-    if (theConstraint == NULL) return;
+    if (theConstraint == nullptr) return;
 
     /*========================================*/
     /* If the bucket value is less than zero, */
@@ -208,11 +208,11 @@ void RemoveConstraint(
     /*================================*/
 
     tmpPtr = ConstraintData(theEnv)->ConstraintHashtable[theConstraint->bucket];
-    while (tmpPtr != NULL) {
+    while (tmpPtr != nullptr) {
         if (tmpPtr == theConstraint) {
             theConstraint->count--;
             if (theConstraint->count == 0) {
-                if (prevPtr == NULL) { ConstraintData(theEnv)->ConstraintHashtable[theConstraint->bucket] = theConstraint->next; }
+                if (prevPtr == nullptr) { ConstraintData(theEnv)->ConstraintHashtable[theConstraint->bucket] = theConstraint->next; }
                 else { prevPtr->next = theConstraint->next; }
                 DeinstallConstraintRecord(theEnv, theConstraint);
                 ReturnConstraintRecord(theEnv, theConstraint);
@@ -263,31 +263,31 @@ unsigned long HashConstraint(
             (theConstraint->classRestriction * 11) +
             (theConstraint->instanceNameRestriction * 7);
 
-    for (tmpPtr = theConstraint->classList; tmpPtr != NULL; tmpPtr = tmpPtr->nextArg) {
+    for (tmpPtr = theConstraint->classList; tmpPtr != nullptr; tmpPtr = tmpPtr->nextArg) {
         count += GetAtomicHashValue(tmpPtr->type, tmpPtr->value, i++);
     }
 
-    for (tmpPtr = theConstraint->restrictionList; tmpPtr != NULL; tmpPtr = tmpPtr->nextArg) {
+    for (tmpPtr = theConstraint->restrictionList; tmpPtr != nullptr; tmpPtr = tmpPtr->nextArg) {
         count += GetAtomicHashValue(tmpPtr->type, tmpPtr->value, i++);
     }
 
-    for (tmpPtr = theConstraint->minValue; tmpPtr != NULL; tmpPtr = tmpPtr->nextArg) {
+    for (tmpPtr = theConstraint->minValue; tmpPtr != nullptr; tmpPtr = tmpPtr->nextArg) {
         count += GetAtomicHashValue(tmpPtr->type, tmpPtr->value, i++);
     }
 
-    for (tmpPtr = theConstraint->maxValue; tmpPtr != NULL; tmpPtr = tmpPtr->nextArg) {
+    for (tmpPtr = theConstraint->maxValue; tmpPtr != nullptr; tmpPtr = tmpPtr->nextArg) {
         count += GetAtomicHashValue(tmpPtr->type, tmpPtr->value, i++);
     }
 
-    for (tmpPtr = theConstraint->minFields; tmpPtr != NULL; tmpPtr = tmpPtr->nextArg) {
+    for (tmpPtr = theConstraint->minFields; tmpPtr != nullptr; tmpPtr = tmpPtr->nextArg) {
         count += GetAtomicHashValue(tmpPtr->type, tmpPtr->value, i++);
     }
 
-    for (tmpPtr = theConstraint->maxFields; tmpPtr != NULL; tmpPtr = tmpPtr->nextArg) {
+    for (tmpPtr = theConstraint->maxFields; tmpPtr != nullptr; tmpPtr = tmpPtr->nextArg) {
         count += GetAtomicHashValue(tmpPtr->type, tmpPtr->value, i++);
     }
 
-    if (theConstraint->multifield != NULL) { count += HashConstraint(theConstraint->multifield); }
+    if (theConstraint->multifield != nullptr) { count += HashConstraint(theConstraint->multifield); }
 
     hashValue = count % SIZE_CONSTRAINT_HASH;
 
@@ -325,49 +325,49 @@ static bool ConstraintCompare(
         (constraint1->instanceNameRestriction != constraint2->instanceNameRestriction)) { return false; }
 
     for (tmpPtr1 = constraint1->classList, tmpPtr2 = constraint2->classList;
-         (tmpPtr1 != NULL) && (tmpPtr2 != NULL);
+         (tmpPtr1 != nullptr) && (tmpPtr2 != nullptr);
          tmpPtr1 = tmpPtr1->nextArg, tmpPtr2 = tmpPtr2->nextArg) {
         if ((tmpPtr1->type != tmpPtr2->type) || (tmpPtr1->value != tmpPtr2->value)) { return false; }
     }
     if (tmpPtr1 != tmpPtr2) return false;
 
     for (tmpPtr1 = constraint1->restrictionList, tmpPtr2 = constraint2->restrictionList;
-         (tmpPtr1 != NULL) && (tmpPtr2 != NULL);
+         (tmpPtr1 != nullptr) && (tmpPtr2 != nullptr);
          tmpPtr1 = tmpPtr1->nextArg, tmpPtr2 = tmpPtr2->nextArg) {
         if ((tmpPtr1->type != tmpPtr2->type) || (tmpPtr1->value != tmpPtr2->value)) { return false; }
     }
     if (tmpPtr1 != tmpPtr2) return false;
 
     for (tmpPtr1 = constraint1->minValue, tmpPtr2 = constraint2->minValue;
-         (tmpPtr1 != NULL) && (tmpPtr2 != NULL);
+         (tmpPtr1 != nullptr) && (tmpPtr2 != nullptr);
          tmpPtr1 = tmpPtr1->nextArg, tmpPtr2 = tmpPtr2->nextArg) {
         if ((tmpPtr1->type != tmpPtr2->type) || (tmpPtr1->value != tmpPtr2->value)) { return false; }
     }
     if (tmpPtr1 != tmpPtr2) return false;
 
     for (tmpPtr1 = constraint1->maxValue, tmpPtr2 = constraint2->maxValue;
-         (tmpPtr1 != NULL) && (tmpPtr2 != NULL);
+         (tmpPtr1 != nullptr) && (tmpPtr2 != nullptr);
          tmpPtr1 = tmpPtr1->nextArg, tmpPtr2 = tmpPtr2->nextArg) {
         if ((tmpPtr1->type != tmpPtr2->type) || (tmpPtr1->value != tmpPtr2->value)) { return false; }
     }
     if (tmpPtr1 != tmpPtr2) return false;
 
     for (tmpPtr1 = constraint1->minFields, tmpPtr2 = constraint2->minFields;
-         (tmpPtr1 != NULL) && (tmpPtr2 != NULL);
+         (tmpPtr1 != nullptr) && (tmpPtr2 != nullptr);
          tmpPtr1 = tmpPtr1->nextArg, tmpPtr2 = tmpPtr2->nextArg) {
         if ((tmpPtr1->type != tmpPtr2->type) || (tmpPtr1->value != tmpPtr2->value)) { return false; }
     }
     if (tmpPtr1 != tmpPtr2) return false;
 
     for (tmpPtr1 = constraint1->maxFields, tmpPtr2 = constraint2->maxFields;
-         (tmpPtr1 != NULL) && (tmpPtr2 != NULL);
+         (tmpPtr1 != nullptr) && (tmpPtr2 != nullptr);
          tmpPtr1 = tmpPtr1->nextArg, tmpPtr2 = tmpPtr2->nextArg) {
         if ((tmpPtr1->type != tmpPtr2->type) || (tmpPtr1->value != tmpPtr2->value)) { return false; }
     }
     if (tmpPtr1 != tmpPtr2) return false;
 
-    if (((constraint1->multifield == NULL) && (constraint2->multifield != NULL)) ||
-        ((constraint1->multifield != NULL) && (constraint2->multifield == NULL))) { return false; }
+    if (((constraint1->multifield == nullptr) && (constraint2->multifield != nullptr)) ||
+        ((constraint1->multifield != nullptr) && (constraint2->multifield == nullptr))) { return false; }
     else if (constraint1->multifield == constraint2->multifield) { return true; }
 
     return (ConstraintCompare(constraint1->multifield, constraint2->multifield));
@@ -383,12 +383,12 @@ struct constraintRecord *AddConstraint(
     struct constraintRecord *tmpPtr;
     unsigned long hashValue;
 
-    if (theConstraint == NULL) return NULL;
+    if (theConstraint == nullptr) return nullptr;
 
     hashValue = HashConstraint(theConstraint);
 
     for (tmpPtr = ConstraintData(theEnv)->ConstraintHashtable[hashValue];
-         tmpPtr != NULL;
+         tmpPtr != nullptr;
          tmpPtr = tmpPtr->next) {
         if (ConstraintCompare(theConstraint, tmpPtr)) {
             tmpPtr->count++;
@@ -440,7 +440,7 @@ static void InstallConstraintRecord(
     ReturnExpression(theEnv, constraints->maxFields);
     constraints->maxFields = tempExpr;
 
-    if (constraints->multifield != NULL) { InstallConstraintRecord(theEnv, constraints->multifield); }
+    if (constraints->multifield != nullptr) { InstallConstraintRecord(theEnv, constraints->multifield); }
 }
 
 

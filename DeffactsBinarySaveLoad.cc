@@ -123,8 +123,8 @@ static void BsaveFind(
     /* Loop through each module. */
     /*===========================*/
 
-    for (theModule = GetNextDefmodule(theEnv, NULL);
-         theModule != NULL;
+    for (theModule = GetNextDefmodule(theEnv, nullptr);
+         theModule != nullptr;
          theModule = GetNextDefmodule(theEnv, theModule)) {
         /*===============================================*/
         /* Set the current module to the module being    */
@@ -139,8 +139,8 @@ static void BsaveFind(
         /* Loop through each deffacts in the current module. */
         /*===================================================*/
 
-        for (theDeffacts = GetNextDeffacts(theEnv, NULL);
-             theDeffacts != NULL;
+        for (theDeffacts = GetNextDeffacts(theEnv, nullptr);
+             theDeffacts != nullptr;
              theDeffacts = GetNextDeffacts(theEnv, theDeffacts)) {
             /*======================================================*/
             /* Initialize the construct header for the binary save. */
@@ -174,8 +174,8 @@ static void BsaveExpressions(
     /* Loop through each module. */
     /*===========================*/
 
-    for (theModule = GetNextDefmodule(theEnv, NULL);
-         theModule != NULL;
+    for (theModule = GetNextDefmodule(theEnv, nullptr);
+         theModule != nullptr;
          theModule = GetNextDefmodule(theEnv, theModule)) {
         /*======================================================*/
         /* Set the current module to the module being examined. */
@@ -188,8 +188,8 @@ static void BsaveExpressions(
         /* and save the assertion list expression.          */
         /*==================================================*/
 
-        for (theDeffacts = GetNextDeffacts(theEnv, NULL);
-             theDeffacts != NULL;
+        for (theDeffacts = GetNextDeffacts(theEnv, nullptr);
+             theDeffacts != nullptr;
              theDeffacts = GetNextDeffacts(theEnv, theDeffacts)) { BsaveExpression(theEnv, theDeffacts->assertList, fp); }
     }
 }
@@ -244,12 +244,12 @@ static void BsaveBinaryItem(
     /*================================================*/
 
     DeffactsBinaryData(theEnv)->NumberOfDeffacts = 0;
-    for (theModule = GetNextDefmodule(theEnv, NULL);
-         theModule != NULL;
+    for (theModule = GetNextDefmodule(theEnv, nullptr);
+         theModule != nullptr;
          theModule = GetNextDefmodule(theEnv, theModule)) {
         SetCurrentModule(theEnv, theModule);
 
-        theModuleItem = (struct deffactsModule *) GetModuleItem(theEnv, NULL, DeffactsData(theEnv)->DeffactsModuleIndex);
+        theModuleItem = (struct deffactsModule *) GetModuleItem(theEnv, nullptr, DeffactsData(theEnv)->DeffactsModuleIndex);
         AssignBsaveDefmdlItemHdrVals(&tempDeffactsModule.header, &theModuleItem->header);
         GenWrite(&tempDeffactsModule, sizeof(struct bsaveDeffactsModule), fp);
     }
@@ -258,16 +258,16 @@ static void BsaveBinaryItem(
     /* Write out each deffacts. */
     /*==========================*/
 
-    for (theModule = GetNextDefmodule(theEnv, NULL);
-         theModule != NULL;
+    for (theModule = GetNextDefmodule(theEnv, nullptr);
+         theModule != nullptr;
          theModule = GetNextDefmodule(theEnv, theModule)) {
         SetCurrentModule(theEnv, theModule);
 
-        for (theDeffacts = GetNextDeffacts(theEnv, NULL);
-             theDeffacts != NULL;
+        for (theDeffacts = GetNextDeffacts(theEnv, nullptr);
+             theDeffacts != nullptr;
              theDeffacts = GetNextDeffacts(theEnv, theDeffacts)) {
             AssignBsaveConstructHeaderVals(&newDeffacts.header, &theDeffacts->header);
-            if (theDeffacts->assertList != NULL) {
+            if (theDeffacts->assertList != nullptr) {
                 newDeffacts.assertList = ExpressionData(theEnv)->ExpressionCount;
                 ExpressionData(theEnv)->ExpressionCount += ExpressionSize(theDeffacts->assertList);
             } else { newDeffacts.assertList = ULONG_MAX; }
@@ -312,8 +312,8 @@ static void BloadStorage(
     /*===================================*/
 
     if (DeffactsBinaryData(theEnv)->NumberOfDeffactsModules == 0) {
-        DeffactsBinaryData(theEnv)->DeffactsArray = NULL;
-        DeffactsBinaryData(theEnv)->ModuleArray = NULL;
+        DeffactsBinaryData(theEnv)->DeffactsArray = nullptr;
+        DeffactsBinaryData(theEnv)->ModuleArray = nullptr;
         return;
     }
 
@@ -326,7 +326,7 @@ static void BloadStorage(
     /*===================================*/
 
     if (DeffactsBinaryData(theEnv)->NumberOfDeffacts == 0) {
-        DeffactsBinaryData(theEnv)->DeffactsArray = NULL;
+        DeffactsBinaryData(theEnv)->DeffactsArray = nullptr;
         return;
     }
 

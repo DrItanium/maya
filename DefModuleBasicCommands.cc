@@ -75,16 +75,16 @@ static void SaveDefmodules(Environment *, Defmodule *, const char *, void *);
 /*****************************************************************/
 void DefmoduleBasicCommands(
         Environment *theEnv) {
-    AddClearFunction(theEnv, "defmodule", ClearDefmodules, 2000, NULL);
+    AddClearFunction(theEnv, "defmodule", ClearDefmodules, 2000, nullptr);
 
 #if DEFMODULE_CONSTRUCT
-    AddSaveFunction(theEnv, "defmodule", SaveDefmodules, 1100, NULL);
+    AddSaveFunction(theEnv, "defmodule", SaveDefmodules, 1100, nullptr);
 
-    AddUDF(theEnv, "get-defmodule-list", "m", 0, 0, NULL, GetDefmoduleListFunction, NULL);
+    AddUDF(theEnv, "get-defmodule-list", "m", 0, 0, nullptr, GetDefmoduleListFunction, nullptr);
 
 #if DEBUGGING_FUNCTIONS
-    AddUDF(theEnv, "list-defmodules", "v", 0, 0, NULL, ListDefmodulesCommand, NULL);
-    AddUDF(theEnv, "ppdefmodule", "v", 1, 2, ";y;ldsyn", PPDefmoduleCommand, NULL);
+    AddUDF(theEnv, "list-defmodules", "v", 0, 0, nullptr, ListDefmodulesCommand, nullptr);
+    AddUDF(theEnv, "ppdefmodule", "v", 1, 2, ";y;ldsyn", PPDefmoduleCommand, nullptr);
 #endif
 #endif
 
@@ -104,9 +104,9 @@ static void ClearDefmodules(
 #if (BLOAD_AND_BSAVE)
     if (Bloaded(theEnv) == true) return;
 #endif
-    RemoveAllDefmodules(theEnv, NULL);
+    RemoveAllDefmodules(theEnv, nullptr);
 
-    CreateMainModule(theEnv, NULL);
+    CreateMainModule(theEnv, nullptr);
     DefmoduleData(theEnv)->MainModuleRedefinable = true;
 }
 
@@ -124,7 +124,7 @@ static void SaveDefmodules(
     const char *ppform;
 
     ppform = DefmodulePPForm(theModule);
-    if (ppform != NULL) {
+    if (ppform != nullptr) {
         WriteString(theEnv, logicalName, ppform);
         WriteString(theEnv, logicalName, "\n");
     }
@@ -160,8 +160,8 @@ void GetDefmoduleList(
     /* of the specified type.             */
     /*====================================*/
 
-    for (theConstruct = GetNextDefmodule(theEnv, NULL);
-         theConstruct != NULL;
+    for (theConstruct = GetNextDefmodule(theEnv, nullptr);
+         theConstruct != nullptr;
          theConstruct = GetNextDefmodule(theEnv, theConstruct)) { count++; }
 
     /*===========================*/
@@ -176,8 +176,8 @@ void GetDefmoduleList(
     /* Store the names in the multifield. */
     /*====================================*/
 
-    for (theConstruct = GetNextDefmodule(theEnv, NULL), count = 0;
-         theConstruct != NULL;
+    for (theConstruct = GetNextDefmodule(theEnv, nullptr), count = 0;
+         theConstruct != nullptr;
          theConstruct = GetNextDefmodule(theEnv, theConstruct), count++) {
         if (EvaluationData(theEnv)->HaltExecution == true) {
             returnValue->multifieldValue = CreateMultifield(theEnv, 0L);
@@ -202,11 +202,11 @@ void PPDefmoduleCommand(
     const char *ppForm;
 
     defmoduleName = GetConstructName(context, "ppdefmodule", "defmodule name");
-    if (defmoduleName == NULL) return;
+    if (defmoduleName == nullptr) return;
 
     if (UDFHasNextArgument(context)) {
         logicalName = GetLogicalName(context, STDOUT);
-        if (logicalName == NULL) {
+        if (logicalName == nullptr) {
             IllegalLogicalNameMessage(theEnv, "ppdefmodule");
             SetHaltExecution(theEnv, true);
             SetEvaluationError(theEnv, true);
@@ -217,7 +217,7 @@ void PPDefmoduleCommand(
     if (strcmp(logicalName, "nil") == 0) {
         ppForm = PPDefmoduleNil(theEnv, defmoduleName);
 
-        if (ppForm == NULL) { CantFindItemErrorMessage(theEnv, "defmodule", defmoduleName, true); }
+        if (ppForm == nullptr) { CantFindItemErrorMessage(theEnv, "defmodule", defmoduleName, true); }
 
         returnValue->lexemeValue = CreateString(theEnv, ppForm);
 
@@ -239,12 +239,12 @@ const char *PPDefmoduleNil(
     Defmodule *defmodulePtr;
 
     defmodulePtr = FindDefmodule(theEnv, defmoduleName);
-    if (defmodulePtr == NULL) {
+    if (defmodulePtr == nullptr) {
         CantFindItemErrorMessage(theEnv, "defmodule", defmoduleName, true);
-        return NULL;
+        return nullptr;
     }
 
-    if (DefmodulePPForm(defmodulePtr) == NULL) return "";
+    if (DefmodulePPForm(defmodulePtr) == nullptr) return "";
 
     return DefmodulePPForm(defmodulePtr);
 }
@@ -260,12 +260,12 @@ bool PPDefmodule(
     Defmodule *defmodulePtr;
 
     defmodulePtr = FindDefmodule(theEnv, defmoduleName);
-    if (defmodulePtr == NULL) {
+    if (defmodulePtr == nullptr) {
         CantFindItemErrorMessage(theEnv, "defmodule", defmoduleName, true);
         return false;
     }
 
-    if (DefmodulePPForm(defmodulePtr) == NULL) return true;
+    if (DefmodulePPForm(defmodulePtr) == nullptr) return true;
     WriteString(theEnv, logicalName, DefmodulePPForm(defmodulePtr));
 
     return true;
@@ -292,8 +292,8 @@ void ListDefmodules(
     Defmodule *theModule;
     unsigned int count = 0;
 
-    for (theModule = GetNextDefmodule(theEnv, NULL);
-         theModule != NULL;
+    for (theModule = GetNextDefmodule(theEnv, nullptr);
+         theModule != nullptr;
          theModule = GetNextDefmodule(theEnv, theModule)) {
         WriteString(theEnv, logicalName, DefmoduleName(theModule));
         WriteString(theEnv, logicalName, "\n");

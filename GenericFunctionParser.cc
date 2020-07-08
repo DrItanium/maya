@@ -169,8 +169,8 @@ bool ParseDefgeneric(
 
     gname = GetConstructNameAndComment(theEnv, readSource, &genericInputToken, "defgeneric",
                                        (FindConstructFunction *) FindDefgenericInModule,
-                                       NULL, "^", true, true, true, false);
-    if (gname == NULL)
+                                       nullptr, "^", true, true, true, false);
+    if (gname == nullptr)
         return true;
 
     if (ValidGenericName(theEnv, gname->contents) == false)
@@ -193,7 +193,7 @@ bool ParseDefgeneric(
     gfunc = AddGeneric(theEnv, gname, &newGeneric);
 
 #if DEBUGGING_FUNCTIONS
-    SetDefgenericPPForm(theEnv, gfunc, GetConserveMemory(theEnv) ? NULL : CopyPPBuffer(theEnv));
+    SetDefgenericPPForm(theEnv, gfunc, GetConserveMemory(theEnv) ? nullptr : CopyPPBuffer(theEnv));
 #endif
     return false;
 }
@@ -244,7 +244,7 @@ bool ParseDefmethod(
 #endif
 
     gname = ParseMethodNameAndIndex(theEnv, readSource, &theIndex, &genericInputToken);
-    if (gname == NULL)
+    if (gname == nullptr)
         return true;
 
     if (ValidGenericName(theEnv, gname->contents) == false)
@@ -267,17 +267,17 @@ bool ParseDefmethod(
     if (rcnt == PARAMETER_ERROR)
         goto DefmethodParseError;
     PPCRAndIndent(theEnv);
-    for (tmp = params; tmp != NULL; tmp = tmp->nextArg) {
+    for (tmp = params; tmp != nullptr; tmp = tmp->nextArg) {
         ReplaceCurrentArgRefs(theEnv, ((RESTRICTION *) tmp->argList)->query);
         if (ReplaceProcVars(theEnv, "method", ((RESTRICTION *) tmp->argList)->query,
-                            params, wildcard, NULL, NULL)) {
+                            params, wildcard, nullptr, nullptr)) {
             DeleteTempRestricts(theEnv, params);
             goto DefmethodParseError;
         }
     }
     meth = FindMethodByRestrictions(gfunc, params, rcnt, wildcard, &mposn);
     error = false;
-    if (meth != NULL) {
+    if (meth != nullptr) {
         if (meth->system) {
             PrintErrorID(theEnv, "GENRCPSR", 17, false);
             WriteString(theEnv, STDERR, "Cannot replace the implicit system method #");
@@ -313,21 +313,21 @@ bool ParseDefmethod(
     ExpressionData(theEnv)->ReturnContext = true;
     actions = ParseProcActions(theEnv, "method", readSource,
                                &genericInputToken, params, wildcard,
-                               NULL, NULL, &lvars, NULL);
+                               nullptr, nullptr, &lvars, nullptr);
 
     /*===========================================================*/
     /* Check for the closing right parenthesis of the defmethod. */
     /*===========================================================*/
 
     if ((genericInputToken.tknType != RIGHT_PARENTHESIS_TOKEN) &&  /* DR0872 */
-        (actions != NULL)) {
+        (actions != nullptr)) {
         SyntaxErrorMessage(theEnv, "defmethod");
         DeleteTempRestricts(theEnv, params);
         ReturnPackedExpression(theEnv, actions);
         goto DefmethodParseError;
     }
 
-    if (actions == NULL) {
+    if (actions == nullptr) {
         DeleteTempRestricts(theEnv, params);
         goto DefmethodParseError;
     }
@@ -354,9 +354,9 @@ bool ParseDefmethod(
 
 #if DEBUGGING_FUNCTIONS
     meth = AddMethod(theEnv, gfunc, meth, mposn, theIndex, params, rcnt, lvars, wildcard, actions,
-                     GetConserveMemory(theEnv) ? NULL : CopyPPBuffer(theEnv), false);
+                     GetConserveMemory(theEnv) ? nullptr : CopyPPBuffer(theEnv), false);
 #else
-    meth = AddMethod(theEnv,gfunc,meth,mposn,theIndex,params,rcnt,lvars,wildcard,actions,NULL,false);
+    meth = AddMethod(theEnv,gfunc,meth,mposn,theIndex,params,rcnt,lvars,wildcard,actions,nullptr,false);
 #endif
     DeleteTempRestricts(theEnv, params);
     if (GetPrintWhileLoading(theEnv) && GetCompilationsWatch(theEnv) &&
@@ -391,14 +391,14 @@ bool ParseDefmethod(
                  If method already exists, deletes old information
                     before proceeding.
   INPUTS       : 1) The generic address
-                 2) The old method address (can be NULL)
+                 2) The old method address (can be nullptr)
                  3) The old method array position (can be -1)
                  4) The method index to assign (0 if don't care)
                  5) The parameter expression-list
                     (restrictions attached to argList pointers)
                  6) The number of restrictions
                  7) The number of locals vars reqd
-                 8) The wildcard symbol (NULL if none)
+                 8) The wildcard symbol (nullptr if none)
                  9) Method actions
                  10) Method pretty-print form
                  11) A flag indicating whether to copy the
@@ -432,7 +432,7 @@ Defmethod *AddMethod(
     unsigned short mai;
 
     SaveBusyCount(gfunc);
-    if (meth == NULL) {
+    if (meth == nullptr) {
         mai = (mi != 0) ? FindMethodByIndex(gfunc, mi) : METHOD_NOT_FOUND;
         if (mai == METHOD_NOT_FOUND)
             meth = AddGenericMethod(theEnv, gfunc, mposn, mi);
@@ -455,7 +455,7 @@ Defmethod *AddMethod(
            ================================ */
         ExpressionDeinstall(theEnv, meth->actions);
         ReturnPackedExpression(theEnv, meth->actions);
-        if (meth->header.ppForm != NULL)
+        if (meth->header.ppForm != nullptr)
             rm(theEnv, (void *) meth->header.ppForm, (sizeof(char) * (strlen(meth->header.ppForm) + 1)));
     }
     meth->system = 0;
@@ -470,7 +470,7 @@ Defmethod *AddMethod(
     meth->localVarCount = lvars;
     meth->restrictionCount = rcnt;
 
-    if (wildcard != NULL) {
+    if (wildcard != nullptr) {
         if (rcnt == 0) { meth->minRestrictions = RESTRICTIONS_UNBOUNDED; }
         else { meth->minRestrictions = rcnt - 1; }
         meth->maxRestrictions = RESTRICTIONS_UNBOUNDED;
@@ -480,18 +480,18 @@ Defmethod *AddMethod(
         meth->restrictions = (RESTRICTION *)
                 gm2(theEnv, (sizeof(RESTRICTION) * rcnt));
     else
-        meth->restrictions = NULL;
+        meth->restrictions = nullptr;
     for (i = 0; i < rcnt; i++) {
         rptr = &meth->restrictions[i];
         rtmp = (RESTRICTION *) params->argList;
         rptr->query = PackExpression(theEnv, rtmp->query);
         rptr->tcnt = rtmp->tcnt;
         if (copyRestricts) {
-            if (rtmp->types != NULL) {
+            if (rtmp->types != nullptr) {
                 rptr->types = (void **) gm2(theEnv, (rptr->tcnt * sizeof(void *)));
                 GenCopyMemory(void *, rptr->tcnt, rptr->types, rtmp->types);
             } else
-                rptr->types = NULL;
+                rptr->types = nullptr;
         } else {
             rptr->types = rtmp->types;
 
@@ -500,7 +500,7 @@ Defmethod *AddMethod(
                  temporary restriction nodes are
                ===================================================== */
             rtmp->tcnt = 0;
-            rtmp->types = NULL;
+            rtmp->types = nullptr;
         }
         ExpressionInstall(theEnv, rptr->query);
         for (j = 0; j < rptr->tcnt; j++)
@@ -530,12 +530,12 @@ void PackRestrictionTypes(
     long i;
 
     rptr->tcnt = 0;
-    for (tmp = types; tmp != NULL; tmp = tmp->nextArg)
+    for (tmp = types; tmp != nullptr; tmp = tmp->nextArg)
         rptr->tcnt++;
     if (rptr->tcnt != 0)
         rptr->types = (void **) gm2(theEnv, (sizeof(void *) * rptr->tcnt));
     else
-        rptr->types = NULL;
+        rptr->types = nullptr;
     for (i = 0, tmp = types; i < rptr->tcnt; i++, tmp = tmp->nextArg)
         rptr->types[i] = tmp->value;
     ReturnExpression(theEnv, types);
@@ -556,7 +556,7 @@ void DeleteTempRestricts(
     Expression *ptmp;
     RESTRICTION *rtmp;
 
-    while (phead != NULL) {
+    while (phead != nullptr) {
         ptmp = phead;
         phead = phead->nextArg;
         rtmp = (RESTRICTION *) ptmp->argList;
@@ -575,11 +575,11 @@ void DeleteTempRestricts(
   INPUTS       : 1) Generic function
                  2) Parameter/restriction expression list
                  3) Number of restrictions
-                 4) Wildcard symbol (can be NULL)
+                 4) Wildcard symbol (can be nullptr)
                  5) Caller's buffer for holding array posn
                       of where to add new generic method
                       (-1 if method already present)
-  RETURNS      : The address of the found method, NULL if
+  RETURNS      : The address of the found method, nullptr if
                     not found
   SIDE EFFECTS : Sets the caller's buffer to the index of
                    where to place the new method, -1 if
@@ -595,7 +595,7 @@ Defmethod *FindMethodByRestrictions(
     int i, cmp;
     int min, max;
 
-    if (wildcard != NULL) {
+    if (wildcard != nullptr) {
         min = rcnt - 1;
         max = -1;
     } else
@@ -607,11 +607,11 @@ Defmethod *FindMethodByRestrictions(
             return (&gfunc->methods[i]);
         } else if (cmp == HIGHER_PRECEDENCE) {
             *posn = i;
-            return NULL;
+            return nullptr;
         }
     }
     *posn = i;
-    return NULL;
+    return nullptr;
 }
 
 /* =========================================
@@ -647,7 +647,7 @@ static bool ValidGenericName(
     /* construct type, e.g, defclass, defrule, etc. */
     /*==============================================*/
 
-    if (FindConstruct(theEnv, theDefgenericName) != NULL) {
+    if (FindConstruct(theEnv, theDefgenericName) != nullptr) {
         PrintErrorID(theEnv, "GENRCPSR", 3, false);
         WriteString(theEnv, STDERR, "Defgenerics are not allowed to replace constructs.\n");
         return false;
@@ -660,7 +660,7 @@ static bool ValidGenericName(
        imported from another)
        ======================================== */
     theDeffunction = LookupDeffunctionInScope(theEnv, theDefgenericName);
-    if (theDeffunction != NULL) {
+    if (theDeffunction != nullptr) {
         theModule = GetConstructModuleItem(&theDeffunction->header)->theModule;
         if (theModule != GetCurrentModule(theEnv)) {
             PrintErrorID(theEnv, "GENRCPSR", 4, false);
@@ -684,7 +684,7 @@ static bool ValidGenericName(
     /*===========================================*/
 
     theDefgeneric = FindDefgenericInModule(theEnv, theDefgenericName);
-    if (theDefgeneric != NULL) {
+    if (theDefgeneric != nullptr) {
         /* ===========================================
            And the redefinition of a defgeneric in
            the current module is only valid if none
@@ -701,7 +701,7 @@ static bool ValidGenericName(
        may be overloaded by generic functions
        ======================================= */
     systemFunction = FindFunction(theEnv, theDefgenericName);
-    if ((systemFunction != NULL) ?
+    if ((systemFunction != nullptr) ?
         (systemFunction->overloadable == false) : false) {
         PrintErrorID(theEnv, "GENRCPSR", 16, false);
         WriteString(theEnv, STDERR, "The system function '");
@@ -762,9 +762,9 @@ static CLIPSLexeme *ParseMethodNameAndIndex(
     *theIndex = 0;
     gname = GetConstructNameAndComment(theEnv, readSource, genericInputToken, "defgeneric",
                                        (FindConstructFunction *) FindDefgenericInModule,
-                                       NULL, "&", true, false, true, true);
-    if (gname == NULL)
-        return NULL;
+                                       nullptr, "&", true, false, true, true);
+    if (gname == nullptr)
+        return nullptr;
     if (genericInputToken->tknType == INTEGER_TOKEN) {
         unsigned short tmp;
 
@@ -776,7 +776,7 @@ static CLIPSLexeme *ParseMethodNameAndIndex(
         if (tmp < 1) {
             PrintErrorID(theEnv, "GENRCPSR", 6, false);
             WriteString(theEnv, STDERR, "Method index out of range.\n");
-            return NULL;
+            return nullptr;
         }
         *theIndex = tmp;
         PPCRAndIndent(theEnv);
@@ -815,13 +815,13 @@ static unsigned short ParseMethodParameters(
         Expression **params,
         CLIPSLexeme **wildcard,
         struct token *genericInputToken) {
-    Expression *phead = NULL, *pprv;
+    Expression *phead = nullptr, *pprv;
     CLIPSLexeme *pname;
     RESTRICTION *rtmp;
     unsigned short rcnt = 0;
 
-    *wildcard = NULL;
-    *params = NULL;
+    *wildcard = nullptr;
+    *params = nullptr;
     if (genericInputToken->tknType != LEFT_PARENTHESIS_TOKEN) {
         PrintErrorID(theEnv, "GENRCPSR", 7, false);
         WriteString(theEnv, STDERR, "Expected a '(' to begin method parameter restrictions.\n");
@@ -829,7 +829,7 @@ static unsigned short ParseMethodParameters(
     }
     GetToken(theEnv, readSource, genericInputToken);
     while (genericInputToken->tknType != RIGHT_PARENTHESIS_TOKEN) {
-        if (*wildcard != NULL) {
+        if (*wildcard != nullptr) {
             DeleteTempRestricts(theEnv, phead);
             PrintErrorID(theEnv, "PRCCODE", 8, false);
             WriteString(theEnv, STDERR, "No parameters allowed after wildcard parameter.\n");
@@ -845,8 +845,8 @@ static unsigned short ParseMethodParameters(
             if (genericInputToken->tknType == MF_VARIABLE_TOKEN)
                 *wildcard = pname;
             rtmp = get_struct(theEnv, restriction);
-            PackRestrictionTypes(theEnv, rtmp, NULL);
-            rtmp->query = NULL;
+            PackRestrictionTypes(theEnv, rtmp, nullptr);
+            rtmp->query = nullptr;
             phead = AddParameter(theEnv, phead, pprv, pname, rtmp);
             rcnt++;
         } else if (genericInputToken->tknType == LEFT_PARENTHESIS_TOKEN) {
@@ -867,7 +867,7 @@ static unsigned short ParseMethodParameters(
                 *wildcard = pname;
             SavePPBuffer(theEnv, " ");
             rtmp = ParseRestriction(theEnv, readSource);
-            if (rtmp == NULL) {
+            if (rtmp == nullptr) {
                 DeleteTempRestricts(theEnv, phead);
                 return PARAMETER_ERROR;
             }
@@ -902,7 +902,7 @@ static unsigned short ParseMethodParameters(
                    2) And an optional restriction-query
                       expression
   INPUTS       : The logical name of the input source
-  RETURNS      : The address of a RESTRICTION node, NULL on
+  RETURNS      : The address of a RESTRICTION node, nullptr on
                    errors
   SIDE EFFECTS : RESTRICTION node allocated
                    Types are in a contiguous array of void *
@@ -913,46 +913,46 @@ static unsigned short ParseMethodParameters(
 static RESTRICTION *ParseRestriction(
         Environment *theEnv,
         const char *readSource) {
-    Expression *types = NULL, *new_types,
+    Expression *types = nullptr, *new_types,
             *typesbot, *tmp, *tmp2,
-            *query = NULL;
+            *query = nullptr;
     RESTRICTION *rptr;
     struct token genericInputToken;
 
     GetToken(theEnv, readSource, &genericInputToken);
     while (genericInputToken.tknType != RIGHT_PARENTHESIS_TOKEN) {
-        if (query != NULL) {
+        if (query != nullptr) {
             PrintErrorID(theEnv, "GENRCPSR", 10, false);
             WriteString(theEnv, STDERR, "Query must be last in parameter restriction.\n");
             ReturnExpression(theEnv, query);
             ReturnExpression(theEnv, types);
-            return NULL;
+            return nullptr;
         }
         if (genericInputToken.tknType == SYMBOL_TOKEN) {
             new_types = ValidType(theEnv, genericInputToken.lexemeValue);
-            if (new_types == NULL) {
+            if (new_types == nullptr) {
                 ReturnExpression(theEnv, types);
                 ReturnExpression(theEnv, query);
-                return NULL;
+                return nullptr;
             }
-            if (types == NULL)
+            if (types == nullptr)
                 types = new_types;
             else {
-                for (typesbot = tmp = types; tmp != NULL; tmp = tmp->nextArg) {
-                    for (tmp2 = new_types; tmp2 != NULL; tmp2 = tmp2->nextArg) {
+                for (typesbot = tmp = types; tmp != nullptr; tmp = tmp->nextArg) {
+                    for (tmp2 = new_types; tmp2 != nullptr; tmp2 = tmp2->nextArg) {
                         if (tmp->value == tmp2->value) {
                             PrintErrorID(theEnv, "GENRCPSR", 11, false);
                             WriteString(theEnv, STDERR, "Duplicate classes not allowed in parameter restriction.\n");
                             ReturnExpression(theEnv, query);
                             ReturnExpression(theEnv, types);
                             ReturnExpression(theEnv, new_types);
-                            return NULL;
+                            return nullptr;
                         }
                         if (RedundantClasses(theEnv, tmp->value, tmp2->value)) {
                             ReturnExpression(theEnv, query);
                             ReturnExpression(theEnv, types);
                             ReturnExpression(theEnv, new_types);
-                            return NULL;
+                            return nullptr;
                         }
                     }
                     typesbot = tmp;
@@ -961,16 +961,16 @@ static RESTRICTION *ParseRestriction(
             }
         } else if (genericInputToken.tknType == LEFT_PARENTHESIS_TOKEN) {
             query = Function1Parse(theEnv, readSource);
-            if (query == NULL) {
+            if (query == nullptr) {
                 ReturnExpression(theEnv, types);
-                return NULL;
+                return nullptr;
             }
-            if (GetParsedBindNames(theEnv) != NULL) {
+            if (GetParsedBindNames(theEnv) != nullptr) {
                 PrintErrorID(theEnv, "GENRCPSR", 12, false);
                 WriteString(theEnv, STDERR, "Binds are not allowed in query expressions.\n");
                 ReturnExpression(theEnv, query);
                 ReturnExpression(theEnv, types);
-                return NULL;
+                return nullptr;
             }
         }
 #if DEFGLOBAL_CONSTRUCT
@@ -982,7 +982,7 @@ static RESTRICTION *ParseRestriction(
             WriteString(theEnv, STDERR, "Expected a valid class name or query.\n");
             ReturnExpression(theEnv, query);
             ReturnExpression(theEnv, types);
-            return NULL;
+            return nullptr;
         }
         SavePPBuffer(theEnv, " ");
         GetToken(theEnv, readSource, &genericInputToken);
@@ -990,10 +990,10 @@ static RESTRICTION *ParseRestriction(
     PPBackup(theEnv);
     PPBackup(theEnv);
     SavePPBuffer(theEnv, ")");
-    if ((types == NULL) && (query == NULL)) {
+    if ((types == nullptr) && (query == nullptr)) {
         PrintErrorID(theEnv, "GENRCPSR", 13, false);
         WriteString(theEnv, STDERR, "Expected a valid class name or query.\n");
-        return NULL;
+        return nullptr;
     }
     rptr = get_struct(theEnv, restriction);
     rptr->query = query;
@@ -1014,13 +1014,13 @@ static RESTRICTION *ParseRestriction(
 static void ReplaceCurrentArgRefs(
         Environment *theEnv,
         Expression *query) {
-    while (query != NULL) {
+    while (query != nullptr) {
         if ((query->type != SF_VARIABLE) ? false :
             (strcmp(query->lexemeValue->contents, CURR_ARG_VAR) == 0)) {
             query->type = FCALL;
             query->value = FindFunction(theEnv, "(gnrc-current-arg)");
         }
-        if (query->argList != NULL)
+        if (query->argList != nullptr)
             ReplaceCurrentArgRefs(theEnv, query->argList);
         query = query->nextArg;
     }
@@ -1030,7 +1030,7 @@ static void ReplaceCurrentArgRefs(
   NAME         : DuplicateParameters
   DESCRIPTION  : Examines the parameter expression
                    chain for a method looking duplicates.
-  INPUTS       : 1) The parameter chain (can be NULL)
+  INPUTS       : 1) The parameter chain (can be nullptr)
                  2) Caller's buffer for address of
                     last node searched (can be used to
                     later attach new parameter)
@@ -1044,8 +1044,8 @@ static bool DuplicateParameters(
         Expression *head,
         Expression **prv,
         CLIPSLexeme *name) {
-    *prv = NULL;
-    while (head != NULL) {
+    *prv = nullptr;
+    while (head != nullptr) {
         if (head->value == (void *) name) {
             PrintErrorID(theEnv, "PRCCODE", 7, false);
             WriteString(theEnv, STDERR, "Duplicate parameter names not allowed.\n");
@@ -1082,7 +1082,7 @@ static Expression *AddParameter(
     Expression *ptmp;
 
     ptmp = GenConstant(theEnv, SYMBOL_TYPE, pname);
-    if (phead == NULL)
+    if (phead == nullptr)
         phead = ptmp;
     else
         pprv->nextArg = ptmp;
@@ -1097,7 +1097,7 @@ static Expression *AddParameter(
                    corresponding to the primitive types
                  (or a Class address if COOL is installed)
   INPUTS       : The type name
-  RETURNS      : The expression chain (NULL on errors)
+  RETURNS      : The expression chain (nullptr on errors)
   SIDE EFFECTS : Expression type chain allocated
                    one or more nodes holding codes for types
                    (or class addresses)
@@ -1112,14 +1112,14 @@ static Expression *ValidType(
         IllegalModuleSpecifierMessage(theEnv);
     else {
         cls = LookupDefclassInScope(theEnv, tname->contents);
-        if (cls == NULL) {
+        if (cls == nullptr) {
             PrintErrorID(theEnv, "GENRCPSR", 14, false);
             WriteString(theEnv, STDERR, "Unknown class in method.\n");
-            return NULL;
+            return nullptr;
         }
         return (GenConstant(theEnv, DEFCLASS_PTR, cls));
     }
-    return NULL;
+    return nullptr;
 }
 
 /*************************************************************
@@ -1174,7 +1174,7 @@ static Defgeneric *AddGeneric(
     Defgeneric *gfunc;
 
     gfunc = FindDefgenericInModule(theEnv, name->contents);
-    if (gfunc != NULL) {
+    if (gfunc != nullptr) {
         *newGeneric = false;
 
         if (ConstructData(theEnv)->CheckSyntaxMode) { return (gfunc); }
@@ -1237,15 +1237,15 @@ static Defmethod *AddGenericMethod(
     narr[mposn].restrictionCount = 0;
     narr[mposn].localVarCount = 0;
     narr[mposn].system = 0;
-    narr[mposn].restrictions = NULL;
-    narr[mposn].actions = NULL;
-    narr[mposn].header.name = NULL;
-    narr[mposn].header.next = NULL;
+    narr[mposn].restrictions = nullptr;
+    narr[mposn].actions = nullptr;
+    narr[mposn].header.name = nullptr;
+    narr[mposn].header.next = nullptr;
     narr[mposn].header.constructType = DEFMETHOD;
     narr[mposn].header.env = theEnv;
     narr[mposn].header.whichModule = gfunc->header.whichModule;
-    narr[mposn].header.ppForm = NULL;
-    narr[mposn].header.usrData = NULL;
+    narr[mposn].header.ppForm = nullptr;
+    narr[mposn].header.usrData = nullptr;
 
     if (gfunc->mcnt != 0)
         rm(theEnv, gfunc->methods, (sizeof(Defmethod) * gfunc->mcnt));
@@ -1308,9 +1308,9 @@ static int RestrictionsCompare(
         /* =====================================================
            The parameter with a query restriction has precedence
            ===================================================== */
-        if ((r1->query == NULL) && (r2->query != NULL))
+        if ((r1->query == nullptr) && (r2->query != nullptr))
             return LOWER_PRECEDENCE;
-        if ((r1->query != NULL) && (r2->query == NULL))
+        if ((r1->query != nullptr) && (r2->query == nullptr))
             return HIGHER_PRECEDENCE;
 
         /* ==========================================================
@@ -1405,7 +1405,7 @@ static Defgeneric *NewGeneric(
     InitializeConstructHeader(theEnv, "defgeneric", DEFGENERIC, &ngen->header, gname);
     ngen->busy = 0;
     ngen->new_index = 1;
-    ngen->methods = NULL;
+    ngen->methods = nullptr;
     ngen->mcnt = 0;
 #if DEBUGGING_FUNCTIONS
     ngen->trace = DefgenericData(theEnv)->WatchGenerics;

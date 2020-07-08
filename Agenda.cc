@@ -103,23 +103,23 @@ static void RemoveActivationFromGroup(Environment *, Activation *, struct defrul
 /*************************************************/
 void InitializeAgenda(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, AGENDA_DATA, sizeof(struct agendaData), NULL);
+    AllocateEnvironmentData(theEnv, AGENDA_DATA, sizeof(struct agendaData), nullptr);
 
     AgendaData(theEnv)->SalienceEvaluation = WHEN_DEFINED;
 
     AgendaData(theEnv)->Strategy = DEFAULT_STRATEGY;
 
-    AddClearFunction(theEnv, "agenda", AgendaClearFunction, 0, NULL);
+    AddClearFunction(theEnv, "agenda", AgendaClearFunction, 0, nullptr);
 #if DEBUGGING_FUNCTIONS
     AddWatchItem(theEnv, "activations", 1, &AgendaData(theEnv)->WatchActivations, 40, DefruleWatchAccess, DefruleWatchPrint);
 #endif
-    AddUDF(theEnv, "refresh", "v", 1, 1, "y", RefreshCommand, NULL);
-    AddUDF(theEnv, "refresh-agenda", "v", 0, 1, "y", RefreshAgendaCommand, NULL);
-    AddUDF(theEnv, "get-salience-evaluation", "y", 0, 0, NULL, GetSalienceEvaluationCommand, NULL);
-    AddUDF(theEnv, "set-salience-evaluation", "y", 1, 1, "y", SetSalienceEvaluationCommand, NULL);
+    AddUDF(theEnv, "refresh", "v", 1, 1, "y", RefreshCommand, nullptr);
+    AddUDF(theEnv, "refresh-agenda", "v", 0, 1, "y", RefreshAgendaCommand, nullptr);
+    AddUDF(theEnv, "get-salience-evaluation", "y", 0, 0, nullptr, GetSalienceEvaluationCommand, nullptr);
+    AddUDF(theEnv, "set-salience-evaluation", "y", 1, 1, "y", SetSalienceEvaluationCommand, nullptr);
 
 #if DEBUGGING_FUNCTIONS
-    AddUDF(theEnv, "agenda", "v", 0, 1, "y", AgendaCommand, NULL);
+    AddUDF(theEnv, "agenda", "v", 0, 1, "y", AgendaCommand, nullptr);
 #endif
 }
 
@@ -160,8 +160,8 @@ void AddActivation(
     newActivation->salience = EvaluateSalience(theEnv, theRule);
 
     newActivation->randomID = genrand();
-    newActivation->prev = NULL;
-    newActivation->next = NULL;
+    newActivation->prev = nullptr;
+    newActivation->next = nullptr;
 
     AgendaData(theEnv)->NumberOfActivations++;
 
@@ -206,8 +206,8 @@ static struct salienceGroup *ReuseOrCreateSalienceGroup(
         int salience) {
     struct salienceGroup *theGroup, *lastGroup, *newGroup;
 
-    for (lastGroup = NULL, theGroup = theRuleModule->groupings;
-         theGroup != NULL;
+    for (lastGroup = nullptr, theGroup = theRuleModule->groupings;
+         theGroup != nullptr;
          lastGroup = theGroup, theGroup = theGroup->next) {
         if (theGroup->salience == salience) { return (theGroup); }
 
@@ -216,16 +216,16 @@ static struct salienceGroup *ReuseOrCreateSalienceGroup(
 
     newGroup = get_struct(theEnv, salienceGroup);
     newGroup->salience = salience;
-    newGroup->first = NULL;
-    newGroup->last = NULL;
+    newGroup->first = nullptr;
+    newGroup->last = nullptr;
     newGroup->next = theGroup;
     newGroup->prev = lastGroup;
 
-    if (newGroup->next != NULL) { newGroup->next->prev = newGroup; }
+    if (newGroup->next != nullptr) { newGroup->next->prev = newGroup; }
 
-    if (newGroup->prev != NULL) { newGroup->prev->next = newGroup; }
+    if (newGroup->prev != nullptr) { newGroup->prev->next = newGroup; }
 
-    if (lastGroup == NULL) { theRuleModule->groupings = newGroup; }
+    if (lastGroup == nullptr) { theRuleModule->groupings = newGroup; }
 
     return newGroup;
 }
@@ -239,14 +239,14 @@ static struct salienceGroup *FindSalienceGroup(
     struct salienceGroup *theGroup;
 
     for (theGroup = theRuleModule->groupings;
-         theGroup != NULL;
+         theGroup != nullptr;
          theGroup = theGroup->next) {
         if (theGroup->salience == salience) { return (theGroup); }
 
         if (theGroup->salience < salience) { break; }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /***************************************************************/
@@ -269,7 +269,7 @@ void ClearRuleFromAgenda(
     /* Loop through every activation on the agenda. */
     /*==============================================*/
 
-    while (agendaPtr != NULL) {
+    while (agendaPtr != nullptr) {
         agendaNext = agendaPtr->next;
 
         /*========================================================*/
@@ -279,7 +279,7 @@ void ClearRuleFromAgenda(
         /*========================================================*/
 
         for (tempRule = theRule;
-             tempRule != NULL;
+             tempRule != nullptr;
              tempRule = tempRule->disjunct) {
             if (agendaPtr->theRule == tempRule) {
                 RemoveActivation(theEnv, agendaPtr, true, true);
@@ -293,8 +293,8 @@ void ClearRuleFromAgenda(
 
 /***************************************************************/
 /* GetNextActivation: Returns an activation from the Agenda.   */
-/*   If its argument is NULL, then the first activation on the */
-/*   Agenda is returned. If its argument is not NULL, the next */
+/*   If its argument is nullptr, then the first activation on the */
+/*   Agenda is returned. If its argument is not nullptr, the next */
 /*   activation after the argument is returned.                */
 /***************************************************************/
 Activation *GetNextActivation(
@@ -302,9 +302,9 @@ Activation *GetNextActivation(
         Activation *actPtr) {
     struct defruleModule *theModuleItem;
 
-    if (actPtr == NULL) {
-        theModuleItem = (struct defruleModule *) GetModuleItem(theEnv, NULL, DefruleData(theEnv)->DefruleModuleIndex);
-        if (theModuleItem == NULL) return NULL;
+    if (actPtr == nullptr) {
+        theModuleItem = (struct defruleModule *) GetModuleItem(theEnv, nullptr, DefruleData(theEnv)->DefruleModuleIndex);
+        if (theModuleItem == nullptr) return nullptr;
         return theModuleItem->agenda;
     } else { return actPtr->next; }
 }
@@ -429,7 +429,7 @@ bool MoveActivationToTop(
 
     prevPtr = theActivation->prev;
     prevPtr->next = theActivation->next;
-    if (theActivation->next != NULL) theActivation->next->prev = prevPtr;
+    if (theActivation->next != nullptr) theActivation->next->prev = prevPtr;
 
     /*=======================================================*/
     /* Move the activation and then update its pointers, the */
@@ -439,7 +439,7 @@ bool MoveActivationToTop(
 
     theActivation->next = theModuleItem->agenda;
     theModuleItem->agenda->prev = theActivation;
-    theActivation->prev = NULL;
+    theActivation->prev = nullptr;
     theModuleItem->agenda = theActivation;
 
     /*=============================*/
@@ -470,15 +470,15 @@ void DeleteAllActivations(
     struct salienceGroup *theGroup, *tempGroup;
     Environment *theEnv = theModule->header.env;
 
-    theActivation = GetDefruleModuleItem(theEnv, NULL)->agenda;
-    while (theActivation != NULL) {
+    theActivation = GetDefruleModuleItem(theEnv, nullptr)->agenda;
+    while (theActivation != nullptr) {
         tempPtr = theActivation->next;
         RemoveActivation(theEnv, theActivation, true, true);
         theActivation = tempPtr;
     }
 
-    theGroup = GetDefruleModuleItem(theEnv, NULL)->groupings;
-    while (theGroup != NULL) {
+    theGroup = GetDefruleModuleItem(theEnv, nullptr)->groupings;
+    while (theGroup != nullptr) {
         tempGroup = theGroup->next;
         rtn_struct(theEnv, salienceGroup, theGroup);
         theGroup = tempGroup;
@@ -495,10 +495,10 @@ bool DetachActivation(
     struct defruleModule *theModuleItem;
 
     /*============================*/
-    /* A NULL pointer is invalid. */
+    /* A nullptr pointer is invalid. */
     /*============================*/
 
-    if (theActivation == NULL) SystemError(theEnv, "AGENDA", 1);
+    if (theActivation == nullptr) SystemError(theEnv, "AGENDA", 1);
 
     /*====================================*/
     /* Determine the module of the agenda */
@@ -520,20 +520,20 @@ bool DetachActivation(
     /* Update the pointers in the preceding activation. */
     /*==================================================*/
 
-    if (theActivation->prev != NULL) { theActivation->prev->next = theActivation->next; }
+    if (theActivation->prev != nullptr) { theActivation->prev->next = theActivation->next; }
 
     /*==================================================*/
     /* Update the pointers in the following activation. */
     /*==================================================*/
 
-    if (theActivation->next != NULL) { theActivation->next->prev = theActivation->prev; }
+    if (theActivation->next != nullptr) { theActivation->next->prev = theActivation->prev; }
 
     /*=================================================*/
     /* Update the pointers in the detached activation. */
     /*=================================================*/
 
-    theActivation->prev = NULL;
-    theActivation->next = NULL;
+    theActivation->prev = nullptr;
+    theActivation->next = nullptr;
 
     /*=============================*/
     /* Mark the agenda as changed. */
@@ -571,9 +571,9 @@ void Agenda(
         Defmodule *theModule) {
     ListItemsDriver(theEnv, logicalName, theModule, "activation", "activations",
                     (GetNextItemFunction *) GetNextActivation,
-                    NULL,
+                    nullptr,
                     (PrintItemFunction *) PrintActivation,
-                    NULL);
+                    nullptr);
 }
 
 /*******************************************************************/
@@ -606,12 +606,12 @@ void RemoveActivation(
         /* Update the pointer links between activations. */
         /*===============================================*/
 
-        if (theActivation->prev == NULL) {
+        if (theActivation->prev == nullptr) {
             theModuleItem->agenda = theModuleItem->agenda->next;
-            if (theModuleItem->agenda != NULL) theModuleItem->agenda->prev = NULL;
+            if (theModuleItem->agenda != nullptr) theModuleItem->agenda->prev = nullptr;
         } else {
             theActivation->prev->next = theActivation->next;
-            if (theActivation->next != NULL) { theActivation->next->prev = theActivation->prev; }
+            if (theActivation->next != nullptr) { theActivation->next->prev = theActivation->prev; }
         }
 
         /*===================================*/
@@ -640,7 +640,7 @@ void RemoveActivation(
     /* Update join and agenda links if necessary. */
     /*============================================*/
 
-    if ((updateLinks == true) && (theActivation->basis != NULL)) { theActivation->basis->marker = NULL; }
+    if ((updateLinks == true) && (theActivation->basis != nullptr)) { theActivation->basis->marker = nullptr; }
 
     /*================================================*/
     /* Return the activation to the free memory pool. */
@@ -661,7 +661,7 @@ static void RemoveActivationFromGroup(
     struct salienceGroup *theGroup;
 
     theGroup = FindSalienceGroup(theRuleModule, theActivation->salience);
-    if (theGroup == NULL) return;
+    if (theGroup == nullptr) return;
 
     if (theActivation == theGroup->first) {
         /*====================================================*/
@@ -670,10 +670,10 @@ static void RemoveActivationFromGroup(
         /*====================================================*/
 
         if (theActivation == theGroup->last) {
-            if (theGroup->prev == NULL) { theRuleModule->groupings = theGroup->next; }
+            if (theGroup->prev == nullptr) { theRuleModule->groupings = theGroup->next; }
             else { theGroup->prev->next = theGroup->next; }
 
-            if (theGroup->next != NULL) { theGroup->next->prev = theGroup->prev; }
+            if (theGroup->next != nullptr) { theGroup->next->prev = theGroup->prev; }
 
             rtn_struct(theEnv, salienceGroup, theGroup);
         }
@@ -720,15 +720,15 @@ void RemoveAllActivations(
     struct activation *tempPtr, *theActivation;
     struct salienceGroup *theGroup, *tempGroup;
 
-    theActivation = GetDefruleModuleItem(theEnv, NULL)->agenda;
-    while (theActivation != NULL) {
+    theActivation = GetDefruleModuleItem(theEnv, nullptr)->agenda;
+    while (theActivation != nullptr) {
         tempPtr = theActivation->next;
         RemoveActivation(theEnv, theActivation, true, true);
         theActivation = tempPtr;
     }
 
-    theGroup = GetDefruleModuleItem(theEnv, NULL)->groupings;
-    while (theGroup != NULL) {
+    theGroup = GetDefruleModuleItem(theEnv, nullptr)->groupings;
+    while (theGroup != nullptr) {
         tempGroup = theGroup->next;
         rtn_struct(theEnv, salienceGroup, theGroup);
         theGroup = tempGroup;
@@ -762,8 +762,8 @@ void ReorderAllAgendas(
         Environment *theEnv) {
     Defmodule *theModule;
 
-    for (theModule = GetNextDefmodule(theEnv, NULL);
-         theModule != NULL;
+    for (theModule = GetNextDefmodule(theEnv, nullptr);
+         theModule != nullptr;
          theModule = GetNextDefmodule(theEnv, theModule)) { ReorderAgenda(theModule); }
 }
 
@@ -778,7 +778,7 @@ void ReorderAgenda(
     struct salienceGroup *theGroup, *tempGroup;
     Environment *theEnv;
 
-    if (theModule == NULL) return;
+    if (theModule == nullptr) return;
     theEnv = theModule->header.env;
 
     /*=================================*/
@@ -788,26 +788,26 @@ void ReorderAgenda(
 
     theModuleItem = GetDefruleModuleItem(theEnv, theModule);
     theActivation = theModuleItem->agenda;
-    theModuleItem->agenda = NULL;
+    theModuleItem->agenda = nullptr;
 
     theGroup = theModuleItem->groupings;
-    while (theGroup != NULL) {
+    while (theGroup != nullptr) {
         tempGroup = theGroup->next;
         rtn_struct(theEnv, salienceGroup, theGroup);
         theGroup = tempGroup;
     }
 
-    theModuleItem->groupings = NULL;
+    theModuleItem->groupings = nullptr;
 
     /*=========================================*/
     /* Reorder the activations by placing them */
     /* back on the agenda one by one.          */
     /*=========================================*/
 
-    while (theActivation != NULL) {
+    while (theActivation != nullptr) {
         tempPtr = theActivation->next;
-        theActivation->next = NULL;
-        theActivation->prev = NULL;
+        theActivation->next = nullptr;
+        theActivation->prev = nullptr;
         theGroup = ReuseOrCreateSalienceGroup(theEnv, theModuleItem, theActivation->salience);
         PlaceActivation(theEnv, &(theModuleItem->agenda), theActivation, theGroup);
         theActivation = tempPtr;
@@ -839,14 +839,14 @@ void RefreshCommand(
     /*===========================*/
 
     ruleName = GetConstructName(context, "refresh", "rule name");
-    if (ruleName == NULL) return;
+    if (ruleName == nullptr) return;
 
     /*===============================*/
     /* Determine if the rule exists. */
     /*===============================*/
 
     rulePtr = FindDefrule(theEnv, ruleName);
-    if (rulePtr == NULL) {
+    if (rulePtr == nullptr) {
         CantFindItemErrorMessage(theEnv, "defrule", ruleName, true);
         return;
     }
@@ -874,7 +874,7 @@ void Refresh(
     /*====================================*/
 
     for (rulePtr = theRule;
-         rulePtr != NULL;
+         rulePtr != nullptr;
          rulePtr = rulePtr->disjunct) {
         /*================================*/
         /* Check each partial match that  */
@@ -883,7 +883,7 @@ void Refresh(
 
         for (b = 0; b < rulePtr->lastJoin->leftMemory->size; b++) {
             for (listOfMatches = rulePtr->lastJoin->leftMemory->beta[b];
-                 listOfMatches != NULL;
+                 listOfMatches != nullptr;
                  listOfMatches = listOfMatches->nextInMemory) {
                 /*=======================================================*/
                 /* If the partial match is associated with an activation */
@@ -892,8 +892,8 @@ void Refresh(
                 /* have an activation associated with it.                */
                 /*=======================================================*/
 
-                if (((struct joinNode *) listOfMatches->owner)->ruleToActivate != NULL) {
-                    if (listOfMatches->marker == NULL) { AddActivation(theEnv, rulePtr, listOfMatches); }
+                if (((struct joinNode *) listOfMatches->owner)->ruleToActivate != nullptr) {
+                    if (listOfMatches->marker == nullptr) { AddActivation(theEnv, rulePtr, listOfMatches); }
                 }
             }
         }
@@ -933,7 +933,7 @@ void RefreshAgendaCommand(
     /* Refresh the agenda of the appropriate module. */
     /*===============================================*/
 
-    if (theModule == NULL) { RefreshAllAgendas(theEnv); }
+    if (theModule == nullptr) { RefreshAllAgendas(theEnv); }
     else { RefreshAgenda(theModule); }
 }
 
@@ -944,8 +944,8 @@ void RefreshAllAgendas(
         Environment *theEnv) {
     Defmodule *theModule;
 
-    for (theModule = GetNextDefmodule(theEnv, NULL);
-         theModule != NULL;
+    for (theModule = GetNextDefmodule(theEnv, nullptr);
+         theModule != nullptr;
          theModule = GetNextDefmodule(theEnv, theModule)) { RefreshAgenda(theModule); }
 }
 
@@ -959,14 +959,14 @@ void RefreshAgenda(
     SalienceEvaluationType oldValue;
     Environment *theEnv;
 
-    if (theModule == NULL) return;
+    if (theModule == nullptr) return;
     theEnv = theModule->header.env;
 
     /*=====================================*/
     /* If embedded, clear the error flags. */
     /*=====================================*/
 
-    if (EvaluationData(theEnv)->CurrentExpression == NULL) { ResetErrorFlags(theEnv); }
+    if (EvaluationData(theEnv)->CurrentExpression == nullptr) { ResetErrorFlags(theEnv); }
 
     /*==========================*/
     /* Save the current module. */
@@ -993,8 +993,8 @@ void RefreshAgenda(
     /* Recompute the salience values for the current module's agenda. */
     /*================================================================*/
 
-    for (theActivation = GetNextActivation(theEnv, NULL);
-         theActivation != NULL;
+    for (theActivation = GetNextActivation(theEnv, nullptr);
+         theActivation != nullptr;
          theActivation = GetNextActivation(theEnv, theActivation)) {
         theActivation->salience = EvaluateSalience(theEnv, theActivation->theRule);
     }
@@ -1160,7 +1160,7 @@ static int EvaluateSalience(
     /* for the rule when it was defined.                               */
     /*=================================================================*/
 
-    if (theDefrule->dynamicSalience == NULL) return theDefrule->salience;
+    if (theDefrule->dynamicSalience == nullptr) return theDefrule->salience;
 
     /*====================================================*/
     /* Reevaluate the rule's salience. If an error occurs */

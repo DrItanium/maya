@@ -36,7 +36,7 @@
 /*************************************************/
 void InitializeUserDataData(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, USER_DATA_DATA, sizeof(struct userDataData), NULL);
+    AllocateEnvironmentData(theEnv, USER_DATA_DATA, sizeof(struct userDataData), nullptr);
 }
 
 /******************************************************/
@@ -64,7 +64,7 @@ struct userData *FetchUserData(
     struct userData *theData;
 
     for (theData = *theList;
-         theData != NULL;
+         theData != nullptr;
          theData = theData->next) {
         if (theData->dataID == userDataID) { return (theData); }
     }
@@ -79,7 +79,7 @@ struct userData *FetchUserData(
 
 /*****************************************************/
 /* TestUserData: Searches for user data information  */
-/*   from a list of user data structures. NULL is    */
+/*   from a list of user data structures. nullptr is    */
 /*   returned if the appropriate user data structure */
 /*   is not found.                                   */
 /*****************************************************/
@@ -89,12 +89,12 @@ struct userData *TestUserData(
     struct userData *theData;
 
     for (theData = theList;
-         theData != NULL;
+         theData != nullptr;
          theData = theData->next) {
         if (theData->dataID == userDataID) { return (theData); }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /***************************************************************/
@@ -105,7 +105,7 @@ void ClearUserDataList(
         struct userData *theList) {
     struct userData *nextData;
 
-    while (theList != NULL) {
+    while (theList != nullptr) {
         nextData = theList->next;
         (*UserDataData(theEnv)->UserDataRecordArray[theList->dataID]->deleteUserData)(theEnv, theList);
         theList = nextData;
@@ -120,13 +120,13 @@ struct userData *DeleteUserData(
         Environment *theEnv,
         unsigned char userDataID,
         struct userData *theList) {
-    struct userData *theData, *lastData = NULL;
+    struct userData *theData, *lastData = nullptr;
 
     for (theData = theList;
-         theData != NULL;
+         theData != nullptr;
          theData = theData->next) {
         if (theData->dataID == userDataID) {
-            if (lastData == NULL) { theList = theData->next; }
+            if (lastData == nullptr) { theList = theData->next; }
             else { lastData->next = theData->next; }
 
             (*UserDataData(theEnv)->UserDataRecordArray[userDataID]->deleteUserData)(theEnv, theData);

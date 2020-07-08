@@ -173,7 +173,7 @@ bool ParseDefclass(
     CLIPSLexeme *cname;
     Defclass *cls;
     PACKED_CLASS_LINKS *sclasses, *preclist;
-    TEMP_SLOT_LINK *slots = NULL;
+    TEMP_SLOT_LINK *slots = nullptr;
     bool parseError;
     bool roleSpecified = false, abstract = false;
     bool patternMatchSpecified = false;
@@ -192,19 +192,19 @@ bool ParseDefclass(
 #endif
 
     cname = GetConstructNameAndComment(theEnv, readSource, &DefclassData(theEnv)->ObjectParseToken, "defclass",
-                                       (FindConstructFunction *) FindDefclassInModule, NULL, "#", true,
+                                       (FindConstructFunction *) FindDefclassInModule, nullptr, "#", true,
                                        true, true, false);
-    if (cname == NULL)
+    if (cname == nullptr)
         return true;
 
     if (ValidClassName(theEnv, cname->contents, &cls) == false)
         return true;
 
     sclasses = ParseSuperclasses(theEnv, readSource, cname);
-    if (sclasses == NULL)
+    if (sclasses == nullptr)
         return true;
     preclist = FindPrecedenceList(theEnv, cls, sclasses);
-    if (preclist == NULL) {
+    if (preclist == nullptr) {
         DeletePackedClassLinks(theEnv, sclasses, true);
         return true;
     }
@@ -241,13 +241,13 @@ bool ParseDefclass(
         }
         else if (strcmp(DefclassData(theEnv)->ObjectParseToken.lexemeValue->contents, SLOT_RLN) == 0) {
             slots = ParseSlot(theEnv, readSource, cname->contents, slots, preclist, false);
-            if (slots == NULL) {
+            if (slots == nullptr) {
                 parseError = true;
                 break;
             }
         } else if (strcmp(DefclassData(theEnv)->ObjectParseToken.lexemeValue->contents, MLT_SLOT_RLN) == 0) {
             slots = ParseSlot(theEnv, readSource, cname->contents, slots, preclist, true);
-            if (slots == NULL) {
+            if (slots == nullptr) {
                 parseError = true;
                 break;
             }
@@ -337,7 +337,7 @@ bool ParseDefclass(
     /* =================================
        Shove slots into contiguous array
        ================================= */
-    if (slots != NULL)
+    if (slots != nullptr)
         PackSlots(theEnv, cls, slots);
     AddClass(theEnv, cls);
 
@@ -368,7 +368,7 @@ static bool ValidClassName(
         const char *theClassName,
         Defclass **theDefclass) {
     *theDefclass = FindDefclassInModule(theEnv, theClassName);
-    if (*theDefclass != NULL) {
+    if (*theDefclass != nullptr) {
         /* ===================================
            System classes (which are visible
            in all modules) cannot be redefined
@@ -528,7 +528,7 @@ static void AddClass(
     cls->hashTableIndex = HashClass(GetDefclassNamePointer(cls));
     ctmp = FindDefclassInModule(theEnv, DefclassName(cls));
 
-    if (ctmp != NULL) {
+    if (ctmp != nullptr) {
 #if DEBUGGING_FUNCTIONS
         oldTraceInstances = ctmp->traceInstances;
         oldTraceSlots = ctmp->traceSlots;
@@ -614,7 +614,7 @@ static void BuildSubclassLinks(
 static void FormInstanceTemplate(
         Environment *theEnv,
         Defclass *cls) {
-    TEMP_SLOT_LINK *islots = NULL, *stmp;
+    TEMP_SLOT_LINK *islots = nullptr, *stmp;
     unsigned short scnt = 0;
     unsigned long i;
 
@@ -676,7 +676,7 @@ static void FormSlotNameMap(
     unsigned i;
 
     cls->maxSlotNameID = 0;
-    cls->slotNameMap = NULL;
+    cls->slotNameMap = nullptr;
     if (cls->instanceSlotCount == 0)
         return;
     for (i = 0; i < cls->instanceSlotCount; i++)
@@ -698,7 +698,7 @@ static void FormSlotNameMap(
                  3) Caller's buffer for # of slots
                  4) A flag indicating whether the new list of slots
                     is from the direct parent-class or not.
-  RETURNS      : The address of the new expanded list, or NULL
+  RETURNS      : The address of the new expanded list, or nullptr
                    for an empty list
   SIDE EFFECTS : The list is expanded
                  Caller's slot count is adjusted.
@@ -729,9 +729,9 @@ static TEMP_SLOT_LINK *MergeSlots(
 
         if ((newSlot->noInherit == 0) ? true : (src == DIRECT)) {
             cur = old;
-            while ((cur != NULL) ? (newSlot->slotName != cur->desc->slotName) : false)
+            while ((cur != nullptr) ? (newSlot->slotName != cur->desc->slotName) : false)
                 cur = cur->nxt;
-            if (cur == NULL) {
+            if (cur == nullptr) {
                 tmp = get_struct(theEnv, tempSlotLink);
                 tmp->desc = newSlot;
                 tmp->nxt = old;
@@ -755,7 +755,7 @@ static TEMP_SLOT_LINK *MergeSlots(
   SIDE EFFECTS : Temporary list deallocated, contiguous array allocated,
                    and nxt pointers linked
                  Class pointer set for slots
-  NOTES        : Assumes class->slotCount == 0 && class->slots == NULL
+  NOTES        : Assumes class->slotCount == 0 && class->slots == nullptr
  ***********************************************************************/
 static void PackSlots(
         Environment *theEnv,
@@ -765,7 +765,7 @@ static void PackSlots(
     long i;
 
     stmp = slots;
-    while (stmp != NULL) {
+    while (stmp != nullptr) {
         stmp->desc->cls = cls;
         cls->slotCount++;
         stmp = stmp->nxt;
@@ -777,7 +777,7 @@ static void PackSlots(
         stmp = stmp->nxt;
         GenCopyMemory(SlotDescriptor, 1, &(cls->slots[i]), sprv->desc);
         cls->slots[i].sharedValue.desc = &(cls->slots[i]);
-        cls->slots[i].sharedValue.value = NULL;
+        cls->slots[i].sharedValue.value = nullptr;
         rtn_struct(theEnv, slotDescriptor, sprv->desc);
         rtn_struct(theEnv, tempSlotLink, sprv);
     }
@@ -856,13 +856,13 @@ void *CreateClassScopeMap(
 
     ClearBitString(scopeMap, scopeMapSize);
     SaveCurrentModule(theEnv);
-    for (theModule = GetNextDefmodule(theEnv, NULL);
-         theModule != NULL;
+    for (theModule = GetNextDefmodule(theEnv, nullptr);
+         theModule != nullptr;
          theModule = GetNextDefmodule(theEnv, theModule)) {
         SetCurrentModule(theEnv, theModule);
         moduleID = theModule->header.bsaveID;
         if (FindImportedConstruct(theEnv, "defclass", matchModule,
-                                  className, &count, true, NULL) != NULL)
+                                  className, &count, true, nullptr) != nullptr)
             SetBitMap(scopeMap, moduleID);
     }
     RestoreCurrentModule(theEnv);

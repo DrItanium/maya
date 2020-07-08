@@ -83,16 +83,16 @@
 /* GetLogicalName: Retrieves the nth argument passed to the function */
 /*   call currently being evaluated and determines if it is a valid  */
 /*   logical name. If valid, the logical name is returned, otherwise */
-/*   NULL is returned.                                               */
+/*   nullptr is returned.                                               */
 /*********************************************************************/
 const char *GetLogicalName(
         UDFContext *context,
         const char *defaultLogicalName) {
     Environment *theEnv = context->environment;
-    const char *logicalName = NULL;
+    const char *logicalName = nullptr;
     UDFValue theArg;
 
-    if (!UDFNextArgument(context, ANY_TYPE_BITS, &theArg)) { return NULL; }
+    if (!UDFNextArgument(context, ANY_TYPE_BITS, &theArg)) { return nullptr; }
 
     if (CVIsLexeme(&theArg) ||
         CVIsInstanceName(&theArg)) {
@@ -102,7 +102,7 @@ const char *GetLogicalName(
         logicalName = CreateSymbol(theEnv, FloatToString(theEnv, theArg.floatValue->contents))->contents;
     } else if (CVIsInteger(&theArg)) {
         logicalName = CreateSymbol(theEnv, LongIntegerToString(theEnv, theArg.integerValue->contents))->contents;
-    } else { logicalName = NULL; }
+    } else { logicalName = nullptr; }
 
     return (logicalName);
 }
@@ -111,13 +111,13 @@ const char *GetLogicalName(
 /* GetFileName: Retrieves the nth argument passed to the    */
 /*   function call currently being evaluated and determines */
 /*   if it is a valid file name. If valid, the file name is */
-/*   returned, otherwise NULL is returned.                  */
+/*   returned, otherwise nullptr is returned.                  */
 /************************************************************/
 const char *GetFileName(
         UDFContext *context) {
     UDFValue theArg;
 
-    if (!UDFNextArgument(context, LEXEME_BITS, &theArg)) { return NULL; }
+    if (!UDFNextArgument(context, LEXEME_BITS, &theArg)) { return nullptr; }
 
     return theArg.lexemeValue->contents;
 }
@@ -141,7 +141,7 @@ void OpenErrorMessage(
 /* GetModuleName: Retrieves the nth argument passed to the  */
 /*   function call currently being evaluated and determines */
 /*   if it is a valid module name. If valid, the module     */
-/*   name is returned or NULL is returned to indicate all   */
+/*   name is returned or nullptr is returned to indicate all   */
 /*   modules.                                               */
 /************************************************************/
 Defmodule *GetModuleName(
@@ -161,7 +161,7 @@ Defmodule *GetModuleName(
 
     if (!UDFNthArgument(context, 1, SYMBOL_BIT, &returnValue)) {
         *error = true;
-        return NULL;
+        return nullptr;
     }
 
     /*=======================================*/
@@ -169,12 +169,12 @@ Defmodule *GetModuleName(
     /* corresponds to a defined module.      */
     /*=======================================*/
 
-    if ((theModule = FindDefmodule(theEnv, returnValue.lexemeValue->contents)) == NULL) {
+    if ((theModule = FindDefmodule(theEnv, returnValue.lexemeValue->contents)) == nullptr) {
         if (strcmp("*", returnValue.lexemeValue->contents) != 0) {
             ExpectedTypeError1(theEnv, functionName, whichArgument, "'defmodule name'");
             *error = true;
         }
-        return NULL;
+        return nullptr;
     }
 
     /*=================================*/
@@ -198,11 +198,11 @@ const char *GetConstructName(
         const char *constructType) {
     UDFValue returnValue;
 
-    if (!UDFFirstArgument(context, ANY_TYPE_BITS, &returnValue)) { return NULL; }
+    if (!UDFFirstArgument(context, ANY_TYPE_BITS, &returnValue)) { return nullptr; }
 
     if (!CVIsSymbol(&returnValue)) {
         UDFInvalidArgumentMessage(context, constructType);
-        return NULL;
+        return nullptr;
     }
 
     return (returnValue.lexemeValue->contents);
@@ -238,7 +238,7 @@ void ExpectedCountError(
 /*  DESCRIPTION  : Checks the number of arguments against    */
 /*                 the system function restriction list      */
 /*  INPUTS       : 1) Name of the calling function           */
-/*                 2) The restriction list can be NULL       */
+/*                 2) The restriction list can be nullptr       */
 /*                 3) The number of arguments                */
 /*  RETURNS      : True if OK, false otherwise               */
 /*  SIDE EFFECTS : EvaluationError set on errrors            */
@@ -367,7 +367,7 @@ void ExpectedTypeError2(
 
     theFunction = FindFunction(theEnv, functionName);
 
-    if (theFunction == NULL) return;
+    if (theFunction == nullptr) return;
 
     theRestriction = GetNthRestriction(theEnv, theFunction, whichArg);
     ExpectedTypeError0(theEnv, functionName, whichArg);
@@ -397,20 +397,20 @@ void *GetFactOrInstanceArgument(
     if (CVIsFactAddress(item)) {
         if (item->factValue == &FactData(theEnv)->DummyFact) {
             CantFindItemErrorMessage(theEnv, "fact", "<Dummy Fact>", false);
-            return NULL;
+            return nullptr;
         } else if (item->factValue->garbage) {
             FactRetractedErrorMessage(theEnv, item->factValue);
-            return NULL;
+            return nullptr;
         }
 
         return item->value;
     } else if (CVIsInstanceAddress(item)) {
         if (item->instanceValue == &InstanceData(theEnv)->DummyInstance) {
             CantFindItemErrorMessage(theEnv, "instance", "<Dummy Instance>", false);
-            return NULL;
+            return nullptr;
         } else if (item->instanceValue->garbage) {
             CantFindItemErrorMessage(theEnv, "instance", item->instanceValue->name->contents, false);
-            return NULL;
+            return nullptr;
         }
 
         return item->value;
@@ -423,7 +423,7 @@ void *GetFactOrInstanceArgument(
 
 #if DEFTEMPLATE_CONSTRUCT
     else if (item->header->type == INTEGER_TYPE) {
-        if ((ptr = (void *) FindIndexedFact(theEnv, item->integerValue->contents)) == NULL) {
+        if ((ptr = (void *) FindIndexedFact(theEnv, item->integerValue->contents)) == nullptr) {
             char tempBuffer[20];
             gensprintf(tempBuffer, "f-%lld", item->integerValue->contents);
             CantFindItemErrorMessage(theEnv, "fact", tempBuffer, false);
@@ -438,7 +438,7 @@ void *GetFactOrInstanceArgument(
         /*================================================*/
 
     else if (CVIsType(item, INSTANCE_NAME_BIT | SYMBOL_BIT)) {
-        if ((ptr = (void *) FindInstanceBySymbol(theEnv, item->lexemeValue)) == NULL) {
+        if ((ptr = (void *) FindInstanceBySymbol(theEnv, item->lexemeValue)) == nullptr) {
             CantFindItemErrorMessage(theEnv, "instance", item->lexemeValue->contents, false);
         }
         return ptr;
@@ -449,7 +449,7 @@ void *GetFactOrInstanceArgument(
     /*========================================*/
 
     ExpectedTypeError2(theEnv, UDFContextFunctionName(context), thePosition);
-    return NULL;
+    return nullptr;
 }
 
 /****************************************************/

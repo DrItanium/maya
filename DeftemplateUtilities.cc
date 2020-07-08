@@ -133,13 +133,13 @@ void MultiIntoSingleFieldSlotError(
     PrintErrorID(theEnv, "TMPLTFUN", 1, true);
     WriteString(theEnv, STDERR, "Attempted to assert a multifield value ");
     WriteString(theEnv, STDERR, "into the single field slot ");
-    if (theSlot != NULL) {
+    if (theSlot != nullptr) {
         WriteString(theEnv, STDERR, "'");
         WriteString(theEnv, STDERR, theSlot->slotName->contents);
         WriteString(theEnv, STDERR, "'");
     } else { WriteString(theEnv, STDERR, "<<unknown>>"); }
     WriteString(theEnv, STDERR, " of deftemplate ");
-    if (theDeftemplate != NULL) {
+    if (theDeftemplate != nullptr) {
         WriteString(theEnv, STDERR, "'");
         WriteString(theEnv, STDERR, theDeftemplate->header.name->contents);
         WriteString(theEnv, STDERR, "'");
@@ -175,7 +175,7 @@ void CheckTemplateFact(
     /*========================================================*/
 
     theDeftemplate = theFact->whichDeftemplate;
-    if (theDeftemplate == NULL) return;
+    if (theDeftemplate == nullptr) return;
     if (theDeftemplate->implied) return;
 
     /*=============================================*/
@@ -184,7 +184,7 @@ void CheckTemplateFact(
 
     i = 0;
     for (slotPtr = theDeftemplate->slotList;
-         slotPtr != NULL;
+         slotPtr != nullptr;
          slotPtr = slotPtr->next) {
         /*================================================*/
         /* Store the slot value in the appropriate format */
@@ -213,7 +213,7 @@ void CheckTemplateFact(
             PrintErrorID(theEnv, "CSTRNCHK", 1, true);
             WriteString(theEnv, STDERR, "Slot value ");
             WriteUDFValue(theEnv, STDERR, &theData);
-            ConstraintViolationErrorMessage(theEnv, NULL, thePlace, false, 0, slotPtr->slotName,
+            ConstraintViolationErrorMessage(theEnv, nullptr, thePlace, false, 0, slotPtr->slotName,
                                             0, rv, slotPtr->constraints, true);
             SetHaltExecution(theEnv, true);
             return;
@@ -259,13 +259,13 @@ struct templateSlot *GetNthSlot(
     long long i = 0;
 
     slotPtr = theDeftemplate->slotList;
-    while (slotPtr != NULL) {
+    while (slotPtr != nullptr) {
         if (i == position) return slotPtr;
         slotPtr = slotPtr->next;
         i++;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /*******************************************************/
@@ -279,7 +279,7 @@ int FindSlotPosition(
     int position;
 
     for (slotPtr = theDeftemplate->slotList, position = 1;
-         slotPtr != NULL;
+         slotPtr != nullptr;
          slotPtr = slotPtr->next, position++) {
         if (slotPtr->slotName == name) { return (position); }
     }
@@ -342,14 +342,14 @@ static struct templateSlot *GetNextTemplateSlotToPrint(
     CLIPSValue *sublist;
 
     sublist = theFact->theProposition.contents;
-    if (slotPtr == NULL) { slotPtr = theFact->whichDeftemplate->slotList; }
+    if (slotPtr == nullptr) { slotPtr = theFact->whichDeftemplate->slotList; }
     else {
         slotPtr = slotPtr->next;
         (*position)++;
     }
 
-    while (slotPtr != NULL) {
-        if ((changeMap != NULL) && (TestBitMap(changeMap, *position) == 0)) {
+    while (slotPtr != nullptr) {
+        if ((changeMap != nullptr) && (TestBitMap(changeMap, *position) == 0)) {
             (*position)++;
             slotPtr = slotPtr->next;
             continue;
@@ -375,7 +375,7 @@ static struct templateSlot *GetNextTemplateSlotToPrint(
         return slotPtr;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /**********************************************************/
@@ -393,7 +393,7 @@ void PrintTemplateFact(
     CLIPSValue *sublist;
     int i;
     Deftemplate *theDeftemplate;
-    struct templateSlot *slotPtr, *lastPtr = NULL;
+    struct templateSlot *slotPtr, *lastPtr = nullptr;
     bool slotPrinted = false;
 
     /*==============================*/
@@ -418,10 +418,10 @@ void PrintTemplateFact(
     slotPtr = GetNextTemplateSlotToPrint(theEnv, theFact, lastPtr, &i,
                                          ignoreDefaults, changeMap);
 
-    if ((changeMap != NULL) &&
+    if ((changeMap != nullptr) &&
         (theFact->whichDeftemplate->slotList != slotPtr)) { WriteString(theEnv, logicalName, " ..."); }
 
-    while (slotPtr != NULL) {
+    while (slotPtr != nullptr) {
         /*===========================================*/
         /* Print the opening parenthesis of the slot */
         /* and the slot name.                        */
@@ -448,9 +448,9 @@ void PrintTemplateFact(
         slotPtr = GetNextTemplateSlotToPrint(theEnv, theFact, lastPtr, &i,
                                              ignoreDefaults, changeMap);
 
-        if ((changeMap != NULL) && (lastPtr->next != slotPtr)) { WriteString(theEnv, logicalName, " ..."); }
+        if ((changeMap != nullptr) && (lastPtr->next != slotPtr)) { WriteString(theEnv, logicalName, " ..."); }
 
-        if (slotPtr != NULL) WriteString(theEnv, logicalName, " ");
+        if (slotPtr != nullptr) WriteString(theEnv, logicalName, " ");
     }
 
     WriteString(theEnv, logicalName, ")");
@@ -470,8 +470,8 @@ void UpdateDeftemplateScope(
     /* Loop through all of the modules. */
     /*==================================*/
 
-    for (theModule = GetNextDefmodule(theEnv, NULL);
-         theModule != NULL;
+    for (theModule = GetNextDefmodule(theEnv, nullptr);
+         theModule != nullptr;
          theModule = GetNextDefmodule(theEnv, theModule)) {
         /*======================================================*/
         /* Loop through each of the deftemplates in the module. */
@@ -481,7 +481,7 @@ void UpdateDeftemplateScope(
                 GetModuleItem(theEnv, theModule, DeftemplateData(theEnv)->DeftemplateModuleIndex);
 
         for (theDeftemplate = (Deftemplate *) theItem->firstItem;
-             theDeftemplate != NULL;
+             theDeftemplate != nullptr;
              theDeftemplate = GetNextDeftemplate(theEnv, theDeftemplate)) {
             /*=======================================*/
             /* If the deftemplate can be seen by the */
@@ -490,7 +490,7 @@ void UpdateDeftemplateScope(
 
             if (FindImportedConstruct(theEnv, "deftemplate", theModule,
                                       theDeftemplate->header.name->contents,
-                                      &moduleCount, true, NULL) != NULL) { theDeftemplate->inScope = true; }
+                                      &moduleCount, true, nullptr) != nullptr) { theDeftemplate->inScope = true; }
             else { theDeftemplate->inScope = false; }
         }
     }
@@ -505,15 +505,15 @@ struct templateSlot *FindSlot(
         unsigned short *whichOne) {
     struct templateSlot *slotPtr;
 
-    if (whichOne != NULL) *whichOne = 0;
+    if (whichOne != nullptr) *whichOne = 0;
     slotPtr = theDeftemplate->slotList;
-    while (slotPtr != NULL) {
+    while (slotPtr != nullptr) {
         if (slotPtr->slotName == name) { return (slotPtr); }
-        if (whichOne != NULL) (*whichOne)++;
+        if (whichOne != nullptr) (*whichOne)++;
         slotPtr = slotPtr->next;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 
@@ -529,27 +529,27 @@ Deftemplate *CreateImpliedDeftemplate(
 
     newDeftemplate = get_struct(theEnv, deftemplate);
     newDeftemplate->header.name = deftemplateName;
-    newDeftemplate->header.ppForm = NULL;
-    newDeftemplate->header.usrData = NULL;
+    newDeftemplate->header.ppForm = nullptr;
+    newDeftemplate->header.usrData = nullptr;
     newDeftemplate->header.constructType = DEFTEMPLATE;
     newDeftemplate->header.env = theEnv;
-    newDeftemplate->slotList = NULL;
+    newDeftemplate->slotList = nullptr;
     newDeftemplate->implied = setFlag;
     newDeftemplate->numberOfSlots = 0;
     newDeftemplate->inScope = 1;
-    newDeftemplate->patternNetwork = NULL;
-    newDeftemplate->factList = NULL;
-    newDeftemplate->lastFact = NULL;
+    newDeftemplate->patternNetwork = nullptr;
+    newDeftemplate->factList = nullptr;
+    newDeftemplate->lastFact = nullptr;
     newDeftemplate->busyCount = 0;
     newDeftemplate->watch = false;
-    newDeftemplate->header.next = NULL;
+    newDeftemplate->header.next = nullptr;
 
 #if DEBUGGING_FUNCTIONS
     if (GetWatchItem(theEnv, "facts") == 1) { DeftemplateSetWatch(newDeftemplate, true); }
 #endif
 
     newDeftemplate->header.whichModule = (struct defmoduleItemHeader *)
-            GetModuleItem(theEnv, NULL, DeftemplateData(theEnv)->DeftemplateModuleIndex);
+            GetModuleItem(theEnv, nullptr, DeftemplateData(theEnv)->DeftemplateModuleIndex);
 
     AddConstructToModule(&newDeftemplate->header);
     InstallDeftemplate(theEnv, newDeftemplate);

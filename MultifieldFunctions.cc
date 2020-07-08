@@ -140,27 +140,27 @@ struct multiFunctionData {
 /**********************************************/
 void MultifieldFunctionDefinitions(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, MULTIFUN_DATA, sizeof(struct multiFunctionData), NULL);
+    AllocateEnvironmentData(theEnv, MULTIFUN_DATA, sizeof(struct multiFunctionData), nullptr);
 
-    AddUDF(theEnv, "first$", "m", 1, 1, "m", FirstFunction, NULL);
-    AddUDF(theEnv, "rest$", "m", 1, 1, "m", RestFunction, NULL);
-    AddUDF(theEnv, "subseq$", "m", 3, 3, "l;m", SubseqFunction, NULL);
-    AddUDF(theEnv, "delete-member$", "m", 2, UNBOUNDED, "*;m", DeleteMemberFunction, NULL);
-    AddUDF(theEnv, "replace-member$", "m", 3, UNBOUNDED, "*;m", ReplaceMemberFunction, NULL);
-    AddUDF(theEnv, "delete$", "m", 3, 3, "l;m", DeleteFunction, NULL);
-    AddUDF(theEnv, "replace$", "m", 4, UNBOUNDED, "*;m;l;l", ReplaceFunction, NULL);
-    AddUDF(theEnv, "insert$", "m", 3, UNBOUNDED, "*;m;l", InsertFunction, NULL);
-    AddUDF(theEnv, "explode$", "m", 1, 1, "s", ExplodeFunction, NULL);
-    AddUDF(theEnv, "implode$", "s", 1, 1, "m", ImplodeFunction, NULL);
-    AddUDF(theEnv, "nth$", "synldife", 2, 2, ";l;m", NthFunction, NULL);
-    AddUDF(theEnv, "member$", "blm", 2, 2, ";*;m", MemberFunction, NULL);
-    AddUDF(theEnv, "subsetp", "b", 2, 2, ";m;m", SubsetpFunction, NULL);
-    AddUDF(theEnv, "progn$", "*", 0, UNBOUNDED, NULL, MultifieldPrognFunction, NULL);
-    AddUDF(theEnv, "foreach", "*", 0, UNBOUNDED, NULL, ForeachFunction, NULL);
+    AddUDF(theEnv, "first$", "m", 1, 1, "m", FirstFunction, nullptr);
+    AddUDF(theEnv, "rest$", "m", 1, 1, "m", RestFunction, nullptr);
+    AddUDF(theEnv, "subseq$", "m", 3, 3, "l;m", SubseqFunction, nullptr);
+    AddUDF(theEnv, "delete-member$", "m", 2, UNBOUNDED, "*;m", DeleteMemberFunction, nullptr);
+    AddUDF(theEnv, "replace-member$", "m", 3, UNBOUNDED, "*;m", ReplaceMemberFunction, nullptr);
+    AddUDF(theEnv, "delete$", "m", 3, 3, "l;m", DeleteFunction, nullptr);
+    AddUDF(theEnv, "replace$", "m", 4, UNBOUNDED, "*;m;l;l", ReplaceFunction, nullptr);
+    AddUDF(theEnv, "insert$", "m", 3, UNBOUNDED, "*;m;l", InsertFunction, nullptr);
+    AddUDF(theEnv, "explode$", "m", 1, 1, "s", ExplodeFunction, nullptr);
+    AddUDF(theEnv, "implode$", "s", 1, 1, "m", ImplodeFunction, nullptr);
+    AddUDF(theEnv, "nth$", "synldife", 2, 2, ";l;m", NthFunction, nullptr);
+    AddUDF(theEnv, "member$", "blm", 2, 2, ";*;m", MemberFunction, nullptr);
+    AddUDF(theEnv, "subsetp", "b", 2, 2, ";m;m", SubsetpFunction, nullptr);
+    AddUDF(theEnv, "progn$", "*", 0, UNBOUNDED, nullptr, MultifieldPrognFunction, nullptr);
+    AddUDF(theEnv, "foreach", "*", 0, UNBOUNDED, nullptr, ForeachFunction, nullptr);
     FuncSeqOvlFlags(theEnv, "progn$", false, false);
     FuncSeqOvlFlags(theEnv, "foreach", false, false);
-    AddUDF(theEnv, "(get-progn$-field)", "*", 0, 0, NULL, GetMvPrognField, NULL);
-    AddUDF(theEnv, "(get-progn$-index)", "l", 0, 0, NULL, GetMvPrognIndex, NULL);
+    AddUDF(theEnv, "(get-progn$-field)", "*", 0, 0, nullptr, GetMvPrognField, nullptr);
+    AddUDF(theEnv, "(get-progn$-index)", "l", 0, 0, nullptr, GetMvPrognIndex, nullptr);
 
     AddFunctionParser(theEnv, "progn$", MultifieldPrognParser);
     AddFunctionParser(theEnv, "foreach", ForeachParser);
@@ -266,7 +266,7 @@ void ReplaceFunction(
     /*===============================*/
 
     fieldarg = GetFirstArgument()->nextArg->nextArg->nextArg;
-    if (fieldarg->nextArg != NULL) { StoreInMultifield(theEnv, &value4, fieldarg, true); }
+    if (fieldarg->nextArg != nullptr) { StoreInMultifield(theEnv, &value4, fieldarg, true); }
     else { EvaluateExpression(theEnv, fieldarg, &value4); }
 
     /*===========================================*/
@@ -444,7 +444,7 @@ void ReplaceMemberFunction(
             return;
         }
     }
-    minkp = NULL;
+    minkp = nullptr;
     while (FindDOsInSegment(delVals, argCnt - 2, &resultValue, &j, &k, minkp, minkp ? 1 : 0)) {
         if (ReplaceMultiValueFieldSizet(theEnv, &tmpVal, &resultValue, j, k,
                                         &replVal, "replace-member$") == false) {
@@ -487,7 +487,7 @@ void InsertFunction(
     /*=============================*/
 
     fieldarg = GetFirstArgument()->nextArg->nextArg;
-    if (fieldarg->nextArg != NULL)
+    if (fieldarg->nextArg != nullptr)
         StoreInMultifield(theEnv, &value3, fieldarg, true);
     else
         EvaluateExpression(theEnv, fieldarg, &value3);
@@ -540,7 +540,7 @@ void ExplodeFunction(
     /*=====================================*/
 
     theMultifield = StringToMultifield(theEnv, value.lexemeValue->contents);
-    if (theMultifield == NULL) {
+    if (theMultifield == nullptr) {
         theMultifield = CreateMultifield(theEnv, 0L);
         end = 0;
     } else { end = theMultifield->length; }
@@ -603,7 +603,7 @@ void SubseqFunction(
 
     /*=============================================*/
     /* Get range arguments. If they are not within */
-    /* appropriate ranges, return a null segment.  */
+    /* appropriate ranges, return a nullptr segment.  */
     /*=============================================*/
 
     if (!UDFNextArgument(context, INTEGER_BIT, &theArg)) { return; }
@@ -982,7 +982,7 @@ static struct expr *MultifieldPrognParser(
     struct BindInfo *oldBindList, *newBindList, *prev;
     struct token tkn;
     struct expr *tmp;
-    CLIPSLexeme *fieldVar = NULL;
+    CLIPSLexeme *fieldVar = nullptr;
 
     SavePPBuffer(theEnv, " ");
     GetToken(theEnv, infile, &tkn);
@@ -992,9 +992,9 @@ static struct expr *MultifieldPrognParser(
        ================================ */
     if (tkn.tknType != LEFT_PARENTHESIS_TOKEN) {
         top->argList = ParseAtomOrExpression(theEnv, infile, &tkn);
-        if (top->argList == NULL) {
+        if (top->argList == nullptr) {
             ReturnExpression(theEnv, top);
-            return NULL;
+            return nullptr;
         }
     } else {
         GetToken(theEnv, infile, &tkn);
@@ -1002,9 +1002,9 @@ static struct expr *MultifieldPrognParser(
             if (tkn.tknType != SYMBOL_TOKEN)
                 goto MvPrognParseError;
             top->argList = Function2Parse(theEnv, infile, tkn.lexemeValue->contents);
-            if (top->argList == NULL) {
+            if (top->argList == nullptr) {
                 ReturnExpression(theEnv, top);
-                return NULL;
+                return nullptr;
             }
         }
 
@@ -1014,10 +1014,10 @@ static struct expr *MultifieldPrognParser(
         else {
             fieldVar = tkn.lexemeValue;
             SavePPBuffer(theEnv, " ");
-            top->argList = ParseAtomOrExpression(theEnv, infile, NULL);
-            if (top->argList == NULL) {
+            top->argList = ParseAtomOrExpression(theEnv, infile, nullptr);
+            if (top->argList == nullptr) {
                 ReturnExpression(theEnv, top);
-                return NULL;
+                return nullptr;
             }
             GetToken(theEnv, infile, &tkn);
             if (tkn.tknType != RIGHT_PARENTHESIS_TOKEN)
@@ -1033,53 +1033,53 @@ static struct expr *MultifieldPrognParser(
         goto MvPrognParseError;
 
     oldBindList = GetParsedBindNames(theEnv);
-    SetParsedBindNames(theEnv, NULL);
+    SetParsedBindNames(theEnv, nullptr);
     IncrementIndentDepth(theEnv, 3);
     ExpressionData(theEnv)->BreakContext = true;
     ExpressionData(theEnv)->ReturnContext = ExpressionData(theEnv)->svContexts->rtn;
     PPCRAndIndent(theEnv);
-    top->argList->nextArg = GroupActions(theEnv, infile, &tkn, true, NULL, false);
+    top->argList->nextArg = GroupActions(theEnv, infile, &tkn, true, nullptr, false);
     DecrementIndentDepth(theEnv, 3);
     PPBackup(theEnv);
     PPBackup(theEnv);
     SavePPBuffer(theEnv, tkn.printForm);
-    if (top->argList->nextArg == NULL) {
+    if (top->argList->nextArg == nullptr) {
         ClearParsedBindNames(theEnv);
         SetParsedBindNames(theEnv, oldBindList);
         ReturnExpression(theEnv, top);
-        return NULL;
+        return nullptr;
     }
     tmp = top->argList->nextArg;
     top->argList->nextArg = tmp->argList;
-    tmp->argList = NULL;
+    tmp->argList = nullptr;
     ReturnExpression(theEnv, tmp);
     newBindList = GetParsedBindNames(theEnv);
-    prev = NULL;
-    while (newBindList != NULL) {
-        if ((fieldVar == NULL) ? false :
+    prev = nullptr;
+    while (newBindList != nullptr) {
+        if ((fieldVar == nullptr) ? false :
             (strcmp(newBindList->name->contents, fieldVar->contents) == 0)) {
             ClearParsedBindNames(theEnv);
             SetParsedBindNames(theEnv, oldBindList);
             PrintErrorID(theEnv, "MULTIFUN", 2, false);
             WriteString(theEnv, STDERR, "Cannot rebind field variable in function 'progn$'.\n");
             ReturnExpression(theEnv, top);
-            return NULL;
+            return nullptr;
         }
         prev = newBindList;
         newBindList = newBindList->next;
     }
-    if (prev == NULL)
+    if (prev == nullptr)
         SetParsedBindNames(theEnv, oldBindList);
     else
         prev->next = oldBindList;
-    if (fieldVar != NULL)
+    if (fieldVar != nullptr)
         ReplaceMvPrognFieldVars(theEnv, fieldVar, top->argList->nextArg, 0);
     return (top);
 
     MvPrognParseError:
     SyntaxErrorMessage(theEnv, "progn$");
     ReturnExpression(theEnv, top);
-    return NULL;
+    return nullptr;
 }
 
 /***********************************************/
@@ -1101,63 +1101,63 @@ static struct expr *ForeachParser(
 
     fieldVar = tkn.lexemeValue;
     SavePPBuffer(theEnv, " ");
-    top->argList = ParseAtomOrExpression(theEnv, infile, NULL);
-    if (top->argList == NULL) {
+    top->argList = ParseAtomOrExpression(theEnv, infile, nullptr);
+    if (top->argList == nullptr) {
         ReturnExpression(theEnv, top);
-        return NULL;
+        return nullptr;
     }
 
     if (CheckArgumentAgainstRestriction(theEnv, top->argList, MULTIFIELD_BIT))
         goto ForeachParseError;
 
     oldBindList = GetParsedBindNames(theEnv);
-    SetParsedBindNames(theEnv, NULL);
+    SetParsedBindNames(theEnv, nullptr);
     IncrementIndentDepth(theEnv, 3);
     ExpressionData(theEnv)->BreakContext = true;
     ExpressionData(theEnv)->ReturnContext = ExpressionData(theEnv)->svContexts->rtn;
     PPCRAndIndent(theEnv);
-    top->argList->nextArg = GroupActions(theEnv, infile, &tkn, true, NULL, false);
+    top->argList->nextArg = GroupActions(theEnv, infile, &tkn, true, nullptr, false);
     DecrementIndentDepth(theEnv, 3);
     PPBackup(theEnv);
     PPBackup(theEnv);
     SavePPBuffer(theEnv, tkn.printForm);
-    if (top->argList->nextArg == NULL) {
+    if (top->argList->nextArg == nullptr) {
         ClearParsedBindNames(theEnv);
         SetParsedBindNames(theEnv, oldBindList);
         ReturnExpression(theEnv, top);
-        return NULL;
+        return nullptr;
     }
     tmp = top->argList->nextArg;
     top->argList->nextArg = tmp->argList;
-    tmp->argList = NULL;
+    tmp->argList = nullptr;
     ReturnExpression(theEnv, tmp);
     newBindList = GetParsedBindNames(theEnv);
-    prev = NULL;
-    while (newBindList != NULL) {
-        if ((fieldVar == NULL) ? false :
+    prev = nullptr;
+    while (newBindList != nullptr) {
+        if ((fieldVar == nullptr) ? false :
             (strcmp(newBindList->name->contents, fieldVar->contents) == 0)) {
             ClearParsedBindNames(theEnv);
             SetParsedBindNames(theEnv, oldBindList);
             PrintErrorID(theEnv, "MULTIFUN", 2, false);
             WriteString(theEnv, STDERR, "Cannot rebind field variable in function 'foreach'.\n");
             ReturnExpression(theEnv, top);
-            return NULL;
+            return nullptr;
         }
         prev = newBindList;
         newBindList = newBindList->next;
     }
-    if (prev == NULL)
+    if (prev == nullptr)
         SetParsedBindNames(theEnv, oldBindList);
     else
         prev->next = oldBindList;
-    if (fieldVar != NULL)
+    if (fieldVar != nullptr)
         ReplaceMvPrognFieldVars(theEnv, fieldVar, top->argList->nextArg, 0);
     return (top);
 
     ForeachParseError:
     SyntaxErrorMessage(theEnv, "foreach");
     ReturnExpression(theEnv, top);
-    return NULL;
+    return nullptr;
 }
 
 /**********************************************/
@@ -1172,7 +1172,7 @@ static void ReplaceMvPrognFieldVars(
     size_t flen;
 
     flen = strlen(fieldVar->contents);
-    while (theExp != NULL) {
+    while (theExp != nullptr) {
         if ((theExp->type != SF_VARIABLE) ? false :
             (strncmp(theExp->lexemeValue->contents, fieldVar->contents,
                      (STD_SIZE) flen) == 0)) {
@@ -1185,7 +1185,7 @@ static void ReplaceMvPrognFieldVars(
                 theExp->value = FindFunction(theEnv, "(get-progn$-index)");
                 theExp->argList = GenConstant(theEnv, INTEGER_TYPE, CreateInteger(theEnv, depth));
             }
-        } else if (theExp->argList != NULL) {
+        } else if (theExp->argList != nullptr) {
             if ((theExp->type == FCALL) && ((theExp->value == (void *) FindFunction(theEnv, "progn$")) ||
                                             (theExp->value == (void *) FindFunction(theEnv, "foreach"))))
                 ReplaceMvPrognFieldVars(theEnv, fieldVar, theExp->argList, depth + 1);
@@ -1255,7 +1255,7 @@ static void MultifieldPrognDriver(
         tmpField->type = argval.multifieldValue->contents[i].header->type;
         tmpField->value = argval.multifieldValue->contents[i].value;
         tmpField->index = 1 + i - argval.begin;
-        for (theExp = GetFirstArgument()->nextArg; theExp != NULL; theExp = theExp->nextArg) {
+        for (theExp = GetFirstArgument()->nextArg; theExp != nullptr; theExp = theExp->nextArg) {
             EvaluateExpression(theEnv, theExp, returnValue);
 
             if (EvaluationData(theEnv)->HaltExecution || ProcedureFunctionData(theEnv)->BreakFlag ||
@@ -1275,8 +1275,8 @@ static void MultifieldPrognDriver(
             /* last evaluation of the progn$.    */
             /*===================================*/
 
-            if (((i + 1) < end) || (theExp->nextArg != NULL)) {
-                CleanCurrentGarbageFrame(theEnv, NULL);
+            if (((i + 1) < end) || (theExp->nextArg != nullptr)) {
+                CleanCurrentGarbageFrame(theEnv, nullptr);
                 CallPeriodicTasks(theEnv);
             }
         }
@@ -1346,7 +1346,7 @@ bool ReplaceMultiValueFieldSizet(
     size_t srclen, dstlen;
     size_t urb, ure;
 
-    srclen = ((src != NULL) ? src->range : 0);
+    srclen = ((src != nullptr) ? src->range : 0);
     if ((re < rb) ||
         (rb < 1) || (re < 1) ||
         (rb > srclen) || (re > srclen)) {
@@ -1398,7 +1398,7 @@ bool ReplaceMultiValueFieldSizet(
   DESCRIPTION  : Performs an insert on the src multi-field value
                    storing the results in the dst multi-field value
   INPUTS       : 1) The destination value buffer
-                 2) The source value (can be NULL)
+                 2) The source value (can be nullptr)
                  3) The index for the change
                  4) The new field value
   RETURNS      : True if successful, false otherwise
@@ -1406,7 +1406,7 @@ bool ReplaceMultiValueFieldSizet(
                    number of fields is 0)
                  Src value segment is not changed
   NOTES        : index is NOT guaranteed to be valid
-                 src is guaranteed to be a multi-field variable or NULL
+                 src is guaranteed to be a multi-field variable or nullptr
  **************************************************************************/
 bool InsertMultiValueField(
         Environment *theEnv,
@@ -1419,12 +1419,12 @@ bool InsertMultiValueField(
     CLIPSValue *deptr, *septr;
     size_t srclen, dstlen;
 
-    srclen = ((src != NULL) ? src->range : 0);
+    srclen = ((src != nullptr) ? src->range : 0);
 
     if (theIndex > (srclen + 1)) { theIndex = (srclen + 1); }
 
     dst->begin = 0;
-    if (src == NULL) {
+    if (src == nullptr) {
         if (field->header->type == MULTIFIELD_TYPE) {
             DuplicateMultifield(theEnv, dst, field);
             AddToMultifieldList(theEnv, dst->multifieldValue);
@@ -1495,7 +1495,7 @@ void MVRangeError(
     }
     WriteString(theEnv, STDERR, " out of range 1..");
     PrintUnsignedInteger(theEnv, STDERR, max);
-    if (funcName != NULL) {
+    if (funcName != nullptr) {
         WriteString(theEnv, STDERR, " in function '");
         WriteString(theEnv, STDERR, funcName);
         WriteString(theEnv, STDERR, "'");
@@ -1521,7 +1521,7 @@ static void MVRangeErrorSizet(
     }
     WriteString(theEnv, STDERR, " out of range 1..");
     PrintUnsignedInteger(theEnv, STDERR, max);
-    if (funcName != NULL) {
+    if (funcName != nullptr) {
         WriteString(theEnv, STDERR, " in function '");
         WriteString(theEnv, STDERR, funcName);
         WriteString(theEnv, STDERR, "'");

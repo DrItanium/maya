@@ -123,7 +123,7 @@ static void DisplayGenericCore(Environment *, Defgeneric *);
 bool ClearDefgenericsReady(
         Environment *theEnv,
         void *context) {
-    return ((DefgenericData(theEnv)->CurrentGeneric != NULL) ? false : true);
+    return ((DefgenericData(theEnv)->CurrentGeneric != nullptr) ? false : true);
 }
 
 /*****************************************************
@@ -185,8 +185,8 @@ bool ClearDefmethods(
     if (Bloaded(theEnv) == true) return false;
 #endif
 
-    gfunc = GetNextDefgeneric(theEnv, NULL);
-    while (gfunc != NULL) {
+    gfunc = GetNextDefgeneric(theEnv, nullptr);
+    while (gfunc != nullptr) {
         if (RemoveAllExplicitMethods(theEnv, gfunc) == false)
             success = false;
         gfunc = GetNextDefgeneric(theEnv, gfunc);
@@ -234,7 +234,7 @@ bool RemoveAllExplicitMethods(
             if (gfunc->mcnt != 0)
                 rm(theEnv, gfunc->methods, (sizeof(Defmethod) * gfunc->mcnt));
             gfunc->mcnt = 0;
-            gfunc->methods = NULL;
+            gfunc->methods = nullptr;
         }
         return true;
     }
@@ -262,7 +262,7 @@ void RemoveDefgeneric(
 
     if (theDefgeneric->mcnt != 0) { rm(theEnv, theDefgeneric->methods, (sizeof(Defmethod) * theDefgeneric->mcnt)); }
     ReleaseLexeme(theEnv, GetDefgenericNamePointer(theDefgeneric));
-    SetDefgenericPPForm(theEnv, theDefgeneric, NULL);
+    SetDefgenericPPForm(theEnv, theDefgeneric, nullptr);
     ClearUserDataList(theEnv, theDefgeneric->header.usrData);
     rtn_struct(theEnv, defgeneric, theDefgeneric);
 }
@@ -285,8 +285,8 @@ bool ClearDefgenerics(
     if (Bloaded(theEnv) == true) return false;
 #endif
 
-    gfunc = GetNextDefgeneric(theEnv, NULL);
-    while (gfunc != NULL) {
+    gfunc = GetNextDefgeneric(theEnv, nullptr);
+    while (gfunc != nullptr) {
         gtmp = gfunc;
         gfunc = GetNextDefgeneric(theEnv, gfunc);
         if (RemoveAllExplicitMethods(theEnv, gtmp) == false) {
@@ -342,7 +342,7 @@ void DeleteMethodInfo(
     ExpressionDeinstall(theEnv, meth->actions);
     ReturnPackedExpression(theEnv, meth->actions);
     ClearUserDataList(theEnv, meth->header.usrData);
-    if (meth->header.ppForm != NULL)
+    if (meth->header.ppForm != nullptr)
         rm(theEnv, (void *) meth->header.ppForm, (sizeof(char) * (strlen(meth->header.ppForm) + 1)));
     for (j = 0; j < meth->restrictionCount; j++) {
         rptr = &meth->restrictions[j];
@@ -350,12 +350,12 @@ void DeleteMethodInfo(
         for (k = 0; k < rptr->tcnt; k++)
                 DecrementDefclassBusyCount(theEnv, (Defclass *) rptr->types[k]);
 
-        if (rptr->types != NULL)
+        if (rptr->types != nullptr)
             rm(theEnv, rptr->types, (sizeof(void *) * rptr->tcnt));
         ExpressionDeinstall(theEnv, rptr->query);
         ReturnPackedExpression(theEnv, rptr->query);
     }
-    if (meth->restrictions != NULL)
+    if (meth->restrictions != nullptr)
         rm(theEnv, meth->restrictions,
            (sizeof(RESTRICTION) * meth->restrictionCount));
     RestoreBusyCount(gfunc);
@@ -385,17 +385,17 @@ void DestroyMethodInfo(
     ReturnPackedExpression(theEnv, meth->actions);
 
     ClearUserDataList(theEnv, meth->header.usrData);
-    if (meth->header.ppForm != NULL)
+    if (meth->header.ppForm != nullptr)
         rm(theEnv, (void *) meth->header.ppForm, (sizeof(char) * (strlen(meth->header.ppForm) + 1)));
     for (j = 0; j < meth->restrictionCount; j++) {
         rptr = &meth->restrictions[j];
 
-        if (rptr->types != NULL)
+        if (rptr->types != nullptr)
             rm(theEnv, rptr->types, (sizeof(void *) * rptr->tcnt));
         ReturnPackedExpression(theEnv, rptr->query);
     }
 
-    if (meth->restrictions != NULL)
+    if (meth->restrictions != nullptr)
         rm(theEnv, meth->restrictions,
            (sizeof(RESTRICTION) * meth->restrictionCount));
 }
@@ -476,7 +476,7 @@ void PrintMethod(
     for (j = 0; j < meth->restrictionCount; j++) {
         rptr = &meth->restrictions[j];
         if (((j + 1) == meth->restrictionCount) && (meth->maxRestrictions == RESTRICTIONS_UNBOUNDED)) {
-            if ((rptr->tcnt == 0) && (rptr->query == NULL)) {
+            if ((rptr->tcnt == 0) && (rptr->query == nullptr)) {
                 SBAppend(theSB, "$?");
                 break;
             }
@@ -488,7 +488,7 @@ void PrintMethod(
             if ((k + 1) < rptr->tcnt)
                 SBAppend(theSB, " ");
         }
-        if (rptr->query != NULL) {
+        if (rptr->query != nullptr) {
             if (rptr->tcnt != 0)
                 SBAppend(theSB, " ");
             SBAppend(theSB, "<qry>");
@@ -529,7 +529,7 @@ void PreviewGeneric(
     if (!UDFFirstArgument(context, SYMBOL_BIT, &theArg)) return;
 
     gfunc = LookupDefgenericByMdlOrScope(theEnv, theArg.lexemeValue->contents);
-    if (gfunc == NULL) {
+    if (gfunc == nullptr) {
         PrintErrorID(theEnv, "GENRCFUN", 3, false);
         WriteString(theEnv, STDERR, "Unable to find generic function '");
         WriteString(theEnv, STDERR, theArg.lexemeValue->contents);
@@ -570,7 +570,7 @@ void PreviewGeneric(
                   error message if not found
   INPUTS       : 1) Calling function
                  2) Name of generic function
-  RETURNS      : Generic function address (NULL if
+  RETURNS      : Generic function address (nullptr if
                    not found)
   SIDE EFFECTS : None
   NOTES        : None
@@ -582,7 +582,7 @@ Defgeneric *CheckGenericExists(
     Defgeneric *gfunc;
 
     gfunc = LookupDefgenericByMdlOrScope(theEnv, gname);
-    if (gfunc == NULL) {
+    if (gfunc == nullptr) {
         PrintErrorID(theEnv, "GENRCFUN", 3, false);
         WriteString(theEnv, STDERR, "Unable to find generic function '");
         WriteString(theEnv, STDERR, gname);

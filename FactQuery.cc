@@ -111,26 +111,26 @@ static void PopQuerySoln(Environment *);
  ****************************************************/
 void SetupFactQuery(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, FACT_QUERY_DATA, sizeof(struct factQueryData), NULL);
+    AllocateEnvironmentData(theEnv, FACT_QUERY_DATA, sizeof(struct factQueryData), nullptr);
 
     FactQueryData(theEnv)->QUERY_DELIMITER_SYMBOL = CreateSymbol(theEnv, QUERY_DELIMITER_STRING);
     IncrementLexemeCount(FactQueryData(theEnv)->QUERY_DELIMITER_SYMBOL);
 
-    AddUDF(theEnv, "(query-fact)", "f", 0, UNBOUNDED, NULL, GetQueryFact, NULL);
+    AddUDF(theEnv, "(query-fact)", "f", 0, UNBOUNDED, nullptr, GetQueryFact, nullptr);
 
-    AddUDF(theEnv, "(query-fact-slot)", "*", 0, UNBOUNDED, NULL, GetQueryFactSlot, NULL);
+    AddUDF(theEnv, "(query-fact-slot)", "*", 0, UNBOUNDED, nullptr, GetQueryFactSlot, nullptr);
 
-    AddUDF(theEnv, "any-factp", "b", 0, UNBOUNDED, NULL, AnyFacts, NULL);
+    AddUDF(theEnv, "any-factp", "b", 0, UNBOUNDED, nullptr, AnyFacts, nullptr);
 
-    AddUDF(theEnv, "find-fact", "m", 0, UNBOUNDED, NULL, QueryFindFact, NULL);
+    AddUDF(theEnv, "find-fact", "m", 0, UNBOUNDED, nullptr, QueryFindFact, nullptr);
 
-    AddUDF(theEnv, "find-all-facts", "m", 0, UNBOUNDED, NULL, QueryFindAllFacts, NULL);
+    AddUDF(theEnv, "find-all-facts", "m", 0, UNBOUNDED, nullptr, QueryFindAllFacts, nullptr);
 
-    AddUDF(theEnv, "do-for-fact", "*", 0, UNBOUNDED, NULL, QueryDoForFact, NULL);
+    AddUDF(theEnv, "do-for-fact", "*", 0, UNBOUNDED, nullptr, QueryDoForFact, nullptr);
 
-    AddUDF(theEnv, "do-for-all-facts", "*", 0, UNBOUNDED, NULL, QueryDoForAllFacts, NULL);
+    AddUDF(theEnv, "do-for-all-facts", "*", 0, UNBOUNDED, nullptr, QueryDoForAllFacts, nullptr);
 
-    AddUDF(theEnv, "delayed-do-for-all-facts", "*", 0, UNBOUNDED, NULL, DelayedQueryDoForAllFacts, NULL);
+    AddUDF(theEnv, "delayed-do-for-all-facts", "*", 0, UNBOUNDED, nullptr, DelayedQueryDoForAllFacts, nullptr);
 
     AddFunctionParser(theEnv, "any-factp", FactParseQueryNoAction);
     AddFunctionParser(theEnv, "find-fact", FactParseQueryNoAction);
@@ -220,7 +220,7 @@ void GetQueryFactSlot(
         }
         position = 0;
     } else if (FindSlot(theFact->whichDeftemplate,
-                        (CLIPSLexeme *) temp.value, &position) == NULL) {
+                        (CLIPSLexeme *) temp.value, &position) == nullptr) {
         FactVarSlotErrorMessage2(theEnv, theFact, varSlot);
         SetEvaluationError(theEnv, true);
         return;
@@ -302,7 +302,7 @@ void AnyFacts(
 
     qtemplates = DetermineQueryTemplates(theEnv, GetFirstArgument()->nextArg,
                                          "any-factp", &rcnt);
-    if (qtemplates == NULL) {
+    if (qtemplates == nullptr) {
         returnValue->lexemeValue = FalseSymbol(theEnv);
         return;
     }
@@ -343,7 +343,7 @@ void QueryFindFact(
     returnValue->range = 0;
     qtemplates = DetermineQueryTemplates(theEnv, GetFirstArgument()->nextArg,
                                          "find-fact", &rcnt);
-    if (qtemplates == NULL) {
+    if (qtemplates == nullptr) {
         returnValue->value = CreateMultifield(theEnv, 0L);
         return;
     }
@@ -397,7 +397,7 @@ void QueryFindAllFacts(
     returnValue->range = 0;
     qtemplates = DetermineQueryTemplates(theEnv, GetFirstArgument()->nextArg,
                                          "find-all-facts", &rcnt);
-    if (qtemplates == NULL) {
+    if (qtemplates == nullptr) {
         returnValue->value = CreateMultifield(theEnv, 0L);
         return;
     }
@@ -405,14 +405,14 @@ void QueryFindAllFacts(
     FactQueryData(theEnv)->QueryCore = get_struct(theEnv, query_core);
     FactQueryData(theEnv)->QueryCore->solns = (Fact **) gm2(theEnv, (sizeof(Fact *) * rcnt));
     FactQueryData(theEnv)->QueryCore->query = GetFirstArgument();
-    FactQueryData(theEnv)->QueryCore->action = NULL;
-    FactQueryData(theEnv)->QueryCore->soln_set = NULL;
+    FactQueryData(theEnv)->QueryCore->action = nullptr;
+    FactQueryData(theEnv)->QueryCore->soln_set = nullptr;
     FactQueryData(theEnv)->QueryCore->soln_size = rcnt;
     FactQueryData(theEnv)->QueryCore->soln_cnt = 0;
     TestEntireChain(theEnv, qtemplates, 0);
     FactQueryData(theEnv)->AbortQuery = false;
     returnValue->value = CreateMultifield(theEnv, FactQueryData(theEnv)->QueryCore->soln_cnt * rcnt);
-    while (FactQueryData(theEnv)->QueryCore->soln_set != NULL) {
+    while (FactQueryData(theEnv)->QueryCore->soln_set != nullptr) {
         for (i = 0, j = returnValue->range; i < rcnt; i++, j++) {
             returnValue->multifieldValue->contents[j].value = FactQueryData(theEnv)->QueryCore->soln_set->soln[i];
         }
@@ -449,7 +449,7 @@ void QueryDoForFact(
     returnValue->value = FalseSymbol(theEnv);
     qtemplates = DetermineQueryTemplates(theEnv, GetFirstArgument()->nextArg->nextArg,
                                          "do-for-fact", &rcnt);
-    if (qtemplates == NULL)
+    if (qtemplates == nullptr)
         return;
     PushQueryCore(theEnv);
     FactQueryData(theEnv)->QueryCore = get_struct(theEnv, query_core);
@@ -497,7 +497,7 @@ void QueryDoForAllFacts(
 
     qtemplates = DetermineQueryTemplates(theEnv, GetFirstArgument()->nextArg->nextArg,
                                          "do-for-all-facts", &rcnt);
-    if (qtemplates == NULL)
+    if (qtemplates == nullptr)
         return;
 
     PushQueryCore(theEnv);
@@ -548,15 +548,15 @@ void DelayedQueryDoForAllFacts(
     returnValue->value = FalseSymbol(theEnv);
     qtemplates = DetermineQueryTemplates(theEnv, GetFirstArgument()->nextArg->nextArg,
                                          "delayed-do-for-all-facts", &rcnt);
-    if (qtemplates == NULL)
+    if (qtemplates == nullptr)
         return;
 
     PushQueryCore(theEnv);
     FactQueryData(theEnv)->QueryCore = get_struct(theEnv, query_core);
     FactQueryData(theEnv)->QueryCore->solns = (Fact **) gm2(theEnv, (sizeof(Fact *) * rcnt));
     FactQueryData(theEnv)->QueryCore->query = GetFirstArgument();
-    FactQueryData(theEnv)->QueryCore->action = NULL;
-    FactQueryData(theEnv)->QueryCore->soln_set = NULL;
+    FactQueryData(theEnv)->QueryCore->action = nullptr;
+    FactQueryData(theEnv)->QueryCore->soln_set = nullptr;
     FactQueryData(theEnv)->QueryCore->soln_size = rcnt;
     FactQueryData(theEnv)->QueryCore->soln_cnt = 0;
     TestEntireChain(theEnv, qtemplates, 0);
@@ -570,7 +570,7 @@ void DelayedQueryDoForAllFacts(
     GCBlockStart(theEnv, &gcb);
 
     for (theSet = FactQueryData(theEnv)->QueryCore->soln_set;
-         theSet != NULL;
+         theSet != nullptr;
          theSet = theSet->nxt) {
         for (i = 0; i < rcnt; i++) { theSet->soln[i]->patternHeader.busyCount++; }
     }
@@ -580,7 +580,7 @@ void DelayedQueryDoForAllFacts(
     /*=====================*/
 
     for (theSet = FactQueryData(theEnv)->QueryCore->soln_set;
-         theSet != NULL;) {
+         theSet != nullptr;) {
         for (i = 0; i < rcnt; i++) {
             if (theSet->soln[i]->garbage) { goto nextSet; }
             FactQueryData(theEnv)->QueryCore->solns[i] = theSet->soln[i];
@@ -591,7 +591,7 @@ void DelayedQueryDoForAllFacts(
         if (EvaluationData(theEnv)->HaltExecution || ProcedureFunctionData(theEnv)->BreakFlag ||
             ProcedureFunctionData(theEnv)->ReturnFlag) { break; }
 
-        CleanCurrentGarbageFrame(theEnv, NULL);
+        CleanCurrentGarbageFrame(theEnv, nullptr);
         CallPeriodicTasks(theEnv);
 
         nextSet:
@@ -603,7 +603,7 @@ void DelayedQueryDoForAllFacts(
     /*==============================================================*/
 
     for (theSet = FactQueryData(theEnv)->QueryCore->soln_set;
-         theSet != NULL;
+         theSet != nullptr;
          theSet = theSet->nxt) {
         for (i = 0; i < rcnt; i++) { theSet->soln[i]->patternHeader.busyCount--; }
     }
@@ -615,7 +615,7 @@ void DelayedQueryDoForAllFacts(
     /* Deallocate the query structures. */
     /*==================================*/
 
-    while (FactQueryData(theEnv)->QueryCore->soln_set != NULL) { PopQuerySoln(theEnv); }
+    while (FactQueryData(theEnv)->QueryCore->soln_set != nullptr) { PopQuerySoln(theEnv); }
 
     ProcedureFunctionData(theEnv)->BreakFlag = false;
     rm(theEnv, FactQueryData(theEnv)->QueryCore->solns, (sizeof(Fact *) * rcnt));
@@ -704,7 +704,7 @@ static QUERY_CORE *FindQueryCore(
                  2) The name of the function being executed
                  3) Caller's buffer for restriction count
                     (# of separate lists)
-  RETURNS      : The query list, or NULL on errors
+  RETURNS      : The query list, or nullptr on errors
   SIDE EFFECTS : Memory allocated for list
                  Busy count incremented for all templates
   NOTES        : Each restriction is linked by nxt pointer,
@@ -712,7 +712,7 @@ static QUERY_CORE *FindQueryCore(
                    linked by the chain pointer.
                  Rcnt caller's buffer is set to reflect the
                    total number of chains
-                 Assumes templateExp is not NULL and that each
+                 Assumes templateExp is not nullptr and that each
                    restriction chain is terminated with
                    the QUERY_DELIMITER_SYMBOL "(QDS)"
  **********************************************************/
@@ -721,39 +721,39 @@ static QUERY_TEMPLATE *DetermineQueryTemplates(
         Expression *templateExp,
         const char *func,
         unsigned *rcnt) {
-    QUERY_TEMPLATE *clist = NULL, *cnxt = NULL, *cchain = NULL, *tmp;
+    QUERY_TEMPLATE *clist = nullptr, *cnxt = nullptr, *cchain = nullptr, *tmp;
     bool new_list = false;
     UDFValue temp;
     Deftemplate *theDeftemplate;
 
     *rcnt = 0;
-    while (templateExp != NULL) {
-        theDeftemplate = NULL;
+    while (templateExp != nullptr) {
+        theDeftemplate = nullptr;
 
         if (templateExp->type == DEFTEMPLATE_PTR) { theDeftemplate = (Deftemplate *) templateExp->value; }
         else if (EvaluateExpression(theEnv, templateExp, &temp)) {
             DeleteQueryTemplates(theEnv, clist);
-            return NULL;
+            return nullptr;
         }
 
-        if ((theDeftemplate == NULL) &&
+        if ((theDeftemplate == nullptr) &&
             (temp.value == (void *) FactQueryData(theEnv)->QUERY_DELIMITER_SYMBOL)) {
             new_list = true;
             (*rcnt)++;
-        } else if ((tmp = FormChain(theEnv, func, theDeftemplate, &temp)) != NULL) {
-            if (clist == NULL) { clist = cnxt = cchain = tmp; }
+        } else if ((tmp = FormChain(theEnv, func, theDeftemplate, &temp)) != nullptr) {
+            if (clist == nullptr) { clist = cnxt = cchain = tmp; }
             else if (new_list == true) {
                 new_list = false;
                 cnxt->nxt = tmp;
                 cnxt = cchain = tmp;
             } else { cchain->chain = tmp; }
 
-            while (cchain->chain != NULL) { cchain = cchain->chain; }
+            while (cchain->chain != nullptr) { cchain = cchain->chain; }
         } else {
             SyntaxErrorMessage(theEnv, "fact-set query class restrictions");
             DeleteQueryTemplates(theEnv, clist);
             SetEvaluationError(theEnv, true);
-            return NULL;
+            return nullptr;
         }
 
         templateExp = templateExp->nextArg;
@@ -770,7 +770,7 @@ static QUERY_TEMPLATE *DetermineQueryTemplates(
                  2) Data object - must be a symbol or a
                       multifield value containing all symbols
                  The symbols must be names of existing templates
-  RETURNS      : The query chain, or NULL on errors
+  RETURNS      : The query chain, or nullptr on errors
   SIDE EFFECTS : Memory allocated for chain
                  Busy count incremented for all templates
   NOTES        : None
@@ -786,13 +786,13 @@ static QUERY_TEMPLATE *FormChain(
     const char *templateName;
     unsigned int count;
 
-    if (theDeftemplate != NULL) {
+    if (theDeftemplate != nullptr) {
         IncrementDeftemplateBusyCount(theEnv, theDeftemplate);
         head = get_struct(theEnv, query_template);
         head->templatePtr = theDeftemplate;
 
-        head->chain = NULL;
-        head->nxt = NULL;
+        head->chain = nullptr;
+        head->nxt = nullptr;
         return head;
     }
 
@@ -805,52 +805,52 @@ static QUERY_TEMPLATE *FormChain(
         /*============================================*/
 
         templatePtr = (Deftemplate *)
-                FindImportedConstruct(theEnv, "deftemplate", NULL, val->lexemeValue->contents,
-                                      &count, true, NULL);
+                FindImportedConstruct(theEnv, "deftemplate", nullptr, val->lexemeValue->contents,
+                                      &count, true, nullptr);
 
-        if (templatePtr == NULL) {
+        if (templatePtr == nullptr) {
             CantFindItemInFunctionErrorMessage(theEnv, "deftemplate", val->lexemeValue->contents, func, true);
-            return NULL;
+            return nullptr;
         }
 
         IncrementDeftemplateBusyCount(theEnv, templatePtr);
         head = get_struct(theEnv, query_template);
         head->templatePtr = templatePtr;
 
-        head->chain = NULL;
-        head->nxt = NULL;
+        head->chain = nullptr;
+        head->nxt = nullptr;
         return head;
     }
 
     if (val->header->type == MULTIFIELD_TYPE) {
-        head = bot = NULL;
+        head = bot = nullptr;
 
         for (i = val->begin; i < (val->begin + val->range); i++) {
             if (val->multifieldValue->contents[i].header->type == SYMBOL_TYPE) {
                 templateName = val->multifieldValue->contents[i].lexemeValue->contents;
 
                 templatePtr = (Deftemplate *)
-                        FindImportedConstruct(theEnv, "deftemplate", NULL, templateName,
-                                              &count, true, NULL);
+                        FindImportedConstruct(theEnv, "deftemplate", nullptr, templateName,
+                                              &count, true, nullptr);
 
-                if (templatePtr == NULL) {
+                if (templatePtr == nullptr) {
                     CantFindItemInFunctionErrorMessage(theEnv, "deftemplate", templateName, func, true);
                     DeleteQueryTemplates(theEnv, head);
-                    return NULL;
+                    return nullptr;
                 }
             } else {
                 DeleteQueryTemplates(theEnv, head);
-                return NULL;
+                return nullptr;
             }
 
             IncrementDeftemplateBusyCount(theEnv, templatePtr);
             tmp = get_struct(theEnv, query_template);
             tmp->templatePtr = templatePtr;
 
-            tmp->chain = NULL;
-            tmp->nxt = NULL;
+            tmp->chain = nullptr;
+            tmp->nxt = nullptr;
 
-            if (head == NULL) { head = tmp; }
+            if (head == nullptr) { head = tmp; }
             else { bot->chain = tmp; }
 
             bot = tmp;
@@ -858,7 +858,7 @@ static QUERY_TEMPLATE *FormChain(
 
         return head;
     }
-    return NULL;
+    return nullptr;
 }
 
 /******************************************************
@@ -875,8 +875,8 @@ static void DeleteQueryTemplates(
         QUERY_TEMPLATE *qlist) {
     QUERY_TEMPLATE *tmp;
 
-    while (qlist != NULL) {
-        while (qlist->chain != NULL) {
+    while (qlist != nullptr) {
+        while (qlist->chain != nullptr) {
             tmp = qlist->chain;
             qlist->chain = qlist->chain->chain;
             DecrementDeftemplateBusyCount(theEnv, tmp->templatePtr);
@@ -908,7 +908,7 @@ static bool TestForFirstInChain(
     QUERY_TEMPLATE *qptr;
 
     FactQueryData(theEnv)->AbortQuery = true;
-    for (qptr = qchain; qptr != NULL; qptr = qptr->chain) {
+    for (qptr = qchain; qptr != nullptr; qptr = qptr->chain) {
         FactQueryData(theEnv)->AbortQuery = false;
 
         if (TestForFirstFactInTemplate(theEnv, qptr->templatePtr, qchain, indx)) { return true; }
@@ -943,9 +943,9 @@ static bool TestForFirstFactInTemplate(
     GCBlockStart(theEnv, &gcb);
 
     theFact = templatePtr->factList;
-    while (theFact != NULL) {
+    while (theFact != nullptr) {
         FactQueryData(theEnv)->QueryCore->solns[indx] = theFact;
-        if (qchain->nxt != NULL) {
+        if (qchain->nxt != nullptr) {
             theFact->patternHeader.busyCount++;
             if (TestForFirstInChain(theEnv, qchain->nxt, indx + 1) == true) {
                 theFact->patternHeader.busyCount--;
@@ -957,7 +957,7 @@ static bool TestForFirstFactInTemplate(
         } else {
             for (j = 0; j < indx; j++) {
                 if (FactQueryData(theEnv)->QueryCore->solns[j]->garbage) {
-                    theFact = NULL;
+                    theFact = nullptr;
                     goto endTest;
                 }
             }
@@ -966,7 +966,7 @@ static bool TestForFirstFactInTemplate(
 
             EvaluateExpression(theEnv, FactQueryData(theEnv)->QueryCore->query, &temp);
 
-            CleanCurrentGarbageFrame(theEnv, NULL);
+            CleanCurrentGarbageFrame(theEnv, nullptr);
             CallPeriodicTasks(theEnv);
 
             theFact->patternHeader.busyCount--;
@@ -981,7 +981,7 @@ static bool TestForFirstFactInTemplate(
         /*================================================*/
 
         theFact = theFact->nextTemplateFact;
-        while ((theFact != NULL) ? (theFact->garbage == 1) : false) { theFact = theFact->nextTemplateFact; }
+        while ((theFact != nullptr) ? (theFact->garbage == 1) : false) { theFact = theFact->nextTemplateFact; }
     }
 
     endTest:
@@ -989,7 +989,7 @@ static bool TestForFirstFactInTemplate(
     GCBlockEnd(theEnv, &gcb);
     CallPeriodicTasks(theEnv);
 
-    if (theFact != NULL)
+    if (theFact != nullptr)
         return (((EvaluationData(theEnv)->HaltExecution == true) || (FactQueryData(theEnv)->AbortQuery == true))
                 ? false : true);
 
@@ -1016,7 +1016,7 @@ static void TestEntireChain(
     QUERY_TEMPLATE *qptr;
 
     FactQueryData(theEnv)->AbortQuery = true;
-    for (qptr = qchain; qptr != NULL; qptr = qptr->chain) {
+    for (qptr = qchain; qptr != nullptr; qptr = qptr->chain) {
         FactQueryData(theEnv)->AbortQuery = false;
 
         TestEntireTemplate(theEnv, qptr->templatePtr, qchain, indx);
@@ -1052,9 +1052,9 @@ static void TestEntireTemplate(
     GCBlockStart(theEnv, &gcb);
 
     theFact = templatePtr->factList;
-    while (theFact != NULL) {
+    while (theFact != nullptr) {
         FactQueryData(theEnv)->QueryCore->solns[indx] = theFact;
-        if (qchain->nxt != NULL) {
+        if (qchain->nxt != nullptr) {
             theFact->patternHeader.busyCount++;
             TestEntireChain(theEnv, qchain->nxt, indx + 1);
             theFact->patternHeader.busyCount--;
@@ -1073,7 +1073,7 @@ static void TestEntireTemplate(
             if (EvaluationData(theEnv)->HaltExecution == true)
                 break;
             if (temp.value != FalseSymbol(theEnv)) {
-                if (FactQueryData(theEnv)->QueryCore->action != NULL) {
+                if (FactQueryData(theEnv)->QueryCore->action != nullptr) {
                     theFact->patternHeader.busyCount++;
                     ReleaseUDFV(theEnv, FactQueryData(theEnv)->QueryCore->result);
                     EvaluateExpression(theEnv, FactQueryData(theEnv)->QueryCore->action, FactQueryData(theEnv)->QueryCore->result);
@@ -1092,9 +1092,9 @@ static void TestEntireTemplate(
         }
 
         theFact = theFact->nextTemplateFact;
-        while ((theFact != NULL) ? (theFact->garbage == 1) : false) { theFact = theFact->nextTemplateFact; }
+        while ((theFact != nullptr) ? (theFact->garbage == 1) : false) { theFact = theFact->nextTemplateFact; }
 
-        CleanCurrentGarbageFrame(theEnv, NULL);
+        CleanCurrentGarbageFrame(theEnv, nullptr);
         CallPeriodicTasks(theEnv);
     }
 
@@ -1123,8 +1123,8 @@ static void AddSolution(
             gm2(theEnv, (sizeof(Fact *) * (FactQueryData(theEnv)->QueryCore->soln_size)));
     for (i = 0; i < FactQueryData(theEnv)->QueryCore->soln_size; i++)
         new_soln->soln[i] = FactQueryData(theEnv)->QueryCore->solns[i];
-    new_soln->nxt = NULL;
-    if (FactQueryData(theEnv)->QueryCore->soln_set == NULL)
+    new_soln->nxt = nullptr;
+    if (FactQueryData(theEnv)->QueryCore->soln_set == nullptr)
         FactQueryData(theEnv)->QueryCore->soln_set = new_soln;
     else
         FactQueryData(theEnv)->QueryCore->soln_bottom->nxt = new_soln;

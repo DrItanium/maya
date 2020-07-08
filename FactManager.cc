@@ -61,7 +61,7 @@
 /*            constructs that are contained externally to    */
 /*            to constructs, DanglingConstructs.             */
 /*                                                           */
-/*      6.31: Added NULL check for slotName in function      */
+/*      6.31: Added nullptr check for slotName in function      */
 /*            EnvGetFactSlot. Return value of FALSE now      */
 /*            returned if garbage flag set for fact.         */
 /*                                                           */
@@ -164,23 +164,23 @@ void InitializeFacts(
               (EntityPrintFunction *) PrintFactIdentifier,
               (EntityPrintFunction *) PrintFactIdentifierInLongForm,
               (bool (*)(void *, Environment *)) RetractCallback,
-              NULL,
+              nullptr,
               (void *(*)(void *, void *)) GetNextFact,
               (EntityBusyCountFunction *) DecrementFactCallback,
               (EntityBusyCountFunction *) IncrementFactCallback,
-              NULL, NULL, NULL, NULL, NULL
+              nullptr, nullptr, nullptr, nullptr, nullptr
              },
              (void (*)(Environment *, void *)) DecrementFactBasisCount,
              (void (*)(Environment *, void *)) IncrementFactBasisCount,
              (void (*)(Environment *, void *)) MatchFactFunction,
-             NULL,
+             nullptr,
              (bool (*)(Environment *, void *)) FactIsDeleted
             };
 
-    Fact dummyFact = {{{{FACT_ADDRESS_TYPE}, NULL, NULL, 0, 0L}},
-                      NULL, NULL, -1L, 0, 1,
-                      NULL, NULL, NULL, NULL, NULL,
-                      {{MULTIFIELD_TYPE}, 1, 0UL, NULL, {{{NULL}}}}};
+    Fact dummyFact = {{{{FACT_ADDRESS_TYPE}, nullptr, nullptr, 0, 0L}},
+                      nullptr, nullptr, -1L, 0, 1,
+                      nullptr, nullptr, nullptr, nullptr, nullptr,
+                      {{MULTIFIELD_TYPE}, 1, 0UL, nullptr, {{{nullptr}}}}};
 
     AllocateEnvironmentData(theEnv, FACTS_DATA, sizeof(struct factsData), DeallocateFactData);
 
@@ -201,15 +201,15 @@ void InitializeFacts(
     /* use with the reset and clear commands.     */
     /*============================================*/
 
-    AddResetFunction(theEnv, "facts", ResetFacts, 60, NULL);
-    AddClearReadyFunction(theEnv, "facts", ClearFactsReady, 0, NULL);
+    AddResetFunction(theEnv, "facts", ResetFacts, 60, nullptr);
+    AddClearReadyFunction(theEnv, "facts", ClearFactsReady, 0, nullptr);
 
     /*=============================*/
     /* Initialize periodic garbage */
     /* collection for facts.       */
     /*=============================*/
 
-    AddCleanupFunction(theEnv, "facts", RemoveGarbageFacts, 0, NULL);
+    AddCleanupFunction(theEnv, "facts", RemoveGarbageFacts, 0, nullptr);
 
     /*===================================*/
     /* Initialize fact pattern matching. */
@@ -268,7 +268,7 @@ static void DeallocateFactData(
     for (i = 0; i < FactData(theEnv)->FactHashTableSize; i++) {
         tmpFHEPtr = FactData(theEnv)->FactHashTable[i];
 
-        while (tmpFHEPtr != NULL) {
+        while (tmpFHEPtr != nullptr) {
             nextFHEPtr = tmpFHEPtr->next;
             rtn_struct(theEnv, factHashEntry, tmpFHEPtr);
             tmpFHEPtr = nextFHEPtr;
@@ -279,11 +279,11 @@ static void DeallocateFactData(
        sizeof(struct factHashEntry *) * FactData(theEnv)->FactHashTableSize);
 
     tmpFactPtr = FactData(theEnv)->FactList;
-    while (tmpFactPtr != NULL) {
+    while (tmpFactPtr != nullptr) {
         nextFactPtr = tmpFactPtr->nextFact;
 
         theMatch = (struct patternMatch *) tmpFactPtr->list;
-        while (theMatch != NULL) {
+        while (theMatch != nullptr) {
             tmpMatch = theMatch->next;
             rtn_struct(theEnv, patternMatch, theMatch);
             theMatch = tmpMatch;
@@ -296,7 +296,7 @@ static void DeallocateFactData(
     }
 
     tmpFactPtr = FactData(theEnv)->GarbageFacts;
-    while (tmpFactPtr != NULL) {
+    while (tmpFactPtr != nullptr) {
         nextFactPtr = tmpFactPtr->nextFact;
         ReturnFact(theEnv, tmpFactPtr);
         tmpFactPtr = nextFactPtr;
@@ -366,16 +366,16 @@ void DecrementFactBasisCount(
 
     ReleaseFact(factPtr);
 
-    if (factPtr->basisSlots != NULL) {
+    if (factPtr->basisSlots != nullptr) {
         theSegment = factPtr->basisSlots;
         factPtr->basisSlots->busyCount--;
     } else { theSegment = &factPtr->theProposition; }
 
     for (i = 0; i < theSegment->length; i++) { AtomDeinstall(theEnv, theSegment->contents[i].header->type, theSegment->contents[i].value); }
 
-    if ((factPtr->basisSlots != NULL) && (factPtr->basisSlots->busyCount == 0)) {
+    if ((factPtr->basisSlots != nullptr) && (factPtr->basisSlots->busyCount == 0)) {
         ReturnMultifield(theEnv, factPtr->basisSlots);
-        factPtr->basisSlots = NULL;
+        factPtr->basisSlots = nullptr;
     }
 }
 
@@ -394,7 +394,7 @@ void IncrementFactBasisCount(
     theSegment = &factPtr->theProposition;
 
     if (theSegment->length != 0) {
-        if (factPtr->basisSlots != NULL) {
+        if (factPtr->basisSlots != nullptr) {
             factPtr->basisSlots->busyCount++;
         } else {
             factPtr->basisSlots = CopyMultifield(theEnv, theSegment);
@@ -470,7 +470,7 @@ void PrintFact(
 void MatchFactFunction(
         Environment *theEnv,
         Fact *theFact) {
-    FactPatternMatch(theEnv, theFact, theFact->whichDeftemplate->patternNetwork, 0, 0, NULL, NULL);
+    FactPatternMatch(theEnv, theFact, theFact->whichDeftemplate->patternNetwork, 0, 0, nullptr, nullptr);
 }
 
 /**********************************************/
@@ -506,11 +506,11 @@ RetractError RetractDriver(
     }
 
     /*====================================*/
-    /* A NULL fact pointer indicates that */
+    /* A nullptr fact pointer indicates that */
     /* all facts should be retracted.     */
     /*====================================*/
 
-    if (theFact == NULL) { return RetractAllFacts(theEnv); }
+    if (theFact == nullptr) { return RetractAllFacts(theEnv); }
 
     /*=================================================*/
     /* Check to see if the fact has not been asserted. */
@@ -527,7 +527,7 @@ RetractError RetractDriver(
     /*===========================================*/
 
     for (theRetractFunction = FactData(theEnv)->ListOfRetractFunctions;
-         theRetractFunction != NULL;
+         theRetractFunction != nullptr;
          theRetractFunction = theRetractFunction->next) {
         (*theRetractFunction->func)(theEnv, theFact, theRetractFunction->context);
     }
@@ -574,12 +574,12 @@ RetractError RetractDriver(
 
     if (theFact == theTemplate->lastFact) { theTemplate->lastFact = theFact->previousTemplateFact; }
 
-    if (theFact->previousTemplateFact == NULL) {
+    if (theFact->previousTemplateFact == nullptr) {
         theTemplate->factList = theTemplate->factList->nextTemplateFact;
-        if (theTemplate->factList != NULL) { theTemplate->factList->previousTemplateFact = NULL; }
+        if (theTemplate->factList != nullptr) { theTemplate->factList->previousTemplateFact = nullptr; }
     } else {
         theFact->previousTemplateFact->nextTemplateFact = theFact->nextTemplateFact;
-        if (theFact->nextTemplateFact != NULL) { theFact->nextTemplateFact->previousTemplateFact = theFact->previousTemplateFact; }
+        if (theFact->nextTemplateFact != nullptr) { theFact->nextTemplateFact->previousTemplateFact = theFact->previousTemplateFact; }
     }
 
     /*=====================================*/
@@ -588,12 +588,12 @@ RetractError RetractDriver(
 
     if (theFact == FactData(theEnv)->LastFact) { FactData(theEnv)->LastFact = theFact->previousFact; }
 
-    if (theFact->previousFact == NULL) {
+    if (theFact->previousFact == nullptr) {
         FactData(theEnv)->FactList = FactData(theEnv)->FactList->nextFact;
-        if (FactData(theEnv)->FactList != NULL) { FactData(theEnv)->FactList->previousFact = NULL; }
+        if (FactData(theEnv)->FactList != nullptr) { FactData(theEnv)->FactList->previousFact = nullptr; }
     } else {
         theFact->previousFact->nextFact = theFact->nextFact;
-        if (theFact->nextFact != NULL) { theFact->nextFact->previousFact = theFact->previousFact; }
+        if (theFact->nextFact != nullptr) { theFact->nextFact->previousFact = theFact->previousFact; }
     }
 
     /*===================================================*/
@@ -606,7 +606,7 @@ RetractError RetractDriver(
         FactData(theEnv)->GarbageFacts = theFact;
         UtilityData(theEnv)->CurrentGarbageFrame->dirty = true;
     } else {
-        theFact->nextFact = NULL;
+        theFact->nextFact = nullptr;
     }
     theFact->garbage = true;
 
@@ -625,7 +625,7 @@ RetractError RetractDriver(
 
     EngineData(theEnv)->JoinOperationInProgress = true;
     NetworkRetract(theEnv, (struct patternMatch *) theFact->list);
-    theFact->list = NULL;
+    theFact->list = nullptr;
     EngineData(theEnv)->JoinOperationInProgress = false;
 
     /*=========================================*/
@@ -633,7 +633,7 @@ RetractError RetractDriver(
     /* by the retraction of the fact.          */
     /*=========================================*/
 
-    if (EngineData(theEnv)->ExecutingRule == NULL) { FlushGarbagePartialMatches(theEnv); }
+    if (EngineData(theEnv)->ExecutingRule == nullptr) { FlushGarbagePartialMatches(theEnv); }
 
     /*=========================================*/
     /* Retract other facts that were logically */
@@ -668,7 +668,7 @@ RetractError RetractDriver(
 static bool RetractCallback(
         Fact *theFact,
         Environment *theEnv) {
-    return (RetractDriver(theEnv, theFact, false, NULL) == RE_NO_ERROR);
+    return (RetractDriver(theEnv, theFact, false, nullptr) == RE_NO_ERROR);
 }
 
 /******************************************************/
@@ -680,7 +680,7 @@ RetractError Retract(
     RetractError rv;
     Environment *theEnv;
 
-    if (theFact == NULL) { return RE_NULL_POINTER_ERROR; }
+    if (theFact == nullptr) { return RE_nullptr_POINTER_ERROR; }
 
     if (theFact->garbage) { return RE_NO_ERROR; }
 
@@ -690,10 +690,10 @@ RetractError Retract(
     /* If embedded, clear the error flags. */
     /*=====================================*/
 
-    if (EvaluationData(theEnv)->CurrentExpression == NULL) { ResetErrorFlags(theEnv); }
+    if (EvaluationData(theEnv)->CurrentExpression == nullptr) { ResetErrorFlags(theEnv); }
 
     GCBlockStart(theEnv, &gcb);
-    rv = RetractDriver(theEnv, theFact, false, NULL);
+    rv = RetractDriver(theEnv, theFact, false, nullptr);
     GCBlockEnd(theEnv, &gcb);
 
     return rv;
@@ -709,11 +709,11 @@ RetractError Retract(
 static void RemoveGarbageFacts(
         Environment *theEnv,
         void *context) {
-    Fact *factPtr, *nextPtr, *lastPtr = NULL;
+    Fact *factPtr, *nextPtr, *lastPtr = nullptr;
 
     factPtr = FactData(theEnv)->GarbageFacts;
 
-    while (factPtr != NULL) {
+    while (factPtr != nullptr) {
         nextPtr = factPtr->nextFact;
 
         if (factPtr->patternHeader.busyCount == 0) {
@@ -726,7 +726,7 @@ static void RemoveGarbageFacts(
             }
 
             ReturnFact(theEnv, factPtr);
-            if (lastPtr == NULL) FactData(theEnv)->GarbageFacts = nextPtr;
+            if (lastPtr == nullptr) FactData(theEnv)->GarbageFacts = nextPtr;
             else lastPtr->nextFact = nextPtr;
         } else { lastPtr = factPtr; }
 
@@ -758,7 +758,7 @@ Fact *AssertDriver(
 
     if (theFact->garbage) {
         FactData(theEnv)->assertError = AE_RETRACTED_ERROR;
-        return NULL;
+        return nullptr;
     }
 
     if (reuseIndex != theFact->factIndex) {
@@ -776,7 +776,7 @@ Fact *AssertDriver(
         ReturnFact(theEnv, theFact);
         PrintErrorID(theEnv, "FACTMNGR", 2, true);
         WriteString(theEnv, STDERR, "Facts may not be asserted during pattern-matching.\n");
-        return NULL;
+        return nullptr;
     }
 
     /*=============================================================*/
@@ -796,7 +796,7 @@ Fact *AssertDriver(
     /*========================================================*/
 
     hashValue = HandleFactDuplication(theEnv, theFact, &duplicate, reuseIndex);
-    if (duplicate != NULL) return duplicate;
+    if (duplicate != nullptr) return duplicate;
 
     /*==========================================================*/
     /* If necessary, add logical dependency links between the   */
@@ -813,7 +813,7 @@ Fact *AssertDriver(
         }
 
         FactData(theEnv)->assertError = AE_COULD_NOT_ASSERT_ERROR;
-        return NULL;
+        return nullptr;
     }
 
     /*======================================*/
@@ -828,19 +828,19 @@ Fact *AssertDriver(
 
     if (reuseIndex == 0) { factListPosition = FactData(theEnv)->LastFact; }
 
-    if (factListPosition == NULL) {
+    if (factListPosition == nullptr) {
         theFact->nextFact = FactData(theEnv)->FactList;
         FactData(theEnv)->FactList = theFact;
-        theFact->previousFact = NULL;
-        if (theFact->nextFact != NULL) { theFact->nextFact->previousFact = theFact; }
+        theFact->previousFact = nullptr;
+        if (theFact->nextFact != nullptr) { theFact->nextFact->previousFact = theFact; }
     } else {
         theFact->nextFact = factListPosition->nextFact;
         theFact->previousFact = factListPosition;
         factListPosition->nextFact = theFact;
-        if (theFact->nextFact != NULL) { theFact->nextFact->previousFact = theFact; }
+        if (theFact->nextFact != nullptr) { theFact->nextFact->previousFact = theFact; }
     }
 
-    if ((FactData(theEnv)->LastFact == NULL) || (theFact->nextFact == NULL)) { FactData(theEnv)->LastFact = theFact; }
+    if ((FactData(theEnv)->LastFact == nullptr) || (theFact->nextFact == nullptr)) { FactData(theEnv)->LastFact = theFact; }
 
     /*====================================*/
     /* Add the fact to its template list. */
@@ -848,20 +848,20 @@ Fact *AssertDriver(
 
     if (reuseIndex == 0) { templatePosition = theFact->whichDeftemplate->lastFact; }
 
-    if (templatePosition == NULL) {
+    if (templatePosition == nullptr) {
         theFact->nextTemplateFact = theFact->whichDeftemplate->factList;
         theFact->whichDeftemplate->factList = theFact;
-        theFact->previousTemplateFact = NULL;
-        if (theFact->nextTemplateFact != NULL) { theFact->nextTemplateFact->previousTemplateFact = theFact; }
+        theFact->previousTemplateFact = nullptr;
+        if (theFact->nextTemplateFact != nullptr) { theFact->nextTemplateFact->previousTemplateFact = theFact; }
     } else {
         theFact->nextTemplateFact = templatePosition->nextTemplateFact;
         theFact->previousTemplateFact = templatePosition;
         templatePosition->nextTemplateFact = theFact;
-        if (theFact->nextTemplateFact != NULL) { theFact->nextTemplateFact->previousTemplateFact = theFact; }
+        if (theFact->nextTemplateFact != nullptr) { theFact->nextTemplateFact->previousTemplateFact = theFact; }
     }
 
-    if ((theFact->whichDeftemplate->lastFact == NULL) ||
-        (theFact->nextTemplateFact == NULL)) { theFact->whichDeftemplate->lastFact = theFact; }
+    if ((theFact->whichDeftemplate->lastFact == nullptr) ||
+        (theFact->nextTemplateFact == nullptr)) { theFact->whichDeftemplate->lastFact = theFact; }
 
     /*==================================*/
     /* Set the fact index and time tag. */
@@ -891,7 +891,7 @@ Fact *AssertDriver(
     /*==========================================*/
 
     for (theAssertFunction = FactData(theEnv)->ListOfAssertFunctions;
-         theAssertFunction != NULL;
+         theAssertFunction != nullptr;
          theAssertFunction = theAssertFunction->next) { (*theAssertFunction->func)(theEnv, theFact, theAssertFunction->context); }
 
     /*==========================*/
@@ -935,7 +935,7 @@ Fact *AssertDriver(
     /*=============================================*/
 
     EngineData(theEnv)->JoinOperationInProgress = true;
-    FactPatternMatch(theEnv, theFact, theFact->whichDeftemplate->patternNetwork, 0, 0, NULL, NULL);
+    FactPatternMatch(theEnv, theFact, theFact->whichDeftemplate->patternNetwork, 0, 0, nullptr, nullptr);
     EngineData(theEnv)->JoinOperationInProgress = false;
 
     /*===================================================*/
@@ -950,7 +950,7 @@ Fact *AssertDriver(
     /* by the assertion of the fact.           */
     /*=========================================*/
 
-    if (EngineData(theEnv)->ExecutingRule == NULL) FlushGarbagePartialMatches(theEnv);
+    if (EngineData(theEnv)->ExecutingRule == nullptr) FlushGarbagePartialMatches(theEnv);
 
     /*===============================*/
     /* Return a pointer to the fact. */
@@ -966,7 +966,7 @@ Fact *AssertDriver(
 /*****************************************************/
 Fact *Assert(
         Fact *theFact) {
-    return AssertDriver(theFact, 0, NULL, NULL, NULL);
+    return AssertDriver(theFact, 0, nullptr, nullptr, nullptr);
 }
 
 /*************************/
@@ -985,7 +985,7 @@ RetractError RetractAllFacts(
         Environment *theEnv) {
     RetractError rv;
 
-    while (FactData(theEnv)->FactList != NULL) {
+    while (FactData(theEnv)->FactList != nullptr) {
         if ((rv = Retract(FactData(theEnv)->FactList)) != RE_NO_ERROR) { return rv; }
     }
 
@@ -1007,7 +1007,7 @@ Fact *CreateFact(
     /* in order to create a fact.      */
     /*=================================*/
 
-    if (theDeftemplate == NULL) return NULL;
+    if (theDeftemplate == nullptr) return nullptr;
 
     /*============================================*/
     /* Create a fact for an explicit deftemplate. */
@@ -1050,8 +1050,8 @@ GetSlotError GetFactSlot(
     unsigned short whichSlot;
     Environment *theEnv = theFact->whichDeftemplate->header.env;
 
-    if (theFact == NULL) {
-        return GSE_NULL_POINTER_ERROR;
+    if (theFact == nullptr) {
+        return GSE_nullptr_POINTER_ERROR;
     }
 
     if (theFact->garbage) {
@@ -1072,7 +1072,7 @@ GetSlotError GetFactSlot(
     /*==============================================*/
 
     if (theDeftemplate->implied) {
-        if (slotName != NULL) {
+        if (slotName != nullptr) {
             if (strcmp(slotName, "implied") != 0) { return GSE_SLOT_NOT_FOUND_ERROR; }
         }
 
@@ -1085,8 +1085,8 @@ GetSlotError GetFactSlot(
     /* corresponds to a valid slot name. */
     /*===================================*/
 
-    if (slotName == NULL) return GSE_NULL_POINTER_ERROR;
-    if (FindSlot(theDeftemplate, CreateSymbol(theEnv, slotName), &whichSlot) == NULL) { return GSE_SLOT_NOT_FOUND_ERROR; }
+    if (slotName == nullptr) return GSE_nullptr_POINTER_ERROR;
+    if (FindSlot(theDeftemplate, CreateSymbol(theEnv, slotName), &whichSlot) == nullptr) { return GSE_SLOT_NOT_FOUND_ERROR; }
 
     /*========================*/
     /* Return the slot value. */
@@ -1130,7 +1130,7 @@ bool PutFactSlot(
     /*============================================*/
 
     if (theDeftemplate->implied) {
-        if ((slotName != NULL) || (theValue->header->type != MULTIFIELD_TYPE)) { return false; }
+        if ((slotName != nullptr) || (theValue->header->type != MULTIFIELD_TYPE)) { return false; }
 
         if (theFact->theProposition.contents[0].header->type == MULTIFIELD_TYPE) {
             ReturnMultifield(theEnv, theFact->theProposition.contents[0].multifieldValue);
@@ -1146,7 +1146,7 @@ bool PutFactSlot(
     /* corresponds to a valid slot name. */
     /*===================================*/
 
-    if ((theSlot = FindSlot(theDeftemplate, CreateSymbol(theEnv, slotName), &whichSlot)) == NULL) { return false; }
+    if ((theSlot = FindSlot(theDeftemplate, CreateSymbol(theEnv, slotName), &whichSlot)) == nullptr) { return false; }
 
     /*=============================================*/
     /* Make sure a single field value is not being */
@@ -1160,7 +1160,7 @@ bool PutFactSlot(
     /* Check constraints for the slot. */
     /*=================================*/
 
-    if (theSlot->constraints != NULL) {
+    if (theSlot->constraints != nullptr) {
         if (ConstraintCheckValue(theEnv, theValue->header->type, theValue->value, theSlot->constraints) != NO_VIOLATION) { return false; }
     }
 
@@ -1377,14 +1377,14 @@ Fact *CreateFactBySize(
     theFact->factIndex = 0LL;
     theFact->patternHeader.busyCount = 0;
     theFact->patternHeader.theInfo = &FactData(theEnv)->FactInfo;
-    theFact->patternHeader.dependents = NULL;
-    theFact->whichDeftemplate = NULL;
-    theFact->nextFact = NULL;
-    theFact->previousFact = NULL;
-    theFact->previousTemplateFact = NULL;
-    theFact->nextTemplateFact = NULL;
-    theFact->list = NULL;
-    theFact->basisSlots = NULL;
+    theFact->patternHeader.dependents = nullptr;
+    theFact->whichDeftemplate = nullptr;
+    theFact->nextFact = nullptr;
+    theFact->previousFact = nullptr;
+    theFact->previousTemplateFact = nullptr;
+    theFact->nextTemplateFact = nullptr;
+    theFact->list = nullptr;
+    theFact->basisSlots = nullptr;
 
     theFact->theProposition.length = size;
     theFact->theProposition.busyCount = 0;
@@ -1407,7 +1407,7 @@ void ReturnFact(
     for (i = 0; i < theSegment->length; i++) {
         if (theSegment->contents[i].header->type == MULTIFIELD_TYPE) {
             subSegment = theSegment->contents[i].multifieldValue;
-            if (subSegment != NULL) {
+            if (subSegment != nullptr) {
                 if (subSegment->busyCount == 0) { ReturnMultifield(theEnv, subSegment); }
                 else { AddToMultifieldList(theEnv, subSegment); }
             }
@@ -1454,7 +1454,7 @@ void IncrementFactCallback(
 #if MAC_XCD
 #pragma unused(theEnv)
 #endif
-    if (factPtr == NULL) return;
+    if (factPtr == nullptr) return;
 
     factPtr->patternHeader.busyCount++;
 }
@@ -1469,7 +1469,7 @@ void DecrementFactCallback(
 #if MAC_XCD
 #pragma unused(theEnv)
 #endif
-    if (factPtr == NULL) return;
+    if (factPtr == nullptr) return;
 
     factPtr->patternHeader.busyCount--;
 }
@@ -1480,7 +1480,7 @@ void DecrementFactCallback(
 /****************************************/
 void RetainFact(
         Fact *factPtr) {
-    if (factPtr == NULL) return;
+    if (factPtr == nullptr) return;
 
     factPtr->patternHeader.busyCount++;
 }
@@ -1491,22 +1491,22 @@ void RetainFact(
 /*****************************************/
 void ReleaseFact(
         Fact *factPtr) {
-    if (factPtr == NULL) return;
+    if (factPtr == nullptr) return;
 
     factPtr->patternHeader.busyCount--;
 }
 
 /*********************************************************/
-/* GetNextFact: If passed a NULL pointer, returns the */
+/* GetNextFact: If passed a nullptr pointer, returns the */
 /*   first fact in the fact-list. Otherwise returns the  */
 /*   next fact following the fact passed as an argument. */
 /*********************************************************/
 Fact *GetNextFact(
         Environment *theEnv,
         Fact *factPtr) {
-    if (factPtr == NULL) { return FactData(theEnv)->FactList; }
+    if (factPtr == nullptr) { return FactData(theEnv)->FactList; }
 
-    if (factPtr->garbage) return NULL;
+    if (factPtr->garbage) return nullptr;
 
     return factPtr->nextFact;
 }
@@ -1521,7 +1521,7 @@ Fact *GetNextFactInScope(
         Environment *theEnv,
         Fact *theFact) {
     /*=======================================================*/
-    /* If fact passed as an argument is a NULL pointer, then */
+    /* If fact passed as an argument is a nullptr pointer, then */
     /* we're just beginning a traversal of the fact list. If */
     /* the module index has changed since that last time the */
     /* fact list was traversed by this routine, then         */
@@ -1529,7 +1529,7 @@ Fact *GetNextFactInScope(
     /* of the current module.                                */
     /*=======================================================*/
 
-    if (theFact == NULL) {
+    if (theFact == nullptr) {
         theFact = FactData(theEnv)->FactList;
         if (FactData(theEnv)->LastModuleIndex != DefmoduleData(theEnv)->ModuleChangeIndex) {
             UpdateDeftemplateScope(theEnv);
@@ -1540,10 +1540,10 @@ Fact *GetNextFactInScope(
         /*==================================================*/
         /* Otherwise, if the fact passed as an argument has */
         /* been retracted, then there's no way to determine */
-        /* the next fact, so return a NULL pointer.         */
+        /* the next fact, so return a nullptr pointer.         */
         /*==================================================*/
 
-    else if (theFact->garbage) { return NULL; }
+    else if (theFact->garbage) { return nullptr; }
 
         /*==================================================*/
         /* Otherwise, start the search for the next fact in */
@@ -1559,13 +1559,13 @@ Fact *GetNextFactInScope(
     /* that's in scope.                               */
     /*================================================*/
 
-    while (theFact != NULL) {
+    while (theFact != nullptr) {
         if (theFact->whichDeftemplate->inScope) return theFact;
 
         theFact = theFact->nextFact;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /*************************************/
@@ -1579,7 +1579,7 @@ void FactPPForm(
     Environment *theEnv = theFact->whichDeftemplate->header.env;
 
     OpenStringBuilderDestination(theEnv, "FactPPForm", theSB);
-    PrintFact(theEnv, "FactPPForm", theFact, true, ignoreDefaults, NULL);
+    PrintFact(theEnv, "FactPPForm", theFact, true, ignoreDefaults, nullptr);
     CloseStringBuilderDestination(theEnv, "FactPPForm");
 }
 
@@ -1603,9 +1603,9 @@ Fact *AssertString(
     GCBlock gcb;
     int danglingConstructs;
 
-    if (theString == NULL) {
-        FactData(theEnv)->assertStringError = ASE_NULL_POINTER_ERROR;
-        return NULL;
+    if (theString == nullptr) {
+        FactData(theEnv)->assertStringError = ASE_nullptr_POINTER_ERROR;
+        return nullptr;
     }
 
     danglingConstructs = ConstructData(theEnv)->DanglingConstructs;
@@ -1614,17 +1614,17 @@ Fact *AssertString(
     /* If embedded, clear the error flags. */
     /*=====================================*/
 
-    if (EvaluationData(theEnv)->CurrentExpression == NULL) { ResetErrorFlags(theEnv); }
+    if (EvaluationData(theEnv)->CurrentExpression == nullptr) { ResetErrorFlags(theEnv); }
 
     GCBlockStart(theEnv, &gcb);
 
-    if ((theFact = StringToFact(theEnv, theString)) == NULL) {
+    if ((theFact = StringToFact(theEnv, theString)) == nullptr) {
         FactData(theEnv)->assertStringError = ASE_PARSING_ERROR;
         GCBlockEnd(theEnv, &gcb);
-        return NULL;
+        return nullptr;
     }
 
-    if (EvaluationData(theEnv)->CurrentExpression == NULL) { ConstructData(theEnv)->DanglingConstructs = danglingConstructs; }
+    if (EvaluationData(theEnv)->CurrentExpression == nullptr) { ConstructData(theEnv)->DanglingConstructs = danglingConstructs; }
 
     rv = Assert(theFact);
 
@@ -1642,7 +1642,7 @@ Fact *AssertString(
             FactData(theEnv)->assertStringError = ASE_RULE_NETWORK_ERROR;
             break;
 
-        case AE_NULL_POINTER_ERROR:
+        case AE_nullptr_POINTER_ERROR:
         case AE_RETRACTED_ERROR:
             SystemError(theEnv, "FACTMNGR", 4);
             ExitRouter(theEnv, EXIT_FAILURE);
@@ -1732,7 +1732,7 @@ static bool ClearFactsReady(
     /* remaining, don't continue with the clear.    */
     /*==============================================*/
 
-    if (GetNextFact(theEnv, NULL) != NULL) return false;
+    if (GetNextFact(theEnv, nullptr) != nullptr) return false;
 
     /*=============================*/
     /* Return true to indicate the */
@@ -1751,13 +1751,13 @@ Fact *FindIndexedFact(
         long long factIndexSought) {
     Fact *theFact;
 
-    for (theFact = GetNextFact(theEnv, NULL);
-         theFact != NULL;
+    for (theFact = GetNextFact(theEnv, nullptr);
+         theFact != nullptr;
          theFact = GetNextFact(theEnv, theFact)) {
         if (theFact->factIndex == factIndexSought) { return (theFact); }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /**************************************/
@@ -1872,7 +1872,7 @@ ModifyCallFunctionItem *AddModifyFunctionToCallList(
         ModifyCallFunction *func,
         ModifyCallFunctionItem *head,
         void *context) {
-    ModifyCallFunctionItem *newPtr, *currentPtr, *lastPtr = NULL;
+    ModifyCallFunctionItem *newPtr, *currentPtr, *lastPtr = nullptr;
     char *nameCopy;
 
     newPtr = get_struct(theEnv, modifyCallFunctionItem);
@@ -1885,18 +1885,18 @@ ModifyCallFunctionItem *AddModifyFunctionToCallList(
     newPtr->priority = priority;
     newPtr->context = context;
 
-    if (head == NULL) {
-        newPtr->next = NULL;
+    if (head == nullptr) {
+        newPtr->next = nullptr;
         return (newPtr);
     }
 
     currentPtr = head;
-    while ((currentPtr != NULL) ? (priority < currentPtr->priority) : false) {
+    while ((currentPtr != nullptr) ? (priority < currentPtr->priority) : false) {
         lastPtr = currentPtr;
         currentPtr = currentPtr->next;
     }
 
-    if (lastPtr == NULL) {
+    if (lastPtr == nullptr) {
         newPtr->next = head;
         head = newPtr;
     } else {
@@ -1920,13 +1920,13 @@ ModifyCallFunctionItem *RemoveModifyFunctionFromCallList(
     ModifyCallFunctionItem *currentPtr, *lastPtr;
 
     *found = false;
-    lastPtr = NULL;
+    lastPtr = nullptr;
     currentPtr = head;
 
-    while (currentPtr != NULL) {
+    while (currentPtr != nullptr) {
         if (strcmp(name, currentPtr->name) == 0) {
             *found = true;
-            if (lastPtr == NULL) { head = currentPtr->next; }
+            if (lastPtr == nullptr) { head = currentPtr->next; }
             else { lastPtr->next = currentPtr->next; }
 
             genfree(theEnv, (void *) currentPtr->name, strlen(currentPtr->name) + 1);
@@ -1953,7 +1953,7 @@ void DeallocateModifyCallList(
     ModifyCallFunctionItem *tmpPtr, *nextPtr;
 
     tmpPtr = theList;
-    while (tmpPtr != NULL) {
+    while (tmpPtr != nullptr) {
         nextPtr = tmpPtr->next;
         genfree(theEnv, (void *) tmpPtr->name, strlen(tmpPtr->name) + 1);
         rtn_struct(theEnv, modifyCallFunctionItem, tmpPtr);
@@ -1971,26 +1971,26 @@ FactBuilder *CreateFactBuilder(
     Deftemplate *theDeftemplate;
     int i;
 
-    if (theEnv == NULL) return NULL;
+    if (theEnv == nullptr) return nullptr;
 
-    if (deftemplateName != NULL) {
+    if (deftemplateName != nullptr) {
         theDeftemplate = FindDeftemplate(theEnv, deftemplateName);
-        if (theDeftemplate == NULL) {
+        if (theDeftemplate == nullptr) {
             FactData(theEnv)->factBuilderError = FBE_DEFTEMPLATE_NOT_FOUND_ERROR;
-            return NULL;
+            return nullptr;
         }
 
         if (theDeftemplate->implied) {
             FactData(theEnv)->factBuilderError = FBE_IMPLIED_DEFTEMPLATE_ERROR;
-            return NULL;
+            return nullptr;
         }
-    } else { theDeftemplate = NULL; }
+    } else { theDeftemplate = nullptr; }
 
     theFB = get_struct(theEnv, factBuilder);
     theFB->fbEnv = theEnv;
     theFB->fbDeftemplate = theDeftemplate;
 
-    if ((theDeftemplate == NULL) || (theDeftemplate->numberOfSlots == 0)) { theFB->fbValueArray = NULL; }
+    if ((theDeftemplate == nullptr) || (theDeftemplate->numberOfSlots == 0)) { theFB->fbValueArray = nullptr; }
     else {
         theFB->fbValueArray = (CLIPSValue *) gm2(theEnv, sizeof(CLIPSValue) * theDeftemplate->numberOfSlots);
         for (i = 0; i < theDeftemplate->numberOfSlots; i++) { theFB->fbValueArray[i].voidValue = VoidConstant(theEnv); }
@@ -2023,7 +2023,7 @@ PutSlotError FBPutSlotInteger(
         long long longLongValue) {
     CLIPSValue theValue;
 
-    if (theFB == NULL) { return PSE_NULL_POINTER_ERROR; }
+    if (theFB == nullptr) { return PSE_nullptr_POINTER_ERROR; }
 
     theValue.integerValue = CreateInteger(theFB->fbEnv, longLongValue);
     return FBPutSlot(theFB, slotName, &theValue);
@@ -2051,7 +2051,7 @@ PutSlotError FBPutSlotSymbol(
         const char *stringValue) {
     CLIPSValue theValue;
 
-    if (theFB == NULL) { return PSE_NULL_POINTER_ERROR; }
+    if (theFB == nullptr) { return PSE_nullptr_POINTER_ERROR; }
 
     theValue.lexemeValue = CreateSymbol(theFB->fbEnv, stringValue);
     return FBPutSlot(theFB, slotName, &theValue);
@@ -2066,7 +2066,7 @@ PutSlotError FBPutSlotString(
         const char *stringValue) {
     CLIPSValue theValue;
 
-    if (theFB == NULL) { return PSE_NULL_POINTER_ERROR; }
+    if (theFB == nullptr) { return PSE_nullptr_POINTER_ERROR; }
 
     theValue.lexemeValue = CreateString(theFB->fbEnv, stringValue);
     return FBPutSlot(theFB, slotName, &theValue);
@@ -2081,7 +2081,7 @@ PutSlotError FBPutSlotInstanceName(
         const char *stringValue) {
     CLIPSValue theValue;
 
-    if (theFB == NULL) { return PSE_NULL_POINTER_ERROR; }
+    if (theFB == nullptr) { return PSE_nullptr_POINTER_ERROR; }
 
     theValue.lexemeValue = CreateInstanceName(theFB->fbEnv, stringValue);
     return FBPutSlot(theFB, slotName, &theValue);
@@ -2109,7 +2109,7 @@ PutSlotError FBPutSlotFloat(
         double floatValue) {
     CLIPSValue theValue;
 
-    if (theFB == NULL) { return PSE_NULL_POINTER_ERROR; }
+    if (theFB == nullptr) { return PSE_nullptr_POINTER_ERROR; }
 
     theValue.floatValue = CreateFloat(theFB->fbEnv, floatValue);
     return FBPutSlot(theFB, slotName, &theValue);
@@ -2182,12 +2182,12 @@ PutSlotError FBPutSlot(
     ConstraintViolationType cvType;
 
     /*==========================*/
-    /* Check for NULL pointers. */
+    /* Check for nullptr pointers. */
     /*==========================*/
 
-    if ((theFB == NULL) || (slotName == NULL) || (slotValue == NULL)) { return PSE_NULL_POINTER_ERROR; }
+    if ((theFB == nullptr) || (slotName == nullptr) || (slotValue == nullptr)) { return PSE_nullptr_POINTER_ERROR; }
 
-    if ((theFB->fbDeftemplate == NULL) || (slotValue->value == NULL)) { return PSE_NULL_POINTER_ERROR; }
+    if ((theFB->fbDeftemplate == nullptr) || (slotValue->value == nullptr)) { return PSE_nullptr_POINTER_ERROR; }
 
     theEnv = theFB->fbEnv;
 
@@ -2197,7 +2197,7 @@ PutSlotError FBPutSlot(
     /*===================================*/
 
     if ((theSlot = FindSlot(theFB->fbDeftemplate, CreateSymbol(theFB->fbEnv, slotName), &whichSlot)) ==
-        NULL) { return PSE_SLOT_NOT_FOUND_ERROR; }
+        nullptr) { return PSE_SLOT_NOT_FOUND_ERROR; }
 
     /*=============================================*/
     /* Make sure a single field value is not being */
@@ -2211,7 +2211,7 @@ PutSlotError FBPutSlot(
     /* Check constraints for the slot. */
     /*=================================*/
 
-    if (theSlot->constraints != NULL) {
+    if (theSlot->constraints != nullptr) {
         if ((cvType = ConstraintCheckValue(theEnv, slotValue->header->type, slotValue->value, theSlot->constraints)) != NO_VIOLATION) {
             switch (cvType) {
                 case NO_VIOLATION:
@@ -2242,7 +2242,7 @@ PutSlotError FBPutSlot(
     /* Set up the change array. */
     /*==========================*/
 
-    if (theFB->fbValueArray == NULL) {
+    if (theFB->fbValueArray == nullptr) {
         theFB->fbValueArray = (CLIPSValue *) gm2(theFB->fbEnv, sizeof(CLIPSValue) * theFB->fbDeftemplate->numberOfSlots);
         for (i = 0; i < theFB->fbDeftemplate->numberOfSlots; i++) { theFB->fbValueArray[i].voidValue = theFB->fbEnv->VoidConstant; }
     }
@@ -2281,12 +2281,12 @@ Fact *FBAssert(
     int i;
     Fact *theFact;
 
-    if (theFB == NULL) return NULL;
+    if (theFB == nullptr) return nullptr;
     theEnv = theFB->fbEnv;
 
-    if (theFB->fbDeftemplate == NULL) {
-        FactData(theEnv)->factBuilderError = FBE_NULL_POINTER_ERROR;
-        return NULL;
+    if (theFB->fbDeftemplate == nullptr) {
+        FactData(theEnv)->factBuilderError = FBE_nullptr_POINTER_ERROR;
+        return nullptr;
     }
 
     theFact = CreateFact(theFB->fbDeftemplate);
@@ -2308,7 +2308,7 @@ Fact *FBAssert(
             FactData(theEnv)->factBuilderError = FBE_NO_ERROR;
             break;
 
-        case AE_NULL_POINTER_ERROR:
+        case AE_nullptr_POINTER_ERROR:
         case AE_RETRACTED_ERROR:
             SystemError(theEnv, "FACTMNGR", 1);
             ExitRouter(theEnv, EXIT_FAILURE);
@@ -2333,13 +2333,13 @@ void FBDispose(
         FactBuilder *theFB) {
     Environment *theEnv;
 
-    if (theFB == NULL) return;
+    if (theFB == nullptr) return;
 
     theEnv = theFB->fbEnv;
 
     FBAbort(theFB);
 
-    if (theFB->fbValueArray != NULL) { rm(theEnv, theFB->fbValueArray, sizeof(CLIPSValue) * theFB->fbDeftemplate->numberOfSlots); }
+    if (theFB->fbValueArray != nullptr) { rm(theEnv, theFB->fbValueArray, sizeof(CLIPSValue) * theFB->fbDeftemplate->numberOfSlots); }
 
     rtn_struct(theEnv, factBuilder, theFB);
 }
@@ -2353,9 +2353,9 @@ void FBAbort(
     GCBlock gcb;
     int i;
 
-    if (theFB == NULL) return;
+    if (theFB == nullptr) return;
 
-    if (theFB->fbDeftemplate == NULL) return;
+    if (theFB->fbDeftemplate == nullptr) return;
 
     theEnv = theFB->fbEnv;
 
@@ -2382,16 +2382,16 @@ FactBuilderError FBSetDeftemplate(
     Environment *theEnv;
     int i;
 
-    if (theFB == NULL) { return FBE_NULL_POINTER_ERROR; }
+    if (theFB == nullptr) { return FBE_nullptr_POINTER_ERROR; }
 
     theEnv = theFB->fbEnv;
 
     FBAbort(theFB);
 
-    if (deftemplateName != NULL) {
+    if (deftemplateName != nullptr) {
         theDeftemplate = FindDeftemplate(theFB->fbEnv, deftemplateName);
 
-        if (theDeftemplate == NULL) {
+        if (theDeftemplate == nullptr) {
             FactData(theEnv)->factBuilderError = FBE_DEFTEMPLATE_NOT_FOUND_ERROR;
             return FBE_DEFTEMPLATE_NOT_FOUND_ERROR;
         }
@@ -2400,13 +2400,13 @@ FactBuilderError FBSetDeftemplate(
             FactData(theEnv)->factBuilderError = FBE_IMPLIED_DEFTEMPLATE_ERROR;
             return FBE_IMPLIED_DEFTEMPLATE_ERROR;
         }
-    } else { theDeftemplate = NULL; }
+    } else { theDeftemplate = nullptr; }
 
-    if (theFB->fbValueArray != NULL) { rm(theEnv, theFB->fbValueArray, sizeof(CLIPSValue) * theFB->fbDeftemplate->numberOfSlots); }
+    if (theFB->fbValueArray != nullptr) { rm(theEnv, theFB->fbValueArray, sizeof(CLIPSValue) * theFB->fbDeftemplate->numberOfSlots); }
 
     theFB->fbDeftemplate = theDeftemplate;
 
-    if ((theDeftemplate == NULL) || (theDeftemplate->numberOfSlots == 0)) { theFB->fbValueArray = NULL; }
+    if ((theDeftemplate == nullptr) || (theDeftemplate->numberOfSlots == 0)) { theFB->fbValueArray = nullptr; }
     else {
         theFB->fbValueArray = (CLIPSValue *) gm2(theEnv, sizeof(CLIPSValue) * theDeftemplate->numberOfSlots);
         for (i = 0; i < theDeftemplate->numberOfSlots; i++) { theFB->fbValueArray[i].voidValue = VoidConstant(theEnv); }
@@ -2433,17 +2433,17 @@ FactModifier *CreateFactModifier(
     FactModifier *theFM;
     int i;
 
-    if (theEnv == NULL) return NULL;
+    if (theEnv == nullptr) return nullptr;
 
-    if (oldFact != NULL) {
+    if (oldFact != nullptr) {
         if (oldFact->garbage) {
             FactData(theEnv)->factModifierError = FME_RETRACTED_ERROR;
-            return NULL;
+            return nullptr;
         }
 
         if (oldFact->whichDeftemplate->implied) {
             FactData(theEnv)->factModifierError = FME_IMPLIED_DEFTEMPLATE_ERROR;
-            return NULL;
+            return nullptr;
         }
 
         RetainFact(oldFact);
@@ -2453,9 +2453,9 @@ FactModifier *CreateFactModifier(
     theFM->fmEnv = theEnv;
     theFM->fmOldFact = oldFact;
 
-    if ((oldFact == NULL) || (oldFact->whichDeftemplate->numberOfSlots == 0)) {
-        theFM->fmValueArray = NULL;
-        theFM->changeMap = NULL;
+    if ((oldFact == nullptr) || (oldFact->whichDeftemplate->numberOfSlots == 0)) {
+        theFM->fmValueArray = nullptr;
+        theFM->changeMap = nullptr;
     } else {
         theFM->fmValueArray = (CLIPSValue *) gm2(theEnv, sizeof(CLIPSValue) * oldFact->whichDeftemplate->numberOfSlots);
 
@@ -2491,7 +2491,7 @@ PutSlotError FMPutSlotInteger(
         long long longLongValue) {
     CLIPSValue theValue;
 
-    if (theFM == NULL) { return PSE_NULL_POINTER_ERROR; }
+    if (theFM == nullptr) { return PSE_nullptr_POINTER_ERROR; }
 
     theValue.integerValue = CreateInteger(theFM->fmEnv, longLongValue);
     return FMPutSlot(theFM, slotName, &theValue);
@@ -2519,7 +2519,7 @@ PutSlotError FMPutSlotSymbol(
         const char *stringValue) {
     CLIPSValue theValue;
 
-    if (theFM == NULL) { return PSE_NULL_POINTER_ERROR; }
+    if (theFM == nullptr) { return PSE_nullptr_POINTER_ERROR; }
 
     theValue.lexemeValue = CreateSymbol(theFM->fmEnv, stringValue);
     return FMPutSlot(theFM, slotName, &theValue);
@@ -2534,7 +2534,7 @@ PutSlotError FMPutSlotString(
         const char *stringValue) {
     CLIPSValue theValue;
 
-    if (theFM == NULL) { return PSE_NULL_POINTER_ERROR; }
+    if (theFM == nullptr) { return PSE_nullptr_POINTER_ERROR; }
 
     theValue.lexemeValue = CreateString(theFM->fmEnv, stringValue);
     return FMPutSlot(theFM, slotName, &theValue);
@@ -2549,7 +2549,7 @@ PutSlotError FMPutSlotInstanceName(
         const char *stringValue) {
     CLIPSValue theValue;
 
-    if (theFM == NULL) { return PSE_NULL_POINTER_ERROR; }
+    if (theFM == nullptr) { return PSE_nullptr_POINTER_ERROR; }
 
     theValue.lexemeValue = CreateInstanceName(theFM->fmEnv, stringValue);
     return FMPutSlot(theFM, slotName, &theValue);
@@ -2577,7 +2577,7 @@ PutSlotError FMPutSlotFloat(
         double floatValue) {
     CLIPSValue theValue;
 
-    if (theFM == NULL) { return PSE_NULL_POINTER_ERROR; }
+    if (theFM == nullptr) { return PSE_nullptr_POINTER_ERROR; }
 
     theValue.floatValue = CreateFloat(theFM->fmEnv, floatValue);
     return FMPutSlot(theFM, slotName, &theValue);
@@ -2651,12 +2651,12 @@ PutSlotError FMPutSlot(
     ConstraintViolationType cvType;
 
     /*==========================*/
-    /* Check for NULL pointers. */
+    /* Check for nullptr pointers. */
     /*==========================*/
 
-    if ((theFM == NULL) || (slotName == NULL) || (slotValue == NULL)) { return PSE_NULL_POINTER_ERROR; }
+    if ((theFM == nullptr) || (slotName == nullptr) || (slotValue == nullptr)) { return PSE_nullptr_POINTER_ERROR; }
 
-    if ((theFM->fmOldFact == NULL) || (slotValue->value == NULL)) { return PSE_NULL_POINTER_ERROR; }
+    if ((theFM->fmOldFact == nullptr) || (slotValue->value == nullptr)) { return PSE_nullptr_POINTER_ERROR; }
 
     theEnv = theFM->fmEnv;
 
@@ -2672,7 +2672,7 @@ PutSlotError FMPutSlot(
     /*===================================*/
 
     if ((theSlot = FindSlot(theFM->fmOldFact->whichDeftemplate, CreateSymbol(theEnv, slotName), &whichSlot)) ==
-        NULL) { return PSE_SLOT_NOT_FOUND_ERROR; }
+        nullptr) { return PSE_SLOT_NOT_FOUND_ERROR; }
 
     /*=============================================*/
     /* Make sure a single field value is not being */
@@ -2686,7 +2686,7 @@ PutSlotError FMPutSlot(
     /* Check constraints for the slot. */
     /*=================================*/
 
-    if (theSlot->constraints != NULL) {
+    if (theSlot->constraints != nullptr) {
         if ((cvType = ConstraintCheckValue(theEnv, slotValue->header->type, slotValue->value, theSlot->constraints)) != NO_VIOLATION) {
             switch (cvType) {
                 case NO_VIOLATION:
@@ -2717,13 +2717,13 @@ PutSlotError FMPutSlot(
     /* Set up the change arrays. */
     /*===========================*/
 
-    if (theFM->fmValueArray == NULL) {
+    if (theFM->fmValueArray == nullptr) {
         theFM->fmValueArray = (CLIPSValue *) gm2(theFM->fmEnv, sizeof(CLIPSValue) * theFM->fmOldFact->whichDeftemplate->numberOfSlots);
         for (i = 0;
              i < theFM->fmOldFact->whichDeftemplate->numberOfSlots; i++) { theFM->fmValueArray[i].voidValue = theFM->fmEnv->VoidConstant; }
     }
 
-    if (theFM->changeMap == NULL) {
+    if (theFM->changeMap == nullptr) {
         theFM->changeMap = (char *) gm2(theFM->fmEnv, CountToBitMapSize(theFM->fmOldFact->whichDeftemplate->numberOfSlots));
         ClearBitString((void *) theFM->changeMap, CountToBitMapSize(theFM->fmOldFact->whichDeftemplate->numberOfSlots));
     }
@@ -2779,21 +2779,21 @@ Fact *FMModify(
     Environment *theEnv;
     Fact *rv;
 
-    if (theFM == NULL) { return NULL; }
+    if (theFM == nullptr) { return nullptr; }
 
     theEnv = theFM->fmEnv;
 
-    if (theFM->fmOldFact == NULL) {
-        FactData(theEnv)->factModifierError = FME_NULL_POINTER_ERROR;
-        return NULL;
+    if (theFM->fmOldFact == nullptr) {
+        FactData(theEnv)->factModifierError = FME_nullptr_POINTER_ERROR;
+        return nullptr;
     }
 
     if (theFM->fmOldFact->garbage) {
         FactData(theEnv)->factModifierError = FME_RETRACTED_ERROR;
-        return NULL;
+        return nullptr;
     }
 
-    if (theFM->changeMap == NULL) { return theFM->fmOldFact; }
+    if (theFM->changeMap == nullptr) { return theFM->fmOldFact; }
 
     if (!BitStringHasBitsSet(theFM->changeMap,
                              CountToBitMapSize(theFM->fmOldFact->whichDeftemplate->numberOfSlots))) { return theFM->fmOldFact; }
@@ -2809,7 +2809,7 @@ Fact *FMModify(
 
     FMAbort(theFM);
 
-    if ((rv != NULL) && (rv != theFM->fmOldFact)) {
+    if ((rv != nullptr) && (rv != theFM->fmOldFact)) {
         ReleaseFact(theFM->fmOldFact);
         theFM->fmOldFact = rv;
         RetainFact(theFM->fmOldFact);
@@ -2833,7 +2833,7 @@ void FMDispose(
     /* Clear the value array. */
     /*========================*/
 
-    if (theFM->fmOldFact != NULL) {
+    if (theFM->fmOldFact != nullptr) {
         for (i = 0; i < theFM->fmOldFact->whichDeftemplate->numberOfSlots; i++) {
             Release(theEnv, theFM->fmValueArray[i].header);
 
@@ -2847,11 +2847,11 @@ void FMDispose(
     /* Return the value and change arrays. */
     /*=====================================*/
 
-    if (theFM->fmValueArray != NULL) {
+    if (theFM->fmValueArray != nullptr) {
         rm(theEnv, theFM->fmValueArray, sizeof(CLIPSValue) * theFM->fmOldFact->whichDeftemplate->numberOfSlots);
     }
 
-    if (theFM->changeMap != NULL) {
+    if (theFM->changeMap != nullptr) {
         rm(theEnv, (void *) theFM->changeMap, CountToBitMapSize(theFM->fmOldFact->whichDeftemplate->numberOfSlots));
     }
 
@@ -2859,7 +2859,7 @@ void FMDispose(
     /* Return the FactModifier structure. */
     /*====================================*/
 
-    if (theFM->fmOldFact != NULL) { ReleaseFact(theFM->fmOldFact); }
+    if (theFM->fmOldFact != nullptr) { ReleaseFact(theFM->fmOldFact); }
 
     rtn_struct(theEnv, factModifier, theFM);
 
@@ -2875,9 +2875,9 @@ void FMAbort(
     Environment *theEnv;
     unsigned int i;
 
-    if (theFM == NULL) return;
+    if (theFM == nullptr) return;
 
-    if (theFM->fmOldFact == NULL) return;
+    if (theFM->fmOldFact == nullptr) return;
 
     theEnv = theFM->fmEnv;
 
@@ -2891,7 +2891,7 @@ void FMAbort(
         theFM->fmValueArray[i].voidValue = theFM->fmEnv->VoidConstant;
     }
 
-    if (theFM->changeMap != NULL) {
+    if (theFM->changeMap != nullptr) {
         ClearBitString((void *) theFM->changeMap, CountToBitMapSize(theFM->fmOldFact->whichDeftemplate->numberOfSlots));
     }
 
@@ -2908,7 +2908,7 @@ FactModifierError FMSetFact(
     unsigned short currentSlotCount, newSlotCount;
     unsigned int i;
 
-    if (theFM == NULL) { return FME_NULL_POINTER_ERROR; }
+    if (theFM == nullptr) { return FME_nullptr_POINTER_ERROR; }
 
     theEnv = theFM->fmEnv;
 
@@ -2917,7 +2917,7 @@ FactModifierError FMSetFact(
     /* deftemplate facts with at least one slot.       */
     /*=================================================*/
 
-    if (oldFact != NULL) {
+    if (oldFact != nullptr) {
         if (oldFact->garbage) {
             FactData(theEnv)->factModifierError = FME_RETRACTED_ERROR;
             return FME_RETRACTED_ERROR;
@@ -2933,7 +2933,7 @@ FactModifierError FMSetFact(
     /* Clear the value array. */
     /*========================*/
 
-    if (theFM->fmValueArray != NULL) {
+    if (theFM->fmValueArray != nullptr) {
         for (i = 0; i < theFM->fmOldFact->whichDeftemplate->numberOfSlots; i++) {
             Release(theEnv, theFM->fmValueArray[i].header);
 
@@ -2947,20 +2947,20 @@ FactModifierError FMSetFact(
     /* Resize the value and change arrays if necessary. */
     /*==================================================*/
 
-    if (theFM->fmOldFact == NULL) { currentSlotCount = 0; }
+    if (theFM->fmOldFact == nullptr) { currentSlotCount = 0; }
     else { currentSlotCount = theFM->fmOldFact->whichDeftemplate->numberOfSlots; }
 
-    if (oldFact == NULL) { newSlotCount = 0; }
+    if (oldFact == nullptr) { newSlotCount = 0; }
     else { newSlotCount = oldFact->whichDeftemplate->numberOfSlots; }
 
     if (newSlotCount != currentSlotCount) {
-        if (theFM->fmValueArray != NULL) { rm(theEnv, theFM->fmValueArray, sizeof(CLIPSValue) * currentSlotCount); }
+        if (theFM->fmValueArray != nullptr) { rm(theEnv, theFM->fmValueArray, sizeof(CLIPSValue) * currentSlotCount); }
 
-        if (theFM->changeMap != NULL) { rm(theEnv, (void *) theFM->changeMap, currentSlotCount); }
+        if (theFM->changeMap != nullptr) { rm(theEnv, (void *) theFM->changeMap, currentSlotCount); }
 
         if (newSlotCount == 0) {
-            theFM->fmValueArray = NULL;
-            theFM->changeMap = NULL;
+            theFM->fmValueArray = nullptr;
+            theFM->changeMap = nullptr;
         } else {
             theFM->fmValueArray = (CLIPSValue *) gm2(theEnv, sizeof(CLIPSValue) * newSlotCount);
             theFM->changeMap = (char *) gm2(theEnv, CountToBitMapSize(newSlotCount));

@@ -106,7 +106,7 @@ void GetToken(
     /*=======================================*/
 
     theToken->tknType = UNKNOWN_VALUE_TOKEN;
-    theToken->value = NULL;
+    theToken->value = nullptr;
     theToken->printForm = "unknown";
     ScannerData(theEnv)->GlobalPos = 0;
     ScannerData(theEnv)->GlobalMax = 0;
@@ -348,9 +348,9 @@ void GetToken(
     /* Return the temporary memory used in scanning the token. */
     /*=========================================================*/
 
-    if (ScannerData(theEnv)->GlobalString != NULL) {
+    if (ScannerData(theEnv)->GlobalString != nullptr) {
         rm(theEnv, ScannerData(theEnv)->GlobalString, ScannerData(theEnv)->GlobalMax);
-        ScannerData(theEnv)->GlobalString = NULL;
+        ScannerData(theEnv)->GlobalString = nullptr;
         ScannerData(theEnv)->GlobalMax = 0;
         ScannerData(theEnv)->GlobalPos = 0;
     }
@@ -432,7 +432,7 @@ static CLIPSLexeme *ScanString(
     int inchar;
     size_t pos = 0;
     size_t max = 0;
-    char *theString = NULL;
+    char *theString = nullptr;
     CLIPSLexeme *thePtr;
 
     /*============================================*/
@@ -458,7 +458,7 @@ static CLIPSLexeme *ScanString(
     /* the symbol table address of the string.       */
     /*===============================================*/
 
-    if (theString == NULL) { thePtr = CreateString(theEnv, ""); }
+    if (theString == nullptr) { thePtr = CreateString(theEnv, ""); }
     else {
         thePtr = CreateString(theEnv, theString);
         rm(theEnv, theString, max);
@@ -675,9 +675,9 @@ static void ScanNumber(
     } else {
         errno = 0;
 #if WIN_MVC
-        lvalue = _strtoi64(ScannerData(theEnv)->GlobalString,NULL,10);
+        lvalue = _strtoi64(ScannerData(theEnv)->GlobalString,nullptr,10);
 #else
-        lvalue = strtoll(ScannerData(theEnv)->GlobalString, NULL, 10);
+        lvalue = strtoll(ScannerData(theEnv)->GlobalString, nullptr, 10);
 #endif
         if (errno) {
             PrintWarningID(theEnv, "SCANNER", 1, false);

@@ -55,7 +55,7 @@ struct deffunctionBinaryData {
 
 #define DeffunctionBinaryData(theEnv) ((struct deffunctionBinaryData *) GetEnvironmentData(theEnv,DFFNXBIN_DATA))
 
-#define DeffunctionPointer(i) (((i) == ULONG_MAX) ? NULL : &DeffunctionBinaryData(theEnv)->DeffunctionArray[i])
+#define DeffunctionPointer(i) (((i) == ULONG_MAX) ? nullptr : &DeffunctionBinaryData(theEnv)->DeffunctionArray[i])
 
 #endif /* DEFFUNCTION_CONSTRUCT && (BLOAD_AND_BSAVE) */
 

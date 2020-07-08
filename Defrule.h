@@ -147,7 +147,7 @@ struct defruleData {
     ((theJoin)->lastLevel))
 #define GetPatternForJoin(theJoin) \
    (((theJoin)->joinFromTheRight) ? \
-    NULL : \
+    nullptr : \
     ((theJoin)->rightSideEntryStructure))
 
 void InitializeDefrules(Environment *);

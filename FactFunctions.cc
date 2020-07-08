@@ -121,13 +121,13 @@
 /****************************************************/
 void FactFunctionDefinitions(
         Environment *theEnv) {
-    AddUDF(theEnv, "fact-existp", "b", 1, 1, "lf", FactExistpFunction, NULL);
-    AddUDF(theEnv, "fact-relation", "y", 1, 1, "lf", FactRelationFunction, NULL);
-    AddUDF(theEnv, "fact-slot-value", "*", 2, 2, ";lf;y", FactSlotValueFunction, NULL);
-    AddUDF(theEnv, "fact-slot-names", "*", 1, 1, "lf", FactSlotNamesFunction, NULL);
-    AddUDF(theEnv, "get-fact-list", "m", 0, 1, "y", GetFactListFunction, NULL);
-    AddUDF(theEnv, "ppfact", "vs", 1, 3, "*;lf;ldsyn", PPFactFunction, NULL);
-    AddUDF(theEnv, "fact-addressp", "b", 1, 1, NULL, FactAddresspFunction, NULL);
+    AddUDF(theEnv, "fact-existp", "b", 1, 1, "lf", FactExistpFunction, nullptr);
+    AddUDF(theEnv, "fact-relation", "y", 1, 1, "lf", FactRelationFunction, nullptr);
+    AddUDF(theEnv, "fact-slot-value", "*", 2, 2, ";lf;y", FactSlotValueFunction, nullptr);
+    AddUDF(theEnv, "fact-slot-names", "*", 1, 1, "lf", FactSlotNamesFunction, nullptr);
+    AddUDF(theEnv, "get-fact-list", "m", 0, 1, "y", GetFactListFunction, nullptr);
+    AddUDF(theEnv, "ppfact", "vs", 1, 3, "*;lf;ldsyn", PPFactFunction, nullptr);
+    AddUDF(theEnv, "fact-addressp", "b", 1, 1, nullptr, FactAddresspFunction, nullptr);
 }
 
 /**********************************************/
@@ -142,7 +142,7 @@ void FactRelationFunction(
 
     theFact = GetFactAddressOrIndexArgument(context, true);
 
-    if (theFact == NULL) {
+    if (theFact == nullptr) {
         returnValue->lexemeValue = FalseSymbol(theEnv);
         return;
     }
@@ -189,7 +189,7 @@ void FactExistpFunction(
 /***********************************/
 bool FactExistp(
         Fact *theFact) {
-    if (theFact == NULL) return false;
+    if (theFact == nullptr) return false;
 
     if (theFact->garbage) return false;
 
@@ -231,7 +231,7 @@ void FactSlotValueFunction(
     /*================================*/
 
     theFact = GetFactAddressOrIndexArgument(context, true);
-    if (theFact == NULL) {
+    if (theFact == nullptr) {
         returnValue->lexemeValue = FalseSymbol(theEnv);
         return;
     }
@@ -272,7 +272,7 @@ void FactSlotValue(
             returnValue->lexemeValue = FalseSymbol(theEnv);
             return;
         }
-    } else if (FindSlot(theFact->whichDeftemplate, CreateSymbol(theEnv, theSlotName), NULL) == NULL) {
+    } else if (FindSlot(theFact->whichDeftemplate, CreateSymbol(theEnv, theSlotName), nullptr) == nullptr) {
         SetEvaluationError(theEnv, true);
         InvalidDeftemplateSlotMessage(theEnv, theSlotName,
                                       theFact->whichDeftemplate->header.name->contents, false);
@@ -284,7 +284,7 @@ void FactSlotValue(
     /* Return the slot's value. */
     /*==========================*/
 
-    if (theFact->whichDeftemplate->implied) { GetFactSlot(theFact, NULL, returnValue); }
+    if (theFact->whichDeftemplate->implied) { GetFactSlot(theFact, nullptr, returnValue); }
     else { GetFactSlot(theFact, theSlotName, returnValue); }
 }
 
@@ -304,7 +304,7 @@ void FactSlotNamesFunction(
     /*================================*/
 
     theFact = GetFactAddressOrIndexArgument(context, true);
-    if (theFact == NULL) {
+    if (theFact == nullptr) {
         returnValue->lexemeValue = FalseSymbol(theEnv);
         return;
     }
@@ -346,7 +346,7 @@ void FactSlotNames(
     /*=================================*/
 
     for (count = 0, theSlot = theFact->whichDeftemplate->slotList;
-         theSlot != NULL;
+         theSlot != nullptr;
          count++, theSlot = theSlot->next) { /* Do Nothing */ }
 
     /*=============================================================*/
@@ -361,7 +361,7 @@ void FactSlotNames(
     /*===============================================*/
 
     for (count = 0, theSlot = theFact->whichDeftemplate->slotList;
-         theSlot != NULL;
+         theSlot != nullptr;
          count++, theSlot = theSlot->next) {
         theList->contents[count].lexemeValue = theSlot->slotName;
     }
@@ -386,14 +386,14 @@ void GetFactListFunction(
     if (UDFHasNextArgument(context)) {
         if (!UDFFirstArgument(context, SYMBOL_BIT, &theArg)) { return; }
 
-        if ((theModule = FindDefmodule(theEnv, theArg.lexemeValue->contents)) == NULL) {
+        if ((theModule = FindDefmodule(theEnv, theArg.lexemeValue->contents)) == nullptr) {
             if (strcmp("*", theArg.lexemeValue->contents) != 0) {
                 SetMultifieldErrorValue(theEnv, returnValue);
                 UDFInvalidArgumentMessage(context, "defmodule name");
                 return;
             }
 
-            theModule = NULL;
+            theModule = nullptr;
         }
     } else { theModule = GetCurrentModule(theEnv); }
 
@@ -427,15 +427,15 @@ void GetFactList(
     /* Count the number of facts to be retrieved. */
     /*============================================*/
 
-    if (theModule == NULL) {
-        for (theFact = GetNextFact(theEnv, NULL), count = 0;
-             theFact != NULL;
+    if (theModule == nullptr) {
+        for (theFact = GetNextFact(theEnv, nullptr), count = 0;
+             theFact != nullptr;
              theFact = GetNextFact(theEnv, theFact), count++) { /* Do Nothing */ }
     } else {
         SetCurrentModule(theEnv, theModule);
         UpdateDeftemplateScope(theEnv);
-        for (theFact = GetNextFactInScope(theEnv, NULL), count = 0;
-             theFact != NULL;
+        for (theFact = GetNextFactInScope(theEnv, nullptr), count = 0;
+             theFact != nullptr;
              theFact = GetNextFactInScope(theEnv, theFact), count++) { /* Do Nothing */ }
     }
 
@@ -450,15 +450,15 @@ void GetFactList(
     /* Store the fact pointers in the multifield value. */
     /*==================================================*/
 
-    if (theModule == NULL) {
-        for (theFact = GetNextFact(theEnv, NULL), count = 0;
-             theFact != NULL;
+    if (theModule == nullptr) {
+        for (theFact = GetNextFact(theEnv, nullptr), count = 0;
+             theFact != nullptr;
              theFact = GetNextFact(theEnv, theFact), count++) {
             theList->contents[count].factValue = theFact;
         }
     } else {
-        for (theFact = GetNextFactInScope(theEnv, NULL), count = 0;
-             theFact != NULL;
+        for (theFact = GetNextFactInScope(theEnv, nullptr), count = 0;
+             theFact != nullptr;
              theFact = GetNextFactInScope(theEnv, theFact), count++) {
             theList->contents[count].factValue = theFact;
         }
@@ -481,12 +481,12 @@ void PPFactFunction(
         UDFContext *context,
         UDFValue *returnValue) {
     Fact *theFact;
-    const char *logicalName = NULL;      /* Avoids warning */
+    const char *logicalName = nullptr;      /* Avoids warning */
     bool ignoreDefaults = false;
     UDFValue theArg;
 
     theFact = GetFactAddressOrIndexArgument(context, true);
-    if (theFact == NULL) return;
+    if (theFact == nullptr) return;
 
     /*===============================================================*/
     /* Determine the logical name to which the fact will be printed. */
@@ -494,7 +494,7 @@ void PPFactFunction(
 
     if (UDFHasNextArgument(context)) {
         logicalName = GetLogicalName(context, STDOUT);
-        if (logicalName == NULL) {
+        if (logicalName == nullptr) {
             IllegalLogicalNameMessage(theEnv, "ppfact");
             SetHaltExecution(theEnv, true);
             SetEvaluationError(theEnv, true);
@@ -547,11 +547,11 @@ void PPFact(
         bool ignoreDefaults) {
     Environment *theEnv = theFact->whichDeftemplate->header.env;
 
-    if (theFact == NULL) return;
+    if (theFact == nullptr) return;
 
     if (theFact->garbage) return;
 
-    PrintFact(theEnv, logicalName, theFact, true, ignoreDefaults, NULL);
+    PrintFact(theEnv, logicalName, theFact, true, ignoreDefaults, nullptr);
 
     WriteString(theEnv, logicalName, "\n");
 }
@@ -569,7 +569,7 @@ Fact *GetFactAddressOrIndexArgument(
     Environment *theEnv = context->environment;
     char tempBuffer[20];
 
-    if (!UDFNextArgument(context, ANY_TYPE_BITS, &theArg)) { return NULL; }
+    if (!UDFNextArgument(context, ANY_TYPE_BITS, &theArg)) { return nullptr; }
 
     if (theArg.header->type == FACT_ADDRESS_TYPE) {
         if (theArg.factValue->garbage) {
@@ -577,27 +577,27 @@ Fact *GetFactAddressOrIndexArgument(
                 FactRetractedErrorMessage(theEnv, theArg.factValue);
                 SetEvaluationError(theEnv, true);
             }
-            return NULL;
+            return nullptr;
         } else return theArg.factValue;
     } else if (theArg.header->type == INTEGER_TYPE) {
         factIndex = theArg.integerValue->contents;
         if (factIndex < 0) {
             UDFInvalidArgumentMessage(context, "fact-address or fact-index");
-            return NULL;
+            return nullptr;
         }
 
         theFact = FindIndexedFact(theEnv, factIndex);
-        if ((theFact == NULL) && noFactError) {
+        if ((theFact == nullptr) && noFactError) {
             gensprintf(tempBuffer, "f-%lld", factIndex);
             CantFindItemErrorMessage(theEnv, "fact", tempBuffer, false);
-            return NULL;
+            return nullptr;
         }
 
         return theFact;
     }
 
     UDFInvalidArgumentMessage(context, "fact-address or fact-index");
-    return NULL;
+    return nullptr;
 }
 
 #endif /* DEFTEMPLATE_CONSTRUCT */

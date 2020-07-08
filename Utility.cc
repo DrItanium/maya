@@ -137,7 +137,7 @@ static void DeallocateUtilityData(
     /*======================*/
 
     tmpTM = UtilityData(theEnv)->trackList;
-    while (tmpTM != NULL) {
+    while (tmpTM != nullptr) {
         nextTM = tmpTM->next;
         genfree(theEnv, tmpTM->theMemory, tmpTM->memSize);
         rtn_struct(theEnv, trackedMemory, tmpTM);
@@ -156,12 +156,12 @@ static void DeallocateUtilityData(
     /* needs to be garbage collected.          */
     /*=========================================*/
 
-    while (UtilityData(theEnv)->CurrentGarbageFrame != NULL) {
+    while (UtilityData(theEnv)->CurrentGarbageFrame != nullptr) {
         theGarbageFrame = UtilityData(theEnv)->CurrentGarbageFrame;
 
         edPtr = theGarbageFrame->ephemeralSymbolList;
 
-        while (edPtr != NULL) {
+        while (edPtr != nullptr) {
             nextEDPtr = edPtr->next;
             rtn_struct(theEnv, ephemeron, edPtr);
             edPtr = nextEDPtr;
@@ -169,7 +169,7 @@ static void DeallocateUtilityData(
 
         edPtr = theGarbageFrame->ephemeralFloatList;
 
-        while (edPtr != NULL) {
+        while (edPtr != nullptr) {
             nextEDPtr = edPtr->next;
             rtn_struct(theEnv, ephemeron, edPtr);
             edPtr = nextEDPtr;
@@ -177,7 +177,7 @@ static void DeallocateUtilityData(
 
         edPtr = theGarbageFrame->ephemeralIntegerList;
 
-        while (edPtr != NULL) {
+        while (edPtr != nullptr) {
             nextEDPtr = edPtr->next;
             rtn_struct(theEnv, ephemeron, edPtr);
             edPtr = nextEDPtr;
@@ -185,7 +185,7 @@ static void DeallocateUtilityData(
 
         edPtr = theGarbageFrame->ephemeralBitMapList;
 
-        while (edPtr != NULL) {
+        while (edPtr != nullptr) {
             nextEDPtr = edPtr->next;
             rtn_struct(theEnv, ephemeron, edPtr);
             edPtr = nextEDPtr;
@@ -193,7 +193,7 @@ static void DeallocateUtilityData(
 
         edPtr = theGarbageFrame->ephemeralExternalAddressList;
 
-        while (edPtr != NULL) {
+        while (edPtr != nullptr) {
             nextEDPtr = edPtr->next;
             rtn_struct(theEnv, ephemeron, edPtr);
             edPtr = nextEDPtr;
@@ -204,7 +204,7 @@ static void DeallocateUtilityData(
         /*==========================*/
 
         tmpMFPtr = theGarbageFrame->ListOfMultifields;
-        while (tmpMFPtr != NULL) {
+        while (tmpMFPtr != nullptr) {
             nextMFPtr = tmpMFPtr->next;
             ReturnMultifield(theEnv, tmpMFPtr);
             tmpMFPtr = nextMFPtr;
@@ -226,20 +226,20 @@ void CleanCurrentGarbageFrame(
 
     if (!currentGarbageFrame->dirty) return;
 
-    if (returnValue != NULL) { RetainUDFV(theEnv, returnValue); }
+    if (returnValue != nullptr) { RetainUDFV(theEnv, returnValue); }
 
     CallCleanupFunctions(theEnv);
     RemoveEphemeralAtoms(theEnv);
     FlushMultifields(theEnv);
 
-    if (returnValue != NULL) { ReleaseUDFV(theEnv, returnValue); }
+    if (returnValue != nullptr) { ReleaseUDFV(theEnv, returnValue); }
 
-    if ((currentGarbageFrame->ephemeralFloatList == NULL) &&
-        (currentGarbageFrame->ephemeralIntegerList == NULL) &&
-        (currentGarbageFrame->ephemeralSymbolList == NULL) &&
-        (currentGarbageFrame->ephemeralBitMapList == NULL) &&
-        (currentGarbageFrame->ephemeralExternalAddressList == NULL) &&
-        (currentGarbageFrame->LastMultifield == NULL)) { currentGarbageFrame->dirty = false; }
+    if ((currentGarbageFrame->ephemeralFloatList == nullptr) &&
+        (currentGarbageFrame->ephemeralIntegerList == nullptr) &&
+        (currentGarbageFrame->ephemeralSymbolList == nullptr) &&
+        (currentGarbageFrame->ephemeralBitMapList == nullptr) &&
+        (currentGarbageFrame->ephemeralExternalAddressList == nullptr) &&
+        (currentGarbageFrame->LastMultifield == nullptr)) { currentGarbageFrame->dirty = false; }
 }
 
 /*****************************/
@@ -251,7 +251,7 @@ void RestorePriorGarbageFrame(
         struct garbageFrame *oldGarbageFrame,
         UDFValue *returnValue) {
     if (newGarbageFrame->dirty) {
-        if (returnValue != NULL) RetainUDFV(theEnv, returnValue);
+        if (returnValue != nullptr) RetainUDFV(theEnv, returnValue);
         CallCleanupFunctions(theEnv);
         RemoveEphemeralAtoms(theEnv);
         FlushMultifields(theEnv);
@@ -260,18 +260,18 @@ void RestorePriorGarbageFrame(
     UtilityData(theEnv)->CurrentGarbageFrame = oldGarbageFrame;
 
     if (newGarbageFrame->dirty) {
-        if (newGarbageFrame->ListOfMultifields != NULL) {
-            if (oldGarbageFrame->ListOfMultifields == NULL) { oldGarbageFrame->ListOfMultifields = newGarbageFrame->ListOfMultifields; }
+        if (newGarbageFrame->ListOfMultifields != nullptr) {
+            if (oldGarbageFrame->ListOfMultifields == nullptr) { oldGarbageFrame->ListOfMultifields = newGarbageFrame->ListOfMultifields; }
             else { oldGarbageFrame->LastMultifield->next = newGarbageFrame->ListOfMultifields; }
 
             oldGarbageFrame->LastMultifield = newGarbageFrame->LastMultifield;
             oldGarbageFrame->dirty = true;
         }
 
-        if (returnValue != NULL) ReleaseUDFV(theEnv, returnValue);
+        if (returnValue != nullptr) ReleaseUDFV(theEnv, returnValue);
     }
 
-    if (returnValue != NULL) { EphemerateValue(theEnv, returnValue->value); }
+    if (returnValue != nullptr) { EphemerateValue(theEnv, returnValue->value); }
 }
 
 /*****************/
@@ -292,7 +292,7 @@ void GCBlockStart(
 void GCBlockEnd(
         Environment *theEnv,
         GCBlock *theBlock) {
-    RestorePriorGarbageFrame(theEnv, &theBlock->newGarbageFrame, theBlock->oldGarbageFrame, NULL);
+    RestorePriorGarbageFrame(theEnv, &theBlock->newGarbageFrame, theBlock->oldGarbageFrame, nullptr);
 }
 
 /******************/
@@ -326,7 +326,7 @@ void CallCleanupFunctions(
     struct voidCallFunctionItem *cleanupPtr;
 
     for (cleanupPtr = UtilityData(theEnv)->ListOfCleanupFunctions;
-         cleanupPtr != NULL;
+         cleanupPtr != nullptr;
          cleanupPtr = cleanupPtr->next) { (*cleanupPtr->func)(theEnv, cleanupPtr->context); }
 }
 
@@ -340,7 +340,7 @@ void CallPeriodicTasks(
 
     if (UtilityData(theEnv)->PeriodicFunctionsEnabled) {
         for (periodPtr = UtilityData(theEnv)->ListOfPeriodicFunctions;
-             periodPtr != NULL;
+             periodPtr != nullptr;
              periodPtr = periodPtr->next) { (*periodPtr->func)(theEnv, periodPtr->context); }
     }
 }
@@ -390,7 +390,7 @@ void *GetPeriodicFunctionContext(
     theItem = GetVoidFunctionFromCallList(theEnv, name,
                                           UtilityData(theEnv)->ListOfPeriodicFunctions);
 
-    if (theItem == NULL) return NULL;
+    if (theItem == nullptr) return nullptr;
 
     return theItem->context;
 }
@@ -436,7 +436,7 @@ const char *StringPrintForm(
     int i = 0;
     size_t pos = 0;
     size_t max = 0;
-    char *theString = NULL;
+    char *theString = nullptr;
     CLIPSLexeme *thePtr;
 
     theString = ExpandStringWithChar(theEnv, '"', theString, &pos, &max, max + 80);
@@ -462,9 +462,9 @@ const char *StringPrintForm(
 char *CopyString(
         Environment *theEnv,
         const char *theString) {
-    char *stringCopy = NULL;
+    char *stringCopy = nullptr;
 
-    if (theString != NULL) {
+    if (theString != nullptr) {
         stringCopy = (char *) genalloc(theEnv, strlen(theString) + 1);
         genstrcpy(stringCopy, theString);
     }
@@ -478,7 +478,7 @@ char *CopyString(
 void DeleteString(
         Environment *theEnv,
         char *theString) {
-    if (theString != NULL) { genfree(theEnv, theString, strlen(theString) + 1); }
+    if (theString != nullptr) { genfree(theEnv, theString, strlen(theString) + 1); }
 }
 
 /***********************************************************/
@@ -492,7 +492,7 @@ const char *AppendStrings(
         const char *str2) {
     size_t pos = 0;
     size_t max = 0;
-    char *theString = NULL;
+    char *theString = nullptr;
     CLIPSLexeme *thePtr;
 
     theString = AppendToString(theEnv, str1, theString, &pos, &max);
@@ -523,10 +523,10 @@ char *AppendToString(
     length = strlen(appendStr);
 
     /*==============================================================*/
-    /* Return NULL if the old string was not successfully expanded. */
+    /* Return nullptr if the old string was not successfully expanded. */
     /*==============================================================*/
 
-    if ((oldStr = EnlargeString(theEnv, length, oldStr, oldPos, oldMax)) == NULL) { return NULL; }
+    if ((oldStr = EnlargeString(theEnv, length, oldStr, oldPos, oldMax)) == nullptr) { return nullptr; }
 
     /*===============================================*/
     /* Append the new string to the expanded string. */
@@ -563,10 +563,10 @@ char *InsertInString(
     length = strlen(insertStr);
 
     /*==============================================================*/
-    /* Return NULL if the old string was not successfully expanded. */
+    /* Return nullptr if the old string was not successfully expanded. */
     /*==============================================================*/
 
-    if ((oldStr = EnlargeString(theEnv, length, oldStr, oldPos, oldMax)) == NULL) { return NULL; }
+    if ((oldStr = EnlargeString(theEnv, length, oldStr, oldPos, oldMax)) == nullptr) { return nullptr; }
 
     /*================================================================*/
     /* Shift the contents to the right of insertion point so that the */
@@ -615,10 +615,10 @@ char *EnlargeString(
     }
 
     /*==============================================================*/
-    /* Return NULL if the old string was not successfully expanded. */
+    /* Return nullptr if the old string was not successfully expanded. */
     /*==============================================================*/
 
-    if (oldStr == NULL) { return NULL; }
+    if (oldStr == nullptr) { return nullptr; }
 
     return (oldStr);
 }
@@ -661,10 +661,10 @@ char *AppendNToString(
     }
 
     /*==============================================================*/
-    /* Return NULL if the old string was not successfully expanded. */
+    /* Return nullptr if the old string was not successfully expanded. */
     /*==============================================================*/
 
-    if (oldStr == NULL) { return NULL; }
+    if (oldStr == nullptr) { return nullptr; }
 
     /*==================================*/
     /* Append N characters from the new */
@@ -736,7 +736,7 @@ struct voidCallFunctionItem *AddVoidFunctionToCallList(
         VoidCallFunction *func,
         struct voidCallFunctionItem *head,
         void *context) {
-    struct voidCallFunctionItem *newPtr, *currentPtr, *lastPtr = NULL;
+    struct voidCallFunctionItem *newPtr, *currentPtr, *lastPtr = nullptr;
     char *nameCopy;
 
     newPtr = get_struct(theEnv, voidCallFunctionItem);
@@ -749,18 +749,18 @@ struct voidCallFunctionItem *AddVoidFunctionToCallList(
     newPtr->priority = priority;
     newPtr->context = context;
 
-    if (head == NULL) {
-        newPtr->next = NULL;
+    if (head == nullptr) {
+        newPtr->next = nullptr;
         return (newPtr);
     }
 
     currentPtr = head;
-    while ((currentPtr != NULL) ? (priority < currentPtr->priority) : false) {
+    while ((currentPtr != nullptr) ? (priority < currentPtr->priority) : false) {
         lastPtr = currentPtr;
         currentPtr = currentPtr->next;
     }
 
-    if (lastPtr == NULL) {
+    if (lastPtr == nullptr) {
         newPtr->next = head;
         head = newPtr;
     } else {
@@ -783,7 +783,7 @@ BoolCallFunctionItem *AddBoolFunctionToCallList(
         BoolCallFunction *func,
         BoolCallFunctionItem *head,
         void *context) {
-    struct boolCallFunctionItem *newPtr, *currentPtr, *lastPtr = NULL;
+    struct boolCallFunctionItem *newPtr, *currentPtr, *lastPtr = nullptr;
     char *nameCopy;
 
     newPtr = get_struct(theEnv, boolCallFunctionItem);
@@ -796,18 +796,18 @@ BoolCallFunctionItem *AddBoolFunctionToCallList(
     newPtr->priority = priority;
     newPtr->context = context;
 
-    if (head == NULL) {
-        newPtr->next = NULL;
+    if (head == nullptr) {
+        newPtr->next = nullptr;
         return (newPtr);
     }
 
     currentPtr = head;
-    while ((currentPtr != NULL) ? (priority < currentPtr->priority) : false) {
+    while ((currentPtr != nullptr) ? (priority < currentPtr->priority) : false) {
         lastPtr = currentPtr;
         currentPtr = currentPtr->next;
     }
 
-    if (lastPtr == NULL) {
+    if (lastPtr == nullptr) {
         newPtr->next = head;
         head = newPtr;
     } else {
@@ -829,11 +829,11 @@ struct voidCallFunctionItem *GetVoidFunctionFromCallList(
         struct voidCallFunctionItem *head) {
     struct voidCallFunctionItem *currentPtr;
 
-    for (currentPtr = head; currentPtr != NULL; currentPtr = currentPtr->next) {
+    for (currentPtr = head; currentPtr != nullptr; currentPtr = currentPtr->next) {
         if (strcmp(name, currentPtr->name) == 0) { return currentPtr; }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /****************************************************************/
@@ -847,11 +847,11 @@ struct boolCallFunctionItem *GetBoolFunctionFromCallList(
         struct boolCallFunctionItem *head) {
     struct boolCallFunctionItem *currentPtr;
 
-    for (currentPtr = head; currentPtr != NULL; currentPtr = currentPtr->next) {
+    for (currentPtr = head; currentPtr != nullptr; currentPtr = currentPtr->next) {
         if (strcmp(name, currentPtr->name) == 0) { return currentPtr; }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /******************************************************************/
@@ -867,13 +867,13 @@ struct voidCallFunctionItem *RemoveVoidFunctionFromCallList(
     struct voidCallFunctionItem *currentPtr, *lastPtr;
 
     *found = false;
-    lastPtr = NULL;
+    lastPtr = nullptr;
     currentPtr = head;
 
-    while (currentPtr != NULL) {
+    while (currentPtr != nullptr) {
         if (strcmp(name, currentPtr->name) == 0) {
             *found = true;
-            if (lastPtr == NULL) { head = currentPtr->next; }
+            if (lastPtr == nullptr) { head = currentPtr->next; }
             else { lastPtr->next = currentPtr->next; }
 
             genfree(theEnv, (void *) currentPtr->name, strlen(currentPtr->name) + 1);
@@ -901,13 +901,13 @@ struct boolCallFunctionItem *RemoveBoolFunctionFromCallList(
     struct boolCallFunctionItem *currentPtr, *lastPtr;
 
     *found = false;
-    lastPtr = NULL;
+    lastPtr = nullptr;
     currentPtr = head;
 
-    while (currentPtr != NULL) {
+    while (currentPtr != nullptr) {
         if (strcmp(name, currentPtr->name) == 0) {
             *found = true;
-            if (lastPtr == NULL) { head = currentPtr->next; }
+            if (lastPtr == nullptr) { head = currentPtr->next; }
             else { lastPtr->next = currentPtr->next; }
 
             genfree(theEnv, (void *) currentPtr->name, strlen(currentPtr->name) + 1);
@@ -933,7 +933,7 @@ void DeallocateVoidCallList(
     struct voidCallFunctionItem *tmpPtr, *nextPtr;
 
     tmpPtr = theList;
-    while (tmpPtr != NULL) {
+    while (tmpPtr != nullptr) {
         nextPtr = tmpPtr->next;
         genfree(theEnv, (void *) tmpPtr->name, strlen(tmpPtr->name) + 1);
         rtn_struct(theEnv, voidCallFunctionItem, tmpPtr);
@@ -952,7 +952,7 @@ void DeallocateBoolCallList(
     struct boolCallFunctionItem *tmpPtr, *nextPtr;
 
     tmpPtr = theList;
-    while (tmpPtr != NULL) {
+    while (tmpPtr != nullptr) {
         nextPtr = tmpPtr->next;
         genfree(theEnv, (void *) tmpPtr->name, strlen(tmpPtr->name) + 1);
         rtn_struct(theEnv, boolCallFunctionItem, tmpPtr);
@@ -972,7 +972,7 @@ struct callFunctionItemWithArg *AddFunctionToCallListWithArg(
         VoidCallFunctionWithArg *func,
         struct callFunctionItemWithArg *head,
         void *context) {
-    struct callFunctionItemWithArg *newPtr, *currentPtr, *lastPtr = NULL;
+    struct callFunctionItemWithArg *newPtr, *currentPtr, *lastPtr = nullptr;
 
     newPtr = get_struct(theEnv, callFunctionItemWithArg);
 
@@ -981,18 +981,18 @@ struct callFunctionItemWithArg *AddFunctionToCallListWithArg(
     newPtr->priority = priority;
     newPtr->context = context;
 
-    if (head == NULL) {
-        newPtr->next = NULL;
+    if (head == nullptr) {
+        newPtr->next = nullptr;
         return (newPtr);
     }
 
     currentPtr = head;
-    while ((currentPtr != NULL) ? (priority < currentPtr->priority) : false) {
+    while ((currentPtr != nullptr) ? (priority < currentPtr->priority) : false) {
         lastPtr = currentPtr;
         currentPtr = currentPtr->next;
     }
 
-    if (lastPtr == NULL) {
+    if (lastPtr == nullptr) {
         newPtr->next = head;
         head = newPtr;
     } else {
@@ -1016,13 +1016,13 @@ struct callFunctionItemWithArg *RemoveFunctionFromCallListWithArg(
     struct callFunctionItemWithArg *currentPtr, *lastPtr;
 
     *found = false;
-    lastPtr = NULL;
+    lastPtr = nullptr;
     currentPtr = head;
 
-    while (currentPtr != NULL) {
+    while (currentPtr != nullptr) {
         if (strcmp(name, currentPtr->name) == 0) {
             *found = true;
-            if (lastPtr == NULL) { head = currentPtr->next; }
+            if (lastPtr == nullptr) { head = currentPtr->next; }
             else { lastPtr->next = currentPtr->next; }
 
             rtn_struct(theEnv, callFunctionItemWithArg, currentPtr);
@@ -1047,7 +1047,7 @@ void DeallocateCallListWithArg(
     struct callFunctionItemWithArg *tmpPtr, *nextPtr;
 
     tmpPtr = theList;
-    while (tmpPtr != NULL) {
+    while (tmpPtr != nullptr) {
         nextPtr = tmpPtr->next;
         rtn_struct(theEnv, callFunctionItemWithArg, tmpPtr);
         tmpPtr = nextPtr;
@@ -1109,7 +1109,7 @@ size_t ItemHashValue(
 /********************************************/
 void YieldTime(
         Environment *theEnv) {
-    if ((UtilityData(theEnv)->YieldTimeFunction != NULL) && UtilityData(theEnv)->YieldFunctionEnabled) {
+    if ((UtilityData(theEnv)->YieldTimeFunction != nullptr) && UtilityData(theEnv)->YieldFunctionEnabled) {
         (*UtilityData(theEnv)->YieldTimeFunction)();
     }
 }
@@ -1160,7 +1160,7 @@ struct trackedMemory *AddTrackedMemory(
 
     newPtr = get_struct(theEnv, trackedMemory);
 
-    newPtr->prev = NULL;
+    newPtr->prev = nullptr;
     newPtr->theMemory = theMemory;
     newPtr->memSize = theSize;
     newPtr->next = UtilityData(theEnv)->trackList;
@@ -1175,10 +1175,10 @@ struct trackedMemory *AddTrackedMemory(
 void RemoveTrackedMemory(
         Environment *theEnv,
         struct trackedMemory *theTracker) {
-    if (theTracker->prev == NULL) { UtilityData(theEnv)->trackList = theTracker->next; }
+    if (theTracker->prev == nullptr) { UtilityData(theEnv)->trackList = theTracker->next; }
     else { theTracker->prev->next = theTracker->next; }
 
-    if (theTracker->next != NULL) { theTracker->next->prev = theTracker->prev; }
+    if (theTracker->next != nullptr) { theTracker->next->prev = theTracker->prev; }
 
     rtn_struct(theEnv, trackedMemory, theTracker);
 }
@@ -1263,7 +1263,7 @@ StringBuilder *CreateStringBuilder(
     StringBuilder *theSB;
 
     theSB = get_struct(theEnv, stringBuilder);
-    if (theSB == NULL) return NULL;
+    if (theSB == nullptr) return nullptr;
 
     theSize++;
     theSB->sbEnv = theEnv;
@@ -1380,7 +1380,7 @@ void BufferedRead(
         size_t bufsz) {
     size_t i, amountLeftToRead;
 
-    if (UtilityData(theEnv)->CurrentReadBuffer != NULL) {
+    if (UtilityData(theEnv)->CurrentReadBuffer != nullptr) {
         amountLeftToRead = UtilityData(theEnv)->CurrentReadBufferSize - UtilityData(theEnv)->CurrentReadBufferOffset;
         if (bufsz <= amountLeftToRead) {
             for (i = 0L; i < bufsz; i++)
@@ -1431,7 +1431,7 @@ void FreeReadBuffer(
         Environment *theEnv) {
     if (UtilityData(theEnv)->CurrentReadBufferSize != 0L) {
         genfree(theEnv, UtilityData(theEnv)->CurrentReadBuffer, UtilityData(theEnv)->CurrentReadBufferSize);
-        UtilityData(theEnv)->CurrentReadBuffer = NULL;
+        UtilityData(theEnv)->CurrentReadBuffer = nullptr;
         UtilityData(theEnv)->CurrentReadBufferSize = 0L;
         UtilityData(theEnv)->CurrentReadBufferOffset = 0L; // TBD Added
     }

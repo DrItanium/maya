@@ -160,55 +160,55 @@ static void ConvertTime(Environment *, UDFValue *, struct tm *);
 /*****************************************************************/
 void MiscFunctionDefinitions(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, MISCFUN_DATA, sizeof(struct miscFunctionData), NULL);
+    AllocateEnvironmentData(theEnv, MISCFUN_DATA, sizeof(struct miscFunctionData), nullptr);
     MiscFunctionData(theEnv)->GensymNumber = 1;
     MiscFunctionData(theEnv)->errorCode.lexemeValue = FalseSymbol(theEnv);
     Retain(theEnv, MiscFunctionData(theEnv)->errorCode.header);
 
-    AddUDF(theEnv, "exit", "v", 0, 1, "l", ExitCommand, NULL);
+    AddUDF(theEnv, "exit", "v", 0, 1, "l", ExitCommand, nullptr);
 
-    AddUDF(theEnv, "gensym", "y", 0, 0, NULL, GensymFunction, NULL);
-    AddUDF(theEnv, "gensym*", "y", 0, 0, NULL, GensymStarFunction, NULL);
-    AddUDF(theEnv, "setgen", "l", 1, 1, "l", SetgenFunction, NULL);
+    AddUDF(theEnv, "gensym", "y", 0, 0, nullptr, GensymFunction, nullptr);
+    AddUDF(theEnv, "gensym*", "y", 0, 0, nullptr, GensymStarFunction, nullptr);
+    AddUDF(theEnv, "setgen", "l", 1, 1, "l", SetgenFunction, nullptr);
 
-    AddUDF(theEnv, "system", "ly", 0, UNBOUNDED, "sy", SystemCommand, NULL);
-    AddUDF(theEnv, "length$", "l", 1, 1, "m", LengthFunction, NULL);
-    AddUDF(theEnv, "time", "d", 0, 0, NULL, TimeFunction, NULL);
-    AddUDF(theEnv, "local-time", "m", 0, 0, NULL, LocalTimeFunction, NULL);
-    AddUDF(theEnv, "gm-time", "m", 0, 0, NULL, GMTimeFunction, NULL);
+    AddUDF(theEnv, "system", "ly", 0, UNBOUNDED, "sy", SystemCommand, nullptr);
+    AddUDF(theEnv, "length$", "l", 1, 1, "m", LengthFunction, nullptr);
+    AddUDF(theEnv, "time", "d", 0, 0, nullptr, TimeFunction, nullptr);
+    AddUDF(theEnv, "local-time", "m", 0, 0, nullptr, LocalTimeFunction, nullptr);
+    AddUDF(theEnv, "gm-time", "m", 0, 0, nullptr, GMTimeFunction, nullptr);
 
-    AddUDF(theEnv, "random", "l", 0, 2, "l", RandomFunction, NULL);
-    AddUDF(theEnv, "seed", "v", 1, 1, "l", SeedFunction, NULL);
-    AddUDF(theEnv, "conserve-mem", "v", 1, 1, "y", ConserveMemCommand, NULL);
-    AddUDF(theEnv, "release-mem", "l", 0, 0, NULL, ReleaseMemCommand, NULL);
+    AddUDF(theEnv, "random", "l", 0, 2, "l", RandomFunction, nullptr);
+    AddUDF(theEnv, "seed", "v", 1, 1, "l", SeedFunction, nullptr);
+    AddUDF(theEnv, "conserve-mem", "v", 1, 1, "y", ConserveMemCommand, nullptr);
+    AddUDF(theEnv, "release-mem", "l", 0, 0, nullptr, ReleaseMemCommand, nullptr);
 #if DEBUGGING_FUNCTIONS
-    AddUDF(theEnv, "mem-used", "l", 0, 0, NULL, MemUsedCommand, NULL);
-    AddUDF(theEnv, "mem-requests", "l", 0, 0, NULL, MemRequestsCommand, NULL);
+    AddUDF(theEnv, "mem-used", "l", 0, 0, nullptr, MemUsedCommand, nullptr);
+    AddUDF(theEnv, "mem-requests", "l", 0, 0, nullptr, MemRequestsCommand, nullptr);
 #endif
 
-    AddUDF(theEnv, "options", "v", 0, 0, NULL, OptionsCommand, NULL);
+    AddUDF(theEnv, "options", "v", 0, 0, nullptr, OptionsCommand, nullptr);
 
-    AddUDF(theEnv, "operating-system", "y", 0, 0, NULL, OperatingSystemFunction, NULL);
-    AddUDF(theEnv, "(expansion-call)", "*", 0, UNBOUNDED, NULL, ExpandFuncCall, NULL);
-    AddUDF(theEnv, "expand$", "*", 1, 1, "m", DummyExpandFuncMultifield, NULL);
+    AddUDF(theEnv, "operating-system", "y", 0, 0, nullptr, OperatingSystemFunction, nullptr);
+    AddUDF(theEnv, "(expansion-call)", "*", 0, UNBOUNDED, nullptr, ExpandFuncCall, nullptr);
+    AddUDF(theEnv, "expand$", "*", 1, 1, "m", DummyExpandFuncMultifield, nullptr);
     FuncSeqOvlFlags(theEnv, "expand$", false, false);
-    AddUDF(theEnv, "(set-evaluation-error)", "y", 0, 0, NULL, CauseEvaluationError, NULL);
-    AddUDF(theEnv, "set-sequence-operator-recognition", "b", 1, 1, "y", SetSORCommand, NULL);
-    AddUDF(theEnv, "get-sequence-operator-recognition", "b", 0, 0, NULL, GetSORCommand, NULL);
-    AddUDF(theEnv, "get-function-restrictions", "s", 1, 1, "y", GetFunctionRestrictions, NULL);
-    AddUDF(theEnv, "create$", "m", 0, UNBOUNDED, NULL, CreateFunction, NULL);
-    AddUDF(theEnv, "apropos", "v", 1, 1, "y", AproposCommand, NULL);
-    AddUDF(theEnv, "get-function-list", "m", 0, 0, NULL, GetFunctionListFunction, NULL);
-    AddUDF(theEnv, "funcall", "*", 1, UNBOUNDED, "*;sy", FuncallFunction, NULL);
-    AddUDF(theEnv, "new", "*", 1, UNBOUNDED, "*;y", NewFunction, NULL);
-    AddUDF(theEnv, "call", "*", 1, UNBOUNDED, "*", CallFunction, NULL);
-    AddUDF(theEnv, "timer", "d", 0, UNBOUNDED, NULL, TimerFunction, NULL);
+    AddUDF(theEnv, "(set-evaluation-error)", "y", 0, 0, nullptr, CauseEvaluationError, nullptr);
+    AddUDF(theEnv, "set-sequence-operator-recognition", "b", 1, 1, "y", SetSORCommand, nullptr);
+    AddUDF(theEnv, "get-sequence-operator-recognition", "b", 0, 0, nullptr, GetSORCommand, nullptr);
+    AddUDF(theEnv, "get-function-restrictions", "s", 1, 1, "y", GetFunctionRestrictions, nullptr);
+    AddUDF(theEnv, "create$", "m", 0, UNBOUNDED, nullptr, CreateFunction, nullptr);
+    AddUDF(theEnv, "apropos", "v", 1, 1, "y", AproposCommand, nullptr);
+    AddUDF(theEnv, "get-function-list", "m", 0, 0, nullptr, GetFunctionListFunction, nullptr);
+    AddUDF(theEnv, "funcall", "*", 1, UNBOUNDED, "*;sy", FuncallFunction, nullptr);
+    AddUDF(theEnv, "new", "*", 1, UNBOUNDED, "*;y", NewFunction, nullptr);
+    AddUDF(theEnv, "call", "*", 1, UNBOUNDED, "*", CallFunction, nullptr);
+    AddUDF(theEnv, "timer", "d", 0, UNBOUNDED, nullptr, TimerFunction, nullptr);
 
-    AddUDF(theEnv, "get-error", "*", 0, 0, NULL, GetErrorFunction, NULL);
-    AddUDF(theEnv, "clear-error", "*", 0, 0, NULL, ClearErrorFunction, NULL);
-    AddUDF(theEnv, "set-error", "v", 1, 1, NULL, SetErrorFunction, NULL);
+    AddUDF(theEnv, "get-error", "*", 0, 0, nullptr, GetErrorFunction, nullptr);
+    AddUDF(theEnv, "clear-error", "*", 0, 0, nullptr, ClearErrorFunction, nullptr);
+    AddUDF(theEnv, "set-error", "v", 1, 1, nullptr, SetErrorFunction, nullptr);
 
-    AddUDF(theEnv, "void", "v", 0, 0, NULL, VoidFunction, NULL);
+    AddUDF(theEnv, "void", "v", 0, 0, nullptr, VoidFunction, nullptr);
 }
 
 /*****************************************************/
@@ -339,7 +339,7 @@ void GensymStar(
     do {
         gensprintf(genstring, "gen%lld", MiscFunctionData(theEnv)->GensymNumber);
         MiscFunctionData(theEnv)->GensymNumber++;
-    } while (FindSymbolHN(theEnv, genstring, SYMBOL_BIT) != NULL);
+    } while (FindSymbolHN(theEnv, genstring, SYMBOL_BIT) != nullptr);
 
     /*====================*/
     /* Return the symbol. */
@@ -556,7 +556,7 @@ void AproposCommand(
         UDFValue *returnValue) {
     const char *argument;
     UDFValue theArg;
-    CLIPSLexeme *hashPtr = NULL;
+    CLIPSLexeme *hashPtr = nullptr;
     size_t theLength;
 
     /*=======================================================*/
@@ -579,7 +579,7 @@ void AproposCommand(
     /* are printed.                                                       */
     /*====================================================================*/
 
-    while ((hashPtr = GetNextSymbolMatch(theEnv, argument, theLength, hashPtr, true, NULL)) != NULL) {
+    while ((hashPtr = GetNextSymbolMatch(theEnv, argument, theLength, hashPtr, true, nullptr)) != nullptr) {
         WriteString(theEnv, STDOUT, hashPtr->contents);
         WriteString(theEnv, STDOUT, "\n");
     }
@@ -758,7 +758,7 @@ void ExpandFuncCall(
     fcallexp = get_struct(theEnv, expr);
     fcallexp->type = GetFirstArgument()->type;
     fcallexp->value = GetFirstArgument()->value;
-    fcallexp->nextArg = NULL;
+    fcallexp->nextArg = nullptr;
     fcallexp->argList = newargexp;
     if (fcallexp->type == FCALL) {
         func = fcallexp->functionValue;
@@ -835,13 +835,13 @@ static void ExpandFuncMultifield(
     Expression *newexp, *top, *bot;
     size_t i; /* 6.04 Bug Fix */
 
-    while (theExp != NULL) {
+    while (theExp != nullptr) {
         if (theExp->value == expmult) {
             EvaluateExpression(theEnv, theExp->argList, returnValue);
             ReturnExpression(theEnv, theExp->argList);
             if ((EvaluationData(theEnv)->EvaluationError) ||
                 (returnValue->header->type != MULTIFIELD_TYPE)) {
-                theExp->argList = NULL;
+                theExp->argList = nullptr;
                 if ((EvaluationData(theEnv)->EvaluationError == false) &&
                     (returnValue->header->type != MULTIFIELD_TYPE))
                     ExpectedTypeError2(theEnv, "expand$", 1);
@@ -850,20 +850,20 @@ static void ExpandFuncMultifield(
                 EvaluationData(theEnv)->HaltExecution = false;
                 return;
             }
-            top = bot = NULL;
+            top = bot = nullptr;
             for (i = returnValue->begin; i < (returnValue->begin + returnValue->range); i++) {
                 newexp = get_struct(theEnv, expr);
                 newexp->type = returnValue->multifieldValue->contents[i].header->type;
                 newexp->value = returnValue->multifieldValue->contents[i].value;
-                newexp->argList = NULL;
-                newexp->nextArg = NULL;
-                if (top == NULL)
+                newexp->argList = nullptr;
+                newexp->nextArg = nullptr;
+                if (top == nullptr)
                     top = newexp;
                 else
                     bot->nextArg = newexp;
                 bot = newexp;
             }
-            if (top == NULL) {
+            if (top == nullptr) {
                 *sto = theExp->nextArg;
                 rtn_struct(theEnv, expr, theExp);
                 theExp = *sto;
@@ -875,7 +875,7 @@ static void ExpandFuncMultifield(
                 theExp = bot->nextArg;
             }
         } else {
-            if (theExp->argList != NULL)
+            if (theExp->argList != nullptr)
                 ExpandFuncMultifield(theEnv, returnValue, theExp->argList, &theExp->argList, expmult);
             sto = &theExp->nextArg;
             theExp = theExp->nextArg;
@@ -940,14 +940,14 @@ void GetFunctionRestrictions(
         UDFValue *returnValue) {
     UDFValue theArg;
     struct functionDefinition *fptr;
-    char *stringBuffer = NULL;
+    char *stringBuffer = nullptr;
     size_t bufferPosition = 0;
     size_t bufferMaximum = 0;
 
     if (!UDFFirstArgument(context, SYMBOL_BIT, &theArg)) { return; }
 
     fptr = FindFunction(theEnv, theArg.lexemeValue->contents);
-    if (fptr == NULL) {
+    if (fptr == nullptr) {
         CantFindItemErrorMessage(theEnv, "function", theArg.lexemeValue->contents, true);
         SetEvaluationError(theEnv, true);
         returnValue->lexemeValue = CreateString(theEnv, "");
@@ -976,7 +976,7 @@ void GetFunctionRestrictions(
     stringBuffer = AppendToString(theEnv, ";",
                                   stringBuffer, &bufferPosition, &bufferMaximum);
 
-    if (fptr->restrictions == NULL) {
+    if (fptr->restrictions == nullptr) {
         stringBuffer = AppendToString(theEnv, "*",
                                       stringBuffer, &bufferPosition, &bufferMaximum);
     } else {
@@ -1002,7 +1002,7 @@ void GetFunctionListFunction(
     unsigned long functionCount = 0;
 
     for (theFunction = GetFunctionList(theEnv);
-         theFunction != NULL;
+         theFunction != nullptr;
          theFunction = theFunction->next) { functionCount++; }
 
     returnValue->begin = 0;
@@ -1011,7 +1011,7 @@ void GetFunctionListFunction(
     returnValue->value = theList;
 
     for (theFunction = GetFunctionList(theEnv), functionCount = 0;
-         theFunction != NULL;
+         theFunction != nullptr;
          theFunction = theFunction->next, functionCount++) {
         theList->contents[functionCount].lexemeValue = theFunction->callFunctionName;
     }
@@ -1030,8 +1030,8 @@ void FuncallFunction(
     Expression theReference;
     const char *name;
     Multifield *theMultifield;
-    struct expr *lastAdd = NULL, *nextAdd, *multiAdd;
-    struct functionDefinition *theFunction = NULL;
+    struct expr *lastAdd = nullptr, *nextAdd, *multiAdd;
+    struct functionDefinition *theFunction = nullptr;
 
     /*==================================*/
     /* Set up the default return value. */
@@ -1062,7 +1062,7 @@ void FuncallFunction(
 
     if (theReference.type == FCALL) {
         theFunction = FindFunction(theEnv, name);
-        if (theFunction->parser != NULL) {
+        if (theFunction->parser != nullptr) {
             ExpectedTypeError1(theEnv, "funcall", 1, "function without specialized parser");
             return;
         }
@@ -1084,16 +1084,16 @@ void FuncallFunction(
             case MULTIFIELD_TYPE:
                 nextAdd = GenConstant(theEnv, FCALL, FindFunction(theEnv, "create$"));
 
-                if (lastAdd == NULL) { theReference.argList = nextAdd; }
+                if (lastAdd == nullptr) { theReference.argList = nextAdd; }
                 else { lastAdd->nextArg = nextAdd; }
                 lastAdd = nextAdd;
 
-                multiAdd = NULL;
+                multiAdd = nullptr;
                 theMultifield = theArg.multifieldValue;
                 for (j = theArg.begin; j < (theArg.begin + theArg.range); j++) {
                     nextAdd = GenConstant(theEnv, theMultifield->contents[j].header->type,
                                           theMultifield->contents[j].value);
-                    if (multiAdd == NULL) { lastAdd->argList = nextAdd; }
+                    if (multiAdd == nullptr) { lastAdd->argList = nextAdd; }
                     else { multiAdd->nextArg = nextAdd; }
                     multiAdd = nextAdd;
                 }
@@ -1103,7 +1103,7 @@ void FuncallFunction(
 
             default:
                 nextAdd = GenConstant(theEnv, theArg.header->type, theArg.value);
-                if (lastAdd == NULL) { theReference.argList = nextAdd; }
+                if (lastAdd == nullptr) { theReference.argList = nextAdd; }
                 else { lastAdd->nextArg = nextAdd; }
                 lastAdd = nextAdd;
                 ExpressionInstall(theEnv, lastAdd);
@@ -1197,8 +1197,8 @@ void NewFunction(
     /* Invoke the new function for the specific language. */
     /*====================================================*/
 
-    if ((EvaluationData(theEnv)->ExternalAddressTypes[theType] != NULL) &&
-        (EvaluationData(theEnv)->ExternalAddressTypes[theType]->newFunction != NULL)) {
+    if ((EvaluationData(theEnv)->ExternalAddressTypes[theType] != nullptr) &&
+        (EvaluationData(theEnv)->ExternalAddressTypes[theType]->newFunction != nullptr)) {
         (*EvaluationData(theEnv)->ExternalAddressTypes[theType]->newFunction)(context, returnValue);
     }
 }
@@ -1249,8 +1249,8 @@ void CallFunction(
         /* and second arguments to the call function.                         */
         /*====================================================================*/
 
-        if ((EvaluationData(theEnv)->ExternalAddressTypes[theType] != NULL) &&
-            (EvaluationData(theEnv)->ExternalAddressTypes[theType]->callFunction != NULL)) {
+        if ((EvaluationData(theEnv)->ExternalAddressTypes[theType] != nullptr) &&
+            (EvaluationData(theEnv)->ExternalAddressTypes[theType]->callFunction != nullptr)) {
             (*EvaluationData(theEnv)->ExternalAddressTypes[theType]->callFunction)(context, &theValue, returnValue);
         }
 
@@ -1268,8 +1268,8 @@ void CallFunction(
 
         theType = theEA->type;
 
-        if ((EvaluationData(theEnv)->ExternalAddressTypes[theType] != NULL) &&
-            (EvaluationData(theEnv)->ExternalAddressTypes[theType]->callFunction != NULL)) {
+        if ((EvaluationData(theEnv)->ExternalAddressTypes[theType] != nullptr) &&
+            (EvaluationData(theEnv)->ExternalAddressTypes[theType]->callFunction != nullptr)) {
             (*EvaluationData(theEnv)->ExternalAddressTypes[theType]->callFunction)(context, &theValue, returnValue);
         }
 
@@ -1432,7 +1432,7 @@ void SystemCommand(
         Environment *theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
-    char *commandBuffer = NULL;
+    char *commandBuffer = nullptr;
     size_t bufferPosition = 0;
     size_t bufferMaximum = 0;
     UDFValue tempValue;
@@ -1464,7 +1464,7 @@ void SystemCommand(
     /* Return the string buffer containing the command. */
     /*==================================================*/
 
-    if (commandBuffer != NULL) { rm(theEnv, commandBuffer, bufferMaximum); }
+    if (commandBuffer != nullptr) { rm(theEnv, commandBuffer, bufferMaximum); }
 }
 
 /****************************************/
@@ -1486,7 +1486,7 @@ void SetErrorValue(
         TypeHeader *theValue) {
     Release(theEnv, MiscFunctionData(theEnv)->errorCode.header);
 
-    if (theValue == NULL) { MiscFunctionData(theEnv)->errorCode.lexemeValue = FalseSymbol(theEnv); }
+    if (theValue == nullptr) { MiscFunctionData(theEnv)->errorCode.lexemeValue = FalseSymbol(theEnv); }
     else { MiscFunctionData(theEnv)->errorCode.header = theValue; }
 
     Retain(theEnv, MiscFunctionData(theEnv)->errorCode.header);

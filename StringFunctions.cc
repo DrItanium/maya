@@ -124,18 +124,18 @@ static void StrOrSymCatFunction(UDFContext *, UDFValue *, unsigned short);
 /******************************************/
 void StringFunctionDefinitions(
         Environment *theEnv) {
-    AddUDF(theEnv, "str-cat", "sy", 1, UNBOUNDED, "synld", StrCatFunction, NULL);
-    AddUDF(theEnv, "sym-cat", "sy", 1, UNBOUNDED, "synld", SymCatFunction, NULL);
-    AddUDF(theEnv, "str-length", "l", 1, 1, "syn", StrLengthFunction, NULL);
-    AddUDF(theEnv, "str-compare", "l", 2, 3, "*;syn;syn;l", StrCompareFunction, NULL);
-    AddUDF(theEnv, "upcase", "syn", 1, 1, "syn", UpcaseFunction, NULL);
-    AddUDF(theEnv, "lowcase", "syn", 1, 1, "syn", LowcaseFunction, NULL);
-    AddUDF(theEnv, "sub-string", "s", 3, 3, "*;l;l;syn", SubStringFunction, NULL);
-    AddUDF(theEnv, "str-index", "bl", 2, 2, "syn", StrIndexFunction, NULL);
-    AddUDF(theEnv, "eval", "*", 1, 1, "sy", EvalFunction, NULL);
-    AddUDF(theEnv, "build", "b", 1, 1, "sy", BuildFunction, NULL);
-    AddUDF(theEnv, "string-to-field", "*", 1, 1, "syn", StringToFieldFunction, NULL);
-    AddUDF(theEnv, "str-replace", "syn", 3, 3, "syn", StrReplaceFunction, NULL);
+    AddUDF(theEnv, "str-cat", "sy", 1, UNBOUNDED, "synld", StrCatFunction, nullptr);
+    AddUDF(theEnv, "sym-cat", "sy", 1, UNBOUNDED, "synld", SymCatFunction, nullptr);
+    AddUDF(theEnv, "str-length", "l", 1, 1, "syn", StrLengthFunction, nullptr);
+    AddUDF(theEnv, "str-compare", "l", 2, 3, "*;syn;syn;l", StrCompareFunction, nullptr);
+    AddUDF(theEnv, "upcase", "syn", 1, 1, "syn", UpcaseFunction, nullptr);
+    AddUDF(theEnv, "lowcase", "syn", 1, 1, "syn", LowcaseFunction, nullptr);
+    AddUDF(theEnv, "sub-string", "s", 3, 3, "*;l;l;syn", SubStringFunction, nullptr);
+    AddUDF(theEnv, "str-index", "bl", 2, 2, "syn", StrIndexFunction, nullptr);
+    AddUDF(theEnv, "eval", "*", 1, 1, "sy", EvalFunction, nullptr);
+    AddUDF(theEnv, "build", "b", 1, 1, "sy", BuildFunction, nullptr);
+    AddUDF(theEnv, "string-to-field", "*", 1, 1, "syn", StringToFieldFunction, nullptr);
+    AddUDF(theEnv, "str-replace", "syn", 3, 3, "syn", StrReplaceFunction, nullptr);
 }
 
 /****************************************/
@@ -188,7 +188,7 @@ static void StrOrSymCatFunction(
     if (numArgs == 0) return;
 
     arrayOfStrings = (CLIPSLexeme **) gm1(theEnv, sizeof(CLIPSLexeme *) * numArgs);
-    for (i = 0; i < numArgs; i++) { arrayOfStrings[i] = NULL; }
+    for (i = 0; i < numArgs; i++) { arrayOfStrings[i] = nullptr; }
 
     /*=============================================*/
     /* Evaluate each argument and store its string */
@@ -228,7 +228,7 @@ static void StrOrSymCatFunction(
 
         if (EvaluationData(theEnv)->EvaluationError) {
             for (i = 0; i < numArgs; i++) {
-                if (arrayOfStrings[i] != NULL) { ReleaseLexeme(theEnv, arrayOfStrings[i]); }
+                if (arrayOfStrings[i] != nullptr) { ReleaseLexeme(theEnv, arrayOfStrings[i]); }
             }
 
             rm(theEnv, arrayOfStrings, sizeof(CLIPSLexeme *) * numArgs);
@@ -265,7 +265,7 @@ static void StrOrSymCatFunction(
     rm(theEnv, theString, sizeof(char) * total);
 
     for (i = 0; i < numArgs; i++) {
-        if (arrayOfStrings[i] != NULL) { ReleaseLexeme(theEnv, arrayOfStrings[i]); }
+        if (arrayOfStrings[i] != nullptr) { ReleaseLexeme(theEnv, arrayOfStrings[i]); }
     }
 
     rm(theEnv, arrayOfStrings, sizeof(CLIPSLexeme *) * numArgs);
@@ -472,7 +472,7 @@ void SubStringFunction(
 
     /*==================================*/
     /* If the start is greater than the */
-    /* end, return a null string.       */
+    /* end, return a nullptr string.       */
     /*==================================*/
 
     if ((start > end) || (length == 0)) {
@@ -540,7 +540,7 @@ void StrIndexFunction(
 
     strg3 = strstr(strg2, strg1);
 
-    if (strg3 != NULL) {
+    if (strg3 != nullptr) {
         i = (size_t) (strg3 - strg2) + 1;
         returnValue->integerValue = CreateInteger(theEnv, (long long) UTF8CharNum(strg2, i));
     }
@@ -658,7 +658,7 @@ void StrReplaceFunction(
     returnLength = strlen(initialString) + 1;
     if (findLength != replaceLength) {
         traverse = initialString;
-        while ((traverse = strstr(traverse, findString)) != NULL) {
+        while ((traverse = strstr(traverse, findString)) != nullptr) {
             traverse += findLength;
             returnLength += (replaceLength - findLength);
         }
@@ -672,7 +672,7 @@ void StrReplaceFunction(
 
     traverse = initialString;
     target = returnString;
-    while ((found = strstr(traverse, findString)) != NULL) {
+    while ((found = strstr(traverse, findString)) != nullptr) {
         strncpy(target, traverse, found - traverse);
         target += (found - traverse);
         strcpy(target, replaceString);
@@ -745,7 +745,7 @@ EvalError Eval(
     /* If embedded, clear the error flags. */
     /*=====================================*/
 
-    if (EvaluationData(theEnv)->CurrentExpression == NULL) { ResetErrorFlags(theEnv); }
+    if (EvaluationData(theEnv)->CurrentExpression == nullptr) { ResetErrorFlags(theEnv); }
 
     /*======================================================*/
     /* Evaluate the string. Create a different logical name */
@@ -767,14 +767,14 @@ EvalError Eval(
     ov = GetPPBufferStatus(theEnv);
     SetPPBufferStatus(theEnv, false);
     oldBinds = GetParsedBindNames(theEnv);
-    SetParsedBindNames(theEnv, NULL);
+    SetParsedBindNames(theEnv, nullptr);
     danglingConstructs = ConstructData(theEnv)->DanglingConstructs;
 
     /*========================================================*/
     /* Parse the string argument passed to the eval function. */
     /*========================================================*/
 
-    top = ParseAtomOrExpression(theEnv, logicalNameBuffer, NULL);
+    top = ParseAtomOrExpression(theEnv, logicalNameBuffer, nullptr);
 
     /*============================*/
     /* Restore the parsing state. */
@@ -788,11 +788,11 @@ EvalError Eval(
     /* Return if an error occured while parsing. */
     /*===========================================*/
 
-    if (top == NULL) {
+    if (top == nullptr) {
         SetEvaluationError(theEnv, true);
         CloseStringSource(theEnv, logicalNameBuffer);
         GCBlockEnd(theEnv, &gcb);
-        if (returnValue != NULL) { returnValue->lexemeValue = FalseSymbol(theEnv); }
+        if (returnValue != nullptr) { returnValue->lexemeValue = FalseSymbol(theEnv); }
         depth--;
         ConstructData(theEnv)->DanglingConstructs = danglingConstructs;
         return EE_PARSING_ERROR;
@@ -810,7 +810,7 @@ EvalError Eval(
         ReturnExpression(theEnv, top);
         CloseStringSource(theEnv, logicalNameBuffer);
         GCBlockEnd(theEnv, &gcb);
-        if (returnValue != NULL) { returnValue->lexemeValue = FalseSymbol(theEnv); }
+        if (returnValue != nullptr) { returnValue->lexemeValue = FalseSymbol(theEnv); }
         depth--;
         ConstructData(theEnv)->DanglingConstructs = danglingConstructs;
         return EE_PARSING_ERROR;
@@ -839,13 +839,13 @@ EvalError Eval(
     /* If embedded, reset dangling construct count. */
     /*==============================================*/
 
-    if (EvaluationData(theEnv)->CurrentExpression == NULL) { ConstructData(theEnv)->DanglingConstructs = danglingConstructs; }
+    if (EvaluationData(theEnv)->CurrentExpression == nullptr) { ConstructData(theEnv)->DanglingConstructs = danglingConstructs; }
 
     /*================================*/
     /* Restore the old garbage frame. */
     /*================================*/
 
-    if (returnValue != NULL) { GCBlockEndUDF(theEnv, &gcb, &evalResult); }
+    if (returnValue != nullptr) { GCBlockEndUDF(theEnv, &gcb, &evalResult); }
     else { GCBlockEnd(theEnv, &gcb); }
 
     /*==========================================*/
@@ -853,13 +853,13 @@ EvalError Eval(
     /* issued from an embedded controller.      */
     /*==========================================*/
 
-    if (EvaluationData(theEnv)->CurrentExpression == NULL) {
-        if (returnValue != NULL) { CleanCurrentGarbageFrame(theEnv, &evalResult); }
-        else { CleanCurrentGarbageFrame(theEnv, NULL); }
+    if (EvaluationData(theEnv)->CurrentExpression == nullptr) {
+        if (returnValue != nullptr) { CleanCurrentGarbageFrame(theEnv, &evalResult); }
+        else { CleanCurrentGarbageFrame(theEnv, nullptr); }
         CallPeriodicTasks(theEnv);
     }
 
-    if (returnValue != NULL) { returnValue->value = evalResult.value; }
+    if (returnValue != nullptr) { returnValue->value = evalResult.value; }
 
     if (GetEvaluationError(theEnv)) return EE_PROCESSING_ERROR;
 
@@ -907,7 +907,7 @@ BuildError Build(
     /* If embedded, clear the error flags. */
     /*=====================================*/
 
-    if (EvaluationData(theEnv)->CurrentExpression == NULL) { ResetErrorFlags(theEnv); }
+    if (EvaluationData(theEnv)->CurrentExpression == nullptr) { ResetErrorFlags(theEnv); }
 
     /*====================================================*/
     /* No additions during defrule join network activity. */
@@ -995,7 +995,7 @@ BuildError Build(
     /* If embedded, clean the topmost garbage frame. */
     /*===============================================*/
 
-    if (EvaluationData(theEnv)->CurrentExpression == NULL) { CleanCurrentGarbageFrame(theEnv, NULL); }
+    if (EvaluationData(theEnv)->CurrentExpression == nullptr) { CleanCurrentGarbageFrame(theEnv, nullptr); }
 
     /*===================================*/
     /* Throw error for extraneous input. */

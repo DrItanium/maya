@@ -76,8 +76,8 @@ struct constraintRecord *GetConstraintRecord(
     constraints->integerRestriction = false;
     constraints->classRestriction = false;
     constraints->instanceNameRestriction = false;
-    constraints->classList = NULL;
-    constraints->restrictionList = NULL;
+    constraints->classList = nullptr;
+    constraints->restrictionList = nullptr;
     constraints->minValue = GenConstant(theEnv, SYMBOL_TYPE, SymbolData(theEnv)->NegativeInfinity);
     constraints->maxValue = GenConstant(theEnv, SYMBOL_TYPE, SymbolData(theEnv)->PositiveInfinity);
     constraints->minFields = GenConstant(theEnv, INTEGER_TYPE, SymbolData(theEnv)->Zero);
@@ -85,8 +85,8 @@ struct constraintRecord *GetConstraintRecord(
     constraints->installed = false;
     constraints->bucket = 0;
     constraints->count = 0;
-    constraints->multifield = NULL;
-    constraints->next = NULL;
+    constraints->multifield = nullptr;
+    constraints->next = nullptr;
 
     return constraints;
 }
@@ -131,7 +131,7 @@ struct constraintRecord *CopyConstraintRecord(
         CONSTRAINT_RECORD *sourceConstraint) {
     CONSTRAINT_RECORD *theConstraint;
 
-    if (sourceConstraint == NULL) return NULL;
+    if (sourceConstraint == nullptr) return nullptr;
 
     theConstraint = get_struct(theEnv, constraintRecord);
 
@@ -164,7 +164,7 @@ struct constraintRecord *CopyConstraintRecord(
     theConstraint->installed = false;
     theConstraint->count = 0;
     theConstraint->multifield = CopyConstraintRecord(theEnv, sourceConstraint->multifield);
-    theConstraint->next = NULL;
+    theConstraint->next = nullptr;
 
     return (theConstraint);
 }
@@ -385,11 +385,11 @@ CONSTRAINT_RECORD *ExpressionToConstraintRecord(
     CONSTRAINT_RECORD *rv;
 
     /*================================================*/
-    /* A NULL expression is converted to a constraint */
+    /* A nullptr expression is converted to a constraint */
     /* record with no values allowed.                 */
     /*================================================*/
 
-    if (theExpression == NULL) {
+    if (theExpression == nullptr) {
         rv = GetConstraintRecord(theEnv);
         rv->anyAllowed = false;
         return (rv);

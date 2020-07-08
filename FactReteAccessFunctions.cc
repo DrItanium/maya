@@ -367,7 +367,7 @@ bool FactJNGetVar1(
     Multifield *segmentPtr;
     size_t extent;
     struct factGetVarJN1Call *hack;
-    Multifield *theSlots = NULL;
+    Multifield *theSlots = nullptr;
 
     /*==========================================*/
     /* Retrieve the arguments for the function. */
@@ -385,7 +385,7 @@ bool FactJNGetVar1(
     } else if (hack->rhs) {
         factPtr = (Fact *) get_nth_pm_match(EngineData(theEnv)->GlobalRHSBinds, hack->whichPattern)->matchingItem;
         marks = get_nth_pm_match(EngineData(theEnv)->GlobalRHSBinds, hack->whichPattern)->markers;
-    } else if (EngineData(theEnv)->GlobalRHSBinds == NULL) {
+    } else if (EngineData(theEnv)->GlobalRHSBinds == nullptr) {
         factPtr = (Fact *) get_nth_pm_match(EngineData(theEnv)->GlobalLHSBinds, hack->whichPattern)->matchingItem;
         marks = get_nth_pm_match(EngineData(theEnv)->GlobalLHSBinds, hack->whichPattern)->markers;
     } else if ((EngineData(theEnv)->GlobalJoin->depth - 1) == hack->whichPattern) {
@@ -406,7 +406,7 @@ bool FactJNGetVar1(
         return true;
     }
 
-    if ((factPtr->basisSlots != NULL) &&
+    if ((factPtr->basisSlots != nullptr) &&
         (!EngineData(theEnv)->JoinOperationInProgress)) { theSlots = factPtr->basisSlots; }
     else { theSlots = &factPtr->theProposition; }
 
@@ -502,7 +502,7 @@ bool FactJNGetVar2(
 
     if (hack->lhs) { factPtr = (Fact *) get_nth_pm_match(EngineData(theEnv)->GlobalLHSBinds, hack->whichPattern)->matchingItem; }
     else if (hack->rhs) { factPtr = (Fact *) get_nth_pm_match(EngineData(theEnv)->GlobalRHSBinds, hack->whichPattern)->matchingItem; }
-    else if (EngineData(theEnv)->GlobalRHSBinds == NULL) {
+    else if (EngineData(theEnv)->GlobalRHSBinds == nullptr) {
         factPtr = (Fact *) get_nth_pm_match(EngineData(theEnv)->GlobalLHSBinds, hack->whichPattern)->matchingItem;
     } else if ((EngineData(theEnv)->GlobalJoin->depth - 1) == hack->whichPattern) {
         factPtr = (Fact *) get_nth_pm_match(EngineData(theEnv)->GlobalRHSBinds, 0)->matchingItem;
@@ -512,7 +512,7 @@ bool FactJNGetVar2(
     /* Extract the value from the specified slot. */
     /*============================================*/
 
-    if ((factPtr->basisSlots != NULL) &&
+    if ((factPtr->basisSlots != nullptr) &&
         (!EngineData(theEnv)->JoinOperationInProgress)) { fieldPtr = &factPtr->basisSlots->contents[hack->whichSlot]; }
     else { fieldPtr = &factPtr->theProposition.contents[hack->whichSlot]; }
 
@@ -547,7 +547,7 @@ bool FactJNGetVar3(
 
     if (hack->lhs) { factPtr = (Fact *) get_nth_pm_match(EngineData(theEnv)->GlobalLHSBinds, hack->whichPattern)->matchingItem; }
     else if (hack->rhs) { factPtr = (Fact *) get_nth_pm_match(EngineData(theEnv)->GlobalRHSBinds, hack->whichPattern)->matchingItem; }
-    else if (EngineData(theEnv)->GlobalRHSBinds == NULL) {
+    else if (EngineData(theEnv)->GlobalRHSBinds == nullptr) {
         factPtr = (Fact *) get_nth_pm_match(EngineData(theEnv)->GlobalLHSBinds, hack->whichPattern)->matchingItem;
     } else if ((EngineData(theEnv)->GlobalJoin->depth - 1) == hack->whichPattern) {
         factPtr = (Fact *) get_nth_pm_match(EngineData(theEnv)->GlobalRHSBinds, 0)->matchingItem;
@@ -557,7 +557,7 @@ bool FactJNGetVar3(
     /* Get the multifield value from which the data is retrieved. */
     /*============================================================*/
 
-    if ((factPtr->basisSlots != NULL) &&
+    if ((factPtr->basisSlots != nullptr) &&
         (!EngineData(theEnv)->JoinOperationInProgress)) { segmentPtr = factPtr->basisSlots->contents[hack->whichSlot].multifieldValue; }
     else { segmentPtr = factPtr->theProposition.contents[hack->whichSlot].multifieldValue; }
 
@@ -603,7 +603,7 @@ bool FactSlotLength(
     hack = (struct factCheckLengthPNCall *) ((CLIPSBitMap *) theValue)->contents;
 
     for (tempMark = FactData(theEnv)->CurrentPatternMarks;
-         tempMark != NULL;
+         tempMark != nullptr;
          tempMark = tempMark->next) {
         if (tempMark->where.whichSlotNumber != hack->whichSlot) continue;
         extraOffset += tempMark->range;
@@ -796,7 +796,7 @@ size_t AdjustFieldPosition(
 
     actualIndex = whichField;
     for (;
-            markList != NULL;
+            markList != nullptr;
             markList = markList->next) {
         /*===============================================*/
         /* Skip over multifield markers for other slots. */

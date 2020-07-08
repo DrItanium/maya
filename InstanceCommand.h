@@ -67,7 +67,7 @@
 
 typedef enum {
     UIE_NO_ERROR = 0,
-    UIE_NULL_POINTER_ERROR,
+    UIE_nullptr_POINTER_ERROR,
     UIE_COULD_NOT_DELETE_ERROR,
     UIE_DELETED_ERROR,
     UIE_RULE_NETWORK_ERROR
@@ -75,7 +75,7 @@ typedef enum {
 
 typedef enum {
     MIE_NO_ERROR = 0,
-    MIE_NULL_POINTER_ERROR,
+    MIE_nullptr_POINTER_ERROR,
     MIE_PARSING_ERROR,
     MIE_COULD_NOT_CREATE_ERROR,
     MIE_RULE_NETWORK_ERROR
@@ -83,7 +83,7 @@ typedef enum {
 
 typedef enum {
     IBE_NO_ERROR = 0,
-    IBE_NULL_POINTER_ERROR,
+    IBE_nullptr_POINTER_ERROR,
     IBE_DEFCLASS_NOT_FOUND_ERROR,
     IBE_COULD_NOT_CREATE_ERROR,
     IBE_RULE_NETWORK_ERROR
@@ -91,7 +91,7 @@ typedef enum {
 
 typedef enum {
     IME_NO_ERROR = 0,
-    IME_NULL_POINTER_ERROR,
+    IME_nullptr_POINTER_ERROR,
     IME_DELETED_ERROR,
     IME_COULD_NOT_MODIFY_ERROR,
     IME_RULE_NETWORK_ERROR

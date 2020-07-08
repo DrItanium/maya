@@ -112,8 +112,8 @@ void PrintPartialMatch(
     unsigned short i;
 
     for (i = 0; i < list->bcount;) {
-        if ((get_nth_pm_match(list, i) != NULL) &&
-            (get_nth_pm_match(list, i)->matchingItem != NULL)) {
+        if ((get_nth_pm_match(list, i) != nullptr) &&
+            (get_nth_pm_match(list, i)->matchingItem != nullptr)) {
             matchingItem = get_nth_pm_match(list, i)->matchingItem;
             (*matchingItem->theInfo->base.shortPrintFunction)(theEnv, logicalName, matchingItem);
         } else { WriteString(theEnv, logicalName, "*"); }
@@ -163,7 +163,7 @@ struct partialMatch *CreateEmptyPartialMatch(
     linker->deleting = false;
     linker->bcount = 1;
     linker->hashValue = 0;
-    linker->binds[0].gm.theValue = NULL;
+    linker->binds[0].gm.theValue = nullptr;
 
     return (linker);
 }
@@ -173,20 +173,20 @@ struct partialMatch *CreateEmptyPartialMatch(
 /**********************/
 static void InitializePMLinks(
         struct partialMatch *theMatch) {
-    theMatch->nextInMemory = NULL;
-    theMatch->prevInMemory = NULL;
-    theMatch->nextRightChild = NULL;
-    theMatch->prevRightChild = NULL;
-    theMatch->nextLeftChild = NULL;
-    theMatch->prevLeftChild = NULL;
-    theMatch->children = NULL;
-    theMatch->rightParent = NULL;
-    theMatch->leftParent = NULL;
-    theMatch->blockList = NULL;
-    theMatch->nextBlocked = NULL;
-    theMatch->prevBlocked = NULL;
-    theMatch->marker = NULL;
-    theMatch->dependents = NULL;
+    theMatch->nextInMemory = nullptr;
+    theMatch->prevInMemory = nullptr;
+    theMatch->nextRightChild = nullptr;
+    theMatch->prevRightChild = nullptr;
+    theMatch->nextLeftChild = nullptr;
+    theMatch->prevLeftChild = nullptr;
+    theMatch->children = nullptr;
+    theMatch->rightParent = nullptr;
+    theMatch->leftParent = nullptr;
+    theMatch->blockList = nullptr;
+    theMatch->nextBlocked = nullptr;
+    theMatch->prevBlocked = nullptr;
+    theMatch->marker = nullptr;
+    theMatch->dependents = nullptr;
 }
 
 /**********************/
@@ -221,10 +221,10 @@ void UpdateBetaPMLinks(
 
     if (side == CLIPS_LHS) {
         thePM->nextInMemory = theMemory->beta[betaLocation];
-        if (theMemory->beta[betaLocation] != NULL) { theMemory->beta[betaLocation]->prevInMemory = thePM; }
+        if (theMemory->beta[betaLocation] != nullptr) { theMemory->beta[betaLocation]->prevInMemory = thePM; }
         theMemory->beta[betaLocation] = thePM;
     } else {
-        if (theMemory->last[betaLocation] != NULL) {
+        if (theMemory->last[betaLocation] != nullptr) {
             theMemory->last[betaLocation]->nextInMemory = thePM;
             thePM->prevInMemory = theMemory->last[betaLocation];
         } else { theMemory->beta[betaLocation] = thePM; }
@@ -242,9 +242,9 @@ void UpdateBetaPMLinks(
     /* Update the alpha memory linked list. */
     /*======================================*/
 
-    if (rhsBinds != NULL) {
+    if (rhsBinds != nullptr) {
         thePM->nextRightChild = rhsBinds->children;
-        if (rhsBinds->children != NULL) { rhsBinds->children->prevRightChild = thePM; }
+        if (rhsBinds->children != nullptr) { rhsBinds->children->prevRightChild = thePM; }
         rhsBinds->children = thePM;
         thePM->rightParent = rhsBinds;
     }
@@ -253,9 +253,9 @@ void UpdateBetaPMLinks(
     /* Update the beta memory linked list. */
     /*=====================================*/
 
-    if (lhsBinds != NULL) {
+    if (lhsBinds != nullptr) {
         thePM->nextLeftChild = lhsBinds->children;
-        if (lhsBinds->children != NULL) { lhsBinds->children->prevLeftChild = thePM; }
+        if (lhsBinds->children != nullptr) { lhsBinds->children->prevLeftChild = thePM; }
         lhsBinds->children = thePM;
         thePM->leftParent = lhsBinds;
     }
@@ -278,7 +278,7 @@ void AddBlockedLink(
         struct partialMatch *rhsBinds) {
     thePM->marker = rhsBinds;
     thePM->nextBlocked = rhsBinds->blockList;
-    if (rhsBinds->blockList != NULL) { rhsBinds->blockList->prevBlocked = thePM; }
+    if (rhsBinds->blockList != nullptr) { rhsBinds->blockList->prevBlocked = thePM; }
     rhsBinds->blockList = thePM;
 }
 
@@ -293,16 +293,16 @@ void RemoveBlockedLink(
         struct partialMatch *thePM) {
     struct partialMatch *blocker;
 
-    if (thePM->prevBlocked == NULL) {
+    if (thePM->prevBlocked == nullptr) {
         blocker = (struct partialMatch *) thePM->marker;
         blocker->blockList = thePM->nextBlocked;
     } else { thePM->prevBlocked->nextBlocked = thePM->nextBlocked; }
 
-    if (thePM->nextBlocked != NULL) { thePM->nextBlocked->prevBlocked = thePM->prevBlocked; }
+    if (thePM->nextBlocked != nullptr) { thePM->nextBlocked->prevBlocked = thePM->prevBlocked; }
 
-    thePM->nextBlocked = NULL;
-    thePM->prevBlocked = NULL;
-    thePM->marker = NULL;
+    thePM->nextBlocked = nullptr;
+    thePM->prevBlocked = nullptr;
+    thePM->marker = nullptr;
 }
 
 /***********************************/
@@ -333,15 +333,15 @@ void UnlinkBetaPMFromNodeAndLineage(
     if ((side == CLIPS_RHS) &&
         (theMemory->last[betaLocation] == thePM)) { theMemory->last[betaLocation] = thePM->prevInMemory; }
 
-    if (thePM->prevInMemory == NULL) {
+    if (thePM->prevInMemory == nullptr) {
         betaLocation = thePM->hashValue % theMemory->size;
         theMemory->beta[betaLocation] = thePM->nextInMemory;
     } else { thePM->prevInMemory->nextInMemory = thePM->nextInMemory; }
 
-    if (thePM->nextInMemory != NULL) { thePM->nextInMemory->prevInMemory = thePM->prevInMemory; }
+    if (thePM->nextInMemory != nullptr) { thePM->nextInMemory->prevInMemory = thePM->prevInMemory; }
 
-    thePM->nextInMemory = NULL;
-    thePM->prevInMemory = NULL;
+    thePM->nextInMemory = nullptr;
+    thePM->prevInMemory = nullptr;
 
     UnlinkBetaPartialMatchfromAlphaAndBetaLineage(thePM);
 
@@ -379,40 +379,40 @@ void UnlinkNonLeftLineage(
     if ((side == CLIPS_RHS) &&
         (theMemory->last[betaLocation] == thePM)) { theMemory->last[betaLocation] = thePM->prevInMemory; }
 
-    if (thePM->prevInMemory == NULL) {
+    if (thePM->prevInMemory == nullptr) {
         betaLocation = thePM->hashValue % theMemory->size;
         theMemory->beta[betaLocation] = thePM->nextInMemory;
     } else { thePM->prevInMemory->nextInMemory = thePM->nextInMemory; }
 
-    if (thePM->nextInMemory != NULL) { thePM->nextInMemory->prevInMemory = thePM->prevInMemory; }
+    if (thePM->nextInMemory != nullptr) { thePM->nextInMemory->prevInMemory = thePM->prevInMemory; }
 
     /*=========================*/
     /* Update the alpha lists. */
     /*=========================*/
 
-    if (thePM->prevRightChild == NULL) {
-        if (thePM->rightParent != NULL) {
+    if (thePM->prevRightChild == nullptr) {
+        if (thePM->rightParent != nullptr) {
             thePM->rightParent->children = thePM->nextRightChild;
-            if (thePM->nextRightChild != NULL) {
+            if (thePM->nextRightChild != nullptr) {
                 thePM->rightParent->children = thePM->nextRightChild;
                 thePM->nextRightChild->rightParent = thePM->rightParent;
             }
         }
     } else { thePM->prevRightChild->nextRightChild = thePM->nextRightChild; }
 
-    if (thePM->nextRightChild != NULL) { thePM->nextRightChild->prevRightChild = thePM->prevRightChild; }
+    if (thePM->nextRightChild != nullptr) { thePM->nextRightChild->prevRightChild = thePM->prevRightChild; }
 
     /*===========================*/
     /* Update the blocked lists. */
     /*===========================*/
 
-    if (thePM->prevBlocked == NULL) {
+    if (thePM->prevBlocked == nullptr) {
         tempPM = (struct partialMatch *) thePM->marker;
 
-        if (tempPM != NULL) { tempPM->blockList = thePM->nextBlocked; }
+        if (tempPM != nullptr) { tempPM->blockList = thePM->nextBlocked; }
     } else { thePM->prevBlocked->nextBlocked = thePM->nextBlocked; }
 
-    if (thePM->nextBlocked != NULL) { thePM->nextBlocked->prevBlocked = thePM->prevBlocked; }
+    if (thePM->nextBlocked != nullptr) { thePM->nextBlocked->prevBlocked = thePM->prevBlocked; }
 
     if (!DefruleData(theEnv)->BetaMemoryResizingFlag) { return; }
 
@@ -434,64 +434,64 @@ static void UnlinkBetaPartialMatchfromAlphaAndBetaLineage(
     /* Update the alpha lists. */
     /*=========================*/
 
-    if (thePM->prevRightChild == NULL) {
-        if (thePM->rightParent != NULL) { thePM->rightParent->children = thePM->nextRightChild; }
+    if (thePM->prevRightChild == nullptr) {
+        if (thePM->rightParent != nullptr) { thePM->rightParent->children = thePM->nextRightChild; }
     } else { thePM->prevRightChild->nextRightChild = thePM->nextRightChild; }
 
-    if (thePM->nextRightChild != NULL) { thePM->nextRightChild->prevRightChild = thePM->prevRightChild; }
+    if (thePM->nextRightChild != nullptr) { thePM->nextRightChild->prevRightChild = thePM->prevRightChild; }
 
-    thePM->rightParent = NULL;
-    thePM->nextRightChild = NULL;
-    thePM->prevRightChild = NULL;
+    thePM->rightParent = nullptr;
+    thePM->nextRightChild = nullptr;
+    thePM->prevRightChild = nullptr;
 
     /*========================*/
     /* Update the beta lists. */
     /*========================*/
 
-    if (thePM->prevLeftChild == NULL) {
-        if (thePM->leftParent != NULL) { thePM->leftParent->children = thePM->nextLeftChild; }
+    if (thePM->prevLeftChild == nullptr) {
+        if (thePM->leftParent != nullptr) { thePM->leftParent->children = thePM->nextLeftChild; }
     } else { thePM->prevLeftChild->nextLeftChild = thePM->nextLeftChild; }
 
-    if (thePM->nextLeftChild != NULL) { thePM->nextLeftChild->prevLeftChild = thePM->prevLeftChild; }
+    if (thePM->nextLeftChild != nullptr) { thePM->nextLeftChild->prevLeftChild = thePM->prevLeftChild; }
 
-    thePM->leftParent = NULL;
-    thePM->nextLeftChild = NULL;
-    thePM->prevLeftChild = NULL;
+    thePM->leftParent = nullptr;
+    thePM->nextLeftChild = nullptr;
+    thePM->prevLeftChild = nullptr;
 
     /*===========================*/
     /* Update the blocked lists. */
     /*===========================*/
 
-    if (thePM->prevBlocked == NULL) {
+    if (thePM->prevBlocked == nullptr) {
         tempPM = (struct partialMatch *) thePM->marker;
 
-        if (tempPM != NULL) { tempPM->blockList = thePM->nextBlocked; }
+        if (tempPM != nullptr) { tempPM->blockList = thePM->nextBlocked; }
     } else { thePM->prevBlocked->nextBlocked = thePM->nextBlocked; }
 
-    if (thePM->nextBlocked != NULL) { thePM->nextBlocked->prevBlocked = thePM->prevBlocked; }
+    if (thePM->nextBlocked != nullptr) { thePM->nextBlocked->prevBlocked = thePM->prevBlocked; }
 
-    thePM->marker = NULL;
-    thePM->nextBlocked = NULL;
-    thePM->prevBlocked = NULL;
+    thePM->marker = nullptr;
+    thePM->nextBlocked = nullptr;
+    thePM->prevBlocked = nullptr;
 
     /*===============================================*/
     /* Remove parent reference from the child links. */
     /*===============================================*/
 
-    if (thePM->children != NULL) {
+    if (thePM->children != nullptr) {
         if (thePM->rhsMemory) {
-            for (tempPM = thePM->children; tempPM != NULL; tempPM = tempPM->nextRightChild) { tempPM->rightParent = NULL; }
+            for (tempPM = thePM->children; tempPM != nullptr; tempPM = tempPM->nextRightChild) { tempPM->rightParent = nullptr; }
         } else {
-            for (tempPM = thePM->children; tempPM != NULL; tempPM = tempPM->nextLeftChild) { tempPM->leftParent = NULL; }
+            for (tempPM = thePM->children; tempPM != nullptr; tempPM = tempPM->nextLeftChild) { tempPM->leftParent = nullptr; }
         }
 
-        thePM->children = NULL;
+        thePM->children = nullptr;
     }
 }
 
 /********************************************************/
 /* MergePartialMatches: Merges two partial matches. The */
-/*   second match should either be NULL (indicating a   */
+/*   second match should either be nullptr (indicating a   */
 /*   negated CE) or contain a single match.             */
 /********************************************************/
 struct partialMatch *MergePartialMatches(
@@ -499,7 +499,7 @@ struct partialMatch *MergePartialMatches(
         struct partialMatch *lhsBind,
         struct partialMatch *rhsBind) {
     struct partialMatch *linker;
-    static struct partialMatch mergeTemplate = {1}; /* betaMemory is true, remainder are 0 or NULL */
+    static struct partialMatch mergeTemplate = {1}; /* betaMemory is true, remainder are 0 or nullptr */
 
     /*=================================*/
     /* Allocate the new partial match. */
@@ -526,7 +526,7 @@ struct partialMatch *MergePartialMatches(
     /* Add the binding of the rhs match. */
     /*===================================*/
 
-    if (rhsBind == NULL) { linker->binds[lhsBind->bcount].gm.theValue = NULL; }
+    if (rhsBind == nullptr) { linker->binds[lhsBind->bcount].gm.theValue = nullptr; }
     else { linker->binds[lhsBind->bcount].gm.theValue = rhsBind->binds[0].gm.theValue; }
 
     return linker;
@@ -542,10 +542,10 @@ void InitializePatternHeader(
 #if MAC_XCD
 #pragma unused(theEnv)
 #endif
-    theHeader->firstHash = NULL;
-    theHeader->lastHash = NULL;
-    theHeader->entryJoin = NULL;
-    theHeader->rightHash = NULL;
+    theHeader->firstHash = nullptr;
+    theHeader->lastHash = nullptr;
+    theHeader->entryJoin = nullptr;
+    theHeader->rightHash = nullptr;
     theHeader->singlefieldNode = false;
     theHeader->multifieldNode = false;
     theHeader->stopNode = false;
@@ -588,11 +588,11 @@ struct partialMatch *CreateAlphaMatch(
     theMatch->hashValue = hashOffset;
 
     afbtemp = get_struct(theEnv, alphaMatch);
-    afbtemp->next = NULL;
+    afbtemp->next = nullptr;
     afbtemp->matchingItem = (struct patternEntity *) theEntity;
 
-    if (markers != NULL) { afbtemp->markers = CopyMultifieldMarkers(theEnv, markers); }
-    else { afbtemp->markers = NULL; }
+    if (markers != nullptr) { afbtemp->markers = CopyMultifieldMarkers(theEnv, markers); }
+    else { afbtemp->markers = nullptr; }
 
     theMatch->binds[0].gm.theMatch = afbtemp;
 
@@ -608,24 +608,24 @@ struct partialMatch *CreateAlphaMatch(
     /* Create an alpha memory if it wasn't found. */
     /*============================================*/
 
-    if (theAlphaMemory == NULL) {
+    if (theAlphaMemory == nullptr) {
         theAlphaMemory = get_struct(theEnv, alphaMemoryHash);
         theAlphaMemory->bucket = hashValue;
         theAlphaMemory->owner = theHeader;
-        theAlphaMemory->alphaMemory = NULL;
-        theAlphaMemory->endOfQueue = NULL;
-        theAlphaMemory->nextHash = NULL;
+        theAlphaMemory->alphaMemory = nullptr;
+        theAlphaMemory->endOfQueue = nullptr;
+        theAlphaMemory->nextHash = nullptr;
 
         theAlphaMemory->next = DefruleData(theEnv)->AlphaMemoryTable[hashValue];
-        if (theAlphaMemory->next != NULL) { theAlphaMemory->next->prev = theAlphaMemory; }
+        if (theAlphaMemory->next != nullptr) { theAlphaMemory->next->prev = theAlphaMemory; }
 
-        theAlphaMemory->prev = NULL;
+        theAlphaMemory->prev = nullptr;
         DefruleData(theEnv)->AlphaMemoryTable[hashValue] = theAlphaMemory;
 
-        if (theHeader->firstHash == NULL) {
+        if (theHeader->firstHash == nullptr) {
             theHeader->firstHash = theAlphaMemory;
             theHeader->lastHash = theAlphaMemory;
-            theAlphaMemory->prevHash = NULL;
+            theAlphaMemory->prevHash = nullptr;
         } else {
             theHeader->lastHash->nextHash = theAlphaMemory;
             theAlphaMemory->prevHash = theHeader->lastHash;
@@ -639,7 +639,7 @@ struct partialMatch *CreateAlphaMatch(
     /*====================================*/
 
     theMatch->prevInMemory = theAlphaMemory->endOfQueue;
-    if (theAlphaMemory->endOfQueue == NULL) {
+    if (theAlphaMemory->endOfQueue == nullptr) {
         theAlphaMemory->alphaMemory = theMatch;
         theAlphaMemory->endOfQueue = theMatch;
     } else {
@@ -661,17 +661,17 @@ struct partialMatch *CreateAlphaMatch(
 struct multifieldMarker *CopyMultifieldMarkers(
         Environment *theEnv,
         struct multifieldMarker *theMarkers) {
-    struct multifieldMarker *head = NULL, *lastMark = NULL, *newMark;
+    struct multifieldMarker *head = nullptr, *lastMark = nullptr, *newMark;
 
-    while (theMarkers != NULL) {
+    while (theMarkers != nullptr) {
         newMark = get_struct(theEnv, multifieldMarker);
-        newMark->next = NULL;
+        newMark->next = nullptr;
         newMark->whichField = theMarkers->whichField;
         newMark->where = theMarkers->where;
         newMark->startPosition = theMarkers->startPosition;
         newMark->range = theMarkers->range;
 
-        if (lastMark == NULL) { head = newMark; }
+        if (lastMark == nullptr) { head = newMark; }
         else { lastMark->next = newMark; }
         lastMark = newMark;
 
@@ -693,7 +693,7 @@ void FlushAlphaBetaMemory(
         struct partialMatch *pfl) {
     struct partialMatch *pfltemp;
 
-    while (pfl != NULL) {
+    while (pfl != nullptr) {
         pfltemp = pfl->nextInMemory;
 
         UnlinkBetaPartialMatchfromAlphaAndBetaLineage(pfl);
@@ -712,7 +712,7 @@ void DestroyAlphaBetaMemory(
         struct partialMatch *pfl) {
     struct partialMatch *pfltemp;
 
-    while (pfl != NULL) {
+    while (pfl != nullptr) {
         pfltemp = pfl->nextInMemory;
         DestroyPartialMatch(theEnv, pfl);
         pfl = pfltemp;
@@ -729,7 +729,7 @@ bool FindEntityInPartialMatch(
     unsigned short i;
 
     for (i = 0; i < thePartialMatch->bcount; i++) {
-        if (thePartialMatch->binds[i].gm.theMatch == NULL) continue;
+        if (thePartialMatch->binds[i].gm.theMatch == nullptr) continue;
         if (thePartialMatch->binds[i].gm.theMatch->matchingItem == theEntity) { return true; }
     }
 
@@ -745,7 +745,7 @@ int GetPatternNumberFromJoin(
         struct joinNode *joinPtr) {
     int whichOne = 0;
 
-    while (joinPtr != NULL) {
+    while (joinPtr != nullptr) {
         if (joinPtr->joinFromTheRight) { joinPtr = (struct joinNode *) joinPtr->rightSideEntryStructure; }
         else {
             whichOne++;
@@ -794,7 +794,7 @@ static void TraceErrorToRuleDriver(
     else { priorPatternCount = 0; }
 
     if (joinPtr->marked) { /* Do Nothing */ }
-    else if (joinPtr->ruleToActivate != NULL) {
+    else if (joinPtr->ruleToActivate != nullptr) {
         joinPtr->marked = 1;
         name = DefruleName(joinPtr->ruleToActivate);
         WriteString(theEnv, STDERR, indentSpaces);
@@ -808,7 +808,7 @@ static void TraceErrorToRuleDriver(
         joinPtr->marked = 1;
 
         theLinks = joinPtr->nextLinks;
-        while (theLinks != NULL) {
+        while (theLinks != nullptr) {
             TraceErrorToRuleDriver(theEnv, theLinks->join, indentSpaces,
                                    priorRightJoinPatterns + priorPatternCount,
                                    (theLinks->enterDirection == CLIPS_RHS));
@@ -824,7 +824,7 @@ static int CountPriorPatterns(
         struct joinNode *joinPtr) {
     int count = 0;
 
-    while (joinPtr != NULL) {
+    while (joinPtr != nullptr) {
         if (joinPtr->joinFromTheRight) { count += CountPriorPatterns((struct joinNode *) joinPtr->rightSideEntryStructure); }
         else { count++; }
 
@@ -850,8 +850,8 @@ void MarkRuleNetwork(
     /*===========================*/
 
     SaveCurrentModule(theEnv);
-    for (modulePtr = GetNextDefmodule(theEnv, NULL);
-         modulePtr != NULL;
+    for (modulePtr = GetNextDefmodule(theEnv, nullptr);
+         modulePtr != nullptr;
          modulePtr = GetNextDefmodule(theEnv, modulePtr)) {
         SetCurrentModule(theEnv, modulePtr);
 
@@ -859,14 +859,14 @@ void MarkRuleNetwork(
         /* Loop through each rule. */
         /*=========================*/
 
-        rulePtr = GetNextDefrule(theEnv, NULL);
-        while (rulePtr != NULL) {
+        rulePtr = GetNextDefrule(theEnv, nullptr);
+        while (rulePtr != nullptr) {
             /*=============================*/
             /* Mark each join for the rule */
             /* with the specified value.   */
             /*=============================*/
 
-            for (disjunctPtr = rulePtr; disjunctPtr != NULL; disjunctPtr = disjunctPtr->disjunct) {
+            for (disjunctPtr = rulePtr; disjunctPtr != nullptr; disjunctPtr = disjunctPtr->disjunct) {
                 joinPtr = disjunctPtr->lastJoin;
                 MarkRuleJoins(joinPtr, value);
             }
@@ -889,7 +889,7 @@ void MarkRuleNetwork(
 void MarkRuleJoins(
         struct joinNode *joinPtr,
         bool value) {
-    while (joinPtr != NULL) {
+    while (joinPtr != nullptr) {
         if (joinPtr->joinFromTheRight) { MarkRuleJoins((struct joinNode *) joinPtr->rightSideEntryStructure, value); }
 
         joinPtr->marked = value;
@@ -911,7 +911,7 @@ struct partialMatch *GetAlphaMemory(
     hashValue = AlphaMemoryHashValue(theHeader, hashOffset);
     theAlphaMemory = FindAlphaMemory(theEnv, theHeader, hashValue);
 
-    if (theAlphaMemory == NULL) { return NULL; }
+    if (theAlphaMemory == nullptr) { return nullptr; }
 
     return theAlphaMemory->alphaMemory;
 }
@@ -946,29 +946,29 @@ struct partialMatch *GetRightBetaMemory(
 
 /***************************************/
 /* ReturnLeftMemory: Sets the contents */
-/*   of a beta memory to NULL.         */
+/*   of a beta memory to nullptr.         */
 /***************************************/
 void ReturnLeftMemory(
         Environment *theEnv,
         struct joinNode *theJoin) {
-    if (theJoin->leftMemory == NULL) return;
+    if (theJoin->leftMemory == nullptr) return;
     genfree(theEnv, theJoin->leftMemory->beta, sizeof(struct partialMatch *) * theJoin->leftMemory->size);
     rtn_struct(theEnv, betaMemory, theJoin->leftMemory);
-    theJoin->leftMemory = NULL;
+    theJoin->leftMemory = nullptr;
 }
 
 /***************************************/
 /* ReturnRightMemory: Sets the contents */
-/*   of a beta memory to NULL.         */
+/*   of a beta memory to nullptr.         */
 /***************************************/
 void ReturnRightMemory(
         Environment *theEnv,
         struct joinNode *theJoin) {
-    if (theJoin->rightMemory == NULL) return;
+    if (theJoin->rightMemory == nullptr) return;
     genfree(theEnv, theJoin->rightMemory->beta, sizeof(struct partialMatch *) * theJoin->rightMemory->size);
     genfree(theEnv, theJoin->rightMemory->last, sizeof(struct partialMatch *) * theJoin->rightMemory->size);
     rtn_struct(theEnv, betaMemory, theJoin->rightMemory);
-    theJoin->rightMemory = NULL;
+    theJoin->rightMemory = nullptr;
 }
 
 /****************************************************************/
@@ -986,11 +986,11 @@ void DestroyBetaMemory(
     unsigned long i;
 
     if (side == CLIPS_LHS) {
-        if (theJoin->leftMemory == NULL) return;
+        if (theJoin->leftMemory == nullptr) return;
 
         for (i = 0; i < theJoin->leftMemory->size; i++) { DestroyAlphaBetaMemory(theEnv, theJoin->leftMemory->beta[i]); }
     } else {
-        if (theJoin->rightMemory == NULL) return;
+        if (theJoin->rightMemory == nullptr) return;
 
         for (i = 0; i < theJoin->rightMemory->size; i++) { DestroyAlphaBetaMemory(theEnv, theJoin->rightMemory->beta[i]); }
     }
@@ -1010,11 +1010,11 @@ void FlushBetaMemory(
     unsigned long i;
 
     if (side == CLIPS_LHS) {
-        if (theJoin->leftMemory == NULL) return;
+        if (theJoin->leftMemory == nullptr) return;
 
         for (i = 0; i < theJoin->leftMemory->size; i++) { FlushAlphaBetaMemory(theEnv, theJoin->leftMemory->beta[i]); }
     } else {
-        if (theJoin->rightMemory == NULL) return;
+        if (theJoin->rightMemory == nullptr) return;
 
         for (i = 0; i < theJoin->rightMemory->size; i++) { FlushAlphaBetaMemory(theEnv, theJoin->rightMemory->beta[i]); }
     }
@@ -1025,11 +1025,11 @@ void FlushBetaMemory(
 /***********************/
 bool BetaMemoryNotEmpty(
         struct joinNode *theJoin) {
-    if (theJoin->leftMemory != NULL) {
+    if (theJoin->leftMemory != nullptr) {
         if (theJoin->leftMemory->count > 0) { return true; }
     }
 
-    if (theJoin->rightMemory != NULL) {
+    if (theJoin->rightMemory != nullptr) {
         if (theJoin->rightMemory->count > 0) { return true; }
     }
 
@@ -1045,18 +1045,18 @@ void RemoveAlphaMemoryMatches(
         struct patternNodeHeader *theHeader,
         struct partialMatch *theMatch,
         struct alphaMatch *theAlphaMatch) {
-    struct alphaMemoryHash *theAlphaMemory = NULL;
+    struct alphaMemoryHash *theAlphaMemory = nullptr;
     unsigned long hashValue;
 
-    if ((theMatch->prevInMemory == NULL) || (theMatch->nextInMemory == NULL)) {
+    if ((theMatch->prevInMemory == nullptr) || (theMatch->nextInMemory == nullptr)) {
         hashValue = theAlphaMatch->bucket;
         theAlphaMemory = FindAlphaMemory(theEnv, theHeader, hashValue);
     }
 
-    if (theMatch->prevInMemory != NULL) { theMatch->prevInMemory->nextInMemory = theMatch->nextInMemory; }
+    if (theMatch->prevInMemory != nullptr) { theMatch->prevInMemory->nextInMemory = theMatch->nextInMemory; }
     else { theAlphaMemory->alphaMemory = theMatch->nextInMemory; }
 
-    if (theMatch->nextInMemory != NULL) { theMatch->nextInMemory->prevInMemory = theMatch->prevInMemory; }
+    if (theMatch->nextInMemory != nullptr) { theMatch->nextInMemory->prevInMemory = theMatch->prevInMemory; }
     else { theAlphaMemory->endOfQueue = theMatch->prevInMemory; }
 
     /*====================================*/
@@ -1066,7 +1066,7 @@ void RemoveAlphaMemoryMatches(
     theMatch->nextInMemory = EngineData(theEnv)->GarbagePartialMatches;
     EngineData(theEnv)->GarbagePartialMatches = theMatch;
 
-    if ((theAlphaMemory != NULL) && (theAlphaMemory->alphaMemory == NULL)) { UnlinkAlphaMemory(theEnv, theHeader, theAlphaMemory); }
+    if ((theAlphaMemory != nullptr) && (theAlphaMemory->alphaMemory == nullptr)) { UnlinkAlphaMemory(theEnv, theHeader, theAlphaMemory); }
 }
 
 /***********************/
@@ -1080,7 +1080,7 @@ void DestroyAlphaMemory(
 
     theAlphaMemory = theHeader->firstHash;
 
-    while (theAlphaMemory != NULL) {
+    while (theAlphaMemory != nullptr) {
         tempMemory = theAlphaMemory->nextHash;
         DestroyAlphaBetaMemory(theEnv, theAlphaMemory->alphaMemory);
         if (unlink) { UnlinkAlphaMemoryBucketSiblings(theEnv, theAlphaMemory); }
@@ -1088,8 +1088,8 @@ void DestroyAlphaMemory(
         theAlphaMemory = tempMemory;
     }
 
-    theHeader->firstHash = NULL;
-    theHeader->lastHash = NULL;
+    theHeader->firstHash = nullptr;
+    theHeader->lastHash = nullptr;
 }
 
 /*********************/
@@ -1102,7 +1102,7 @@ void FlushAlphaMemory(
 
     theAlphaMemory = theHeader->firstHash;
 
-    while (theAlphaMemory != NULL) {
+    while (theAlphaMemory != nullptr) {
         tempMemory = theAlphaMemory->nextHash;
         FlushAlphaBetaMemory(theEnv, theAlphaMemory->alphaMemory);
         UnlinkAlphaMemoryBucketSiblings(theEnv, theAlphaMemory);
@@ -1110,8 +1110,8 @@ void FlushAlphaMemory(
         theAlphaMemory = tempMemory;
     }
 
-    theHeader->firstHash = NULL;
-    theHeader->lastHash = NULL;
+    theHeader->firstHash = nullptr;
+    theHeader->lastHash = nullptr;
 }
 
 /********************/
@@ -1125,8 +1125,8 @@ static struct alphaMemoryHash *FindAlphaMemory(
 
     theAlphaMemory = DefruleData(theEnv)->AlphaMemoryTable[hashValue];
 
-    if (theAlphaMemory != NULL) {
-        while ((theAlphaMemory != NULL) && (theAlphaMemory->owner != theHeader)) { theAlphaMemory = theAlphaMemory->next; }
+    if (theAlphaMemory != nullptr) {
+        while ((theAlphaMemory != nullptr) && (theAlphaMemory->owner != theHeader)) { theAlphaMemory = theAlphaMemory->next; }
     }
 
     return theAlphaMemory;
@@ -1178,9 +1178,9 @@ static void UnlinkAlphaMemory(
     /* Update nextHash and prevHash. */
     /*===============================*/
 
-    if (theAlphaMemory->prevHash != NULL) { theAlphaMemory->prevHash->nextHash = theAlphaMemory->nextHash; }
+    if (theAlphaMemory->prevHash != nullptr) { theAlphaMemory->prevHash->nextHash = theAlphaMemory->nextHash; }
 
-    if (theAlphaMemory->nextHash != NULL) { theAlphaMemory->nextHash->prevHash = theAlphaMemory->prevHash; }
+    if (theAlphaMemory->nextHash != nullptr) { theAlphaMemory->nextHash->prevHash = theAlphaMemory->prevHash; }
 
     rtn_struct(theEnv, alphaMemoryHash, theAlphaMemory);
 }
@@ -1191,10 +1191,10 @@ static void UnlinkAlphaMemory(
 static void UnlinkAlphaMemoryBucketSiblings(
         Environment *theEnv,
         struct alphaMemoryHash *theAlphaMemory) {
-    if (theAlphaMemory->prev == NULL) { DefruleData(theEnv)->AlphaMemoryTable[theAlphaMemory->bucket] = theAlphaMemory->next; }
+    if (theAlphaMemory->prev == nullptr) { DefruleData(theEnv)->AlphaMemoryTable[theAlphaMemory->bucket] = theAlphaMemory->next; }
     else { theAlphaMemory->prev->next = theAlphaMemory->next; }
 
-    if (theAlphaMemory->next != NULL) { theAlphaMemory->next->prev = theAlphaMemory->prev; }
+    if (theAlphaMemory->next != nullptr) { theAlphaMemory->next->prev = theAlphaMemory->prev; }
 }
 
 /**************************/
@@ -1211,10 +1211,10 @@ unsigned long ComputeRightHashValue(
         unsigned long liv;
     } fis;
 
-    if (theHeader->rightHash == NULL) { return hashValue; }
+    if (theHeader->rightHash == nullptr) { return hashValue; }
 
     for (tempExpr = theHeader->rightHash;
-         tempExpr != NULL;
+         tempExpr != nullptr;
          tempExpr = tempExpr->nextArg, multiplier = multiplier * 509) {
         UDFValue theResult;
         struct expr *oldArgument;
@@ -1278,15 +1278,15 @@ void ResizeBetaMemory(
 
     for (i = 0; i < oldSize; i++) {
         thePM = oldArray[i];
-        while (thePM != NULL) {
+        while (thePM != nullptr) {
             nextPM = thePM->nextInMemory;
 
-            thePM->nextInMemory = NULL;
+            thePM->nextInMemory = nullptr;
 
             betaLocation = thePM->hashValue % theMemory->size;
             thePM->prevInMemory = lastAdd[betaLocation];
 
-            if (lastAdd[betaLocation] != NULL) { lastAdd[betaLocation]->nextInMemory = thePM; }
+            if (lastAdd[betaLocation] != nullptr) { lastAdd[betaLocation]->nextInMemory = thePM; }
             else { theMemory->beta[betaLocation] = thePM; }
 
             lastAdd[betaLocation] = thePM;
@@ -1295,7 +1295,7 @@ void ResizeBetaMemory(
         }
     }
 
-    if (theMemory->last != NULL) {
+    if (theMemory->last != nullptr) {
         genfree(theEnv, theMemory->last, sizeof(struct partialMatch *) * oldSize);
         theMemory->last = lastAdd;
     } else { genfree(theEnv, lastAdd, sizeof(struct partialMatch *) * theMemory->size); }
@@ -1323,7 +1323,7 @@ static void ResetBetaMemory(
     memset(theMemory->beta, 0, sizeof(struct partialMatch *) * theMemory->size);
     genfree(theEnv, oldArray, sizeof(struct partialMatch *) * oldSize);
 
-    if (theMemory->last != NULL) {
+    if (theMemory->last != nullptr) {
         lastAdd = (struct partialMatch **) genalloc(theEnv, sizeof(struct partialMatch *) * theMemory->size);
         memset(lastAdd, 0, sizeof(struct partialMatch *) * theMemory->size);
         genfree(theEnv, theMemory->last, sizeof(struct partialMatch *) * oldSize);
@@ -1349,7 +1349,7 @@ unsigned long PrintBetaMemory(
     for (b = 0; b < theMemory->size; b++) {
         listOfMatches = theMemory->beta[b];
 
-        while (listOfMatches != NULL) {
+        while (listOfMatches != nullptr) {
             /*=========================================*/
             /* Check to see if the user is attempting  */
             /* to stop the display of partial matches. */
@@ -1416,14 +1416,14 @@ void TagRuleNetwork(
     MarkRuleNetwork(theEnv, 0);
 
     for (theLink = DefruleData(theEnv)->LeftPrimeJoins;
-         theLink != NULL;
+         theLink != nullptr;
          theLink = theLink->next) {
         theLink->bsaveID = *linkCount;
         (*linkCount)++;
     }
 
     for (theLink = DefruleData(theEnv)->RightPrimeJoins;
-         theLink != NULL;
+         theLink != nullptr;
          theLink = theLink->next) {
         theLink->bsaveID = *linkCount;
         (*linkCount)++;
@@ -1433,8 +1433,8 @@ void TagRuleNetwork(
     /* Loop through each module. */
     /*===========================*/
 
-    for (modulePtr = GetNextDefmodule(theEnv, NULL);
-         modulePtr != NULL;
+    for (modulePtr = GetNextDefmodule(theEnv, nullptr);
+         modulePtr != nullptr;
          modulePtr = GetNextDefmodule(theEnv, modulePtr)) {
         (*moduleCount)++;
         SetCurrentModule(theEnv, modulePtr);
@@ -1443,14 +1443,14 @@ void TagRuleNetwork(
         /* Loop through each rule. */
         /*=========================*/
 
-        rulePtr = GetNextDefrule(theEnv, NULL);
+        rulePtr = GetNextDefrule(theEnv, nullptr);
 
-        while (rulePtr != NULL) {
+        while (rulePtr != nullptr) {
             /*=============================*/
             /* Loop through each disjunct. */
             /*=============================*/
 
-            for (disjunctPtr = rulePtr; disjunctPtr != NULL; disjunctPtr = disjunctPtr->disjunct) {
+            for (disjunctPtr = rulePtr; disjunctPtr != nullptr; disjunctPtr = disjunctPtr->disjunct) {
                 disjunctPtr->header.bsaveID = *ruleCount;
                 (*ruleCount)++;
                 TagNetworkTraverseJoins(theEnv, joinCount, linkCount, disjunctPtr->lastJoin);
@@ -1471,14 +1471,14 @@ static void TagNetworkTraverseJoins(
         struct joinNode *joinPtr) {
     struct joinLink *theLink;
     for (;
-            joinPtr != NULL;
+            joinPtr != nullptr;
             joinPtr = joinPtr->lastLevel) {
         if (joinPtr->marked == 0) {
             joinPtr->marked = 1;
             joinPtr->bsaveID = *joinCount;
             (*joinCount)++;
             for (theLink = joinPtr->nextLinks;
-                 theLink != NULL;
+                 theLink != nullptr;
                  theLink = theLink->next) {
                 theLink->bsaveID = *linkCount;
                 (*linkCount)++;

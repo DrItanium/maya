@@ -25,14 +25,14 @@ typedef struct modifyCallFunctionItem ModifyCallFunctionItem;
 
 typedef enum {
     RE_NO_ERROR = 0,
-    RE_NULL_POINTER_ERROR,
+    RE_nullptr_POINTER_ERROR,
     RE_COULD_NOT_RETRACT_ERROR,
     RE_RULE_NETWORK_ERROR
 } RetractError;
 
 typedef enum {
     AE_NO_ERROR = 0,
-    AE_NULL_POINTER_ERROR,
+    AE_nullptr_POINTER_ERROR,
     AE_RETRACTED_ERROR,
     AE_COULD_NOT_ASSERT_ERROR,
     AE_RULE_NETWORK_ERROR
@@ -40,7 +40,7 @@ typedef enum {
 
 typedef enum {
     ASE_NO_ERROR = 0,
-    ASE_NULL_POINTER_ERROR,
+    ASE_nullptr_POINTER_ERROR,
     ASE_PARSING_ERROR,
     ASE_COULD_NOT_ASSERT_ERROR,
     ASE_RULE_NETWORK_ERROR
@@ -48,7 +48,7 @@ typedef enum {
 
 typedef enum {
     FBE_NO_ERROR = 0,
-    FBE_NULL_POINTER_ERROR,
+    FBE_nullptr_POINTER_ERROR,
     FBE_DEFTEMPLATE_NOT_FOUND_ERROR,
     FBE_IMPLIED_DEFTEMPLATE_ERROR,
     FBE_COULD_NOT_ASSERT_ERROR,
@@ -57,7 +57,7 @@ typedef enum {
 
 typedef enum {
     FME_NO_ERROR = 0,
-    FME_NULL_POINTER_ERROR,
+    FME_nullptr_POINTER_ERROR,
     FME_RETRACTED_ERROR,
     FME_IMPLIED_DEFTEMPLATE_ERROR,
     FME_COULD_NOT_MODIFY_ERROR,
@@ -332,8 +332,8 @@ struct factBinaryData {
 
 void FactBinarySetup(Environment *);
 
-#define BsaveFactPatternIndex(patPtr) ((patPtr == NULL) ? ULONG_MAX : ((struct factPatternNode *) patPtr)->bsaveID)
-#define BloadFactPatternPointer(i) ((struct factPatternNode *) ((i == ULONG_MAX) ? NULL : &FactBinaryData(theEnv)->FactPatternArray[i]))
+#define BsaveFactPatternIndex(patPtr) ((patPtr == nullptr) ? ULONG_MAX : ((struct factPatternNode *) patPtr)->bsaveID)
+#define BloadFactPatternPointer(i) ((struct factPatternNode *) ((i == ULONG_MAX) ? nullptr : &FactBinaryData(theEnv)->FactPatternArray[i]))
 
 struct factPatternNode {
     struct patternNodeHeader header;

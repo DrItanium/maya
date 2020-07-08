@@ -93,7 +93,7 @@ void InitAtomicValueNeededFlags(
 
     for (i = 0; i < SYMBOL_HASH_SIZE; i++) {
         symbolPtr = symbolArray[i];
-        while (symbolPtr != NULL) {
+        while (symbolPtr != nullptr) {
             symbolPtr->neededSymbol = false;
             symbolPtr = symbolPtr->next;
         }
@@ -107,7 +107,7 @@ void InitAtomicValueNeededFlags(
 
     for (i = 0; i < FLOAT_HASH_SIZE; i++) {
         floatPtr = floatArray[i];
-        while (floatPtr != NULL) {
+        while (floatPtr != nullptr) {
             floatPtr->neededFloat = false;
             floatPtr = floatPtr->next;
         }
@@ -121,7 +121,7 @@ void InitAtomicValueNeededFlags(
 
     for (i = 0; i < INTEGER_HASH_SIZE; i++) {
         integerPtr = integerArray[i];
-        while (integerPtr != NULL) {
+        while (integerPtr != nullptr) {
             integerPtr->neededInteger = false;
             integerPtr = integerPtr->next;
         }
@@ -135,7 +135,7 @@ void InitAtomicValueNeededFlags(
 
     for (i = 0; i < BITMAP_HASH_SIZE; i++) {
         bitMapPtr = bitMapArray[i];
-        while (bitMapPtr != NULL) {
+        while (bitMapPtr != nullptr) {
             bitMapPtr->neededBitMap = false;
             bitMapPtr = bitMapPtr->next;
         }
@@ -168,7 +168,7 @@ void WriteNeededSymbols(
 
     for (i = 0; i < SYMBOL_HASH_SIZE; i++) {
         for (symbolPtr = symbolArray[i];
-             symbolPtr != NULL;
+             symbolPtr != nullptr;
              symbolPtr = symbolPtr->next) {
             if (symbolPtr->neededSymbol) {
                 numberOfUsedSymbols++;
@@ -190,7 +190,7 @@ void WriteNeededSymbols(
 
     for (i = 0; i < SYMBOL_HASH_SIZE; i++) {
         for (symbolPtr = symbolArray[i];
-             symbolPtr != NULL;
+             symbolPtr != nullptr;
              symbolPtr = symbolPtr->next) {
             if (symbolPtr->neededSymbol) { GenWrite(&symbolPtr->header.type, sizeof(unsigned short), fp); }
         }
@@ -202,7 +202,7 @@ void WriteNeededSymbols(
 
     for (i = 0; i < SYMBOL_HASH_SIZE; i++) {
         for (symbolPtr = symbolArray[i];
-             symbolPtr != NULL;
+             symbolPtr != nullptr;
              symbolPtr = symbolPtr->next) {
             if (symbolPtr->neededSymbol) {
                 length = strlen(symbolPtr->contents) + 1;
@@ -236,7 +236,7 @@ void WriteNeededFloats(
 
     for (i = 0; i < FLOAT_HASH_SIZE; i++) {
         for (floatPtr = floatArray[i];
-             floatPtr != NULL;
+             floatPtr != nullptr;
              floatPtr = floatPtr->next) { if (floatPtr->neededFloat) numberOfUsedFloats++; }
     }
 
@@ -248,7 +248,7 @@ void WriteNeededFloats(
 
     for (i = 0; i < FLOAT_HASH_SIZE; i++) {
         for (floatPtr = floatArray[i];
-             floatPtr != NULL;
+             floatPtr != nullptr;
              floatPtr = floatPtr->next) {
             if (floatPtr->neededFloat) {
                 GenWrite(&floatPtr->contents,
@@ -282,7 +282,7 @@ void WriteNeededIntegers(
 
     for (i = 0; i < INTEGER_HASH_SIZE; i++) {
         for (integerPtr = integerArray[i];
-             integerPtr != NULL;
+             integerPtr != nullptr;
              integerPtr = integerPtr->next) {
             if (integerPtr->neededInteger) numberOfUsedIntegers++;
         }
@@ -296,7 +296,7 @@ void WriteNeededIntegers(
 
     for (i = 0; i < INTEGER_HASH_SIZE; i++) {
         for (integerPtr = integerArray[i];
-             integerPtr != NULL;
+             integerPtr != nullptr;
              integerPtr = integerPtr->next) {
             if (integerPtr->neededInteger) {
                 GenWrite(&integerPtr->contents,
@@ -331,7 +331,7 @@ static void WriteNeededBitMaps(
 
     for (i = 0; i < BITMAP_HASH_SIZE; i++) {
         for (bitMapPtr = bitMapArray[i];
-             bitMapPtr != NULL;
+             bitMapPtr != nullptr;
              bitMapPtr = bitMapPtr->next) {
             if (bitMapPtr->neededBitMap) {
                 numberOfUsedBitMaps++;
@@ -349,7 +349,7 @@ static void WriteNeededBitMaps(
 
     for (i = 0; i < BITMAP_HASH_SIZE; i++) {
         for (bitMapPtr = bitMapArray[i];
-             bitMapPtr != NULL;
+             bitMapPtr != nullptr;
              bitMapPtr = bitMapPtr->next) {
             if (bitMapPtr->neededBitMap) {
                 tempSize = bitMapPtr->size;
@@ -394,7 +394,7 @@ void ReadNeededSymbols(
     GenReadBinary(theEnv, &SymbolData(theEnv)->NumberOfSymbols, sizeof(long));
     GenReadBinary(theEnv, &space, sizeof(unsigned long));
     if (SymbolData(theEnv)->NumberOfSymbols == 0) {
-        SymbolData(theEnv)->SymbolArray = NULL;
+        SymbolData(theEnv)->SymbolArray = nullptr;
         return;
     }
 
@@ -446,7 +446,7 @@ void ReadNeededFloats(
 
     GenReadBinary(theEnv, &SymbolData(theEnv)->NumberOfFloats, sizeof(long));
     if (SymbolData(theEnv)->NumberOfFloats == 0) {
-        SymbolData(theEnv)->FloatArray = NULL;
+        SymbolData(theEnv)->FloatArray = nullptr;
         return;
     }
 
@@ -487,7 +487,7 @@ void ReadNeededIntegers(
 
     GenReadBinary(theEnv, &SymbolData(theEnv)->NumberOfIntegers, sizeof(unsigned long));
     if (SymbolData(theEnv)->NumberOfIntegers == 0) {
-        SymbolData(theEnv)->IntegerArray = NULL;
+        SymbolData(theEnv)->IntegerArray = nullptr;
         return;
     }
 
@@ -534,7 +534,7 @@ static void ReadNeededBitMaps(
     GenReadBinary(theEnv, &SymbolData(theEnv)->NumberOfBitMaps, sizeof(long));
     GenReadBinary(theEnv, &space, sizeof(unsigned long));
     if (SymbolData(theEnv)->NumberOfBitMaps == 0) {
-        SymbolData(theEnv)->BitMapArray = NULL;
+        SymbolData(theEnv)->BitMapArray = nullptr;
         return;
     }
 
@@ -572,19 +572,19 @@ static void ReadNeededBitMaps(
 /**********************************************************/
 void FreeAtomicValueStorage(
         Environment *theEnv) {
-    if (SymbolData(theEnv)->SymbolArray != NULL)
+    if (SymbolData(theEnv)->SymbolArray != nullptr)
         rm(theEnv, SymbolData(theEnv)->SymbolArray, sizeof(CLIPSLexeme *) * SymbolData(theEnv)->NumberOfSymbols);
-    if (SymbolData(theEnv)->FloatArray != NULL)
+    if (SymbolData(theEnv)->FloatArray != nullptr)
         rm(theEnv, SymbolData(theEnv)->FloatArray, sizeof(CLIPSFloat *) * SymbolData(theEnv)->NumberOfFloats);
-    if (SymbolData(theEnv)->IntegerArray != NULL)
+    if (SymbolData(theEnv)->IntegerArray != nullptr)
         rm(theEnv, SymbolData(theEnv)->IntegerArray, sizeof(CLIPSInteger *) * SymbolData(theEnv)->NumberOfIntegers);
-    if (SymbolData(theEnv)->BitMapArray != NULL)
+    if (SymbolData(theEnv)->BitMapArray != nullptr)
         rm(theEnv, SymbolData(theEnv)->BitMapArray, sizeof(CLIPSBitMap *) * SymbolData(theEnv)->NumberOfBitMaps);
 
-    SymbolData(theEnv)->SymbolArray = NULL;
-    SymbolData(theEnv)->FloatArray = NULL;
-    SymbolData(theEnv)->IntegerArray = NULL;
-    SymbolData(theEnv)->BitMapArray = NULL;
+    SymbolData(theEnv)->SymbolArray = nullptr;
+    SymbolData(theEnv)->FloatArray = nullptr;
+    SymbolData(theEnv)->IntegerArray = nullptr;
+    SymbolData(theEnv)->BitMapArray = nullptr;
     SymbolData(theEnv)->NumberOfSymbols = 0;
     SymbolData(theEnv)->NumberOfFloats = 0;
     SymbolData(theEnv)->NumberOfIntegers = 0;

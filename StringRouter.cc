@@ -77,8 +77,8 @@ void InitializeStringRouter(
         Environment *theEnv) {
     AllocateEnvironmentData(theEnv, STRING_ROUTER_DATA, sizeof(struct stringRouterData), DeallocateStringRouterData);
 
-    AddRouter(theEnv, "string", 0, QueryStringCallback, WriteStringCallback, ReadStringCallback, UnreadStringCallback, NULL, NULL);
-    AddRouter(theEnv, "stringBuilder", 0, QueryStringBuilderCallback, WriteStringBuilderCallback, NULL, NULL, NULL, NULL);
+    AddRouter(theEnv, "string", 0, QueryStringCallback, WriteStringCallback, ReadStringCallback, UnreadStringCallback, nullptr, nullptr);
+    AddRouter(theEnv, "stringBuilder", 0, QueryStringBuilderCallback, WriteStringBuilderCallback, nullptr, nullptr, nullptr, nullptr);
 }
 
 /*******************************************/
@@ -91,7 +91,7 @@ static void DeallocateStringRouterData(
     StringBuilderRouter *tmpSBPtr, *nextSBPtr;
 
     tmpPtr = StringRouterData(theEnv)->ListOfStringRouters;
-    while (tmpPtr != NULL) {
+    while (tmpPtr != nullptr) {
         nextPtr = tmpPtr->next;
         rm(theEnv, (void *) tmpPtr->name, strlen(tmpPtr->name) + 1);
         rtn_struct(theEnv, stringRouter, tmpPtr);
@@ -99,7 +99,7 @@ static void DeallocateStringRouterData(
     }
 
     tmpSBPtr = StringRouterData(theEnv)->ListOfStringBuilderRouters;
-    while (tmpSBPtr != NULL) {
+    while (tmpSBPtr != nullptr) {
         nextSBPtr = tmpSBPtr->next;
         rm(theEnv, (void *) tmpSBPtr->name, strlen(tmpSBPtr->name) + 1);
         rtn_struct(theEnv, stringBuilderRouter, tmpSBPtr);
@@ -117,7 +117,7 @@ static bool QueryStringCallback(
     struct stringRouter *head;
 
     head = StringRouterData(theEnv)->ListOfStringRouters;
-    while (head != NULL) {
+    while (head != nullptr) {
         if (strcmp(head->name, logicalName) == 0) { return true; }
         head = head->next;
     }
@@ -136,7 +136,7 @@ static void WriteStringCallback(
     struct stringRouter *head;
 
     head = FindStringRouter(theEnv, logicalName);
-    if (head == NULL) {
+    if (head == nullptr) {
         SystemError(theEnv, "ROUTER", 3);
         ExitRouter(theEnv, EXIT_FAILURE);
         return;
@@ -165,7 +165,7 @@ static int ReadStringCallback(
     int rc;
 
     head = FindStringRouter(theEnv, logicalName);
-    if (head == NULL) {
+    if (head == nullptr) {
         SystemError(theEnv, "ROUTER", 1);
         ExitRouter(theEnv, EXIT_FAILURE);
     }
@@ -197,7 +197,7 @@ static int UnreadStringCallback(
 
     head = FindStringRouter(theEnv, logicalName);
 
-    if (head == NULL) {
+    if (head == nullptr) {
         SystemError(theEnv, "ROUTER", 2);
         ExitRouter(theEnv, EXIT_FAILURE);
     }
@@ -218,7 +218,7 @@ bool OpenStringSource(
         size_t currentPosition) {
     size_t maximumPosition;
 
-    if (str == NULL) {
+    if (str == nullptr) {
         currentPosition = 0;
         maximumPosition = 0;
     } else { maximumPosition = strlen(str); }
@@ -228,7 +228,7 @@ bool OpenStringSource(
 
 /******************************************************/
 /* OpenTextSource: Opens a new string router for text */
-/*   (which is not NULL terminated).                  */
+/*   (which is not nullptr terminated).                  */
 /******************************************************/
 bool OpenTextSource(
         Environment *theEnv,
@@ -236,7 +236,7 @@ bool OpenTextSource(
         const char *str,
         size_t currentPosition,
         size_t maximumPosition) {
-    if (str == NULL) {
+    if (str == nullptr) {
         currentPosition = 0;
         maximumPosition = 0;
     }
@@ -256,13 +256,13 @@ static bool CreateReadStringSource(
     struct stringRouter *newStringRouter;
     char *theName;
 
-    if (FindStringRouter(theEnv, name) != NULL) return false;
+    if (FindStringRouter(theEnv, name) != nullptr) return false;
 
     newStringRouter = get_struct(theEnv, stringRouter);
     theName = (char *) gm1(theEnv, strlen(name) + 1);
     genstrcpy(theName, name);
     newStringRouter->name = theName;
-    newStringRouter->writeString = NULL;
+    newStringRouter->writeString = nullptr;
     newStringRouter->readString = str;
     newStringRouter->currentPosition = currentPosition;
     newStringRouter->readWriteType = READ_STRING;
@@ -281,11 +281,11 @@ bool CloseStringSource(
         const char *name) {
     struct stringRouter *head, *last;
 
-    last = NULL;
+    last = nullptr;
     head = StringRouterData(theEnv)->ListOfStringRouters;
-    while (head != NULL) {
+    while (head != nullptr) {
         if (strcmp(head->name, name) == 0) {
-            if (last == NULL) {
+            if (last == nullptr) {
                 StringRouterData(theEnv)->ListOfStringRouters = head->next;
                 rm(theEnv, (void *) head->name, strlen(head->name) + 1);
                 rtn_struct(theEnv, stringRouter, head);
@@ -315,13 +315,13 @@ bool OpenStringDestination(
     struct stringRouter *newStringRouter;
     char *theName;
 
-    if (FindStringRouter(theEnv, name) != NULL) return false;
+    if (FindStringRouter(theEnv, name) != nullptr) return false;
 
     newStringRouter = get_struct(theEnv, stringRouter);
     theName = (char *) gm1(theEnv, strlen(name) + 1);
     genstrcpy(theName, name);
     newStringRouter->name = theName;
-    newStringRouter->readString = NULL;
+    newStringRouter->readString = nullptr;
     newStringRouter->writeString = str;
     newStringRouter->currentPosition = 0;
     newStringRouter->readWriteType = WRITE_STRING;
@@ -350,12 +350,12 @@ static struct stringRouter *FindStringRouter(
     struct stringRouter *head;
 
     head = StringRouterData(theEnv)->ListOfStringRouters;
-    while (head != NULL) {
+    while (head != nullptr) {
         if (strcmp(head->name, name) == 0) { return (head); }
         head = head->next;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /*********************************************/
@@ -369,7 +369,7 @@ bool OpenStringBuilderDestination(
     StringBuilderRouter *newStringRouter;
     char *theName;
 
-    if (FindStringBuilderRouter(theEnv, name) != NULL) return false;
+    if (FindStringBuilderRouter(theEnv, name) != nullptr) return false;
 
     newStringRouter = get_struct(theEnv, stringBuilderRouter);
     theName = (char *) gm1(theEnv, strlen(name) + 1);
@@ -391,11 +391,11 @@ bool CloseStringBuilderDestination(
         const char *name) {
     StringBuilderRouter *head, *last;
 
-    last = NULL;
+    last = nullptr;
     head = StringRouterData(theEnv)->ListOfStringBuilderRouters;
-    while (head != NULL) {
+    while (head != nullptr) {
         if (strcmp(head->name, name) == 0) {
-            if (last == NULL) {
+            if (last == nullptr) {
                 StringRouterData(theEnv)->ListOfStringBuilderRouters = head->next;
                 rm(theEnv, (void *) head->name, strlen(head->name) + 1);
                 rtn_struct(theEnv, stringBuilderRouter, head);
@@ -424,12 +424,12 @@ static struct stringBuilderRouter *FindStringBuilderRouter(
     StringBuilderRouter *head;
 
     head = StringRouterData(theEnv)->ListOfStringBuilderRouters;
-    while (head != NULL) {
+    while (head != nullptr) {
         if (strcmp(head->name, name) == 0) { return head; }
         head = head->next;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /*********************************************/
@@ -443,7 +443,7 @@ static bool QueryStringBuilderCallback(
     StringBuilderRouter *head;
 
     head = StringRouterData(theEnv)->ListOfStringBuilderRouters;
-    while (head != NULL) {
+    while (head != nullptr) {
         if (strcmp(head->name, logicalName) == 0) { return true; }
         head = head->next;
     }
@@ -463,7 +463,7 @@ static void WriteStringBuilderCallback(
     StringBuilderRouter *head;
 
     head = FindStringBuilderRouter(theEnv, logicalName);
-    if (head == NULL) {
+    if (head == nullptr) {
         SystemError(theEnv, "ROUTER", 3);
         ExitRouter(theEnv, EXIT_FAILURE);
         return;

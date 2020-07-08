@@ -182,7 +182,7 @@ struct systemDependentData {
 /********************************************************/
 void InitializeSystemDependentData(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, SYSTEM_DEPENDENT_DATA, sizeof(struct systemDependentData), NULL);
+    AllocateEnvironmentData(theEnv, SYSTEM_DEPENDENT_DATA, sizeof(struct systemDependentData), nullptr);
 }
 
 /*********************************************************/
@@ -207,7 +207,7 @@ double gentime() {
     tt -= 11644473600000000ULL;
     return (double) tt / 1000000.0;
 #else
-   return((double) time(NULL));
+   return((double) time(nullptr));
 #endif
 }
 
@@ -271,7 +271,7 @@ void InitializeNonportableFeatures(
 void genexit(
         Environment *theEnv,
         int num) {
-    if (SystemDependentData(theEnv)->jmpBuffer != NULL) { longjmp(*SystemDependentData(theEnv)->jmpBuffer, 1); }
+    if (SystemDependentData(theEnv)->jmpBuffer != nullptr) { longjmp(*SystemDependentData(theEnv)->jmpBuffer, 1); }
 
     exit(num);
 }
@@ -368,7 +368,7 @@ char *gengetcwd(
 #if MAC_XCD || DARWIN || LINUX
     return(getcwd(buffer,buflength));
 #else
-    if (buffer != NULL) { buffer[0] = 0; }
+    if (buffer != nullptr) { buffer[0] = 0; }
     return (buffer);
 #endif
 }
@@ -384,11 +384,11 @@ int genchdir(
     int rv = -1;
 
     /*==========================================================*/
-    /* If the directory argument is NULL, then the return value */
+    /* If the directory argument is nullptr, then the return value */
     /* indicates whether the chdir functionality is supported.  */
     /*==========================================================*/
 
-    if (directory == NULL) {
+    if (directory == nullptr) {
 #if MAC_XCD || DARWIN || LINUX || WIN_MVC
         return 1;
 #else
@@ -407,7 +407,7 @@ int genchdir(
     wchar_t *wdirectory;
     int wlength;
 
-    wlength = MultiByteToWideChar(CP_UTF8,0,directory,-1,NULL,0);
+    wlength = MultiByteToWideChar(CP_UTF8,0,directory,-1,nullptr,0);
 
     wdirectory = (wchar_t *) genalloc(theEnv,wlength * sizeof(wchar_t));
 
@@ -433,7 +433,7 @@ bool genremove(
 #endif
 
 #if WIN_MVC
-    wfnlength = MultiByteToWideChar(CP_UTF8,0,fileName,-1,NULL,0);
+    wfnlength = MultiByteToWideChar(CP_UTF8,0,fileName,-1,nullptr,0);
 
     wfileName = (wchar_t *) genalloc(theEnv,wfnlength * sizeof(wchar_t));
 
@@ -466,8 +466,8 @@ bool genrename(
 #endif
 
 #if WIN_MVC
-    wofnlength = MultiByteToWideChar(CP_UTF8,0,oldFileName,-1,NULL,0);
-    wnfnlength = MultiByteToWideChar(CP_UTF8,0,newFileName,-1,NULL,0);
+    wofnlength = MultiByteToWideChar(CP_UTF8,0,oldFileName,-1,nullptr,0);
+    wnfnlength = MultiByteToWideChar(CP_UTF8,0,newFileName,-1,nullptr,0);
 
     woldFileName = (wchar_t *) genalloc(theEnv,wofnlength * sizeof(wchar_t));
     wnewFileName = (wchar_t *) genalloc(theEnv,wnfnlength * sizeof(wchar_t));
@@ -534,15 +534,15 @@ FILE *GenOpen(
     /* Invoke the before open function. */
     /*==================================*/
 
-    if (SystemDependentData(theEnv)->BeforeOpenFunction != NULL) { (*SystemDependentData(theEnv)->BeforeOpenFunction)(theEnv); }
+    if (SystemDependentData(theEnv)->BeforeOpenFunction != nullptr) { (*SystemDependentData(theEnv)->BeforeOpenFunction)(theEnv); }
 
     /*================*/
     /* Open the file. */
     /*================*/
 
 #if WIN_MVC
-    wfnlength = MultiByteToWideChar(CP_UTF8,0,fileName,-1,NULL,0);
-    watlength = MultiByteToWideChar(CP_UTF8,0,accessType,-1,NULL,0);
+    wfnlength = MultiByteToWideChar(CP_UTF8,0,fileName,-1,nullptr,0);
+    watlength = MultiByteToWideChar(CP_UTF8,0,accessType,-1,nullptr,0);
 
     wfileName = (wchar_t *) genalloc(theEnv,wfnlength * sizeof(wchar_t));
     waccessType = (wchar_t *) genalloc(theEnv,watlength * sizeof(wchar_t));
@@ -563,7 +563,7 @@ FILE *GenOpen(
     /* (BOM): 0xEF,0xBB,0xBF.              */
     /*=====================================*/
 
-    if ((theFile != NULL) & (strcmp(accessType, "r") == 0)) {
+    if ((theFile != nullptr) & (strcmp(accessType, "r") == 0)) {
         int theChar;
 
         theChar = getc(theFile);
@@ -580,7 +580,7 @@ FILE *GenOpen(
     /* Invoke the after open function. */
     /*=================================*/
 
-    if (SystemDependentData(theEnv)->AfterOpenFunction != NULL) { (*SystemDependentData(theEnv)->AfterOpenFunction)(theEnv); }
+    if (SystemDependentData(theEnv)->AfterOpenFunction != nullptr) { (*SystemDependentData(theEnv)->AfterOpenFunction)(theEnv); }
 
     /*===============================*/
     /* Return a pointer to the file. */
@@ -662,26 +662,26 @@ bool GenOpenReadBinary(
         Environment *theEnv,
         const char *funcName,
         const char *fileName) {
-    if (SystemDependentData(theEnv)->BeforeOpenFunction != NULL) { (*SystemDependentData(theEnv)->BeforeOpenFunction)(theEnv); }
+    if (SystemDependentData(theEnv)->BeforeOpenFunction != nullptr) { (*SystemDependentData(theEnv)->BeforeOpenFunction)(theEnv); }
 
 #if WIN_MVC
     SystemDependentData(theEnv)->BinaryFileHandle = _open(fileName,O_RDONLY | O_BINARY);
     if (SystemDependentData(theEnv)->BinaryFileHandle == -1)
       {
-       if (SystemDependentData(theEnv)->AfterOpenFunction != NULL)
+       if (SystemDependentData(theEnv)->AfterOpenFunction != nullptr)
          { (*SystemDependentData(theEnv)->AfterOpenFunction)(theEnv); }
        return false;
       }
 #endif
 
 #if (!WIN_MVC)
-    if ((SystemDependentData(theEnv)->BinaryFP = fopen(fileName, "rb")) == NULL) {
-        if (SystemDependentData(theEnv)->AfterOpenFunction != NULL) { (*SystemDependentData(theEnv)->AfterOpenFunction)(theEnv); }
+    if ((SystemDependentData(theEnv)->BinaryFP = fopen(fileName, "rb")) == nullptr) {
+        if (SystemDependentData(theEnv)->AfterOpenFunction != nullptr) { (*SystemDependentData(theEnv)->AfterOpenFunction)(theEnv); }
         return false;
     }
 #endif
 
-    if (SystemDependentData(theEnv)->AfterOpenFunction != NULL) { (*SystemDependentData(theEnv)->AfterOpenFunction)(theEnv); }
+    if (SystemDependentData(theEnv)->AfterOpenFunction != nullptr) { (*SystemDependentData(theEnv)->AfterOpenFunction)(theEnv); }
 
     return true;
 }
@@ -768,7 +768,7 @@ void GenTellBinary(
 /****************************************/
 void GenCloseBinary(
         Environment *theEnv) {
-    if (SystemDependentData(theEnv)->BeforeOpenFunction != NULL) { (*SystemDependentData(theEnv)->BeforeOpenFunction)(theEnv); }
+    if (SystemDependentData(theEnv)->BeforeOpenFunction != nullptr) { (*SystemDependentData(theEnv)->BeforeOpenFunction)(theEnv); }
 
 #if WIN_MVC
     _close(SystemDependentData(theEnv)->BinaryFileHandle);
@@ -778,7 +778,7 @@ void GenCloseBinary(
     fclose(SystemDependentData(theEnv)->BinaryFP);
 #endif
 
-    if (SystemDependentData(theEnv)->AfterOpenFunction != NULL) { (*SystemDependentData(theEnv)->AfterOpenFunction)(theEnv); }
+    if (SystemDependentData(theEnv)->AfterOpenFunction != nullptr) { (*SystemDependentData(theEnv)->AfterOpenFunction)(theEnv); }
 }
 
 /***********************************************/

@@ -27,7 +27,7 @@
 /*            Added pragmas to remove compilation warnings.   */
 /*                                                            */
 /*      6.30: Updated ENTITY_RECORD definitions to include    */
-/*            additional NULL initializers.                   */
+/*            additional nullptr initializers.                   */
 /*                                                            */
 /*            Added ReleaseProcParameters call.               */
 /*                                                            */

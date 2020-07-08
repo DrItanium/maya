@@ -103,17 +103,17 @@ static void DeallocateExternalFunctionData(
     struct functionDefinition *tmpPtr, *nextPtr;
 
     tmpPtr = ExternalFunctionData(theEnv)->ListOfFunctions;
-    while (tmpPtr != NULL) {
+    while (tmpPtr != nullptr) {
         nextPtr = tmpPtr->next;
         rtn_struct(theEnv, functionDefinition, tmpPtr);
         tmpPtr = nextPtr;
     }
 
-    if (ExternalFunctionData(theEnv)->FunctionHashtable == NULL) { return; }
+    if (ExternalFunctionData(theEnv)->FunctionHashtable == nullptr) { return; }
 
     for (i = 0; i < SIZE_FUNCTION_HASH; i++) {
         fhPtr = ExternalFunctionData(theEnv)->FunctionHashtable[i];
-        while (fhPtr != NULL) {
+        while (fhPtr != nullptr) {
             nextFHPtr = fhPtr->next;
             rtn_struct(theEnv, FunctionHash, fhPtr);
             fhPtr = nextFHPtr;
@@ -137,15 +137,15 @@ AddUDFError AddUDF(Environment *theEnv, const char *name, const char *returnType
 
     if ((minArgs != UNBOUNDED) && (minArgs > maxArgs)) { return AUE_MIN_EXCEEDS_MAX_ERROR; }
 
-    if (argumentTypes != NULL) {
+    if (argumentTypes != nullptr) {
         for (i = 0; argumentTypes[i] != EOS; i++) {
-            if (strchr(validTypeChars, argumentTypes[i]) == NULL) { return AUE_INVALID_ARGUMENT_TYPE_ERROR; }
+            if (strchr(validTypeChars, argumentTypes[i]) == nullptr) { return AUE_INVALID_ARGUMENT_TYPE_ERROR; }
         }
     }
 
-    if (returnTypes != NULL) {
+    if (returnTypes != nullptr) {
         for (i = 0; returnTypes[i] != EOS; i++) {
-            if (strchr(validTypeChars, returnTypes[i]) == NULL) { return AUE_INVALID_RETURN_TYPE_ERROR; }
+            if (strchr(validTypeChars, returnTypes[i]) == nullptr) { return AUE_INVALID_RETURN_TYPE_ERROR; }
         }
 
         PopulateRestriction(theEnv, &returnTypeBits, ANY_TYPE_BITS, returnTypes, 0);
@@ -172,7 +172,7 @@ static AddUDFError DefineFunction(
     struct functionDefinition *newFunction;
 
     newFunction = FindFunction(theEnv, name);
-    if (newFunction != NULL) { return AUE_FUNCTION_NAME_IN_USE_ERROR; }
+    if (newFunction != nullptr) { return AUE_FUNCTION_NAME_IN_USE_ERROR; }
 
     newFunction = get_struct(theEnv, functionDefinition);
     newFunction->callFunctionName = CreateSymbol(theEnv, name);
@@ -187,16 +187,16 @@ static AddUDFError DefineFunction(
     newFunction->minArgs = minArgs;
     newFunction->maxArgs = maxArgs;
 
-    if (restrictions == NULL) { newFunction->restrictions = NULL; }
+    if (restrictions == nullptr) { newFunction->restrictions = nullptr; }
     else {
         newFunction->restrictions = CreateString(theEnv, restrictions);
         IncrementLexemeCount(newFunction->restrictions);
     }
 
-    newFunction->parser = NULL;
+    newFunction->parser = nullptr;
     newFunction->overloadable = true;
     newFunction->sequenceuseok = true;
-    newFunction->usrData = NULL;
+    newFunction->usrData = nullptr;
     newFunction->context = context;
 
     return AUE_NO_ERROR;
@@ -210,21 +210,21 @@ bool RemoveUDF(
         Environment *theEnv,
         const char *functionName) {
     CLIPSLexeme *findValue;
-    struct functionDefinition *fPtr, *lastPtr = NULL;
+    struct functionDefinition *fPtr, *lastPtr = nullptr;
 
     findValue = FindSymbolHN(theEnv, functionName, SYMBOL_BIT);
 
     for (fPtr = ExternalFunctionData(theEnv)->ListOfFunctions;
-         fPtr != NULL;
+         fPtr != nullptr;
          fPtr = fPtr->next) {
         if (fPtr->callFunctionName == findValue) {
             ReleaseLexeme(theEnv, fPtr->callFunctionName);
             RemoveHashFunction(theEnv, fPtr);
 
-            if (lastPtr == NULL) { ExternalFunctionData(theEnv)->ListOfFunctions = fPtr->next; }
+            if (lastPtr == nullptr) { ExternalFunctionData(theEnv)->ListOfFunctions = fPtr->next; }
             else { lastPtr->next = fPtr->next; }
 
-            if (fPtr->restrictions != NULL) { ReleaseLexeme(theEnv, fPtr->restrictions); }
+            if (fPtr->restrictions != nullptr) { ReleaseLexeme(theEnv, fPtr->restrictions); }
             ClearUserDataList(theEnv, fPtr->usrData);
             rtn_struct(theEnv, functionDefinition, fPtr);
             return true;
@@ -243,16 +243,16 @@ bool RemoveUDF(
 static bool RemoveHashFunction(
         Environment *theEnv,
         struct functionDefinition *fdPtr) {
-    struct FunctionHash *fhPtr, *lastPtr = NULL;
+    struct FunctionHash *fhPtr, *lastPtr = nullptr;
     size_t hashValue;
 
     hashValue = HashSymbol(fdPtr->callFunctionName->contents, SIZE_FUNCTION_HASH);
 
     for (fhPtr = ExternalFunctionData(theEnv)->FunctionHashtable[hashValue];
-         fhPtr != NULL;
+         fhPtr != nullptr;
          fhPtr = fhPtr->next) {
         if (fhPtr->fdPtr == fdPtr) {
-            if (lastPtr == NULL) { ExternalFunctionData(theEnv)->FunctionHashtable[hashValue] = fhPtr->next; }
+            if (lastPtr == nullptr) { ExternalFunctionData(theEnv)->FunctionHashtable[hashValue] = fhPtr->next; }
             else { lastPtr->next = fhPtr->next; }
 
             rtn_struct(theEnv, FunctionHash, fhPtr);
@@ -282,7 +282,7 @@ bool AddFunctionParser(
     struct functionDefinition *fdPtr;
 
     fdPtr = FindFunction(theEnv, functionName);
-    if (fdPtr == NULL) {
+    if (fdPtr == nullptr) {
         WriteString(theEnv, STDERR, "Function parsers can only be added for existing functions.\n");
         return false;
     }
@@ -304,12 +304,12 @@ bool RemoveFunctionParser(
     struct functionDefinition *fdPtr;
 
     fdPtr = FindFunction(theEnv, functionName);
-    if (fdPtr == NULL) {
+    if (fdPtr == nullptr) {
         WriteString(theEnv, STDERR, "Function parsers can only be removed from existing functions.\n");
         return false;
     }
 
-    fdPtr->parser = NULL;
+    fdPtr->parser = nullptr;
 
     return true;
 }
@@ -326,7 +326,7 @@ bool FuncSeqOvlFlags(
     struct functionDefinition *fdPtr;
 
     fdPtr = FindFunction(theEnv, functionName);
-    if (fdPtr == NULL) {
+    if (fdPtr == nullptr) {
         WriteString(theEnv, STDERR, "Only existing functions can be marked as using sequence expansion arguments/overloadable or not.\n");
         return false;
     }
@@ -349,9 +349,9 @@ unsigned GetNthRestriction(
     unsigned rv, df;
     const char *restrictions;
 
-    if (theFunction == NULL) return (ANY_TYPE_BITS);
+    if (theFunction == nullptr) return (ANY_TYPE_BITS);
 
-    if (theFunction->restrictions == NULL) return (ANY_TYPE_BITS);
+    if (theFunction->restrictions == nullptr) return (ANY_TYPE_BITS);
     restrictions = theFunction->restrictions->contents;
 
     PopulateRestriction(theEnv, &df, ANY_TYPE_BITS, restrictions, 0);
@@ -378,21 +378,21 @@ void InstallFunctionList(
     int i;
     struct FunctionHash *fhPtr, *nextPtr;
 
-    if (ExternalFunctionData(theEnv)->FunctionHashtable != NULL) {
+    if (ExternalFunctionData(theEnv)->FunctionHashtable != nullptr) {
         for (i = 0; i < SIZE_FUNCTION_HASH; i++) {
             fhPtr = ExternalFunctionData(theEnv)->FunctionHashtable[i];
-            while (fhPtr != NULL) {
+            while (fhPtr != nullptr) {
                 nextPtr = fhPtr->next;
                 rtn_struct(theEnv, FunctionHash, fhPtr);
                 fhPtr = nextPtr;
             }
-            ExternalFunctionData(theEnv)->FunctionHashtable[i] = NULL;
+            ExternalFunctionData(theEnv)->FunctionHashtable[i] = nullptr;
         }
     }
 
     ExternalFunctionData(theEnv)->ListOfFunctions = value;
 
-    while (value != NULL) {
+    while (value != nullptr) {
         AddHashFunction(theEnv, value);
         value = value->next;
     }
@@ -401,7 +401,7 @@ void InstallFunctionList(
 /********************************************************/
 /* FindFunction: Returns a pointer to the corresponding */
 /*   functionDefinition structure if a function name is */
-/*   in the function list, otherwise returns NULL.      */
+/*   in the function list, otherwise returns nullptr.      */
 /********************************************************/
 struct functionDefinition *FindFunction(
         Environment *theEnv,
@@ -410,19 +410,19 @@ struct functionDefinition *FindFunction(
     size_t hashValue;
     CLIPSLexeme *findValue;
 
-    if (ExternalFunctionData(theEnv)->FunctionHashtable == NULL) return NULL;
+    if (ExternalFunctionData(theEnv)->FunctionHashtable == nullptr) return nullptr;
 
     hashValue = HashSymbol(functionName, SIZE_FUNCTION_HASH);
 
     findValue = FindSymbolHN(theEnv, functionName, SYMBOL_BIT);
 
     for (fhPtr = ExternalFunctionData(theEnv)->FunctionHashtable[hashValue];
-         fhPtr != NULL;
+         fhPtr != nullptr;
          fhPtr = fhPtr->next) {
         if (fhPtr->fdPtr->callFunctionName == findValue) { return (fhPtr->fdPtr); }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /********************************************************/
@@ -435,24 +435,24 @@ void *GetUDFContext(
     size_t hashValue;
     CLIPSLexeme *findValue;
 
-    if (ExternalFunctionData(theEnv)->FunctionHashtable == NULL) return NULL;
+    if (ExternalFunctionData(theEnv)->FunctionHashtable == nullptr) return nullptr;
 
     hashValue = HashSymbol(functionName, SIZE_FUNCTION_HASH);
 
     findValue = FindSymbolHN(theEnv, functionName, SYMBOL_BIT);
 
     for (fhPtr = ExternalFunctionData(theEnv)->FunctionHashtable[hashValue];
-         fhPtr != NULL;
+         fhPtr != nullptr;
          fhPtr = fhPtr->next) {
         if (fhPtr->fdPtr->callFunctionName == findValue) { return fhPtr->fdPtr->context; }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /*********************************************************/
 /* InitializeFunctionHashTable: Purpose is to initialize */
-/*   the function hash table to NULL.                    */
+/*   the function hash table to nullptr.                    */
 /*********************************************************/
 static void InitializeFunctionHashTable(
         Environment *theEnv) {
@@ -462,7 +462,7 @@ static void InitializeFunctionHashTable(
             gm2(theEnv, sizeof(struct FunctionHash *) *
                         SIZE_FUNCTION_HASH);
 
-    for (i = 0; i < SIZE_FUNCTION_HASH; i++) ExternalFunctionData(theEnv)->FunctionHashtable[i] = NULL;
+    for (i = 0; i < SIZE_FUNCTION_HASH; i++) ExternalFunctionData(theEnv)->FunctionHashtable[i] = nullptr;
 }
 
 /****************************************************************/
@@ -474,7 +474,7 @@ static void AddHashFunction(
     struct FunctionHash *newhash, *temp;
     size_t hashValue;
 
-    if (ExternalFunctionData(theEnv)->FunctionHashtable == NULL) InitializeFunctionHashTable(theEnv);
+    if (ExternalFunctionData(theEnv)->FunctionHashtable == nullptr) InitializeFunctionHashTable(theEnv);
 
     newhash = get_struct(theEnv, FunctionHash);
     newhash->fdPtr = fdPtr;
@@ -528,7 +528,7 @@ void AssignErrorValue(
     } else if (context->theFunction->unknownReturnValueType & INSTANCE_ADDRESS_BIT) {
         context->returnValue->value = &InstanceData(context->environment)->DummyInstance;
     } else if (context->theFunction->unknownReturnValueType & EXTERNAL_ADDRESS_BIT) {
-        context->returnValue->value = CreateExternalAddress(context->environment, NULL, 0);
+        context->returnValue->value = CreateExternalAddress(context->environment, nullptr, 0);
     } else { context->returnValue->value = context->environment->VoidConstant; }
 }
 
@@ -541,7 +541,7 @@ unsigned int UDFArgumentCount(
     struct expr *argPtr;
 
     for (argPtr = EvaluationData(context->environment)->CurrentExpression->argList;
-         argPtr != NULL;
+         argPtr != nullptr;
          argPtr = argPtr->nextArg) { count++; }
 
     return count;
@@ -570,7 +570,7 @@ bool UDFNextArgument(
     unsigned int argumentPosition = context->lastPosition;
     Environment *theEnv = context->environment;
 
-    if (argPtr == NULL) {
+    if (argPtr == nullptr) {
         SetHaltExecution(theEnv, true);
         SetEvaluationError(theEnv, true);
         return false;
@@ -766,7 +766,7 @@ bool UDFNthArgument(
         context->lastPosition = 1;
     }
 
-    for (; (context->lastArg != NULL) && (context->lastPosition < argumentPosition);
+    for (; (context->lastArg != nullptr) && (context->lastPosition < argumentPosition);
            context->lastArg = context->lastArg->nextArg) { context->lastPosition++; }
 
     return UDFNextArgument(context, expectedType, returnValue);

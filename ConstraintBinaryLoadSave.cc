@@ -113,7 +113,7 @@ void WriteNeededConstraints(
 
     for (i = 0; i < SIZE_CONSTRAINT_HASH; i++) {
         for (tmpPtr = ConstraintData(theEnv)->ConstraintHashtable[i];
-             tmpPtr != NULL;
+             tmpPtr != nullptr;
              tmpPtr = tmpPtr->next) {
             tmpPtr->bsaveID = theIndex++;
             numberOfUsedConstraints++;
@@ -143,7 +143,7 @@ void WriteNeededConstraints(
 
     for (i = 0; i < SIZE_CONSTRAINT_HASH; i++) {
         for (tmpPtr = ConstraintData(theEnv)->ConstraintHashtable[i];
-             tmpPtr != NULL;
+             tmpPtr != nullptr;
              tmpPtr = tmpPtr->next) {
             CopyToBsaveConstraintRecord(theEnv, tmpPtr, &bsaveConstraints);
             GenWrite(&bsaveConstraints, sizeof(BSAVE_CONSTRAINT_RECORD), fp);
@@ -246,7 +246,7 @@ static void CopyFromBsaveConstraintRecord(
     constraints->maxValue = HashedExpressionPointer(bsaveConstraints->maxValue);
     constraints->minFields = HashedExpressionPointer(bsaveConstraints->minFields);
     constraints->maxFields = HashedExpressionPointer(bsaveConstraints->maxFields);
-    constraints->multifield = NULL;
+    constraints->multifield = nullptr;
 }
 
 /********************************************************/

@@ -140,7 +140,7 @@ bool ParseDefglobal(
         /*=================================*/
 
         theModule = FindDefmodule(theEnv, theToken.lexemeValue->contents);
-        if (theModule == NULL) {
+        if (theModule == nullptr) {
             CantFindItemErrorMessage(theEnv, "defmodule", theToken.lexemeValue->contents, true);
             return true;
         }
@@ -236,7 +236,7 @@ static bool GetVariableDefinition(
 #if DEBUGGING_FUNCTIONS
     if ((GetWatchItem(theEnv, "compilations") == 1) && GetPrintWhileLoading(theEnv)) {
         const char *outRouter = STDOUT;
-        if (QFindDefglobal(theEnv, variableName) != NULL) {
+        if (QFindDefglobal(theEnv, variableName) != nullptr) {
             outRouter = STDWRN;
             PrintWarningID(theEnv, "CSTRCPSR", 1, true);
             WriteString(theEnv, outRouter, "Redefining defglobal: ");
@@ -253,7 +253,7 @@ static bool GetVariableDefinition(
 
 #if DEFMODULE_CONSTRUCT
     if (FindImportExportConflict(theEnv, "defglobal", GetCurrentModule(theEnv), variableName->contents)) {
-        ImportExportConflictMessage(theEnv, "defglobal", variableName->contents, NULL, NULL);
+        ImportExportConflictMessage(theEnv, "defglobal", variableName->contents, nullptr, nullptr);
         *defglobalError = true;
         return false;
     }
@@ -276,8 +276,8 @@ static bool GetVariableDefinition(
     /* Parse the expression to be assigned to the variable. */
     /*======================================================*/
 
-    assignPtr = ParseAtomOrExpression(theEnv, readSource, NULL);
-    if (assignPtr == NULL) {
+    assignPtr = ParseAtomOrExpression(theEnv, readSource, nullptr);
+    if (assignPtr == nullptr) {
         *defglobalError = true;
         return false;
     }
@@ -332,7 +332,7 @@ static void AddDefglobal(
     /*========================================================*/
 
     defglobalPtr = QFindDefglobal(theEnv, name);
-    if (defglobalPtr == NULL) {
+    if (defglobalPtr == nullptr) {
         newGlobal = true;
         defglobalPtr = get_struct(theEnv, defglobal);
     } else {
@@ -379,13 +379,13 @@ static void AddDefglobal(
     /*======================================*/
 
     defglobalPtr->header.name = name;
-    defglobalPtr->header.usrData = NULL;
+    defglobalPtr->header.usrData = nullptr;
     defglobalPtr->header.constructType = DEFGLOBAL;
     defglobalPtr->header.env = theEnv;
     IncrementLexemeCount(name);
 
     SavePPBuffer(theEnv, "\n");
-    if (GetConserveMemory(theEnv) == true) { defglobalPtr->header.ppForm = NULL; }
+    if (GetConserveMemory(theEnv) == true) { defglobalPtr->header.ppForm = nullptr; }
     else { defglobalPtr->header.ppForm = CopyPPBuffer(theEnv); }
 
     defglobalPtr->inScope = true;
@@ -402,7 +402,7 @@ static void AddDefglobal(
 
     defglobalPtr->busyCount = 0;
     defglobalPtr->header.whichModule = (struct defmoduleItemHeader *)
-            GetModuleItem(theEnv, NULL, FindModuleItem(theEnv, "defglobal")->moduleIndex);
+            GetModuleItem(theEnv, nullptr, FindModuleItem(theEnv, "defglobal")->moduleIndex);
 
     /*=============================================*/
     /* Add the defglobal to the list of defglobals */
@@ -428,14 +428,14 @@ bool ReplaceGlobalVariable(
     /*=================================*/
 
     theGlobal = (Defglobal *)
-            FindImportedConstruct(theEnv, "defglobal", NULL, ePtr->lexemeValue->contents,
-                                  &count, true, NULL);
+            FindImportedConstruct(theEnv, "defglobal", nullptr, ePtr->lexemeValue->contents,
+                                  &count, true, nullptr);
 
     /*=============================================*/
     /* If it wasn't found, print an error message. */
     /*=============================================*/
 
-    if (theGlobal == NULL) {
+    if (theGlobal == nullptr) {
         GlobalReferenceErrorMessage(theEnv, ePtr->lexemeValue->contents);
         return false;
     }

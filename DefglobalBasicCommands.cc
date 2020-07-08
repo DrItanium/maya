@@ -90,16 +90,16 @@ static bool DefglobalWatchPrint(Environment *, const char *, int, struct expr *)
 /*****************************************************************/
 void DefglobalBasicCommands(
         Environment *theEnv) {
-    AddSaveFunction(theEnv, "defglobal", SaveDefglobals, 40, NULL);
-    AddResetFunction(theEnv, "defglobal", ResetDefglobals, 50, NULL);
+    AddSaveFunction(theEnv, "defglobal", SaveDefglobals, 40, nullptr);
+    AddResetFunction(theEnv, "defglobal", ResetDefglobals, 50, nullptr);
 
-    AddUDF(theEnv, "get-defglobal-list", "m", 0, 1, "y", GetDefglobalListFunction, NULL);
-    AddUDF(theEnv, "undefglobal", "v", 1, 1, "y", UndefglobalCommand, NULL);
-    AddUDF(theEnv, "defglobal-module", "y", 1, 1, "y", DefglobalModuleFunction, NULL);
+    AddUDF(theEnv, "get-defglobal-list", "m", 0, 1, "y", GetDefglobalListFunction, nullptr);
+    AddUDF(theEnv, "undefglobal", "v", 1, 1, "y", UndefglobalCommand, nullptr);
+    AddUDF(theEnv, "defglobal-module", "y", 1, 1, "y", DefglobalModuleFunction, nullptr);
 
 #if DEBUGGING_FUNCTIONS
-    AddUDF(theEnv, "list-defglobals", "v", 0, 1, "y", ListDefglobalsCommand, NULL);
-    AddUDF(theEnv, "ppdefglobal", "vs", 1, 2, ";y;ldsyn", PPDefglobalCommand, NULL);
+    AddUDF(theEnv, "list-defglobals", "v", 0, 1, "y", ListDefglobalsCommand, nullptr);
+    AddUDF(theEnv, "ppdefglobal", "vs", 1, 2, ";y;ldsyn", PPDefglobalCommand, nullptr);
     AddWatchItem(theEnv, "globals", 0, &DefglobalData(theEnv)->WatchGlobals, 0, DefglobalWatchAccess, DefglobalWatchPrint);
 #endif
 
@@ -118,7 +118,7 @@ void ResetDefglobals(
         void *context) {
     if (!GetResetGlobals(theEnv)) return;
     DoForAllConstructs(theEnv, ResetDefglobalAction,
-                       DefglobalData(theEnv)->DefglobalModuleIndex, true, NULL);
+                       DefglobalData(theEnv)->DefglobalModuleIndex, true, nullptr);
 }
 
 /******************************************************/
@@ -174,9 +174,9 @@ bool Undefglobal(
         Environment *allEnv) {
     Environment *theEnv;
 
-    if (theDefglobal == NULL) {
+    if (theDefglobal == nullptr) {
         theEnv = allEnv;
-        return (Undefconstruct(theEnv, NULL, DefglobalData(theEnv)->DefglobalConstruct));
+        return (Undefconstruct(theEnv, nullptr, DefglobalData(theEnv)->DefglobalConstruct));
     } else {
         theEnv = theDefglobal->header.env;
         return (Undefconstruct(theEnv, &theDefglobal->header, DefglobalData(theEnv)->DefglobalConstruct));

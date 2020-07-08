@@ -43,7 +43,7 @@ namespace maya {
 #undef X
             private:
             ::Environment& _env;
-            ::FactBuilder* _contents = nullptr;
+            ::FactBuilder* _contents = nullptrptr;
         };
         class FactModifier {
             public:
@@ -74,7 +74,7 @@ namespace maya {
 #undef X
             private:
             ::Environment& _env;
-            ::FactModifier* _contents = nullptr;
+            ::FactModifier* _contents = nullptrptr;
 
         };
 

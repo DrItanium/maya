@@ -160,7 +160,7 @@ bool ParseDefrule(
                                           "*", false,
                                           true, true, false);
 
-    if (ruleName == NULL) return true;
+    if (ruleName == nullptr) return true;
 
     /*============================*/
     /* Parse the LHS of the rule. */
@@ -169,7 +169,7 @@ bool ParseDefrule(
     theLHS = ParseRuleLHS(theEnv, readSource, &theToken, ruleName->contents, &error);
     if (error) {
         ReturnPackedExpression(theEnv, PatternData(theEnv)->SalienceExpression);
-        PatternData(theEnv)->SalienceExpression = NULL;
+        PatternData(theEnv)->SalienceExpression = nullptr;
         return true;
     }
 
@@ -181,9 +181,9 @@ bool ParseDefrule(
     ExpressionData(theEnv)->ReturnContext = true;
     actions = ParseRuleRHS(theEnv, readSource);
 
-    if (actions == NULL) {
+    if (actions == nullptr) {
         ReturnPackedExpression(theEnv, PatternData(theEnv)->SalienceExpression);
-        PatternData(theEnv)->SalienceExpression = NULL;
+        PatternData(theEnv)->SalienceExpression = nullptr;
         ReturnLHSParseNodes(theEnv, theLHS);
         return true;
     }
@@ -200,7 +200,7 @@ bool ParseDefrule(
 
     if (error) {
         ReturnPackedExpression(theEnv, PatternData(theEnv)->SalienceExpression);
-        PatternData(theEnv)->SalienceExpression = NULL;
+        PatternData(theEnv)->SalienceExpression = nullptr;
         return true;
     }
 
@@ -211,18 +211,18 @@ bool ParseDefrule(
 
     if (ConstructData(theEnv)->CheckSyntaxMode) {
         ReturnPackedExpression(theEnv, PatternData(theEnv)->SalienceExpression);
-        PatternData(theEnv)->SalienceExpression = NULL;
+        PatternData(theEnv)->SalienceExpression = nullptr;
         return false;
     }
 
-    PatternData(theEnv)->SalienceExpression = NULL;
+    PatternData(theEnv)->SalienceExpression = nullptr;
 
     /*======================================*/
     /* Save the nice printout of the rules. */
     /*======================================*/
 
     SavePPBuffer(theEnv, "\n");
-    if (GetConserveMemory(theEnv) == true) { topDisjunct->header.ppForm = NULL; }
+    if (GetConserveMemory(theEnv) == true) { topDisjunct->header.ppForm = nullptr; }
     else { topDisjunct->header.ppForm = CopyPPBuffer(theEnv); }
 
     /*=======================================*/
@@ -230,9 +230,9 @@ bool ParseDefrule(
     /*=======================================*/
 
     theModuleItem = (struct defruleModule *)
-            GetModuleItem(theEnv, NULL, FindModuleItem(theEnv, "defrule")->moduleIndex);
+            GetModuleItem(theEnv, nullptr, FindModuleItem(theEnv, "defrule")->moduleIndex);
 
-    for (tempPtr = topDisjunct; tempPtr != NULL; tempPtr = tempPtr->disjunct) {
+    for (tempPtr = topDisjunct; tempPtr != nullptr; tempPtr = tempPtr->disjunct) {
         tempPtr->header.whichModule = (struct defmoduleItemHeader *) theModuleItem;
         tempPtr->header.ppForm = topDisjunct->header.ppForm;
     }
@@ -278,8 +278,8 @@ static Defrule *ProcessRuleLHS(
         struct expr *actions,
         CLIPSLexeme *ruleName,
         bool *error) {
-    struct lhsParseNode *tempNode = NULL;
-    Defrule *topDisjunct = NULL, *currentDisjunct, *lastDisjunct = NULL;
+    struct lhsParseNode *tempNode = nullptr;
+    Defrule *topDisjunct = nullptr, *currentDisjunct, *lastDisjunct = nullptr;
     struct expr *newActions, *packPtr;
     int logicalJoin;
     unsigned short localVarCnt;
@@ -299,7 +299,7 @@ static Defrule *ProcessRuleLHS(
     /* top level of the pattern construct, then remove it.       */
     /*===========================================================*/
 
-    if (theLHS == NULL) { emptyLHS = true; }
+    if (theLHS == nullptr) { emptyLHS = true; }
     else {
         emptyLHS = false;
         if (theLHS->pnType == OR_CE_NODE) theLHS = theLHS->right;
@@ -311,12 +311,12 @@ static Defrule *ProcessRuleLHS(
 
     localVarCnt = CountParsedBindNames(theEnv);
 
-    while ((theLHS != NULL) || (emptyLHS == true)) {
+    while ((theLHS != nullptr) || (emptyLHS == true)) {
         /*===================================*/
         /* Analyze the LHS of this disjunct. */
         /*===================================*/
 
-        if (emptyLHS) { tempNode = NULL; }
+        if (emptyLHS) { tempNode = nullptr; }
         else {
             if (theLHS->pnType == AND_CE_NODE) tempNode = theLHS->right;
             else if (theLHS->pnType == PATTERN_CE_NODE) tempNode = theLHS;
@@ -325,7 +325,7 @@ static Defrule *ProcessRuleLHS(
         if (VariableAnalysis(theEnv, tempNode)) {
             *error = true;
             ReturnDefrule(theEnv, topDisjunct);
-            return NULL;
+            return nullptr;
         }
 
         /*=========================================*/
@@ -335,7 +335,7 @@ static Defrule *ProcessRuleLHS(
         if (PostPatternAnalysis(theEnv, tempNode)) {
             *error = true;
             ReturnDefrule(theEnv, topDisjunct);
-            return NULL;
+            return nullptr;
         }
 
         /*========================================================*/
@@ -354,7 +354,7 @@ static Defrule *ProcessRuleLHS(
         if (CheckRHSForConstraintErrors(theEnv, actions, tempNode)) {
             *error = true;
             ReturnDefrule(theEnv, topDisjunct);
-            return NULL;
+            return nullptr;
         }
 
         /*=================================================*/
@@ -363,12 +363,12 @@ static Defrule *ProcessRuleLHS(
         /*=================================================*/
 
         newActions = CopyExpression(theEnv, actions);
-        if (ReplaceProcVars(theEnv, "RHS of defrule", newActions, NULL, NULL,
+        if (ReplaceProcVars(theEnv, "RHS of defrule", newActions, nullptr, nullptr,
                             ReplaceRHSVariable, tempNode)) {
             *error = true;
             ReturnDefrule(theEnv, topDisjunct);
             ReturnExpression(theEnv, newActions);
-            return NULL;
+            return nullptr;
         }
 
         /*===================================================*/
@@ -388,7 +388,7 @@ static Defrule *ProcessRuleLHS(
             *error = true;
             ReturnDefrule(theEnv, topDisjunct);
             ReturnExpression(theEnv, newActions);
-            return NULL;
+            return nullptr;
         }
 
         /*==================================*/
@@ -415,7 +415,7 @@ static Defrule *ProcessRuleLHS(
         /* Create the pattern and join data structures for the new rule. */
         /*===============================================================*/
 
-        lastJoin = ConstructJoins(theEnv, logicalJoin, tempNode, 1, NULL, true, true);
+        lastJoin = ConstructJoins(theEnv, logicalJoin, tempNode, 1, nullptr, true, true);
 
         /*===================================================================*/
         /* Determine the rule's complexity for use with conflict resolution. */
@@ -440,7 +440,7 @@ static Defrule *ProcessRuleLHS(
         /* disjunct for their dynamic salience value.                 */
         /*============================================================*/
 
-        if (topDisjunct == NULL) {
+        if (topDisjunct == nullptr) {
             topDisjunct = currentDisjunct;
             ExpressionInstall(theEnv, topDisjunct->dynamicSalience);
         } else lastDisjunct->disjunct = currentDisjunct;
@@ -477,11 +477,11 @@ static Defrule *CreateNewDisjunct(
     /*===================================================*/
 
     newDisjunct = get_struct(theEnv, defrule);
-    newDisjunct->header.ppForm = NULL;
-    newDisjunct->header.next = NULL;
-    newDisjunct->header.usrData = NULL;
-    newDisjunct->logicalJoin = NULL;
-    newDisjunct->disjunct = NULL;
+    newDisjunct->header.ppForm = nullptr;
+    newDisjunct->header.next = nullptr;
+    newDisjunct->header.usrData = nullptr;
+    newDisjunct->logicalJoin = nullptr;
+    newDisjunct->disjunct = nullptr;
     newDisjunct->header.constructType = DEFRULE;
     newDisjunct->header.env = theEnv;
     newDisjunct->header.name = ruleName;
@@ -503,7 +503,7 @@ static Defrule *CreateNewDisjunct(
 
     newDisjunct->header.whichModule =
             (struct defmoduleItemHeader *)
-                    GetModuleItem(theEnv, NULL, FindModuleItem(theEnv, "defrule")->moduleIndex);
+                    GetModuleItem(theEnv, nullptr, FindModuleItem(theEnv, "defrule")->moduleIndex);
 
     /*============================================================*/
     /* Attach the rule's last join to the defrule data structure. */
@@ -517,7 +517,7 @@ static Defrule *CreateNewDisjunct(
     /*=================================================*/
 
     tempJoin = lastJoin;
-    while (tempJoin != NULL) {
+    while (tempJoin != nullptr) {
         if (tempJoin->depth == logicalJoin) {
             newDisjunct->logicalJoin = tempJoin;
             tempJoin->logicalJoin = true;
@@ -570,14 +570,14 @@ static int ReplaceRHSVariable(
     /*===============================================================*/
 
     theVariable = FindVariable(list->lexemeValue, (struct lhsParseNode *) VtheLHS);
-    if (theVariable == NULL) return 0;
+    if (theVariable == nullptr) return 0;
 
     /*================================================*/
     /* Replace the variable reference with a function */
     /* call to retrieve the variable.                 */
     /*================================================*/
 
-    if (theVariable->patternType != NULL) { (*theVariable->patternType->replaceGetJNValueFunction)(theEnv, list, theVariable, CLIPS_LHS); }
+    if (theVariable->patternType != nullptr) { (*theVariable->patternType->replaceGetJNValueFunction)(theEnv, list, theVariable, CLIPS_LHS); }
     else { return 0; }
 
     /*==============================================================*/
@@ -604,9 +604,9 @@ static struct expr *ParseRuleRHS(
     SavePPBuffer(theEnv, "\n   ");
     SetIndentDepth(theEnv, 3);
 
-    actions = GroupActions(theEnv, readSource, &theToken, true, NULL, false);
+    actions = GroupActions(theEnv, readSource, &theToken, true, nullptr, false);
 
-    if (actions == NULL) return NULL;
+    if (actions == nullptr) return nullptr;
 
     /*=============================*/
     /* Reformat the closing token. */
@@ -623,7 +623,7 @@ static struct expr *ParseRuleRHS(
     if (theToken.tknType != RIGHT_PARENTHESIS_TOKEN) {
         SyntaxErrorMessage(theEnv, "defrule");
         ReturnExpression(theEnv, actions);
-        return NULL;
+        return nullptr;
     }
 
     /*========================*/
@@ -643,14 +643,14 @@ static unsigned short RuleComplexity(
     struct lhsParseNode *thePattern, *tempPattern;
     unsigned short complexity = 0;
 
-    while (theLHS != NULL) {
+    while (theLHS != nullptr) {
         complexity += 1; /* Add 1 for each pattern. */
         complexity += ExpressionComplexity(theEnv, theLHS->networkTest);
         thePattern = theLHS->right;
-        while (thePattern != NULL) {
+        while (thePattern != nullptr) {
             if (thePattern->multifieldSlot) {
                 tempPattern = thePattern->bottom;
-                while (tempPattern != NULL) {
+                while (tempPattern != nullptr) {
                     complexity += ExpressionComplexity(theEnv, tempPattern->networkTest);
                     tempPattern = tempPattern->right;
                 }
@@ -671,7 +671,7 @@ static unsigned short ExpressionComplexity(
         struct expr *exprPtr) {
     unsigned short complexity = 0;
 
-    while (exprPtr != NULL) {
+    while (exprPtr != nullptr) {
         if (exprPtr->type == FCALL) {
             /*=========================================*/
             /* Logical combinations do not add to the  */
@@ -688,7 +688,7 @@ static unsigned short ExpressionComplexity(
                 /*=========================================*/
 
             else { complexity++; }
-        } else if ((EvaluationData(theEnv)->PrimitivesArray[exprPtr->type] != NULL) ?
+        } else if ((EvaluationData(theEnv)->PrimitivesArray[exprPtr->type] != nullptr) ?
                    EvaluationData(theEnv)->PrimitivesArray[exprPtr->type]->addsToRuleComplexity : false) { complexity++; }
 
         exprPtr = exprPtr->nextArg;
@@ -708,7 +708,7 @@ static int LogicalAnalysis(
     int logicalJoin = 1;
     bool gap = false;
 
-    if (patternList == NULL) return 0;
+    if (patternList == nullptr) return 0;
 
     firstLogical = patternList->logical;
 
@@ -717,7 +717,7 @@ static int LogicalAnalysis(
     /*===================================================*/
 
     for (;
-            patternList != NULL;
+            patternList != nullptr;
             patternList = patternList->bottom) {
         /*=======================================*/
         /* Skip anything that isn't a pattern CE */
@@ -804,15 +804,15 @@ static int LogicalAnalysis(
 struct lhsParseNode *FindVariable(
         CLIPSLexeme *name,
         struct lhsParseNode *theLHS) {
-    struct lhsParseNode *theFields, *tmpFields = NULL;
-    struct lhsParseNode *theReturnValue = NULL;
+    struct lhsParseNode *theFields, *tmpFields = nullptr;
+    struct lhsParseNode *theReturnValue = nullptr;
 
     /*==============================================*/
     /* Loop through each CE in the LHS of the rule. */
     /*==============================================*/
 
     for (;
-            theLHS != NULL;
+            theLHS != nullptr;
             theLHS = theLHS->bottom) {
         /*==========================================*/
         /* Don't bother searching for the variable  */
@@ -836,7 +836,7 @@ struct lhsParseNode *FindVariable(
         /*============================================*/
 
         theFields = theLHS->right;
-        while (theFields != NULL) {
+        while (theFields != nullptr) {
             /*=================================================*/
             /* Go one level deeper to check a multifield slot. */
             /*=================================================*/
@@ -851,7 +851,7 @@ struct lhsParseNode *FindVariable(
             /* is the variable being sought.   */
             /*=================================*/
 
-            if (theFields == NULL) { /* Do Nothing */ }
+            if (theFields == nullptr) { /* Do Nothing */ }
             else if (((theFields->pnType == SF_VARIABLE_NODE) ||
                       (theFields->pnType == MF_VARIABLE_NODE)) &&
                      (theFields->value == (void *) name)) { theReturnValue = theFields; }
@@ -860,12 +860,12 @@ struct lhsParseNode *FindVariable(
             /* Move on to the next field. */
             /*============================*/
 
-            if (theFields == NULL) {
+            if (theFields == nullptr) {
                 theFields = tmpFields;
-                tmpFields = NULL;
-            } else if ((theFields->right == NULL) && (tmpFields != NULL)) {
+                tmpFields = nullptr;
+            } else if ((theFields->right == nullptr) && (tmpFields != nullptr)) {
                 theFields = tmpFields;
-                tmpFields = NULL;
+                tmpFields = nullptr;
             }
             theFields = theFields->right;
         }
@@ -873,7 +873,7 @@ struct lhsParseNode *FindVariable(
 
     /*=========================================================*/
     /* Return a pointer to the LHS location where the variable */
-    /* was found (or a NULL pointer if it wasn't).             */
+    /* was found (or a nullptr pointer if it wasn't).             */
     /*=========================================================*/
 
     return (theReturnValue);
@@ -889,7 +889,7 @@ static void AddToDefruleList(
 
     theModuleItem = (struct defruleModule *) rulePtr->header.whichModule;
 
-    if (theModuleItem->header.lastItem == NULL) { theModuleItem->header.firstItem = &rulePtr->header; }
+    if (theModuleItem->header.lastItem == nullptr) { theModuleItem->header.firstItem = &rulePtr->header; }
     else {
         tempRule = (Defrule *) theModuleItem->header.lastItem; // Note: Only the first disjunct
         tempRule->header.next = &rulePtr->header;   // points to the next rule
@@ -912,7 +912,7 @@ void DumpRuleAnalysis(
    char buffer[20];
 
    WriteString(theEnv,STDOUT,"\n");
-   for (traceNode = tempNode; traceNode != NULL; traceNode = traceNode->bottom)
+   for (traceNode = tempNode; traceNode != nullptr; traceNode = traceNode->bottom)
      {
       if (traceNode->userCE)
         { gensprintf(buffer,"UCE %2d (%2d %2d): ",traceNode->whichCE,traceNode->beginNandDepth,traceNode->endNandDepth); }
@@ -924,49 +924,49 @@ void DumpRuleAnalysis(
       PrintExpression(theEnv,STDOUT,traceNode->networkTest);
       WriteString(theEnv,STDOUT,"\n");
 
-      if (traceNode->externalNetworkTest != NULL)
+      if (traceNode->externalNetworkTest != nullptr)
         {
          WriteString(theEnv,STDOUT,"      ENT: ");
          PrintExpression(theEnv,STDOUT,traceNode->externalNetworkTest);
          WriteString(theEnv,STDOUT,"\n");
         }
 
-      if (traceNode->secondaryNetworkTest != NULL)
+      if (traceNode->secondaryNetworkTest != nullptr)
         {
          WriteString(theEnv,STDOUT,"      SNT: ");
          PrintExpression(theEnv,STDOUT,traceNode->secondaryNetworkTest);
          WriteString(theEnv,STDOUT,"\n");
         }
 
-      if (traceNode->externalRightHash != NULL)
+      if (traceNode->externalRightHash != nullptr)
         {
          WriteString(theEnv,STDOUT,"      ERH: ");
          PrintExpression(theEnv,STDOUT,traceNode->externalRightHash);
          WriteString(theEnv,STDOUT,"\n");
         }
 
-      if (traceNode->externalLeftHash != NULL)
+      if (traceNode->externalLeftHash != nullptr)
         {
          WriteString(theEnv,STDOUT,"      ELH: ");
          PrintExpression(theEnv,STDOUT,traceNode->externalLeftHash);
          WriteString(theEnv,STDOUT,"\n");
         }
 
-      if (traceNode->leftHash != NULL)
+      if (traceNode->leftHash != nullptr)
         {
          WriteString(theEnv,STDOUT,"       LH: ");
          PrintExpression(theEnv,STDOUT,traceNode->leftHash);
          WriteString(theEnv,STDOUT,"\n");
         }
 
-      if (traceNode->rightHash != NULL)
+      if (traceNode->rightHash != nullptr)
         {
          WriteString(theEnv,STDOUT,"       RH: ");
          PrintExpression(theEnv,STDOUT,traceNode->rightHash);
          WriteString(theEnv,STDOUT,"\n");
         }
 
-      if (traceNode->betaHash != NULL)
+      if (traceNode->betaHash != nullptr)
         {
          WriteString(theEnv,STDOUT,"       BH: ");
          PrintExpression(theEnv,STDOUT,traceNode->betaHash);

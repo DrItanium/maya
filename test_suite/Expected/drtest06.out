@@ -311,7 +311,7 @@ CLIPS> (deftemplate foo                   ; DR0561
 CLIPS> (assert (foo))                     ; DR0561
 <Fact-1>
 CLIPS> (facts)                            ; DR0561
-f-1     (foo (x <Pointer-C-0x0>)) ;; Any NULL pointer is OK
+f-1     (foo (x <Pointer-C-0x0>)) ;; Any nullptr pointer is OK
 For a total of 1 fact.
 CLIPS> (clear)                            ; DR0562
 CLIPS> (deffunction foo ()                ; DR0562

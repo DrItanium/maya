@@ -96,7 +96,7 @@ static void DeallocateWatchData(
     WatchItemRecord *tmpPtr, *nextPtr;
 
     tmpPtr = WatchData(theEnv)->ListOfWatchItems;
-    while (tmpPtr != NULL) {
+    while (tmpPtr != nullptr) {
         nextPtr = tmpPtr->next;
         rtn_struct(theEnv, watchItemRecord, tmpPtr);
         tmpPtr = nextPtr;
@@ -124,8 +124,8 @@ bool AddWatchItem(
     /* the new item. If the item is already in the list return false. */
     /*================================================================*/
 
-    for (currentPtr = WatchData(theEnv)->ListOfWatchItems, lastPtr = NULL;
-         currentPtr != NULL;
+    for (currentPtr = WatchData(theEnv)->ListOfWatchItems, lastPtr = nullptr;
+         currentPtr != nullptr;
          currentPtr = currentPtr->next) {
         if (strcmp(currentPtr->name, name) == 0) return false;
         if (priority < currentPtr->priority) lastPtr = currentPtr;
@@ -147,7 +147,7 @@ bool AddWatchItem(
     /* Insert the new item in the list of watch items. */
     /*=================================================*/
 
-    if (lastPtr == NULL) {
+    if (lastPtr == nullptr) {
         newPtr->next = WatchData(theEnv)->ListOfWatchItems;
         WatchData(theEnv)->ListOfWatchItems = newPtr;
     } else {
@@ -170,63 +170,63 @@ void Watch(
         WatchItem item) {
     switch (item) {
         case ALL:
-            SetWatchItem(theEnv, "all", true, NULL);
+            SetWatchItem(theEnv, "all", true, nullptr);
             break;
 
         case FACTS:
-            SetWatchItem(theEnv, "facts", true, NULL);
+            SetWatchItem(theEnv, "facts", true, nullptr);
             break;
 
         case INSTANCES:
-            SetWatchItem(theEnv, "instances", true, NULL);
+            SetWatchItem(theEnv, "instances", true, nullptr);
             break;
 
         case SLOTS:
-            SetWatchItem(theEnv, "slots", true, NULL);
+            SetWatchItem(theEnv, "slots", true, nullptr);
             break;
 
         case RULES:
-            SetWatchItem(theEnv, "rules", true, NULL);
+            SetWatchItem(theEnv, "rules", true, nullptr);
             break;
 
         case ACTIVATIONS:
-            SetWatchItem(theEnv, "activations", true, NULL);
+            SetWatchItem(theEnv, "activations", true, nullptr);
             break;
 
         case MESSAGES:
-            SetWatchItem(theEnv, "messages", true, NULL);
+            SetWatchItem(theEnv, "messages", true, nullptr);
             break;
 
         case MESSAGE_HANDLERS:
-            SetWatchItem(theEnv, "message-handlers", true, NULL);
+            SetWatchItem(theEnv, "message-handlers", true, nullptr);
             break;
 
         case GENERIC_FUNCTIONS:
-            SetWatchItem(theEnv, "generic-functions", true, NULL);
+            SetWatchItem(theEnv, "generic-functions", true, nullptr);
             break;
 
         case METHODS:
-            SetWatchItem(theEnv, "methods", true, NULL);
+            SetWatchItem(theEnv, "methods", true, nullptr);
             break;
 
         case DEFFUNCTIONS:
-            SetWatchItem(theEnv, "deffunctions", true, NULL);
+            SetWatchItem(theEnv, "deffunctions", true, nullptr);
             break;
 
         case COMPILATIONS:
-            SetWatchItem(theEnv, "compilations", true, NULL);
+            SetWatchItem(theEnv, "compilations", true, nullptr);
             break;
 
         case STATISTICS:
-            SetWatchItem(theEnv, "statistics", true, NULL);
+            SetWatchItem(theEnv, "statistics", true, nullptr);
             break;
 
         case GLOBALS:
-            SetWatchItem(theEnv, "globals", true, NULL);
+            SetWatchItem(theEnv, "globals", true, nullptr);
             break;
 
         case FOCUS:
-            SetWatchItem(theEnv, "focus", true, NULL);
+            SetWatchItem(theEnv, "focus", true, nullptr);
             break;
     }
 }
@@ -239,63 +239,63 @@ void Unwatch(
         WatchItem item) {
     switch (item) {
         case ALL:
-            SetWatchItem(theEnv, "all", false, NULL);
+            SetWatchItem(theEnv, "all", false, nullptr);
             break;
 
         case FACTS:
-            SetWatchItem(theEnv, "facts", false, NULL);
+            SetWatchItem(theEnv, "facts", false, nullptr);
             break;
 
         case INSTANCES:
-            SetWatchItem(theEnv, "instances", false, NULL);
+            SetWatchItem(theEnv, "instances", false, nullptr);
             break;
 
         case SLOTS:
-            SetWatchItem(theEnv, "slots", false, NULL);
+            SetWatchItem(theEnv, "slots", false, nullptr);
             break;
 
         case RULES:
-            SetWatchItem(theEnv, "rules", false, NULL);
+            SetWatchItem(theEnv, "rules", false, nullptr);
             break;
 
         case ACTIVATIONS:
-            SetWatchItem(theEnv, "activations", false, NULL);
+            SetWatchItem(theEnv, "activations", false, nullptr);
             break;
 
         case MESSAGES:
-            SetWatchItem(theEnv, "messages", false, NULL);
+            SetWatchItem(theEnv, "messages", false, nullptr);
             break;
 
         case MESSAGE_HANDLERS:
-            SetWatchItem(theEnv, "message-handlers", false, NULL);
+            SetWatchItem(theEnv, "message-handlers", false, nullptr);
             break;
 
         case GENERIC_FUNCTIONS:
-            SetWatchItem(theEnv, "generic-functions", false, NULL);
+            SetWatchItem(theEnv, "generic-functions", false, nullptr);
             break;
 
         case METHODS:
-            SetWatchItem(theEnv, "methods", false, NULL);
+            SetWatchItem(theEnv, "methods", false, nullptr);
             break;
 
         case DEFFUNCTIONS:
-            SetWatchItem(theEnv, "deffunctions", false, NULL);
+            SetWatchItem(theEnv, "deffunctions", false, nullptr);
             break;
 
         case COMPILATIONS:
-            SetWatchItem(theEnv, "compilations", false, NULL);
+            SetWatchItem(theEnv, "compilations", false, nullptr);
             break;
 
         case STATISTICS:
-            SetWatchItem(theEnv, "statistics", false, NULL);
+            SetWatchItem(theEnv, "statistics", false, nullptr);
             break;
 
         case GLOBALS:
-            SetWatchItem(theEnv, "globals", false, NULL);
+            SetWatchItem(theEnv, "globals", false, nullptr);
             break;
 
         case FOCUS:
-            SetWatchItem(theEnv, "focus", false, NULL);
+            SetWatchItem(theEnv, "focus", false, nullptr);
             break;
     }
 }
@@ -367,63 +367,63 @@ void SetWatchState(
         bool newState) {
     switch (item) {
         case ALL:
-            SetWatchItem(theEnv, "all", newState, NULL);
+            SetWatchItem(theEnv, "all", newState, nullptr);
             return;
 
         case FACTS:
-            SetWatchItem(theEnv, "facts", newState, NULL);
+            SetWatchItem(theEnv, "facts", newState, nullptr);
             return;
 
         case INSTANCES:
-            SetWatchItem(theEnv, "instances", newState, NULL);
+            SetWatchItem(theEnv, "instances", newState, nullptr);
             return;
 
         case SLOTS:
-            SetWatchItem(theEnv, "slots", newState, NULL);
+            SetWatchItem(theEnv, "slots", newState, nullptr);
             return;
 
         case RULES:
-            SetWatchItem(theEnv, "rules", newState, NULL);
+            SetWatchItem(theEnv, "rules", newState, nullptr);
             return;
 
         case ACTIVATIONS:
-            SetWatchItem(theEnv, "activations", newState, NULL);
+            SetWatchItem(theEnv, "activations", newState, nullptr);
             return;
 
         case MESSAGES:
-            SetWatchItem(theEnv, "messages", newState, NULL);
+            SetWatchItem(theEnv, "messages", newState, nullptr);
             return;
 
         case MESSAGE_HANDLERS:
-            SetWatchItem(theEnv, "message-handlers", newState, NULL);
+            SetWatchItem(theEnv, "message-handlers", newState, nullptr);
             return;
 
         case GENERIC_FUNCTIONS:
-            SetWatchItem(theEnv, "generic-functions", newState, NULL);
+            SetWatchItem(theEnv, "generic-functions", newState, nullptr);
             return;
 
         case METHODS:
-            SetWatchItem(theEnv, "methods", newState, NULL);
+            SetWatchItem(theEnv, "methods", newState, nullptr);
             return;
 
         case DEFFUNCTIONS:
-            SetWatchItem(theEnv, "deffunctions", newState, NULL);
+            SetWatchItem(theEnv, "deffunctions", newState, nullptr);
             return;
 
         case COMPILATIONS:
-            SetWatchItem(theEnv, "compilations", newState, NULL);
+            SetWatchItem(theEnv, "compilations", newState, nullptr);
             return;
 
         case STATISTICS:
-            SetWatchItem(theEnv, "statistics", newState, NULL);
+            SetWatchItem(theEnv, "statistics", newState, nullptr);
             return;
 
         case GLOBALS:
-            SetWatchItem(theEnv, "globals", newState, NULL);
+            SetWatchItem(theEnv, "globals", newState, nullptr);
             return;
 
         case FOCUS:
-            SetWatchItem(theEnv, "focus", newState, NULL);
+            SetWatchItem(theEnv, "focus", newState, nullptr);
             return;
     }
 }
@@ -434,7 +434,7 @@ void SetWatchState(
 bool WatchString(
         Environment *theEnv,
         const char *itemName) {
-    return SetWatchItem(theEnv, itemName, true, NULL);
+    return SetWatchItem(theEnv, itemName, true, nullptr);
 }
 
 /************************************************************/
@@ -443,7 +443,7 @@ bool WatchString(
 bool UnwatchString(
         Environment *theEnv,
         const char *itemName) {
-    return SetWatchItem(theEnv, itemName, false, NULL);
+    return SetWatchItem(theEnv, itemName, false, nullptr);
 }
 
 /********************************************************************/
@@ -464,19 +464,19 @@ bool SetWatchItem(
     /*===================================================*/
 
     if (strcmp(itemName, "all") == 0) {
-        for (wPtr = WatchData(theEnv)->ListOfWatchItems; wPtr != NULL; wPtr = wPtr->next) {
+        for (wPtr = WatchData(theEnv)->ListOfWatchItems; wPtr != nullptr; wPtr = wPtr->next) {
             /*==============================================*/
             /* If no specific arguments are specified, then */
             /* set the global flag for the watch item.      */
             /*==============================================*/
 
-            if (argExprs == NULL) *(wPtr->flag) = newState;
+            if (argExprs == nullptr) *(wPtr->flag) = newState;
 
             /*=======================================*/
             /* Set flags for individual watch items. */
             /*=======================================*/
 
-            if ((wPtr->accessFunc == NULL) ? false :
+            if ((wPtr->accessFunc == nullptr) ? false :
                 ((*wPtr->accessFunc)(theEnv, wPtr->code, newState, argExprs) == false)) {
                 SetEvaluationError(theEnv, true);
                 return false;
@@ -491,20 +491,20 @@ bool SetWatchItem(
     /* its new state and return true.                  */
     /*=================================================*/
 
-    for (wPtr = WatchData(theEnv)->ListOfWatchItems; wPtr != NULL; wPtr = wPtr->next) {
+    for (wPtr = WatchData(theEnv)->ListOfWatchItems; wPtr != nullptr; wPtr = wPtr->next) {
         if (strcmp(itemName, wPtr->name) == 0) {
             /*==============================================*/
             /* If no specific arguments are specified, then */
             /* set the global flag for the watch item.      */
             /*==============================================*/
 
-            if (argExprs == NULL) *(wPtr->flag) = newState;
+            if (argExprs == nullptr) *(wPtr->flag) = newState;
 
             /*=======================================*/
             /* Set flags for individual watch items. */
             /*=======================================*/
 
-            if ((wPtr->accessFunc == NULL) ? false :
+            if ((wPtr->accessFunc == nullptr) ? false :
                 ((*wPtr->accessFunc)(theEnv, wPtr->code, newState, argExprs) == false)) {
                 SetEvaluationError(theEnv, true);
                 return false;
@@ -533,7 +533,7 @@ int GetWatchItem(
         const char *itemName) {
     WatchItemRecord *wPtr;
 
-    for (wPtr = WatchData(theEnv)->ListOfWatchItems; wPtr != NULL; wPtr = wPtr->next) {
+    for (wPtr = WatchData(theEnv)->ListOfWatchItems; wPtr != nullptr; wPtr = wPtr->next) {
         if (strcmp(itemName, wPtr->name) == 0) {
             if (*(wPtr->flag)) { return 1; }
             else { return 0; }
@@ -555,21 +555,21 @@ static WatchItemRecord *ValidWatchItem(
 
     *recognized = true;
     if (strcmp(itemName, "all") == 0)
-        return NULL;
+        return nullptr;
 
-    for (wPtr = WatchData(theEnv)->ListOfWatchItems; wPtr != NULL; wPtr = wPtr->next) {
+    for (wPtr = WatchData(theEnv)->ListOfWatchItems; wPtr != nullptr; wPtr = wPtr->next) {
         if (strcmp(itemName, wPtr->name) == 0)
             return (wPtr);
     }
 
     *recognized = false;
-    return NULL;
+    return nullptr;
 }
 
 /*************************************************************/
 /* GetNthWatchName: Returns the name associated with the nth */
 /*   item in the list of watchable items. If the nth item    */
-/*   does not exist, then NULL is returned.                  */
+/*   does not exist, then nullptr is returned.                  */
 /*************************************************************/
 const char *GetNthWatchName(
         Environment *theEnv,
@@ -578,10 +578,10 @@ const char *GetNthWatchName(
     WatchItemRecord *wPtr;
 
     for (wPtr = WatchData(theEnv)->ListOfWatchItems, i = 1;
-         wPtr != NULL;
+         wPtr != nullptr;
          wPtr = wPtr->next, i++) { if (i == whichItem) return (wPtr->name); }
 
-    return NULL;
+    return nullptr;
 }
 
 /***************************************************************/
@@ -596,7 +596,7 @@ int GetNthWatchValue(
     WatchItemRecord *wPtr;
 
     for (wPtr = WatchData(theEnv)->ListOfWatchItems, i = 1;
-         wPtr != NULL;
+         wPtr != nullptr;
          wPtr = wPtr->next, i++) { if (i == whichItem) return ((int) *(wPtr->flag)); }
 
     return (-1);
@@ -633,8 +633,8 @@ void WatchCommand(
     /* Check to make sure extra arguments are allowed. */
     /*=================================================*/
 
-    if (GetNextArgument(GetFirstArgument()) != NULL) {
-        if ((wPtr == NULL) ? true : (wPtr->accessFunc == NULL)) {
+    if (GetNextArgument(GetFirstArgument()) != nullptr) {
+        if ((wPtr == nullptr) ? true : (wPtr->accessFunc == nullptr)) {
             SetEvaluationError(theEnv, true);
             ExpectedCountError(theEnv, "watch", EXACTLY, 1);
             return;
@@ -679,8 +679,8 @@ void UnwatchCommand(
     /* Check to make sure extra arguments are allowed. */
     /*=================================================*/
 
-    if (GetNextArgument(GetFirstArgument()) != NULL) {
-        if ((wPtr == NULL) ? true : (wPtr->accessFunc == NULL)) {
+    if (GetNextArgument(GetFirstArgument()) != nullptr) {
+        if ((wPtr == nullptr) ? true : (wPtr->accessFunc == nullptr)) {
             SetEvaluationError(theEnv, true);
             ExpectedCountError(theEnv, "unwatch", EXACTLY, 1);
             return;
@@ -710,8 +710,8 @@ void ListWatchItemsCommand(
     /* List the watch items. */
     /*=======================*/
 
-    if (GetFirstArgument() == NULL) {
-        for (wPtr = WatchData(theEnv)->ListOfWatchItems; wPtr != NULL; wPtr = wPtr->next) {
+    if (GetFirstArgument() == nullptr) {
+        for (wPtr = WatchData(theEnv)->ListOfWatchItems; wPtr != nullptr; wPtr = wPtr->next) {
             WriteString(theEnv, STDOUT, wPtr->name);
             if (*(wPtr->flag)) WriteString(theEnv, STDOUT, " = on\n");
             else WriteString(theEnv, STDOUT, " = off\n");
@@ -725,7 +725,7 @@ void ListWatchItemsCommand(
 
     if (!UDFFirstArgument(context, SYMBOL_BIT, &theValue)) return;
     wPtr = ValidWatchItem(theEnv, theValue.lexemeValue->contents, &recognized);
-    if ((recognized == false) || (wPtr == NULL)) {
+    if ((recognized == false) || (wPtr == nullptr)) {
         SetEvaluationError(theEnv, true);
         ExpectedTypeError1(theEnv, "list-watch-items", 1, "'watchable symbol'");
         return;
@@ -735,8 +735,8 @@ void ListWatchItemsCommand(
     /* Check to make sure extra arguments are allowed. */
     /*=================================================*/
 
-    if ((wPtr->printFunc == NULL) &&
-        (GetNextArgument(GetFirstArgument()) != NULL)) {
+    if ((wPtr->printFunc == nullptr) &&
+        (GetNextArgument(GetFirstArgument()) != nullptr)) {
         SetEvaluationError(theEnv, true);
         ExpectedCountError(theEnv, "list-watch-items", EXACTLY, 1);
         return;
@@ -754,7 +754,7 @@ void ListWatchItemsCommand(
     /* List the status of individual watch items. */
     /*============================================*/
 
-    if (wPtr->printFunc != NULL) {
+    if (wPtr->printFunc != nullptr) {
         if ((*wPtr->printFunc)(theEnv, STDOUT, wPtr->code,
                                GetNextArgument(GetFirstArgument())) == false) { SetEvaluationError(theEnv, true); }
     }
@@ -800,10 +800,10 @@ void GetWatchItemCommand(
 /*************************************************************/
 void WatchFunctionDefinitions(
         Environment *theEnv) {
-    AddUDF(theEnv, "watch", "v", 1, UNBOUNDED, "*;y", WatchCommand, NULL);
-    AddUDF(theEnv, "unwatch", "v", 1, UNBOUNDED, "*;y", UnwatchCommand, NULL);
-    AddUDF(theEnv, "get-watch-item", "b", 1, 1, "y", GetWatchItemCommand, NULL);
-    AddUDF(theEnv, "list-watch-items", "v", 0, UNBOUNDED, "*;y", ListWatchItemsCommand, NULL);
+    AddUDF(theEnv, "watch", "v", 1, UNBOUNDED, "*;y", WatchCommand, nullptr);
+    AddUDF(theEnv, "unwatch", "v", 1, UNBOUNDED, "*;y", UnwatchCommand, nullptr);
+    AddUDF(theEnv, "get-watch-item", "b", 1, 1, "y", GetWatchItemCommand, nullptr);
+    AddUDF(theEnv, "list-watch-items", "v", 0, UNBOUNDED, "*;y", ListWatchItemsCommand, nullptr);
 }
 
 #endif /* DEBUGGING_FUNCTIONS */

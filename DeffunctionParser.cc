@@ -143,10 +143,10 @@ bool ParseDeffunction(
 
     deffunctionName = GetConstructNameAndComment(theEnv, readSource, &inputToken, "deffunction",
                                                  (FindConstructFunction *) FindDeffunctionInModule,
-                                                 NULL,
+                                                 nullptr,
                                                  "!", true, true, true, false);
 
-    if (deffunctionName == NULL) { return true; }
+    if (deffunctionName == nullptr) { return true; }
 
     if (ValidDeffunctionName(theEnv, deffunctionName->contents) == false) { return true; }
 
@@ -155,7 +155,7 @@ bool ParseDeffunction(
     /*==========================*/
 
     parameterList = ParseProcParameters(theEnv, readSource, &inputToken,
-                                        NULL, &wildcard, &min, &max, &deffunctionError, NULL);
+                                        nullptr, &wildcard, &min, &max, &deffunctionError, nullptr);
     if (deffunctionError) { return true; }
 
     /*===================================================================*/
@@ -164,7 +164,7 @@ bool ParseDeffunction(
 
     if (ConstructData(theEnv)->CheckSyntaxMode) {
         dptr = FindDeffunctionInModule(theEnv, deffunctionName->contents);
-        if (dptr == NULL) { dptr = AddDeffunction(theEnv, deffunctionName, NULL, min, max, 0, true); }
+        if (dptr == nullptr) { dptr = AddDeffunction(theEnv, deffunctionName, nullptr, min, max, 0, true); }
         else {
             overwrite = true;
             owMin = dptr->minNumberOfParameters;
@@ -172,9 +172,9 @@ bool ParseDeffunction(
             dptr->minNumberOfParameters = min;
             dptr->maxNumberOfParameters = max;
         }
-    } else { dptr = AddDeffunction(theEnv, deffunctionName, NULL, min, max, 0, true); }
+    } else { dptr = AddDeffunction(theEnv, deffunctionName, nullptr, min, max, 0, true); }
 
-    if (dptr == NULL) {
+    if (dptr == nullptr) {
         ReturnExpression(theEnv, parameterList);
         return true;
     }
@@ -188,14 +188,14 @@ bool ParseDeffunction(
     ExpressionData(theEnv)->ReturnContext = true;
     actions = ParseProcActions(theEnv, "deffunction", readSource,
                                &inputToken, parameterList, wildcard,
-                               NULL, NULL, &lvars, NULL);
+                               nullptr, nullptr, &lvars, nullptr);
 
     /*=============================================================*/
     /* Check for the closing right parenthesis of the deffunction. */
     /*=============================================================*/
 
     if ((inputToken.tknType != RIGHT_PARENTHESIS_TOKEN) && /* DR0872 */
-        (actions != NULL)) {
+        (actions != nullptr)) {
         SyntaxErrorMessage(theEnv, "deffunction");
 
         ReturnExpression(theEnv, parameterList);
@@ -214,7 +214,7 @@ bool ParseDeffunction(
         return true;
     }
 
-    if (actions == NULL) {
+    if (actions == nullptr) {
         ReturnExpression(theEnv, parameterList);
         if (overwrite) {
             dptr->minNumberOfParameters = owMin;
@@ -298,7 +298,7 @@ static bool ValidDeffunctionName(
     /* construct type, e.g, defclass, defrule, etc. */
     /*==============================================*/
 
-    if (FindConstruct(theEnv, theDeffunctionName) != NULL) {
+    if (FindConstruct(theEnv, theDeffunctionName) != nullptr) {
         PrintErrorID(theEnv, "DFFNXPSR", 1, false);
         WriteString(theEnv, STDERR, "Deffunctions are not allowed to replace constructs.\n");
         return false;
@@ -310,7 +310,7 @@ static bool ValidDeffunctionName(
     /* watch, list-defrules, etc.             */
     /*========================================*/
 
-    if (FindFunction(theEnv, theDeffunctionName) != NULL) {
+    if (FindFunction(theEnv, theDeffunctionName) != nullptr) {
         PrintErrorID(theEnv, "DFFNXPSR", 2, false);
         WriteString(theEnv, STDERR, "Deffunctions are not allowed to replace external functions.\n");
         return false;
@@ -326,7 +326,7 @@ static bool ValidDeffunctionName(
 
     theDefgeneric = LookupDefgenericInScope(theEnv, theDeffunctionName);
 
-    if (theDefgeneric != NULL) {
+    if (theDefgeneric != nullptr) {
         theModule = GetConstructModuleItem(&theDefgeneric->header)->theModule;
         if (theModule != GetCurrentModule(theEnv)) {
             PrintErrorID(theEnv, "DFFNXPSR", 5, false);
@@ -345,7 +345,7 @@ static bool ValidDeffunctionName(
 #endif
 
     theDeffunction = FindDeffunctionInModule(theEnv, theDeffunctionName);
-    if (theDeffunction != NULL) {
+    if (theDeffunction != nullptr) {
         /*=============================================*/
         /* And a deffunction in the current module can */
         /* only be redefined if it is not executing.   */
@@ -376,7 +376,7 @@ static bool ValidDeffunctionName(
                     a header call so that the
                     deffunction can be recursively
                     called
-  RETURNS      : The new deffunction (NULL on errors)
+  RETURNS      : The new deffunction (nullptr on errors)
   SIDE EFFECTS : Deffunction structures allocated
   NOTES        : Assumes deffunction is not executing
  ****************************************************/
@@ -406,11 +406,11 @@ static Deffunction *AddDeffunction(
     /*===============================================================*/
 
     dfuncPtr = FindDeffunctionInModule(theEnv, name->contents);
-    if (dfuncPtr == NULL) {
+    if (dfuncPtr == nullptr) {
         dfuncPtr = get_struct(theEnv, deffunction);
         InitializeConstructHeader(theEnv, "deffunction", DEFFUNCTION, &dfuncPtr->header, name);
         IncrementLexemeCount(name);
-        dfuncPtr->code = NULL;
+        dfuncPtr->code = nullptr;
         dfuncPtr->minNumberOfParameters = min;
         dfuncPtr->maxNumberOfParameters = max;
         dfuncPtr->numberOfLocalVars = lvars;
@@ -427,8 +427,8 @@ static Deffunction *AddDeffunction(
         ExpressionDeinstall(theEnv, dfuncPtr->code);
         dfuncPtr->busy = oldbusy;
         ReturnPackedExpression(theEnv, dfuncPtr->code);
-        dfuncPtr->code = NULL;
-        SetDeffunctionPPForm(theEnv, dfuncPtr, NULL);
+        dfuncPtr->code = nullptr;
+        SetDeffunctionPPForm(theEnv, dfuncPtr, nullptr);
 
         /*======================================*/
         /* Remove the deffunction from the list */
@@ -444,7 +444,7 @@ static Deffunction *AddDeffunction(
     /* Install the new interpretive code. */
     /*====================================*/
 
-    if (actions != NULL) {
+    if (actions != nullptr) {
         /*=================================================*/
         /* If a deffunction is recursive, do not increment */
         /* its busy count based on self-references.        */

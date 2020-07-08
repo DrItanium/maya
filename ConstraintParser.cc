@@ -125,7 +125,7 @@ bool CheckConstraintParseConflicts(
         struct expr *theExp;
 
         for (theExp = constraints->restrictionList;
-             theExp != NULL;
+             theExp != nullptr;
              theExp = theExp->nextArg) {
             if (ConstraintCheckValue(theEnv, theExp->type, theExp->value, constraints) != NO_VIOLATION) {
                 AttributeConflictErrorMessage(theEnv, "type", "allowed-values");
@@ -138,7 +138,7 @@ bool CheckConstraintParseConflicts(
     /* Check to see if range attribute conflicts with type attribute. */
     /*================================================================*/
 
-    if ((constraints->maxValue != NULL) &&
+    if ((constraints->maxValue != nullptr) &&
         (constraints->anyAllowed == false)) {
         if (((constraints->maxValue->type == INTEGER_TYPE) &&
              (constraints->integersAllowed == false)) ||
@@ -149,7 +149,7 @@ bool CheckConstraintParseConflicts(
         }
     }
 
-    if ((constraints->minValue != NULL) &&
+    if ((constraints->minValue != nullptr) &&
         (constraints->anyAllowed == false)) {
         if (((constraints->minValue->type == INTEGER_TYPE) &&
              (constraints->integersAllowed == false)) ||
@@ -165,7 +165,7 @@ bool CheckConstraintParseConflicts(
     /* conflicts with type attribute.          */
     /*=========================================*/
 
-    if ((constraints->classList != NULL) &&
+    if ((constraints->classList != nullptr) &&
         (constraints->anyAllowed == false) &&
         (constraints->instanceNamesAllowed == false) &&
         (constraints->instanceAddressesAllowed == false)) {
@@ -442,7 +442,7 @@ static void AddToRestrictionList(
         CONSTRAINT_RECORD *csrc) {
     struct expr *theExp, *tmp;
 
-    for (theExp = csrc->restrictionList; theExp != NULL; theExp = theExp->nextArg) {
+    for (theExp = csrc->restrictionList; theExp != nullptr; theExp = theExp->nextArg) {
         if (theExp->type == type) {
             tmp = GenConstant(theEnv, theExp->type, theExp->value);
             tmp->nextArg = cdst->restrictionList;
@@ -465,7 +465,7 @@ static bool ParseAllowedValuesAttribute(
     bool error = false;
     struct expr *newValue, *lastValue;
     bool constantParsed = false, variableParsed = false;
-    const char *tempPtr = NULL;
+    const char *tempPtr = nullptr;
     unsigned short genType;
 
     /*======================================================*/
@@ -586,7 +586,7 @@ static bool ParseAllowedValuesAttribute(
     if (strcmp(constraintName, "allowed-classes") == 0) { lastValue = constraints->classList; }
     else { lastValue = constraints->restrictionList; }
 
-    if (lastValue != NULL) { while (lastValue->nextArg != NULL) lastValue = lastValue->nextArg; }
+    if (lastValue != nullptr) { while (lastValue->nextArg != nullptr) lastValue = lastValue->nextArg; }
 
     /*==================================================*/
     /* Read the allowed values and add them to the list */
@@ -701,7 +701,7 @@ static bool ParseAllowedValuesAttribute(
 
         newValue = GenConstant(theEnv, genType, inputToken.value);
 
-        if (lastValue == NULL) {
+        if (lastValue == nullptr) {
             if (strcmp(constraintName, "allowed-classes") == 0) { constraints->classList = newValue; }
             else { constraints->restrictionList = newValue; }
         } else { lastValue->nextArg = newValue; }
@@ -953,7 +953,7 @@ static bool ParseRangeCardinalityAttribute(
         bool multipleValuesAllowed) {
     struct token inputToken;
     bool range;
-    const char *tempPtr = NULL;
+    const char *tempPtr = nullptr;
 
     /*=================================*/
     /* Determine if we're parsing the  */

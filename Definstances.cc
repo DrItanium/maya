@@ -157,7 +157,7 @@ void SetupDefinstances(
 #if BLOAD_AND_BSAVE
                                BloadDefinstancesModuleRef,
 #else
-                    NULL,
+                    nullptr,
 #endif
                                (FindConstructFunction *) FindDefinstancesInModule);
 
@@ -174,20 +174,20 @@ void SetupDefinstances(
                          (FreeConstructFunction *) RemoveDefinstances
             );
 
-    AddClearReadyFunction(theEnv, "definstances", ClearDefinstancesReady, 0, NULL);
+    AddClearReadyFunction(theEnv, "definstances", ClearDefinstancesReady, 0, nullptr);
 
-    AddUDF(theEnv, "undefinstances", "v", 1, 1, "y", UndefinstancesCommand, NULL);
-    AddSaveFunction(theEnv, "definstances", SaveDefinstances, 0, NULL);
+    AddUDF(theEnv, "undefinstances", "v", 1, 1, "y", UndefinstancesCommand, nullptr);
+    AddSaveFunction(theEnv, "definstances", SaveDefinstances, 0, nullptr);
 
 #if DEBUGGING_FUNCTIONS
-    AddUDF(theEnv, "ppdefinstances", "vs", 1, 2, ";y;ldsyn", PPDefinstancesCommand, NULL);
-    AddUDF(theEnv, "list-definstances", "v", 0, 1, "y", ListDefinstancesCommand, NULL);
+    AddUDF(theEnv, "ppdefinstances", "vs", 1, 2, ";y;ldsyn", PPDefinstancesCommand, nullptr);
+    AddUDF(theEnv, "list-definstances", "v", 0, 1, "y", ListDefinstancesCommand, nullptr);
 #endif
 
-    AddUDF(theEnv, "get-definstances-list", "m", 0, 1, "y", GetDefinstancesListFunction, NULL);
-    AddUDF(theEnv, "definstances-module", "y", 1, 1, "y", GetDefinstancesModuleCommand, NULL);
+    AddUDF(theEnv, "get-definstances-list", "m", 0, 1, "y", GetDefinstancesListFunction, nullptr);
+    AddUDF(theEnv, "definstances-module", "y", 1, 1, "y", GetDefinstancesModuleCommand, nullptr);
 
-    AddResetFunction(theEnv, "definstances", ResetDefinstances, 0, NULL);
+    AddResetFunction(theEnv, "definstances", ResetDefinstances, 0, nullptr);
 
 #if BLOAD_AND_BSAVE
     SetupDefinstancesBload(theEnv);
@@ -208,10 +208,10 @@ static void DeallocateDefinstancesData(
     if (Bloaded(theEnv)) return;
 #endif
 
-    DoForAllConstructs(theEnv, DestroyDefinstancesAction, DefinstancesData(theEnv)->DefinstancesModuleIndex, false, NULL);
+    DoForAllConstructs(theEnv, DestroyDefinstancesAction, DefinstancesData(theEnv)->DefinstancesModuleIndex, false, nullptr);
 
-    for (theModule = GetNextDefmodule(theEnv, NULL);
-         theModule != NULL;
+    for (theModule = GetNextDefmodule(theEnv, nullptr);
+         theModule != nullptr;
          theModule = GetNextDefmodule(theEnv, theModule)) {
         theModuleItem = (struct definstancesModule *)
                 GetModuleItem(theEnv, theModule,
@@ -233,7 +233,7 @@ static void DestroyDefinstancesAction(
 #endif
     struct definstances *theDefinstances = (struct definstances *) theConstruct;
 
-    if (theDefinstances == NULL) return;
+    if (theDefinstances == nullptr) return;
 
     ReturnPackedExpression(theEnv, theDefinstances->mkinstance);
 
@@ -247,9 +247,9 @@ static void DestroyDefinstancesAction(
   DESCRIPTION  : Finds first or next definstances
   INPUTS       : The address of the current definstances
   RETURNS      : The address of the next definstances
-                   (NULL if none)
+                   (nullptr if none)
   SIDE EFFECTS : None
-  NOTES        : If ptr == NULL, the first definstances
+  NOTES        : If ptr == nullptr, the first definstances
                     is returned.
  ***********************************************************/
 Definstances *GetNextDefinstances(
@@ -264,7 +264,7 @@ Definstances *GetNextDefinstances(
   DESCRIPTION  : Looks up a definstance construct
                    by name-string
   INPUTS       : The symbolic name
-  RETURNS      : The definstance address, or NULL
+  RETURNS      : The definstance address, or nullptr
                     if not found
   SIDE EFFECTS : None
   NOTES        : None
@@ -280,7 +280,7 @@ Definstances *FindDefinstances(
   DESCRIPTION  : Looks up a definstance construct
                    by name-string
   INPUTS       : The symbolic name
-  RETURNS      : The definstance address, or NULL
+  RETURNS      : The definstance address, or nullptr
                     if not found
   SIDE EFFECTS : None
   NOTES        : None
@@ -353,9 +353,9 @@ bool Undefinstances(
         Environment *allEnv) {
     Environment *theEnv;
 
-    if (theDefinstances == NULL) {
+    if (theDefinstances == nullptr) {
         theEnv = allEnv;
-        return Undefconstruct(theEnv, NULL, DefinstancesData(theEnv)->DefinstancesConstruct);
+        return Undefconstruct(theEnv, nullptr, DefinstancesData(theEnv)->DefinstancesConstruct);
     } else {
         theEnv = theDefinstances->header.env;
         return Undefconstruct(theEnv, &theDefinstances->header, DefinstancesData(theEnv)->DefinstancesConstruct);
@@ -478,7 +478,7 @@ static bool ParseDefinstances(
         const char *readSource) {
     CLIPSLexeme *dname;
     struct functionDefinition *mkinsfcall;
-    Expression *mkinstance, *mkbot = NULL;
+    Expression *mkinstance, *mkbot = nullptr;
     Definstances *dobj;
     bool active;
 
@@ -494,13 +494,13 @@ static bool ParseDefinstances(
     }
 #endif
     dname = ParseDefinstancesName(theEnv, readSource, &active);
-    if (dname == NULL)
+    if (dname == nullptr)
         return true;
 
     dobj = get_struct(theEnv, definstances);
     InitializeConstructHeader(theEnv, "definstances", DEFINSTANCES, &dobj->header, dname);
     dobj->busy = 0;
-    dobj->mkinstance = NULL;
+    dobj->mkinstance = nullptr;
     if (active)
         mkinsfcall = FindFunction(theEnv, "active-make-instance");
     else
@@ -508,7 +508,7 @@ static bool ParseDefinstances(
     while (DefclassData(theEnv)->ObjectParseToken.tknType == LEFT_PARENTHESIS_TOKEN) {
         mkinstance = GenConstant(theEnv, UNKNOWN_VALUE, mkinsfcall);
         mkinstance = ParseInitializeInstance(theEnv, mkinstance, readSource);
-        if (mkinstance == NULL) {
+        if (mkinstance == nullptr) {
             ReturnExpression(theEnv, dobj->mkinstance);
             rtn_struct(theEnv, definstances, dobj);
             return true;
@@ -520,7 +520,7 @@ static bool ParseDefinstances(
             rtn_struct(theEnv, definstances, dobj);
             return true;
         }
-        if (mkbot == NULL)
+        if (mkbot == nullptr)
             dobj->mkinstance = mkinstance;
         else
             GetNextArgument(mkbot) = mkinstance;
@@ -544,7 +544,7 @@ static bool ParseDefinstances(
         }
 #if DEBUGGING_FUNCTIONS
         if (GetConserveMemory(theEnv) == false) {
-            if (dobj->mkinstance != NULL)
+            if (dobj->mkinstance != nullptr)
                 PPBackup(theEnv);
             PPBackup(theEnv);
             SavePPBuffer(theEnv, ")\n");
@@ -571,7 +571,7 @@ static bool ParseDefinstances(
                     definstances should cause pattern-matching
                     to occur during slot-overrides
   RETURNS      : Address of name symbol, or
-                   NULL if there was an error
+                   nullptr if there was an error
   SIDE EFFECTS : Token after name or comment is scanned
   NOTES        : Assumes "(definstances" has already
                    been scanned.
@@ -587,8 +587,8 @@ static CLIPSLexeme *ParseDefinstancesName(
                                        (FindConstructFunction *) FindDefinstancesInModule,
                                        (DeleteConstructFunction *) Undefinstances, "@",
                                        true, false, true, false);
-    if (dname == NULL)
-        return NULL;
+    if (dname == nullptr)
+        return nullptr;
 
     if ((DefclassData(theEnv)->ObjectParseToken.tknType != SYMBOL_TOKEN) ? false :
         (strcmp(DefclassData(theEnv)->ObjectParseToken.lexemeValue->contents, ACTIVE_RLN) == 0)) {
@@ -625,7 +625,7 @@ static void RemoveDefinstances(
     ReleaseLexeme(theEnv, theDefinstances->header.name);
     ExpressionDeinstall(theEnv, theDefinstances->mkinstance);
     ReturnPackedExpression(theEnv, theDefinstances->mkinstance);
-    SetDefinstancesPPForm(theEnv, theDefinstances, NULL);
+    SetDefinstancesPPForm(theEnv, theDefinstances, nullptr);
     ClearUserDataList(theEnv, theDefinstances->header.usrData);
     rtn_struct(theEnv, definstances, theDefinstances);
 }
@@ -741,7 +741,7 @@ static void CheckDefinstancesBusy(
 static void ResetDefinstances(
         Environment *theEnv,
         void *context) {
-    DoForAllConstructs(theEnv, ResetDefinstancesAction, DefinstancesData(theEnv)->DefinstancesModuleIndex, true, NULL);
+    DoForAllConstructs(theEnv, ResetDefinstancesAction, DefinstancesData(theEnv)->DefinstancesModuleIndex, true, nullptr);
 }
 
 /***************************************************
@@ -769,7 +769,7 @@ static void ResetDefinstancesAction(
     SetCurrentModule(theEnv, vDefinstances->whichModule->theModule);
     theDefinstances->busy++;
     for (theExp = theDefinstances->mkinstance;
-         theExp != NULL;
+         theExp != nullptr;
          theExp = GetNextArgument(theExp)) {
         EvaluateExpression(theEnv, theExp, &temp);
         if (EvaluationData(theEnv)->HaltExecution ||

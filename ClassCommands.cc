@@ -101,39 +101,39 @@ static const char *GetClassDefaultsModeName(ClassDefaultsMode);
   DESCRIPTION  : Looks up a specified class in the class hash table
                  (Only looks in current or specified module)
   INPUTS       : The name-string of the class (including module)
-  RETURNS      : The address of the found class, NULL otherwise
+  RETURNS      : The address of the found class, nullptr otherwise
   SIDE EFFECTS : None
   NOTES        : None
  ******************************************************************/
 Defclass *FindDefclass( // TBD Needs to look in imported
         Environment *theEnv,
         const char *classAndModuleName) {
-    CLIPSLexeme *classSymbol = NULL;
+    CLIPSLexeme *classSymbol = nullptr;
     Defclass *cls;
-    Defmodule *theModule = NULL;
+    Defmodule *theModule = nullptr;
     const char *className;
 
     SaveCurrentModule(theEnv);
 
     className = ExtractModuleAndConstructName(theEnv, classAndModuleName);
-    if (className != NULL) {
+    if (className != nullptr) {
         classSymbol = FindSymbolHN(theEnv, ExtractModuleAndConstructName(theEnv, classAndModuleName), SYMBOL_BIT);
         theModule = GetCurrentModule(theEnv);
     }
 
     RestoreCurrentModule(theEnv);
 
-    if (classSymbol == NULL) { return NULL; }
+    if (classSymbol == nullptr) { return nullptr; }
 
     cls = DefclassData(theEnv)->ClassTable[HashClass(classSymbol)];
-    while (cls != NULL) {
+    while (cls != nullptr) {
         if (cls->header.name == classSymbol) {
-            if (cls->system || (cls->header.whichModule->theModule == theModule)) { return cls->installed ? cls : NULL; }
+            if (cls->system || (cls->header.whichModule->theModule == theModule)) { return cls->installed ? cls : nullptr; }
         }
         cls = cls->nxtHash;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /*******************************************************************
@@ -141,37 +141,37 @@ Defclass *FindDefclass( // TBD Needs to look in imported
   DESCRIPTION  : Looks up a specified class in the class hash table
                  (Only looks in current or specified module)
   INPUTS       : The name-string of the class (including module)
-  RETURNS      : The address of the found class, NULL otherwise
+  RETURNS      : The address of the found class, nullptr otherwise
   SIDE EFFECTS : None
   NOTES        : None
  ******************************************************************/
 Defclass *FindDefclassInModule(
         Environment *theEnv,
         const char *classAndModuleName) {
-    CLIPSLexeme *classSymbol = NULL;
+    CLIPSLexeme *classSymbol = nullptr;
     Defclass *cls;
-    Defmodule *theModule = NULL;
+    Defmodule *theModule = nullptr;
     const char *className;
 
     SaveCurrentModule(theEnv);
     className = ExtractModuleAndConstructName(theEnv, classAndModuleName);
-    if (className != NULL) {
+    if (className != nullptr) {
         classSymbol = FindSymbolHN(theEnv, ExtractModuleAndConstructName(theEnv, classAndModuleName), SYMBOL_BIT);
         theModule = GetCurrentModule(theEnv);
     }
     RestoreCurrentModule(theEnv);
 
-    if (classSymbol == NULL) { return NULL; }
+    if (classSymbol == nullptr) { return nullptr; }
 
     cls = DefclassData(theEnv)->ClassTable[HashClass(classSymbol)];
-    while (cls != NULL) {
+    while (cls != nullptr) {
         if (cls->header.name == classSymbol) {
-            if (cls->system || (cls->header.whichModule->theModule == theModule)) { return cls->installed ? cls : NULL; }
+            if (cls->system || (cls->header.whichModule->theModule == theModule)) { return cls->installed ? cls : nullptr; }
         }
         cls = cls->nxtHash;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /***************************************************
@@ -180,7 +180,7 @@ Defclass *FindDefclassInModule(
                  is specified) or in current or
                  imported modules
   INPUTS       : The class name
-  RETURNS      : The class (NULL if not found)
+  RETURNS      : The class (nullptr if not found)
   SIDE EFFECTS : Error message printed on
                   ambiguous references
   NOTES        : Assumes no two classes of the same
@@ -201,19 +201,19 @@ Defclass *LookupDefclassByMdlOrScope(
     theModule = GetCurrentModule(theEnv);
     RestoreCurrentModule(theEnv);
 
-    if (className == NULL) { return NULL; }
+    if (className == nullptr) { return nullptr; }
 
-    if ((classSymbol = FindSymbolHN(theEnv, className, SYMBOL_BIT)) == NULL) { return NULL; }
+    if ((classSymbol = FindSymbolHN(theEnv, className, SYMBOL_BIT)) == nullptr) { return nullptr; }
 
     cls = DefclassData(theEnv)->ClassTable[HashClass(classSymbol)];
-    while (cls != NULL) {
+    while (cls != nullptr) {
         if ((cls->header.name == classSymbol) &&
             (cls->header.whichModule->theModule == theModule))
-            return (cls->installed ? cls : NULL);
+            return (cls->installed ? cls : nullptr);
         cls = cls->nxtHash;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /****************************************************
@@ -222,7 +222,7 @@ Defclass *LookupDefclassByMdlOrScope(
                    modules (module specifier
                    is not allowed)
   INPUTS       : The class name
-  RETURNS      : The class (NULL if not found)
+  RETURNS      : The class (nullptr if not found)
   SIDE EFFECTS : Error message printed on
                   ambiguous references
   NOTES        : Assumes no two classes of the same
@@ -234,26 +234,26 @@ Defclass *LookupDefclassInScope(
     Defclass *cls;
     CLIPSLexeme *classSymbol;
 
-    if ((classSymbol = FindSymbolHN(theEnv, className, SYMBOL_BIT)) == NULL) { return NULL; }
+    if ((classSymbol = FindSymbolHN(theEnv, className, SYMBOL_BIT)) == nullptr) { return nullptr; }
 
     cls = DefclassData(theEnv)->ClassTable[HashClass(classSymbol)];
-    while (cls != NULL) {
-        if ((cls->header.name == classSymbol) && DefclassInScope(theEnv, cls, NULL))
-            return cls->installed ? cls : NULL;
+    while (cls != nullptr) {
+        if ((cls->header.name == classSymbol) && DefclassInScope(theEnv, cls, nullptr))
+            return cls->installed ? cls : nullptr;
         cls = cls->nxtHash;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /******************************************************
   NAME         : LookupDefclassAnywhere
   DESCRIPTION  : Finds a class in specified
                  (or any) module
-  INPUTS       : 1) The module (NULL if don't care)
+  INPUTS       : 1) The module (nullptr if don't care)
                  2) The class name (module specifier
                     in name not allowed)
-  RETURNS      : The class (NULL if not found)
+  RETURNS      : The class (nullptr if not found)
   SIDE EFFECTS : None
   NOTES        : Does *not* generate an error if
                  multiple classes of the same name
@@ -266,17 +266,17 @@ Defclass *LookupDefclassAnywhere(
     Defclass *cls;
     CLIPSLexeme *classSymbol;
 
-    if ((classSymbol = FindSymbolHN(theEnv, className, SYMBOL_BIT)) == NULL) { return NULL; }
+    if ((classSymbol = FindSymbolHN(theEnv, className, SYMBOL_BIT)) == nullptr) { return nullptr; }
 
     cls = DefclassData(theEnv)->ClassTable[HashClass(classSymbol)];
-    while (cls != NULL) {
+    while (cls != nullptr) {
         if ((cls->header.name == classSymbol) &&
-            ((theModule == NULL) ||
-             (cls->header.whichModule->theModule == theModule))) { return cls->installed ? cls : NULL; }
+            ((theModule == nullptr) ||
+             (cls->header.whichModule->theModule == theModule))) { return cls->installed ? cls : nullptr; }
         cls = cls->nxtHash;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /***************************************************
@@ -284,7 +284,7 @@ Defclass *LookupDefclassAnywhere(
   DESCRIPTION  : Determines if a defclass is in
                  scope of the given module
   INPUTS       : 1) The defclass
-                 2) The module (NULL for current
+                 2) The module (nullptr for current
                     module)
   RETURNS      : True if in scope,
                  false otherwise
@@ -300,7 +300,7 @@ bool DefclassInScope(
     char *scopeMap;
 
     scopeMap = (char *) theDefclass->scopeMap->contents;
-    if (theModule == NULL) { theModule = GetCurrentModule(theEnv); }
+    if (theModule == nullptr) { theModule = GetCurrentModule(theEnv); }
     moduleID = theModule->header.bsaveID;
 
     return TestBitMap(scopeMap, moduleID);
@@ -317,9 +317,9 @@ bool DefclassInScope(
   DESCRIPTION  : Finds first or next defclass
   INPUTS       : The address of the current defclass
   RETURNS      : The address of the next defclass
-                   (NULL if none)
+                   (nullptr if none)
   SIDE EFFECTS : None
-  NOTES        : If ptr == NULL, the first defclass
+  NOTES        : If ptr == nullptr, the first defclass
                     is returned.
  ***********************************************************/
 Defclass *GetNextDefclass(
@@ -381,7 +381,7 @@ bool Undefclass(
     bool success;
     GCBlock gcb;
 
-    if (theDefclass == NULL) { theEnv = allEnv; }
+    if (theDefclass == nullptr) { theEnv = allEnv; }
     else { theEnv = theDefclass->header.env; }
 
 #if BLOAD_AND_BSAVE
@@ -390,7 +390,7 @@ bool Undefclass(
 #endif
 
     GCBlockStart(theEnv, &gcb);
-    if (theDefclass == NULL) {
+    if (theDefclass == nullptr) {
         success = RemoveAllUserClasses(theEnv);
         GCBlockEnd(theEnv, &gcb);
         return success;
@@ -644,7 +644,7 @@ bool HasSuperclass(
   DESCRIPTION  : Checks class and slot argument for various functions
   INPUTS       : 1) Name of the calling function
                  2) Buffer for class address
-  RETURNS      : Slot symbol, NULL on errors
+  RETURNS      : Slot symbol, nullptr on errors
   SIDE EFFECTS : None
   NOTES        : None
  ********************************************************************/
@@ -656,16 +656,16 @@ CLIPSLexeme *CheckClassAndSlot(
     Environment *theEnv = context->environment;
 
     if (!UDFFirstArgument(context, SYMBOL_BIT, &theArg))
-        return NULL;
+        return nullptr;
 
     *cls = LookupDefclassByMdlOrScope(theEnv, theArg.lexemeValue->contents);
-    if (*cls == NULL) {
+    if (*cls == nullptr) {
         ClassExistError(theEnv, func, theArg.lexemeValue->contents);
-        return NULL;
+        return nullptr;
     }
 
     if (!UDFNextArgument(context, SYMBOL_BIT, &theArg))
-        return NULL;
+        return nullptr;
 
     return theArg.lexemeValue;
 }
@@ -724,13 +724,13 @@ static void SaveDefclass(
     const char *ppForm;
 
     ppForm = DefclassPPForm(theDefclass);
-    if (ppForm != NULL) {
+    if (ppForm != nullptr) {
         WriteString(theEnv, logName, ppForm);
         WriteString(theEnv, logName, "\n");
         hnd = GetNextDefmessageHandler(theDefclass, 0);
         while (hnd != 0) {
             ppForm = DefmessageHandlerPPForm(theDefclass, hnd);
-            if (ppForm != NULL) {
+            if (ppForm != nullptr) {
                 WriteString(theEnv, logName, ppForm);
                 WriteString(theEnv, logName, "\n");
             }

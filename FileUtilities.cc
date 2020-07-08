@@ -267,7 +267,7 @@ static void ExitDribbleCallback(
         fprintf(FileCommandData(theEnv)->DribbleFP, "%s", FileCommandData(theEnv)->DribbleBuffer);
     }
 
-    if (FileCommandData(theEnv)->DribbleFP != NULL) GenClose(theEnv, FileCommandData(theEnv)->DribbleFP);
+    if (FileCommandData(theEnv)->DribbleFP != nullptr) GenClose(theEnv, FileCommandData(theEnv)->DribbleFP);
 }
 
 /*********************************/
@@ -282,14 +282,14 @@ bool DribbleOn(
     /* open, then close it.         */
     /*==============================*/
 
-    if (FileCommandData(theEnv)->DribbleFP != NULL) { DribbleOff(theEnv); }
+    if (FileCommandData(theEnv)->DribbleFP != nullptr) { DribbleOff(theEnv); }
 
     /*========================*/
     /* Open the dribble file. */
     /*========================*/
 
     FileCommandData(theEnv)->DribbleFP = GenOpen(theEnv, fileName, "w");
-    if (FileCommandData(theEnv)->DribbleFP == NULL) {
+    if (FileCommandData(theEnv)->DribbleFP == nullptr) {
         OpenErrorMessage(theEnv, "dribble-on", fileName);
         return false;
     }
@@ -301,7 +301,7 @@ bool DribbleOn(
     AddRouter(theEnv, "dribble", 40,
               QueryDribbleCallback, WriteDribbleCallback,
               ReadDribbleCallback, UnreadDribbleCallback,
-              ExitDribbleCallback, NULL);
+              ExitDribbleCallback, nullptr);
 
     FileCommandData(theEnv)->DribbleCurrentPosition = 0;
 
@@ -313,7 +313,7 @@ bool DribbleOn(
     /* "Turn Dribble Off..."                          */
     /*================================================*/
 
-    if (FileCommandData(theEnv)->DribbleStatusFunction != NULL) { (*FileCommandData(theEnv)->DribbleStatusFunction)(theEnv, true); }
+    if (FileCommandData(theEnv)->DribbleStatusFunction != nullptr) { (*FileCommandData(theEnv)->DribbleStatusFunction)(theEnv, true); }
 
     /*=====================================*/
     /* Return true to indicate the dribble */
@@ -329,7 +329,7 @@ bool DribbleOn(
 /**********************************************/
 bool DribbleActive(
         Environment *theEnv) {
-    if (FileCommandData(theEnv)->DribbleFP != NULL) return true;
+    if (FileCommandData(theEnv)->DribbleFP != nullptr) return true;
 
     return false;
 }
@@ -350,14 +350,14 @@ bool DribbleOff(
     /* "Turn Dribble Off..."                          */
     /*================================================*/
 
-    if (FileCommandData(theEnv)->DribbleStatusFunction != NULL) { (*FileCommandData(theEnv)->DribbleStatusFunction)(theEnv, false); }
+    if (FileCommandData(theEnv)->DribbleStatusFunction != nullptr) { (*FileCommandData(theEnv)->DribbleStatusFunction)(theEnv, false); }
 
     /*=======================================*/
     /* Close the dribble file and deactivate */
     /* the dribble router.                   */
     /*=======================================*/
 
-    if (FileCommandData(theEnv)->DribbleFP != NULL) {
+    if (FileCommandData(theEnv)->DribbleFP != nullptr) {
         if (FileCommandData(theEnv)->DribbleCurrentPosition > 0) {
             fprintf(FileCommandData(theEnv)->DribbleFP, "%s", FileCommandData(theEnv)->DribbleBuffer);
         }
@@ -365,15 +365,15 @@ bool DribbleOff(
         if (GenClose(theEnv, FileCommandData(theEnv)->DribbleFP) == 0) rv = true;
     } else { rv = true; }
 
-    FileCommandData(theEnv)->DribbleFP = NULL;
+    FileCommandData(theEnv)->DribbleFP = nullptr;
 
     /*============================================*/
     /* Free the space used by the dribble buffer. */
     /*============================================*/
 
-    if (FileCommandData(theEnv)->DribbleBuffer != NULL) {
+    if (FileCommandData(theEnv)->DribbleBuffer != nullptr) {
         rm(theEnv, FileCommandData(theEnv)->DribbleBuffer, FileCommandData(theEnv)->DribbleMaximumPosition);
-        FileCommandData(theEnv)->DribbleBuffer = NULL;
+        FileCommandData(theEnv)->DribbleBuffer = nullptr;
     }
 
     FileCommandData(theEnv)->DribbleCurrentPosition = 0;
@@ -476,10 +476,10 @@ int LLGetcBatch(
     if ((char) rv == '\n') {
         WriteString(theEnv, STDOUT, (char *) FileCommandData(theEnv)->BatchBuffer);
         FileCommandData(theEnv)->BatchCurrentPosition = 0;
-        if ((FileCommandData(theEnv)->BatchBuffer != NULL) && (FileCommandData(theEnv)->BatchMaximumPosition > BUFFER_SIZE)) {
+        if ((FileCommandData(theEnv)->BatchBuffer != nullptr) && (FileCommandData(theEnv)->BatchMaximumPosition > BUFFER_SIZE)) {
             rm(theEnv, FileCommandData(theEnv)->BatchBuffer, FileCommandData(theEnv)->BatchMaximumPosition);
             FileCommandData(theEnv)->BatchMaximumPosition = 0;
-            FileCommandData(theEnv)->BatchBuffer = NULL;
+            FileCommandData(theEnv)->BatchBuffer = nullptr;
         }
     }
 
@@ -510,7 +510,7 @@ static int UnreadBatchCallback(
 #endif
 
     if (FileCommandData(theEnv)->BatchCurrentPosition > 0) FileCommandData(theEnv)->BatchCurrentPosition--;
-    if (FileCommandData(theEnv)->BatchBuffer != NULL)
+    if (FileCommandData(theEnv)->BatchBuffer != nullptr)
         FileCommandData(theEnv)->BatchBuffer[FileCommandData(theEnv)->BatchCurrentPosition] = EOS;
     if (FileCommandData(theEnv)->BatchType == FILE_BATCH) { return ungetc(ch, FileCommandData(theEnv)->BatchFileSource); }
 
@@ -554,7 +554,7 @@ bool OpenBatch(
 
     theFile = GenOpen(theEnv, fileName, "r");
 
-    if (theFile == NULL) {
+    if (theFile == nullptr) {
         OpenErrorMessage(theEnv, "batch", fileName);
         return false;
     }
@@ -564,24 +564,24 @@ bool OpenBatch(
     /* it doesn't already exist.  */
     /*============================*/
 
-    if (FileCommandData(theEnv)->TopOfBatchList == NULL) {
-        AddRouter(theEnv, "batch", 20, QueryBatchCallback, NULL,
+    if (FileCommandData(theEnv)->TopOfBatchList == nullptr) {
+        AddRouter(theEnv, "batch", 20, QueryBatchCallback, nullptr,
                   ReadBatchCallback, UnreadBatchCallback,
-                  ExitBatchCallback, NULL);
+                  ExitBatchCallback, nullptr);
     }
 
     /*===============================================================*/
     /* If a batch file is already open, save its current line count. */
     /*===============================================================*/
 
-    if (FileCommandData(theEnv)->TopOfBatchList != NULL) { FileCommandData(theEnv)->TopOfBatchList->lineNumber = GetLineCount(theEnv); }
+    if (FileCommandData(theEnv)->TopOfBatchList != nullptr) { FileCommandData(theEnv)->TopOfBatchList->lineNumber = GetLineCount(theEnv); }
 
 
     /*========================================================================*/
     /* If this is the first batch file, remember the prior parsing file name. */
     /*========================================================================*/
 
-    if (FileCommandData(theEnv)->TopOfBatchList == NULL) {
+    if (FileCommandData(theEnv)->TopOfBatchList == nullptr) {
         FileCommandData(theEnv)->batchPriorParsingFile = CopyString(theEnv, GetParsingFileName(theEnv));
     }
 
@@ -599,7 +599,7 @@ bool OpenBatch(
     /* the list of batch files opened.    */
     /*====================================*/
 
-    AddBatch(theEnv, placeAtEnd, theFile, NULL, FILE_BATCH, NULL, fileName);
+    AddBatch(theEnv, placeAtEnd, theFile, nullptr, FILE_BATCH, nullptr, fileName);
 
     /*===================================*/
     /* Return true to indicate the batch */
@@ -623,14 +623,14 @@ bool OpenStringBatch(
         bool placeAtEnd) {
     if (OpenStringSource(theEnv, stringName, theString, 0) == false) { return false; }
 
-    if (FileCommandData(theEnv)->TopOfBatchList == NULL) {
+    if (FileCommandData(theEnv)->TopOfBatchList == nullptr) {
         AddRouter(theEnv, "batch", 20,
-                  QueryBatchCallback, NULL,
+                  QueryBatchCallback, nullptr,
                   ReadBatchCallback, UnreadBatchCallback,
-                  ExitBatchCallback, NULL);
+                  ExitBatchCallback, nullptr);
     }
 
-    AddBatch(theEnv, placeAtEnd, NULL, stringName, STRING_BATCH, theString, NULL);
+    AddBatch(theEnv, placeAtEnd, nullptr, stringName, STRING_BATCH, theString, nullptr);
 
     return true;
 }
@@ -660,13 +660,13 @@ static void AddBatch(
     bptr->theString = theString;
     bptr->fileName = CopyString(theEnv, theFileName);
     bptr->lineNumber = 0;
-    bptr->next = NULL;
+    bptr->next = nullptr;
 
     /*============================*/
     /* Add the entry to the list. */
     /*============================*/
 
-    if (FileCommandData(theEnv)->TopOfBatchList == NULL) {
+    if (FileCommandData(theEnv)->TopOfBatchList == nullptr) {
         FileCommandData(theEnv)->TopOfBatchList = bptr;
         FileCommandData(theEnv)->BottomOfBatchList = bptr;
         FileCommandData(theEnv)->BatchType = type;
@@ -694,7 +694,7 @@ bool RemoveBatch(
     struct batchEntry *bptr;
     bool rv, fileBatch = false;
 
-    if (FileCommandData(theEnv)->TopOfBatchList == NULL) return false;
+    if (FileCommandData(theEnv)->TopOfBatchList == nullptr) return false;
 
     /*==================================================*/
     /* Close the source from which batch input is read. */
@@ -727,13 +727,13 @@ bool RemoveBatch(
     /* then free the space used by the batch buffer.          */
     /*========================================================*/
 
-    if (FileCommandData(theEnv)->TopOfBatchList == NULL) {
-        FileCommandData(theEnv)->BottomOfBatchList = NULL;
-        FileCommandData(theEnv)->BatchFileSource = NULL;
-        FileCommandData(theEnv)->BatchLogicalSource = NULL;
-        if (FileCommandData(theEnv)->BatchBuffer != NULL) {
+    if (FileCommandData(theEnv)->TopOfBatchList == nullptr) {
+        FileCommandData(theEnv)->BottomOfBatchList = nullptr;
+        FileCommandData(theEnv)->BatchFileSource = nullptr;
+        FileCommandData(theEnv)->BatchLogicalSource = nullptr;
+        if (FileCommandData(theEnv)->BatchBuffer != nullptr) {
             rm(theEnv, FileCommandData(theEnv)->BatchBuffer, FileCommandData(theEnv)->BatchMaximumPosition);
-            FileCommandData(theEnv)->BatchBuffer = NULL;
+            FileCommandData(theEnv)->BatchBuffer = nullptr;
         }
         FileCommandData(theEnv)->BatchCurrentPosition = 0;
         FileCommandData(theEnv)->BatchMaximumPosition = 0;
@@ -742,7 +742,7 @@ bool RemoveBatch(
         if (fileBatch) {
             SetParsingFileName(theEnv, FileCommandData(theEnv)->batchPriorParsingFile);
             DeleteString(theEnv, FileCommandData(theEnv)->batchPriorParsingFile);
-            FileCommandData(theEnv)->batchPriorParsingFile = NULL;
+            FileCommandData(theEnv)->batchPriorParsingFile = nullptr;
         }
     }
 
@@ -777,7 +777,7 @@ bool RemoveBatch(
 /****************************************/
 bool BatchActive(
         Environment *theEnv) {
-    if (FileCommandData(theEnv)->TopOfBatchList != NULL) return true;
+    if (FileCommandData(theEnv)->TopOfBatchList != nullptr) return true;
 
     return false;
 }
@@ -791,10 +791,10 @@ void CloseAllBatchSources(
     /* Free the batch buffer if it contains anything. */
     /*================================================*/
 
-    if (FileCommandData(theEnv)->BatchBuffer != NULL) {
+    if (FileCommandData(theEnv)->BatchBuffer != nullptr) {
         if (FileCommandData(theEnv)->BatchCurrentPosition > 0) WriteString(theEnv, STDOUT, (char *) FileCommandData(theEnv)->BatchBuffer);
         rm(theEnv, FileCommandData(theEnv)->BatchBuffer, FileCommandData(theEnv)->BatchMaximumPosition);
-        FileCommandData(theEnv)->BatchBuffer = NULL;
+        FileCommandData(theEnv)->BatchBuffer = nullptr;
         FileCommandData(theEnv)->BatchCurrentPosition = 0;
         FileCommandData(theEnv)->BatchMaximumPosition = 0;
     }
@@ -822,7 +822,7 @@ bool BatchStar(
     int inchar;
     bool done = false;
     FILE *theFile;
-    char *theString = NULL;
+    char *theString = nullptr;
     size_t position = 0;
     size_t maxChars = 0;
     char *oldParsingFileName;
@@ -833,7 +833,7 @@ bool BatchStar(
 
     theFile = GenOpen(theEnv, fileName, "r");
 
-    if (theFile == NULL) {
+    if (theFile == nullptr) {
         OpenErrorMessage(theEnv, "batch", fileName);
         return false;
     }
@@ -853,7 +853,7 @@ bool BatchStar(
     /* If embedded, clear the error flags. */
     /*=====================================*/
 
-    if (EvaluationData(theEnv)->CurrentExpression == NULL) { ResetErrorFlags(theEnv); }
+    if (EvaluationData(theEnv)->CurrentExpression == nullptr) { ResetErrorFlags(theEnv); }
 
     /*=============================================*/
     /* Evaluate commands from the file one by one. */
@@ -876,9 +876,9 @@ bool BatchStar(
             FlushPPBuffer(theEnv);
             SetHaltExecution(theEnv, false);
             SetEvaluationError(theEnv, false);
-            FlushBindList(theEnv, NULL);
+            FlushBindList(theEnv, nullptr);
             genfree(theEnv, theString, maxChars);
-            theString = NULL;
+            theString = nullptr;
             maxChars = 0;
             position = 0;
             FlushParsingMessages(theEnv);
@@ -887,7 +887,7 @@ bool BatchStar(
         if (inchar == '\n') { IncrementLineCount(theEnv); }
     }
 
-    if (theString != NULL) { genfree(theEnv, theString, maxChars); }
+    if (theString != nullptr) { genfree(theEnv, theString, maxChars); }
 
     /*=======================*/
     /* Close the batch file. */

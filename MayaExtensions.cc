@@ -43,11 +43,11 @@ static void Functionp(Environment *theEnv, UDFContext *context, UDFValue *ret);
 static void LastFunction(Environment *, UDFContext *context, UDFValue *ret);
 
 void InstallMayaExtensions(Environment *theEnv) {
-    AddUDF(theEnv, "empty$", "b", 1, 1, "m", EmptyFunction, NULL);
-    AddUDF(theEnv, "functionp", "b", 1, 1, "y", Functionp, NULL);
-    AddUDF(theEnv, "quit", "v", 0, 1, "l", ExitCommand, NULL);
-    AddUDF(theEnv, "bye", "v", 0, 1, "l", ExitCommand, NULL);
-    AddUDF(theEnv, "last$", "m", 1, 1, "m", LastFunction, NULL);
+    AddUDF(theEnv, "empty$", "b", 1, 1, "m", EmptyFunction, nullptr);
+    AddUDF(theEnv, "functionp", "b", 1, 1, "y", Functionp, nullptr);
+    AddUDF(theEnv, "quit", "v", 0, 1, "l", ExitCommand, nullptr);
+    AddUDF(theEnv, "bye", "v", 0, 1, "l", ExitCommand, nullptr);
+    AddUDF(theEnv, "last$", "m", 1, 1, "m", LastFunction, nullptr);
 #if BOOST_EXTENSIONS
     InstallBoostExtensions(theEnv);
 #endif

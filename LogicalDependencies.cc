@@ -68,10 +68,10 @@ static struct dependency *DetachAssociatedDependencies(Environment *, struct dep
 /*   data entity (such as a fact or instance) and the partial match    */
 /*   which logically supports that data entity. If a data entity is    */
 /*   unconditionally asserted (i.e. the global variable TheLogicalJoin */
-/*   is NULL), then existing logical support for the data entity is no */
+/*   is nullptr), then existing logical support for the data entity is no */
 /*   longer needed and it is removed. If a data entity is already      */
 /*   unconditionally supported and that data entity is conditionally   */
-/*   asserted (i.e. the global variable TheLogicalJoin is not NULL),   */
+/*   asserted (i.e. the global variable TheLogicalJoin is not nullptr),   */
 /*   then the logical support is ignored. Otherwise, the partial match */
 /*   is linked to the data entity and the data entity is linked to the */
 /*   partial match. Note that the word assert is used to refer to      */
@@ -90,10 +90,10 @@ bool AddLogicalDependencies(
     /* dependencies have to be established.         */
     /*==============================================*/
 
-    if (EngineData(theEnv)->TheLogicalJoin == NULL) {
+    if (EngineData(theEnv)->TheLogicalJoin == nullptr) {
         if (existingEntity) RemoveEntityDependencies(theEnv, theEntity);
         return true;
-    } else if (existingEntity && (theEntity->dependents == NULL)) { return true; }
+    } else if (existingEntity && (theEntity->dependents == nullptr)) { return true; }
 
     /*===========================================================*/
     /* Retrieve the partial match in the logical join associated */
@@ -105,8 +105,8 @@ bool AddLogicalDependencies(
     /*===========================================================*/
 
     theBinds = EngineData(theEnv)->TheLogicalBind;
-    if (theBinds == NULL) return false;
-    if ((theBinds->leftParent == NULL) && (theBinds->rightParent == NULL)) { return false; }
+    if (theBinds == nullptr) return false;
+    if ((theBinds->leftParent == nullptr) && (theBinds->rightParent == nullptr)) { return false; }
 
     /*==============================================================*/
     /* Add a dependency link between the partial match and the data */
@@ -156,12 +156,12 @@ struct partialMatch *FindLogicalBind(
     /*========================================================*/
 
     for (compPtr = theBinds;
-         compPtr != NULL;
+         compPtr != nullptr;
          compPtr = compPtr->leftParent) {
         if (compPtr->owner == theJoin) { return (compPtr); }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /*********************************************************************/
@@ -187,7 +187,7 @@ void RemoveEntityDependencies(
     /* Loop through each of the dependencies. */
     /*========================================*/
 
-    while (fdPtr != NULL) {
+    while (fdPtr != nullptr) {
         /*===============================*/
         /* Remember the next dependency. */
         /*===============================*/
@@ -217,10 +217,10 @@ void RemoveEntityDependencies(
     }
 
     /*=====================================================*/
-    /* Set the dependency list of the data entity to NULL. */
+    /* Set the dependency list of the data entity to nullptr. */
     /*=====================================================*/
 
-    theEntity->dependents = NULL;
+    theEntity->dependents = nullptr;
 }
 
 /********************************************************************/
@@ -235,13 +235,13 @@ void ReturnEntityDependencies(
 
     fdPtr = (struct dependency *) theEntity->dependents;
 
-    while (fdPtr != NULL) {
+    while (fdPtr != nullptr) {
         nextPtr = fdPtr->next;
         rtn_struct(theEnv, dependency, fdPtr);
         fdPtr = nextPtr;
     }
 
-    theEntity->dependents = NULL;
+    theEntity->dependents = nullptr;
 }
 
 /*******************************************************************/
@@ -255,14 +255,14 @@ static struct dependency *DetachAssociatedDependencies(
         Environment *theEnv,
         struct dependency *theList,
         void *theEntity) {
-    struct dependency *fdPtr, *nextPtr, *lastPtr = NULL;
+    struct dependency *fdPtr, *nextPtr, *lastPtr = nullptr;
 
     fdPtr = theList;
 
-    while (fdPtr != NULL) {
+    while (fdPtr != nullptr) {
         if (fdPtr->dPtr == theEntity) {
             nextPtr = fdPtr->next;
-            if (lastPtr == NULL) theList = nextPtr;
+            if (lastPtr == nullptr) theList = nextPtr;
             else lastPtr->next = nextPtr;
             rtn_struct(theEnv, dependency, fdPtr);
             fdPtr = nextPtr;
@@ -288,7 +288,7 @@ void RemovePMDependencies(
 
     fdPtr = (struct dependency *) theBinds->dependents;
 
-    while (fdPtr != NULL) {
+    while (fdPtr != nullptr) {
         nextPtr = fdPtr->next;
 
         theEntity = (struct patternEntity *) fdPtr->dPtr;
@@ -301,7 +301,7 @@ void RemovePMDependencies(
         fdPtr = nextPtr;
     }
 
-    theBinds->dependents = NULL;
+    theBinds->dependents = nullptr;
 }
 
 /************************************************************/
@@ -315,14 +315,14 @@ void DestroyPMDependencies(
 
     fdPtr = (struct dependency *) theBinds->dependents;
 
-    while (fdPtr != NULL) {
+    while (fdPtr != nullptr) {
         nextPtr = fdPtr->next;
 
         rtn_struct(theEnv, dependency, fdPtr);
         fdPtr = nextPtr;
     }
 
-    theBinds->dependents = NULL;
+    theBinds->dependents = nullptr;
 }
 
 /************************************************************************/
@@ -346,7 +346,7 @@ void RemoveLogicalSupport(
     /* dependencies, then return.             */
     /*========================================*/
 
-    if (theBinds->dependents == NULL) return;
+    if (theBinds->dependents == nullptr) return;
 
     /*=======================================*/
     /* Loop through each of the dependencies */
@@ -355,7 +355,7 @@ void RemoveLogicalSupport(
 
     dlPtr = (struct dependency *) theBinds->dependents;
 
-    while (dlPtr != NULL) {
+    while (dlPtr != nullptr) {
         /*===============================*/
         /* Remember the next dependency. */
         /*===============================*/
@@ -381,7 +381,7 @@ void RemoveLogicalSupport(
         /* just delete the dependency structure.                        */
         /*==============================================================*/
 
-        if (theEntity->dependents == NULL) {
+        if (theEntity->dependents == nullptr) {
             (*theEntity->theInfo->base.incrementBusyCount)(theEnv, theEntity);
             dlPtr->next = EngineData(theEnv)->UnsupportedDataEntities;
             EngineData(theEnv)->UnsupportedDataEntities = dlPtr;
@@ -399,7 +399,7 @@ void RemoveLogicalSupport(
     /* dependencies associated with it.    */
     /*=====================================*/
 
-    theBinds->dependents = NULL;
+    theBinds->dependents = nullptr;
 }
 
 /********************************************************************/
@@ -432,7 +432,7 @@ void ForceLogicalRetractions(
     /* entities are deleted.                                 */
     /*=======================================================*/
 
-    while (EngineData(theEnv)->UnsupportedDataEntities != NULL) {
+    while (EngineData(theEnv)->UnsupportedDataEntities != nullptr) {
         /*==========================================*/
         /* Determine the data entity to be deleted. */
         /*==========================================*/
@@ -475,7 +475,7 @@ void Dependencies(
     /* then print "None" and return.           */
     /*=========================================*/
 
-    if (theEntity->dependents == NULL) {
+    if (theEntity->dependents == nullptr) {
         WriteString(theEnv, STDOUT, "None\n");
         return;
     }
@@ -486,7 +486,7 @@ void Dependencies(
     /*============================================*/
 
     for (fdPtr = (struct dependency *) theEntity->dependents;
-         fdPtr != NULL;
+         fdPtr != nullptr;
          fdPtr = fdPtr->next) {
         if (GetHaltExecution(theEnv) == true) return;
         PrintPartialMatch(theEnv, STDOUT, (struct partialMatch *) fdPtr->dPtr);
@@ -500,8 +500,8 @@ void Dependencies(
 void Dependents(
         Environment *theEnv,
         struct patternEntity *theEntity) {
-    struct patternEntity *entityPtr = NULL;
-    struct patternParser *theParser = NULL;
+    struct patternEntity *entityPtr = nullptr;
+    struct patternParser *theParser = nullptr;
     struct dependency *fdPtr;
     struct partialMatch *theBinds;
     bool found = false;
@@ -511,7 +511,7 @@ void Dependents(
     /*=================================*/
 
     for (GetNextPatternEntity(theEnv, &theParser, &entityPtr);
-         entityPtr != NULL;
+         entityPtr != nullptr;
          GetNextPatternEntity(theEnv, &theParser, &entityPtr)) {
         if (GetHaltExecution(theEnv) == true) return;
 
@@ -521,7 +521,7 @@ void Dependents(
         /*====================================*/
 
         for (fdPtr = (struct dependency *) entityPtr->dependents;
-             fdPtr != NULL;
+             fdPtr != nullptr;
              fdPtr = fdPtr->next) {
             if (GetHaltExecution(theEnv) == true) return;
 
@@ -569,7 +569,7 @@ void DependenciesCommand(
 
     ptr = GetFactOrInstanceArgument(context, 1, &item);
 
-    if (ptr == NULL) return;
+    if (ptr == nullptr) return;
 
     Dependencies(theEnv, (struct patternEntity *) ptr);
 }
@@ -587,7 +587,7 @@ void DependentsCommand(
 
     ptr = GetFactOrInstanceArgument(context, 1, &item);
 
-    if (ptr == NULL) return;
+    if (ptr == nullptr) return;
 
     Dependents(theEnv, (struct patternEntity *) ptr);
 }

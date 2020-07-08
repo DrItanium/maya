@@ -88,7 +88,7 @@ void InitializeFileRouter(
 
     AddRouter(theEnv, "fileio", 0, FindFile,
               WriteFileCallback, ReadFileCallback,
-              UnreadFileCallback, ExitFileCallback, NULL);
+              UnreadFileCallback, ExitFileCallback, nullptr);
 }
 
 /*****************************************/
@@ -100,7 +100,7 @@ static void DeallocateFileRouterData(
     struct fileRouter *tmpPtr, *nextPtr;
 
     tmpPtr = FileRouterData(theEnv)->ListOfFileRouters;
-    while (tmpPtr != NULL) {
+    while (tmpPtr != nullptr) {
         nextPtr = tmpPtr->next;
         GenClose(theEnv, tmpPtr->stream);
         rm(theEnv, (void *) tmpPtr->logicalName, strlen(tmpPtr->logicalName) + 1);
@@ -132,11 +132,11 @@ FILE *FindFptr(
     /*==============================================================*/
 
     fptr = FileRouterData(theEnv)->ListOfFileRouters;
-    while ((fptr != NULL) ? (strcmp(logicalName, fptr->logicalName) != 0) : false) { fptr = fptr->next; }
+    while ((fptr != nullptr) ? (strcmp(logicalName, fptr->logicalName) != 0) : false) { fptr = fptr->next; }
 
-    if (fptr != NULL) return fptr->stream;
+    if (fptr != nullptr) return fptr->stream;
 
-    return NULL;
+    return nullptr;
 }
 
 /*****************************************************/
@@ -150,7 +150,7 @@ bool FindFile(
         Environment *theEnv,
         const char *logicalName,
         void *context) {
-    if (FindFptr(theEnv, logicalName) != NULL) return true;
+    if (FindFptr(theEnv, logicalName) != nullptr) return true;
 
     return false;
 }
@@ -250,7 +250,7 @@ bool OpenAFile(
     /* with the specified access mode.  */
     /*==================================*/
 
-    if ((newstream = GenOpen(theEnv, fileName, accessMode)) == NULL) { return false; }
+    if ((newstream = GenOpen(theEnv, fileName, accessMode)) == nullptr) { return false; }
 
     /*===========================*/
     /* Create a new file router. */
@@ -288,13 +288,13 @@ bool CloseFile(
         const char *fid) {
     struct fileRouter *fptr, *prev;
 
-    for (fptr = FileRouterData(theEnv)->ListOfFileRouters, prev = NULL;
-         fptr != NULL;
+    for (fptr = FileRouterData(theEnv)->ListOfFileRouters, prev = nullptr;
+         fptr != nullptr;
          fptr = fptr->next) {
         if (strcmp(fptr->logicalName, fid) == 0) {
             GenClose(theEnv, fptr->stream);
             rm(theEnv, (void *) fptr->logicalName, strlen(fptr->logicalName) + 1);
-            if (prev == NULL) { FileRouterData(theEnv)->ListOfFileRouters = fptr->next; }
+            if (prev == nullptr) { FileRouterData(theEnv)->ListOfFileRouters = fptr->next; }
             else { prev->next = fptr->next; }
             rm(theEnv, fptr, sizeof(struct fileRouter));
 
@@ -316,11 +316,11 @@ bool CloseAllFiles(
         Environment *theEnv) {
     struct fileRouter *fptr, *prev;
 
-    if (FileRouterData(theEnv)->ListOfFileRouters == NULL) return false;
+    if (FileRouterData(theEnv)->ListOfFileRouters == nullptr) return false;
 
     fptr = FileRouterData(theEnv)->ListOfFileRouters;
 
-    while (fptr != NULL) {
+    while (fptr != nullptr) {
         GenClose(theEnv, fptr->stream);
         prev = fptr;
         rm(theEnv, (void *) fptr->logicalName, strlen(fptr->logicalName) + 1);
@@ -328,7 +328,7 @@ bool CloseAllFiles(
         rm(theEnv, prev, sizeof(struct fileRouter));
     }
 
-    FileRouterData(theEnv)->ListOfFileRouters = NULL;
+    FileRouterData(theEnv)->ListOfFileRouters = nullptr;
 
     return true;
 }
@@ -344,7 +344,7 @@ bool FlushFile(
     struct fileRouter *fptr;
 
     for (fptr = FileRouterData(theEnv)->ListOfFileRouters;
-         fptr != NULL;
+         fptr != nullptr;
          fptr = fptr->next) {
         if (strcmp(fptr->logicalName, fid) == 0) {
             GenFlush(theEnv, fptr->stream);
@@ -364,10 +364,10 @@ bool FlushAllFiles(
         Environment *theEnv) {
     struct fileRouter *fptr;
 
-    if (FileRouterData(theEnv)->ListOfFileRouters == NULL) return false;
+    if (FileRouterData(theEnv)->ListOfFileRouters == nullptr) return false;
 
     for (fptr = FileRouterData(theEnv)->ListOfFileRouters;
-         fptr != NULL;
+         fptr != nullptr;
          fptr = fptr->next) { GenFlush(theEnv, fptr->stream); }
 
     return true;
@@ -384,7 +384,7 @@ bool RewindFile(
     struct fileRouter *fptr;
 
     for (fptr = FileRouterData(theEnv)->ListOfFileRouters;
-         fptr != NULL;
+         fptr != nullptr;
          fptr = fptr->next) {
         if (strcmp(fptr->logicalName, fid) == 0) {
             GenRewind(theEnv, fptr->stream);
@@ -405,7 +405,7 @@ long long TellFile(
     struct fileRouter *fptr;
 
     for (fptr = FileRouterData(theEnv)->ListOfFileRouters;
-         fptr != NULL;
+         fptr != nullptr;
          fptr = fptr->next) {
         if (strcmp(fptr->logicalName, fid) == 0) { return GenTell(theEnv, fptr->stream); }
     }
@@ -425,7 +425,7 @@ bool SeekFile(
     struct fileRouter *fptr;
 
     for (fptr = FileRouterData(theEnv)->ListOfFileRouters;
-         fptr != NULL;
+         fptr != nullptr;
          fptr = fptr->next) {
         if (strcmp(fptr->logicalName, fid) == 0) {
             if (GenSeek(theEnv, fptr->stream, offset, whereFrom)) { return false; }

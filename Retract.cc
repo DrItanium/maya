@@ -92,14 +92,14 @@ void NetworkRetract(
     struct patternMatch *tempMatch, *nextMatch;
 
     tempMatch = listOfMatchedPatterns;
-    while (tempMatch != NULL) {
+    while (tempMatch != nullptr) {
         nextMatch = tempMatch->next;
 
         tempMatch->theMatch->deleting = true;
 
-        if (tempMatch->theMatch->children != NULL) { PosEntryRetractAlpha(theEnv, tempMatch->theMatch, NETWORK_RETRACT); }
+        if (tempMatch->theMatch->children != nullptr) { PosEntryRetractAlpha(theEnv, tempMatch->theMatch, NETWORK_RETRACT); }
 
-        if (tempMatch->theMatch->blockList != NULL) { NegEntryRetractAlpha(theEnv, tempMatch->theMatch, NETWORK_RETRACT); }
+        if (tempMatch->theMatch->blockList != nullptr) { NegEntryRetractAlpha(theEnv, tempMatch->theMatch, NETWORK_RETRACT); }
 
         /*===================================================*/
         /* Remove from the alpha memory of the pattern node. */
@@ -126,17 +126,17 @@ void PosEntryRetractAlpha(
     struct joinNode *joinPtr;
 
     betaMatch = alphaMatch->children;
-    while (betaMatch != NULL) {
+    while (betaMatch != nullptr) {
         joinPtr = (struct joinNode *) betaMatch->owner;
 
-        if (betaMatch->children != NULL) { PosEntryRetractBeta(theEnv, betaMatch, betaMatch->children, operation); }
+        if (betaMatch->children != nullptr) { PosEntryRetractBeta(theEnv, betaMatch, betaMatch->children, operation); }
 
         if (betaMatch->rhsMemory) { NegEntryRetractAlpha(theEnv, betaMatch, operation); }
 
         /* Remove the beta match. */
 
-        if ((joinPtr->ruleToActivate != NULL) ?
-            (betaMatch->marker != NULL) : false) { RemoveActivation(theEnv, (struct activation *) betaMatch->marker, true, true); }
+        if ((joinPtr->ruleToActivate != nullptr) ?
+            (betaMatch->marker != nullptr) : false) { RemoveActivation(theEnv, (struct activation *) betaMatch->marker, true, true); }
 
         tempMatch = betaMatch->nextRightChild;
 
@@ -160,7 +160,7 @@ static void NegEntryRetractAlpha(
     struct joinNode *joinPtr;
 
     betaMatch = alphaMatch->blockList;
-    while (betaMatch != NULL) {
+    while (betaMatch != nullptr) {
         joinPtr = (struct joinNode *) betaMatch->owner;
 
         if ((!joinPtr->patternIsNegated) &&
@@ -194,10 +194,10 @@ static void NegEntryRetractBeta(
 
     if (FindNextConflictingMatch(theEnv, betaMatch, alphaMatch->nextInMemory, joinPtr, alphaMatch, operation)) { return; }
     else if (joinPtr->patternIsExists) {
-        if (betaMatch->children != NULL) { PosEntryRetractBeta(theEnv, betaMatch, betaMatch->children, operation); }
+        if (betaMatch->children != nullptr) { PosEntryRetractBeta(theEnv, betaMatch, betaMatch->children, operation); }
         return;
     } else if (joinPtr->firstJoin && (joinPtr->patternIsNegated || joinPtr->joinFromTheRight) && (!joinPtr->patternIsExists)) {
-        if (joinPtr->secondaryNetworkTest != NULL) {
+        if (joinPtr->secondaryNetworkTest != nullptr) {
             if (EvaluateSecondaryNetworkTest(theEnv, betaMatch, joinPtr) == false) { return; }
         }
 
@@ -206,7 +206,7 @@ static void NegEntryRetractBeta(
         return;
     }
 
-    if (joinPtr->secondaryNetworkTest != NULL) {
+    if (joinPtr->secondaryNetworkTest != nullptr) {
         if (EvaluateSecondaryNetworkTest(theEnv, betaMatch, joinPtr) == false) { return; }
     }
 
@@ -223,7 +223,7 @@ static void NegEntryRetractBeta(
 
     if ((operation == NETWORK_RETRACT) && PartialMatchWillBeDeleted(theEnv, betaMatch)) { return; }
 
-    PPDrive(theEnv, betaMatch, NULL, joinPtr, operation);
+    PPDrive(theEnv, betaMatch, nullptr, joinPtr, operation);
 }
 
 /************************/
@@ -236,26 +236,26 @@ void PosEntryRetractBeta(
         int operation) {
     struct partialMatch *tempMatch;
 
-    while (betaMatch != NULL) {
-        if (betaMatch->children != NULL) {
+    while (betaMatch != nullptr) {
+        if (betaMatch->children != nullptr) {
             betaMatch = betaMatch->children;
             continue;
         }
 
-        if (betaMatch->nextLeftChild != NULL) { tempMatch = betaMatch->nextLeftChild; }
+        if (betaMatch->nextLeftChild != nullptr) { tempMatch = betaMatch->nextLeftChild; }
         else {
             tempMatch = betaMatch->leftParent;
-            betaMatch->leftParent->children = NULL;
+            betaMatch->leftParent->children = nullptr;
         }
 
-        if (betaMatch->blockList != NULL) { NegEntryRetractAlpha(theEnv, betaMatch, operation); }
-        else if ((((struct joinNode *) betaMatch->owner)->ruleToActivate != NULL) ?
-                 (betaMatch->marker != NULL) : false) { RemoveActivation(theEnv, (struct activation *) betaMatch->marker, true, true); }
+        if (betaMatch->blockList != nullptr) { NegEntryRetractAlpha(theEnv, betaMatch, operation); }
+        else if ((((struct joinNode *) betaMatch->owner)->ruleToActivate != nullptr) ?
+                 (betaMatch->marker != nullptr) : false) { RemoveActivation(theEnv, (struct activation *) betaMatch->marker, true, true); }
 
         if (betaMatch->rhsMemory) { UnlinkNonLeftLineage(theEnv, (struct joinNode *) betaMatch->owner, betaMatch, CLIPS_RHS); }
         else { UnlinkNonLeftLineage(theEnv, (struct joinNode *) betaMatch->owner, betaMatch, CLIPS_LHS); }
 
-        if (betaMatch->dependents != NULL) RemoveLogicalSupport(theEnv, betaMatch);
+        if (betaMatch->dependents != nullptr) RemoveLogicalSupport(theEnv, betaMatch);
         ReturnPartialMatch(theEnv, betaMatch);
 
         if (tempMatch == parentMatch) return;
@@ -276,9 +276,9 @@ static bool FindNextConflictingMatch(
         struct partialMatch *skipMatch,
         int operation) {
     bool result, restore = false;
-    struct partialMatch *oldLHSBinds = NULL;
-    struct partialMatch *oldRHSBinds = NULL;
-    struct joinNode *oldJoin = NULL;
+    struct partialMatch *oldLHSBinds = nullptr;
+    struct partialMatch *oldRHSBinds = nullptr;
+    struct joinNode *oldJoin = nullptr;
 
     /*====================================*/
     /* Check each of the possible partial */
@@ -286,14 +286,14 @@ static bool FindNextConflictingMatch(
     /*====================================*/
 
 #if DEVELOPER
-    if (possibleConflicts != NULL)
+    if (possibleConflicts != nullptr)
       { EngineData(theEnv)->leftToRightLoops++; }
 #endif
     /*====================================*/
     /* Set up the evaluation environment. */
     /*====================================*/
 
-    if (possibleConflicts != NULL) {
+    if (possibleConflicts != nullptr) {
         oldLHSBinds = EngineData(theEnv)->GlobalLHSBinds;
         oldRHSBinds = EngineData(theEnv)->GlobalRHSBinds;
         oldJoin = EngineData(theEnv)->GlobalJoin;
@@ -303,7 +303,7 @@ static bool FindNextConflictingMatch(
     }
 
     for (;
-            possibleConflicts != NULL;
+            possibleConflicts != nullptr;
             possibleConflicts = possibleConflicts->nextInMemory) {
         theJoin->memoryCompares++;
 
@@ -335,7 +335,7 @@ static bool FindNextConflictingMatch(
             /* to be evaluated, then partial match conflicts. */
             /*================================================*/
 
-        else if (theJoin->networkTest == NULL) { result = true; }
+        else if (theJoin->networkTest == nullptr) { result = true; }
 
             /*=================================================*/
             /* Otherwise, if the join has a network expression */
@@ -409,7 +409,7 @@ static bool PartialMatchDefunct(
     if (thePM->deleting) return true;
 
     for (i = 0; i < thePM->bcount; i++) {
-        if (thePM->binds[i].gm.theMatch == NULL) continue;
+        if (thePM->binds[i].gm.theMatch == nullptr) continue;
         thePE = thePM->binds[i].gm.theMatch->matchingItem;
         if (thePE && thePE->theInfo->synchronized &&
             !(*thePE->theInfo->synchronized)(theEnv, thePE))
@@ -432,12 +432,12 @@ bool PartialMatchWillBeDeleted(
     unsigned short i;
     struct patternEntity *thePE;
 
-    if (thePM == NULL) return false;
+    if (thePM == nullptr) return false;
 
     if (thePM->deleting) return true;
 
     for (i = 0; i < thePM->bcount; i++) {
-        if (thePM->binds[i].gm.theMatch == NULL) continue;
+        if (thePM->binds[i].gm.theMatch == nullptr) continue;
         thePE = thePM->binds[i].gm.theMatch->matchingItem;
         if (thePE && thePE->theInfo->isDeleted &&
             (*thePE->theInfo->isDeleted)(theEnv, thePE))
@@ -456,7 +456,7 @@ void DeletePartialMatches(
         struct partialMatch *listOfPMs) {
     struct partialMatch *nextPM;
 
-    while (listOfPMs != NULL) {
+    while (listOfPMs != nullptr) {
         /*============================================*/
         /* Remember the next partial match to delete. */
         /*============================================*/
@@ -469,7 +469,7 @@ void DeletePartialMatches(
         /* result of a logical CE.                        */
         /*================================================*/
 
-        if (listOfPMs->dependents != NULL) RemoveLogicalSupport(theEnv, listOfPMs);
+        if (listOfPMs->dependents != nullptr) RemoveLogicalSupport(theEnv, listOfPMs);
 
         /*==========================================================*/
         /* If the partial match is being deleted from a beta memory */
@@ -521,7 +521,7 @@ void ReturnPartialMatch(
     /*======================================================*/
 
     if (waste->betaMemory == false) {
-        if (waste->binds[0].gm.theMatch->markers != NULL) { ReturnMarkers(theEnv, waste->binds[0].gm.theMatch->markers); }
+        if (waste->binds[0].gm.theMatch->markers != nullptr) { ReturnMarkers(theEnv, waste->binds[0].gm.theMatch->markers); }
         rm(theEnv, waste->binds[0].gm.theMatch, sizeof(struct alphaMatch));
     }
 
@@ -531,7 +531,7 @@ void ReturnPartialMatch(
     /* the logical CE.                                 */
     /*=================================================*/
 
-    if (waste->dependents != NULL) RemovePMDependencies(theEnv, waste);
+    if (waste->dependents != nullptr) RemovePMDependencies(theEnv, waste);
 
     /*======================================================*/
     /* Return the partial match to the pool of free memory. */
@@ -557,7 +557,7 @@ void DestroyPartialMatch(
     /*======================================================*/
 
     if (waste->betaMemory == false) {
-        if (waste->binds[0].gm.theMatch->markers != NULL) { ReturnMarkers(theEnv, waste->binds[0].gm.theMatch->markers); }
+        if (waste->binds[0].gm.theMatch->markers != nullptr) { ReturnMarkers(theEnv, waste->binds[0].gm.theMatch->markers); }
         rm(theEnv, waste->binds[0].gm.theMatch, sizeof(struct alphaMatch));
     }
 
@@ -567,7 +567,7 @@ void DestroyPartialMatch(
     /* the logical CE.                                 */
     /*=================================================*/
 
-    if (waste->dependents != NULL) DestroyPMDependencies(theEnv, waste);
+    if (waste->dependents != nullptr) DestroyPMDependencies(theEnv, waste);
 
     /*======================================================*/
     /* Return the partial match to the pool of free memory. */
@@ -588,7 +588,7 @@ static void ReturnMarkers(
         struct multifieldMarker *waste) {
     struct multifieldMarker *temp;
 
-    while (waste != NULL) {
+    while (waste != nullptr) {
         temp = waste->next;
         rtn_struct(theEnv, multifieldMarker, waste);
         waste = temp;
@@ -613,7 +613,7 @@ void FlushGarbagePartialMatches(
     /* the alpha memories of the pattern networks.       */
     /*===================================================*/
 
-    while (EngineData(theEnv)->GarbageAlphaMatches != NULL) {
+    while (EngineData(theEnv)->GarbageAlphaMatches != nullptr) {
         amPtr = EngineData(theEnv)->GarbageAlphaMatches->next;
         rtn_struct(theEnv, alphaMatch, EngineData(theEnv)->GarbageAlphaMatches);
         EngineData(theEnv)->GarbageAlphaMatches = amPtr;
@@ -624,7 +624,7 @@ void FlushGarbagePartialMatches(
     /* from the beta memories of the join networks. */
     /*==============================================*/
 
-    while (EngineData(theEnv)->GarbagePartialMatches != NULL) {
+    while (EngineData(theEnv)->GarbagePartialMatches != nullptr) {
         /*=====================================================*/
         /* Remember the next garbage partial match to process. */
         /*=====================================================*/

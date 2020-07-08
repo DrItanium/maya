@@ -121,7 +121,7 @@ static void DeallocateRouterData(
     struct router *tmpPtr, *nextPtr;
 
     tmpPtr = RouterData(theEnv)->ListOfRouters;
-    while (tmpPtr != NULL) {
+    while (tmpPtr != nullptr) {
         nextPtr = tmpPtr->next;
         genfree(theEnv, (void *) tmpPtr->name, strlen(tmpPtr->name) + 1);
         rtn_struct(theEnv, router, tmpPtr);
@@ -140,8 +140,8 @@ bool PrintRouterExists(
     if (((char *) RouterData(theEnv)->FastSaveFilePtr) == logicalName) { return true; }
 
     currentPtr = RouterData(theEnv)->ListOfRouters;
-    while (currentPtr != NULL) {
-        if ((currentPtr->writeCallback != NULL) ? QueryRouter(theEnv, logicalName, currentPtr) : false) { return true; }
+    while (currentPtr != nullptr) {
+        if ((currentPtr->writeCallback != nullptr) ? QueryRouter(theEnv, logicalName, currentPtr) : false) { return true; }
         currentPtr = currentPtr->next;
     }
 
@@ -176,7 +176,7 @@ void WriteString(
         const char *str) {
     struct router *currentPtr;
 
-    if (str == NULL) return;
+    if (str == nullptr) return;
 
     /*===================================================*/
     /* If the "fast save" option is being used, then the */
@@ -196,8 +196,8 @@ void WriteString(
     /*==============================================*/
 
     currentPtr = RouterData(theEnv)->ListOfRouters;
-    while (currentPtr != NULL) {
-        if ((currentPtr->writeCallback != NULL) ? QueryRouter(theEnv, logicalName, currentPtr) : false) {
+    while (currentPtr != nullptr) {
+        if ((currentPtr->writeCallback != nullptr) ? QueryRouter(theEnv, logicalName, currentPtr) : false) {
             (*currentPtr->writeCallback)(theEnv, logicalName, str, currentPtr->context);
             return;
         }
@@ -266,12 +266,12 @@ int ReadRouter(
     /*==============================================*/
 
     currentPtr = RouterData(theEnv)->ListOfRouters;
-    while (currentPtr != NULL) {
-        if ((currentPtr->readCallback != NULL) ? QueryRouter(theEnv, logicalName, currentPtr) : false) {
+    while (currentPtr != nullptr) {
+        if ((currentPtr->readCallback != nullptr) ? QueryRouter(theEnv, logicalName, currentPtr) : false) {
             inchar = (*currentPtr->readCallback)(theEnv, logicalName, currentPtr->context);
 
             if (inchar == '\n') {
-                if ((RouterData(theEnv)->LineCountRouter != NULL) &&
+                if ((RouterData(theEnv)->LineCountRouter != nullptr) &&
                     (strcmp(logicalName, RouterData(theEnv)->LineCountRouter) == 0)) { IncrementLineCount(theEnv); }
             }
 
@@ -334,10 +334,10 @@ int UnreadRouter(
     /*===============================================*/
 
     currentPtr = RouterData(theEnv)->ListOfRouters;
-    while (currentPtr != NULL) {
-        if ((currentPtr->unreadCallback != NULL) ? QueryRouter(theEnv, logicalName, currentPtr) : false) {
+    while (currentPtr != nullptr) {
+        if ((currentPtr->unreadCallback != nullptr) ? QueryRouter(theEnv, logicalName, currentPtr) : false) {
             if (ch == '\n') {
-                if ((RouterData(theEnv)->LineCountRouter != NULL) &&
+                if ((RouterData(theEnv)->LineCountRouter != nullptr) &&
                     (strcmp(logicalName, RouterData(theEnv)->LineCountRouter) == 0)) { DecrementLineCount(theEnv); }
             }
 
@@ -366,10 +366,10 @@ void ExitRouter(
 
     RouterData(theEnv)->Abort = false;
     currentPtr = RouterData(theEnv)->ListOfRouters;
-    while (currentPtr != NULL) {
+    while (currentPtr != nullptr) {
         nextPtr = currentPtr->next;
         if (currentPtr->active == true) {
-            if (currentPtr->exitCallback != NULL) {
+            if (currentPtr->exitCallback != nullptr) {
                 (*currentPtr->exitCallback)(theEnv, num, currentPtr->context);
             }
         }
@@ -410,7 +410,7 @@ bool AddRouter(
     /*==================================================*/
 
     for (currentPtr = RouterData(theEnv)->ListOfRouters;
-         currentPtr != NULL;
+         currentPtr != nullptr;
          currentPtr = currentPtr->next) {
         if (strcmp(currentPtr->name, routerName) == 0) { return false; }
     }
@@ -429,21 +429,21 @@ bool AddRouter(
     newPtr->exitCallback = exitFunction;
     newPtr->readCallback = readFunction;
     newPtr->unreadCallback = unreadFunction;
-    newPtr->next = NULL;
+    newPtr->next = nullptr;
 
-    if (RouterData(theEnv)->ListOfRouters == NULL) {
+    if (RouterData(theEnv)->ListOfRouters == nullptr) {
         RouterData(theEnv)->ListOfRouters = newPtr;
         return true;
     }
 
-    lastPtr = NULL;
+    lastPtr = nullptr;
     currentPtr = RouterData(theEnv)->ListOfRouters;
-    while ((currentPtr != NULL) ? (priority < currentPtr->priority) : false) {
+    while ((currentPtr != nullptr) ? (priority < currentPtr->priority) : false) {
         lastPtr = currentPtr;
         currentPtr = currentPtr->next;
     }
 
-    if (lastPtr == NULL) {
+    if (lastPtr == nullptr) {
         newPtr->next = RouterData(theEnv)->ListOfRouters;
         RouterData(theEnv)->ListOfRouters = newPtr;
     } else {
@@ -463,12 +463,12 @@ bool DeleteRouter(
     struct router *currentPtr, *lastPtr;
 
     currentPtr = RouterData(theEnv)->ListOfRouters;
-    lastPtr = NULL;
+    lastPtr = nullptr;
 
-    while (currentPtr != NULL) {
+    while (currentPtr != nullptr) {
         if (strcmp(currentPtr->name, routerName) == 0) {
             genfree(theEnv, (void *) currentPtr->name, strlen(currentPtr->name) + 1);
-            if (lastPtr == NULL) {
+            if (lastPtr == nullptr) {
                 RouterData(theEnv)->ListOfRouters = currentPtr->next;
                 rm(theEnv, currentPtr, sizeof(struct router));
                 return true;
@@ -493,7 +493,7 @@ bool QueryRouters(
     struct router *currentPtr;
 
     currentPtr = RouterData(theEnv)->ListOfRouters;
-    while (currentPtr != NULL) {
+    while (currentPtr != nullptr) {
         if (QueryRouter(theEnv, logicalName, currentPtr) == true) return true;
         currentPtr = currentPtr->next;
     }
@@ -519,7 +519,7 @@ static bool QueryRouter(
     /* If the router has no query function, then it can't respond. */
     /*=============================================================*/
 
-    if (currentPtr->queryCallback == NULL) return false;
+    if (currentPtr->queryCallback == nullptr) return false;
 
     /*=========================================*/
     /* Call the router's query function to see */
@@ -541,7 +541,7 @@ bool DeactivateRouter(
 
     currentPtr = RouterData(theEnv)->ListOfRouters;
 
-    while (currentPtr != NULL) {
+    while (currentPtr != nullptr) {
         if (strcmp(currentPtr->name, routerName) == 0) {
             currentPtr->active = false;
             return true;
@@ -562,7 +562,7 @@ bool ActivateRouter(
 
     currentPtr = RouterData(theEnv)->ListOfRouters;
 
-    while (currentPtr != NULL) {
+    while (currentPtr != nullptr) {
         if (strcmp(currentPtr->name, routerName) == 0) {
             currentPtr->active = true;
             return true;
@@ -582,12 +582,12 @@ Router *FindRouter(
     Router *currentPtr;
 
     for (currentPtr = RouterData(theEnv)->ListOfRouters;
-         currentPtr != NULL;
+         currentPtr != nullptr;
          currentPtr = currentPtr->next) {
         if (strcmp(currentPtr->name, routerName) == 0) { return currentPtr; }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /********************************************************/

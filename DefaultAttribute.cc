@@ -88,7 +88,7 @@ void DeriveDefaultFromConstraints(
     /* 0 as a default for multifield slots.                        */
     /*=============================================================*/
 
-    if (constraints == NULL) {
+    if (constraints == nullptr) {
         if (multifield) {
             theDefault->begin = 0;
             theDefault->range = 0;
@@ -116,7 +116,7 @@ void DeriveDefaultFromConstraints(
 #if DEFTEMPLATE_CONSTRUCT
     else if (constraints->factAddressesAllowed) { theValue = &FactData(theEnv)->DummyFact; }
 #endif
-    else if (constraints->externalAddressesAllowed) { theValue = CreateExternalAddress(theEnv, NULL, 0); }
+    else if (constraints->externalAddressesAllowed) { theValue = CreateExternalAddress(theEnv, nullptr, 0); }
 
     else { theValue = CreateSymbol(theEnv, "nil"); }
 
@@ -128,7 +128,7 @@ void DeriveDefaultFromConstraints(
     /*=========================================================*/
 
     if (multifield) {
-        if (constraints->minFields == NULL) minFields = 0;
+        if (constraints->minFields == nullptr) minFields = 0;
         else if (constraints->minFields->value == SymbolData(theEnv)->NegativeInfinity) minFields = 0;
         else minFields = (unsigned long) constraints->minFields->integerValue->contents;
 
@@ -167,7 +167,7 @@ static void *FindDefaultValue(
     /*=====================================================*/
 
     theList = theConstraints->restrictionList;
-    while (theList != NULL) {
+    while (theList != nullptr) {
         if (theList->type == theType) return (theList->value);
         theList = theList->nextArg;
     }
@@ -217,7 +217,7 @@ struct expr *ParseDefault(
         bool *noneSpecified,
         bool *deriveSpecified,
         bool *error) {
-    struct expr *defaultList = NULL, *lastDefault = NULL;
+    struct expr *defaultList = nullptr, *lastDefault = nullptr;
     struct expr *newItem, *tmpItem;
     struct token theToken;
     UDFValue theValue;
@@ -241,10 +241,10 @@ struct expr *ParseDefault(
         /*========================================*/
 
         newItem = ParseAtomOrExpression(theEnv, readSource, &theToken);
-        if (newItem == NULL) {
+        if (newItem == nullptr) {
             ReturnExpression(theEnv, defaultList);
             *error = true;
-            return NULL;
+            return nullptr;
         }
 
         /*===========================================================*/
@@ -261,13 +261,13 @@ struct expr *ParseDefault(
             if ((dynamic) ||
                 (newItem->type == MF_VARIABLE) ||
                 (specialVarCode == -1) ||
-                ((specialVarCode != -1) && (defaultList != NULL))) {
+                ((specialVarCode != -1) && (defaultList != nullptr))) {
                 if (dynamic) SyntaxErrorMessage(theEnv, "default-dynamic attribute");
                 else SyntaxErrorMessage(theEnv, "default attribute");
                 ReturnExpression(theEnv, newItem);
                 ReturnExpression(theEnv, defaultList);
                 *error = true;
-                return NULL;
+                return nullptr;
             }
 
             ReturnExpression(theEnv, newItem);
@@ -292,7 +292,7 @@ struct expr *ParseDefault(
                 *noneSpecified = true;
             else
                 *deriveSpecified = true;
-            return NULL;
+            return nullptr;
         }
 
         /*====================================================*/
@@ -306,14 +306,14 @@ struct expr *ParseDefault(
             *error = true;
             if (dynamic) SyntaxErrorMessage(theEnv, "default-dynamic attribute");
             else SyntaxErrorMessage(theEnv, "default attribute");
-            return NULL;
+            return nullptr;
         }
 
         /*============================================*/
         /* Add the default value to the default list. */
         /*============================================*/
 
-        if (lastDefault == NULL) { defaultList = newItem; }
+        if (lastDefault == nullptr) { defaultList = newItem; }
         else { lastDefault->nextArg = newItem; }
         lastDefault = newItem;
 
@@ -339,8 +339,8 @@ struct expr *ParseDefault(
     /*=========================================*/
 
     if (multifield == false) {
-        if (defaultList == NULL) { *error = true; }
-        else if (defaultList->nextArg != NULL) { *error = true; }
+        if (defaultList == nullptr) { *error = true; }
+        else if (defaultList->nextArg != nullptr) { *error = true; }
         else {
             rv = ExpressionToConstraintRecord(theEnv, defaultList);
             rv->multifieldsAllowed = false;
@@ -352,7 +352,7 @@ struct expr *ParseDefault(
             PrintErrorID(theEnv, "DEFAULT", 1, true);
             WriteString(theEnv, STDERR, "The default value for a single field slot must be a single field value.\n");
             ReturnExpression(theEnv, defaultList);
-            return NULL;
+            return nullptr;
         }
     }
 
@@ -361,14 +361,14 @@ struct expr *ParseDefault(
     /* evaluate the expressions to make the default value.   */
     /*=======================================================*/
 
-    if (dynamic || (!evalStatic) || (defaultList == NULL)) return (defaultList);
+    if (dynamic || (!evalStatic) || (defaultList == nullptr)) return (defaultList);
 
     tmpItem = defaultList;
     newItem = defaultList;
 
-    defaultList = NULL;
+    defaultList = nullptr;
 
-    while (newItem != NULL) {
+    while (newItem != nullptr) {
         SetEvaluationError(theEnv, false);
         if (EvaluateExpression(theEnv, newItem, &theValue)) *error = true;
 
@@ -384,7 +384,7 @@ struct expr *ParseDefault(
             ReturnExpression(theEnv, tmpItem);
             ReturnExpression(theEnv, defaultList);
             *error = true;
-            return NULL;
+            return nullptr;
         }
 
         lastDefault = ConvertValueToExpression(theEnv, &theValue);

@@ -85,7 +85,7 @@ struct functionCallBuilder {
 
 typedef enum {
     FCBE_NO_ERROR = 0,
-    FCBE_NULL_POINTER_ERROR,
+    FCBE_nullptr_POINTER_ERROR,
     FCBE_FUNCTION_NOT_FOUND_ERROR,
     FCBE_INVALID_FUNCTION_ERROR,
     FCBE_ARGUMENT_COUNT_ERROR,

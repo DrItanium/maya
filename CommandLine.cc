@@ -153,11 +153,11 @@ void InitializeCommandLineData(
 /******************************************************/
 static void DeallocateCommandLineData(
         Environment *theEnv) {
-    if (CommandLineData(theEnv)->CommandString != NULL) {
+    if (CommandLineData(theEnv)->CommandString != nullptr) {
         rm(theEnv, CommandLineData(theEnv)->CommandString, CommandLineData(theEnv)->MaximumCharacters);
     }
 
-    if (CommandLineData(theEnv)->CurrentCommand != NULL) { ReturnExpression(theEnv, CommandLineData(theEnv)->CurrentCommand); }
+    if (CommandLineData(theEnv)->CurrentCommand != nullptr) { ReturnExpression(theEnv, CommandLineData(theEnv)->CurrentCommand); }
 }
 
 /*************************************************/
@@ -183,7 +183,7 @@ void RerouteStdin(
     /* If argv was not passed then return. */
     /*=====================================*/
 
-    if (argv == NULL) return;
+    if (argv == nullptr) return;
 
     /*=============================================*/
     /* Process each of the command line arguments. */
@@ -264,9 +264,9 @@ bool ExpandCommandString(
 /******************************************************************/
 void FlushCommandString(
         Environment *theEnv) {
-    if (CommandLineData(theEnv)->CommandString != NULL)
+    if (CommandLineData(theEnv)->CommandString != nullptr)
         rm(theEnv, CommandLineData(theEnv)->CommandString, CommandLineData(theEnv)->MaximumCharacters);
-    CommandLineData(theEnv)->CommandString = NULL;
+    CommandLineData(theEnv)->CommandString = nullptr;
     CommandLineData(theEnv)->MaximumCharacters = 0;
     RouterData(theEnv)->CommandBufferInputCount = 0;
     RouterData(theEnv)->InputUngets = 0;
@@ -376,7 +376,7 @@ int CompleteCommand(
     bool complete;
     bool error = false;
 
-    if (mstring == NULL) return 0;
+    if (mstring == nullptr) return 0;
 
     /*===================================================*/
     /* Loop through each character of the command string */
@@ -604,7 +604,7 @@ void CommandLoop(
     SetHaltExecution(theEnv, false);
     SetEvaluationError(theEnv, false);
 
-    CleanCurrentGarbageFrame(theEnv, NULL);
+    CleanCurrentGarbageFrame(theEnv, nullptr);
     CallPeriodicTasks(theEnv);
 
     PrintPrompt(theEnv);
@@ -657,7 +657,7 @@ void CommandLoopBatch(
     SetHaltExecution(theEnv, false);
     SetEvaluationError(theEnv, false);
 
-    CleanCurrentGarbageFrame(theEnv, NULL);
+    CleanCurrentGarbageFrame(theEnv, nullptr);
     CallPeriodicTasks(theEnv);
 
     PrintPrompt(theEnv);
@@ -739,7 +739,7 @@ bool ExecuteIfCommandComplete(
         (RouterData(theEnv)->CommandBufferInputCount == 0) ||
         (RouterData(theEnv)->AwaitingInput == false)) { return false; }
 
-    if (CommandLineData(theEnv)->BeforeCommandExecutionCallback != NULL) {
+    if (CommandLineData(theEnv)->BeforeCommandExecutionCallback != nullptr) {
         if (!(*CommandLineData(theEnv)->BeforeCommandExecutionCallback)(theEnv)) { return false; }
     }
 
@@ -755,7 +755,7 @@ bool ExecuteIfCommandComplete(
     SetEvaluationError(theEnv, false);
     FlushCommandString(theEnv);
 
-    CleanCurrentGarbageFrame(theEnv, NULL);
+    CleanCurrentGarbageFrame(theEnv, nullptr);
     CallPeriodicTasks(theEnv);
 
     PrintPrompt(theEnv);
@@ -782,7 +782,7 @@ void PrintPrompt(
         Environment *theEnv) {
     WriteString(theEnv, STDOUT, COMMAND_PROMPT);
 
-    if (CommandLineData(theEnv)->AfterPromptCallback != NULL) { (*CommandLineData(theEnv)->AfterPromptCallback)(theEnv); }
+    if (CommandLineData(theEnv)->AfterPromptCallback != nullptr) { (*CommandLineData(theEnv)->AfterPromptCallback)(theEnv); }
 }
 
 /*****************************************/
@@ -827,7 +827,7 @@ bool RouteCommand(
     struct token theToken;
     int danglingConstructs;
 
-    if (command == NULL) { return false; }
+    if (command == nullptr) { return false; }
 
     /*========================================*/
     /* Open a string input source and get the */
@@ -916,8 +916,8 @@ bool RouteCommand(
             }
             DestroyPPBuffer(theEnv);
 
-            SetWarningFileName(theEnv, NULL);
-            SetErrorFileName(theEnv, NULL);
+            SetWarningFileName(theEnv, nullptr);
+            SetErrorFileName(theEnv, nullptr);
 
             if (errorFlag == BE_NO_ERROR) return true;
             else return false;
@@ -944,9 +944,9 @@ bool RouteCommand(
     /* Evaluate function call. */
     /*=========================*/
 
-    if (top == NULL) {
-        SetWarningFileName(theEnv, NULL);
-        SetErrorFileName(theEnv, NULL);
+    if (top == nullptr) {
+        SetWarningFileName(theEnv, nullptr);
+        SetErrorFileName(theEnv, nullptr);
         ConstructData(theEnv)->DanglingConstructs = danglingConstructs;
         return false;
     }
@@ -956,15 +956,15 @@ bool RouteCommand(
     CommandLineData(theEnv)->EvaluatingTopLevelCommand = true;
     CommandLineData(theEnv)->CurrentCommand = top;
     EvaluateExpression(theEnv, top, &returnValue);
-    CommandLineData(theEnv)->CurrentCommand = NULL;
+    CommandLineData(theEnv)->CurrentCommand = nullptr;
     CommandLineData(theEnv)->EvaluatingTopLevelCommand = false;
 
     ExpressionDeinstall(theEnv, top);
     ReturnExpression(theEnv, top);
     ConstructData(theEnv)->DanglingConstructs = danglingConstructs;
 
-    SetWarningFileName(theEnv, NULL);
-    SetErrorFileName(theEnv, NULL);
+    SetWarningFileName(theEnv, nullptr);
+    SetErrorFileName(theEnv, nullptr);
 
     /*=================================================*/
     /* Print the return value of the function/command. */
@@ -1036,7 +1036,7 @@ const char *GetCommandCompletionString(
     /* Get the command string. */
     /*=========================*/
 
-    if (theString == NULL) return ("");
+    if (theString == nullptr) return ("");
 
     /*=========================================================================*/
     /* If the last character in the command string is a space, character       */
@@ -1075,12 +1075,12 @@ const char *GetCommandCompletionString(
     else if (lastToken.tknType == MF_VARIABLE_TOKEN) { return lastToken.lexemeValue->contents; }
     else if ((lastToken.tknType == GBL_VARIABLE_TOKEN) ||
              (lastToken.tknType == MF_GBL_VARIABLE_TOKEN) ||
-             (lastToken.tknType == INSTANCE_NAME_TOKEN)) { return NULL; }
+             (lastToken.tknType == INSTANCE_NAME_TOKEN)) { return nullptr; }
     else if (lastToken.tknType == STRING_TOKEN) {
         length = strlen(lastToken.lexemeValue->contents);
         return GetCommandCompletionString(theEnv, lastToken.lexemeValue->contents, length);
     } else if ((lastToken.tknType == FLOAT_TOKEN) ||
-               (lastToken.tknType == INTEGER_TOKEN)) { return NULL; }
+               (lastToken.tknType == INTEGER_TOKEN)) { return nullptr; }
 
     return ("");
 }

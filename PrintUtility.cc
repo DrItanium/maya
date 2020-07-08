@@ -99,7 +99,7 @@
 /*****************************************************/
 void InitializePrintUtilityData(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, PRINT_UTILITY_DATA, sizeof(struct printUtilityData), NULL);
+    AllocateEnvironmentData(theEnv, PRINT_UTILITY_DATA, sizeof(struct printUtilityData), nullptr);
 }
 
 /************************************************************/
@@ -178,8 +178,8 @@ void PrintAtom(
 
             if (PrintUtilityData(theEnv)->AddressesToStrings) WriteString(theEnv, logicalName, "\"");
 
-            if ((EvaluationData(theEnv)->ExternalAddressTypes[theAddress->type] != NULL) &&
-                (EvaluationData(theEnv)->ExternalAddressTypes[theAddress->type]->longPrintFunction != NULL)) {
+            if ((EvaluationData(theEnv)->ExternalAddressTypes[theAddress->type] != nullptr) &&
+                (EvaluationData(theEnv)->ExternalAddressTypes[theAddress->type]->longPrintFunction != nullptr)) {
                 (*EvaluationData(theEnv)->ExternalAddressTypes[theAddress->type]->longPrintFunction)(theEnv, logicalName, value);
             } else {
                 WriteString(theEnv, logicalName, "<Pointer-");
@@ -205,8 +205,8 @@ void PrintAtom(
             break;
 
         default:
-            if (EvaluationData(theEnv)->PrimitivesArray[type] == NULL) break;
-            if (EvaluationData(theEnv)->PrimitivesArray[type]->longPrintFunction == NULL) {
+            if (EvaluationData(theEnv)->PrimitivesArray[type] == nullptr) break;
+            if (EvaluationData(theEnv)->PrimitivesArray[type]->longPrintFunction == nullptr) {
                 WriteString(theEnv, logicalName, "<unknown atom type>");
                 break;
             }
@@ -261,12 +261,12 @@ void PrintErrorID(
     /* and there is no callback for errors/warnings.    */
     /*==================================================*/
 
-    if ((ConstructData(theEnv)->ParserErrorCallback == NULL) &&
+    if ((ConstructData(theEnv)->ParserErrorCallback == nullptr) &&
         (GetLoadInProgress(theEnv) == true)) {
         const char *fileName;
 
         fileName = GetParsingFileName(theEnv);
-        if (fileName != NULL) {
+        if (fileName != nullptr) {
             WriteString(theEnv, STDERR, fileName);
             WriteString(theEnv, STDERR, ", Line ");
             WriteInteger(theEnv, STDERR, GetLineCount(theEnv));
@@ -298,12 +298,12 @@ void PrintWarningID(
     /* and there is no callback for errors/warnings.    */
     /*==================================================*/
 
-    if ((ConstructData(theEnv)->ParserErrorCallback == NULL) &&
+    if ((ConstructData(theEnv)->ParserErrorCallback == nullptr) &&
         (GetLoadInProgress(theEnv) == true)) {
         const char *fileName;
 
         fileName = GetParsingFileName(theEnv);
-        if (fileName != NULL) {
+        if (fileName != nullptr) {
             WriteString(theEnv, STDERR, fileName);
             WriteString(theEnv, STDERR, ", Line ");
             WriteInteger(theEnv, STDERR, GetLineCount(theEnv));
@@ -381,8 +381,8 @@ void AlreadyParsedErrorMessage(
         const char *itemName) {
     PrintErrorID(theEnv, "PRNTUTIL", 5, true);
     WriteString(theEnv, STDERR, "The ");
-    if (itemType != NULL) WriteString(theEnv, STDERR, itemType);
-    if (itemName != NULL) {
+    if (itemType != nullptr) WriteString(theEnv, STDERR, itemType);
+    if (itemName != nullptr) {
         WriteString(theEnv, STDERR, "'");
         WriteString(theEnv, STDERR, itemName);
         WriteString(theEnv, STDERR, "'");
@@ -398,7 +398,7 @@ void SyntaxErrorMessage(
         const char *location) {
     PrintErrorID(theEnv, "PRNTUTIL", 2, true);
     WriteString(theEnv, STDERR, "Syntax Error");
-    if (location != NULL) {
+    if (location != nullptr) {
         WriteString(theEnv, STDERR, ":  Check appropriate syntax for ");
         WriteString(theEnv, STDERR, location);
     }
@@ -589,8 +589,8 @@ const char *DataObjectToString(
 
             OpenStringBuilderDestination(theEnv, "DOTS", theSB);
 
-            if ((EvaluationData(theEnv)->ExternalAddressTypes[theAddress->type] != NULL) &&
-                (EvaluationData(theEnv)->ExternalAddressTypes[theAddress->type]->longPrintFunction != NULL)) {
+            if ((EvaluationData(theEnv)->ExternalAddressTypes[theAddress->type] != nullptr) &&
+                (EvaluationData(theEnv)->ExternalAddressTypes[theAddress->type]->longPrintFunction != nullptr)) {
                 (*EvaluationData(theEnv)->ExternalAddressTypes[theAddress->type]->longPrintFunction)(theEnv, "DOTS", theAddress);
             } else {
                 WriteString(theEnv, "DOTS", "<Pointer-");
@@ -643,7 +643,7 @@ void SalienceInformationError(
         const char *constructName) {
     PrintErrorID(theEnv, "PRNTUTIL", 8, true);
     WriteString(theEnv, STDERR, "This error occurred while evaluating the salience");
-    if (constructName != NULL) {
+    if (constructName != nullptr) {
         WriteString(theEnv, STDERR, " for ");
         WriteString(theEnv, STDERR, constructType);
         WriteString(theEnv, STDERR, " '");
