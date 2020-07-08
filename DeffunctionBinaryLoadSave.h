@@ -44,7 +44,7 @@
 void SetupDeffunctionsBload(Environment *);
 void *BloadDeffunctionModuleReference(Environment *, unsigned long);
 
-#define DFFNXBIN_DATA 24
+constexpr auto DFFNXBIN_DATA = 24;
 
 struct deffunctionBinaryData {
     Deffunction *DeffunctionArray;

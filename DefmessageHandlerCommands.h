@@ -64,7 +64,7 @@
 #include "DefmessageHandlerDispatch.h"
 #include "Object.h"
 
-#define MESSAGE_HANDLER_DATA 32
+constexpr auto MESSAGE_HANDLER_DATA = 32;
 
 struct messageHandlerData {
     EntityRecord HandlerGetInfo;

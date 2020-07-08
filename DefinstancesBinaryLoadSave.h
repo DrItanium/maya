@@ -43,7 +43,7 @@
 
 #include "Definstances.h"
 
-#define DFINSBIN_DATA 25
+constexpr auto DFINSBIN_DATA = 25;
 
 struct definstancesBinaryData {
     Definstances *DefinstancesArray;

@@ -89,12 +89,10 @@ struct batchEntry {
 /* DEFINITIONS */
 /***************/
 
-#define FILE_BATCH      0
-#define STRING_BATCH    1
-
-#define BUFFER_SIZE   120
-
-#define FILECOM_DATA 14
+constexpr auto FILE_BATCH = 0;
+constexpr auto STRING_BATCH = 1;
+constexpr auto BUFFER_SIZE = 120;
+constexpr auto FILECOM_DATA = 14;
 
 struct fileCommandData {
 #if DEBUGGING_FUNCTIONS
@@ -126,7 +124,7 @@ void SaveCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
 void DribbleOnCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
 void DribbleOffCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
 
-#define FILE_ROUTER_DATA 47
+constexpr auto FILE_ROUTER_DATA = 47;
 
 struct fileRouter {
     const char *logicalName;

@@ -76,7 +76,7 @@ typedef struct definstances {
     Expression *mkinstance;
 } Definstances;
 
-#define DEFINSTANCES_DATA 22
+constexpr auto DEFINSTANCES_DATA = 22;
 
 struct definstancesData {
     Construct *DefinstancesConstruct;

@@ -46,7 +46,7 @@ struct bsaveDefglobalModule {
     struct bsaveDefmoduleItemHeader header;
 };
 
-#define GLOBLBIN_DATA 60
+constexpr auto GLOBLBIN_DATA = 60;
 
 struct defglobalBinaryData {
     Defglobal *DefglobalArray;

@@ -72,7 +72,7 @@ typedef struct defglobal Defglobal;
 #include "Defmodule.h"
 #include "Symbol.h"
 
-#define DEFGLOBAL_DATA 1
+constexpr auto DEFGLOBAL_DATA = 1;
 
 struct defglobalData {
     Construct *DefglobalConstruct;

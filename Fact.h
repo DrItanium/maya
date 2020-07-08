@@ -103,7 +103,7 @@ struct factModifier {
     char *changeMap;
 };
 
-#define FACTS_DATA 3
+constexpr auto FACTS_DATA = 3;
 
 struct factsData {
     bool ChangeToFactList;
@@ -253,7 +253,7 @@ typedef struct query_stack {
     struct query_stack *nxt;
 } QUERY_STACK;
 
-#define FACT_QUERY_DATA 63
+constexpr auto FACT_QUERY_DATA = 63;
 
 struct factQueryData {
     CLIPSLexeme *QUERY_DELIMITER_SYMBOL;
@@ -321,7 +321,7 @@ void FactPatternMatch(Environment *, Fact *,
 void MarkFactPatternForIncrementalReset(Environment *, struct patternNodeHeader *, bool);
 void FactsIncrementalReset(Environment *);
 
-#define FACTBIN_DATA 62
+constexpr auto FACTBIN_DATA = 62;
 
 struct factBinaryData {
     struct factPatternNode *FactPatternArray;

@@ -94,7 +94,7 @@ struct functionDefinition {
 /* ENVIRONMENT DATA */
 /*==================*/
 
-#define EXTERNAL_FUNCTION_DATA 50
+constexpr auto EXTERNAL_FUNCTION_DATA = 50;
 
 struct externalFunctionData {
     struct functionDefinition *ListOfFunctions;
@@ -116,7 +116,7 @@ struct FunctionHash {
     struct FunctionHash *next;
 };
 
-#define SIZE_FUNCTION_HASH 517
+constexpr auto SIZE_FUNCTION_HASH = 517;
 
 void InitializeExternalFunctionData(Environment *);
 AddUDFError AddUDF(Environment *theEnv, const char *name, const char *returnTypes, unsigned short minArgs, unsigned short maxArgs,
