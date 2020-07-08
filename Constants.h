@@ -47,26 +47,24 @@
 #include <stdint.h>
 #include <limits.h>
 
-#define EXACTLY       0
-#define AT_LEAST      1
-#define NO_MORE_THAN  2
-#define RANGE         3
-
-#define UNBOUNDED    USHRT_MAX
-
-#define CLIPS_LHS     0
-#define CLIPS_RHS     1
-#define NESTED_RHS    2
-#define NEGATIVE      0
-#define POSITIVE      1
-#define EOS        '\0'
-
-#define INSIDE        0
-#define OUTSIDE       1
-
-#define LESS_THAN     0
-#define GREATER_THAN  1
-#define EQUAL         2
+#define X(name, idx) constexpr auto name = idx
+X(EXACTLY, 0);
+X(AT_LEAST, 1);
+X(NO_MORE_THAN, 2);
+X(RANGE, 3);
+X(UNBOUNDED, USHRT_MAX);
+X(CLIPS_LHS, 0);
+X(CLIPS_RHS, 1);
+X(NESTED_RHS, 2);
+X(NEGATIVE, 0);
+X(POSITIVE, 1);
+X(EOS, '\0');
+X(INSIDE, 0);
+X(OUTSIDE, 1);
+X(LESS_THAN, 0);
+X(GREATER_THAN, 1);
+X(EQUAL, 2);
+#undef X
 
 typedef enum {
     LOCAL_SAVE,
@@ -147,13 +145,14 @@ typedef enum {
 /* used to let the generic function bsave image be used whether COOL is  */
 /* present or not.                                                       */
 /*************************************************************************/
-
-#define OBJECT_TYPE_CODE                9
-#define PRIMITIVE_TYPE_CODE            10
-#define NUMBER_TYPE_CODE               11
-#define LEXEME_TYPE_CODE               12
-#define ADDRESS_TYPE_CODE              13
-#define INSTANCE_TYPE_CODE             14
+#define X(name, code) constexpr auto name = code
+X(OBJECT_TYPE_CODE, 9);
+X(PRIMITIVE_TYPE_CODE, 10);
+X(NUMBER_TYPE_CODE, 11);
+X(LEXEME_TYPE_CODE, 12);
+X(ADDRESS_TYPE_CODE, 13);
+X(INSTANCE_TYPE_CODE, 14);
+#undef X
 
 typedef enum {
     FLOAT_BIT = (1 << 0),
@@ -169,12 +168,12 @@ typedef enum {
     BOOLEAN_BIT = (1 << 10),
 } CLIPSType;
 
-#define NUMBER_BITS (INTEGER_BIT | FLOAT_BIT)
-#define LEXEME_BITS (SYMBOL_BIT | STRING_BIT | BOOLEAN_BIT)
-#define ADDRESS_BITS (EXTERNAL_ADDRESS_BIT | FACT_ADDRESS_BIT | INSTANCE_ADDRESS_BIT)
-#define INSTANCE_BITS (INSTANCE_ADDRESS_BIT | INSTANCE_NAME_BIT)
-#define SINGLEFIELD_BITS (NUMBER_BITS | LEXEME_BITS | ADDRESS_BITS | INSTANCE_NAME_BIT)
-#define ANY_TYPE_BITS (VOID_BIT | SINGLEFIELD_BITS | MULTIFIELD_BIT)
+constexpr auto NUMBER_BITS = (INTEGER_BIT | FLOAT_BIT);
+constexpr auto LEXEME_BITS = (SYMBOL_BIT | STRING_BIT | BOOLEAN_BIT);
+constexpr auto ADDRESS_BITS = (EXTERNAL_ADDRESS_BIT | FACT_ADDRESS_BIT | INSTANCE_ADDRESS_BIT);
+constexpr auto INSTANCE_BITS = (INSTANCE_ADDRESS_BIT | INSTANCE_NAME_BIT);
+constexpr auto SINGLEFIELD_BITS = (NUMBER_BITS | LEXEME_BITS | ADDRESS_BITS | INSTANCE_NAME_BIT);
+constexpr auto ANY_TYPE_BITS = (VOID_BIT | SINGLEFIELD_BITS | MULTIFIELD_BIT);
 
 /****************************************************/
 /* The first 9 primitive types need to retain their */
