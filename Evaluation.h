@@ -83,7 +83,7 @@ struct functionCallBuilder {
     size_t bufferMaximum;
 };
 
-typedef enum {
+enum FunctionCallBuilderError {
     FCBE_NO_ERROR = 0,
     FCBE_nullptr_POINTER_ERROR,
     FCBE_FUNCTION_NOT_FOUND_ERROR,
@@ -91,11 +91,11 @@ typedef enum {
     FCBE_ARGUMENT_COUNT_ERROR,
     FCBE_ARGUMENT_TYPE_ERROR,
     FCBE_PROCESSING_ERROR
-} FunctionCallBuilderError;
+} ;
 
-#define PARAMETERS_UNBOUNDED USHRT_MAX
 
-#define C_POINTER_EXTERNAL_ADDRESS 0
+constexpr auto C_POINTER_EXTERNAL_ADDRESS = 0;
+constexpr auto PARAMETERS_UNBOUNDED = USHRT_MAX;
 
 struct externalAddressType {
     const char *name;
@@ -113,12 +113,17 @@ struct externalAddressType {
 #define GetFirstArgument()           (EvaluationData(theEnv)->CurrentExpression->argList)
 #define GetNextArgument(ep)          (ep->nextArg)
 
-#define MAXIMUM_PRIMITIVES 150
-#define MAXIMUM_EXTERNAL_ADDRESS_TYPES 64
-
-#define BITS_PER_BYTE    8
-
+constexpr auto BITS_PER_BYTE = 8;
+constexpr auto MAXIMUM_PRIMITIVES = 150;
+constexpr auto MAXIMUM_EXTERNAL_ADDRESS_TYPES = 128;
+/// @todo rewrite as templated methods once I am confident in the design
 #define BitwiseTest(n, b)   (((n) & (char) (1 << (b))) ? true : false)
+static_assert(BitwiseTest(0b1, 0));
+static_assert(!BitwiseTest(0, 0));
+static_assert(BitwiseTest(0b10, 1));
+static_assert(!BitwiseTest(0b01, 1));
+static_assert(BitwiseTest(0b100, 2));
+static_assert(!BitwiseTest(0b010, 2));
 #define BitwiseSet(n, b)    (n |= (char) (1 << (b)))
 #define BitwiseClear(n, b)  (n &= (char) ~(1 << (b)))
 
@@ -127,7 +132,7 @@ struct externalAddressType {
 #define SetBitMap(map, id)   BitwiseSet(map[(id) / BITS_PER_BYTE],(id) % BITS_PER_BYTE)
 #define ClearBitMap(map, id) BitwiseClear(map[(id) / BITS_PER_BYTE],(id) % BITS_PER_BYTE)
 
-#define EVALUATION_DATA 44
+constexpr auto EVALUATION_DATA = 44;
 
 struct evaluationData {
     struct expr *CurrentExpression;
