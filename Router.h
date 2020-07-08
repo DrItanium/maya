@@ -85,7 +85,7 @@ extern const char *STDIN;
 extern const char *STDERR;
 extern const char *STDWRN;
 
-#define ROUTER_DATA 46
+constexpr auto ROUTER_DATA = 46;
 
 struct router {
     const char *name;

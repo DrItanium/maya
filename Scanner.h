@@ -79,7 +79,7 @@ struct token {
     const char *printForm;
 };
 
-#define SCANNER_DATA 57
+constexpr auto SCANNER_DATA = 57;
 
 struct scannerData {
     char *GlobalString;

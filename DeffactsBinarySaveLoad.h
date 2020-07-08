@@ -47,7 +47,7 @@ struct bsaveDeffactsModule {
     struct bsaveDefmoduleItemHeader header;
 };
 
-#define DFFCTBIN_DATA 26
+constexpr auto DFFCTBIN_DATA = 26;
 
 struct deffactsBinaryData {
     Deffacts *DeffactsArray;

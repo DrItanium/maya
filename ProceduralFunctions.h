@@ -58,7 +58,7 @@ typedef struct loopCounterStack {
     struct loopCounterStack *nxt;
 } LOOP_COUNTER_STACK;
 
-#define PRCDRFUN_DATA 13
+constexpr auto PRCDRFUN_DATA = 13;
 
 struct procedureFunctionData {
     bool ReturnFlag;

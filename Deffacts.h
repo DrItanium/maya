@@ -60,7 +60,7 @@ typedef struct deffacts Deffacts;
 #include "Defmodule.h"
 #include "Symbol.h"
 
-#define DEFFACTS_DATA 0
+constexpr auto DEFFACTS_DATA = 0;
 
 struct deffactsData {
     Construct *DeffactsConstruct;

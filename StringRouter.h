@@ -51,7 +51,7 @@ typedef struct stringBuilderRouter StringBuilderRouter;
 #include <stdio.h>
 #include "Utility.h"
 
-#define STRING_ROUTER_DATA 48
+constexpr auto STRING_ROUTER_DATA = 48;
 
 struct stringRouter {
     const char *name;

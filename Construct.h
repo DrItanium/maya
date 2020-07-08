@@ -119,7 +119,7 @@ struct construct {
     Construct *next;
 };
 
-#define CONSTRUCT_DATA 42
+constexpr auto CONSTRUCT_DATA = 42;
 
 struct constructData {
     bool ClearReadyInProgress;

@@ -73,8 +73,8 @@ typedef void EnvironmentCleanupFunction(Environment *);
 #include "Entities.h"
 #include "ExternalFunctions.h"
 
-#define USER_ENVIRONMENT_DATA 70
-#define MAXIMUM_ENVIRONMENT_POSITIONS 100
+constexpr auto USER_ENVIRONMENT_DATA = 70;
+constexpr auto MAXIMUM_ENVIRONMENT_POSITIONS = 100;
 
 struct environmentCleanupFunction {
     const char *name;
@@ -95,9 +95,9 @@ struct environmentData {
     struct environmentData *next;
 };
 
-#define VoidConstant(theEnv) (theEnv->VoidConstant)
-#define FalseSymbol(theEnv) (theEnv->FalseSymbol)
-#define TrueSymbol(theEnv) (theEnv->TrueSymbol)
+inline auto VoidConstant(Environment* theEnv) noexcept { return theEnv->VoidConstant; }
+inline auto FalseSymbol(Environment* theEnv) noexcept { return theEnv->FalseSymbol; }
+inline auto TrueSymbol(Environment* theEnv) noexcept { return theEnv->TrueSymbol; }
 
 #define GetEnvironmentData(theEnv, position) (((struct environmentData *) theEnv)->theData[position])
 #define SetEnvironmentData(theEnv, position, value) (((struct environmentData *) theEnv)->theData[position] = value)

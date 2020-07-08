@@ -105,7 +105,7 @@ struct bsaveJoinNode {
     unsigned long ruleToActivate;
 };
 
-#define RULEBIN_DATA 20
+constexpr auto RULEBIN_DATA = 20;
 
 struct defruleBinaryData {
     unsigned long NumberOfDefruleModules;

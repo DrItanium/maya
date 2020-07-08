@@ -59,7 +59,7 @@
 #include "Symbol.h"
 #include "SystemDependency.h"
 
-#define BLOAD_DATA 38
+constexpr auto BLOAD_DATA = 38;
 
 struct bloadData {
     const char *BinaryPrefixID;

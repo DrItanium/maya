@@ -74,7 +74,7 @@ struct profileFrameInfo {
     struct constructProfileInfo *oldProfileFrame;
 };
 
-#define PROFLFUN_DATA 15
+constexpr auto PROFLFUN_DATA = 15;
 
 struct profileFunctionData {
     double ProfileStartTime;

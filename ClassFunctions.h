@@ -111,9 +111,8 @@ int GetTraversalID(Environment *);
 void ReleaseTraversalID(Environment *);
 unsigned int HashClass(CLIPSLexeme *);
 
-#define DEFCLASS_DATA 21
-
-#define PRIMITIVE_CLASSES 9
+constexpr auto DEFCLASS_DATA = 21;
+constexpr auto PRIMITIVE_CLASSES = 9;
 
 #include "ClassCommands.h"
 

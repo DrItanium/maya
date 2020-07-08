@@ -57,7 +57,7 @@
 
 #include "Expression.h"
 
-#define WATCH_DATA 54
+constexpr auto WATCH_DATA = 54;
 
 typedef struct watchItemRecord WatchItemRecord;
 

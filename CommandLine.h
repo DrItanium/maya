@@ -69,7 +69,7 @@
 
 #define _H_commline
 
-#define COMMANDLINE_DATA 40
+constexpr auto COMMANDLINE_DATA = 40;
 
 #include <stdlib.h>
 

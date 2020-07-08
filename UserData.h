@@ -48,9 +48,8 @@ struct userDataRecord {
 typedef struct userDataRecord USER_DATA_RECORD;
 typedef struct userDataRecord *USER_DATA_RECORD_PTR;
 
-#define MAXIMUM_USER_DATA_RECORDS 100
-
-#define USER_DATA_DATA 56
+constexpr auto MAXIMUM_USER_DATA_RECORDS = 100;
+constexpr auto USER_DATA_DATA = 56;
 
 struct userDataData {
     struct userDataRecord *UserDataRecordArray[MAXIMUM_USER_DATA_RECORDS];

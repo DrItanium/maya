@@ -156,7 +156,7 @@ struct symbolMatch {
 /* ENVIRONMENT DATA */
 /*==================*/
 
-#define SYMBOL_DATA 49
+constexpr auto SYMBOL_DATA = 49;
 
 struct symbolData {
     CLIPSLexeme *PositiveInfinity;

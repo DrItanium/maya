@@ -147,7 +147,7 @@ struct stringBuilder {
     size_t bufferMaximum;
 };
 
-#define UTILITY_DATA 55
+constexpr auto UTILITY_DATA = 55;
 typedef void YieldTimeFunctionType(void);
 struct utilityData {
     struct voidCallFunctionItem *ListOfCleanupFunctions;

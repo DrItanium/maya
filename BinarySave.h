@@ -85,9 +85,9 @@ typedef struct bsave_expr {
     unsigned long next_arg;
 } BSAVE_EXPRESSION;
 
-#define CONSTRUCT_HEADER_SIZE 20
+constexpr auto CONSTRUCT_HEADER_SIZE = 20;
 
-#define BSAVE_DATA 39
+constexpr auto BSAVE_DATA = 39;
 
 struct bsaveData {
     struct BinaryItem *ListOfBinaryItems;

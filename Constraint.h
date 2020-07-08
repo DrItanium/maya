@@ -97,9 +97,8 @@ struct constraintRecord {
     unsigned int count;
 };
 
-#define SIZE_CONSTRAINT_HASH  167
-
-#define CONSTRAINT_DATA 43
+constexpr auto SIZE_CONSTRAINT_HASH  = 167;
+constexpr auto CONSTRAINT_DATA = 43;
 
 struct constraintData {
     struct constraintRecord **ConstraintHashtable;

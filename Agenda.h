@@ -101,7 +101,7 @@ struct salienceGroup {
 
 #include "ConflictResolutionStrategy.h"
 
-#define AGENDA_DATA 17
+constexpr auto AGENDA_DATA = 17;
 
 struct agendaData {
 #if DEBUGGING_FUNCTIONS

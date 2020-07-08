@@ -92,7 +92,7 @@ struct deffunction {
     unsigned short numberOfLocalVars;
 };
 
-#define DEFFUNCTION_DATA 23
+constexpr auto DEFFUNCTION_DATA = 23;
 
 struct deffunctionData {
     Construct *DeffunctionConstruct;
