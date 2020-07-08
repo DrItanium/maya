@@ -142,31 +142,31 @@ add_library(clips
 	UserSetup.h
 	Utility.h
 	Watch.h
-	Agenda.c
-	Analysis.c
-	ArgumentAccess.c
-	BinaryLoad.c
-	BasicMathFunctions.c
-	BinarySave.c
-	ClassCommands.c
-	ClassExamination.c
-	ClassFunctions.c
-	ClassInfo.c
-	ClassInitialization.c
-	ClassParser.c
-	ClassSlotParser.c
-	CommandLine.c
-	Construct.c
-	Constraint.c
-	ConflictResolutionStrategy.c
-	ConstructBinaryLoadSave.c
-	ConstructCommand.c
-	ConstructParser.c
-	ConstraintBinaryLoadSave.c
-	ConstraintChecking.c
-	ConstraintOperations.c
-	ConstraintParser.c
-	ConstraintUtilities.c
+		Agenda.cc
+		Analysis.cc
+		ArgumentAccess.cc
+		BinaryLoad.cc
+		BasicMathFunctions.cc
+		BinarySave.cc
+		ClassCommands.cc
+		ClassExamination.cc
+		ClassFunctions.cc
+		ClassInfo.cc
+		ClassInitialization.cc
+		ClassParser.cc
+		ClassSlotParser.cc
+		CommandLine.cc
+		Construct.cc
+		Constraint.cc
+		ConflictResolutionStrategy.cc
+		ConstructBinaryLoadSave.cc
+		ConstructCommand.cc
+		ConstructParser.cc
+		ConstraintBinaryLoadSave.cc
+		ConstraintChecking.cc
+		ConstraintOperations.cc
+		ConstraintParser.cc
+		ConstraintUtilities.cc
 	DefaultAttribute.c
 	Definstances.c
 	Developer.c
@@ -262,25 +262,25 @@ add_library(clips
 	PrintUtility.c
 	ConstructProfilingFunctions.c
 	Reorder.c
-	ReteUtility.c
-	Retract.c
-	Router.c
-	RuleBinarySaveLoad.c
-	RuleBuild.c
-	BasicRuleCommands.c
-	RuleCommands.c
-	RuleConstraints.c
+		ReteUtility.cc
+		Retract.cc
+		Router.cc
+		RuleBinarySaveLoad.cc
+		RuleBuild.cc
+		BasicRuleCommands.cc
+		RuleCommands.cc
+		RuleConstraints.cc
 	Defrule.c
-	RuleDelete.c
-	RuleLHSParsing.c
-	RuleParser.c
-	Scanner.c
-	SortingFunctions.c
-	StringFunctions.c
-	StringRouter.c
-	SymbolBinarySave.c
-	Symbol.c
-	SystemDependency.c
+		RuleDelete.cc
+		RuleLHSParsing.cc
+		RuleParser.cc
+		Scanner.cc
+		SortingFunctions.cc
+		StringFunctions.cc
+		StringRouter.cc
+		SymbolBinarySave.cc
+		Symbol.cc
+		SystemDependency.cc
 	DeftemplateBinarySaveLoad.c
 	DeftemplateBasicCommands.c
 	Deftemplate.c
@@ -289,10 +289,10 @@ add_library(clips
 	DeftemplateParser.c
 	DeftemplateRHSParsing.c
 	DeftemplateUtilities.c
-	UserData.c
-	UserFunctions.c
-	Utility.c
-	Watch.c)
+		UserData.cc
+		UserFunctions.cc
+		Utility.cc
+		Watch.cc)
 add_library(maya_extensions 
 	BoostExtensions.cc
 	BoostExtensions.h
