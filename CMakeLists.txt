@@ -247,21 +247,21 @@ add_library(clips
 	Multifield.c
 	MultifieldFunctions.c
 	ObjectBinaryLoadSave.c
-	ObjectReteBinarySaveLoad.c
-	ObjectPatternMatcher.c
+		ObjectReteBinarySaveLoad.cc
+		ObjectPatternMatcher.cc
 	InferenceEngineObjectAccessRotuines.c
 	InferenceEngineObjectParsingRoutines.c
-	ObjectReteMatch.c
-	ParsingFunctions.c
-	Pattern.c
-	PrettyPrint.c
-	ProceduralCodeSupportRoutines.c
-	ProceduralFunctions.c
-	ProceduralFunctionsParser.c
-	PredicateFunctions.c
-	PrintUtility.c
+		ObjectReteMatch.cc
+		ParsingFunctions.cc
+		Pattern.cc
+		PrettyPrint.cc
+		ProceduralCodeSupportRoutines.cc
+		ProceduralFunctions.cc
+		ProceduralFunctionsParser.cc
+		PredicateFunctions.cc
+		PrintUtility.cc
 	ConstructProfilingFunctions.c
-	Reorder.c
+		Reorder.cc
 		ReteUtility.cc
 		Retract.cc
 		Router.cc
