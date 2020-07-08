@@ -167,90 +167,90 @@ add_library(clips
 		ConstraintOperations.cc
 		ConstraintParser.cc
 		ConstraintUtilities.cc
-	DefaultAttribute.c
-	Definstances.c
-	Developer.c
-	DeffactsBinarySaveLoad.c
-	DeffactsBasicCommands.c
-	Deffacts.c
-	DeffactsParser.c
-	DeffunctionBinaryLoadSave.c
-	DeffunctionExecution.c
-	Deffunction.c
-	DeffunctionParser.c
-	DefinstancesBinaryLoadSave.c
-	Drive.c
-	ExtendedMathFunctions.c
-	Engine.c
-	Environment.c
-	EnvironmentBuild.c
-	Evaluation.c
-	Expression.c
-	ExpressionBinary.c
-	ExpressionOperations.c
-	ExpressionParser.c
-	ExternalFunctions.c
-	FactBinarySaveLoad.c
-	FactBuild.c
-	FactCommands.c
-	FactLoadSaveRoutines.c
-	FactFunctions.c
-	FactReteFunctionGeneration.c
-	FactHashing.c
-	FactLHSPatternParsing.c
-	FactMatch.c
-	FactManager.c
-	FactRetePrintFunctions.c
-	FactSetQueriesParser.c
-	FactQuery.c
-	FactReteAccessFunctions.c
-	FactRHSPatternParser.c
-	File.c
-	FileRouter.c
-	FileUtilities.c
-	Generate.c
-	GenericFunctionBinaryLoadSave.c
-	GenericFunctionCommands.c
-	GenericFunctionExecution.c
-	GenericFunction.c
-	GenericFunctionParser.c
-	DefglobalBinary.c
-	DefglobalBasicCommands.c
-	DefglobalCommands.c
-	Defglobal.c
-	DefglobalParser.c
-	ImplicitSystemMethodsParsing.c
-	IncrementalReset.c
-	MultipleInheritanceParser.c
-	InstanceCommand.c
-	InstanceSaveLoadCommands.c
-	InstanceFunctions.c
-	InstanceManager.c
-	InstanceModifyAndDuplicate.c
-	InstanceMultifieldTypeSlot.c
-	InstanceParser.c
-	InstanceQuery.c
-	InstanceSetQueryParser.c
-	IOFunctions.c
-	LogicalDependencies.c
-	MemoryAllocation.c
-	MiscFunctions.c
-	DefmoduleBinarySaveLoad.c
-	DefModuleBasicCommands.c
-	Defmodule.c
-	DefmoduleParser.c
-	DefmoduleUtility.c
-	DefmessageHandlerCommands.c
-	DefmessageHandlerFunctions.c
-	DefmessageHandlerDispatch.c
-	DefmessageHandlerParser.c
-	Multifield.c
-	MultifieldFunctions.c
-	ObjectBinaryLoadSave.c
+		DefaultAttribute.cc
+		Definstances.cc
+		Developer.cc
+		DeffactsBinarySaveLoad.cc
+		DeffactsBasicCommands.cc
+		Deffacts.cc
+		DeffactsParser.cc
+		DeffunctionBinaryLoadSave.cc
+		DeffunctionExecution.cc
+		Deffunction.cc
+		DeffunctionParser.cc
+		DefinstancesBinaryLoadSave.cc
+		Drive.cc
+		ExtendedMathFunctions.cc
+		Engine.cc
+		Environment.cc
+		EnvironmentBuild.cc
+		Evaluation.cc
+		Expression.cc
+		ExpressionBinary.cc
+		ExpressionOperations.cc
+		ExpressionParser.cc
+		ExternalFunctions.cc
+		FactBinarySaveLoad.cc
+		FactBuild.cc
+		FactCommands.cc
+		FactLoadSaveRoutines.cc
+		FactFunctions.cc
+		FactReteFunctionGeneration.cc
+		FactHashing.cc
+		FactLHSPatternParsing.cc
+		FactMatch.cc
+		FactManager.cc
+		FactRetePrintFunctions.cc
+		FactSetQueriesParser.cc
+		FactQuery.cc
+		FactReteAccessFunctions.cc
+		FactRHSPatternParser.cc
+		File.cc
+		FileRouter.cc
+		FileUtilities.cc
+		Generate.cc
+		GenericFunctionBinaryLoadSave.cc
+		GenericFunctionCommands.cc
+		GenericFunctionExecution.cc
+		GenericFunction.cc
+		GenericFunctionParser.cc
+		DefglobalBinary.cc
+		DefglobalBasicCommands.cc
+		DefglobalCommands.cc
+		Defglobal.cc
+		DefglobalParser.cc
+		ImplicitSystemMethodsParsing.cc
+		IncrementalReset.cc
+		MultipleInheritanceParser.cc
+		InstanceCommand.cc
+		InstanceSaveLoadCommands.cc
+		InstanceFunctions.cc
+		InstanceManager.cc
+		InstanceModifyAndDuplicate.cc
+		InstanceMultifieldTypeSlot.cc
+		InstanceParser.cc
+		InstanceQuery.cc
+		InstanceSetQueryParser.cc
+		IOFunctions.cc
+		LogicalDependencies.cc
+		MemoryAllocation.cc
+		MiscFunctions.cc
+		DefmoduleBinarySaveLoad.cc
+		DefModuleBasicCommands.cc
+		Defmodule.cc
+		DefmoduleParser.cc
+		DefmoduleUtility.cc
+		DefmessageHandlerCommands.cc
+		DefmessageHandlerFunctions.cc
+		DefmessageHandlerDispatch.cc
+		DefmessageHandlerParser.cc
+		Multifield.cc
+		MultifieldFunctions.cc
+		ObjectBinaryLoadSave.cc
 		ObjectReteBinarySaveLoad.cc
 		ObjectPatternMatcher.cc
-	InferenceEngineObjectAccessRotuines.c
-	InferenceEngineObjectParsingRoutines.c
+		InferenceEngineObjectAccessRoutines.cc
+		InferenceEngineObjectParsingRoutines.cc
 		ObjectReteMatch.cc
 		ParsingFunctions.cc
 		Pattern.cc
@@ -260,7 +260,7 @@ add_library(clips
 		ProceduralFunctionsParser.cc
 		PredicateFunctions.cc
 		PrintUtility.cc
-	ConstructProfilingFunctions.c
+		ConstructProfilingFunctions.cc
 		Reorder.cc
 		ReteUtility.cc
 		Retract.cc
@@ -270,7 +270,7 @@ add_library(clips
 		BasicRuleCommands.cc
 		RuleCommands.cc
 		RuleConstraints.cc
-	Defrule.c
+		Defrule.cc
 		RuleDelete.cc
 		RuleLHSParsing.cc
 		RuleParser.cc
@@ -281,14 +281,14 @@ add_library(clips
 		SymbolBinarySave.cc
 		Symbol.cc
 		SystemDependency.cc
-	DeftemplateBinarySaveLoad.c
-	DeftemplateBasicCommands.c
-	Deftemplate.c
-	DeftemplateFunctions.c
-	DeftemplateLHS.c
-	DeftemplateParser.c
-	DeftemplateRHSParsing.c
-	DeftemplateUtilities.c
+		DeftemplateBinarySaveLoad.cc
+		DeftemplateBasicCommands.cc
+		Deftemplate.cc
+		DeftemplateFunctions.cc
+		DeftemplateLHS.cc
+		DeftemplateParser.cc
+		DeftemplateRHSParsing.cc
+		DeftemplateUtilities.cc
 		UserData.cc
 		UserFunctions.cc
 		Utility.cc
@@ -298,9 +298,9 @@ add_library(maya_extensions
 	BoostExtensions.h
 	FunctionalExtensions.cpp
 	FunctionalExtensions.h
-	MayaExtensions.c FactExtensions.h InstanceExtensions.h ExternalAddressTracker.h Problem.h DefruleView.cc DefruleView.h FactView.cc FactView.h DeftemplateView.cc DeftemplateView.h GenericView.h NandFrameView.h NandFrameView.cc)
+		MayaExtensions.cc FactExtensions.h InstanceExtensions.h ExternalAddressTracker.h Problem.h DefruleView.cc DefruleView.h FactView.cc FactView.h DeftemplateView.cc DeftemplateView.h GenericView.h NandFrameView.h NandFrameView.cc)
 # TODO express the configurable dependencies in setup.h using CMAKE instead
-add_executable(maya cmd/repl/main.c DefclassView.cc DefclassView.h)
+add_executable(maya cmd/repl/main.cc DefclassView.cc DefclassView.h)
 target_link_libraries(maya PUBLIC
 	boost_system
 	boost_filesystem
