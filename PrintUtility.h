@@ -74,7 +74,7 @@
 
 #include "Entities.h"
 
-#define PRINT_UTILITY_DATA 53
+constexpr auto PRINT_UTILITY_DATA = 53;
 
 struct printUtilityData {
     bool PreserveEscapedCharacters;

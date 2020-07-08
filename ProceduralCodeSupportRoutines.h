@@ -78,7 +78,7 @@ typedef struct ProcParamStack {
     struct ProcParamStack *nxt;
 } PROC_PARAM_STACK;
 
-#define PROCEDURAL_PRIMITIVE_DATA 37
+constexpr auto PROCEDURAL_PRIMITIVE_DATA = 37;
 
 struct proceduralPrimitiveData {
     Multifield *NoParamValue;

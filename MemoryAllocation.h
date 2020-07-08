@@ -152,7 +152,7 @@ struct memoryPtr {
 #define GenCopyMemory(type, cnt, dst, src) \
    memcpy((void *) (dst),(void *) (src),sizeof(type) * (size_t) (cnt))
 
-#define MEMORY_DATA 59
+constexpr auto MEMORY_DATA = 59;
 
 struct memoryData {
     long long MemoryAmount;

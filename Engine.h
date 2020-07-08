@@ -105,7 +105,7 @@ struct ruleFiredFunctionItem {
     void *context;
 };
 
-#define ENGINE_DATA 18
+constexpr auto ENGINE_DATA = 18;
 
 struct engineData {
     Defrule *ExecutingRule;

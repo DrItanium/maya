@@ -163,7 +163,7 @@ struct ObjectCmpJoinSingleSlotVars3 {
     unsigned int secondPatternRHS: 1;
 };
 
-#define OBJECT_RETE_DATA 35
+constexpr auto OBJECT_RETE_DATA = 35;
 
 struct objectReteData {
     Instance *CurrentPatternObject;

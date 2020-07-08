@@ -107,7 +107,7 @@ struct templateSlot {
     struct templateSlot *next;
 };
 
-#define DEFTEMPLATE_DATA 5
+constexpr auto DEFTEMPLATE_DATA = 5;
 
 struct deftemplateData {
     Construct *DeftemplateConstruct;

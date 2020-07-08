@@ -77,7 +77,7 @@ typedef struct query_stack {
     struct query_stack *nxt;
 } QUERY_STACK;
 
-#define INSTANCE_QUERY_DATA 31
+constexpr auto INSTANCE_QUERY_DATA = 31;
 
 struct instanceQueryData {
     CLIPSLexeme *QUERY_DELIMITER_SYMBOL;

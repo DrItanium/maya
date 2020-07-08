@@ -70,7 +70,7 @@ struct bsaveDeftemplateModule {
     struct bsaveDefmoduleItemHeader header;
 };
 
-#define TMPLTBIN_DATA 61
+constexpr auto TMPLTBIN_DATA = 61;
 
 #include "Deftemplate.h"
 

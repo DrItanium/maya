@@ -61,7 +61,7 @@
 #include "Reorder.h"
 #include "Constraint.h"
 
-#define MAXIMUM_NUMBER_OF_PATTERNS 128
+constexpr auto MAXIMUM_NUMBER_OF_PATTERNS = 128;
 
 struct patternParser {
     const char *name;
@@ -95,9 +95,8 @@ struct reservedSymbol {
     struct reservedSymbol *next;
 };
 
-#define MAX_POSITIONS 8
-
-#define PATTERN_DATA 19
+constexpr auto MAX_POSITIONS = 8;
+constexpr auto PATTERN_DATA = 19;
 
 struct patternData {
     struct patternParser *ListOfPatternParsers;

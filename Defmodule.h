@@ -194,7 +194,7 @@ struct moduleStackItem {
     ModuleStackItem *next;
 };
 
-#define DEFMODULE_DATA 4
+constexpr auto DEFMODULE_DATA = 4;
 
 struct defmoduleData {
     struct moduleItem *LastModuleItem;

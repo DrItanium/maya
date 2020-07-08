@@ -119,7 +119,7 @@ struct defruleModule {
 #define ALPHA_MEMORY_HASH_SIZE       63559L
 #endif
 
-#define DEFRULE_DATA 16
+constexpr auto DEFRULE_DATA = 16;
 
 struct defruleData {
     Construct *DefruleConstruct;

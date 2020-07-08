@@ -41,7 +41,7 @@
 
 #define _H_pprint
 
-#define PRETTY_PRINT_DATA 52
+constexpr auto PRETTY_PRINT_DATA = 52;
 
 struct prettyPrintData {
     bool PPBufferStatus;

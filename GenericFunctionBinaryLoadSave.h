@@ -39,7 +39,7 @@
 
 #include "GenericFunction.h"
 
-#define GENRCBIN_DATA 28
+constexpr auto GENRCBIN_DATA = 28;
 
 struct defgenericBinaryData {
     Defgeneric *DefgenericArray;

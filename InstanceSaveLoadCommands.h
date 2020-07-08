@@ -57,7 +57,7 @@
 
 #include "Expression.h"
 
-#define INSTANCE_FILE_DATA 30
+constexpr auto INSTANCE_FILE_DATA = 30;
 
 #if BLOAD_INSTANCES || BSAVE_INSTANCES
 struct instanceFileData {

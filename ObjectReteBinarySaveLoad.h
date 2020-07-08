@@ -48,7 +48,7 @@
 #define _H_objrtbin
 
 
-#define OBJECTRETEBIN_DATA 34
+constexpr auto OBJECTRETEBIN_DATA = 34;
 
 #include "ObjectReteMatch.h"
 

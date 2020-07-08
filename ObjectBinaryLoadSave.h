@@ -42,7 +42,7 @@
 
 #include "Object.h"
 
-#define OBJECTBIN_DATA 33
+constexpr auto OBJECTBIN_DATA = 33;
 
 struct objectBinaryData {
     Defclass *DefclassArray;

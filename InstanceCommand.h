@@ -100,7 +100,7 @@ typedef enum {
 #include "InstanceFunctions.h"
 #include "Object.h"
 
-#define INSTANCE_DATA 29
+constexpr auto INSTANCE_DATA = 29;
 
 struct instanceData {
     Instance DummyInstance;

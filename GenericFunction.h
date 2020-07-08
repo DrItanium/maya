@@ -75,8 +75,8 @@ typedef struct defgeneric Defgeneric;
 #include "Defmodule.h"
 #include "Symbol.h"
 
-#define METHOD_NOT_FOUND USHRT_MAX
-#define RESTRICTIONS_UNBOUNDED USHRT_MAX
+constexpr auto METHOD_NOT_FOUND = USHRT_MAX;
+constexpr auto RESTRICTIONS_UNBOUNDED = USHRT_MAX;
 
 struct defgenericModule {
     struct defmoduleItemHeader header;
@@ -111,7 +111,7 @@ struct defgeneric {
     unsigned short new_index;
 };
 
-#define DEFGENERIC_DATA 27
+constexpr auto DEFGENERIC_DATA = 27;
 
 struct defgenericData {
     Construct *DefgenericConstruct;
