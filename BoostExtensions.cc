@@ -20,9 +20,7 @@
 // ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-extern "C" {
 #include "clips.h"
-}
 #include "MayaSetup.h"
 #include "BoostExtensions.h"
 #include <string>
@@ -61,7 +59,7 @@ void GetDirectoryContents(Environment *theEnv, UDFContext *context, UDFValue *re
 void GetFileExtension(Environment *theEnv, UDFContext *context, UDFValue *ret);
 #endif
 
-extern "C" void InstallBoostExtensions(Environment *theEnv) {
+void InstallBoostExtensions(Environment *theEnv) {
 #if BOOST_EXTENSIONS
     AddUDF(theEnv, "has-prefix", "b", 2, 2, "sy;sy;sy", HasPrefix, nullptr);
     AddUDF(theEnv, "has-suffix", "b", 2, 2, "sy;sy;sy", HasSuffix, nullptr);

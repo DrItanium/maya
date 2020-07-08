@@ -5,10 +5,8 @@
 #ifndef MAYA_FACTEXTENSIONS_H
 #define MAYA_FACTEXTENSIONS_H
 
-extern "C" {
 #include "Environment.h"
 #include "Fact.h"
-}
 #include <string>
 #include <tuple>
 #include "FunctionalExtensions.h"

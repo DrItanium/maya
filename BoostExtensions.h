@@ -23,13 +23,7 @@
 #ifndef __MAYA_BOOST_H__
 #define __MAYA_BOOST_H__
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 #include "clips.h"
 void InstallBoostExtensions(Environment *theEnv);
 
-#ifdef __cplusplus
-}
-#endif
 #endif

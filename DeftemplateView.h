@@ -4,9 +4,7 @@
 
 #ifndef MAYA_DEFTEMPLATEVIEW_H
 #define MAYA_DEFTEMPLATEVIEW_H
-extern "C" {
 #include "clips.h"
-}
 #include <optional>
 #include <string>
 #include "GenericView.h"

@@ -20,9 +20,7 @@
 // ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-extern "C" {
 #include "clips.h"
-}
 #include "MayaSetup.h"
 #include "FunctionalExtensions.h"
 #include <functional>
@@ -43,7 +41,7 @@ void BitwiseAnd(Environment *theEnv, UDFContext *context, UDFValue *ret) noexcep
 void BitwiseNot(Environment *theEnv, UDFContext *context, UDFValue *ret) noexcept;
 #endif
 
-extern "C" void InstallFunctionalExtensions(Environment *theEnv) {
+void InstallFunctionalExtensions(Environment *theEnv) {
 #if FUNCTIONAL_EXTENSIONS
     AddUDF(theEnv, "map$", "m", 1, UNBOUNDED, "*;y;*", MapFunction, nullptr);
     AddUDF(theEnv, "filter$", "m", 1, UNBOUNDED, "*;y;*", FilterFunction, nullptr);

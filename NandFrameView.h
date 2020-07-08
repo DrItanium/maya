@@ -4,9 +4,7 @@
 
 #ifndef MAYA_NANDFRAMEVIEW_H
 #define MAYA_NANDFRAMEVIEW_H
-extern "C" {
 #include "Analysis.h"
-}
 #include <optional>
 #include <string>
 #include "GenericView.h"

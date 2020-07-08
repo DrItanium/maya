@@ -4,9 +4,7 @@
 
 #ifndef MAYA_FACTVIEW_H
 #define MAYA_FACTVIEW_H
-extern "C" {
 #include "clips.h"
-}
 #include <optional>
 #include <string>
 #include "GenericView.h"

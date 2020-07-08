@@ -22,17 +22,11 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef __MAYA_FUNCTIONAL_H__
 #define __MAYA_FUNCTIONAL_H__
-#ifdef __cplusplus
 #include <string>
 #include <cstdint>
 
-extern "C" {
-#endif
 #include "clips.h"
 void InstallFunctionalExtensions(Environment *theEnv);
-
-#ifdef __cplusplus
-}
 namespace maya {
     class TreatLexemeAsSymbol final { };
     class TreatLexemeAsString final { };
@@ -93,5 +87,4 @@ namespace maya {
         MB *_builder;
     };
 }
-#endif // end __cplusplus
 #endif // end __MAYA_FUNCTIONAL_H__

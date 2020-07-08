@@ -4,11 +4,9 @@
 
 #ifndef MAYA_INSTANCEEXTENSIONS_H
 #define MAYA_INSTANCEEXTENSIONS_H
-extern "C" {
 #include "Environment.h"
 #include "InstanceCommand.h"
 #include "InstanceManager.h"
-}
 #include <string>
 #include "FunctionalExtensions.h"
 

@@ -4,9 +4,7 @@
 
 #ifndef MAYA_DEFRULEVIEW_H
 #define MAYA_DEFRULEVIEW_H
-extern "C" {
 #include "clips.h"
-}
 #include <optional>
 #include "GenericView.h"
 namespace maya {
