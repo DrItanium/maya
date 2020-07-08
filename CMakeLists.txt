@@ -293,14 +293,29 @@ add_library(clips
 		UserFunctions.cc
 		Utility.cc
 		Watch.cc)
-add_library(maya_extensions 
-	BoostExtensions.cc
-	BoostExtensions.h
-	FunctionalExtensions.cpp
-	FunctionalExtensions.h
-		MayaExtensions.cc FactExtensions.h InstanceExtensions.h ExternalAddressTracker.h Problem.h DefruleView.cc DefruleView.h FactView.cc FactView.h DeftemplateView.cc DeftemplateView.h GenericView.h NandFrameView.h NandFrameView.cc)
+add_library(maya_extensions
+		BoostExtensions.cc
+		BoostExtensions.h
+		FunctionalExtensions.cpp
+		FunctionalExtensions.h
+		MayaExtensions.cc
+		FactExtensions.h
+		InstanceExtensions.h
+		ExternalAddressTracker.h
+		Problem.h
+		DefruleView.cc
+		DefruleView.h
+		FactView.cc
+		FactView.h
+		DeftemplateView.cc
+		DeftemplateView.h
+		GenericView.h
+		NandFrameView.h
+		NandFrameView.cc
+		DefclassView.cc
+		DefclassView.h)
 # TODO express the configurable dependencies in setup.h using CMAKE instead
-add_executable(maya cmd/repl/main.cc DefclassView.cc DefclassView.h)
+add_executable(maya cmd/repl/main.cc)
 target_link_libraries(maya PUBLIC
 	boost_system
 	boost_filesystem
