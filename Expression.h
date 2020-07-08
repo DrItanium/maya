@@ -92,13 +92,13 @@ struct savedContexts {
     struct savedContexts *nxt;
 };
 
-#define EXPRESSION_HASH_SIZE 503
+constexpr auto EXPRESSION_HASH_SIZE = 503;
 
 /********************/
 /* ENVIRONMENT DATA */
 /********************/
 
-#define EXPRESSION_DATA 45
+constexpr auto EXPRESSION_DATA = 45;
 
 struct expressionData {
     FunctionDefinition *PTR_AND;
