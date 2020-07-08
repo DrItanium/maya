@@ -180,72 +180,74 @@ constexpr auto ANY_TYPE_BITS = (VOID_BIT | SINGLEFIELD_BITS | MULTIFIELD_BIT);
 /* values!! Sorted arrays depend on their values!!  */
 /****************************************************/
 
-#define FLOAT_TYPE                      0
-#define INTEGER_TYPE                    1
-#define SYMBOL_TYPE                     2
-#define STRING_TYPE                     3
-#define MULTIFIELD_TYPE                 4
-#define EXTERNAL_ADDRESS_TYPE           5
-#define FACT_ADDRESS_TYPE               6
-#define INSTANCE_ADDRESS_TYPE           7
-#define INSTANCE_NAME_TYPE              8
 
-#define VOID_TYPE                       9
+#define X(name, code) constexpr auto name = code
+X(FLOAT_TYPE                     , 0);
+X(INTEGER_TYPE                   , 1);
+X(SYMBOL_TYPE                    , 2);
+X(STRING_TYPE                    , 3);
+X(MULTIFIELD_TYPE                , 4);
+X(EXTERNAL_ADDRESS_TYPE          , 5);
+X(FACT_ADDRESS_TYPE              , 6);
+X(INSTANCE_ADDRESS_TYPE          , 7);
+X(INSTANCE_NAME_TYPE             , 8);
 
-#define BITMAP_TYPE                    11
+X( VOID_TYPE                     ,  9);
+X( BITMAP_TYPE                   , 11);
 
-#define FCALL                          30
-#define GCALL                          31
-#define PCALL                          32
-#define GBL_VARIABLE                   33
-#define MF_GBL_VARIABLE                34
+X( FCALL                         , 30);
+X( GCALL                         , 31);
+X( PCALL                         , 32);
+X( GBL_VARIABLE                  , 33);
+X( MF_GBL_VARIABLE               , 34);
 
-#define SF_VARIABLE                    35
-#define MF_VARIABLE                    36
-#define BITMAPARRAY                    39
+X( SF_VARIABLE                   , 35);
+X( MF_VARIABLE                   , 36);
+X( BITMAPARRAY                   , 39);
 
-#define FACT_PN_CMP1                   50
-#define FACT_JN_CMP1                   51
-#define FACT_JN_CMP2                   52
-#define FACT_SLOT_LENGTH               53
-#define FACT_PN_VAR1                   54
-#define FACT_PN_VAR2                   55
-#define FACT_PN_VAR3                   56
-#define FACT_JN_VAR1                   57
-#define FACT_JN_VAR2                   58
-#define FACT_JN_VAR3                   59
-#define FACT_PN_CONSTANT1              60
-#define FACT_PN_CONSTANT2              61
-#define FACT_STORE_MULTIFIELD          62
-#define DEFTEMPLATE_PTR                63
+X( FACT_PN_CMP1                  , 50);
+X( FACT_JN_CMP1                  , 51);
+X( FACT_JN_CMP2                  , 52);
+X( FACT_SLOT_LENGTH              , 53);
+X( FACT_PN_VAR1                  , 54);
+X( FACT_PN_VAR2                  , 55);
+X( FACT_PN_VAR3                  , 56);
+X( FACT_JN_VAR1                  , 57);
+X( FACT_JN_VAR2                  , 58);
+X( FACT_JN_VAR3                  , 59);
+X( FACT_PN_CONSTANT1             , 60);
+X( FACT_PN_CONSTANT2             , 61);
+X( FACT_STORE_MULTIFIELD         , 62);
+X( DEFTEMPLATE_PTR               , 63);
 
-#define OBJ_GET_SLOT_PNVAR1            70
-#define OBJ_GET_SLOT_PNVAR2            71
-#define OBJ_GET_SLOT_JNVAR1            72
-#define OBJ_GET_SLOT_JNVAR2            73
-#define OBJ_SLOT_LENGTH                74
-#define OBJ_PN_CONSTANT                75
-#define OBJ_PN_CMP1                    76
-#define OBJ_JN_CMP1                    77
-#define OBJ_PN_CMP2                    78
-#define OBJ_JN_CMP2                    79
-#define OBJ_PN_CMP3                    80
-#define OBJ_JN_CMP3                    81
-#define DEFCLASS_PTR                   82
-#define HANDLER_GET                    83
-#define HANDLER_PUT                    84
+X( OBJ_GET_SLOT_PNVAR1           , 70);
+X( OBJ_GET_SLOT_PNVAR2           , 71);
+X( OBJ_GET_SLOT_JNVAR1           , 72);
+X( OBJ_GET_SLOT_JNVAR2           , 73);
+X( OBJ_SLOT_LENGTH               , 74);
+X( OBJ_PN_CONSTANT               , 75);
+X( OBJ_PN_CMP1                   , 76);
+X( OBJ_JN_CMP1                   , 77);
+X( OBJ_PN_CMP2                   , 78);
+X( OBJ_JN_CMP2                   , 79);
+X( OBJ_PN_CMP3                   , 80);
+X( OBJ_JN_CMP3                   , 81);
+X( DEFCLASS_PTR                  , 82);
+X( HANDLER_GET                   , 83);
+X( HANDLER_PUT                   , 84);
 
-#define DEFGLOBAL_PTR                  90
+X( DEFGLOBAL_PTR                 , 90);
 
-#define PROC_PARAM                     95
-#define PROC_WILD_PARAM                96
-#define PROC_GET_BIND                  97
-#define PROC_BIND                      98
+X( PROC_PARAM                    , 95);
+X( PROC_WILD_PARAM               , 96);
+X( PROC_GET_BIND                 , 97);
+X( PROC_BIND                     , 98);
 
-#define UNKNOWN_VALUE                 173
+X( UNKNOWN_VALUE                 ,173);
 
-#define INTEGER_OR_FLOAT              180
-#define SYMBOL_OR_STRING              181
-#define INSTANCE_OR_INSTANCE_NAME     182
+X( INTEGER_OR_FLOAT              ,180);
+X( SYMBOL_OR_STRING              ,181);
+X( INSTANCE_OR_INSTANCE_NAME     ,182);
+#undef X
 
 #endif
