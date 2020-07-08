@@ -82,10 +82,10 @@ void BloadCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
 bool Bload(Environment *, const char *);
 void BloadandRefresh(Environment *, unsigned long, size_t, void (*)(Environment *, void *, unsigned long));
 bool Bloaded(Environment *);
-void AddBeforeBloadFunction(Environment *, const char *, VoidCallFunction *, int, void *);
-void AddAfterBloadFunction(Environment *, const char *, VoidCallFunction *, int, void *);
-void AddClearBloadReadyFunction(Environment *, const char *, BoolCallFunction *, int, void *);
-void AddAbortBloadFunction(Environment *, const char *, VoidCallFunction *, int, void *);
+void AddBeforeBloadFunction(Environment *, const char *, VoidCallFunction *, int, void *context = nullptr);
+void AddAfterBloadFunction(Environment *, const char *, VoidCallFunction *, int, void *context = nullptr);
+void AddClearBloadReadyFunction(Environment *, const char *, BoolCallFunction *, int, void *context = nullptr);
+void AddAbortBloadFunction(Environment *, const char *, VoidCallFunction *, int, void *context = nullptr);
 void CannotLoadWithBloadMessage(Environment *, const char *);
 
 #endif

@@ -173,8 +173,8 @@ struct utilityData {
 #define IsUTF8MultiByteContinuation(ch) ((((unsigned char) ch) >= 0x80) && (((unsigned char) ch) <= 0xBF))
 
 void InitializeUtilityData(Environment *);
-bool AddCleanupFunction(Environment *, const char *, VoidCallFunction *, int, void *);
-bool AddPeriodicFunction(Environment *, const char *, VoidCallFunction *, int, void *);
+bool AddCleanupFunction(Environment *, const char *, VoidCallFunction *, int, void *context = nullptr);
+bool AddPeriodicFunction(Environment *, const char *, VoidCallFunction *, int, void *context = nullptr);
 bool RemoveCleanupFunction(Environment *, const char *);
 bool RemovePeriodicFunction(Environment *, const char *);
 char *CopyString(Environment *, const char *);
@@ -187,9 +187,9 @@ char *AppendNToString(Environment *, const char *, char *, size_t, size_t *, siz
 char *EnlargeString(Environment *, size_t, char *, size_t *, size_t *);
 char *ExpandStringWithChar(Environment *, int, char *, size_t *, size_t *, size_t);
 VoidCallFunctionItem *AddVoidFunctionToCallList(Environment *, const char *, int, VoidCallFunction *,
-                                                VoidCallFunctionItem *, void *);
+                                                VoidCallFunctionItem *, void *context = nullptr);
 BoolCallFunctionItem *AddBoolFunctionToCallList(Environment *, const char *, int, BoolCallFunction *,
-                                                BoolCallFunctionItem *, void *);
+                                                BoolCallFunctionItem *, void *context = nullptr);
 VoidCallFunctionItem *RemoveVoidFunctionFromCallList(Environment *, const char *,
                                                      VoidCallFunctionItem *, bool *);
 BoolCallFunctionItem *RemoveBoolFunctionFromCallList(Environment *, const char *,
@@ -198,7 +198,7 @@ void DeallocateVoidCallList(Environment *, VoidCallFunctionItem *);
 void DeallocateBoolCallList(Environment *, BoolCallFunctionItem *);
 CallFunctionItemWithArg *AddFunctionToCallListWithArg(Environment *, const char *, int,
                                                       VoidCallFunctionWithArg *,
-                                                      CallFunctionItemWithArg *, void *);
+                                                      CallFunctionItemWithArg *, void *context = nullptr);
 CallFunctionItemWithArg *RemoveFunctionFromCallListWithArg(Environment *, const char *,
                                                            struct callFunctionItemWithArg *,
                                                            bool *);

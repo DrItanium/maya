@@ -163,11 +163,11 @@ void Reset(Environment *);
 bool Save(Environment *, const char *);
 
 void InitializeConstructData(Environment *);
-bool AddResetFunction(Environment *, const char *, VoidCallFunction *, int, void *);
+bool AddResetFunction(Environment *, const char *, VoidCallFunction *, int, void *context = nullptr);
 bool RemoveResetFunction(Environment *, const char *);
-bool AddClearReadyFunction(Environment *, const char *, BoolCallFunction *, int, void *);
+bool AddClearReadyFunction(Environment *, const char *, BoolCallFunction *, int, void *context = nullptr);
 bool RemoveClearReadyFunction(Environment *, const char *);
-bool AddClearFunction(Environment *, const char *, VoidCallFunction *, int, void *);
+bool AddClearFunction(Environment *, const char *, VoidCallFunction *, int, void *context = nullptr);
 bool RemoveClearFunction(Environment *, const char *);
 void IncrementClearReadyLocks(Environment *);
 void DecrementClearReadyLocks(Environment *);
@@ -199,12 +199,12 @@ bool ClearReady(Environment *);
 Construct *FindConstruct(Environment *, const char *);
 void DeinstallConstructHeader(Environment *, ConstructHeader *);
 void DestroyConstructHeader(Environment *, ConstructHeader *);
-ParserErrorFunction *SetParserErrorCallback(Environment *, ParserErrorFunction *, void *);
+ParserErrorFunction *SetParserErrorCallback(Environment *, ParserErrorFunction *, void *context = nullptr);
 
-bool AddSaveFunction(Environment *, const char *, SaveCallFunction *, int, void *);
+bool AddSaveFunction(Environment *, const char *, SaveCallFunction *, int, void *context = nullptr);
 bool RemoveSaveFunction(Environment *, const char *);
 SaveCallFunctionItem *AddSaveFunctionToCallList(Environment *, const char *, int,
-                                                SaveCallFunction *, SaveCallFunctionItem *, void *);
+                                                SaveCallFunction *, SaveCallFunctionItem *, void *context = nullptr);
 SaveCallFunctionItem *RemoveSaveFunctionFromCallList(Environment *, const char *,
                                                      SaveCallFunctionItem *, bool *);
 void DeallocateSaveCallList(Environment *, SaveCallFunctionItem *);

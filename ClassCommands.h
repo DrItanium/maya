@@ -107,6 +107,6 @@ bool HasSuperclass(Defclass *, Defclass *);
 
 CLIPSLexeme *CheckClassAndSlot(UDFContext *, const char *, Defclass **);
 
-void SaveDefclasses(Environment *, Defmodule *, const char *, void *);
+void SaveDefclasses(Environment *, Defmodule *, const char *, void * context = nullptr);
 
 #endif /* _H_classcom */

@@ -73,7 +73,7 @@
 
 void IncrementDefclassBusyCount(Environment *, Defclass *);
 void DecrementDefclassBusyCount(Environment *, Defclass *);
-bool InstancesPurge(Environment *, void *);
+bool InstancesPurge(Environment *, void *context = nullptr);
 
 void InitializeClasses(Environment *);
 SlotDescriptor *FindClassSlot(Defclass *, CLIPSLexeme *);

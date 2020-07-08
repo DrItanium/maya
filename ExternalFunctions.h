@@ -120,7 +120,7 @@ struct FunctionHash {
 
 void InitializeExternalFunctionData(Environment *);
 AddUDFError AddUDF(Environment *theEnv, const char *name, const char *returnTypes, unsigned short minArgs, unsigned short maxArgs,
-                   const char *argumentTypes, UserDefinedFunction *cFunctionPointer, void *context);
+                   const char *argumentTypes, UserDefinedFunction *cFunctionPointer, void *context = nullptr);
 bool AddFunctionParser(Environment *, const char *,
                        struct expr *(*)(Environment *, struct expr *, const char *));
 bool RemoveFunctionParser(Environment *, const char *);

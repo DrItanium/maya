@@ -145,7 +145,7 @@ FILE *FindFptr(Environment *, const char *);
 bool OpenAFile(Environment *, const char *, const char *, const char *);
 bool CloseAllFiles(Environment *);
 bool CloseFile(Environment *, const char *);
-bool FindFile(Environment *, const char *, void *);
+bool FindFile(Environment *, const char *, void *context = nullptr);
 bool FlushAllFiles(Environment *);
 bool FlushFile(Environment *, const char *);
 bool RewindFile(Environment *, const char *);
