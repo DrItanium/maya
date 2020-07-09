@@ -73,7 +73,7 @@ enum StrategyType {
 
 #define DEFAULT_STRATEGY DEPTH_STRATEGY
 
-void PlaceActivation(Environment *, Activation **, Activation *, struct salienceGroup *);
+void PlaceActivation(Environment *, Activation **, Activation *, struct SalienceGroup *);
 StrategyType SetStrategy(Environment *, StrategyType);
 StrategyType GetStrategy(Environment *);
 void SetStrategyCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);

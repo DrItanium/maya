@@ -114,7 +114,7 @@ static void DeallocateDefruleBloadData(
     unsigned long i;
     struct defruleModule *theModuleItem;
     struct activation *theActivation, *tmpActivation;
-    struct salienceGroup *theGroup, *tmpGroup;
+    struct SalienceGroup *theGroup, *tmpGroup;
 
     for (i = 0; i < DefruleBinaryData(theEnv)->NumberOfJoins; i++) {
         DestroyBetaMemory(theEnv, &DefruleBinaryData(theEnv)->JoinArray[i], CLIPS_LHS);
@@ -139,7 +139,7 @@ static void DeallocateDefruleBloadData(
         while (theGroup != nullptr) {
             tmpGroup = theGroup->next;
 
-            rtn_struct(theEnv, salienceGroup, theGroup);
+            rtn_struct(theEnv, SalienceGroup, theGroup);
 
             theGroup = tmpGroup;
         }

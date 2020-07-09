@@ -158,7 +158,7 @@ static void DeallocateDefruleData(
     struct defruleModule *theModuleItem;
     Defmodule *theModule;
     Activation *theActivation, *tmpActivation;
-    struct salienceGroup *theGroup, *tmpGroup;
+    struct SalienceGroup *theGroup, *tmpGroup;
 
 #if BLOAD_AND_BSAVE
     if (Bloaded(theEnv)) { return; }
@@ -187,7 +187,7 @@ static void DeallocateDefruleData(
         while (theGroup != nullptr) {
             tmpGroup = theGroup->next;
 
-            rtn_struct(theEnv, salienceGroup, theGroup);
+            rtn_struct(theEnv, SalienceGroup, theGroup);
 
             theGroup = tmpGroup;
         }

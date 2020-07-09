@@ -92,8 +92,8 @@ static void PrintActivation(Environment *, const char *, Activation *);
 static void AgendaClearFunction(Environment *, void *);
 static const char *SalienceEvaluationName(SalienceEvaluationType);
 static int EvaluateSalience(Environment *, Defrule *);
-static struct salienceGroup *ReuseOrCreateSalienceGroup(Environment *, struct defruleModule *, int);
-static struct salienceGroup *FindSalienceGroup(defruleModule *, int);
+static struct SalienceGroup *ReuseOrCreateSalienceGroup(Environment *, struct defruleModule *, int);
+static struct SalienceGroup *FindSalienceGroup(defruleModule *, int);
 static void RemoveActivationFromGroup(Environment *, Activation *, struct defruleModule *);
 
 /*************************************************/
@@ -136,7 +136,7 @@ void AddActivation(
         PartialMatch *binds) {
     Activation *newActivation;
     struct defruleModule *theModuleItem;
-    struct salienceGroup *theGroup;
+    struct SalienceGroup *theGroup;
 
     /*=======================================*/
     /* Focus on the module if the activation */
@@ -200,11 +200,11 @@ void AddActivation(
 /*******************************/
 /* ReuseOrCreateSalienceGroup: */
 /*******************************/
-static struct salienceGroup *ReuseOrCreateSalienceGroup(
+static struct SalienceGroup *ReuseOrCreateSalienceGroup(
         Environment *theEnv,
         struct defruleModule *theRuleModule,
         int salience) {
-    struct salienceGroup *theGroup, *lastGroup, *newGroup;
+    struct SalienceGroup *theGroup, *lastGroup, *newGroup;
 
     for (lastGroup = nullptr, theGroup = theRuleModule->groupings;
          theGroup != nullptr;
@@ -214,7 +214,7 @@ static struct salienceGroup *ReuseOrCreateSalienceGroup(
         if (theGroup->getSalience() < salience) { break; }
     }
 
-    newGroup = get_struct(theEnv, salienceGroup);
+    newGroup = get_struct(theEnv, SalienceGroup);
     newGroup->setSalience(salience);
     newGroup->first = nullptr;
     newGroup->last = nullptr;
@@ -233,10 +233,10 @@ static struct salienceGroup *ReuseOrCreateSalienceGroup(
 /**********************/
 /* FindSalienceGroup: */
 /**********************/
-static struct salienceGroup *FindSalienceGroup(
+static struct SalienceGroup *FindSalienceGroup(
         struct defruleModule *theRuleModule,
         int salience) {
-    struct salienceGroup *theGroup;
+    struct SalienceGroup *theGroup;
 
     for (theGroup = theRuleModule->groupings;
          theGroup != nullptr;
@@ -431,7 +431,7 @@ void DeleteActivation(
 void DeleteAllActivations(
         Defmodule *theModule) {
     struct activation *tempPtr, *theActivation;
-    struct salienceGroup *theGroup, *tempGroup;
+    struct SalienceGroup *theGroup, *tempGroup;
     Environment *theEnv = theModule->header.env;
 
     theActivation = GetDefruleModuleItem(theEnv, nullptr)->agenda;
@@ -444,7 +444,7 @@ void DeleteAllActivations(
     theGroup = GetDefruleModuleItem(theEnv, nullptr)->groupings;
     while (theGroup != nullptr) {
         tempGroup = theGroup->next;
-        rtn_struct(theEnv, salienceGroup, theGroup);
+        rtn_struct(theEnv, SalienceGroup, theGroup);
         theGroup = tempGroup;
     }
 }
@@ -622,7 +622,7 @@ static void RemoveActivationFromGroup(
         Environment *theEnv,
         Activation *theActivation,
         struct defruleModule *theRuleModule) {
-    struct salienceGroup *theGroup;
+    struct SalienceGroup *theGroup;
 
     theGroup = FindSalienceGroup(theRuleModule, theActivation->getSalience());
     if (theGroup == nullptr) return;
@@ -639,7 +639,7 @@ static void RemoveActivationFromGroup(
 
             if (theGroup->next != nullptr) { theGroup->next->prev = theGroup->prev; }
 
-            rtn_struct(theEnv, salienceGroup, theGroup);
+            rtn_struct(theEnv, SalienceGroup, theGroup);
         }
 
             /*======================================================*/
@@ -682,7 +682,7 @@ static void AgendaClearFunction(
 void RemoveAllActivations(
         Environment *theEnv) {
     struct activation *tempPtr, *theActivation;
-    struct salienceGroup *theGroup, *tempGroup;
+    struct SalienceGroup *theGroup, *tempGroup;
 
     theActivation = GetDefruleModuleItem(theEnv, nullptr)->agenda;
     while (theActivation != nullptr) {
@@ -694,7 +694,7 @@ void RemoveAllActivations(
     theGroup = GetDefruleModuleItem(theEnv, nullptr)->groupings;
     while (theGroup != nullptr) {
         tempGroup = theGroup->next;
-        rtn_struct(theEnv, salienceGroup, theGroup);
+        rtn_struct(theEnv, SalienceGroup, theGroup);
         theGroup = tempGroup;
     }
 }
@@ -739,7 +739,7 @@ void ReorderAgenda(
         Defmodule *theModule) {
     struct activation *theActivation, *tempPtr;
     struct defruleModule *theModuleItem;
-    struct salienceGroup *theGroup, *tempGroup;
+    struct SalienceGroup *theGroup, *tempGroup;
     Environment *theEnv;
 
     if (theModule == nullptr) return;
@@ -757,7 +757,7 @@ void ReorderAgenda(
     theGroup = theModuleItem->groupings;
     while (theGroup != nullptr) {
         tempGroup = theGroup->next;
-        rtn_struct(theEnv, salienceGroup, theGroup);
+        rtn_struct(theEnv, SalienceGroup, theGroup);
         theGroup = tempGroup;
     }
 

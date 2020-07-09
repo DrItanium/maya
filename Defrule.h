@@ -111,7 +111,7 @@ struct defrule {
 
 struct defruleModule {
     struct defmoduleItemHeader header;
-    struct salienceGroup *groupings;
+    struct SalienceGroup *groupings;
     struct activation *agenda;
 };
 

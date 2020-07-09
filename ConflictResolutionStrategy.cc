@@ -75,13 +75,13 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static Activation *PlaceDepthActivation(Activation *, struct salienceGroup *);
-static Activation *PlaceBreadthActivation(Activation *, struct salienceGroup *);
-static Activation *PlaceLEXActivation(Environment *, Activation *, struct salienceGroup *);
-static Activation *PlaceMEAActivation(Environment *, Activation *, struct salienceGroup *);
-static Activation *PlaceComplexityActivation(Activation *, struct salienceGroup *);
-static Activation *PlaceSimplicityActivation(Activation *, struct salienceGroup *);
-static Activation *PlaceRandomActivation(Activation *, struct salienceGroup *);
+static Activation *PlaceDepthActivation(Activation *, struct SalienceGroup *);
+static Activation *PlaceBreadthActivation(Activation *, struct SalienceGroup *);
+static Activation *PlaceLEXActivation(Environment *, Activation *, struct SalienceGroup *);
+static Activation *PlaceMEAActivation(Environment *, Activation *, struct SalienceGroup *);
+static Activation *PlaceComplexityActivation(Activation *, struct SalienceGroup *);
+static Activation *PlaceSimplicityActivation(Activation *, struct SalienceGroup *);
+static Activation *PlaceRandomActivation(Activation *, struct SalienceGroup *);
 static int ComparePartialMatches(Environment *, Activation *, Activation *);
 static const char *GetStrategyName(StrategyType);
 static unsigned long long *SortPartialMatch(Environment *, struct partialMatch *);
@@ -94,7 +94,7 @@ void PlaceActivation(
         Environment *theEnv,
         Activation **whichAgenda,
         Activation *newActivation,
-        struct salienceGroup *theGroup) {
+        struct SalienceGroup *theGroup) {
     Activation *placeAfter = nullptr;
 
     /*================================================*/
@@ -174,7 +174,7 @@ void PlaceActivation(
 /*******************************************************************/
 static Activation *PlaceDepthActivation(
         Activation *newActivation,
-        struct salienceGroup *theGroup) {
+        struct SalienceGroup *theGroup) {
     Activation *lastAct, *actPtr;
     unsigned long long timetag;
 
@@ -229,7 +229,7 @@ static Activation *PlaceDepthActivation(
 /*******************************************************************/
 static Activation *PlaceBreadthActivation(
         Activation *newActivation,
-        struct salienceGroup *theGroup) {
+        struct SalienceGroup *theGroup) {
     unsigned long long timetag;
     Activation *lastAct, *actPtr;
 
@@ -292,7 +292,7 @@ static Activation *PlaceBreadthActivation(
 static Activation *PlaceLEXActivation(
         Environment *theEnv,
         Activation *newActivation,
-        struct salienceGroup *theGroup) {
+        struct SalienceGroup *theGroup) {
     unsigned long long timetag;
     Activation *lastAct, *actPtr;
     int flag;
@@ -375,7 +375,7 @@ static Activation *PlaceLEXActivation(
 static Activation *PlaceMEAActivation(
         Environment *theEnv,
         Activation *newActivation,
-        struct salienceGroup *theGroup) {
+        struct SalienceGroup *theGroup) {
     unsigned long long timetag;
     Activation *lastAct, *actPtr;
     int flag;
@@ -486,7 +486,7 @@ static Activation *PlaceMEAActivation(
 /*********************************************************************/
 static Activation *PlaceComplexityActivation(
         Activation *newActivation,
-        struct salienceGroup *theGroup) {
+        struct SalienceGroup *theGroup) {
     unsigned int complexity;
     unsigned long long timetag;
     Activation *lastAct, *actPtr;
@@ -547,7 +547,7 @@ static Activation *PlaceComplexityActivation(
 /*********************************************************************/
 static Activation *PlaceSimplicityActivation(
         Activation *newActivation,
-        struct salienceGroup *theGroup) {
+        struct SalienceGroup *theGroup) {
     unsigned int complexity;
     unsigned long long timetag;
     Activation *lastAct, *actPtr;
@@ -608,7 +608,7 @@ static Activation *PlaceSimplicityActivation(
 /*******************************************************************/
 static Activation *PlaceRandomActivation(
         Activation *newActivation,
-        struct salienceGroup *theGroup) {
+        struct SalienceGroup *theGroup) {
     int randomID;
     unsigned long long timetag;
     Activation *lastAct, *actPtr;

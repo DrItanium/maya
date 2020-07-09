@@ -107,7 +107,7 @@ public:
     auto getNext() const noexcept { return next; }
 };
 
-struct salienceGroup {
+struct SalienceGroup {
 private:
     int salience;
 public:
@@ -115,8 +115,8 @@ public:
     void setSalience(int value) noexcept { salience = value; }
     struct activation *first;
     struct activation *last;
-    struct salienceGroup *next;
-    struct salienceGroup *prev;
+    struct SalienceGroup *next;
+    struct SalienceGroup *prev;
 };
 
 #include "ConflictResolutionStrategy.h"
