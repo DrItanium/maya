@@ -108,7 +108,11 @@ public:
 };
 
 struct salienceGroup {
+private:
     int salience;
+public:
+    constexpr auto getSalience() const noexcept { return salience; }
+    void setSalience(int value) noexcept { salience = value; }
     struct activation *first;
     struct activation *last;
     struct salienceGroup *next;

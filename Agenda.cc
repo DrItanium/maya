@@ -209,13 +209,13 @@ static struct salienceGroup *ReuseOrCreateSalienceGroup(
     for (lastGroup = nullptr, theGroup = theRuleModule->groupings;
          theGroup != nullptr;
          lastGroup = theGroup, theGroup = theGroup->next) {
-        if (theGroup->salience == salience) { return (theGroup); }
+        if (theGroup->getSalience() == salience) { return (theGroup); }
 
-        if (theGroup->salience < salience) { break; }
+        if (theGroup->getSalience() < salience) { break; }
     }
 
     newGroup = get_struct(theEnv, salienceGroup);
-    newGroup->salience = salience;
+    newGroup->setSalience(salience);
     newGroup->first = nullptr;
     newGroup->last = nullptr;
     newGroup->next = theGroup;
@@ -241,9 +241,9 @@ static struct salienceGroup *FindSalienceGroup(
     for (theGroup = theRuleModule->groupings;
          theGroup != nullptr;
          theGroup = theGroup->next) {
-        if (theGroup->salience == salience) { return (theGroup); }
+        if (theGroup->getSalience() == salience) { return (theGroup); }
 
-        if (theGroup->salience < salience) { break; }
+        if (theGroup->getSalience() < salience) { break; }
     }
 
     return nullptr;
