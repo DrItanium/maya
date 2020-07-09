@@ -63,6 +63,7 @@
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
+#include <iostream>
 
 #include "Setup.h"
 
@@ -134,7 +135,7 @@ bool AllocateEnvironmentData(
     /*================================================================*/
 
     if (position >= MAXIMUM_ENVIRONMENT_POSITIONS) {
-        printf("\n[ENVRNMNT2] Environment data position %d exceeds the maximum allowed.\n", position);
+        std::cout << "\n[ENVRNMNT2] Environment data position " << position << " exceeds the maximum allowed.\n";
         return false;
     }
 
@@ -143,7 +144,7 @@ bool AllocateEnvironmentData(
     /*============================================================*/
 
     if (theEnvironment->theData[position] != nullptr) {
-        printf("\n[ENVRNMNT3] Environment data position %d already allocated.\n", position);
+        std::cout << "\n[ENVRNMNT3] Environment data position " << position << " already allocated.\n";
         return false;
     }
 
@@ -153,7 +154,7 @@ bool AllocateEnvironmentData(
 
     theEnvironment->theData[position] = malloc(size);
     if (theEnvironment->theData[position] == nullptr) {
-        printf("\n[ENVRNMNT4] Environment data position %d could not be allocated.\n", position);
+        std::cout << "\n[ENVRNMNT4] Environment data position " << position << " could not be allocated.\n";
         return false;
     }
 

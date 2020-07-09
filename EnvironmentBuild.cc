@@ -22,6 +22,7 @@
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
+#include <iostream>
 
 #include "Setup.h"
 
@@ -48,6 +49,7 @@
 #include "SystemDependency.h"
 #include "Utility.h"
 #include "Watch.h"
+
 
 #if DEFFACTS_CONSTRUCT
 #include "Deffacts.h"
@@ -137,7 +139,7 @@ Environment *CreateEnvironmentDriver(
     theEnvironment = (environmentData *) malloc(sizeof(environmentData));
 
     if (theEnvironment == nullptr) {
-        printf("\n[ENVRNMNT5] Unable to create new environment.\n");
+        std::cout << "\n[ENVRNMNT5] Unable to create new environment.\n";
         return nullptr;
     }
 
@@ -145,7 +147,7 @@ Environment *CreateEnvironmentDriver(
 
     if (theData == nullptr) {
         free(theEnvironment);
-        printf("\n[ENVRNMNT6] Unable to create environment data.\n");
+        std::cout << "\n[ENVRNMNT6] Unable to create environment data.\n";
         return nullptr;
     }
 
@@ -166,7 +168,7 @@ Environment *CreateEnvironmentDriver(
     if (theData == nullptr) {
         free(theEnvironment->theData);
         free(theEnvironment);
-        printf("\n[ENVRNMNT7] Unable to create environment data.\n");
+        std::cout << "\n[ENVRNMNT7] Unable to create environment data.\n";
         return nullptr;
     }
 
@@ -211,9 +213,9 @@ bool DestroyEnvironment(
     ReleaseMem(theEnvironment, -1);
 
     if ((theMemData->MemoryAmount != 0) || (theMemData->MemoryCalls != 0)) {
-        printf("\n[ENVRNMNT8] Environment data not fully deallocated.\n");
-        printf("\n[ENVRNMNT8] MemoryAmount = %lld.\n", theMemData->MemoryAmount);
-        printf("\n[ENVRNMNT8] MemoryCalls = %lld.\n", theMemData->MemoryCalls);
+        std::cout << "\n[ENVRNMNT8] Environment data not fully deallocated.\n";
+        std::cout << "\n[ENVRNMNT8] MemoryAmount = " << theMemData->MemoryAmount << '\n';
+        std::cout << "\n[ENVRNMNT8] MemoryCalls = " << theMemData->MemoryCalls<< '\n';
         rv = false;
     }
 

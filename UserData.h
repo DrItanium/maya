@@ -32,7 +32,7 @@
 
 struct userData {
     unsigned char dataID;
-    struct userData *next;
+    userData *next;
 };
 
 typedef struct userData USER_DATA;
@@ -45,25 +45,25 @@ struct userDataRecord {
     DeleteUserDataFunction* deleteUserData;
 };
 
-typedef struct userDataRecord USER_DATA_RECORD;
-typedef struct userDataRecord *USER_DATA_RECORD_PTR;
+typedef userDataRecord USER_DATA_RECORD;
+typedef userDataRecord *USER_DATA_RECORD_PTR;
 
 constexpr auto MAXIMUM_USER_DATA_RECORDS = 100;
 constexpr auto USER_DATA_DATA = 56;
 
 struct userDataData {
-    struct userDataRecord *UserDataRecordArray[MAXIMUM_USER_DATA_RECORDS];
+    userDataRecord *UserDataRecordArray[MAXIMUM_USER_DATA_RECORDS];
     unsigned char UserDataRecordCount;
 };
 
 #define UserDataData(theEnv) ((userDataData *) GetEnvironmentData(theEnv,USER_DATA_DATA))
 
 void InitializeUserDataData(Environment *);
-unsigned char InstallUserDataRecord(Environment *, struct userDataRecord *);
-struct userData *FetchUserData(Environment *, unsigned char, struct userData **);
-struct userData *TestUserData(unsigned char, struct userData *);
-void ClearUserDataList(Environment *, struct userData *);
-struct userData *DeleteUserData(Environment *, unsigned char, struct userData *);
+unsigned char InstallUserDataRecord(Environment *, userDataRecord *);
+userData *FetchUserData(Environment *, unsigned char, userData **);
+userData *TestUserData(unsigned char, userData *);
+void ClearUserDataList(Environment *, userData *);
+userData *DeleteUserData(Environment *, unsigned char, userData *);
 
 #endif
 
