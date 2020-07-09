@@ -52,10 +52,17 @@
 
 #include "Object.h"
 
-typedef struct tempSlotLink {
+struct tempSlotLink {
+private:
     SlotDescriptor *desc;
-    struct tempSlotLink *nxt;
-} TEMP_SLOT_LINK;
+    tempSlotLink *nxt;
+public:
+    auto getDescription() const noexcept { return desc; }
+    void setDescription(SlotDescriptor* value) noexcept { desc = value; }
+    auto getNext() const noexcept { return nxt; }
+    void setNext(tempSlotLink* value) noexcept { nxt = value; }
+};
+using TEMP_SLOT_LINK  = tempSlotLink;
 
 TEMP_SLOT_LINK *ParseSlot(Environment *, const char *, const char *, TEMP_SLOT_LINK *, PACKED_CLASS_LINKS *, bool);
 void DeleteSlots(Environment *, TEMP_SLOT_LINK *);

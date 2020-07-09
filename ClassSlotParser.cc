@@ -356,20 +356,20 @@ void DeleteSlots(
 
     while (slots != nullptr) {
         stmp = slots;
-        slots = slots->nxt;
-        DeleteSlotName(theEnv, stmp->desc->slotName);
-        ReleaseLexeme(theEnv, stmp->desc->overrideMessage);
-        RemoveConstraint(theEnv, stmp->desc->constraint);
-        if (stmp->desc->dynamicDefault == 1) {
-            ExpressionDeinstall(theEnv, (Expression *) stmp->desc->defaultValue);
-            ReturnPackedExpression(theEnv, (Expression *) stmp->desc->defaultValue);
-        } else if (stmp->desc->defaultValue != nullptr) {
-            UDFValue *theValue = (UDFValue *) stmp->desc->defaultValue;
+        slots = slots->getNext();
+        DeleteSlotName(theEnv, stmp->getDescription()->slotName);
+        ReleaseLexeme(theEnv, stmp->getDescription()->overrideMessage);
+        RemoveConstraint(theEnv, stmp->getDescription()->constraint);
+        if (stmp->getDescription()->dynamicDefault == 1) {
+            ExpressionDeinstall(theEnv, (Expression *) stmp->getDescription()->defaultValue);
+            ReturnPackedExpression(theEnv, (Expression *) stmp->getDescription()->defaultValue);
+        } else if (stmp->getDescription()->defaultValue != nullptr) {
+            UDFValue *theValue = (UDFValue *) stmp->getDescription()->defaultValue;
             ReleaseUDFV(theEnv, theValue);
             if (theValue->header->type == MULTIFIELD_TYPE) { ReturnMultifield(theEnv, theValue->multifieldValue); }
             rtn_struct(theEnv, udfValue, theValue);
         }
-        rtn_struct(theEnv, slotDescriptor, stmp->desc);
+        rtn_struct(theEnv, slotDescriptor, stmp->getDescription());
         rtn_struct(theEnv, tempSlotLink, stmp);
     }
 }
@@ -438,16 +438,16 @@ static TEMP_SLOT_LINK *InsertSlot(
     TEMP_SLOT_LINK *stmp, *sprv, *tmp;
 
     tmp = get_struct(theEnv, tempSlotLink);
-    tmp->desc = slot;
-    tmp->nxt = nullptr;
+    tmp->setDescription(slot);
+    tmp->setNext(nullptr);
     if (slist == nullptr)
         slist = tmp;
     else {
         stmp = slist;
         sprv = nullptr;
         while (stmp != nullptr) {
-            if (stmp->desc->slotName == slot->slotName) {
-                tmp->nxt = slist;
+            if (stmp->getDescription()->slotName == slot->slotName) {
+                tmp->setNext(slist);
                 DeleteSlots(theEnv, tmp);
                 PrintErrorID(theEnv, "CLSLTPSR", 1, false);
                 WriteString(theEnv, STDERR, "The '");
@@ -458,9 +458,9 @@ static TEMP_SLOT_LINK *InsertSlot(
                 return nullptr;
             }
             sprv = stmp;
-            stmp = stmp->nxt;
+            stmp = stmp->getNext();
         }
-        sprv->nxt = tmp;
+        sprv->setNext(tmp);
     }
     return (slist);
 }

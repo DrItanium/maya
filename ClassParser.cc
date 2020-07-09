@@ -640,9 +640,9 @@ static void FormInstanceTemplate(
         cls->instanceTemplate = (SlotDescriptor **) gm2(theEnv, (scnt * sizeof(SlotDescriptor *)));
     for (i = 0; i < scnt; i++) {
         stmp = islots;
-        islots = islots->nxt;
-        cls->instanceTemplate[i] = stmp->desc;
-        if (stmp->desc->shared == 0)
+        islots = islots->getNext();
+        cls->instanceTemplate[i] = stmp->getDescription();
+        if (stmp->getDescription()->shared == 0)
             cls->localInstanceSlotCount++;
         rtn_struct(theEnv, tempSlotLink, stmp);
     }
@@ -729,12 +729,12 @@ static TEMP_SLOT_LINK *MergeSlots(
 
         if ((newSlot->noInherit == 0) ? true : (src == DIRECT)) {
             cur = old;
-            while ((cur != nullptr) ? (newSlot->slotName != cur->desc->slotName) : false)
-                cur = cur->nxt;
+            while ((cur != nullptr) ? (newSlot->slotName != cur->getDescription()->slotName) : false)
+                cur = cur->getNext();
             if (cur == nullptr) {
                 tmp = get_struct(theEnv, tempSlotLink);
-                tmp->desc = newSlot;
-                tmp->nxt = old;
+                tmp->setDescription(newSlot);
+                tmp->setNext(old);
                 old = tmp;
                 (*scnt)++;
             }
@@ -766,19 +766,19 @@ static void PackSlots(
 
     stmp = slots;
     while (stmp != nullptr) {
-        stmp->desc->cls = cls;
+        stmp->getDescription()->cls = cls;
         cls->slotCount++;
-        stmp = stmp->nxt;
+        stmp = stmp->getNext();
     }
     cls->slots = (SlotDescriptor *) gm2(theEnv, (sizeof(SlotDescriptor) * cls->slotCount));
     stmp = slots;
     for (i = 0; i < cls->slotCount; i++) {
         sprv = stmp;
-        stmp = stmp->nxt;
-        GenCopyMemory(SlotDescriptor, 1, &(cls->slots[i]), sprv->desc);
+        stmp = stmp->getNext();
+        GenCopyMemory(SlotDescriptor, 1, &(cls->slots[i]), sprv->getDescription());
         cls->slots[i].sharedValue.desc = &(cls->slots[i]);
         cls->slots[i].sharedValue.value = nullptr;
-        rtn_struct(theEnv, slotDescriptor, sprv->desc);
+        rtn_struct(theEnv, slotDescriptor, sprv->getDescription());
         rtn_struct(theEnv, tempSlotLink, sprv);
     }
 }
