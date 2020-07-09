@@ -52,10 +52,12 @@
 struct nandFrame {
 private:
     int depth;
+    lhsParseNode *nandCE;
 public:
     constexpr auto getDepth() const noexcept { return depth; }
     void setDepth(int value) noexcept { depth = value; }
-    struct lhsParseNode *nandCE;
+    auto getNandCE() const noexcept { return nandCE; }
+    void setNandCE(lhsParseNode* value) noexcept { nandCE = value; }
     struct nandFrame *next;
 };
 

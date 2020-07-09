@@ -673,13 +673,13 @@ void AddNandUnification(
 
             tempExpression = GenJNVariableComparison(theEnv, nodeList->referringNode, nodeList->referringNode, true);
 
-            theFrame->nandCE->externalNetworkTest = CombineExpressions(theEnv, theFrame->nandCE->externalNetworkTest, tempExpression);
+            theFrame->getNandCE()->externalNetworkTest = CombineExpressions(theEnv, theFrame->getNandCE()->externalNetworkTest, tempExpression);
 
             tempExpression = (*nodeList->referringNode->patternType->genGetJNValueFunction)(theEnv, nodeList->referringNode, CLIPS_LHS);
-            theFrame->nandCE->externalRightHash = AppendExpressions(theFrame->nandCE->externalRightHash, tempExpression);
+            theFrame->getNandCE()->externalRightHash = AppendExpressions(theFrame->getNandCE()->externalRightHash, tempExpression);
 
             tempExpression = (*nodeList->referringNode->patternType->genGetJNValueFunction)(theEnv, nodeList->referringNode, CLIPS_LHS);
-            theFrame->nandCE->externalLeftHash = AppendExpressions(theFrame->nandCE->externalLeftHash, tempExpression);
+            theFrame->getNandCE()->externalLeftHash = AppendExpressions(theFrame->getNandCE()->externalLeftHash, tempExpression);
         }
     }
 }
