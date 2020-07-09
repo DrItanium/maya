@@ -107,7 +107,7 @@ void InitializeAgenda(
 
     AgendaData(theEnv)->setSalienceEvaluation(WHEN_DEFINED);
 
-    AgendaData(theEnv)->Strategy = DEFAULT_STRATEGY;
+    AgendaData(theEnv)->setStrategy(DEFAULT_STRATEGY);
 
     AddClearFunction(theEnv, "agenda", AgendaClearFunction, 0, nullptr);
 #if DEBUGGING_FUNCTIONS

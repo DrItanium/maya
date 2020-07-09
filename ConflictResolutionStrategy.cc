@@ -111,7 +111,7 @@ void PlaceActivation(
     /*==============================================*/
 
     if (*whichAgenda != nullptr) {
-        switch (AgendaData(theEnv)->Strategy) {
+        switch (AgendaData(theEnv)->getStrategy()) {
             case DEPTH_STRATEGY:
                 placeAfter = PlaceDepthActivation(newActivation, theGroup);
                 break;
@@ -804,12 +804,10 @@ static int ComparePartialMatches(
 StrategyType SetStrategy(
         Environment *theEnv,
         StrategyType value) {
-    StrategyType oldStrategy;
+    auto oldStrategy = AgendaData(theEnv)->getStrategy();
+    AgendaData(theEnv)->setStrategy(value);
 
-    oldStrategy = AgendaData(theEnv)->Strategy;
-    AgendaData(theEnv)->Strategy = value;
-
-    if (oldStrategy != AgendaData(theEnv)->Strategy) { ReorderAllAgendas(theEnv); }
+    if (oldStrategy != AgendaData(theEnv)->getStrategy()) { ReorderAllAgendas(theEnv); }
 
     return oldStrategy;
 }
@@ -820,7 +818,7 @@ StrategyType SetStrategy(
 /***********************************/
 StrategyType GetStrategy(
         Environment *theEnv) {
-    return AgendaData(theEnv)->Strategy;
+    return AgendaData(theEnv)->getStrategy();
 }
 
 /********************************************/
