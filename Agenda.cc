@@ -156,7 +156,7 @@ void AddActivation(
     newActivation = get_struct(theEnv, activation);
     newActivation->setRule(theRule);
     newActivation->setBasis(binds);
-    newActivation->setTimetag(AgendaData(theEnv)->CurrentTimetag++);
+    newActivation->setTimetag(AgendaData(theEnv)->newTimetag());
     newActivation->setSalience(EvaluateSalience(theEnv, theRule));
 
     newActivation->setRandomID(genrand());
@@ -672,7 +672,7 @@ static void RemoveActivationFromGroup(
 static void AgendaClearFunction(
         Environment *theEnv,
         void *context) {
-    AgendaData(theEnv)->CurrentTimetag = 1;
+    AgendaData(theEnv)->setCurrentTimetag(1);
 }
 
 /*************************************************/
@@ -795,21 +795,18 @@ void RefreshCommand(
         Environment *theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
-    const char *ruleName;
-    Defrule *rulePtr;
-
     /*===========================*/
     /* Get the name of the rule. */
     /*===========================*/
 
-    ruleName = GetConstructName(context, "refresh", "rule name");
+    auto ruleName = GetConstructName(context, "refresh", "rule name");
     if (ruleName == nullptr) return;
 
     /*===============================*/
     /* Determine if the rule exists. */
     /*===============================*/
 
-    rulePtr = FindDefrule(theEnv, ruleName);
+    auto rulePtr = FindDefrule(theEnv, ruleName);
     if (rulePtr == nullptr) {
         CantFindItemErrorMessage(theEnv, "defrule", ruleName, true);
         return;

@@ -138,13 +138,19 @@ struct agendaData {
 #endif
 private:
     unsigned long NumberOfActivations;
+    unsigned long long CurrentTimetag;
 public:
     constexpr auto getNumberOfActivations() const noexcept { return NumberOfActivations; }
     void setNumberOfActivations(unsigned long value) noexcept { NumberOfActivations = value; }
     void incrementActivationCount() noexcept { ++NumberOfActivations; }
     void decrementActivationCount() noexcept { --NumberOfActivations; }
-    unsigned long long CurrentTimetag;
     constexpr auto getCurrentTimetag() const noexcept { return CurrentTimetag; }
+    void setCurrentTimetag(unsigned long long value) noexcept { CurrentTimetag = value; }
+    auto newTimetag() noexcept {
+        auto output = CurrentTimetag;
+        ++CurrentTimetag;
+        return output;
+    }
     bool AgendaChanged;
     constexpr auto agendaHasChanged() const noexcept { return AgendaChanged; }
     SalienceEvaluationType SalienceEvaluation;
