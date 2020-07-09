@@ -90,8 +90,8 @@ struct defglobalData {
 
 struct defglobal {
     ConstructHeader header;
-    unsigned int watch: 1;
-    unsigned int inScope: 1;
+    bool watch;
+    bool inScope;
     long busyCount;
     CLIPSValue current;
     struct expr *initial;
