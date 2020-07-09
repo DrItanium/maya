@@ -84,11 +84,17 @@ constexpr auto MIN_DEFRULE_SALIENCE = -10000;
 struct activation {
     Defrule *theRule;
     struct partialMatch *basis;
+private:
     int salience;
+public:
+    constexpr auto getSalience() const noexcept { return salience; }
+    void setSalience(int value) noexcept { salience = value; }
     unsigned long long timetag;
+    constexpr auto getTimetag() const noexcept { return timetag; }
     int randomID;
-    struct activation *prev;
-    struct activation *next;
+    constexpr auto getRandomID() const noexcept { return randomID; }
+    activation *prev;
+    activation *next;
 };
 
 struct salienceGroup {
@@ -106,12 +112,17 @@ constexpr auto AGENDA_DATA = 17;
 struct agendaData {
 #if DEBUGGING_FUNCTIONS
     bool WatchActivations;
+    constexpr auto shouldWatchActivations() const noexcept { return WatchActivations; }
 #endif
     unsigned long NumberOfActivations;
+    constexpr auto getNumberOfActivations() const noexcept { return NumberOfActivations; }
     unsigned long long CurrentTimetag;
+    constexpr auto getCurrentTimetag() const noexcept { return CurrentTimetag; }
     bool AgendaChanged;
+    constexpr auto agendaHasChanged() const noexcept { return AgendaChanged; }
     SalienceEvaluationType SalienceEvaluation;
     StrategyType Strategy;
+    constexpr auto getStrategy() const noexcept { return Strategy; }
 };
 
 #define AgendaData(theEnv) ((agendaData *) GetEnvironmentData(theEnv,AGENDA_DATA))
@@ -126,8 +137,6 @@ Activation *GetNextActivation(Environment *, Activation *);
 struct partialMatch *GetActivationBasis(Environment *, Activation *);
 const char *ActivationRuleName(Activation *);
 Defrule *GetActivationRule(Environment *, Activation *);
-int ActivationGetSalience(Activation *);
-int ActivationSetSalience(Activation *, int);
 void ActivationPPForm(Activation *, StringBuilder *);
 void GetActivationBasisPPForm(Environment *, char *, size_t, Activation *);
 bool MoveActivationToTop(Environment *, Activation *);

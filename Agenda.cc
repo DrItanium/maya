@@ -157,7 +157,7 @@ void AddActivation(
     newActivation->theRule = theRule;
     newActivation->basis = binds;
     newActivation->timetag = AgendaData(theEnv)->CurrentTimetag++;
-    newActivation->salience = EvaluateSalience(theEnv, theRule);
+    newActivation->setSalience(EvaluateSalience(theEnv, theRule));
 
     newActivation->randomID = genrand();
     newActivation->prev = nullptr;
@@ -192,7 +192,7 @@ void AddActivation(
 
     theModuleItem = (defruleModule *) theRule->header.whichModule;
 
-    theGroup = ReuseOrCreateSalienceGroup(theEnv, theModuleItem, newActivation->salience);
+    theGroup = ReuseOrCreateSalienceGroup(theEnv, theModuleItem, newActivation->getSalience());
 
     PlaceActivation(theEnv, &(theModuleItem->agenda), newActivation, theGroup);
 }
@@ -347,28 +347,10 @@ Defrule *GetActivationRule(
 /************************************************/
 /* ActivationGetSalience: Returns the salience  */
 /*   of the rule associated with an activation. */
-/************************************************/
-int ActivationGetSalience(
-        Activation *actPtr) {
-    return actPtr->salience;
-}
 
 /**************************************/
 /* ActivationSetSalience: Sets the    */
 /*   salience value of an activation. */
-/**************************************/
-int ActivationSetSalience(
-        Activation *actPtr,
-        int value) {
-    int temp;
-
-    if (value > MAX_DEFRULE_SALIENCE) { value = MAX_DEFRULE_SALIENCE; }
-    else if (value < MIN_DEFRULE_SALIENCE) { value = MIN_DEFRULE_SALIENCE; }
-
-    temp = actPtr->salience;
-    actPtr->salience = value;
-    return temp;
-}
 
 /********************************************/
 /* ActivationPPForm: Returns the pretty     */
@@ -554,7 +536,7 @@ static void PrintActivation(
         Activation *theActivation) {
     char printSpace[20];
 
-    gensprintf(printSpace, "%-6d ", theActivation->salience);
+    gensprintf(printSpace, "%-6d ", theActivation->getSalience());
     WriteString(theEnv, logicalName, printSpace);
     WriteString(theEnv, logicalName, theActivation->theRule->header.name->contents);
     WriteString(theEnv, logicalName, ": ");
@@ -660,7 +642,7 @@ static void RemoveActivationFromGroup(
         struct defruleModule *theRuleModule) {
     struct salienceGroup *theGroup;
 
-    theGroup = FindSalienceGroup(theRuleModule, theActivation->salience);
+    theGroup = FindSalienceGroup(theRuleModule, theActivation->getSalience());
     if (theGroup == nullptr) return;
 
     if (theActivation == theGroup->first) {
@@ -808,7 +790,7 @@ void ReorderAgenda(
         tempPtr = theActivation->next;
         theActivation->next = nullptr;
         theActivation->prev = nullptr;
-        theGroup = ReuseOrCreateSalienceGroup(theEnv, theModuleItem, theActivation->salience);
+        theGroup = ReuseOrCreateSalienceGroup(theEnv, theModuleItem, theActivation->getSalience());
         PlaceActivation(theEnv, &(theModuleItem->agenda), theActivation, theGroup);
         theActivation = tempPtr;
     }
@@ -996,7 +978,7 @@ void RefreshAgenda(
     for (theActivation = GetNextActivation(theEnv, nullptr);
          theActivation != nullptr;
          theActivation = GetNextActivation(theEnv, theActivation)) {
-        theActivation->salience = EvaluateSalience(theEnv, theActivation->theRule);
+        theActivation->setSalience(EvaluateSalience(theEnv, theActivation->theRule));
     }
 
     /*======================================================*/
