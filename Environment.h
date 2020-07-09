@@ -84,15 +84,15 @@ struct environmentCleanupFunction {
 };
 
 struct environmentData {
-    unsigned int initialized: 1;
+    bool initialized;
     void *context;
     CLIPSLexeme *TrueSymbol;
     CLIPSLexeme *FalseSymbol;
     CLIPSVoid *VoidConstant;
     void **theData;
     void (**cleanupFunctions)(Environment *);
-    struct environmentCleanupFunction *listOfCleanupEnvironmentFunctions;
-    struct environmentData *next;
+    environmentCleanupFunction *listOfCleanupEnvironmentFunctions;
+    environmentData *next;
 };
 
 inline auto VoidConstant(Environment* theEnv) noexcept { return theEnv->VoidConstant; }
