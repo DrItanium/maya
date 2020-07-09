@@ -102,11 +102,11 @@ static void *GetBinaryAtomValue(Environment *, struct bsaveSlotValueAtom *);
 /********************************************************/
 void FactFileCommandDefinitions(
         Environment *theEnv) {
-    AddUDF(theEnv, "save-facts", "l", 1, UNBOUNDED, "y;sy", SaveFactsCommand, nullptr);
-    AddUDF(theEnv, "load-facts", "l", 1, 1, "sy", LoadFactsCommand, nullptr);
+    AddUDF(theEnv, "save-facts", "l", 1, UNBOUNDED, "y;sy", SaveFactsCommand);
+    AddUDF(theEnv, "load-facts", "l", 1, 1, "sy", LoadFactsCommand);
 
-    AddUDF(theEnv, "bsave-facts", "l", 1, UNBOUNDED, "y;sy", BinarySaveFactsCommand, nullptr);
-    AddUDF(theEnv, "bload-facts", "l", 1, 1, "sy", BinaryLoadFactsCommand, nullptr);
+    AddUDF(theEnv, "bsave-facts", "l", 1, UNBOUNDED, "y;sy", BinarySaveFactsCommand);
+    AddUDF(theEnv, "bload-facts", "l", 1, 1, "sy", BinaryLoadFactsCommand);
 }
 
 /******************************************/

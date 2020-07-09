@@ -142,25 +142,25 @@ void MultifieldFunctionDefinitions(
         Environment *theEnv) {
     AllocateEnvironmentData(theEnv, MULTIFUN_DATA, sizeof(multiFunctionData), nullptr);
 
-    AddUDF(theEnv, "first$", "m", 1, 1, "m", FirstFunction, nullptr);
-    AddUDF(theEnv, "rest$", "m", 1, 1, "m", RestFunction, nullptr);
-    AddUDF(theEnv, "subseq$", "m", 3, 3, "l;m", SubseqFunction, nullptr);
-    AddUDF(theEnv, "delete-member$", "m", 2, UNBOUNDED, "*;m", DeleteMemberFunction, nullptr);
-    AddUDF(theEnv, "replace-member$", "m", 3, UNBOUNDED, "*;m", ReplaceMemberFunction, nullptr);
-    AddUDF(theEnv, "delete$", "m", 3, 3, "l;m", DeleteFunction, nullptr);
-    AddUDF(theEnv, "replace$", "m", 4, UNBOUNDED, "*;m;l;l", ReplaceFunction, nullptr);
-    AddUDF(theEnv, "insert$", "m", 3, UNBOUNDED, "*;m;l", InsertFunction, nullptr);
-    AddUDF(theEnv, "explode$", "m", 1, 1, "s", ExplodeFunction, nullptr);
-    AddUDF(theEnv, "implode$", "s", 1, 1, "m", ImplodeFunction, nullptr);
-    AddUDF(theEnv, "nth$", "synldife", 2, 2, ";l;m", NthFunction, nullptr);
-    AddUDF(theEnv, "member$", "blm", 2, 2, ";*;m", MemberFunction, nullptr);
-    AddUDF(theEnv, "subsetp", "b", 2, 2, ";m;m", SubsetpFunction, nullptr);
-    AddUDF(theEnv, "progn$", "*", 0, UNBOUNDED, nullptr, MultifieldPrognFunction, nullptr);
-    AddUDF(theEnv, "foreach", "*", 0, UNBOUNDED, nullptr, ForeachFunction, nullptr);
+    AddUDF(theEnv, "first$", "m", 1, 1, "m", FirstFunction);
+    AddUDF(theEnv, "rest$", "m", 1, 1, "m", RestFunction);
+    AddUDF(theEnv, "subseq$", "m", 3, 3, "l;m", SubseqFunction);
+    AddUDF(theEnv, "delete-member$", "m", 2, UNBOUNDED, "*;m", DeleteMemberFunction);
+    AddUDF(theEnv, "replace-member$", "m", 3, UNBOUNDED, "*;m", ReplaceMemberFunction);
+    AddUDF(theEnv, "delete$", "m", 3, 3, "l;m", DeleteFunction);
+    AddUDF(theEnv, "replace$", "m", 4, UNBOUNDED, "*;m;l;l", ReplaceFunction);
+    AddUDF(theEnv, "insert$", "m", 3, UNBOUNDED, "*;m;l", InsertFunction);
+    AddUDF(theEnv, "explode$", "m", 1, 1, "s", ExplodeFunction);
+    AddUDF(theEnv, "implode$", "s", 1, 1, "m", ImplodeFunction);
+    AddUDF(theEnv, "nth$", "synldife", 2, 2, ";l;m", NthFunction);
+    AddUDF(theEnv, "member$", "blm", 2, 2, ";*;m", MemberFunction);
+    AddUDF(theEnv, "subsetp", "b", 2, 2, ";m;m", SubsetpFunction);
+    AddUDF(theEnv, "progn$", "*", 0, UNBOUNDED, nullptr, MultifieldPrognFunction);
+    AddUDF(theEnv, "foreach", "*", 0, UNBOUNDED, nullptr, ForeachFunction);
     FuncSeqOvlFlags(theEnv, "progn$", false, false);
     FuncSeqOvlFlags(theEnv, "foreach", false, false);
-    AddUDF(theEnv, "(get-progn$-field)", "*", 0, 0, nullptr, GetMvPrognField, nullptr);
-    AddUDF(theEnv, "(get-progn$-index)", "l", 0, 0, nullptr, GetMvPrognIndex, nullptr);
+    AddUDF(theEnv, "(get-progn$-field)", "*", 0, 0, nullptr, GetMvPrognField);
+    AddUDF(theEnv, "(get-progn$-index)", "l", 0, 0, nullptr, GetMvPrognIndex);
 
     AddFunctionParser(theEnv, "progn$", MultifieldPrognParser);
     AddFunctionParser(theEnv, "foreach", ForeachParser);

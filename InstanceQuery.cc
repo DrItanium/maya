@@ -120,21 +120,21 @@ void SetupQuery(
     InstanceQueryData(theEnv)->QUERY_DELIMITER_SYMBOL = CreateSymbol(theEnv, QUERY_DELIMITER_STRING);
     IncrementLexemeCount(InstanceQueryData(theEnv)->QUERY_DELIMITER_SYMBOL);
 
-    AddUDF(theEnv, "(query-instance)", "n", 0, UNBOUNDED, nullptr, GetQueryInstance, nullptr);
+    AddUDF(theEnv, "(query-instance)", "n", 0, UNBOUNDED, nullptr, GetQueryInstance);
 
-    AddUDF(theEnv, "(query-instance-slot)", "*", 0, UNBOUNDED, nullptr, GetQueryInstanceSlot, nullptr);
+    AddUDF(theEnv, "(query-instance-slot)", "*", 0, UNBOUNDED, nullptr, GetQueryInstanceSlot);
 
-    AddUDF(theEnv, "any-instancep", "b", 0, UNBOUNDED, nullptr, AnyInstances, nullptr);
+    AddUDF(theEnv, "any-instancep", "b", 0, UNBOUNDED, nullptr, AnyInstances);
 
-    AddUDF(theEnv, "find-instance", "m", 0, UNBOUNDED, nullptr, QueryFindInstance, nullptr);
+    AddUDF(theEnv, "find-instance", "m", 0, UNBOUNDED, nullptr, QueryFindInstance);
 
-    AddUDF(theEnv, "find-all-instances", "m", 0, UNBOUNDED, nullptr, QueryFindAllInstances, nullptr);
+    AddUDF(theEnv, "find-all-instances", "m", 0, UNBOUNDED, nullptr, QueryFindAllInstances);
 
-    AddUDF(theEnv, "do-for-instance", "*", 0, UNBOUNDED, nullptr, QueryDoForInstance, nullptr);
+    AddUDF(theEnv, "do-for-instance", "*", 0, UNBOUNDED, nullptr, QueryDoForInstance);
 
-    AddUDF(theEnv, "do-for-all-instances", "*", 0, UNBOUNDED, nullptr, QueryDoForAllInstances, nullptr);
+    AddUDF(theEnv, "do-for-all-instances", "*", 0, UNBOUNDED, nullptr, QueryDoForAllInstances);
 
-    AddUDF(theEnv, "delayed-do-for-all-instances", "*", 0, UNBOUNDED, nullptr, DelayedQueryDoForAllInstances, nullptr);
+    AddUDF(theEnv, "delayed-do-for-all-instances", "*", 0, UNBOUNDED, nullptr, DelayedQueryDoForAllInstances);
 
     AddFunctionParser(theEnv, "any-instancep", ParseQueryNoAction);
     AddFunctionParser(theEnv, "find-instance", ParseQueryNoAction);

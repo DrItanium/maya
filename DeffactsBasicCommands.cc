@@ -101,13 +101,13 @@ void DeffactsBasicCommands(
     AddResetFunction(theEnv, "deffacts", ResetDeffacts, 0, nullptr);
     AddSaveFunction(theEnv, "deffacts", SaveDeffacts, 10, nullptr);
 
-    AddUDF(theEnv, "get-deffacts-list", "m", 0, 1, "y", GetDeffactsListFunction, nullptr);
-    AddUDF(theEnv, "undeffacts", "v", 1, 1, "y", UndeffactsCommand, nullptr);
-    AddUDF(theEnv, "deffacts-module", "y", 1, 1, "y", DeffactsModuleFunction, nullptr);
+    AddUDF(theEnv, "get-deffacts-list", "m", 0, 1, "y", GetDeffactsListFunction);
+    AddUDF(theEnv, "undeffacts", "v", 1, 1, "y", UndeffactsCommand);
+    AddUDF(theEnv, "deffacts-module", "y", 1, 1, "y", DeffactsModuleFunction);
 
 #if DEBUGGING_FUNCTIONS
-    AddUDF(theEnv, "list-deffacts", "v", 0, 1, "y", ListDeffactsCommand, nullptr);
-    AddUDF(theEnv, "ppdeffacts", "vs", 1, 2, ";y;ldsyn", PPDeffactsCommand, nullptr);
+    AddUDF(theEnv, "list-deffacts", "v", 0, 1, "y", ListDeffactsCommand);
+    AddUDF(theEnv, "ppdeffacts", "vs", 1, 2, ";y;ldsyn", PPDeffactsCommand);
 #endif
 
 #if (BLOAD_AND_BSAVE)

@@ -124,18 +124,18 @@ static void StrOrSymCatFunction(UDFContext *, UDFValue *, unsigned short);
 /******************************************/
 void StringFunctionDefinitions(
         Environment *theEnv) {
-    AddUDF(theEnv, "str-cat", "sy", 1, UNBOUNDED, "synld", StrCatFunction, nullptr);
-    AddUDF(theEnv, "sym-cat", "sy", 1, UNBOUNDED, "synld", SymCatFunction, nullptr);
-    AddUDF(theEnv, "str-length", "l", 1, 1, "syn", StrLengthFunction, nullptr);
-    AddUDF(theEnv, "str-compare", "l", 2, 3, "*;syn;syn;l", StrCompareFunction, nullptr);
-    AddUDF(theEnv, "upcase", "syn", 1, 1, "syn", UpcaseFunction, nullptr);
-    AddUDF(theEnv, "lowcase", "syn", 1, 1, "syn", LowcaseFunction, nullptr);
-    AddUDF(theEnv, "sub-string", "s", 3, 3, "*;l;l;syn", SubStringFunction, nullptr);
-    AddUDF(theEnv, "str-index", "bl", 2, 2, "syn", StrIndexFunction, nullptr);
-    AddUDF(theEnv, "eval", "*", 1, 1, "sy", EvalFunction, nullptr);
-    AddUDF(theEnv, "build", "b", 1, 1, "sy", BuildFunction, nullptr);
-    AddUDF(theEnv, "string-to-field", "*", 1, 1, "syn", StringToFieldFunction, nullptr);
-    AddUDF(theEnv, "str-replace", "syn", 3, 3, "syn", StrReplaceFunction, nullptr);
+    AddUDF(theEnv, "str-cat", "sy", 1, UNBOUNDED, "synld", StrCatFunction);
+    AddUDF(theEnv, "sym-cat", "sy", 1, UNBOUNDED, "synld", SymCatFunction);
+    AddUDF(theEnv, "str-length", "l", 1, 1, "syn", StrLengthFunction);
+    AddUDF(theEnv, "str-compare", "l", 2, 3, "*;syn;syn;l", StrCompareFunction);
+    AddUDF(theEnv, "upcase", "syn", 1, 1, "syn", UpcaseFunction);
+    AddUDF(theEnv, "lowcase", "syn", 1, 1, "syn", LowcaseFunction);
+    AddUDF(theEnv, "sub-string", "s", 3, 3, "*;l;l;syn", SubStringFunction);
+    AddUDF(theEnv, "str-index", "bl", 2, 2, "syn", StrIndexFunction);
+    AddUDF(theEnv, "eval", "*", 1, 1, "sy", EvalFunction);
+    AddUDF(theEnv, "build", "b", 1, 1, "sy", BuildFunction);
+    AddUDF(theEnv, "string-to-field", "*", 1, 1, "syn", StringToFieldFunction);
+    AddUDF(theEnv, "str-replace", "syn", 3, 3, "syn", StrReplaceFunction);
 }
 
 /****************************************/

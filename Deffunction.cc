@@ -197,15 +197,15 @@ void SetupDeffunctions(
 #endif
     AddSaveFunction(theEnv, "deffunction-headers", SaveDeffunctionHeaders, 1000, nullptr);
     AddSaveFunction(theEnv, "deffunctions", SaveDeffunctions, 0, nullptr);
-    AddUDF(theEnv, "undeffunction", "v", 1, 1, "y", UndeffunctionCommand, nullptr);
+    AddUDF(theEnv, "undeffunction", "v", 1, 1, "y", UndeffunctionCommand);
 
 #if DEBUGGING_FUNCTIONS
-    AddUDF(theEnv, "list-deffunctions", "v", 0, 1, "y", ListDeffunctionsCommand, nullptr);
-    AddUDF(theEnv, "ppdeffunction", "vs", 1, 2, ";y;ldsyn", PPDeffunctionCommand, nullptr);
+    AddUDF(theEnv, "list-deffunctions", "v", 0, 1, "y", ListDeffunctionsCommand);
+    AddUDF(theEnv, "ppdeffunction", "vs", 1, 2, ";y;ldsyn", PPDeffunctionCommand);
 #endif
 
-    AddUDF(theEnv, "get-deffunction-list", "m", 0, 1, "y", GetDeffunctionListFunction, nullptr);
-    AddUDF(theEnv, "deffunction-module", "y", 1, 1, "y", GetDeffunctionModuleCommand, nullptr);
+    AddUDF(theEnv, "get-deffunction-list", "m", 0, 1, "y", GetDeffunctionListFunction);
+    AddUDF(theEnv, "deffunction-module", "y", 1, 1, "y", GetDeffunctionModuleCommand);
 
 #if BLOAD_AND_BSAVE
     SetupDeffunctionsBload(theEnv);

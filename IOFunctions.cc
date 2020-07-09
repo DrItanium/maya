@@ -181,26 +181,26 @@ void IOFunctionDefinitions(
 #endif
 
 #if IO_FUNCTIONS
-    AddUDF(theEnv, "printout", "v", 1, UNBOUNDED, "*;ldsyn", PrintoutFunction, nullptr);
-    AddUDF(theEnv, "print", "v", 0, UNBOUNDED, nullptr, PrintFunction, nullptr);
-    AddUDF(theEnv, "println", "v", 0, UNBOUNDED, nullptr, PrintlnFunction, nullptr);
-    AddUDF(theEnv, "read", "synldfie", 0, 1, ";ldsyn", ReadFunction, nullptr);
-    AddUDF(theEnv, "open", "b", 2, 3, "*;sy;ldsyn;s", OpenFunction, nullptr);
-    AddUDF(theEnv, "close", "b", 0, 1, "ldsyn", CloseFunction, nullptr);
-    AddUDF(theEnv, "flush", "b", 0, 1, "ldsyn", FlushFunction, nullptr);
-    AddUDF(theEnv, "rewind", "b", 1, 1, ";ldsyn", RewindFunction, nullptr);
-    AddUDF(theEnv, "tell", "lb", 1, 1, ";ldsyn", TellFunction, nullptr);
-    AddUDF(theEnv, "seek", "b", 3, 3, ";ldsyn;l;y", SeekFunction, nullptr);
-    AddUDF(theEnv, "get-char", "l", 0, 1, ";ldsyn", GetCharFunction, nullptr);
-    AddUDF(theEnv, "unget-char", "l", 1, 2, ";ldsyn;l", UngetCharFunction, nullptr);
-    AddUDF(theEnv, "put-char", "v", 1, 2, ";ldsyn;l", PutCharFunction, nullptr);
-    AddUDF(theEnv, "remove", "b", 1, 1, "sy", RemoveFunction, nullptr);
-    AddUDF(theEnv, "rename", "b", 2, 2, "sy", RenameFunction, nullptr);
-    AddUDF(theEnv, "format", "s", 2, UNBOUNDED, "*;ldsyn;s", FormatFunction, nullptr);
-    AddUDF(theEnv, "readline", "sy", 0, 1, ";ldsyn", ReadlineFunction, nullptr);
-    AddUDF(theEnv, "set-locale", "sy", 0, 1, ";s", SetLocaleFunction, nullptr);
-    AddUDF(theEnv, "read-number", "syld", 0, 1, ";ldsyn", ReadNumberFunction, nullptr);
-    AddUDF(theEnv, "chdir", "b", 0, 1, "sy", ChdirFunction, nullptr);
+    AddUDF(theEnv, "printout", "v", 1, UNBOUNDED, "*;ldsyn", PrintoutFunction);
+    AddUDF(theEnv, "print", "v", 0, UNBOUNDED, nullptr, PrintFunction);
+    AddUDF(theEnv, "println", "v", 0, UNBOUNDED, nullptr, PrintlnFunction);
+    AddUDF(theEnv, "read", "synldfie", 0, 1, ";ldsyn", ReadFunction);
+    AddUDF(theEnv, "open", "b", 2, 3, "*;sy;ldsyn;s", OpenFunction);
+    AddUDF(theEnv, "close", "b", 0, 1, "ldsyn", CloseFunction);
+    AddUDF(theEnv, "flush", "b", 0, 1, "ldsyn", FlushFunction);
+    AddUDF(theEnv, "rewind", "b", 1, 1, ";ldsyn", RewindFunction);
+    AddUDF(theEnv, "tell", "lb", 1, 1, ";ldsyn", TellFunction);
+    AddUDF(theEnv, "seek", "b", 3, 3, ";ldsyn;l;y", SeekFunction);
+    AddUDF(theEnv, "get-char", "l", 0, 1, ";ldsyn", GetCharFunction);
+    AddUDF(theEnv, "unget-char", "l", 1, 2, ";ldsyn;l", UngetCharFunction);
+    AddUDF(theEnv, "put-char", "v", 1, 2, ";ldsyn;l", PutCharFunction);
+    AddUDF(theEnv, "remove", "b", 1, 1, "sy", RemoveFunction);
+    AddUDF(theEnv, "rename", "b", 2, 2, "sy", RenameFunction);
+    AddUDF(theEnv, "format", "s", 2, UNBOUNDED, "*;ldsyn;s", FormatFunction);
+    AddUDF(theEnv, "readline", "sy", 0, 1, ";ldsyn", ReadlineFunction);
+    AddUDF(theEnv, "set-locale", "sy", 0, 1, ";s", SetLocaleFunction);
+    AddUDF(theEnv, "read-number", "syld", 0, 1, ";ldsyn", ReadNumberFunction);
+    AddUDF(theEnv, "chdir", "b", 0, 1, "sy", ChdirFunction);
 #endif
 }
 

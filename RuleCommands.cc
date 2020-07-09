@@ -131,37 +131,37 @@ static void JoinActivityReset(Environment *, ConstructHeader *, void *);
 /****************************************************************/
 void DefruleCommands(
         Environment *theEnv) {
-    AddUDF(theEnv, "run", "v", 0, 1, "l", RunCommand, nullptr);
-    AddUDF(theEnv, "halt", "v", 0, 0, nullptr, HaltCommand, nullptr);
-    AddUDF(theEnv, "focus", "b", 1, UNBOUNDED, "y", FocusCommand, nullptr);
-    AddUDF(theEnv, "clear-focus-stack", "v", 0, 0, nullptr, ClearFocusStackCommand, nullptr);
-    AddUDF(theEnv, "get-focus-stack", "m", 0, 0, nullptr, GetFocusStackFunction, nullptr);
-    AddUDF(theEnv, "pop-focus", "y", 0, 0, nullptr, PopFocusFunction, nullptr);
-    AddUDF(theEnv, "get-focus", "y", 0, 0, nullptr, GetFocusFunction, nullptr);
+    AddUDF(theEnv, "run", "v", 0, 1, "l", RunCommand);
+    AddUDF(theEnv, "halt", "v", 0, 0, nullptr, HaltCommand);
+    AddUDF(theEnv, "focus", "b", 1, UNBOUNDED, "y", FocusCommand);
+    AddUDF(theEnv, "clear-focus-stack", "v", 0, 0, nullptr, ClearFocusStackCommand);
+    AddUDF(theEnv, "get-focus-stack", "m", 0, 0, nullptr, GetFocusStackFunction);
+    AddUDF(theEnv, "pop-focus", "y", 0, 0, nullptr, PopFocusFunction);
+    AddUDF(theEnv, "get-focus", "y", 0, 0, nullptr, GetFocusFunction);
 #if DEBUGGING_FUNCTIONS
-    AddUDF(theEnv, "set-break", "v", 1, 1, "y", SetBreakCommand, nullptr);
-    AddUDF(theEnv, "remove-break", "v", 0, 1, "y", RemoveBreakCommand, nullptr);
-    AddUDF(theEnv, "show-breaks", "v", 0, 1, "y", ShowBreaksCommand, nullptr);
-    AddUDF(theEnv, "matches", "bm", 1, 2, "y", MatchesCommand, nullptr);
-    AddUDF(theEnv, "join-activity", "bm", 1, 2, "y", JoinActivityCommand, nullptr);
-    AddUDF(theEnv, "join-activity-reset", "v", 0, 0, nullptr, JoinActivityResetCommand, nullptr);
-    AddUDF(theEnv, "list-focus-stack", "v", 0, 0, nullptr, ListFocusStackCommand, nullptr);
-    AddUDF(theEnv, "dependencies", "v", 1, 1, "infly", DependenciesCommand, nullptr);
-    AddUDF(theEnv, "dependents", "v", 1, 1, "infly", DependentsCommand, nullptr);
+    AddUDF(theEnv, "set-break", "v", 1, 1, "y", SetBreakCommand);
+    AddUDF(theEnv, "remove-break", "v", 0, 1, "y", RemoveBreakCommand);
+    AddUDF(theEnv, "show-breaks", "v", 0, 1, "y", ShowBreaksCommand);
+    AddUDF(theEnv, "matches", "bm", 1, 2, "y", MatchesCommand);
+    AddUDF(theEnv, "join-activity", "bm", 1, 2, "y", JoinActivityCommand);
+    AddUDF(theEnv, "join-activity-reset", "v", 0, 0, nullptr, JoinActivityResetCommand);
+    AddUDF(theEnv, "list-focus-stack", "v", 0, 0, nullptr, ListFocusStackCommand);
+    AddUDF(theEnv, "dependencies", "v", 1, 1, "infly", DependenciesCommand);
+    AddUDF(theEnv, "dependents", "v", 1, 1, "infly", DependentsCommand);
 
-    AddUDF(theEnv, "timetag", "l", 1, 1, "infly", TimetagFunction, nullptr);
+    AddUDF(theEnv, "timetag", "l", 1, 1, "infly", TimetagFunction);
 #endif /* DEBUGGING_FUNCTIONS */
 
-    AddUDF(theEnv, "get-beta-memory-resizing", "b", 0, 0, nullptr, GetBetaMemoryResizingCommand, nullptr);
-    AddUDF(theEnv, "set-beta-memory-resizing", "b", 1, 1, nullptr, SetBetaMemoryResizingCommand, nullptr);
+    AddUDF(theEnv, "get-beta-memory-resizing", "b", 0, 0, nullptr, GetBetaMemoryResizingCommand);
+    AddUDF(theEnv, "set-beta-memory-resizing", "b", 1, 1, nullptr, SetBetaMemoryResizingCommand);
 
-    AddUDF(theEnv, "get-strategy", "y", 0, 0, nullptr, GetStrategyCommand, nullptr);
-    AddUDF(theEnv, "set-strategy", "y", 1, 1, "y", SetStrategyCommand, nullptr);
+    AddUDF(theEnv, "get-strategy", "y", 0, 0, nullptr, GetStrategyCommand);
+    AddUDF(theEnv, "set-strategy", "y", 1, 1, "y", SetStrategyCommand);
 
 #if DEVELOPER
-    AddUDF(theEnv,"rule-complexity","l",1,1,"y",RuleComplexityCommand,"RuleComplexityCommand",nullptr);
-    AddUDF(theEnv,"show-joins","v",1,1,"y",ShowJoinsCommand,"ShowJoinsCommand",nullptr);
-    AddUDF(theEnv,"show-aht","v",0,0,nullptr,ShowAlphaHashTable,"ShowAlphaHashTable",nullptr);
+    AddUDF(theEnv,"rule-complexity","l",1,1,"y",RuleComplexityCommand,"RuleComplexityCommand");
+    AddUDF(theEnv,"show-joins","v",1,1,"y",ShowJoinsCommand,"ShowJoinsCommand");
+    AddUDF(theEnv,"show-aht","v",0,0,nullptr,ShowAlphaHashTable,"ShowAlphaHashTable");
 #if DEBUGGING_FUNCTIONS
     AddWatchItem(theEnv,"rule-analysis",0,&DefruleData(theEnv)->WatchRuleAnalysis,0,nullptr,nullptr);
 #endif

@@ -103,7 +103,7 @@ static void RemoveActivationFromGroup(Environment *, Activation *, struct defrul
 /*************************************************/
 void InitializeAgenda(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, AGENDA_DATA, sizeof(agendaData), nullptr);
+    AllocateEnvironmentData(theEnv, AGENDA_DATA, sizeof(agendaData));
 
     AgendaData(theEnv)->SalienceEvaluation = WHEN_DEFINED;
 
@@ -113,13 +113,13 @@ void InitializeAgenda(
 #if DEBUGGING_FUNCTIONS
     AddWatchItem(theEnv, "activations", 1, &AgendaData(theEnv)->WatchActivations, 40, DefruleWatchAccess, DefruleWatchPrint);
 #endif
-    AddUDF(theEnv, "refresh", "v", 1, 1, "y", RefreshCommand, nullptr);
-    AddUDF(theEnv, "refresh-agenda", "v", 0, 1, "y", RefreshAgendaCommand, nullptr);
-    AddUDF(theEnv, "get-salience-evaluation", "y", 0, 0, nullptr, GetSalienceEvaluationCommand, nullptr);
-    AddUDF(theEnv, "set-salience-evaluation", "y", 1, 1, "y", SetSalienceEvaluationCommand, nullptr);
+    AddUDF(theEnv, "refresh", "v", 1, 1, "y", RefreshCommand);
+    AddUDF(theEnv, "refresh-agenda", "v", 0, 1, "y", RefreshAgendaCommand);
+    AddUDF(theEnv, "get-salience-evaluation", "y", 0, 0, nullptr, GetSalienceEvaluationCommand);
+    AddUDF(theEnv, "set-salience-evaluation", "y", 1, 1, "y", SetSalienceEvaluationCommand);
 
 #if DEBUGGING_FUNCTIONS
-    AddUDF(theEnv, "agenda", "v", 0, 1, "y", AgendaCommand, nullptr);
+    AddUDF(theEnv, "agenda", "v", 0, 1, "y", AgendaCommand);
 #endif
 }
 

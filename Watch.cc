@@ -800,10 +800,10 @@ void GetWatchItemCommand(
 /*************************************************************/
 void WatchFunctionDefinitions(
         Environment *theEnv) {
-    AddUDF(theEnv, "watch", "v", 1, UNBOUNDED, "*;y", WatchCommand, nullptr);
-    AddUDF(theEnv, "unwatch", "v", 1, UNBOUNDED, "*;y", UnwatchCommand, nullptr);
-    AddUDF(theEnv, "get-watch-item", "b", 1, 1, "y", GetWatchItemCommand, nullptr);
-    AddUDF(theEnv, "list-watch-items", "v", 0, UNBOUNDED, "*;y", ListWatchItemsCommand, nullptr);
+    AddUDF(theEnv, "watch", "v", 1, UNBOUNDED, "*;y", WatchCommand);
+    AddUDF(theEnv, "unwatch", "v", 1, UNBOUNDED, "*;y", UnwatchCommand);
+    AddUDF(theEnv, "get-watch-item", "b", 1, 1, "y", GetWatchItemCommand);
+    AddUDF(theEnv, "list-watch-items", "v", 0, UNBOUNDED, "*;y", ListWatchItemsCommand);
 }
 
 #endif /* DEBUGGING_FUNCTIONS */

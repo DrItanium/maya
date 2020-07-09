@@ -176,33 +176,33 @@ void SetupInstances(
     InitializeInstanceTable(theEnv);
     InstallPrimitive(theEnv, (entityRecord *) &InstanceData(theEnv)->InstanceInfo, INSTANCE_ADDRESS_TYPE);
 
-    AddUDF(theEnv, "initialize-instance", "bn", 0, UNBOUNDED, nullptr, InactiveInitializeInstance, nullptr);
-    AddUDF(theEnv, "active-initialize-instance", "bn", 0, UNBOUNDED, nullptr, InitializeInstanceCommand, nullptr);
+    AddUDF(theEnv, "initialize-instance", "bn", 0, UNBOUNDED, nullptr, InactiveInitializeInstance);
+    AddUDF(theEnv, "active-initialize-instance", "bn", 0, UNBOUNDED, nullptr, InitializeInstanceCommand);
 
-    AddUDF(theEnv, "make-instance", "bn", 0, UNBOUNDED, nullptr, InactiveMakeInstance, nullptr);
-    AddUDF(theEnv, "active-make-instance", "bn", 0, UNBOUNDED, nullptr, MakeInstanceCommand, nullptr);
+    AddUDF(theEnv, "make-instance", "bn", 0, UNBOUNDED, nullptr, InactiveMakeInstance);
+    AddUDF(theEnv, "active-make-instance", "bn", 0, UNBOUNDED, nullptr, MakeInstanceCommand);
 
 
-    AddUDF(theEnv, "init-slots", "*", 0, 0, nullptr, InitSlotsCommand, nullptr);
+    AddUDF(theEnv, "init-slots", "*", 0, 0, nullptr, InitSlotsCommand);
 
-    AddUDF(theEnv, "delete-instance", "b", 0, 0, nullptr, DeleteInstanceCommand, nullptr);
-    AddUDF(theEnv, "(create-instance)", "b", 0, 0, nullptr, CreateInstanceHandler, nullptr);
-    AddUDF(theEnv, "unmake-instance", "b", 1, UNBOUNDED, "iny", UnmakeInstanceCommand, nullptr);
+    AddUDF(theEnv, "delete-instance", "b", 0, 0, nullptr, DeleteInstanceCommand);
+    AddUDF(theEnv, "(create-instance)", "b", 0, 0, nullptr, CreateInstanceHandler);
+    AddUDF(theEnv, "unmake-instance", "b", 1, UNBOUNDED, "iny", UnmakeInstanceCommand);
 
 #if DEBUGGING_FUNCTIONS
-    AddUDF(theEnv, "instances", "v", 0, 3, "y", InstancesCommand, nullptr);
-    AddUDF(theEnv, "ppinstance", "v", 0, 0, nullptr, PPInstanceCommand, nullptr);
+    AddUDF(theEnv, "instances", "v", 0, 3, "y", InstancesCommand);
+    AddUDF(theEnv, "ppinstance", "v", 0, 0, nullptr, PPInstanceCommand);
 #endif
 
-    AddUDF(theEnv, "symbol-to-instance-name", "*", 1, 1, "y", SymbolToInstanceNameFunction, nullptr);
-    AddUDF(theEnv, "instance-name-to-symbol", "y", 1, 1, "ny", InstanceNameToSymbolFunction, nullptr);
-    AddUDF(theEnv, "instance-address", "bi", 1, 2, ";iyn;yn", InstanceAddressCommand, nullptr);
-    AddUDF(theEnv, "instance-addressp", "b", 1, 1, nullptr, InstanceAddressPCommand, nullptr);
-    AddUDF(theEnv, "instance-namep", "b", 1, 1, nullptr, InstanceNamePCommand, nullptr);
-    AddUDF(theEnv, "instance-name", "bn", 1, 1, "yin", InstanceNameCommand, nullptr);
-    AddUDF(theEnv, "instancep", "b", 1, 1, nullptr, InstancePCommand, nullptr);
-    AddUDF(theEnv, "instance-existp", "b", 1, 1, "niy", InstanceExistPCommand, nullptr);
-    AddUDF(theEnv, "class", "*", 1, 1, nullptr, ClassCommand, nullptr);
+    AddUDF(theEnv, "symbol-to-instance-name", "*", 1, 1, "y", SymbolToInstanceNameFunction);
+    AddUDF(theEnv, "instance-name-to-symbol", "y", 1, 1, "ny", InstanceNameToSymbolFunction);
+    AddUDF(theEnv, "instance-address", "bi", 1, 2, ";iyn;yn", InstanceAddressCommand);
+    AddUDF(theEnv, "instance-addressp", "b", 1, 1, nullptr, InstanceAddressPCommand);
+    AddUDF(theEnv, "instance-namep", "b", 1, 1, nullptr, InstanceNamePCommand);
+    AddUDF(theEnv, "instance-name", "bn", 1, 1, "yin", InstanceNameCommand);
+    AddUDF(theEnv, "instancep", "b", 1, 1, nullptr, InstancePCommand);
+    AddUDF(theEnv, "instance-existp", "b", 1, 1, "niy", InstanceExistPCommand);
+    AddUDF(theEnv, "class", "*", 1, 1, nullptr, ClassCommand);
 
     AddFunctionParser(theEnv, "active-initialize-instance", ParseInitializeInstance);
     AddFunctionParser(theEnv, "active-make-instance", ParseInitializeInstance);

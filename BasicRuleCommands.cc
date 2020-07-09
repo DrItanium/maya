@@ -97,24 +97,24 @@ static void ClearDefrules(Environment *, void *);
 /*************************************************************/
 void DefruleBasicCommands(
         Environment *theEnv) {
-    AddResetFunction(theEnv, "defrule", ResetDefrules, 70, nullptr);
-    AddResetFunction(theEnv, "defrule", ResetDefrulesPrime, 10, nullptr);
-    AddSaveFunction(theEnv, "defrule", SaveDefrules, 0, nullptr);
-    AddClearReadyFunction(theEnv, "defrule", ClearDefrulesReady, 0, nullptr);
-    AddClearFunction(theEnv, "defrule", ClearDefrules, 0, nullptr);
+    AddResetFunction(theEnv, "defrule", ResetDefrules, 70);
+    AddResetFunction(theEnv, "defrule", ResetDefrulesPrime, 10);
+    AddSaveFunction(theEnv, "defrule", SaveDefrules, 0);
+    AddClearReadyFunction(theEnv, "defrule", ClearDefrulesReady, 0);
+    AddClearFunction(theEnv, "defrule", ClearDefrules, 0);
 
 #if DEBUGGING_FUNCTIONS
     AddWatchItem(theEnv, "rules", 0, &DefruleData(theEnv)->WatchRules, 70, DefruleWatchAccess, DefruleWatchPrint);
 #endif
 
-    AddUDF(theEnv, "get-defrule-list", "m", 0, 1, "y", GetDefruleListFunction, nullptr);
-    AddUDF(theEnv, "undefrule", "v", 1, 1, "y", UndefruleCommand, nullptr);
-    AddUDF(theEnv, "defrule-module", "y", 1, 1, "y", DefruleModuleFunction, nullptr);
+    AddUDF(theEnv, "get-defrule-list", "m", 0, 1, "y", GetDefruleListFunction);
+    AddUDF(theEnv, "undefrule", "v", 1, 1, "y", UndefruleCommand);
+    AddUDF(theEnv, "defrule-module", "y", 1, 1, "y", DefruleModuleFunction);
 
 #if DEBUGGING_FUNCTIONS
-    AddUDF(theEnv, "rules", "v", 0, 1, "y", ListDefrulesCommand, nullptr);
-    AddUDF(theEnv, "list-defrules", "v", 0, 1, "y", ListDefrulesCommand, nullptr);
-    AddUDF(theEnv, "ppdefrule", "vs", 1, 2, ";y;ldsyn", PPDefruleCommand, nullptr);
+    AddUDF(theEnv, "rules", "v", 0, 1, "y", ListDefrulesCommand);
+    AddUDF(theEnv, "list-defrules", "v", 0, 1, "y", ListDefrulesCommand);
+    AddUDF(theEnv, "ppdefrule", "vs", 1, 2, ";y;ldsyn", PPDefruleCommand);
 #endif
 
 #if BLOAD_AND_BSAVE

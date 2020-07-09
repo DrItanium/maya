@@ -101,12 +101,12 @@ void ConstructProfilingFunctionDefinitions(
     ProfileFunctionData(theEnv)->PercentThreshold = 0.0;
     ProfileFunctionData(theEnv)->OutputString = OUTPUT_STRING;
 
-    AddUDF(theEnv, "profile", "v", 1, 1, "y", ProfileCommand, nullptr);
-    AddUDF(theEnv, "profile-info", "v", 0, 0, nullptr, ProfileInfoCommand, nullptr);
-    AddUDF(theEnv, "profile-reset", "v", 0, 0, nullptr, ProfileResetCommand, nullptr);
+    AddUDF(theEnv, "profile", "v", 1, 1, "y", ProfileCommand);
+    AddUDF(theEnv, "profile-info", "v", 0, 0, nullptr, ProfileInfoCommand);
+    AddUDF(theEnv, "profile-reset", "v", 0, 0, nullptr, ProfileResetCommand);
 
-    AddUDF(theEnv, "set-profile-percent-threshold", "d", 1, 1, "ld", SetProfilePercentThresholdCommand, nullptr);
-    AddUDF(theEnv, "get-profile-percent-threshold", "d", 0, 0, nullptr, GetProfilePercentThresholdCommand, nullptr);
+    AddUDF(theEnv, "set-profile-percent-threshold", "d", 1, 1, "ld", SetProfilePercentThresholdCommand);
+    AddUDF(theEnv, "get-profile-percent-threshold", "d", 0, 0, nullptr, GetProfilePercentThresholdCommand);
 
     ProfileFunctionData(theEnv)->ProfileDataID = InstallUserDataRecord(theEnv, &ProfileFunctionData(theEnv)->ProfileDataInfo);
 

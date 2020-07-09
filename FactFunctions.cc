@@ -121,13 +121,13 @@
 /****************************************************/
 void FactFunctionDefinitions(
         Environment *theEnv) {
-    AddUDF(theEnv, "fact-existp", "b", 1, 1, "lf", FactExistpFunction, nullptr);
-    AddUDF(theEnv, "fact-relation", "y", 1, 1, "lf", FactRelationFunction, nullptr);
-    AddUDF(theEnv, "fact-slot-value", "*", 2, 2, ";lf;y", FactSlotValueFunction, nullptr);
-    AddUDF(theEnv, "fact-slot-names", "*", 1, 1, "lf", FactSlotNamesFunction, nullptr);
-    AddUDF(theEnv, "get-fact-list", "m", 0, 1, "y", GetFactListFunction, nullptr);
-    AddUDF(theEnv, "ppfact", "vs", 1, 3, "*;lf;ldsyn", PPFactFunction, nullptr);
-    AddUDF(theEnv, "fact-addressp", "b", 1, 1, nullptr, FactAddresspFunction, nullptr);
+    AddUDF(theEnv, "fact-existp", "b", 1, 1, "lf", FactExistpFunction);
+    AddUDF(theEnv, "fact-relation", "y", 1, 1, "lf", FactRelationFunction);
+    AddUDF(theEnv, "fact-slot-value", "*", 2, 2, ";lf;y", FactSlotValueFunction);
+    AddUDF(theEnv, "fact-slot-names", "*", 1, 1, "lf", FactSlotNamesFunction);
+    AddUDF(theEnv, "get-fact-list", "m", 0, 1, "y", GetFactListFunction);
+    AddUDF(theEnv, "ppfact", "vs", 1, 3, "*;lf;ldsyn", PPFactFunction);
+    AddUDF(theEnv, "fact-addressp", "b", 1, 1, nullptr, FactAddresspFunction);
 }
 
 /**********************************************/

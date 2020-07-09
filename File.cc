@@ -108,21 +108,21 @@ void FileCommandDefinitions(
     AllocateEnvironmentData(theEnv, FILECOM_DATA, sizeof(fileCommandData), DeallocateFileCommandData);
 
 #if DEBUGGING_FUNCTIONS
-    AddUDF(theEnv, "batch", "b", 1, 1, "sy", BatchCommand, nullptr);
-    AddUDF(theEnv, "batch*", "b", 1, 1, "sy", BatchStarCommand, nullptr);
-    AddUDF(theEnv, "dribble-on", "b", 1, 1, "sy", DribbleOnCommand, nullptr);
-    AddUDF(theEnv, "dribble-off", "b", 0, 0, nullptr, DribbleOffCommand, nullptr);
-    AddUDF(theEnv, "save", "b", 1, 1, "sy", SaveCommand, nullptr);
+    AddUDF(theEnv, "batch", "b", 1, 1, "sy", BatchCommand);
+    AddUDF(theEnv, "batch*", "b", 1, 1, "sy", BatchStarCommand);
+    AddUDF(theEnv, "dribble-on", "b", 1, 1, "sy", DribbleOnCommand);
+    AddUDF(theEnv, "dribble-off", "b", 0, 0, nullptr, DribbleOffCommand);
+    AddUDF(theEnv, "save", "b", 1, 1, "sy", SaveCommand);
 #endif
-    AddUDF(theEnv, "load", "b", 1, 1, "sy", LoadCommand, nullptr);
-    AddUDF(theEnv, "load*", "b", 1, 1, "sy", LoadStarCommand, nullptr);
+    AddUDF(theEnv, "load", "b", 1, 1, "sy", LoadCommand);
+    AddUDF(theEnv, "load*", "b", 1, 1, "sy", LoadStarCommand);
 #if BLOAD_AND_BSAVE
-    AddUDF(theEnv, "bsave", "b", 1, 1, "sy", BsaveCommand, nullptr);
+    AddUDF(theEnv, "bsave", "b", 1, 1, "sy", BsaveCommand);
 #endif
 #if BLOAD_AND_BSAVE
     InitializeBsaveData(theEnv);
     InitializeBloadData(theEnv);
-    AddUDF(theEnv, "bload", "b", 1, 1, "sy", BloadCommand, nullptr);
+    AddUDF(theEnv, "bload", "b", 1, 1, "sy", BloadCommand);
 #endif
 }
 

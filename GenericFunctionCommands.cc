@@ -223,34 +223,34 @@ void SetupGenericFunctions(
        ================================================================ */
     AddSaveFunction(theEnv, "defgeneric", SaveDefgenerics, 1000, nullptr);
     AddSaveFunction(theEnv, "defmethod", SaveDefmethods, -1000, nullptr);
-    AddUDF(theEnv, "undefgeneric", "v", 1, 1, "y", UndefgenericCommand, nullptr);
-    AddUDF(theEnv, "undefmethod", "v", 2, 2, "*;y;ly", UndefmethodCommand, nullptr);
+    AddUDF(theEnv, "undefgeneric", "v", 1, 1, "y", UndefgenericCommand);
+    AddUDF(theEnv, "undefmethod", "v", 2, 2, "*;y;ly", UndefmethodCommand);
 
-    AddUDF(theEnv, "call-next-method", "*", 0, 0, nullptr, CallNextMethod, nullptr);
+    AddUDF(theEnv, "call-next-method", "*", 0, 0, nullptr, CallNextMethod);
     FuncSeqOvlFlags(theEnv, "call-next-method", true, false);
-    AddUDF(theEnv, "call-specific-method", "*", 2, UNBOUNDED, "*;y;l", CallSpecificMethod, nullptr);
+    AddUDF(theEnv, "call-specific-method", "*", 2, UNBOUNDED, "*;y;l", CallSpecificMethod);
     FuncSeqOvlFlags(theEnv, "call-specific-method", true, false);
-    AddUDF(theEnv, "override-next-method", "*", 0, UNBOUNDED, nullptr, OverrideNextMethod, nullptr);
+    AddUDF(theEnv, "override-next-method", "*", 0, UNBOUNDED, nullptr, OverrideNextMethod);
     FuncSeqOvlFlags(theEnv, "override-next-method", true, false);
-    AddUDF(theEnv, "next-methodp", "b", 0, 0, nullptr, NextMethodPCommand, nullptr);
+    AddUDF(theEnv, "next-methodp", "b", 0, 0, nullptr, NextMethodPCommand);
     FuncSeqOvlFlags(theEnv, "next-methodp", true, false);
 
-    AddUDF(theEnv, "(gnrc-current-arg)", "*", 0, UNBOUNDED, nullptr, GetGenericCurrentArgument, nullptr);
+    AddUDF(theEnv, "(gnrc-current-arg)", "*", 0, UNBOUNDED, nullptr, GetGenericCurrentArgument);
 
 #if DEBUGGING_FUNCTIONS
-    AddUDF(theEnv, "ppdefgeneric", "vs", 1, 2, ";y;ldsyn", PPDefgenericCommand, nullptr);
-    AddUDF(theEnv, "list-defgenerics", "v", 0, 1, "y", ListDefgenericsCommand, nullptr);
-    AddUDF(theEnv, "ppdefmethod", "v", 2, 3, "*;y;l;ldsyn", PPDefmethodCommand, nullptr);
-    AddUDF(theEnv, "list-defmethods", "v", 0, 1, "y", ListDefmethodsCommand, nullptr);
-    AddUDF(theEnv, "preview-generic", "v", 1, UNBOUNDED, "*;y", PreviewGeneric, nullptr);
+    AddUDF(theEnv, "ppdefgeneric", "vs", 1, 2, ";y;ldsyn", PPDefgenericCommand);
+    AddUDF(theEnv, "list-defgenerics", "v", 0, 1, "y", ListDefgenericsCommand);
+    AddUDF(theEnv, "ppdefmethod", "v", 2, 3, "*;y;l;ldsyn", PPDefmethodCommand);
+    AddUDF(theEnv, "list-defmethods", "v", 0, 1, "y", ListDefmethodsCommand);
+    AddUDF(theEnv, "preview-generic", "v", 1, UNBOUNDED, "*;y", PreviewGeneric);
 #endif
 
-    AddUDF(theEnv, "get-defgeneric-list", "m", 0, 1, "y", GetDefgenericListFunction, nullptr);
-    AddUDF(theEnv, "get-defmethod-list", "m", 0, 1, "y", GetDefmethodListCommand, nullptr);
-    AddUDF(theEnv, "get-method-restrictions", "m", 2, 2, "l;y", GetMethodRestrictionsCommand, nullptr);
-    AddUDF(theEnv, "defgeneric-module", "y", 1, 1, "y", GetDefgenericModuleCommand, nullptr);
+    AddUDF(theEnv, "get-defgeneric-list", "m", 0, 1, "y", GetDefgenericListFunction);
+    AddUDF(theEnv, "get-defmethod-list", "m", 0, 1, "y", GetDefmethodListCommand);
+    AddUDF(theEnv, "get-method-restrictions", "m", 2, 2, "l;y", GetMethodRestrictionsCommand);
+    AddUDF(theEnv, "defgeneric-module", "y", 1, 1, "y", GetDefgenericModuleCommand);
 
-    AddUDF(theEnv, "type", "*", 1, 1, "*", ClassCommand, nullptr);
+    AddUDF(theEnv, "type", "*", 1, 1, "*", ClassCommand);
 
 #if DEBUGGING_FUNCTIONS
     AddWatchItem(theEnv, "generic-functions", 0, &DefgenericData(theEnv)->WatchGenerics, 34,

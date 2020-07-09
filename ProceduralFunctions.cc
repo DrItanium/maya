@@ -90,15 +90,15 @@ void ProceduralFunctionDefinitions(
         Environment *theEnv) {
     AllocateEnvironmentData(theEnv, PRCDRFUN_DATA, sizeof(procedureFunctionData), DeallocateProceduralFunctionData);
 
-    AddUDF(theEnv, "if", "*", 0, UNBOUNDED, nullptr, IfFunction, nullptr);
-    AddUDF(theEnv, "while", "*", 0, UNBOUNDED, nullptr, WhileFunction, nullptr);
-    AddUDF(theEnv, "loop-for-count", "*", 0, UNBOUNDED, nullptr, LoopForCountFunction, nullptr);
-    AddUDF(theEnv, "(get-loop-count)", "l", 1, 1, nullptr, GetLoopCount, nullptr);
-    AddUDF(theEnv, "bind", "*", 0, UNBOUNDED, nullptr, BindFunction, nullptr);
-    AddUDF(theEnv, "progn", "*", 0, UNBOUNDED, nullptr, PrognFunction, nullptr);
-    AddUDF(theEnv, "return", "*", 0, UNBOUNDED, nullptr, ReturnFunction, nullptr);
-    AddUDF(theEnv, "break", "v", 0, 0, nullptr, BreakFunction, nullptr);
-    AddUDF(theEnv, "switch", "*", 0, UNBOUNDED, nullptr, SwitchFunction, nullptr);
+    AddUDF(theEnv, "if", "*", 0, UNBOUNDED, nullptr, IfFunction);
+    AddUDF(theEnv, "while", "*", 0, UNBOUNDED, nullptr, WhileFunction);
+    AddUDF(theEnv, "loop-for-count", "*", 0, UNBOUNDED, nullptr, LoopForCountFunction);
+    AddUDF(theEnv, "(get-loop-count)", "l", 1, 1, nullptr, GetLoopCount);
+    AddUDF(theEnv, "bind", "*", 0, UNBOUNDED, nullptr, BindFunction);
+    AddUDF(theEnv, "progn", "*", 0, UNBOUNDED, nullptr, PrognFunction);
+    AddUDF(theEnv, "return", "*", 0, UNBOUNDED, nullptr, ReturnFunction);
+    AddUDF(theEnv, "break", "v", 0, 0, nullptr, BreakFunction);
+    AddUDF(theEnv, "switch", "*", 0, UNBOUNDED, nullptr, SwitchFunction);
 
     ProceduralFunctionParsers(theEnv);
 

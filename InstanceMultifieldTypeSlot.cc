@@ -100,12 +100,12 @@ static void AssignSlotToDataObject(UDFValue *, InstanceSlot *);
  ***************************************************/
 void SetupInstanceMultifieldCommands(
         Environment *theEnv) {
-    AddUDF(theEnv, "slot-direct-replace$", "b", 4, UNBOUNDED, "*;y;l;l", DirectMVReplaceCommand, nullptr);
-    AddUDF(theEnv, "slot-direct-insert$", "b", 3, UNBOUNDED, "*;y;l", DirectMVInsertCommand, nullptr);
-    AddUDF(theEnv, "slot-direct-delete$", "b", 3, 3, "l;y", DirectMVDeleteCommand, nullptr);
-    AddUDF(theEnv, "slot-replace$", "*", 5, UNBOUNDED, "*;iny;y;l;l", MVSlotReplaceCommand, nullptr);
-    AddUDF(theEnv, "slot-insert$", "*", 4, UNBOUNDED, "*;iny;y;l", MVSlotInsertCommand, nullptr);
-    AddUDF(theEnv, "slot-delete$", "*", 4, 4, "l;iny;y", MVSlotDeleteCommand, nullptr);
+    AddUDF(theEnv, "slot-direct-replace$", "b", 4, UNBOUNDED, "*;y;l;l", DirectMVReplaceCommand);
+    AddUDF(theEnv, "slot-direct-insert$", "b", 3, UNBOUNDED, "*;y;l", DirectMVInsertCommand);
+    AddUDF(theEnv, "slot-direct-delete$", "b", 3, 3, "l;y", DirectMVDeleteCommand);
+    AddUDF(theEnv, "slot-replace$", "*", 5, UNBOUNDED, "*;iny;y;l;l", MVSlotReplaceCommand);
+    AddUDF(theEnv, "slot-insert$", "*", 4, UNBOUNDED, "*;iny;y;l", MVSlotInsertCommand);
+    AddUDF(theEnv, "slot-delete$", "*", 4, 4, "l;iny;y", MVSlotDeleteCommand);
 }
 
 /***********************************************************************************

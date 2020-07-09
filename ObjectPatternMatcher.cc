@@ -227,7 +227,7 @@ void SetupObjectPatternStuff(
 
     AddPatternParser(theEnv, newPtr);
 
-    AddUDF(theEnv, "object-pattern-match-delay", "*", 0, UNBOUNDED, nullptr, ObjectMatchDelay, nullptr);
+    AddUDF(theEnv, "object-pattern-match-delay", "*", 0, UNBOUNDED, nullptr, ObjectMatchDelay);
     FuncSeqOvlFlags(theEnv, "object-pattern-match-delay", false, false);
 
     AddFunctionParser(theEnv, "object-pattern-match-delay", ObjectMatchDelayParse);

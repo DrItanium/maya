@@ -102,7 +102,7 @@ inline auto TrueSymbol(Environment* theEnv) noexcept { return theEnv->TrueSymbol
 #define GetEnvironmentData(theEnv, position) (((environmentData *) theEnv)->theData[position])
 #define SetEnvironmentData(theEnv, position, value) (((environmentData *) theEnv)->theData[position] = value)
 
-bool AllocateEnvironmentData(Environment *, unsigned, size_t, EnvironmentCleanupFunction *);
+bool AllocateEnvironmentData(Environment *, unsigned, size_t, EnvironmentCleanupFunction * = nullptr);
 bool AddEnvironmentCleanupFunction(Environment *, const char *, EnvironmentCleanupFunction *, int);
 void *GetEnvironmentContext(Environment *);
 void *SetEnvironmentContext(Environment *, void *);

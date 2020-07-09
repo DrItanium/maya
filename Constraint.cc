@@ -96,8 +96,8 @@ void InitializeConstraints(
 
     for (i = 0; i < SIZE_CONSTRAINT_HASH; i++) ConstraintData(theEnv)->ConstraintHashtable[i] = nullptr;
 
-    AddUDF(theEnv, "get-dynamic-constraint-checking", "b", 0, 0, nullptr, GDCCommand, nullptr);
-    AddUDF(theEnv, "set-dynamic-constraint-checking", "b", 1, 1, nullptr, SDCCommand, nullptr);
+    AddUDF(theEnv, "get-dynamic-constraint-checking", "b", 0, 0, nullptr, GDCCommand);
+    AddUDF(theEnv, "set-dynamic-constraint-checking", "b", 1, 1, nullptr, SDCCommand);
 }
 
 /*****************************************************/

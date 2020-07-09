@@ -107,24 +107,24 @@ static void DuplicateMsgHandlerSupport(Environment *, UDFValue *, bool);
 void SetupInstanceModDupCommands(
         Environment *theEnv) {
 
-    AddUDF(theEnv, "modify-instance", "*", 0, UNBOUNDED, nullptr, InactiveModifyInstance, nullptr);
-    AddUDF(theEnv, "active-modify-instance", "*", 0, UNBOUNDED, nullptr, ModifyInstance, nullptr);
+    AddUDF(theEnv, "modify-instance", "*", 0, UNBOUNDED, nullptr, InactiveModifyInstance);
+    AddUDF(theEnv, "active-modify-instance", "*", 0, UNBOUNDED, nullptr, ModifyInstance);
     AddFunctionParser(theEnv, "active-modify-instance", ParseInitializeInstance);
-    AddUDF(theEnv, "message-modify-instance", "*", 0, UNBOUNDED, nullptr, InactiveMsgModifyInstance, nullptr);
-    AddUDF(theEnv, "active-message-modify-instance", "*", 0, UNBOUNDED, nullptr, MsgModifyInstance, nullptr);
+    AddUDF(theEnv, "message-modify-instance", "*", 0, UNBOUNDED, nullptr, InactiveMsgModifyInstance);
+    AddUDF(theEnv, "active-message-modify-instance", "*", 0, UNBOUNDED, nullptr, MsgModifyInstance);
     AddFunctionParser(theEnv, "active-message-modify-instance", ParseInitializeInstance);
 
-    AddUDF(theEnv, "duplicate-instance", "*", 0, UNBOUNDED, nullptr, InactiveDuplicateInstance, nullptr);
-    AddUDF(theEnv, "active-duplicate-instance", "*", 0, UNBOUNDED, nullptr, DuplicateInstance, nullptr);
+    AddUDF(theEnv, "duplicate-instance", "*", 0, UNBOUNDED, nullptr, InactiveDuplicateInstance);
+    AddUDF(theEnv, "active-duplicate-instance", "*", 0, UNBOUNDED, nullptr, DuplicateInstance);
     AddFunctionParser(theEnv, "active-duplicate-instance", ParseInitializeInstance);
-    AddUDF(theEnv, "message-duplicate-instance", "*", 0, UNBOUNDED, nullptr, InactiveMsgDuplicateInstance, nullptr);
-    AddUDF(theEnv, "active-message-duplicate-instance", "*", 0, UNBOUNDED, nullptr, MsgDuplicateInstance, nullptr);
+    AddUDF(theEnv, "message-duplicate-instance", "*", 0, UNBOUNDED, nullptr, InactiveMsgDuplicateInstance);
+    AddUDF(theEnv, "active-message-duplicate-instance", "*", 0, UNBOUNDED, nullptr, MsgDuplicateInstance);
     AddFunctionParser(theEnv, "active-message-duplicate-instance", ParseInitializeInstance);
 
-    AddUDF(theEnv, "(direct-modify)", "*", 0, UNBOUNDED, nullptr, DirectModifyMsgHandler, nullptr);
-    AddUDF(theEnv, "(message-modify)", "*", 0, UNBOUNDED, nullptr, MsgModifyMsgHandler, nullptr);
-    AddUDF(theEnv, "(direct-duplicate)", "*", 0, UNBOUNDED, nullptr, DirectDuplicateMsgHandler, nullptr);
-    AddUDF(theEnv, "(message-duplicate)", "*", 0, UNBOUNDED, nullptr, MsgDuplicateMsgHandler, nullptr);
+    AddUDF(theEnv, "(direct-modify)", "*", 0, UNBOUNDED, nullptr, DirectModifyMsgHandler);
+    AddUDF(theEnv, "(message-modify)", "*", 0, UNBOUNDED, nullptr, MsgModifyMsgHandler);
+    AddUDF(theEnv, "(direct-duplicate)", "*", 0, UNBOUNDED, nullptr, DirectDuplicateMsgHandler);
+    AddUDF(theEnv, "(message-duplicate)", "*", 0, UNBOUNDED, nullptr, MsgDuplicateMsgHandler);
 
     AddFunctionParser(theEnv, "active-modify-instance", ParseInitializeInstance);
     AddFunctionParser(theEnv, "active-message-modify-instance", ParseInitializeInstance);

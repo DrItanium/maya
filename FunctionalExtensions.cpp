@@ -43,15 +43,15 @@ void BitwiseNot(Environment *theEnv, UDFContext *context, UDFValue *ret) noexcep
 
 void InstallFunctionalExtensions(Environment *theEnv) {
 #if FUNCTIONAL_EXTENSIONS
-    AddUDF(theEnv, "map$", "m", 1, UNBOUNDED, "*;y;*", MapFunction, nullptr);
-    AddUDF(theEnv, "filter$", "m", 1, UNBOUNDED, "*;y;*", FilterFunction, nullptr);
-    AddUDF(theEnv, "exists$", "b", 1, UNBOUNDED, "*;y;*", ExistsFunction, nullptr);
-    AddUDF(theEnv, "not-exists$", "b", 1, UNBOUNDED, "*;y;*", NotExistsFunction, nullptr);
-    AddUDF(theEnv, "left-shift", "l", 2, 2, "l;l;l", LeftShift, nullptr);
-    AddUDF(theEnv, "right-shift", "l", 2, 2, "l;l;l", RightShift, nullptr);
-    AddUDF(theEnv, "bitwise-or", "l", 2, 2, "l;l;l", BitwiseOr, nullptr);
-    AddUDF(theEnv, "bitwise-and", "l", 2, 2, "l;l;l", BitwiseAnd, nullptr);
-    AddUDF(theEnv, "bitwise-not", "l", 1, 1, "l;l", BitwiseNot, nullptr);
+    AddUDF(theEnv, "map$", "m", 1, UNBOUNDED, "*;y;*", MapFunction);
+    AddUDF(theEnv, "filter$", "m", 1, UNBOUNDED, "*;y;*", FilterFunction);
+    AddUDF(theEnv, "exists$", "b", 1, UNBOUNDED, "*;y;*", ExistsFunction);
+    AddUDF(theEnv, "not-exists$", "b", 1, UNBOUNDED, "*;y;*", NotExistsFunction);
+    AddUDF(theEnv, "left-shift", "l", 2, 2, "l;l;l", LeftShift);
+    AddUDF(theEnv, "right-shift", "l", 2, 2, "l;l;l", RightShift);
+    AddUDF(theEnv, "bitwise-or", "l", 2, 2, "l;l;l", BitwiseOr);
+    AddUDF(theEnv, "bitwise-and", "l", 2, 2, "l;l;l", BitwiseAnd);
+    AddUDF(theEnv, "bitwise-not", "l", 1, 1, "l;l", BitwiseNot);
 #endif
 }
 

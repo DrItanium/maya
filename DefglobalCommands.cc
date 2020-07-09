@@ -69,11 +69,11 @@ static void PrintDefglobalValueForm(Environment *, const char *, Defglobal *);
 /************************************************************/
 void DefglobalCommandDefinitions(
         Environment *theEnv) {
-    AddUDF(theEnv, "set-reset-globals", "b", 1, 1, nullptr, SetResetGlobalsCommand, nullptr);
-    AddUDF(theEnv, "get-reset-globals", "b", 0, 0, nullptr, GetResetGlobalsCommand, nullptr);
+    AddUDF(theEnv, "set-reset-globals", "b", 1, 1, nullptr, SetResetGlobalsCommand);
+    AddUDF(theEnv, "get-reset-globals", "b", 0, 0, nullptr, GetResetGlobalsCommand);
 
 #if DEBUGGING_FUNCTIONS
-    AddUDF(theEnv, "show-defglobals", "v", 0, 1, "y", ShowDefglobalsCommand, nullptr);
+    AddUDF(theEnv, "show-defglobals", "v", 0, 1, "y", ShowDefglobalsCommand);
 #endif
 }
 

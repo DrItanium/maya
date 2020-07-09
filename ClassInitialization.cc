@@ -420,44 +420,44 @@ static void SetupDefclasses(
     AddPortConstructItem(theEnv, "defclass", SYMBOL_TOKEN);
     AddAfterModuleDefinedFunction(theEnv, "defclass", UpdateDefclassesScope, 0, nullptr);
 #endif
-    AddUDF(theEnv, "undefclass", "v", 1, 1, "y", UndefclassCommand, nullptr);
+    AddUDF(theEnv, "undefclass", "v", 1, 1, "y", UndefclassCommand);
 
     AddSaveFunction(theEnv, "defclass", SaveDefclasses, 10, nullptr);
 
 #if DEBUGGING_FUNCTIONS
-    AddUDF(theEnv, "list-defclasses", "v", 0, 1, "y", ListDefclassesCommand, nullptr);
-    AddUDF(theEnv, "ppdefclass", "vs", 1, 2, ";y;ldsyn", PPDefclassCommand, nullptr);
-    AddUDF(theEnv, "describe-class", "v", 1, 1, "y", DescribeClassCommand, nullptr);
-    AddUDF(theEnv, "browse-classes", "v", 0, 1, "y", BrowseClassesCommand, nullptr);
+    AddUDF(theEnv, "list-defclasses", "v", 0, 1, "y", ListDefclassesCommand);
+    AddUDF(theEnv, "ppdefclass", "vs", 1, 2, ";y;ldsyn", PPDefclassCommand);
+    AddUDF(theEnv, "describe-class", "v", 1, 1, "y", DescribeClassCommand);
+    AddUDF(theEnv, "browse-classes", "v", 0, 1, "y", BrowseClassesCommand);
 #endif
 
-    AddUDF(theEnv, "get-defclass-list", "m", 0, 1, "y", GetDefclassListFunction, nullptr);
-    AddUDF(theEnv, "superclassp", "b", 2, 2, "y", SuperclassPCommand, nullptr);
-    AddUDF(theEnv, "subclassp", "b", 2, 2, "y", SubclassPCommand, nullptr);
-    AddUDF(theEnv, "class-existp", "b", 1, 1, "y", ClassExistPCommand, nullptr);
-    AddUDF(theEnv, "message-handler-existp", "b", 2, 3, "y", MessageHandlerExistPCommand, nullptr);
-    AddUDF(theEnv, "class-abstractp", "b", 1, 1, "y", ClassAbstractPCommand, nullptr);
-    AddUDF(theEnv, "class-reactivep", "b", 1, 1, "y", ClassReactivePCommand, nullptr);
-    AddUDF(theEnv, "class-slots", "m", 1, 2, "y", ClassSlotsCommand, nullptr);
-    AddUDF(theEnv, "class-superclasses", "m", 1, 2, "y", ClassSuperclassesCommand, nullptr);
-    AddUDF(theEnv, "class-subclasses", "m", 1, 2, "y", ClassSubclassesCommand, nullptr);
-    AddUDF(theEnv, "get-defmessage-handler-list", "m", 0, 2, "y", GetDefmessageHandlersListCmd, nullptr);
-    AddUDF(theEnv, "slot-existp", "b", 2, 3, "y", SlotExistPCommand, nullptr);
-    AddUDF(theEnv, "slot-facets", "m", 2, 2, "y", SlotFacetsCommand, nullptr);
-    AddUDF(theEnv, "slot-sources", "m", 2, 2, "y", SlotSourcesCommand, nullptr);
-    AddUDF(theEnv, "slot-types", "m", 2, 2, "y", SlotTypesCommand, nullptr);
-    AddUDF(theEnv, "slot-allowed-values", "m", 2, 2, "y", SlotAllowedValuesCommand, nullptr);
-    AddUDF(theEnv, "slot-allowed-classes", "m", 2, 2, "y", SlotAllowedClassesCommand, nullptr);
-    AddUDF(theEnv, "slot-range", "m", 2, 2, "y", SlotRangeCommand, nullptr);
-    AddUDF(theEnv, "slot-cardinality", "m", 2, 2, "y", SlotCardinalityCommand, nullptr);
-    AddUDF(theEnv, "slot-writablep", "b", 2, 2, "y", SlotWritablePCommand, nullptr);
-    AddUDF(theEnv, "slot-initablep", "b", 2, 2, "y", SlotInitablePCommand, nullptr);
-    AddUDF(theEnv, "slot-publicp", "b", 2, 2, "y", SlotPublicPCommand, nullptr);
-    AddUDF(theEnv, "slot-direct-accessp", "b", 2, 2, "y", SlotDirectAccessPCommand, nullptr);
-    AddUDF(theEnv, "slot-default-value", "*", 2, 2, "y", SlotDefaultValueCommand, nullptr);
-    AddUDF(theEnv, "defclass-module", "y", 1, 1, "y", GetDefclassModuleCommand, nullptr);
-    AddUDF(theEnv, "get-class-defaults-mode", "y", 0, 0, nullptr, GetClassDefaultsModeCommand, nullptr);
-    AddUDF(theEnv, "set-class-defaults-mode", "y", 1, 1, "y", SetClassDefaultsModeCommand, nullptr);
+    AddUDF(theEnv, "get-defclass-list", "m", 0, 1, "y", GetDefclassListFunction);
+    AddUDF(theEnv, "superclassp", "b", 2, 2, "y", SuperclassPCommand);
+    AddUDF(theEnv, "subclassp", "b", 2, 2, "y", SubclassPCommand);
+    AddUDF(theEnv, "class-existp", "b", 1, 1, "y", ClassExistPCommand);
+    AddUDF(theEnv, "message-handler-existp", "b", 2, 3, "y", MessageHandlerExistPCommand);
+    AddUDF(theEnv, "class-abstractp", "b", 1, 1, "y", ClassAbstractPCommand);
+    AddUDF(theEnv, "class-reactivep", "b", 1, 1, "y", ClassReactivePCommand);
+    AddUDF(theEnv, "class-slots", "m", 1, 2, "y", ClassSlotsCommand);
+    AddUDF(theEnv, "class-superclasses", "m", 1, 2, "y", ClassSuperclassesCommand);
+    AddUDF(theEnv, "class-subclasses", "m", 1, 2, "y", ClassSubclassesCommand);
+    AddUDF(theEnv, "get-defmessage-handler-list", "m", 0, 2, "y", GetDefmessageHandlersListCmd);
+    AddUDF(theEnv, "slot-existp", "b", 2, 3, "y", SlotExistPCommand);
+    AddUDF(theEnv, "slot-facets", "m", 2, 2, "y", SlotFacetsCommand);
+    AddUDF(theEnv, "slot-sources", "m", 2, 2, "y", SlotSourcesCommand);
+    AddUDF(theEnv, "slot-types", "m", 2, 2, "y", SlotTypesCommand);
+    AddUDF(theEnv, "slot-allowed-values", "m", 2, 2, "y", SlotAllowedValuesCommand);
+    AddUDF(theEnv, "slot-allowed-classes", "m", 2, 2, "y", SlotAllowedClassesCommand);
+    AddUDF(theEnv, "slot-range", "m", 2, 2, "y", SlotRangeCommand);
+    AddUDF(theEnv, "slot-cardinality", "m", 2, 2, "y", SlotCardinalityCommand);
+    AddUDF(theEnv, "slot-writablep", "b", 2, 2, "y", SlotWritablePCommand);
+    AddUDF(theEnv, "slot-initablep", "b", 2, 2, "y", SlotInitablePCommand);
+    AddUDF(theEnv, "slot-publicp", "b", 2, 2, "y", SlotPublicPCommand);
+    AddUDF(theEnv, "slot-direct-accessp", "b", 2, 2, "y", SlotDirectAccessPCommand);
+    AddUDF(theEnv, "slot-default-value", "*", 2, 2, "y", SlotDefaultValueCommand);
+    AddUDF(theEnv, "defclass-module", "y", 1, 1, "y", GetDefclassModuleCommand);
+    AddUDF(theEnv, "get-class-defaults-mode", "y", 0, 0, nullptr, GetClassDefaultsModeCommand);
+    AddUDF(theEnv, "set-class-defaults-mode", "y", 1, 1, "y", SetClassDefaultsModeCommand);
 
 #if DEBUGGING_FUNCTIONS
     AddWatchItem(theEnv, "instances", 0, &DefclassData(theEnv)->WatchInstances, 75, DefclassWatchAccess, DefclassWatchPrint);

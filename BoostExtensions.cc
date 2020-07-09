@@ -61,20 +61,20 @@ void GetFileExtension(Environment *theEnv, UDFContext *context, UDFValue *ret);
 
 void InstallBoostExtensions(Environment *theEnv) {
 #if BOOST_EXTENSIONS
-    AddUDF(theEnv, "has-prefix", "b", 2, 2, "sy;sy;sy", HasPrefix, nullptr);
-    AddUDF(theEnv, "has-suffix", "b", 2, 2, "sy;sy;sy", HasSuffix, nullptr);
-    AddUDF(theEnv, "string-trim", "y", 1, 1, "s", TrimString, nullptr);
-    AddUDF(theEnv, "string-trim-front", "y", 1, 1, "s", TrimStringFront, nullptr);
-    AddUDF(theEnv, "string-trim-back", "y", 1, 1, "s", TrimStringBack, nullptr);
-    AddUDF(theEnv, "new-uuid", "s", 0, 0, "", NewUUID, nullptr);
-    AddUDF(theEnv, "gcd", "l", 2, 2, "l;l;l", gcdFunction, nullptr);
-    AddUDF(theEnv, "lcm", "l", 2, 2, "l;l;l", lcmFunction, nullptr);
-    AddUDF(theEnv, "path-exists", "b", 1, 1, "sy", FileExists, nullptr);
-    AddUDF(theEnv, "directoryp", "b", 1, 1, "sy", IsDirectory, nullptr);
-    AddUDF(theEnv, "regular-filep", "b", 1, 1, "sy", IsRegularFile, nullptr);
-    AddUDF(theEnv, "clamp", "l", 3, 3, "l;l;l;l", ClampValue, nullptr);
-    AddUDF(theEnv, "get-directory-contents", "m", 1, 1, "sy", GetDirectoryContents, nullptr);
-    AddUDF(theEnv, "get-file-extension", "sy", 1, 1, "sy", GetFileExtension, nullptr);
+    AddUDF(theEnv, "has-prefix", "b", 2, 2, "sy;sy;sy", HasPrefix);
+    AddUDF(theEnv, "has-suffix", "b", 2, 2, "sy;sy;sy", HasSuffix);
+    AddUDF(theEnv, "string-trim", "y", 1, 1, "s", TrimString);
+    AddUDF(theEnv, "string-trim-front", "y", 1, 1, "s", TrimStringFront);
+    AddUDF(theEnv, "string-trim-back", "y", 1, 1, "s", TrimStringBack);
+    AddUDF(theEnv, "new-uuid", "s", 0, 0, "", NewUUID);
+    AddUDF(theEnv, "gcd", "l", 2, 2, "l;l;l", gcdFunction);
+    AddUDF(theEnv, "lcm", "l", 2, 2, "l;l;l", lcmFunction);
+    AddUDF(theEnv, "path-exists", "b", 1, 1, "sy", FileExists);
+    AddUDF(theEnv, "directoryp", "b", 1, 1, "sy", IsDirectory);
+    AddUDF(theEnv, "regular-filep", "b", 1, 1, "sy", IsRegularFile);
+    AddUDF(theEnv, "clamp", "l", 3, 3, "l;l;l;l", ClampValue);
+    AddUDF(theEnv, "get-directory-contents", "m", 1, 1, "sy", GetDirectoryContents);
+    AddUDF(theEnv, "get-file-extension", "sy", 1, 1, "sy", GetFileExtension);
 #endif
 }
 

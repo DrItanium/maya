@@ -74,7 +74,7 @@ static void DeallocateSortFunctionData(Environment *);
 void SortFunctionDefinitions(
         Environment *theEnv) {
     AllocateEnvironmentData(theEnv, SORTFUN_DATA, sizeof(sortFunctionData), DeallocateSortFunctionData);
-    AddUDF(theEnv, "sort", "bm", 1, UNBOUNDED, "*;y", SortFunction, nullptr);
+    AddUDF(theEnv, "sort", "bm", 1, UNBOUNDED, "*;y", SortFunction);
 }
 
 /*******************************************************/
