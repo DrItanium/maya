@@ -140,6 +140,7 @@ private:
     unsigned long NumberOfActivations;
     unsigned long long CurrentTimetag;
     bool AgendaChanged;
+    SalienceEvaluationType SalienceEvaluation;
 public:
     constexpr auto getNumberOfActivations() const noexcept { return NumberOfActivations; }
     void setNumberOfActivations(unsigned long value) noexcept { NumberOfActivations = value; }
@@ -154,7 +155,8 @@ public:
     }
     constexpr auto agendaHasChanged() const noexcept { return AgendaChanged; }
     void markAgendaHasChanged(bool value = true) noexcept { AgendaChanged = value; }
-    SalienceEvaluationType SalienceEvaluation;
+    constexpr auto getSalienceEvaluation() const noexcept { return SalienceEvaluation; }
+    void setSalienceEvaluation(SalienceEvaluationType value) noexcept { SalienceEvaluation = value; }
     StrategyType Strategy;
     constexpr auto getStrategy() const noexcept { return Strategy; }
 };

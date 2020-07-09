@@ -105,7 +105,7 @@ void InitializeAgenda(
         Environment *theEnv) {
     AllocateEnvironmentData(theEnv, AGENDA_DATA, sizeof(agendaData));
 
-    AgendaData(theEnv)->SalienceEvaluation = WHEN_DEFINED;
+    AgendaData(theEnv)->setSalienceEvaluation(WHEN_DEFINED);
 
     AgendaData(theEnv)->Strategy = DEFAULT_STRATEGY;
 
@@ -1075,7 +1075,7 @@ static const char *SalienceEvaluationName(
 /*******************************************************/
 SalienceEvaluationType GetSalienceEvaluation(
         Environment *theEnv) {
-    return AgendaData(theEnv)->SalienceEvaluation;
+    return AgendaData(theEnv)->getSalienceEvaluation();
 }
 
 /**********************************************/
@@ -1087,8 +1087,8 @@ SalienceEvaluationType SetSalienceEvaluation(
         SalienceEvaluationType value) {
     SalienceEvaluationType ov;
 
-    ov = AgendaData(theEnv)->SalienceEvaluation;
-    AgendaData(theEnv)->SalienceEvaluation = value;
+    ov = AgendaData(theEnv)->getSalienceEvaluation();
+    AgendaData(theEnv)->setSalienceEvaluation(value);
     return ov;
 }
 
