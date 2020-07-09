@@ -91,7 +91,7 @@ static bool CheckFunctionReturnType(
         CONSTRAINT_RECORD *constraints) {
     if (constraints == nullptr) return true;
 
-    if (constraints->anyAllowed) return true;
+    if (constraints->getAnyAllowed()) return true;
 
     if (constraints->voidAllowed) { if (functionReturnType & VOID_BIT) return true; }
 
@@ -128,7 +128,7 @@ static bool CheckTypeConstraint(
 
     if (constraints == nullptr) return true;
 
-    if (constraints->anyAllowed == true) return true;
+    if (constraints->getAnyAllowed()== true) return true;
 
     if ((type == SYMBOL_TYPE) && (constraints->symbolsAllowed != true)) { return false; }
 
@@ -691,7 +691,7 @@ bool UnmatchableConstraint(
         CONSTRAINT_RECORD *theConstraint) {
     if (theConstraint == nullptr) return false;
 
-    return (!theConstraint->anyAllowed) &&
+    return (!theConstraint->getAnyAllowed()) &&
            (!theConstraint->symbolsAllowed) &&
            (!theConstraint->stringsAllowed) &&
            (!theConstraint->floatsAllowed) &&

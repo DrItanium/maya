@@ -755,7 +755,7 @@ bool SlotTypes(
         return false;
     }
 
-    if ((sp->constraint != nullptr) ? sp->constraint->anyAllowed : true) {
+    if ((sp->constraint != nullptr) ? sp->constraint->getAnyAllowed(): true) {
         typemap[0] = typemap[1] = (char) 0xFF;
         ClearBitMap(typemap, MULTIFIELD_TYPE);
         msize = 8;
@@ -898,7 +898,7 @@ bool SlotRange(
         return false;
     }
     if ((sp->constraint == nullptr) ? false :
-        (sp->constraint->anyAllowed || sp->constraint->floatsAllowed ||
+        (sp->constraint->getAnyAllowed() || sp->constraint->floatsAllowed ||
          sp->constraint->integersAllowed)) {
         returnValue->value = CreateMultifield(theEnv, 2L);
         returnValue->multifieldValue->contents[0].value = sp->constraint->minValue->value;

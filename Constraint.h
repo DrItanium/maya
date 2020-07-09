@@ -64,7 +64,9 @@ typedef struct constraintRecord CONSTRAINT_RECORD;
 #include "Evaluation.h"
 
 struct constraintRecord {
+private:
     bool anyAllowed: 1;
+public:
     bool symbolsAllowed: 1;
     bool stringsAllowed: 1;
     bool floatsAllowed: 1;
@@ -84,6 +86,11 @@ struct constraintRecord {
     bool multifieldsAllowed: 1;
     bool singlefieldsAllowed: 1;
     bool installed: 1;
+#define X(field,form) \
+    constexpr auto get ## form () const noexcept { return field ;} \
+    void set ## form (bool value) noexcept { field = value ; }
+    X(anyAllowed, AnyAllowed);
+#undef X
     unsigned long bsaveID;
     expr *classList;
     expr *restrictionList;

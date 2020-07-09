@@ -71,7 +71,7 @@ enum StrategyType {
 #include "Agenda.h"
 #include "Entities.h"
 
-#define DEFAULT_STRATEGY DEPTH_STRATEGY
+constexpr auto DEFAULT_STRATEGY = DEPTH_STRATEGY;
 
 void PlaceActivation(Environment *, Activation **, Activation *, struct SalienceGroup *);
 StrategyType SetStrategy(Environment *, StrategyType);

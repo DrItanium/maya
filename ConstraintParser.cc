@@ -95,7 +95,7 @@ bool CheckConstraintParseConflicts(
     /* conflict with the type attribute.                 */
     /*===================================================*/
 
-    if (constraints->anyAllowed == true) { /* Do Nothing */ }
+    if (constraints->getAnyAllowed() == true) { /* Do Nothing */ }
     else if (constraints->symbolRestriction &&
              (constraints->symbolsAllowed == false)) {
         AttributeConflictErrorMessage(theEnv, "type", "allowed-symbols");
@@ -139,7 +139,7 @@ bool CheckConstraintParseConflicts(
     /*================================================================*/
 
     if ((constraints->maxValue != nullptr) &&
-        (constraints->anyAllowed == false)) {
+        (!constraints->getAnyAllowed())) {
         if (((constraints->maxValue->type == INTEGER_TYPE) &&
              (constraints->integersAllowed == false)) ||
             ((constraints->maxValue->type == FLOAT_TYPE) &&
@@ -150,7 +150,7 @@ bool CheckConstraintParseConflicts(
     }
 
     if ((constraints->minValue != nullptr) &&
-        (constraints->anyAllowed == false)) {
+        (constraints->getAnyAllowed() == false)) {
         if (((constraints->minValue->type == INTEGER_TYPE) &&
              (constraints->integersAllowed == false)) ||
             ((constraints->minValue->type == FLOAT_TYPE) &&
@@ -166,7 +166,7 @@ bool CheckConstraintParseConflicts(
     /*=========================================*/
 
     if ((constraints->classList != nullptr) &&
-        (constraints->anyAllowed == false) &&
+        (constraints->getAnyAllowed() == false) &&
         (constraints->instanceNamesAllowed == false) &&
         (constraints->instanceAddressesAllowed == false)) {
         AttributeConflictErrorMessage(theEnv, "type", "allowed-class");
@@ -324,7 +324,7 @@ void OverlayConstraint(
         CONSTRAINT_RECORD *cdst,
         CONSTRAINT_RECORD *csrc) {
     if (pc->type == 0) {
-        cdst->anyAllowed = csrc->anyAllowed;
+        cdst->setAnyAllowed(csrc->getAnyAllowed());
         cdst->symbolsAllowed = csrc->symbolsAllowed;
         cdst->stringsAllowed = csrc->stringsAllowed;
         cdst->floatsAllowed = csrc->floatsAllowed;
@@ -864,7 +864,7 @@ static bool ParseTypeAttribute(
                 return false;
             }
 
-            constraints->anyAllowed = false;
+            constraints->setAnyAllowed(false);
 
             /*===========================================*/
             /* Remember that a type constant was parsed. */

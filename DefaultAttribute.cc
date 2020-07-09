@@ -103,7 +103,7 @@ void DeriveDefaultFromConstraints(
     /* Determine the default's type and value. */
     /*=========================================*/
 
-    if (constraints->anyAllowed || constraints->symbolsAllowed) {
+    if (constraints->getAnyAllowed()|| constraints->symbolsAllowed) {
         theValue = FindDefaultValue(theEnv, SYMBOL_TYPE, constraints, CreateSymbol(theEnv, "nil"));
     } else if (constraints->stringsAllowed) { theValue = FindDefaultValue(theEnv, STRING_TYPE, constraints, CreateString(theEnv, "")); }
 

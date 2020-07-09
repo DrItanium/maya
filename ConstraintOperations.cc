@@ -133,7 +133,7 @@ struct constraintRecord *IntersectConstraints(
 
     if ((c1->multifieldsAllowed != c2->multifieldsAllowed) &&
         (c1->singlefieldsAllowed != c2->singlefieldsAllowed)) {
-        rv->anyAllowed = false;
+        rv->setAnyAllowed(false);
         return (rv);
     }
 
@@ -141,17 +141,17 @@ struct constraintRecord *IntersectConstraints(
 
     rv->singlefieldsAllowed = c1->singlefieldsAllowed && c2->singlefieldsAllowed;
 
-    if (c1->anyAllowed && c2->anyAllowed) rv->anyAllowed = true;
+    if (c1->getAnyAllowed() && c2->getAnyAllowed()) rv->setAnyAllowed(true);
     else {
-        if (c1->anyAllowed) {
+        if (c1->getAnyAllowed()) {
             c1Changed = true;
             SetAnyAllowedFlags(c1, false);
-        } else if (c2->anyAllowed) {
+        } else if (c2->getAnyAllowed()) {
             c2Changed = true;
             SetAnyAllowedFlags(c2, false);
         }
 
-        rv->anyAllowed = false;
+        rv->setAnyAllowed(false);
         rv->symbolsAllowed = (c1->symbolsAllowed && c2->symbolsAllowed);
         rv->stringsAllowed = (c1->stringsAllowed && c2->stringsAllowed);
         rv->floatsAllowed = (c1->floatsAllowed && c2->floatsAllowed);
@@ -487,14 +487,14 @@ static void IntersectNumericExpressions(
 
     else {
         if (range) {
-            if (newConstraint->anyAllowed) SetAnyAllowedFlags(newConstraint, false);
+            if (newConstraint->getAnyAllowed()) SetAnyAllowedFlags(newConstraint, false);
             newConstraint->integersAllowed = false;
             newConstraint->floatsAllowed = false;
         } else {
             SetAnyAllowedFlags(newConstraint, true);
             newConstraint->singlefieldsAllowed = false;
             newConstraint->multifieldsAllowed = false;
-            newConstraint->anyAllowed = false;
+            newConstraint->setAnyAllowed(false);
         }
     }
 }
@@ -511,7 +511,7 @@ static void UpdateRestrictionFlags(
         CONSTRAINT_RECORD *rv) {
     if ((rv->anyRestriction) && (rv->restrictionList == nullptr)) {
         SetAnyAllowedFlags(rv, true);
-        rv->anyAllowed = false;
+        rv->setAnyAllowed(false);
     }
 
     if ((rv->symbolRestriction) && (rv->symbolsAllowed)) {
@@ -624,9 +624,9 @@ struct constraintRecord *UnionConstraints(
 
     if (c1->singlefieldsAllowed || c2->singlefieldsAllowed) { rv->singlefieldsAllowed = true; }
 
-    if (c1->anyAllowed || c2->anyAllowed) rv->anyAllowed = true;
+    if (c1->getAnyAllowed()|| c2->getAnyAllowed()) rv->setAnyAllowed(true);
     else {
-        rv->anyAllowed = false;
+        rv->setAnyAllowed(false);
         rv->symbolsAllowed = (c1->symbolsAllowed || c2->symbolsAllowed);
         rv->stringsAllowed = (c1->stringsAllowed || c2->stringsAllowed);
         rv->floatsAllowed = (c1->floatsAllowed || c2->floatsAllowed);
@@ -787,12 +787,12 @@ static void UnionNumericExpressions(
 
     else {
         if (range) {
-            if (newConstraint->anyAllowed) SetAnyAllowedFlags(newConstraint, false);
+            if (newConstraint->getAnyAllowed()) SetAnyAllowedFlags(newConstraint, false);
             newConstraint->integersAllowed = false;
             newConstraint->floatsAllowed = false;
         } else {
             SetAnyAllowedFlags(newConstraint, true);
-            newConstraint->anyAllowed = true;
+            newConstraint->setAnyAllowed(true);
         }
     }
 }

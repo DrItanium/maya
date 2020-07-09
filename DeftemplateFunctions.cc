@@ -1319,7 +1319,7 @@ bool DeftemplateSlotRange(
     /*===============================*/
 
     if ((theSlot->constraints == nullptr) ? false :
-        (theSlot->constraints->anyAllowed || theSlot->constraints->floatsAllowed ||
+        (theSlot->constraints->getAnyAllowed() || theSlot->constraints->floatsAllowed ||
          theSlot->constraints->integersAllowed)) {
         returnValue->value = CreateMultifield(theEnv, 2L);
         returnValue->multifieldValue->contents[0].value = theSlot->constraints->minValue->value;
@@ -1407,7 +1407,7 @@ bool DeftemplateSlotTypes(
     /*==============================================*/
 
     if ((theDeftemplate->implied) ||
-        ((theSlot->constraints != nullptr) ? theSlot->constraints->anyAllowed : true)) {
+        ((theSlot->constraints != nullptr) ? theSlot->constraints->getAnyAllowed() : true)) {
         numTypes = 8;
         allTypes = true;
     }

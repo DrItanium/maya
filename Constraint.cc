@@ -240,7 +240,7 @@ unsigned long HashConstraint(
     struct expr *tmpPtr;
 
     count +=
-            (theConstraint->anyAllowed * 17) +
+            (theConstraint->getAnyAllowed() * 17) +
             (theConstraint->symbolsAllowed * 5) +
             (theConstraint->stringsAllowed * 23) +
             (theConstraint->floatsAllowed * 19) +
@@ -304,7 +304,7 @@ static bool ConstraintCompare(
         struct constraintRecord *constraint2) {
     struct expr *tmpPtr1, *tmpPtr2;
 
-    if ((constraint1->anyAllowed != constraint2->anyAllowed) ||
+    if ((constraint1->getAnyAllowed() != constraint2->getAnyAllowed()) ||
         (constraint1->symbolsAllowed != constraint2->symbolsAllowed) ||
         (constraint1->stringsAllowed != constraint2->stringsAllowed) ||
         (constraint1->floatsAllowed != constraint2->floatsAllowed) ||

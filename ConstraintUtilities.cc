@@ -111,7 +111,7 @@ void SetAnyAllowedFlags(
         flag2 = true;
     }
 
-    theConstraint->anyAllowed = flag1;
+    theConstraint->setAnyAllowed(flag1);
     theConstraint->symbolsAllowed = flag2;
     theConstraint->stringsAllowed = flag2;
     theConstraint->floatsAllowed = flag2;
@@ -135,7 +135,7 @@ struct constraintRecord *CopyConstraintRecord(
 
     theConstraint = get_struct(theEnv, constraintRecord);
 
-    theConstraint->anyAllowed = sourceConstraint->anyAllowed;
+    theConstraint->setAnyAllowed(sourceConstraint->getAnyAllowed());
     theConstraint->symbolsAllowed = sourceConstraint->symbolsAllowed;
     theConstraint->stringsAllowed = sourceConstraint->stringsAllowed;
     theConstraint->floatsAllowed = sourceConstraint->floatsAllowed;
@@ -211,8 +211,8 @@ bool SetConstraintType(
 
     switch (theType) {
         case UNKNOWN_VALUE:
-            rv = constraints->anyAllowed;
-            constraints->anyAllowed = true;
+            rv = constraints->getAnyAllowed();
+            constraints->setAnyAllowed(true);
             break;
 
         case SYMBOL_TYPE:
@@ -284,7 +284,7 @@ bool SetConstraintType(
             break;
     }
 
-    if (theType != UNKNOWN_VALUE) constraints->anyAllowed = false;
+    if (theType != UNKNOWN_VALUE) constraints->setAnyAllowed(false);
     return (rv);
 }
 
@@ -391,7 +391,7 @@ CONSTRAINT_RECORD *ExpressionToConstraintRecord(
 
     if (theExpression == nullptr) {
         rv = GetConstraintRecord(theEnv);
-        rv->anyAllowed = false;
+        rv->setAnyAllowed(false);
         return (rv);
     }
 
@@ -419,7 +419,7 @@ CONSTRAINT_RECORD *ExpressionToConstraintRecord(
     /*============================================*/
 
     rv = GetConstraintRecord(theEnv);
-    rv->anyAllowed = false;
+    rv->setAnyAllowed(false);
 
     switch (theExpression->type) {
         case FLOAT_TYPE:
@@ -485,7 +485,7 @@ CONSTRAINT_RECORD *ArgumentTypeToConstraintRecord(
     CONSTRAINT_RECORD *rv;
 
     rv = GetConstraintRecord(theEnv);
-    rv->anyAllowed = false;
+    rv->setAnyAllowed(false);
 
     if (bitTypes & VOID_BIT) { rv->voidAllowed = true; }
     if (bitTypes & FLOAT_BIT) { rv->floatsAllowed = true; }
@@ -499,7 +499,7 @@ CONSTRAINT_RECORD *ArgumentTypeToConstraintRecord(
     if (bitTypes & INSTANCE_NAME_BIT) { rv->instanceNamesAllowed = true; }
     if (bitTypes & BOOLEAN_BIT) { rv->symbolsAllowed = true; }
 
-    if (bitTypes == ANY_TYPE_BITS) { rv->anyAllowed = true; }
+    if (bitTypes == ANY_TYPE_BITS) { rv->setAnyAllowed(true); }
 
     return (rv);
 }

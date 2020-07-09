@@ -287,7 +287,7 @@ static Expression *ParseRestrictionCreateTypes(
         CONSTRAINT_RECORD *rv) {
     Expression *types = nullptr;
 
-    if (rv->anyAllowed == false) {
+    if (rv->getAnyAllowed()== false) {
         if (rv->symbolsAllowed && rv->stringsAllowed)
             types = GenTypeExpression(theEnv, types, LEXEME_TYPE_CODE, -1, LEXEME_TYPE_NAME);
         else if (rv->symbolsAllowed)

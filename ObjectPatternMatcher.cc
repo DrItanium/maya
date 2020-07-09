@@ -1256,7 +1256,7 @@ static struct lhsParseNode *ParseClassRestriction(
     CONSTRAINT_RECORD *rv;
 
     rv = GetConstraintRecord(theEnv);
-    rv->anyAllowed = 0;
+    rv->setAnyAllowed(false);
     rv->symbolsAllowed = 1;
     rln = theToken->lexemeValue;
     SavePPBuffer(theEnv, " ");
@@ -1304,7 +1304,7 @@ static struct lhsParseNode *ParseNameRestriction(
     CONSTRAINT_RECORD *rv;
 
     rv = GetConstraintRecord(theEnv);
-    rv->anyAllowed = 0;
+    rv->setAnyAllowed(false);
     rv->instanceNamesAllowed = 1;
     rln = theToken->lexemeValue;
     SavePPBuffer(theEnv, " ");

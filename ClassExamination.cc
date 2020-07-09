@@ -1217,7 +1217,7 @@ static void DisplaySlotConstraintInfo(
             genstrcat(buf, ConstraintCode(cr, cr->integersAllowed, cr->integerRestriction));
             genstrcat(buf, ConstraintCode(cr, cr->floatsAllowed, cr->floatRestriction));
             OpenStringDestination(theEnv, strdest, buf + strlen(buf), (maxlen - strlen(buf) - 1));
-            if (cr->integersAllowed || cr->floatsAllowed || cr->anyAllowed) {
+            if (cr->integersAllowed || cr->floatsAllowed || cr->getAnyAllowed()) {
                 WriteString(theEnv, strdest, "RNG:[");
                 PrintExpression(theEnv, strdest, cr->minValue);
                 WriteString(theEnv, strdest, "..");
@@ -1260,7 +1260,7 @@ static const char *ConstraintCode(
         CONSTRAINT_RECORD *cr,
         unsigned allow,
         unsigned restrictValues) {
-    if (allow || cr->anyAllowed) {
+    if (allow || cr->getAnyAllowed()) {
         if (restrictValues || cr->anyRestriction) return " #  ";
         else return " +  ";
     }

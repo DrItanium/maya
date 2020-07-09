@@ -940,7 +940,7 @@ static bool CheckForVariableMixing(
             else if (ConstantNode(tempRestriction)) constant = true;
             else if (tempRestriction->pnType == RETURN_VALUE_CONSTRAINT_NODE) {
                 theConstraint = FunctionCallToConstraintRecord(theEnv, tempRestriction->expression->value);
-                if (theConstraint->anyAllowed) { /* Do nothing. */ }
+                if (theConstraint->getAnyAllowed()) { /* Do nothing. */ }
                 else if (theConstraint->multifieldsAllowed) multiReturnValue = true;
                 else singleReturnValue = true;
                 RemoveConstraint(theEnv, theConstraint);

@@ -427,7 +427,7 @@ static bool ProcessVariable(
         if (thePattern->derivedConstraints) RemoveConstraint(theEnv, thePattern->constraints);
         theConstraints = GetConstraintRecord(theEnv);
         thePattern->constraints = theConstraints;
-        thePattern->constraints->anyAllowed = false;
+        thePattern->constraints->setAnyAllowed(false);
         thePattern->constraints->instanceAddressesAllowed = true;
         thePattern->constraints->factAddressesAllowed = true;
         thePattern->derivedConstraints = true;

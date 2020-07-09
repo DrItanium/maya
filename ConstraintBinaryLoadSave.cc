@@ -160,7 +160,7 @@ static void CopyToBsaveConstraintRecord(
         Environment *theEnv,
         CONSTRAINT_RECORD *constraints,
         BSAVE_CONSTRAINT_RECORD *bsaveConstraints) {
-    bsaveConstraints->anyAllowed = constraints->anyAllowed;
+    bsaveConstraints->anyAllowed = constraints->getAnyAllowed();
     bsaveConstraints->symbolsAllowed = constraints->symbolsAllowed;
     bsaveConstraints->stringsAllowed = constraints->stringsAllowed;
     bsaveConstraints->floatsAllowed = constraints->floatsAllowed;
@@ -220,7 +220,7 @@ static void CopyFromBsaveConstraintRecord(
     bsaveConstraints = (BSAVE_CONSTRAINT_RECORD *) buf;
     constraints = (CONSTRAINT_RECORD *) &ConstraintData(theEnv)->ConstraintArray[theIndex];
 
-    constraints->anyAllowed = bsaveConstraints->anyAllowed;
+    constraints->setAnyAllowed(bsaveConstraints->anyAllowed);
     constraints->symbolsAllowed = bsaveConstraints->symbolsAllowed;
     constraints->stringsAllowed = bsaveConstraints->stringsAllowed;
     constraints->floatsAllowed = bsaveConstraints->floatsAllowed;
