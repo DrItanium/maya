@@ -213,7 +213,7 @@ long long Run(
 #endif
         maxInstances = GetGlobalNumberOfInstances(theEnv);
         sumInstances = maxInstances;
-        maxActivations = GetNumberOfActivations(theEnv);
+        maxActivations = AgendaData(theEnv)->getNumberOfActivations();
         sumActivations = maxActivations;
 #if (!GENERIC)
         startTime = gentime();
@@ -468,7 +468,7 @@ long long Run(
             tempValue = GetGlobalNumberOfInstances(theEnv);
             if (tempValue > maxInstances) maxInstances = tempValue;
             sumInstances += tempValue;
-            tempValue = GetNumberOfActivations(theEnv);
+            tempValue = AgendaData(theEnv)->getNumberOfActivations();
             if (tempValue > maxActivations) maxActivations = tempValue;
             sumActivations += tempValue;
         }

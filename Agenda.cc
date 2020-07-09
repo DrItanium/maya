@@ -770,11 +770,6 @@ void ReorderAgenda(
 /****************************************************/
 /* GetNumberOfActivations: Returns the value of the */
 /*   total number of activations on all agendas.    */
-/****************************************************/
-unsigned long GetNumberOfActivations(
-        Environment *theEnv) {
-    return (AgendaData(theEnv)->getNumberOfActivations());
-}
 
 /******************************************************/
 /* RefreshCommand: H/L Command for refreshing a rule. */
