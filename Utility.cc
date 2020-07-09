@@ -94,12 +94,12 @@
 
 #include "Utility.h"
 
-#define MAX_EPHEMERAL_COUNT 1000L
-#define MAX_EPHEMERAL_SIZE 10240L
-#define COUNT_INCREMENT 1000L
-#define SIZE_INCREMENT 10240L
+constexpr auto MAX_EPHEMERAL_COUNT = 1000L;
+constexpr auto MAX_EPHEMERAL_SIZE = 10240L;
+constexpr auto COUNT_INCREMENT = 1000L;
+constexpr auto SIZE_INCREMENT = 10240L;
 
-#define MAX_BLOCK_SIZE 10240
+constexpr auto MAX_BLOCK_SIZE = 10240;
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */

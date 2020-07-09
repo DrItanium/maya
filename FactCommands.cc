@@ -102,8 +102,8 @@
 #include "Deftemplate.h"
 #include "DeftemplateUtilities.h"
 
-#define INVALID     -2L
-#define UNSPECIFIED -1L
+constexpr auto INVALID     = -2L;
+constexpr auto UNSPECIFIED = -1L;
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */

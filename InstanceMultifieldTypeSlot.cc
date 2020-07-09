@@ -70,9 +70,9 @@
                    CONSTANTS
    =========================================
    ***************************************** */
-#define INSERT         0
-#define REPLACE        1
-#define DELETE_OP      2
+constexpr auto INSERT         = 0;
+constexpr auto REPLACE        = 1;
+constexpr auto DELETE_OP      = 2;
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */

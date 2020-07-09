@@ -572,7 +572,7 @@ struct factHashEntry {
     FactHashEntry *next;
 };
 
-#define SIZE_FACT_HASH 16231
+constexpr auto SIZE_FACT_HASH = 16231;
 
 void AddHashedFact(Environment *, Fact *, size_t);
 bool RemoveHashedFact(Environment *, Fact *);

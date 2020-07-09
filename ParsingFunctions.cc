@@ -69,7 +69,7 @@
 
 #include "ParsingFunctions.h"
 
-#define PARSEFUN_DATA 11
+constexpr auto PARSEFUN_DATA = 11;
 
 struct parseFunctionData {
     char *ErrorString;

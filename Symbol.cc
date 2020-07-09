@@ -97,9 +97,9 @@
 #define POSITIVE_INFINITY_STRING "+oo"
 #define NEGATIVE_INFINITY_STRING "-oo"
 
-#define AVERAGE_STRING_SIZE 10
-#define AVERAGE_BITMAP_SIZE sizeof(long)
-#define NUMBER_OF_LONGS_FOR_HASH 25
+constexpr auto AVERAGE_STRING_SIZE = 10;
+constexpr auto AVERAGE_BITMAP_SIZE = sizeof(long);
+constexpr auto NUMBER_OF_LONGS_FOR_HASH = 25;
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */

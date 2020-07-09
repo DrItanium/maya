@@ -91,8 +91,8 @@
                    CONSTANTS
    =========================================
    ***************************************** */
-#define SELF_LEN         4
-#define SELF_SLOT_REF   ':'
+constexpr auto SELF_LEN  = 4;
+constexpr auto SELF_SLOT_REF = ':';
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */

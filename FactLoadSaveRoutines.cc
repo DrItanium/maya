@@ -71,7 +71,7 @@ struct bsaveSlotValueAtom {
 #define BINARY_FACTS_PREFIX_ID "\5\6\7BSFCLIPS"
 #define BINARY_FACTS_VERSION_ID "V6.40"
 
-#define MAX_BLOCK_SIZE 10240
+constexpr auto MAX_BLOCK_SIZE = 10240;
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */

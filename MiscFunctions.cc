@@ -137,7 +137,7 @@
 
 #include "MiscFunctions.h"
 
-#define MISCFUN_DATA 9
+constexpr auto MISCFUN_DATA = 9;
 
 struct miscFunctionData {
     long long GensymNumber;

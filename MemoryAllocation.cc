@@ -68,7 +68,7 @@
 #include <malloc.h>
 #endif
 
-#define STRICT_ALIGN_SIZE sizeof(double)
+constexpr auto STRICT_ALIGN_SIZE = sizeof(double);
 
 #define SpecialMalloc(sz) malloc((STD_SIZE) sz)
 #define SpecialFree(ptr) free(ptr)

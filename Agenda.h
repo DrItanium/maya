@@ -74,8 +74,8 @@ typedef enum {
     EVERY_CYCLE
 } SalienceEvaluationType;
 
-#define MAX_DEFRULE_SALIENCE  10000
-#define MIN_DEFRULE_SALIENCE -10000
+constexpr auto MAX_DEFRULE_SALIENCE =  10000;
+constexpr auto MIN_DEFRULE_SALIENCE = -10000;
 
 /*******************/
 /* DATA STRUCTURES */

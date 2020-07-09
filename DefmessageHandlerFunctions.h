@@ -63,14 +63,14 @@ typedef struct handlerSlotReference {
 /* =================================================================================
    Message-handler types - don't change these values: a string array depends on them
    ================================================================================= */
-#define MAROUND        0
-#define MBEFORE        1
-#define MPRIMARY       2
-#define MAFTER         3
-#define MERROR         4
+constexpr auto MAROUND       = 0;
+constexpr auto MBEFORE       = 1;
+constexpr auto MPRIMARY      = 2;
+constexpr auto MAFTER        = 3;
+constexpr auto MERROR        = 4;
 
-#define LOOKUP_HANDLER_INDEX   0
-#define LOOKUP_HANDLER_ADDRESS 1
+constexpr auto LOOKUP_HANDLER_INDEX   = 0;
+constexpr auto LOOKUP_HANDLER_ADDRESS = 1;
 
 void UnboundHandlerErr(Environment *, const char *);
 void PrintNoHandlerError(Environment *, const char *);

@@ -157,7 +157,7 @@
 /* ENVIRONMENT DATA */
 /********************/
 
-#define SYSTEM_DEPENDENT_DATA 58
+constexpr auto SYSTEM_DEPENDENT_DATA = 58;
 
 struct systemDependentData {
 #if WIN_MVC

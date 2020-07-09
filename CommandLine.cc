@@ -120,10 +120,10 @@
 /* DEFINITIONS */
 /***************/
 
-#define NO_SWITCH         0
-#define BATCH_SWITCH      1
-#define BATCH_STAR_SWITCH 2
-#define LOAD_SWITCH       3
+constexpr auto NO_SWITCH         = 0;
+constexpr auto BATCH_SWITCH      = 1;
+constexpr auto BATCH_STAR_SWITCH = 2;
+constexpr auto LOAD_SWITCH       = 3;
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */

@@ -136,14 +136,14 @@
 /* DEFINITIONS */
 /***************/
 
-#define FORMAT_MAX 512
-#define FLAG_MAX    80
+constexpr auto FORMAT_MAX  = 512;
+constexpr auto FLAG_MAX    = 80;
 
 /********************/
 /* ENVIRONMENT DATA */
 /********************/
 
-#define IO_FUNCTION_DATA 64
+constexpr auto IO_FUNCTION_DATA = 64;
 
 struct IOFunctionData {
     CLIPSLexeme *locale;

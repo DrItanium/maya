@@ -103,12 +103,11 @@
                    CONSTANTS
    =========================================
    ***************************************** */
-#define BIG_PRIME          11329
-
-#define CLASS_ID_MAP_CHUNK 30
+constexpr auto BIG_PRIME          = 11329;
+constexpr auto CLASS_ID_MAP_CHUNK = 30;
 
 #define PUT_PREFIX         "put-"
-#define PUT_PREFIX_LENGTH  4
+constexpr auto PUT_PREFIX_LENGTH  = 4;
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */

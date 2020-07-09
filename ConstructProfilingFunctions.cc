@@ -69,9 +69,9 @@
 
 #include <cstring>
 
-#define NO_PROFILE      0
-#define USER_FUNCTIONS  1
-#define CONSTRUCTS_CODE 2
+constexpr auto NO_PROFILE      = 0;
+constexpr auto USER_FUNCTIONS  = 1;
+constexpr auto CONSTRUCTS_CODE = 2;
 
 #define OUTPUT_STRING "%-40s %7ld %15.6f  %8.2f%%  %15.6f  %8.2f%%\n"
 

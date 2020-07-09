@@ -81,10 +81,10 @@
                    CONSTANTS
    =========================================
    ***************************************** */
-#define MAKE_TYPE       0
-#define INITIALIZE_TYPE 1
-#define MODIFY_TYPE     2
-#define DUPLICATE_TYPE  3
+constexpr auto MAKE_TYPE       = 0;
+constexpr auto INITIALIZE_TYPE = 1;
+constexpr auto MODIFY_TYPE     = 2;
+constexpr auto DUPLICATE_TYPE  = 3;
 
 #define CLASS_RLN          "of"
 #define DUPLICATE_NAME_REF "to"

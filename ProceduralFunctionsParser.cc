@@ -77,7 +77,7 @@
 #include "DefglobalParser.h"
 #endif
 
-#define PRCDRPSR_DATA 12
+constexpr auto PRCDRPSR_DATA = 12;
 
 struct procedureParserData {
     struct BindInfo *ListOfParsedBindNames;

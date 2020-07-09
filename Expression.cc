@@ -59,9 +59,9 @@
 
 #include "Expression.h"
 
-#define PRIME_ONE   257
-#define PRIME_TWO   263
-#define PRIME_THREE 269
+constexpr auto PRIME_ONE   = 257;
+constexpr auto PRIME_TWO   = 263;
+constexpr auto PRIME_THREE = 269;
 
 /****************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS  */

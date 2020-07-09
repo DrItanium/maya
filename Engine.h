@@ -146,8 +146,7 @@ struct engineData {
 
 #define EngineData(theEnv) ((engineData *) GetEnvironmentData(theEnv,ENGINE_DATA))
 
-#define MAX_PATTERNS_CHECKED 64
-
+constexpr auto MAX_PATTERNS_CHECKED = 64;
 long long Run(Environment *, long long);
 bool AddAfterRuleFiresFunction(Environment *, const char *,
                                RuleFiredFunction *, int, void *);

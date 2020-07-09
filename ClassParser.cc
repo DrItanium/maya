@@ -95,8 +95,8 @@
 #define SLOT_RLN             "slot"
 #define MLT_SLOT_RLN         "multislot"
 
-#define DIRECT               0
-#define INHERIT              1
+constexpr auto DIRECT               = 0;
+constexpr auto INHERIT              = 1;
 
 
 /***************************************/

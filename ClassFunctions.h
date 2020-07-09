@@ -63,13 +63,14 @@
 #define SetTraversalID(traversalRecord, id) SetBitMap(traversalRecord,id)
 #define ClearTraversalID(traversalRecord, id) ClearBitMap(traversalRecord,id)
 
-#define CLASS_TABLE_HASH_SIZE     167 // TBD Larger?
-#define SLOT_NAME_TABLE_HASH_SIZE 167 // TBD Larger?
 
-#define ISA_ID  0
-#define NAME_ID 1
+constexpr auto CLASS_TABLE_HASH_SIZE     = 167; // TBD Larger?
+constexpr auto SLOT_NAME_TABLE_HASH_SIZE = 167; // TBD Larger?
 
-#define SLOT_NAME_NOT_FOUND USHRT_MAX
+constexpr auto ISA_ID  = 0;
+constexpr auto NAME_ID = 1;
+
+constexpr auto SLOT_NAME_NOT_FOUND = USHRT_MAX;
 
 void IncrementDefclassBusyCount(Environment *, Defclass *);
 void DecrementDefclassBusyCount(Environment *, Defclass *);

@@ -124,7 +124,7 @@ void MBAppendUDFValue(MultifieldBuilder *theMB, UDFValue *);
 
 #include "Evaluation.h"
 
-#define VALUE_NOT_FOUND SIZE_MAX
+constexpr auto VALUE_NOT_FOUND = SIZE_MAX;
 
 void MultifieldFunctionDefinitions(Environment *);
 #if MULTIFIELD_FUNCTIONS

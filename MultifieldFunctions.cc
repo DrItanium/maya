@@ -126,7 +126,7 @@ static void MVRangeErrorSizet(Environment *, size_t, size_t, size_t, const char 
 
 #if MULTIFIELD_FUNCTIONS
 
-#define MULTIFUN_DATA 10
+constexpr auto MULTIFUN_DATA = 10;
 
 struct multiFunctionData {
     FIELD_VAR_STACK *FieldVarStack;

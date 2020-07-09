@@ -49,7 +49,7 @@
 
 #include "SortingFunctions.h"
 
-#define SORTFUN_DATA 7
+constexpr auto SORTFUN_DATA = 7;
 
 struct sortFunctionData {
     struct expr *SortComparisonFunction;

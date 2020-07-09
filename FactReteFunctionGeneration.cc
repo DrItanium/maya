@@ -63,7 +63,7 @@
 #include "DeftemplateLHS.h"
 #include "DeftemplateUtilities.h"
 
-#define FACTGEN_DATA 2
+constexpr auto FACTGEN_DATA = 2;
 
 struct factgenData {
     struct entityRecord FactJNGV1Info;

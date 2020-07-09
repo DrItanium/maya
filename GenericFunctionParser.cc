@@ -98,13 +98,13 @@
                    CONSTANTS
    =========================================
    ***************************************** */
-#define HIGHER_PRECEDENCE -1
-#define IDENTICAL          0
-#define LOWER_PRECEDENCE   1
+constexpr auto HIGHER_PRECEDENCE =  -1;
+constexpr auto IDENTICAL         =   0;
+constexpr auto LOWER_PRECEDENCE  =   1;
 
 #define CURR_ARG_VAR "current-argument"
 
-#define PARAMETER_ERROR USHRT_MAX
+constexpr auto PARAMETER_ERROR = USHRT_MAX;
 
 /* =========================================
    *****************************************

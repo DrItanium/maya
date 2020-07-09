@@ -91,8 +91,8 @@ typedef enum {
     UNKNOWN_NODE
 } ParseNodeType;
 
-#define UNSPECIFIED_SLOT USHRT_MAX
-#define NO_INDEX USHRT_MAX
+constexpr auto UNSPECIFIED_SLOT = USHRT_MAX;
+constexpr auto NO_INDEX = USHRT_MAX;
 
 /***********************************************************************/
 /* lhsParseNode structure: Stores information about the intermediate   */

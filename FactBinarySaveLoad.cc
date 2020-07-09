@@ -65,8 +65,8 @@ struct bsaveFactPatternNode {
     unsigned long rightNode;
 };
 
-#define BSAVE_FIND         0
-#define BSAVE_PATTERNS     1
+constexpr auto BSAVE_FIND         = 0;
+constexpr auto BSAVE_PATTERNS     = 1;
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
