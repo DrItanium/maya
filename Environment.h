@@ -84,7 +84,7 @@ struct environmentCleanupFunction {
 };
 
 struct environmentData {
-    bool initialized;
+    bool initialized: 1;
     void *context;
     CLIPSLexeme *TrueSymbol;
     CLIPSLexeme *FalseSymbol;
