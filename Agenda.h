@@ -83,7 +83,11 @@ constexpr auto MIN_DEFRULE_SALIENCE = -10000;
 
 struct activation {
     Defrule *theRule;
+private:
     struct partialMatch *basis;
+public:
+    auto getBasis() const noexcept { return basis; }
+    void setBasis(partialMatch* value) noexcept { basis = value; }
 private:
     int salience;
 public:

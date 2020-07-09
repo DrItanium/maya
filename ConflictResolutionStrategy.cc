@@ -68,8 +68,8 @@
 
 #include "ConflictResolutionStrategy.h"
 
-#define GetMatchingItem(x, i) ((x->basis->binds[i].gm.theMatch != nullptr) ? \
-                              (x->basis->binds[i].gm.theMatch->matchingItem) : nullptr)
+#define GetMatchingItem(x, i) ((x->getBasis()->binds[i].gm.theMatch != nullptr) ? \
+                              (x->getBasis()->binds[i].gm.theMatch->matchingItem) : nullptr)
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
@@ -727,8 +727,8 @@ static int ComparePartialMatches(
     /* have a set of sorted timetags, then create one. */
     /*=================================================*/
 
-    basis1 = SortPartialMatch(theEnv, newActivation->basis);
-    basis2 = SortPartialMatch(theEnv, actPtr->basis);
+    basis1 = SortPartialMatch(theEnv, newActivation->getBasis());
+    basis2 = SortPartialMatch(theEnv, actPtr->getBasis());
 
     /*==============================================================*/
     /* Determine the number of timetags in each of the activations. */
@@ -736,8 +736,8 @@ static int ComparePartialMatches(
     /* two numbers.                                                 */
     /*==============================================================*/
 
-    cCount = newActivation->basis->bcount;
-    oCount = actPtr->basis->bcount;
+    cCount = newActivation->getBasis()->bcount;
+    oCount = actPtr->getBasis()->bcount;
 
     if (oCount > cCount) mCount = cCount;
     else mCount = oCount;

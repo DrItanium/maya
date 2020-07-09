@@ -155,7 +155,7 @@ void AddActivation(
 
     newActivation = get_struct(theEnv, activation);
     newActivation->theRule = theRule;
-    newActivation->basis = binds;
+    newActivation->setBasis(binds);
     newActivation->timetag = AgendaData(theEnv)->CurrentTimetag++;
     newActivation->setSalience(EvaluateSalience(theEnv, theRule));
 
@@ -319,7 +319,7 @@ struct partialMatch *GetActivationBasis(
 #if MAC_XCD
 #pragma unused(theEnv)
 #endif
-    return actPtr->basis;
+    return actPtr->getBasis();
 }
 
 /*********************************************/
@@ -376,7 +376,7 @@ void GetActivationBasisPPForm(
         size_t bufferLength,
         Activation *theActivation) {
     OpenStringDestination(theEnv, "ActPPForm", buffer, bufferLength);
-    PrintPartialMatch(theEnv, "ActPPForm", theActivation->basis);
+    PrintPartialMatch(theEnv, "ActPPForm", theActivation->getBasis());
     CloseStringDestination(theEnv, "ActPPForm");
 }
 
@@ -540,7 +540,7 @@ static void PrintActivation(
     WriteString(theEnv, logicalName, printSpace);
     WriteString(theEnv, logicalName, theActivation->theRule->header.name->contents);
     WriteString(theEnv, logicalName, ": ");
-    PrintPartialMatch(theEnv, logicalName, theActivation->basis);
+    PrintPartialMatch(theEnv, logicalName, theActivation->getBasis());
 }
 
 /*****************************/
@@ -622,7 +622,7 @@ void RemoveActivation(
     /* Update join and agenda links if necessary. */
     /*============================================*/
 
-    if (updateLinks && (theActivation->basis != nullptr)) { theActivation->basis->marker = nullptr; }
+    if (updateLinks && (theActivation->getBasis() != nullptr)) { theActivation->getBasis()->marker = nullptr; }
 
     /*================================================*/
     /* Return the activation to the free memory pool. */
