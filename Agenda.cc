@@ -154,7 +154,7 @@ void AddActivation(
     /*=======================================================*/
 
     newActivation = get_struct(theEnv, activation);
-    newActivation->theRule = theRule;
+    newActivation->setRule(theRule);
     newActivation->setBasis(binds);
     newActivation->timetag = AgendaData(theEnv)->CurrentTimetag++;
     newActivation->setSalience(EvaluateSalience(theEnv, theRule));
@@ -177,7 +177,7 @@ void AddActivation(
     /*====================================================*/
 
 #if DEBUGGING_FUNCTIONS
-    if (newActivation->theRule->watchActivation &&
+    if (newActivation->getRule()->watchActivation &&
         (!ConstructData(theEnv)->ClearReadyInProgress) &&
         (!ConstructData(theEnv)->ClearInProgress)) {
         WriteString(theEnv, STDOUT, "==> Activation ");
@@ -281,7 +281,7 @@ void ClearRuleFromAgenda(
         for (tempRule = theRule;
              tempRule != nullptr;
              tempRule = tempRule->disjunct) {
-            if (agendaPtr->theRule == tempRule) {
+            if (agendaPtr->getRule() == tempRule) {
                 RemoveActivation(theEnv, agendaPtr, true, true);
                 break;
             }
@@ -328,21 +328,12 @@ struct partialMatch *GetActivationBasis(
 /*********************************************/
 const char *ActivationRuleName(
         Activation *actPtr) {
-    return actPtr->theRule->header.name->contents;
+    return actPtr->getRule()->header.name->contents;
 }
 
 /***************************************/
 /* GetActivationRule: Returns the rule */
 /*   associated with an activation.    */
-/***************************************/
-Defrule *GetActivationRule(
-        Environment *theEnv,
-        Activation *actPtr) {
-#if MAC_XCD
-#pragma unused(theEnv)
-#endif
-    return actPtr->theRule;
-}
 
 /************************************************/
 /* ActivationGetSalience: Returns the salience  */
@@ -359,7 +350,7 @@ Defrule *GetActivationRule(
 void ActivationPPForm(
         Activation *theActivation,
         StringBuilder *theSB) {
-    Environment *theEnv = theActivation->theRule->header.env;
+    Environment *theEnv = theActivation->getRule()->header.env;
 
     OpenStringBuilderDestination(theEnv, "ActPPForm", theSB);
     PrintActivation(theEnv, "ActPPForm", theActivation);
@@ -395,7 +386,7 @@ bool MoveActivationToTop(
     /* in which the activation is stored. */
     /*====================================*/
 
-    theModuleItem = (defruleModule *) theActivation->theRule->header.whichModule;
+    theModuleItem = (defruleModule *) theActivation->getRule()->header.whichModule;
 
     /*============================================*/
     /* If the activation is already at the top of */
@@ -439,7 +430,7 @@ bool MoveActivationToTop(
 /*******************************************/
 void DeleteActivation(
         Activation *theActivation) {
-    RemoveActivation(theActivation->theRule->header.env, theActivation, true, true);
+    RemoveActivation(theActivation->getRule()->header.env, theActivation, true, true);
 }
 
 /*************************************************/
@@ -487,7 +478,7 @@ bool DetachActivation(
     /* in which the activation is stored. */
     /*====================================*/
 
-    theModuleItem = (defruleModule *) theActivation->theRule->header.whichModule;
+    theModuleItem = (defruleModule *) theActivation->getRule()->header.whichModule;
 
     RemoveActivationFromGroup(theEnv, theActivation, theModuleItem);
 
@@ -538,7 +529,7 @@ static void PrintActivation(
 
     gensprintf(printSpace, "%-6d ", theActivation->getSalience());
     WriteString(theEnv, logicalName, printSpace);
-    WriteString(theEnv, logicalName, theActivation->theRule->header.name->contents);
+    WriteString(theEnv, logicalName, theActivation->getRule()->header.name->contents);
     WriteString(theEnv, logicalName, ": ");
     PrintPartialMatch(theEnv, logicalName, theActivation->getBasis());
 }
@@ -575,7 +566,7 @@ void RemoveActivation(
     /* in which the activation is stored. */
     /*====================================*/
 
-    theModuleItem = (defruleModule *) theActivation->theRule->header.whichModule;
+    theModuleItem = (defruleModule *) theActivation->getRule()->header.whichModule;
 
     /*=================================*/
     /* Update the agenda if necessary. */
@@ -602,7 +593,7 @@ void RemoveActivation(
         /*===================================*/
 
 #if DEBUGGING_FUNCTIONS
-        if (theActivation->theRule->watchActivation &&
+        if (theActivation->getRule()->watchActivation &&
             (!ConstructData(theEnv)->ClearReadyInProgress) &&
             (!ConstructData(theEnv)->ClearInProgress)) {
             WriteString(theEnv, STDOUT, "<== Activation ");
@@ -978,7 +969,7 @@ void RefreshAgenda(
     for (theActivation = GetNextActivation(theEnv, nullptr);
          theActivation != nullptr;
          theActivation = GetNextActivation(theEnv, theActivation)) {
-        theActivation->setSalience(EvaluateSalience(theEnv, theActivation->theRule));
+        theActivation->setSalience(EvaluateSalience(theEnv, theActivation->getRule()));
     }
 
     /*======================================================*/

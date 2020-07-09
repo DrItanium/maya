@@ -82,15 +82,15 @@ constexpr auto MIN_DEFRULE_SALIENCE = -10000;
 /*******************/
 
 struct activation {
+private:
     Defrule *theRule;
-private:
     struct partialMatch *basis;
-public:
-    auto getBasis() const noexcept { return basis; }
-    void setBasis(partialMatch* value) noexcept { basis = value; }
-private:
     int salience;
 public:
+    auto getRule() const noexcept { return theRule; }
+    void setRule(Defrule* value) noexcept { theRule = value; }
+    auto getBasis() const noexcept { return basis; }
+    void setBasis(partialMatch* value) noexcept { basis = value; }
     constexpr auto getSalience() const noexcept { return salience; }
     void setSalience(int value) noexcept { salience = value; }
     unsigned long long timetag;
@@ -140,7 +140,6 @@ void ClearRuleFromAgenda(Environment *, Defrule *);
 Activation *GetNextActivation(Environment *, Activation *);
 struct partialMatch *GetActivationBasis(Environment *, Activation *);
 const char *ActivationRuleName(Activation *);
-Defrule *GetActivationRule(Environment *, Activation *);
 void ActivationPPForm(Activation *, StringBuilder *);
 void GetActivationBasisPPForm(Environment *, char *, size_t, Activation *);
 bool MoveActivationToTop(Environment *, Activation *);

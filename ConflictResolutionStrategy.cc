@@ -494,7 +494,7 @@ static Activation *PlaceComplexityActivation(
     /*========================================*/
 
     timetag = newActivation->timetag;
-    complexity = newActivation->theRule->complexity;
+    complexity = newActivation->getRule()->complexity;
     if (theGroup->prev == nullptr) { lastAct = nullptr; }
     else { lastAct = theGroup->prev->last; }
 
@@ -508,11 +508,11 @@ static Activation *PlaceComplexityActivation(
 
     actPtr = theGroup->first;
     while (actPtr != nullptr) {
-        if (complexity < actPtr->theRule->complexity) {
+        if (complexity < actPtr->getRule()->complexity) {
             lastAct = actPtr;
             if (actPtr == theGroup->last) { break; }
             else { actPtr = actPtr->next; }
-        } else if (complexity > actPtr->theRule->complexity) { break; }
+        } else if (complexity > actPtr->getRule()->complexity) { break; }
         else if (timetag > actPtr->timetag) {
             lastAct = actPtr;
             if (actPtr == theGroup->last) { break; }
@@ -555,7 +555,7 @@ static Activation *PlaceSimplicityActivation(
     /*============================================*/
 
     timetag = newActivation->timetag;
-    complexity = newActivation->theRule->complexity;
+    complexity = newActivation->getRule()->complexity;
     if (theGroup->prev == nullptr) { lastAct = nullptr; }
     else { lastAct = theGroup->prev->last; }
 
@@ -569,11 +569,11 @@ static Activation *PlaceSimplicityActivation(
 
     actPtr = theGroup->first;
     while (actPtr != nullptr) {
-        if (complexity > actPtr->theRule->complexity) {
+        if (complexity > actPtr->getRule()->complexity) {
             lastAct = actPtr;
             if (actPtr == theGroup->last) { break; }
             else { actPtr = actPtr->next; }
-        } else if (complexity < actPtr->theRule->complexity) { break; }
+        } else if (complexity < actPtr->getRule()->complexity) { break; }
         else if (timetag > actPtr->timetag) {
             lastAct = actPtr;
             if (actPtr == theGroup->last) { break; }
@@ -783,8 +783,8 @@ static int ComparePartialMatches(
     /* other partial match.                                    */
     /*=========================================================*/
 
-    if (newActivation->theRule->complexity < actPtr->theRule->complexity) { return (LESS_THAN); }
-    else if (newActivation->theRule->complexity > actPtr->theRule->complexity) { return (GREATER_THAN); }
+    if (newActivation->getRule()->complexity < actPtr->getRule()->complexity) { return (LESS_THAN); }
+    else if (newActivation->getRule()->complexity > actPtr->getRule()->complexity) { return (GREATER_THAN); }
 
     /*================================================*/
     /* The two partial matches are equal for purposes */

@@ -276,7 +276,7 @@ long long Run(
         theTM = AddTrackedMemory(theEnv, theActivation, sizeof(activation));
         ruleFiring = ActivationRuleName(theActivation);
         theBasis = (partialMatch *) GetActivationBasis(theEnv, theActivation);
-        EngineData(theEnv)->ExecutingRule = GetActivationRule(theEnv, theActivation);
+        EngineData(theEnv)->ExecutingRule = theActivation->getRule();
 
         /*=============================================*/
         /* Update the number of rules that have fired. */
@@ -502,7 +502,7 @@ long long Run(
         /*==============================*/
 
         if (theActivation != nullptr) {
-            if (GetActivationRule(theEnv, theActivation)->afterBreakpoint) {
+            if (theActivation->getRule()->afterBreakpoint) {
                 EngineData(theEnv)->HaltRules = true;
                 WriteString(theEnv, STDOUT, "Breaking on rule ");
                 WriteString(theEnv, STDOUT, ActivationRuleName(theActivation));

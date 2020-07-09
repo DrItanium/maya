@@ -403,7 +403,7 @@ void Matches(
          agendaPtr = (activation *) GetNextActivation(theEnv, agendaPtr)) {
         if (GetHaltExecution(theEnv)) return;
 
-        if (((activation *) agendaPtr)->theRule->header.name == topDisjunct->header.name) {
+        if (((activation *) agendaPtr)->getRule()->header.name == topDisjunct->header.name) {
             activations++;
 
             if (output == VERBOSE) {
