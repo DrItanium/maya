@@ -103,7 +103,7 @@ static void RemoveActivationFromGroup(Environment *, Activation *, struct defrul
 /*************************************************/
 void InitializeAgenda(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, AGENDA_DATA, sizeof(agendaData));
+    AllocateEnvironmentData(theEnv, AGENDA_DATA, sizeof(AgendaData));
 
     AgendaData(theEnv)->setSalienceEvaluation(WHEN_DEFINED);
 

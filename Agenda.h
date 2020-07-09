@@ -131,7 +131,7 @@ public:
 
 constexpr auto AGENDA_DATA = 17;
 
-struct agendaData {
+struct AgendaData {
 #if DEBUGGING_FUNCTIONS
     bool WatchActivations;
     constexpr auto shouldWatchActivations() const noexcept { return WatchActivations; }
@@ -162,7 +162,7 @@ public:
     void setStrategy(StrategyType value) noexcept { Strategy = value; }
 };
 
-#define AgendaData(theEnv) ((agendaData *) GetEnvironmentData(theEnv,AGENDA_DATA))
+#define AgendaData(theEnv) ((AgendaData *) GetEnvironmentData(theEnv,AGENDA_DATA))
 
 /****************************************/
 /* GLOBAL EXTERNAL FUNCTION DEFINITIONS */
