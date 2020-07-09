@@ -163,7 +163,7 @@ void AddActivation(
     newActivation->setPrevious(nullptr);
     newActivation->setNext(nullptr);
 
-    AgendaData(theEnv)->NumberOfActivations++;
+    AgendaData(theEnv)->incrementActivationCount();
 
     /*=======================================================*/
     /* Point the partial match to the activation to complete */
@@ -610,7 +610,7 @@ void RemoveActivation(
     /* Return the activation to the free memory pool. */
     /*================================================*/
 
-    AgendaData(theEnv)->NumberOfActivations--;
+    AgendaData(theEnv)->decrementActivationCount();
 
     rtn_struct(theEnv, activation, theActivation);
 }
@@ -784,7 +784,7 @@ void ReorderAgenda(
 /****************************************************/
 unsigned long GetNumberOfActivations(
         Environment *theEnv) {
-    return (AgendaData(theEnv)->NumberOfActivations);
+    return (AgendaData(theEnv)->getNumberOfActivations());
 }
 
 /******************************************************/

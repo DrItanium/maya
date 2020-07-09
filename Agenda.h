@@ -136,8 +136,13 @@ struct agendaData {
     bool WatchActivations;
     constexpr auto shouldWatchActivations() const noexcept { return WatchActivations; }
 #endif
+private:
     unsigned long NumberOfActivations;
+public:
     constexpr auto getNumberOfActivations() const noexcept { return NumberOfActivations; }
+    void setNumberOfActivations(unsigned long value) noexcept { NumberOfActivations = value; }
+    void incrementActivationCount() noexcept { ++NumberOfActivations; }
+    void decrementActivationCount() noexcept { --NumberOfActivations; }
     unsigned long long CurrentTimetag;
     constexpr auto getCurrentTimetag() const noexcept { return CurrentTimetag; }
     bool AgendaChanged;
