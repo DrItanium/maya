@@ -703,21 +703,10 @@ void RemoveAllActivations(
 /* GetAgendaChanged: Returns the value of the */
 /*   boolean flag which indicates whether any */
 /*   changes have been made to the agenda.    */
-/**********************************************/
-bool GetAgendaChanged(
-        Environment *theEnv) {
-    return (AgendaData(theEnv)->agendaHasChanged());
-}
 
 /*****************************************************************/
 /* SetAgendaChanged: Sets the value of the boolean flag which    */
 /*   indicates whether any changes have been made to the agenda. */
-/*****************************************************************/
-void SetAgendaChanged(
-        Environment *theEnv,
-        bool value) {
-    AgendaData(theEnv)->markAgendaHasChanged(value);
-}
 
 /**********************/
 /* ReorderAllAgendas: */

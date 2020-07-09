@@ -181,8 +181,6 @@ void DeleteAllActivations(Defmodule *);
 void Agenda(Environment *, const char *, Defmodule *);
 void RemoveActivation(Environment *, Activation *, bool, bool);
 void RemoveAllActivations(Environment *);
-bool GetAgendaChanged(Environment *);
-void SetAgendaChanged(Environment *, bool);
 unsigned long GetNumberOfActivations(Environment *);
 SalienceEvaluationType GetSalienceEvaluation(Environment *);
 SalienceEvaluationType SetSalienceEvaluation(Environment *, SalienceEvaluationType);

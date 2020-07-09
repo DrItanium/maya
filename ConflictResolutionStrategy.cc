@@ -101,8 +101,7 @@ void PlaceActivation(
     /* Set the flag which indicates that a change has */
     /* been made to the agenda.                       */
     /*================================================*/
-
-    SetAgendaChanged(theEnv, true);
+    AgendaData(theEnv)->markAgendaHasChanged(true);
 
     /*=============================================*/
     /* Determine the location where the activation */
