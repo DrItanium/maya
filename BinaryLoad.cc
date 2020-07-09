@@ -139,7 +139,7 @@ bool Bload(
     /* Open the file. */
     /*================*/
 
-    if (GenOpenReadBinary(theEnv, "bload", fileName) == false) {
+    if (!GenOpenReadBinary(theEnv, "bload", fileName)) {
         OpenErrorMessage(theEnv, "bload", fileName);
         return false;
     }
@@ -193,7 +193,7 @@ bool Bload(
     /*====================*/
 
     if (BloadData(theEnv)->BloadActive) {
-        if (ClearBload(theEnv) == false) {
+        if (!ClearBload(theEnv)) {
             GenCloseBinary(theEnv);
             return false;
         }
@@ -204,7 +204,7 @@ bool Bload(
     /* was successfully cleared.       */
     /*=================================*/
 
-    if (ClearReady(theEnv) == false) {
+    if (!ClearReady(theEnv)) {
         GenCloseBinary(theEnv);
         PrintErrorID(theEnv, "BLOAD", 4, false);
         WriteString(theEnv, STDERR, "The ");
@@ -424,7 +424,7 @@ void BloadandRefresh(
         buf = (char *) genalloc(theEnv, space);
         if (buf == nullptr) {
             if ((objsmaxread / 2) == 0) {
-                if ((*oldOutOfMemoryFunction)(theEnv, space) == true) {
+                if ((*oldOutOfMemoryFunction)(theEnv, space)) {
                     SetOutOfMemoryFunction(theEnv, oldOutOfMemoryFunction);
                     return;
                 }
@@ -621,7 +621,7 @@ static bool ClearBload(
          bfPtr = bfPtr->next) {
         ready = (bfPtr->func)(theEnv, bfPtr->context);
 
-        if (ready == false) {
+        if (!ready) {
             if (!error) {
                 PrintErrorID(theEnv, "BLOAD", 5, false);
                 WriteString(theEnv, STDERR,
@@ -640,7 +640,7 @@ static bool ClearBload(
     /* and return false to indicate this condition.     */
     /*==================================================*/
 
-    if (error == true) {
+    if (error) {
         WriteString(theEnv, STDERR, "Binary clear cannot continue.\n");
         return false;
     }

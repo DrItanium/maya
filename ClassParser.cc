@@ -197,7 +197,7 @@ bool ParseDefclass(
     if (cname == nullptr)
         return true;
 
-    if (ValidClassName(theEnv, cname->contents, &cls) == false)
+    if (!ValidClassName(theEnv, cname->contents, &cls))
         return true;
 
     sclasses = ParseSuperclasses(theEnv, readSource, cname);
@@ -226,15 +226,15 @@ bool ParseDefclass(
             break;
         }
         if (strcmp(DefclassData(theEnv)->ObjectParseToken.lexemeValue->contents, ROLE_RLN) == 0) {
-            if (ParseSimpleQualifier(theEnv, readSource, ROLE_RLN, CONCRETE_RLN, ABSTRACT_RLN,
-                                     &roleSpecified, &abstract) == false) {
+            if (!ParseSimpleQualifier(theEnv, readSource, ROLE_RLN, CONCRETE_RLN, ABSTRACT_RLN,
+                                      &roleSpecified, &abstract)) {
                 parseError = true;
                 break;
             }
         }
         else if (strcmp(DefclassData(theEnv)->ObjectParseToken.lexemeValue->contents, MATCH_RLN) == 0) {
-            if (ParseSimpleQualifier(theEnv, readSource, MATCH_RLN, NONREACTIVE_RLN, REACTIVE_RLN,
-                                     &patternMatchSpecified, &reactive) == false) {
+            if (!ParseSimpleQualifier(theEnv, readSource, MATCH_RLN, NONREACTIVE_RLN, REACTIVE_RLN,
+                                      &patternMatchSpecified, &reactive)) {
                 parseError = true;
                 break;
             }
@@ -252,7 +252,7 @@ bool ParseDefclass(
                 break;
             }
         } else if (strcmp(DefclassData(theEnv)->ObjectParseToken.lexemeValue->contents, HANDLER_DECL) == 0) {
-            if (ReadUntilClosingParen(theEnv, readSource, &DefclassData(theEnv)->ObjectParseToken) == false) {
+            if (!ReadUntilClosingParen(theEnv, readSource, &DefclassData(theEnv)->ObjectParseToken)) {
                 parseError = true;
                 break;
             }
@@ -265,7 +265,7 @@ bool ParseDefclass(
     }
 
     if ((DefclassData(theEnv)->ObjectParseToken.tknType != RIGHT_PARENTHESIS_TOKEN) ||
-        (parseError == true)) {
+        parseError) {
         DeletePackedClassLinks(theEnv, sclasses, true);
         DeletePackedClassLinks(theEnv, preclist, true);
         DeleteSlots(theEnv, slots);
@@ -276,13 +276,13 @@ bool ParseDefclass(
     /* =========================================================================
        The abstract/reactive qualities of a class are inherited if not specified
        ========================================================================= */
-    if (roleSpecified == false) {
+    if (!roleSpecified) {
         if (preclist->classArray[1]->system &&                             /* Change to cause         */
             (DefclassData(theEnv)->ClassDefaultsModeValue == CONVENIENCE_MODE)) /* default role of         */
         { abstract = false; }                                            /* classes to be concrete. */
         else { abstract = preclist->classArray[1]->abstract; }
     }
-    if (patternMatchSpecified == false) {
+    if (!patternMatchSpecified) {
         if ((preclist->classArray[1]->system) &&                           /* Change to cause       */
             (!abstract) &&                                                /* default pattern-match */
             (DefclassData(theEnv)->ClassDefaultsModeValue == CONVENIENCE_MODE)) /* of classes to be      */
@@ -384,7 +384,7 @@ static bool ValidClassName(
            redefined if it is not in use, e.g., instances,
            generic function method restrictions, etc.
            =============================================== */
-        if ((DefclassIsDeletable(*theDefclass) == false) &&
+        if (!DefclassIsDeletable(*theDefclass) &&
             (!ConstructData(theEnv)->CheckSyntaxMode)) {
             PrintErrorID(theEnv, "CLASSPSR", 3, false);
             WriteString(theEnv, STDERR, "Class '");
@@ -471,7 +471,7 @@ static bool ReadUntilClosingParen(
     bool lparen_read = false;
 
     do {
-        if (lparen_read == false)
+        if (!lparen_read)
             SavePPBuffer(theEnv, " ");
         GetToken(theEnv, readSource, inputToken);
         if (inputToken->tknType == STOP_TOKEN) {
@@ -482,7 +482,7 @@ static bool ReadUntilClosingParen(
             cnt++;
         } else if (inputToken->tknType == RIGHT_PARENTHESIS_TOKEN) {
             cnt--;
-            if (lparen_read == false) {
+            if (!lparen_read) {
                 PPBackup(theEnv);
                 PPBackup(theEnv);
                 SavePPBuffer(theEnv, ")");
@@ -559,7 +559,7 @@ static void AddClass(
 #endif
 
 #if DEBUGGING_FUNCTIONS
-    if (GetConserveMemory(theEnv) == false)
+    if (!GetConserveMemory(theEnv))
         SetDefclassPPForm(theEnv, cls, CopyPPBuffer(theEnv));
 #endif
 

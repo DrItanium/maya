@@ -173,7 +173,7 @@ bool InstancesPurge(
         void *context) {
     DestroyAllInstances(theEnv, nullptr);
     CleanupInstances(theEnv, nullptr);
-    return ((InstanceData(theEnv)->InstanceList != nullptr) ? false : true);
+    return InstanceData(theEnv)->InstanceList == nullptr;
 }
 
 /***************************************************
@@ -868,7 +868,7 @@ void InstallClass(
     long i;
 
     if ((set && cls->installed) ||
-        ((set == false) && (cls->installed == 0)))
+        (!set && (cls->installed == 0)))
         return;
 
     /* ==================================================================
@@ -878,7 +878,7 @@ void InstallClass(
        Slot installation is handled by ParseSlot() in CLASSPSR.C
        Scope map installation is handled by CreateClassScopeMap()
        ================================================================== */
-    if (set == false) {
+    if (!set) {
         cls->installed = 0;
 
         ReleaseLexeme(theEnv, cls->header.name);
@@ -1227,7 +1227,7 @@ static void DeassignClassID(
         DefclassData(theEnv)->MaxClassID = id;
         if ((DefclassData(theEnv)->MaxClassID % CLASS_ID_MAP_CHUNK) == 0) {
             newChunk = DefclassData(theEnv)->MaxClassID;
-            if (reallocReqd == false) {
+            if (!reallocReqd) {
                 oldChunk = (DefclassData(theEnv)->MaxClassID + CLASS_ID_MAP_CHUNK);
                 reallocReqd = true;
             }

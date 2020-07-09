@@ -112,17 +112,17 @@
 #define OVERRIDE_MSG_FACET    "override-message"
 #define SLOT_DEFAULT_RLN      "DEFAULT"
 
-#define STORAGE_BIT           0
-#define FIELD_BIT             1
-#define ACCESS_BIT            2
-#define PROPAGATION_BIT       3
-#define SOURCE_BIT            4
-#define MATCH_BIT             5
-#define DEFAULT_BIT           6
-#define DEFAULT_DYNAMIC_BIT   7
-#define VISIBILITY_BIT        8
-#define CREATE_ACCESSOR_BIT   9
-#define OVERRIDE_MSG_BIT      10
+constexpr auto STORAGE_BIT           = 0;
+constexpr auto FIELD_BIT             = 1;
+constexpr auto ACCESS_BIT            = 2;
+constexpr auto PROPAGATION_BIT       = 3;
+constexpr auto SOURCE_BIT            = 4;
+constexpr auto MATCH_BIT             = 5;
+constexpr auto DEFAULT_BIT           = 6;
+constexpr auto DEFAULT_DYNAMIC_BIT   = 7;
+constexpr auto VISIBILITY_BIT        = 8;
+constexpr auto CREATE_ACCESSOR_BIT   = 9;
+constexpr auto OVERRIDE_MSG_BIT      = 10;
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
