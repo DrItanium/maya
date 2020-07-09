@@ -207,12 +207,12 @@ void RemoveConstraint(
     /* from the contraint hash table. */
     /*================================*/
 
-    tmpPtr = ConstraintData(theEnv)->ConstraintHashtable[theConstraint->bucket];
+    tmpPtr = ConstraintData(theEnv)->ConstraintHashtable[theConstraint->getBucket()];
     while (tmpPtr != nullptr) {
         if (tmpPtr == theConstraint) {
-            theConstraint->count--;
-            if (theConstraint->count == 0) {
-                if (prevPtr == nullptr) { ConstraintData(theEnv)->ConstraintHashtable[theConstraint->bucket] = theConstraint->getNext(); }
+            theConstraint->decrementCount();
+            if (theConstraint->getCount() == 0) {
+                if (prevPtr == nullptr) { ConstraintData(theEnv)->ConstraintHashtable[theConstraint->getBucket()] = theConstraint->getNext(); }
                 else { prevPtr->setNext(theConstraint->getNext()); }
                 DeinstallConstraintRecord(theEnv, theConstraint);
                 ReturnConstraintRecord(theEnv, theConstraint);
@@ -391,15 +391,15 @@ struct constraintRecord *AddConstraint(
          tmpPtr != nullptr;
          tmpPtr = tmpPtr->getNext()) {
         if (ConstraintCompare(theConstraint, tmpPtr)) {
-            tmpPtr->count++;
+            tmpPtr->incrementCount();
             ReturnConstraintRecord(theEnv, theConstraint);
             return tmpPtr;
         }
     }
 
     InstallConstraintRecord(theEnv, theConstraint);
-    theConstraint->count = 1;
-    theConstraint->bucket = (unsigned int) hashValue;
+    theConstraint->setCount(1);
+    theConstraint->setBucket((unsigned int) hashValue);
     theConstraint->installed = true;
     theConstraint->setNext(ConstraintData(theEnv)->ConstraintHashtable[hashValue]);
     ConstraintData(theEnv)->ConstraintHashtable[hashValue] = theConstraint;

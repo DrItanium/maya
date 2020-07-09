@@ -83,8 +83,8 @@ struct constraintRecord *GetConstraintRecord(
     constraints->minFields = GenConstant(theEnv, INTEGER_TYPE, SymbolData(theEnv)->Zero);
     constraints->maxFields = GenConstant(theEnv, SYMBOL_TYPE, SymbolData(theEnv)->PositiveInfinity);
     constraints->installed = false;
-    constraints->bucket = 0;
-    constraints->count = 0;
+    constraints->setBucket(0);
+    constraints->setCount(0);
     constraints->multifield = nullptr;
     constraints->setNext(nullptr);
 
@@ -160,9 +160,9 @@ struct constraintRecord *CopyConstraintRecord(
     theConstraint->maxValue = CopyExpression(theEnv, sourceConstraint->maxValue);
     theConstraint->minFields = CopyExpression(theEnv, sourceConstraint->minFields);
     theConstraint->maxFields = CopyExpression(theEnv, sourceConstraint->maxFields);
-    theConstraint->bucket = 0;
+    theConstraint->setBucket(0);
     theConstraint->installed = false;
-    theConstraint->count = 0;
+    theConstraint->setCount(0);
     theConstraint->multifield = CopyConstraintRecord(theEnv, sourceConstraint->multifield);
     theConstraint->setNext(nullptr);
 

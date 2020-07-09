@@ -101,11 +101,17 @@ public:
     constraintRecord *multifield;
 private:
     constraintRecord *next;
+    unsigned int bucket;
+    unsigned int count;
 public:
     auto getNext() const noexcept { return next; }
     void setNext(constraintRecord* value) noexcept { next = value; }
-    unsigned int bucket;
-    unsigned int count;
+    constexpr auto getBucket() const noexcept { return bucket; }
+    void setBucket(unsigned int value) noexcept { bucket = value; }
+    constexpr auto getCount() const noexcept { return count; }
+    void setCount(unsigned int value) noexcept { count = value; }
+    void decrementCount() noexcept { --count; }
+    void incrementCount() noexcept { ++count; }
 };
 
 constexpr auto SIZE_CONSTRAINT_HASH  = 167;
