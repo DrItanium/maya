@@ -134,7 +134,6 @@ void InitializeAtomTables(
 #pragma unused(bitmapTable)
 #pragma unused(externalAddressTable)
 #endif
-    unsigned long i;
 
     AllocateEnvironmentData(theEnv, SYMBOL_DATA, sizeof(struct symbolData), DeallocateSymbolData);
 
@@ -160,12 +159,11 @@ void InitializeAtomTables(
     /*===================================================*/
     /* Initialize all of the hash table entries to nullptr. */
     /*===================================================*/
-
-    for (i = 0; i < SYMBOL_HASH_SIZE; i++) SymbolData(theEnv)->SymbolTable[i] = nullptr;
-    for (i = 0; i < FLOAT_HASH_SIZE; i++) SymbolData(theEnv)->FloatTable[i] = nullptr;
-    for (i = 0; i < INTEGER_HASH_SIZE; i++) SymbolData(theEnv)->IntegerTable[i] = nullptr;
-    for (i = 0; i < BITMAP_HASH_SIZE; i++) SymbolData(theEnv)->BitMapTable[i] = nullptr;
-    for (i = 0; i < EXTERNAL_ADDRESS_HASH_SIZE; i++) SymbolData(theEnv)->ExternalAddressTable[i] = nullptr;
+    for (unsigned long i = 0; i < SYMBOL_HASH_SIZE; i++) SymbolData(theEnv)->SymbolTable[i] = nullptr;
+    for (unsigned long i = 0; i < FLOAT_HASH_SIZE; i++) SymbolData(theEnv)->FloatTable[i] = nullptr;
+    for (unsigned long i = 0; i < INTEGER_HASH_SIZE; i++) SymbolData(theEnv)->IntegerTable[i] = nullptr;
+    for (unsigned long i = 0; i < BITMAP_HASH_SIZE; i++) SymbolData(theEnv)->BitMapTable[i] = nullptr;
+    for (unsigned long i = 0; i < EXTERNAL_ADDRESS_HASH_SIZE; i++) SymbolData(theEnv)->ExternalAddressTable[i] = nullptr;
 
     /*========================*/
     /* Predefine some values. */
@@ -192,7 +190,6 @@ void InitializeAtomTables(
 /*************************************************/
 static void DeallocateSymbolData(
         Environment *theEnv) {
-    int i;
     CLIPSLexeme *shPtr, *nextSHPtr;
     CLIPSInteger *ihPtr, *nextIHPtr;
     CLIPSFloat *fhPtr, *nextFHPtr;
@@ -207,7 +204,7 @@ static void DeallocateSymbolData(
 
     genfree(theEnv, theEnv->VoidConstant, sizeof(TypeHeader));
 
-    for (i = 0; i < SYMBOL_HASH_SIZE; i++) {
+    for (int i = 0; i < SYMBOL_HASH_SIZE; i++) {
         shPtr = SymbolData(theEnv)->SymbolTable[i];
 
         while (shPtr != nullptr) {
@@ -220,7 +217,7 @@ static void DeallocateSymbolData(
         }
     }
 
-    for (i = 0; i < FLOAT_HASH_SIZE; i++) {
+    for (int i = 0; i < FLOAT_HASH_SIZE; i++) {
         fhPtr = SymbolData(theEnv)->FloatTable[i];
 
         while (fhPtr != nullptr) {
@@ -230,7 +227,7 @@ static void DeallocateSymbolData(
         }
     }
 
-    for (i = 0; i < INTEGER_HASH_SIZE; i++) {
+    for (int i = 0; i < INTEGER_HASH_SIZE; i++) {
         ihPtr = SymbolData(theEnv)->IntegerTable[i];
 
         while (ihPtr != nullptr) {
@@ -240,7 +237,7 @@ static void DeallocateSymbolData(
         }
     }
 
-    for (i = 0; i < BITMAP_HASH_SIZE; i++) {
+    for (int i = 0; i < BITMAP_HASH_SIZE; i++) {
         bmhPtr = SymbolData(theEnv)->BitMapTable[i];
 
         while (bmhPtr != nullptr) {
@@ -253,7 +250,7 @@ static void DeallocateSymbolData(
         }
     }
 
-    for (i = 0; i < EXTERNAL_ADDRESS_HASH_SIZE; i++) {
+    for (int i = 0; i < EXTERNAL_ADDRESS_HASH_SIZE; i++) {
         eahPtr = SymbolData(theEnv)->ExternalAddressTable[i];
 
         while (eahPtr != nullptr) {
