@@ -41,10 +41,10 @@
 
 struct bsaveTemplateSlot {
     unsigned long slotName;
-    unsigned int multislot: 1;
-    unsigned int noDefault: 1;
-    unsigned int defaultPresent: 1;
-    unsigned int defaultDynamic: 1;
+    bool multislot: 1;
+    bool noDefault: 1;
+    bool defaultPresent: 1;
+    bool defaultDynamic: 1;
     unsigned long constraints;
     unsigned long defaultList;
     unsigned long facetList;
@@ -59,7 +59,7 @@ struct bsaveDeftemplateModule;
 struct bsaveDeftemplate {
     struct bsaveConstructHeader header;
     unsigned long slotList;
-    unsigned int implied: 1;
+    bool implied: 1;
     unsigned int numberOfSlots: 15;
     unsigned long patternNetwork;
 };

@@ -69,10 +69,10 @@ struct genericMatch {
 /* partialMatch */
 /****************/
 struct partialMatch {
-    unsigned int betaMemory: 1;
-    unsigned int busy: 1;
-    unsigned int rhsMemory: 1;
-    unsigned int deleting: 1;
+    bool betaMemory: 1;
+    bool busy: 1;
+    bool rhsMemory: 1;
+    bool deleting: 1;
     unsigned short bcount;
     unsigned long hashValue;
     void *owner;

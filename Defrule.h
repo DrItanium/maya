@@ -95,11 +95,11 @@ struct defrule {
     int salience;
     unsigned short localVarCnt;
     unsigned int complexity: 11;
-    unsigned int afterBreakpoint: 1;
-    unsigned int watchActivation: 1;
-    unsigned int watchFiring: 1;
-    unsigned int autoFocus: 1;
-    unsigned int executing: 1;
+    bool afterBreakpoint: 1;
+    bool watchActivation: 1;
+    bool watchFiring: 1;
+    bool autoFocus: 1;
+    bool executing: 1;
     struct expr *dynamicSalience;
     struct expr *actions;
     struct joinNode *logicalJoin;

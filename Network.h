@@ -45,14 +45,14 @@ struct patternNodeHeader {
     struct alphaMemoryHash *lastHash;
     struct joinNode *entryJoin;
     Expression *rightHash;
-    unsigned int singlefieldNode: 1;
-    unsigned int multifieldNode: 1;
-    unsigned int stopNode: 1;
-    unsigned int initialize: 1;
-    unsigned int marked: 1;
-    unsigned int beginSlot: 1;
-    unsigned int endSlot: 1;
-    unsigned int selector: 1;
+    bool singlefieldNode: 1;
+    bool multifieldNode: 1;
+    bool stopNode: 1;
+    bool initialize: 1;
+    bool marked: 1;
+    bool beginSlot: 1;
+    bool endSlot: 1;
+    bool selector: 1;
 };
 
 #include "Match.h"
@@ -99,13 +99,13 @@ struct joinLink {
 };
 
 struct joinNode {
-    unsigned int firstJoin: 1;
-    unsigned int logicalJoin: 1;
-    unsigned int joinFromTheRight: 1;
-    unsigned int patternIsNegated: 1;
-    unsigned int patternIsExists: 1;
-    unsigned int initialize: 1;
-    unsigned int marked: 1;
+    bool firstJoin: 1;
+    bool logicalJoin: 1;
+    bool joinFromTheRight: 1;
+    bool patternIsNegated: 1;
+    bool patternIsExists: 1;
+    bool initialize: 1;
+    bool marked: 1;
     unsigned int rhsType: 3;
     unsigned int depth: 16;
     unsigned long bsaveID;

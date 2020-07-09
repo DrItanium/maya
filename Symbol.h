@@ -116,9 +116,9 @@ struct genericHashNode {
     TypeHeader header;
     struct genericHashNode *next;
     long count;
-    unsigned int permanent: 1;
-    unsigned int markedEphemeral: 1;
-    unsigned int needed: 1;
+    bool permanent: 1;
+    bool markedEphemeral: 1;
+    bool needed: 1;
     unsigned int bucket: 29;
 };
 

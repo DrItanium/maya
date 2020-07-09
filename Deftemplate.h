@@ -85,9 +85,9 @@ struct deftemplateModule {
 struct deftemplate {
     ConstructHeader header;
     struct templateSlot *slotList;
-    unsigned int implied: 1;
-    unsigned int watch: 1;
-    unsigned int inScope: 1;
+    bool implied: 1;
+    bool watch: 1;
+    bool inScope: 1;
     unsigned short numberOfSlots;
     long busyCount;
     struct factPatternNode *patternNetwork;
@@ -97,10 +97,10 @@ struct deftemplate {
 
 struct templateSlot {
     CLIPSLexeme *slotName;
-    unsigned int multislot: 1;
-    unsigned int noDefault: 1;
-    unsigned int defaultPresent: 1;
-    unsigned int defaultDynamic: 1;
+    bool multislot: 1;
+    bool noDefault: 1;
+    bool defaultPresent: 1;
+    bool defaultDynamic: 1;
     CONSTRAINT_RECORD *constraints;
     Expression *defaultList;
     Expression *facetList;

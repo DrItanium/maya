@@ -96,8 +96,8 @@ struct defmethod {
     unsigned short minRestrictions;
     unsigned short maxRestrictions;
     unsigned short localVarCount;
-    unsigned system: 1;
-    unsigned trace: 1;
+    bool system: 1;
+    bool trace: 1;
     RESTRICTION *restrictions;
     Expression *actions;
 };
