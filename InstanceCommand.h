@@ -65,37 +65,37 @@
 
 #define _H_inscom
 
-typedef enum {
+enum UnmakeInstanceError{
     UIE_NO_ERROR = 0,
     UIE_nullptr_POINTER_ERROR,
     UIE_COULD_NOT_DELETE_ERROR,
     UIE_DELETED_ERROR,
     UIE_RULE_NETWORK_ERROR
-} UnmakeInstanceError;
+} ;
 
-typedef enum {
+enum MakeInstanceError {
     MIE_NO_ERROR = 0,
     MIE_nullptr_POINTER_ERROR,
     MIE_PARSING_ERROR,
     MIE_COULD_NOT_CREATE_ERROR,
     MIE_RULE_NETWORK_ERROR
-} MakeInstanceError;
+};
 
-typedef enum {
+enum InstanceBuilderError {
     IBE_NO_ERROR = 0,
     IBE_nullptr_POINTER_ERROR,
     IBE_DEFCLASS_NOT_FOUND_ERROR,
     IBE_COULD_NOT_CREATE_ERROR,
     IBE_RULE_NETWORK_ERROR
-} InstanceBuilderError;
+};
 
-typedef enum {
+enum InstanceModifierError {
     IME_NO_ERROR = 0,
     IME_nullptr_POINTER_ERROR,
     IME_DELETED_ERROR,
     IME_COULD_NOT_MODIFY_ERROR,
     IME_RULE_NETWORK_ERROR
-} InstanceModifierError;
+};
 
 #include "InstanceFunctions.h"
 #include "Object.h"

@@ -23,46 +23,46 @@ struct factPatternNode;
 typedef void ModifyCallFunction(Environment *, Fact *, Fact *, void *);
 typedef struct modifyCallFunctionItem ModifyCallFunctionItem;
 
-typedef enum {
+enum RetractError {
     RE_NO_ERROR = 0,
     RE_nullptr_POINTER_ERROR,
     RE_COULD_NOT_RETRACT_ERROR,
     RE_RULE_NETWORK_ERROR
-} RetractError;
+} ;
 
-typedef enum {
+enum AssertError{
     AE_NO_ERROR = 0,
     AE_nullptr_POINTER_ERROR,
     AE_RETRACTED_ERROR,
     AE_COULD_NOT_ASSERT_ERROR,
     AE_RULE_NETWORK_ERROR
-} AssertError;
+} ;
 
-typedef enum {
+enum AssertStringError {
     ASE_NO_ERROR = 0,
     ASE_nullptr_POINTER_ERROR,
     ASE_PARSING_ERROR,
     ASE_COULD_NOT_ASSERT_ERROR,
     ASE_RULE_NETWORK_ERROR
-} AssertStringError;
+};
 
-typedef enum {
+enum FactBuilderError {
     FBE_NO_ERROR = 0,
     FBE_nullptr_POINTER_ERROR,
     FBE_DEFTEMPLATE_NOT_FOUND_ERROR,
     FBE_IMPLIED_DEFTEMPLATE_ERROR,
     FBE_COULD_NOT_ASSERT_ERROR,
     FBE_RULE_NETWORK_ERROR
-} FactBuilderError;
+};
 
-typedef enum {
+enum FactModifierError {
     FME_NO_ERROR = 0,
     FME_nullptr_POINTER_ERROR,
     FME_RETRACTED_ERROR,
     FME_IMPLIED_DEFTEMPLATE_ERROR,
     FME_COULD_NOT_MODIFY_ERROR,
     FME_RULE_NETWORK_ERROR
-} FactModifierError;
+};
 
 struct modifyCallFunctionItem {
     const char *name;
