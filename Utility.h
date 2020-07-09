@@ -148,7 +148,7 @@ struct stringBuilder {
 };
 
 constexpr auto UTILITY_DATA = 55;
-typedef void YieldTimeFunctionType(void);
+typedef void YieldTimeFunctionType();
 struct utilityData {
     struct voidCallFunctionItem *ListOfCleanupFunctions;
     struct voidCallFunctionItem *ListOfPeriodicFunctions;
@@ -168,9 +168,17 @@ struct utilityData {
 #define UtilityData(theEnv) ((struct utilityData *) GetEnvironmentData(theEnv,UTILITY_DATA))
 
 /* Is c the start of a utf8 sequence? */
-#define IsUTF8Start(ch) (((ch) & 0xC0) != 0x80)
-#define IsUTF8MultiByteStart(ch) ((((unsigned char) ch) >= 0xC0) && (((unsigned char) ch) <= 0xF7))
-#define IsUTF8MultiByteContinuation(ch) ((((unsigned char) ch) >= 0x80) && (((unsigned char) ch) <= 0xBF))
+constexpr bool IsUTF8Start(char ch) noexcept {
+    return ((ch) & 0xC0) != 0x80;
+}
+
+constexpr bool IsUTF8MultiByteStart(char ch) noexcept {
+    return (((unsigned char) ch) >= 0xC0) && (((unsigned char) ch) <= 0xF7);
+}
+constexpr bool IsUTF8MultiByteContinuation(char ch) noexcept {
+    return (((unsigned char) ch) >= 0x80) && (((unsigned char) ch) <= 0xBF);
+}
+
 
 void InitializeUtilityData(Environment *);
 bool AddCleanupFunction(Environment *, const char *, VoidCallFunction *, int, void *context = nullptr);

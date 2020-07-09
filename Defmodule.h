@@ -227,7 +227,7 @@ const char *DefmoduleName(Defmodule *);
 const char *DefmodulePPForm(Defmodule *);
 Defmodule *GetNextDefmodule(Environment *, Defmodule *);
 void RemoveAllDefmodules(Environment *, void *);
-int AllocateModuleStorage(void);
+int AllocateModuleStorage();
 unsigned RegisterModuleItem(Environment *theEnv,
                             const char *theItem,
                             AllocateModuleFunction *allocateFunction,

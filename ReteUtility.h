@@ -64,13 +64,13 @@
 #include "Network.h"
 #include "RuleCommands.h"
 
-#define NETWORK_ASSERT  0
-#define NETWORK_RETRACT 1
+constexpr auto NETWORK_ASSERT  = 0;
+constexpr auto NETWORK_RETRACT = 1;
 
 void PrintPartialMatch(Environment *, const char *, struct partialMatch *);
 struct partialMatch *CopyPartialMatch(Environment *, struct partialMatch *);
 struct partialMatch *MergePartialMatches(Environment *, struct partialMatch *, struct partialMatch *);
-long IncrementPseudoFactIndex(void);
+long IncrementPseudoFactIndex();
 struct partialMatch *GetAlphaMemory(Environment *, struct patternNodeHeader *, unsigned long);
 struct partialMatch *GetLeftBetaMemory(struct joinNode *, unsigned long);
 struct partialMatch *GetRightBetaMemory(struct joinNode *, unsigned long);

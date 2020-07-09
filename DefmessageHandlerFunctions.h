@@ -83,7 +83,7 @@ DefmessageHandler
 *InsertHandlerHeader(Environment *, Defclass *, CLIPSLexeme *, unsigned);
 
 DefmessageHandler
-*NewHandler(void);
+*NewHandler();
 bool HandlersExecuting(Defclass *);
 bool DeleteHandler(Environment *, Defclass *, CLIPSLexeme *, int, bool);
 void DeallocateMarkedHandlers(Environment *, Defclass *);

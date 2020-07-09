@@ -700,23 +700,23 @@ static bool ReplaceSlotReference(
  ********************************************************************/
 static bool IsQueryFunction(
         Expression *theExp) {
-    int (*fptr)(void);
+    int (*fptr)();
 
     if (theExp->type != FCALL)
         return false;
-    fptr = (int (*)(void)) ExpressionFunctionPointer(theExp);
+    fptr = (int (*)()) ExpressionFunctionPointer(theExp);
 
-    if (fptr == (int (*)(void)) AnyFacts)
+    if (fptr == (int (*)()) AnyFacts)
         return true;
-    if (fptr == (int (*)(void)) QueryFindFact)
+    if (fptr == (int (*)()) QueryFindFact)
         return true;
-    if (fptr == (int (*)(void)) QueryFindAllFacts)
+    if (fptr == (int (*)()) QueryFindAllFacts)
         return true;
-    if (fptr == (int (*)(void)) QueryDoForFact)
+    if (fptr == (int (*)()) QueryDoForFact)
         return true;
-    if (fptr == (int (*)(void)) QueryDoForAllFacts)
+    if (fptr == (int (*)()) QueryDoForAllFacts)
         return true;
-    if (fptr == (int (*)(void)) DelayedQueryDoForAllFacts)
+    if (fptr == (int (*)()) DelayedQueryDoForAllFacts)
         return true;
 
     return false;

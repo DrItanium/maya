@@ -82,7 +82,7 @@ void InitializeDeffacts(Environment *);
 Deffacts *FindDeffacts(Environment *, const char *);
 Deffacts *FindDeffactsInModule(Environment *, const char *);
 Deffacts *GetNextDeffacts(Environment *, Deffacts *);
-void CreateInitialFactDeffacts(void);
+void CreateInitialFactDeffacts();
 bool DeffactsIsDeletable(Deffacts *);
 struct deffactsModule *GetDeffactsModuleItem(Environment *, Defmodule *);
 const char *DeffactsModule(Deffacts *);

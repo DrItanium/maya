@@ -105,7 +105,7 @@
 #include <stdio.h>
 #include <setjmp.h>
 
-double gentime(void);
+double gentime();
 int gensystem(Environment *, const char *);
 bool GenOpenReadBinary(Environment *, const char *, const char *);
 void GetSeekCurBinary(Environment *, long);
@@ -120,7 +120,7 @@ void GenRewind(Environment *, FILE *);
 long long GenTell(Environment *, FILE *);
 int GenSeek(Environment *, FILE *, long, int);
 void genexit(Environment *, int);
-int genrand(void);
+int genrand();
 void genseed(unsigned int);
 bool genremove(Environment *, const char *);
 bool genrename(Environment *, const char *, const char *);

@@ -107,7 +107,7 @@ void InitializeDefglobals(Environment *);
 Defglobal *FindDefglobal(Environment *, const char *);
 Defglobal *FindDefglobalInModule(Environment *, const char *);
 Defglobal *GetNextDefglobal(Environment *, Defglobal *);
-void CreateInitialFactDefglobal(void);
+void CreateInitialFactDefglobal();
 bool DefglobalIsDeletable(Defglobal *);
 struct defglobalModule *GetDefglobalModuleItem(Environment *, Defmodule *);
 void QSetDefglobalValue(Environment *, Defglobal *, UDFValue *, bool);

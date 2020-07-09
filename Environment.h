@@ -107,7 +107,7 @@ bool AddEnvironmentCleanupFunction(Environment *, const char *, EnvironmentClean
 void *GetEnvironmentContext(Environment *);
 void *SetEnvironmentContext(Environment *, void *);
 
-Environment *CreateEnvironment(void);
+Environment *CreateEnvironment();
 Environment *CreateRuntimeEnvironment(CLIPSLexeme **, CLIPSFloat **,
                                       CLIPSInteger **, CLIPSBitMap **,
                                       struct functionDefinition *);
