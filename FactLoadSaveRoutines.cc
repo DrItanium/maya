@@ -639,7 +639,7 @@ static struct expr *StandardLoadFact(
     temp->argList = GetRHSPattern(theEnv, logicalName, theToken, &error,
                                   true, false, true, RIGHT_PARENTHESIS_TOKEN);
 
-    if (error == true) {
+    if (error) {
         WriteString(theEnv, STDERR, "Function load-facts encountered an error\n");
         SetEvaluationError(theEnv, true);
         ReturnExpression(theEnv, temp);
@@ -702,7 +702,7 @@ long BinaryLoadFacts(
     /* Open the file. Use either "fast save" or I/O Router. */
     /*======================================================*/
 
-    if (GenOpenReadBinary(theEnv, "bload-facts", fileName) == false) {
+    if (!GenOpenReadBinary(theEnv, "bload-facts", fileName)) {
         OpenErrorMessage(theEnv, "bload-facts", fileName);
         return -1;
     }
@@ -712,7 +712,7 @@ long BinaryLoadFacts(
     /* if this is a binary fact file.       */
     /*======================================*/
 
-    if (VerifyBinaryHeader(theEnv, fileName) == false) {
+    if (!VerifyBinaryHeader(theEnv, fileName)) {
         GenCloseBinary(theEnv);
         return -1;
     }
@@ -735,7 +735,7 @@ long BinaryLoadFacts(
     GenReadBinary(theEnv, &factCount, sizeof(long));
 
     for (i = 0; i < factCount; i++) {
-        if (LoadSingleBinaryFact(theEnv) == false) {
+        if (!LoadSingleBinaryFact(theEnv)) {
             SetEvaluationError(theEnv, true);
             break;
         }

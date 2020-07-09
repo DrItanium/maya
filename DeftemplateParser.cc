@@ -112,7 +112,7 @@ bool ParseDeftemplate(
     /*==============================================================*/
 
 #if BLOAD_AND_BSAVE
-    if ((Bloaded(theEnv) == true) && (!ConstructData(theEnv)->CheckSyntaxMode)) {
+    if (Bloaded(theEnv) && (!ConstructData(theEnv)->CheckSyntaxMode)) {
         CannotLoadWithBloadMessage(theEnv, "deftemplate");
         return true;
     }
@@ -143,7 +143,7 @@ bool ParseDeftemplate(
     /*===========================================*/
 
     slots = SlotDeclarations(theEnv, readSource, &inputToken);
-    if (DeftemplateData(theEnv)->DeftemplateError == true) return true;
+    if (DeftemplateData(theEnv)->DeftemplateError) return true;
 
     /*==============================================*/
     /* If we're only checking syntax, don't add the */
@@ -190,7 +190,7 @@ bool ParseDeftemplate(
     /* Store pretty print representation. */
     /*====================================*/
 
-    if (GetConserveMemory(theEnv) == true) { newDeftemplate->header.ppForm = nullptr; }
+    if (GetConserveMemory(theEnv)) { newDeftemplate->header.ppForm = nullptr; }
     else { newDeftemplate->header.ppForm = CopyPPBuffer(theEnv); }
 
     /*=======================================================================*/
@@ -278,7 +278,7 @@ static struct templateSlot *SlotDeclarations(
         /*=================*/
 
         newSlot = ParseSlot(theEnv, readSource, inputToken, slotList);
-        if (DeftemplateData(theEnv)->DeftemplateError == true) {
+        if (DeftemplateData(theEnv)->DeftemplateError) {
             ReturnSlots(theEnv, newSlot);
             ReturnSlots(theEnv, slotList);
             ReturnSlots(theEnv, multiSlot);
@@ -391,7 +391,7 @@ static struct templateSlot *ParseSlot(
     /* Check for slot conflict errors. */
     /*=================================*/
 
-    if (CheckConstraintParseConflicts(theEnv, newSlot->constraints) == false) {
+    if (!CheckConstraintParseConflicts(theEnv, newSlot->constraints)) {
         ReturnSlots(theEnv, newSlot);
         DeftemplateData(theEnv)->DeftemplateError = true;
         return nullptr;
@@ -490,9 +490,9 @@ static struct templateSlot *DefinedSlots(
         /*================================================================*/
 
         if (StandardConstraint(inputToken->lexemeValue->contents)) {
-            if (ParseStandardConstraint(theEnv, readSource, (inputToken->lexemeValue->contents),
-                                        newSlot->constraints, &parsedConstraints,
-                                        multifieldSlot) == false) {
+            if (!ParseStandardConstraint(theEnv, readSource, (inputToken->lexemeValue->contents),
+                                         newSlot->constraints, &parsedConstraints,
+                                         multifieldSlot)) {
                 DeftemplateData(theEnv)->DeftemplateError = true;
                 ReturnSlots(theEnv, newSlot);
                 return nullptr;
@@ -537,7 +537,7 @@ static struct templateSlot *DefinedSlots(
 
             defaultList = ParseDefault(theEnv, readSource, multifieldSlot, newSlot->defaultDynamic,
                                        true, &noneSpecified, &deriveSpecified, &DeftemplateData(theEnv)->DeftemplateError);
-            if (DeftemplateData(theEnv)->DeftemplateError == true) {
+            if (DeftemplateData(theEnv)->DeftemplateError) {
                 ReturnSlots(theEnv, newSlot);
                 return nullptr;
             }

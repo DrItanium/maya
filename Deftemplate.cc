@@ -274,9 +274,8 @@ bool DeftemplateIsDeletable(
     if (!ConstructsDeletable(theEnv)) { return false; }
 
     if (theDeftemplate->busyCount > 0) return false;
-    if (theDeftemplate->patternNetwork != nullptr) return false;
+    return theDeftemplate->patternNetwork == nullptr;
 
-    return true;
 }
 
 /**************************************************************/

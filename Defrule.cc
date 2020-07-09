@@ -310,9 +310,8 @@ bool DefruleIsDeletable(
             theDefrule != nullptr;
             theDefrule = theDefrule->disjunct) { if (theDefrule->executing) return false; }
 
-    if (EngineData(theEnv)->JoinOperationInProgress) return false;
+    return !EngineData(theEnv)->JoinOperationInProgress;
 
-    return true;
 }
 
 /********************************************************/

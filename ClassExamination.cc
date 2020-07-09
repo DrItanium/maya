@@ -347,7 +347,7 @@ void SuperclassPCommand(
         UDFValue *returnValue) {
     Defclass *c1, *c2;
 
-    if (CheckTwoClasses(context, "superclassp", &c1, &c2) == false) {
+    if (!CheckTwoClasses(context, "superclassp", &c1, &c2)) {
         returnValue->lexemeValue = FalseSymbol(theEnv);
         return;
     }
@@ -387,7 +387,7 @@ void SubclassPCommand(
         UDFValue *returnValue) {
     Defclass *c1, *c2;
 
-    if (CheckTwoClasses(context, "subclassp", &c1, &c2) == false) {
+    if (!CheckTwoClasses(context, "subclassp", &c1, &c2)) {
         returnValue->lexemeValue = FalseSymbol(theEnv);
         return;
     }
@@ -469,8 +469,7 @@ bool SlotExistP(
         bool inheritFlag) {
     Environment *theEnv = theDefclass->header.env;
 
-    return (LookupSlot(theEnv, theDefclass, slotName, inheritFlag) != nullptr)
-           ? true : false;
+    return LookupSlot(theEnv, theDefclass, slotName, inheritFlag) != nullptr;
 }
 
 /************************************************************************************
@@ -533,7 +532,7 @@ void SlotWritablePCommand(
 
     sd = CheckSlotExists(context, "slot-writablep", &theDefclass, true, true);
     if (sd == nullptr) { returnValue->lexemeValue = FalseSymbol(theEnv); }
-    else { returnValue->lexemeValue = CreateBoolean(theEnv, (sd->noWrite || sd->initializeOnly) ? false : true); }
+    else { returnValue->lexemeValue = CreateBoolean(theEnv, !(sd->noWrite || sd->initializeOnly)); }
 }
 
 /***************************************************
@@ -554,7 +553,7 @@ bool SlotWritableP(
 
     if ((sd = LookupSlot(theEnv, theDefclass, slotName, true)) == nullptr)
         return false;
-    return ((sd->noWrite || sd->initializeOnly) ? false : true);
+    return !(sd->noWrite || sd->initializeOnly);
 }
 
 /**********************************************************************
@@ -575,7 +574,7 @@ void SlotInitablePCommand(
 
     sd = CheckSlotExists(context, "slot-initablep", &theDefclass, true, true);
     if (sd == nullptr) { returnValue->lexemeValue = FalseSymbol(theEnv); }
-    else { returnValue->lexemeValue = CreateBoolean(theEnv, (sd->noWrite && (sd->initializeOnly == 0)) ? false : true); }
+    else { returnValue->lexemeValue = CreateBoolean(theEnv, !(sd->noWrite && (sd->initializeOnly == 0))); }
 }
 
 /***************************************************
@@ -596,7 +595,7 @@ bool SlotInitableP(
 
     if ((sd = LookupSlot(theEnv, theDefclass, slotName, true)) == nullptr)
         return false;
-    return ((sd->noWrite && (sd->initializeOnly == 0)) ? false : true);
+    return !(sd->noWrite && (sd->initializeOnly == 0));
 }
 
 /**********************************************************************
@@ -617,7 +616,7 @@ void SlotPublicPCommand(
 
     sd = CheckSlotExists(context, "slot-publicp", &theDefclass, true, false);
     if (sd == nullptr) { returnValue->lexemeValue = FalseSymbol(theEnv); }
-    else { returnValue->lexemeValue = CreateBoolean(theEnv, (sd->publicVisibility ? true : false)); }
+    else { returnValue->lexemeValue = CreateBoolean(theEnv, sd->publicVisibility != 0); }
 }
 
 /***************************************************
@@ -638,7 +637,7 @@ bool SlotPublicP(
 
     if ((sd = LookupSlot(theEnv, theDefclass, slotName, false)) == nullptr)
         return false;
-    return (sd->publicVisibility ? true : false);
+    return sd->publicVisibility != 0;
 }
 
 /***************************************************
@@ -686,7 +685,7 @@ void SlotDirectAccessPCommand(
 
     sd = CheckSlotExists(context, "slot-direct-accessp", &theDefclass, true, true);
     if (sd == nullptr) { returnValue->lexemeValue = FalseSymbol(theEnv); }
-    else { returnValue->lexemeValue = CreateBoolean(theEnv, ((sd->publicVisibility || (sd->cls == theDefclass)) ? true : false)); }
+    else { returnValue->lexemeValue = CreateBoolean(theEnv, sd->publicVisibility || (sd->cls == theDefclass)); }
 }
 
 /***************************************************
@@ -709,8 +708,7 @@ bool SlotDirectAccessP(
 
     if ((sd = LookupSlot(theEnv, theDefclass, slotName, true)) == nullptr)
         return false;
-    return ((sd->publicVisibility || (sd->cls == theDefclass)) ?
-            true : false);
+    return sd->publicVisibility || (sd->cls == theDefclass);
 }
 
 /**********************************************************************
@@ -809,7 +807,7 @@ void ClassExistPCommand(
     if (!UDFFirstArgument(context, SYMBOL_BIT, &theArg)) { return; }
 
     returnValue->lexemeValue = CreateBoolean(theEnv,
-                                             ((LookupDefclassByMdlOrScope(theEnv, theArg.lexemeValue->contents) != nullptr) ? true : false));
+                                             LookupDefclassByMdlOrScope(theEnv, theArg.lexemeValue->contents) != nullptr);
 }
 
 /* =========================================
@@ -941,7 +939,7 @@ static SlotDescriptor *LookupSlot(
     if (slotIndex == -1) { return nullptr; }
 
     sd = theDefclass->instanceTemplate[slotIndex];
-    if ((sd->cls != theDefclass) && (inheritFlag == false)) { return nullptr; }
+    if ((sd->cls != theDefclass) && !inheritFlag) { return nullptr; }
 
     return sd;
 }

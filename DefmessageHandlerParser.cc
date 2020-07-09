@@ -286,7 +286,7 @@ bool ParseDefmessageHandler(
     /* ===================================================
        Old handler trace status is automatically preserved
        =================================================== */
-    if (GetConserveMemory(theEnv) == false)
+    if (!GetConserveMemory(theEnv))
         hnd->header.ppForm = CopyPPBuffer(theEnv);
     else
 #endif

@@ -352,7 +352,7 @@ void QueryFindFact(
     FactQueryData(theEnv)->QueryCore->solns = (Fact **)
             gm2(theEnv, (sizeof(Fact *) * rcnt));
     FactQueryData(theEnv)->QueryCore->query = GetFirstArgument();
-    if (TestForFirstInChain(theEnv, qtemplates, 0) == true) {
+    if (TestForFirstInChain(theEnv, qtemplates, 0)) {
         returnValue->value = CreateMultifield(theEnv, rcnt);
         returnValue->range = rcnt;
         for (i = 0; i < rcnt; i++) {
@@ -457,7 +457,7 @@ void QueryDoForFact(
     FactQueryData(theEnv)->QueryCore->query = GetFirstArgument();
     FactQueryData(theEnv)->QueryCore->action = GetFirstArgument()->nextArg;
 
-    if (TestForFirstInChain(theEnv, qtemplates, 0) == true) {
+    if (TestForFirstInChain(theEnv, qtemplates, 0)) {
         for (i = 0; i < rcnt; i++) { FactQueryData(theEnv)->QueryCore->solns[i]->patternHeader.busyCount++; }
 
         EvaluateExpression(theEnv, FactQueryData(theEnv)->QueryCore->action, returnValue);
@@ -742,7 +742,7 @@ static QUERY_TEMPLATE *DetermineQueryTemplates(
             (*rcnt)++;
         } else if ((tmp = FormChain(theEnv, func, theDeftemplate, &temp)) != nullptr) {
             if (clist == nullptr) { clist = cnxt = cchain = tmp; }
-            else if (new_list == true) {
+            else if (new_list) {
                 new_list = false;
                 cnxt->nxt = tmp;
                 cnxt = cchain = tmp;
@@ -913,7 +913,7 @@ static bool TestForFirstInChain(
 
         if (TestForFirstFactInTemplate(theEnv, qptr->templatePtr, qchain, indx)) { return true; }
 
-        if ((EvaluationData(theEnv)->HaltExecution == true) || (FactQueryData(theEnv)->AbortQuery == true))
+        if (EvaluationData(theEnv)->HaltExecution || FactQueryData(theEnv)->AbortQuery)
             return false;
     }
     return false;
@@ -947,12 +947,12 @@ static bool TestForFirstFactInTemplate(
         FactQueryData(theEnv)->QueryCore->solns[indx] = theFact;
         if (qchain->nxt != nullptr) {
             theFact->patternHeader.busyCount++;
-            if (TestForFirstInChain(theEnv, qchain->nxt, indx + 1) == true) {
+            if (TestForFirstInChain(theEnv, qchain->nxt, indx + 1)) {
                 theFact->patternHeader.busyCount--;
                 break;
             }
             theFact->patternHeader.busyCount--;
-            if ((EvaluationData(theEnv)->HaltExecution == true) || (FactQueryData(theEnv)->AbortQuery == true))
+            if (EvaluationData(theEnv)->HaltExecution || FactQueryData(theEnv)->AbortQuery)
                 break;
         } else {
             for (j = 0; j < indx; j++) {
@@ -971,7 +971,7 @@ static bool TestForFirstFactInTemplate(
 
             theFact->patternHeader.busyCount--;
 
-            if (EvaluationData(theEnv)->HaltExecution == true) { break; }
+            if (EvaluationData(theEnv)->HaltExecution) { break; }
 
             if (temp.value != FalseSymbol(theEnv)) { break; }
         }
@@ -990,8 +990,7 @@ static bool TestForFirstFactInTemplate(
     CallPeriodicTasks(theEnv);
 
     if (theFact != nullptr)
-        return (((EvaluationData(theEnv)->HaltExecution == true) || (FactQueryData(theEnv)->AbortQuery == true))
-                ? false : true);
+        return !((EvaluationData(theEnv)->HaltExecution == true) || (FactQueryData(theEnv)->AbortQuery == true));
 
     return false;
 }
@@ -1021,7 +1020,7 @@ static void TestEntireChain(
 
         TestEntireTemplate(theEnv, qptr->templatePtr, qchain, indx);
 
-        if ((EvaluationData(theEnv)->HaltExecution == true) || (FactQueryData(theEnv)->AbortQuery == true))
+        if (EvaluationData(theEnv)->HaltExecution || FactQueryData(theEnv)->AbortQuery)
             return;
     }
 }
@@ -1058,7 +1057,7 @@ static void TestEntireTemplate(
             theFact->patternHeader.busyCount++;
             TestEntireChain(theEnv, qchain->nxt, indx + 1);
             theFact->patternHeader.busyCount--;
-            if ((EvaluationData(theEnv)->HaltExecution == true) || (FactQueryData(theEnv)->AbortQuery == true))
+            if (EvaluationData(theEnv)->HaltExecution || FactQueryData(theEnv)->AbortQuery)
                 break;
         } else {
             for (j = 0; j < indx; j++) {
@@ -1070,7 +1069,7 @@ static void TestEntireTemplate(
             EvaluateExpression(theEnv, FactQueryData(theEnv)->QueryCore->query, &temp);
 
             theFact->patternHeader.busyCount--;
-            if (EvaluationData(theEnv)->HaltExecution == true)
+            if (EvaluationData(theEnv)->HaltExecution)
                 break;
             if (temp.value != FalseSymbol(theEnv)) {
                 if (FactQueryData(theEnv)->QueryCore->action != nullptr) {
@@ -1084,7 +1083,7 @@ static void TestEntireTemplate(
                         FactQueryData(theEnv)->AbortQuery = true;
                         break;
                     }
-                    if (EvaluationData(theEnv)->HaltExecution == true)
+                    if (EvaluationData(theEnv)->HaltExecution)
                         break;
                 } else
                     AddSolution(theEnv);

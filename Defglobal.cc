@@ -291,9 +291,8 @@ bool DefglobalIsDeletable(
 
     if (!ConstructsDeletable(theEnv)) { return false; }
 
-    if (theDefglobal->busyCount) return false;
+    return theDefglobal->busyCount == 0;
 
-    return true;
 }
 
 /************************************************************/
@@ -833,10 +832,9 @@ void UpdateDefglobalScope(
             /* as being out of scope.                             */
             /*====================================================*/
 
-            if (FindImportedConstruct(theEnv, "defglobal", theModule,
-                                      theDefglobal->header.name->contents,
-                                      &moduleCount, true, nullptr) != nullptr) { theDefglobal->inScope = true; }
-            else { theDefglobal->inScope = false; }
+            theDefglobal->inScope = FindImportedConstruct(theEnv, "defglobal", theModule,
+                                                          theDefglobal->header.name->contents,
+                                                          &moduleCount, true, nullptr) != nullptr;
         }
     }
 }

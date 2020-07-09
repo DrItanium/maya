@@ -139,7 +139,7 @@ bool ParseDefrule(
     /*=========================================================*/
 
 #if BLOAD_AND_BSAVE
-    if ((Bloaded(theEnv) == true) && (!ConstructData(theEnv)->CheckSyntaxMode)) {
+    if (Bloaded(theEnv) && (!ConstructData(theEnv)->CheckSyntaxMode)) {
         CannotLoadWithBloadMessage(theEnv, "defrule");
         return true;
     }
@@ -222,7 +222,7 @@ bool ParseDefrule(
     /*======================================*/
 
     SavePPBuffer(theEnv, "\n");
-    if (GetConserveMemory(theEnv) == true) { topDisjunct->header.ppForm = nullptr; }
+    if (GetConserveMemory(theEnv)) { topDisjunct->header.ppForm = nullptr; }
     else { topDisjunct->header.ppForm = CopyPPBuffer(theEnv); }
 
     /*=======================================*/
@@ -311,7 +311,7 @@ static Defrule *ProcessRuleLHS(
 
     localVarCnt = CountParsedBindNames(theEnv);
 
-    while ((theLHS != nullptr) || (emptyLHS == true)) {
+    while ((theLHS != nullptr) || emptyLHS) {
         /*===================================*/
         /* Analyze the LHS of this disjunct. */
         /*===================================*/

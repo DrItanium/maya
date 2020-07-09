@@ -803,7 +803,7 @@ Fact *AssertDriver(
     /* fact and the partial match which is its logical support. */
     /*==========================================================*/
 
-    if (AddLogicalDependencies(theEnv, (patternEntity *) theFact, false) == false) {
+    if (!AddLogicalDependencies(theEnv, (patternEntity *) theFact, false)) {
         if (reuseIndex == 0) { ReturnFact(theEnv, theFact); }
         else {
             theFact->nextFact = FactData(theEnv)->GarbageFacts;
@@ -1732,14 +1732,13 @@ static bool ClearFactsReady(
     /* remaining, don't continue with the clear.    */
     /*==============================================*/
 
-    if (GetNextFact(theEnv, nullptr) != nullptr) return false;
+    return GetNextFact(theEnv, nullptr) == nullptr;
 
     /*=============================*/
     /* Return true to indicate the */
     /* clear command can continue. */
     /*=============================*/
 
-    return true;
 }
 
 /***************************************************/
@@ -1788,9 +1787,8 @@ bool RemoveAssertFunction(
     FactData(theEnv)->ListOfAssertFunctions =
             RemoveFunctionFromCallListWithArg(theEnv, name, FactData(theEnv)->ListOfAssertFunctions, &found);
 
-    if (found) return true;
+    return found;
 
-    return false;
 }
 
 /***************************************/
@@ -1821,9 +1819,8 @@ bool RemoveRetractFunction(
     FactData(theEnv)->ListOfRetractFunctions =
             RemoveFunctionFromCallListWithArg(theEnv, name, FactData(theEnv)->ListOfRetractFunctions, &found);
 
-    if (found) return true;
+    return found;
 
-    return false;
 }
 
 /**************************************/
@@ -1855,9 +1852,8 @@ bool RemoveModifyFunction(
     FactData(theEnv)->ListOfModifyFunctions =
             RemoveModifyFunctionFromCallList(theEnv, name, FactData(theEnv)->ListOfModifyFunctions, &found);
 
-    if (found) return true;
+    return found;
 
-    return false;
 }
 
 /**********************************************************/

@@ -347,7 +347,7 @@ bool DefclassIsDeletable(
 
     if (theDefclass->system == 1) { return false; }
 
-    return (IsClassBeingUsed(theDefclass) == false) ? true : false;
+    return !IsClassBeingUsed(theDefclass);
 }
 
 /*************************************************************

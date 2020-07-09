@@ -240,9 +240,8 @@ bool DeffactsIsDeletable(
 
     if (!ConstructsDeletable(theEnv)) { return false; }
 
-    if (ConstructData(theEnv)->ResetInProgress) return false;
+    return !ConstructData(theEnv)->ResetInProgress;
 
-    return true;
 }
 
 /***********************************************************/

@@ -222,7 +222,7 @@ static void WatchDeffunction(
     WriteString(theEnv, STDOUT, "DFN ");
     WriteString(theEnv, STDOUT, tstring);
     if (DeffunctionData(theEnv)->ExecutingDeffunction->header.whichModule->theModule != GetCurrentModule(theEnv)) {
-        WriteString(theEnv, STDOUT, DeffunctionModule(DeffunctionData(theEnv)->ExecutingDeffunction));;
+        WriteString(theEnv, STDOUT, DeffunctionModule(DeffunctionData(theEnv)->ExecutingDeffunction));
         WriteString(theEnv, STDOUT, "::");
     }
     WriteString(theEnv, STDOUT, DeffunctionData(theEnv)->ExecutingDeffunction->header.name->contents);

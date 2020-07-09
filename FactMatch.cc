@@ -325,8 +325,7 @@ static void ProcessMultifieldNode(
                 EvaluateExpression(theEnv, thePattern->networkTest, &theResult);
 
                 thePattern = (factPatternNode *) FindHashedPatternNode(theEnv, thePattern, theResult.header->type, theResult.value);
-                if (thePattern != nullptr) { success = true; }
-                else { success = false; }
+                success = thePattern != nullptr;
             } else { success = false; }
         } else if ((thePattern->networkTest == nullptr) ?
                    true :
@@ -433,7 +432,7 @@ static struct factPatternNode *GetNextFactPatternNode(
     /* into the tree, then move down to the next level.  */
     /*===================================================*/
 
-    if (finishedMatching == false) { if (thePattern->nextLevel != nullptr) return (thePattern->nextLevel); }
+    if (!finishedMatching) { if (thePattern->nextLevel != nullptr) return (thePattern->nextLevel); }
 
     /*================================================*/
     /* Keep backing up toward the root of the pattern */
@@ -604,9 +603,8 @@ static bool EvaluatePatternExpression(
         for (theTest = theTest->argList;
              theTest != nullptr;
              theTest = theTest->nextArg) {
-            if (EvaluatePatternExpression(theEnv, patternPtr, theTest) == true) {
-                if (EvaluationData(theEnv)->EvaluationError) return false;
-                return true;
+            if (EvaluatePatternExpression(theEnv, patternPtr, theTest)) {
+                return !EvaluationData(theEnv)->EvaluationError;
             }
             if (EvaluationData(theEnv)->EvaluationError) return false;
         }
@@ -624,7 +622,7 @@ static bool EvaluatePatternExpression(
         for (theTest = theTest->argList;
              theTest != nullptr;
              theTest = theTest->nextArg) {
-            if (EvaluatePatternExpression(theEnv, patternPtr, theTest) == false) { return false; }
+            if (!EvaluatePatternExpression(theEnv, patternPtr, theTest)) { return false; }
             if (EvaluationData(theEnv)->EvaluationError) return false;
         }
 
@@ -640,9 +638,8 @@ static bool EvaluatePatternExpression(
         return false;
     }
 
-    if (theResult.value == FalseSymbol(theEnv)) { return false; }
+    return theResult.value != FalseSymbol(theEnv);
 
-    return true;
 }
 
 /************************************************************************/
@@ -733,10 +730,9 @@ static void TraceErrorToJoin(
 static bool SkipFactPatternNode(
         Environment *theEnv,
         struct factPatternNode *thePattern) {
-    if (EngineData(theEnv)->IncrementalResetInProgress &&
-        (thePattern->header.initialize == false)) { return true; }
+    return EngineData(theEnv)->IncrementalResetInProgress &&
+           (thePattern->header.initialize == false);
 
-    return false;
 }
 
 /***************************************************************/

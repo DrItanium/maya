@@ -303,7 +303,7 @@ void SaveCommand(
         return;
     }
 
-    if (Save(theEnv, theFileName) == false) {
+    if (!Save(theEnv, theFileName)) {
         OpenErrorMessage(theEnv, "save", theFileName);
         returnValue->lexemeValue = FalseSymbol(theEnv);
         return;

@@ -948,25 +948,24 @@ static bool TestJoinForReuse(
     /* the networkTest expression stored with the join to be shared. */
     /*===============================================================*/
 
-    if (IdenticalExpression(testJoin->networkTest, joinTest) != true) { return false; }
+    if (!IdenticalExpression(testJoin->networkTest, joinTest)) { return false; }
 
-    if (IdenticalExpression(testJoin->secondaryNetworkTest, secondaryJoinTest) != true) { return false; }
+    if (!IdenticalExpression(testJoin->secondaryNetworkTest, secondaryJoinTest)) { return false; }
 
     /*====================================================================*/
     /* The alpha memory hashing values associated with the join must be   */
     /* identical to the hashing values stored with the join to be shared. */
     /*====================================================================*/
 
-    if (IdenticalExpression(testJoin->leftHash, leftHash) != true) { return false; }
-
-    if (IdenticalExpression(testJoin->rightHash, rightHash) != true) { return false; }
+    if (!IdenticalExpression(testJoin->leftHash, leftHash)) { return false; }
 
     /*=============================================*/
     /* The join can be shared since all conditions */
     /* for sharing have been satisfied.            */
     /*=============================================*/
+    return IdenticalExpression(testJoin->rightHash, rightHash);
 
-    return true;
+
 }
 
 /*************************************************************************/
