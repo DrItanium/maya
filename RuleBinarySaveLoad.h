@@ -54,7 +54,7 @@ struct bsaveDefrule {
     int salience;
     unsigned short localVarCnt;
     unsigned int complexity: 12;
-    unsigned int autoFocus: 1;
+    bool autoFocus: 1;
     unsigned long dynamicSalience;
     unsigned long actions;
     unsigned long logicalJoin;
@@ -65,15 +65,15 @@ struct bsaveDefrule {
 struct bsavePatternNodeHeader {
     unsigned long entryJoin;
     unsigned long rightHash;
-    unsigned int singlefieldNode: 1;
-    unsigned int multifieldNode: 1;
-    unsigned int stopNode: 1;
-    unsigned int blocked: 1;
-    unsigned int initialize: 1;
-    unsigned int marked: 1;
-    unsigned int beginSlot: 1;
-    unsigned int endSlot: 1;
-    unsigned int selector: 1;
+    bool singlefieldNode: 1;
+    bool multifieldNode: 1;
+    bool stopNode: 1;
+    bool blocked: 1;
+    bool initialize: 1;
+    bool marked: 1;
+    bool beginSlot: 1;
+    bool endSlot: 1;
+    bool selector: 1;
 };
 
 struct bsaveDefruleModule {
@@ -87,11 +87,11 @@ struct bsaveJoinLink {
 };
 
 struct bsaveJoinNode {
-    unsigned int firstJoin: 1;
-    unsigned int logicalJoin: 1;
-    unsigned int joinFromTheRight: 1;
-    unsigned int patternIsNegated: 1;
-    unsigned int patternIsExists: 1;
+    bool firstJoin: 1;
+    bool logicalJoin: 1;
+    bool joinFromTheRight: 1;
+    bool patternIsNegated: 1;
+    bool patternIsExists: 1;
     unsigned int rhsType: 3;
     unsigned int depth: 7;
     unsigned long networkTest;

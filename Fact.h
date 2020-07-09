@@ -81,7 +81,7 @@ struct fact {
     void *list;
     long long factIndex;
     unsigned long hashValue;
-    unsigned int garbage: 1;
+    bool garbage: 1;
     Fact *previousFact;
     Fact *nextFact;
     Fact *previousTemplateFact;
@@ -384,8 +384,8 @@ void FactFunctionDefinitions(Environment *);
 /*   retrieving a variable from the fact pattern network. */
 /**********************************************************/
 struct factGetVarPN1Call {
-    unsigned int factAddress: 1;
-    unsigned int allFields: 1;
+    bool factAddress: 1;
+    bool allFields: 1;
     unsigned short whichField;
     unsigned short whichSlot;
 };
@@ -406,8 +406,8 @@ struct factGetVarPN2Call {
 /* factGetVarPN3Call:  */
 /**********************************************************/
 struct factGetVarPN3Call {
-    unsigned int fromBeginning: 1;
-    unsigned int fromEnd: 1;
+    bool fromBeginning: 1;
+    bool fromEnd: 1;
     unsigned short beginOffset;
     unsigned short endOffset;
     unsigned short whichSlot;
@@ -419,7 +419,7 @@ struct factGetVarPN3Call {
 /*   single field slot to a constant.                         */
 /**************************************************************/
 struct factConstantPN1Call {
-    unsigned int testForEquality: 1;
+    bool testForEquality: 1;
     unsigned short whichSlot;
 };
 
@@ -431,8 +431,8 @@ struct factConstantPN1Call {
 /*   multifield before and none after).                           */
 /******************************************************************/
 struct factConstantPN2Call {
-    unsigned int testForEquality: 1;
-    unsigned int fromBeginning: 1;
+    bool testForEquality: 1;
+    bool fromBeginning: 1;
     unsigned short offset;
     unsigned short whichSlot;
 };
@@ -443,10 +443,10 @@ struct factConstantPN2Call {
 /*   retrieving a fact variable from the join network.    */
 /**********************************************************/
 struct factGetVarJN1Call {
-    unsigned int factAddress: 1;
-    unsigned int allFields: 1;
-    unsigned int lhs: 1;
-    unsigned int rhs: 1;
+    bool factAddress: 1;
+    bool allFields: 1;
+    bool lhs: 1;
+    bool rhs: 1;
     unsigned short whichPattern;
     unsigned short whichSlot;
     unsigned short whichField;
@@ -456,8 +456,8 @@ struct factGetVarJN1Call {
 /* factGetVarJN2Call:  */
 /**********************************************************/
 struct factGetVarJN2Call {
-    unsigned int lhs: 1;
-    unsigned int rhs: 1;
+    bool lhs: 1;
+    bool rhs: 1;
     unsigned short whichPattern;
     unsigned short whichSlot;
 };
@@ -466,10 +466,10 @@ struct factGetVarJN2Call {
 /* factGetVarJN3Call:  */
 /**********************************************************/
 struct factGetVarJN3Call {
-    unsigned int fromBeginning: 1;
-    unsigned int fromEnd: 1;
-    unsigned int lhs: 1;
-    unsigned int rhs: 1;
+    bool fromBeginning: 1;
+    bool fromEnd: 1;
+    bool lhs: 1;
+    bool rhs: 1;
     unsigned short beginOffset;
     unsigned short endOffset;
     unsigned short whichPattern;
@@ -480,8 +480,8 @@ struct factGetVarJN3Call {
 /* factCompVarsPN1Call:  */
 /**********************************************************/
 struct factCompVarsPN1Call {
-    unsigned int pass: 1;
-    unsigned int fail: 1;
+    bool pass: 1;
+    bool fail: 1;
     unsigned short field1;
     unsigned short field2;
 };
@@ -490,12 +490,12 @@ struct factCompVarsPN1Call {
 /* factCompVarsJN1Call:  */
 /**********************************************************/
 struct factCompVarsJN1Call {
-    unsigned int pass: 1;
-    unsigned int fail: 1;
-    unsigned int p1lhs: 1;
-    unsigned int p1rhs: 1;
-    unsigned int p2lhs: 1;
-    unsigned int p2rhs: 1;
+    bool pass: 1;
+    bool fail: 1;
+    bool p1lhs: 1;
+    bool p1rhs: 1;
+    bool p2lhs: 1;
+    bool p2rhs: 1;
     unsigned short pattern1;
     unsigned short pattern2;
     unsigned short slot1;
@@ -506,14 +506,14 @@ struct factCompVarsJN1Call {
 /* factCompVarsJN2Call:  */
 /**********************************************************/
 struct factCompVarsJN2Call {
-    unsigned int pass: 1;
-    unsigned int fail: 1;
-    unsigned int p1lhs: 1;
-    unsigned int p1rhs: 1;
-    unsigned int p2lhs: 1;
-    unsigned int p2rhs: 1;
-    unsigned int fromBeginning1: 1;
-    unsigned int fromBeginning2: 1;
+    bool pass: 1;
+    bool fail: 1;
+    bool p1lhs: 1;
+    bool p1rhs: 1;
+    bool p2lhs: 1;
+    bool p2rhs: 1;
+    bool fromBeginning1: 1;
+    bool fromBeginning2: 1;
     unsigned short offset1;
     unsigned short offset2;
     unsigned short pattern1;
@@ -530,7 +530,7 @@ struct factCompVarsJN2Call {
 /**********************************************************/
 
 struct factCheckLengthPNCall {
-    unsigned int exactly: 1;
+    bool exactly : 1;
     unsigned short minLength;
     unsigned short whichSlot;
 };

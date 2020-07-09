@@ -61,15 +61,15 @@
 struct constructProfileInfo {
     struct userData usrData;
     long numberOfEntries;
-    unsigned int childCall: 1;
+    bool childCall: 1;
     double startTime;
     double totalSelfTime;
     double totalWithChildrenTime;
 };
 
 struct profileFrameInfo {
-    unsigned int parentCall: 1;
-    unsigned int profileOnExit: 1;
+    bool parentCall: 1;
+    bool profileOnExit: 1;
     double parentStartTime;
     struct constructProfileInfo *oldProfileFrame;
 };

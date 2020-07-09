@@ -98,10 +98,10 @@ using SLOT_BITMAP = slotBitMap;
                                      (sizeof(char) * (bmp->maxid / BITS_PER_BYTE))))
 
 typedef struct objectPatternNode {
-    unsigned blocked: 1;
-    unsigned multifieldNode: 1;
-    unsigned endSlot: 1;
-    unsigned selector: 1;
+    bool blocked: 1;
+    bool multifieldNode: 1;
+    bool endSlot: 1;
+    bool selector: 1;
     unsigned whichField: 8;
     unsigned short leaveFields;
     unsigned long long matchTimeTag;

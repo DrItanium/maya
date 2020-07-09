@@ -50,18 +50,18 @@
 #include "Constraint.h"
 
 struct constraintParseRecord {
-    unsigned int type: 1;
-    unsigned int range: 1;
-    unsigned int allowedSymbols: 1;
-    unsigned int allowedStrings: 1;
-    unsigned int allowedLexemes: 1;
-    unsigned int allowedFloats: 1;
-    unsigned int allowedIntegers: 1;
-    unsigned int allowedNumbers: 1;
-    unsigned int allowedValues: 1;
-    unsigned int allowedClasses: 1;
-    unsigned int allowedInstanceNames: 1;
-    unsigned int cardinality: 1;
+    bool type: 1;
+    bool range: 1;
+    bool allowedSymbols: 1;
+    bool allowedStrings: 1;
+    bool allowedLexemes: 1;
+    bool allowedFloats: 1;
+    bool allowedIntegers: 1;
+    bool allowedNumbers: 1;
+    bool allowedValues: 1;
+    bool allowedClasses: 1;
+    bool allowedInstanceNames: 1;
+    bool cardinality: 1;
 };
 
 typedef struct constraintParseRecord CONSTRAINT_PARSE_RECORD;

@@ -61,10 +61,10 @@ struct ObjectMatchVar1 {
     unsigned short whichSlot;
     unsigned short whichPattern;
     unsigned short whichField;
-    unsigned objectAddress: 1;
-    unsigned allFields: 1;
-    unsigned lhs: 1;
-    unsigned rhs: 1;
+    bool objectAddress: 1;
+    bool allFields: 1;
+    bool lhs: 1;
+    bool rhs: 1;
 };
 
 struct ObjectMatchVar2 {
@@ -72,39 +72,39 @@ struct ObjectMatchVar2 {
     unsigned short whichPattern;
     unsigned short beginningOffset;
     unsigned short endOffset;
-    unsigned fromBeginning: 1;
-    unsigned fromEnd: 1;
-    unsigned lhs: 1;
-    unsigned rhs: 1;
+    bool fromBeginning: 1;
+    bool fromEnd: 1;
+    bool lhs: 1;
+    bool rhs: 1;
 };
 
 struct ObjectMatchLength {
     unsigned minLength: 15;
-    unsigned exactly: 1;
+    bool exactly: 1;
 };
 
 struct ObjectCmpPNConstant {
     unsigned short offset;
-    unsigned pass: 1;
-    unsigned fail: 1;
-    unsigned general: 1;
-    unsigned fromBeginning: 1;
+    bool pass: 1;
+    bool fail: 1;
+    bool general: 1;
+    bool fromBeginning: 1;
 };
 
 struct ObjectCmpPNSingleSlotVars1 {
     unsigned short firstSlot;
     unsigned short secondSlot;
-    unsigned pass: 1;
-    unsigned fail: 1;
+    bool pass: 1;
+    bool fail: 1;
 };
 
 struct ObjectCmpPNSingleSlotVars2 {
     unsigned short firstSlot;
     unsigned short secondSlot;
     unsigned short offset;
-    unsigned pass: 1;
-    unsigned fail: 1;
-    unsigned fromBeginning: 1;
+    bool pass: 1;
+    bool fail: 1;
+    bool fromBeginning: 1;
 };
 
 struct ObjectCmpPNSingleSlotVars3 {
@@ -112,10 +112,10 @@ struct ObjectCmpPNSingleSlotVars3 {
     unsigned short secondSlot;
     unsigned short firstOffset;
     unsigned short secondOffset;
-    unsigned pass: 1;
-    unsigned fail: 1;
-    unsigned firstFromBeginning: 1;
-    unsigned secondFromBeginning: 1;
+    bool pass: 1;
+    bool fail: 1;
+    bool firstFromBeginning: 1;
+    bool secondFromBeginning: 1;
 };
 
 struct ObjectCmpJoinSingleSlotVars1 {
@@ -123,12 +123,12 @@ struct ObjectCmpJoinSingleSlotVars1 {
     unsigned short secondSlot;
     unsigned short firstPattern;
     unsigned short secondPattern;
-    unsigned pass: 1;
-    unsigned fail: 1;
-    unsigned int firstPatternLHS: 1;
-    unsigned int firstPatternRHS: 1;
-    unsigned int secondPatternLHS: 1;
-    unsigned int secondPatternRHS: 1;
+    bool pass: 1;
+    bool fail: 1;
+    bool firstPatternLHS: 1;
+    bool firstPatternRHS: 1;
+    bool secondPatternLHS: 1;
+    bool secondPatternRHS: 1;
 };
 
 struct ObjectCmpJoinSingleSlotVars2 {
@@ -137,13 +137,13 @@ struct ObjectCmpJoinSingleSlotVars2 {
     unsigned short firstPattern;
     unsigned short secondPattern;
     unsigned short offset;
-    unsigned pass: 1;
-    unsigned fromBeginning: 1;
-    unsigned fail: 1;
-    unsigned int firstPatternLHS: 1;
-    unsigned int firstPatternRHS: 1;
-    unsigned int secondPatternLHS: 1;
-    unsigned int secondPatternRHS: 1;
+    bool pass: 1;
+    bool fromBeginning: 1;
+    bool fail: 1;
+    bool firstPatternLHS: 1;
+    bool firstPatternRHS: 1;
+    bool secondPatternLHS: 1;
+    bool secondPatternRHS: 1;
 };
 
 struct ObjectCmpJoinSingleSlotVars3 {
@@ -153,14 +153,14 @@ struct ObjectCmpJoinSingleSlotVars3 {
     unsigned short secondPattern;
     unsigned short firstOffset;
     unsigned short secondOffset;
-    unsigned pass: 1;
-    unsigned fail: 1;
-    unsigned firstFromBeginning: 1;
-    unsigned secondFromBeginning: 1;
-    unsigned int firstPatternLHS: 1;
-    unsigned int firstPatternRHS: 1;
-    unsigned int secondPatternLHS: 1;
-    unsigned int secondPatternRHS: 1;
+    bool pass: 1;
+    bool fail: 1;
+    bool firstFromBeginning: 1;
+    bool secondFromBeginning: 1;
+    bool firstPatternLHS: 1;
+    bool firstPatternRHS: 1;
+    bool secondPatternLHS: 1;
+    bool secondPatternRHS: 1;
 };
 
 constexpr auto OBJECT_RETE_DATA = 35;

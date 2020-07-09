@@ -83,12 +83,12 @@ struct defclassModule {
 
 struct defclass {
     ConstructHeader header;
-    unsigned installed: 1;
-    unsigned system: 1;
-    unsigned abstract: 1;
-    unsigned reactive: 1;
-    unsigned traceInstances: 1;
-    unsigned traceSlots: 1;
+    bool installed: 1;
+    bool system: 1;
+    bool abstract: 1;
+    bool reactive: 1;
+    bool traceInstances: 1;
+    bool traceSlots: 1;
     unsigned short id;
     unsigned busy;
     unsigned hashTableIndex;
@@ -138,8 +138,8 @@ struct slotName {
 
 struct instanceSlot {
     SlotDescriptor *desc;
-    unsigned valueRequired: 1;
-    unsigned override: 1;
+    bool valueRequired: 1;
+    bool override: 1;
     unsigned short type;
     union {
         void *value;
@@ -156,20 +156,20 @@ struct instanceSlot {
 };
 
 struct slotDescriptor {
-    unsigned shared: 1;
-    unsigned multiple: 1;
-    unsigned composite: 1;
-    unsigned noInherit: 1;
-    unsigned noWrite: 1;
-    unsigned initializeOnly: 1;
-    unsigned dynamicDefault: 1;
-    unsigned defaultSpecified: 1;
-    unsigned noDefault: 1;
-    unsigned reactive: 1;
-    unsigned publicVisibility: 1;
-    unsigned createReadAccessor: 1;
-    unsigned createWriteAccessor: 1;
-    unsigned overrideMessageSpecified: 1;
+    bool shared: 1;
+    bool multiple: 1;
+    bool composite: 1;
+    bool noInherit: 1;
+    bool noWrite: 1;
+    bool initializeOnly: 1;
+    bool dynamicDefault: 1;
+    bool defaultSpecified: 1;
+    bool noDefault: 1;
+    bool reactive: 1;
+    bool publicVisibility: 1;
+    bool createReadAccessor: 1;
+    bool createWriteAccessor: 1;
+    bool overrideMessageSpecified: 1;
     Defclass *cls;
     SLOT_NAME *slotName;
     CLIPSLexeme *overrideMessage;
@@ -187,11 +187,11 @@ struct instance {
     };
     void *partialMatchList;
     InstanceSlot *basisSlots;
-    unsigned installed: 1;
-    unsigned garbage: 1;
-    unsigned initSlotsCalled: 1;
-    unsigned initializeInProgress: 1;
-    unsigned reteSynchronized: 1;
+    bool installed: 1;
+    bool garbage: 1;
+    bool initSlotsCalled: 1;
+    bool initializeInProgress: 1;
+    bool reteSynchronized: 1;
     CLIPSLexeme *name;
     unsigned hashTableIndex;
     unsigned busy;
@@ -205,10 +205,10 @@ struct instance {
 
 struct defmessageHandler {
     ConstructHeader header;
-    unsigned system: 1;
+    bool system: 1;
     unsigned type: 2;
-    unsigned mark: 1;
-    unsigned trace: 1;
+    bool mark: 1;
+    bool trace: 1;
     unsigned busy;
     Defclass *cls;
     unsigned short minParams;
