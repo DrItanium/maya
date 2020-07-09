@@ -6,6 +6,7 @@
 #define MAYA_EXTERNALADDRESSTRACKER_H
 #include <map>
 #include "Problem.h"
+#include "clips.h"
 namespace maya {
         /**
          * @brief Track the type code generated from registering a type

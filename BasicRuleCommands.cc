@@ -190,7 +190,7 @@ static void ResetDefrulesPrime(
             notParent = theLink->join->leftMemory->beta[0];
 
             if (theLink->join->secondaryNetworkTest != nullptr) {
-                if (EvaluateSecondaryNetworkTest(theEnv, notParent, theLink->join) == false) { continue; }
+                if (!EvaluateSecondaryNetworkTest(theEnv, notParent, theLink->join)) { continue; }
             }
 
             notParent->marker = nullptr;

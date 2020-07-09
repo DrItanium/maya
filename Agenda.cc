@@ -599,7 +599,7 @@ void RemoveActivation(
     /* Update the agenda if necessary. */
     /*=================================*/
 
-    if (updateAgenda == true) {
+    if (updateAgenda) {
         RemoveActivationFromGroup(theEnv, theActivation, theModuleItem);
 
         /*===============================================*/
@@ -640,7 +640,7 @@ void RemoveActivation(
     /* Update join and agenda links if necessary. */
     /*============================================*/
 
-    if ((updateLinks == true) && (theActivation->basis != nullptr)) { theActivation->basis->marker = nullptr; }
+    if (updateLinks && (theActivation->basis != nullptr)) { theActivation->basis->marker = nullptr; }
 
     /*================================================*/
     /* Return the activation to the free memory pool. */

@@ -60,7 +60,7 @@
 
 #define _H_memalloc
 
-#include <string.h>
+#include <cstring>
 
 struct memoryPtr;
 

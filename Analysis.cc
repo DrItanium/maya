@@ -186,12 +186,12 @@ bool VariableAnalysis(
             /* Analyze any test CE that's been attached to the pattern. */
             /*==========================================================*/
 
-            if (TestCEAnalysis(theEnv, patternPtr, patternPtr->expression, false, &errorFlag, theNandFrames) == true) {
+            if (TestCEAnalysis(theEnv, patternPtr, patternPtr->expression, false, &errorFlag, theNandFrames)) {
                 ReleaseNandFrames(theEnv, theNandFrames);
                 return true;
             }
 
-            if (TestCEAnalysis(theEnv, patternPtr, patternPtr->secondaryExpression, true, &errorFlag, theNandFrames) == true) {
+            if (TestCEAnalysis(theEnv, patternPtr, patternPtr->secondaryExpression, true, &errorFlag, theNandFrames)) {
                 ReleaseNandFrames(theEnv, theNandFrames);
                 return true;
             }
@@ -205,7 +205,7 @@ bool VariableAnalysis(
             /*==============================================================*/
 
         else if (patternPtr->pnType == TEST_CE_NODE) {
-            if (TestCEAnalysis(theEnv, patternPtr, patternPtr->expression, false, &errorFlag, theNandFrames) == true) {
+            if (TestCEAnalysis(theEnv, patternPtr, patternPtr->expression, false, &errorFlag, theNandFrames)) {
                 ReleaseNandFrames(theEnv, theNandFrames);
                 return true;
             }
@@ -675,7 +675,7 @@ static bool PropagateVariableToNodes(
             /* Check for mixing of single and multifield variables. */
             /*======================================================*/
 
-            if (ignoreVariableTypes == false) {
+            if (!ignoreVariableTypes) {
                 if (((theType == SF_VARIABLE_NODE) && (theNode->pnType == MF_VARIABLE_NODE)) ||
                     ((theType == MF_VARIABLE_NODE) && (theNode->pnType == SF_VARIABLE_NODE))) { return true; }
             }
@@ -716,7 +716,7 @@ static bool PropagateVariableToNodes(
 
         else if ((theNode->pnType == PATTERN_CE_NODE) &&
                  (theNode->value == (void *) variableName) &&
-                 (assignReference == true)) {
+                 assignReference) {
             if (theType == MF_VARIABLE) return true;
 
             theNode->referringNode = theReference;

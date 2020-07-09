@@ -339,9 +339,8 @@ bool RemoveSaveFunction(
     ConstructData(theEnv)->ListOfSaveFunctions =
             RemoveSaveFunctionFromCallList(theEnv, name, ConstructData(theEnv)->ListOfSaveFunctions, &found);
 
-    if (found) return true;
+    return found;
 
-    return false;
 }
 
 /**********************************/
@@ -478,7 +477,7 @@ void Reset(
     /*=======================================================*/
 
     if ((ConstructData(theEnv)->BeforeResetCallback != nullptr) ?
-        ((*ConstructData(theEnv)->BeforeResetCallback)(theEnv) == false) : false) {
+        !(*ConstructData(theEnv)->BeforeResetCallback)(theEnv) : false) {
         ConstructData(theEnv)->ResetReadyInProgress = false;
         ConstructData(theEnv)->ResetInProgress = false;
         GCBlockEnd(theEnv, &gcb);
@@ -491,7 +490,7 @@ void Reset(
     /*===========================*/
 
     for (resetPtr = ConstructData(theEnv)->ListOfResetFunctions;
-         (resetPtr != nullptr) && (GetHaltExecution(theEnv) == false);
+         (resetPtr != nullptr) && !GetHaltExecution(theEnv);
          resetPtr = resetPtr->next) { (*resetPtr->func)(theEnv, resetPtr->context); }
 
     /*============================================*/
@@ -610,7 +609,7 @@ bool Clear(
     ConstructData(theEnv)->ClearReadyInProgress = true;
     if ((ConstructData(theEnv)->ClearReadyLocks > 0) ||
         (ConstructData(theEnv)->DanglingConstructs > 0) ||
-        (ClearReady(theEnv) == false)) {
+        !ClearReady(theEnv)) {
         PrintErrorID(theEnv, "CONSTRCT", 1, false);
         WriteString(theEnv, STDERR, "Some constructs are still in use. Clear cannot continue.\n");
         ConstructData(theEnv)->ClearReadyInProgress = false;
@@ -683,7 +682,7 @@ bool ClearReady(
     for (theFunction = ConstructData(theEnv)->ListOfClearReadyFunctions;
          theFunction != nullptr;
          theFunction = theFunction->next) {
-        if ((*theFunction->func)(theEnv, theFunction->context) == false) { return false; }
+        if (!(*theFunction->func)(theEnv, theFunction->context)) { return false; }
     }
 
     return true;
@@ -717,9 +716,8 @@ bool RemoveClearReadyFunction(
     ConstructData(theEnv)->ListOfClearReadyFunctions =
             RemoveBoolFunctionFromCallList(theEnv, name, ConstructData(theEnv)->ListOfClearReadyFunctions, &found);
 
-    if (found) return true;
+    return found;
 
-    return false;
 }
 
 /*************************************/
@@ -750,9 +748,8 @@ bool RemoveClearFunction(
     ConstructData(theEnv)->ListOfClearFunctions =
             RemoveVoidFunctionFromCallList(theEnv, name, ConstructData(theEnv)->ListOfClearFunctions, &found);
 
-    if (found) return true;
+    return found;
 
-    return false;
 }
 
 /********************************************/

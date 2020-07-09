@@ -40,7 +40,7 @@ public:
 #undef X
 private:
     ::Environment& _env;
-    ::InstanceBuilder* _contents = nullptrptr;
+    ::InstanceBuilder* _contents = nullptr;
 };
 
 class InstanceModifier {
@@ -72,7 +72,7 @@ class InstanceModifier {
 #undef X
 private:
     ::Environment& _env;
-    ::InstanceModifier* _contents = nullptrptr;
+    ::InstanceModifier* _contents = nullptr;
 
 };
 } // end namespace maya
