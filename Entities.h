@@ -194,7 +194,7 @@ struct udfValue {
     };
     size_t begin;
     size_t range;
-    struct udfValue *next;
+    udfValue *next;
 };
 
 /**************/

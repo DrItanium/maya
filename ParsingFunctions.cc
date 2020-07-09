@@ -133,10 +133,8 @@ bool CheckSyntax(
         Environment *theEnv,
         const char *theString,
         UDFValue *returnValue) {
-    const char *name;
     struct token theToken;
     struct expr *top;
-    bool rv;
 
     /*==============================*/
     /* Set the default return value */
@@ -177,7 +175,7 @@ bool CheckSyntax(
         return true;
     }
 
-    name = theToken.lexemeValue->contents;
+    auto name = theToken.lexemeValue->contents;
 
     /*==============================================*/
     /* Set up a router to capture the error output. */
@@ -194,7 +192,7 @@ bool CheckSyntax(
     if (FindConstruct(theEnv, name)) {
         ConstructData(theEnv)->CheckSyntaxMode = true;
 
-        rv = ParseConstruct(theEnv, name, "check-syntax") == BE_PARSING_ERROR;
+        auto rv = ParseConstruct(theEnv, name, "check-syntax") == BE_PARSING_ERROR;
 
         GetToken(theEnv, "check-syntax", &theToken);
         ConstructData(theEnv)->CheckSyntaxMode = false;
