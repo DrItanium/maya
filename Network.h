@@ -65,7 +65,7 @@ struct patternNodeHashEntry {
     struct patternNodeHashEntry *next;
 };
 
-#define SIZE_PATTERN_HASH 16231
+constexpr auto SIZE_PATTERN_HASH = 16231;
 
 struct alphaMemoryHash {
     unsigned long bucket;
@@ -82,7 +82,7 @@ typedef struct alphaMemoryHash ALPHA_MEMORY_HASH;
 
 #include "Defrule.h"
 
-#define INITIAL_BETA_HASH_SIZE 17
+constexpr auto INITIAL_BETA_HASH_SIZE = 17;
 
 struct betaMemory {
     unsigned long size;

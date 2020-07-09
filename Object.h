@@ -53,12 +53,12 @@ typedef struct instanceModifier InstanceModifier;
 /* Maximum # of simultaneous class hierarchy traversals
    should be a multiple of BITS_PER_BYTE and less than MAX_INT      */
 
-#define MAX_TRAVERSALS  256
-#define TRAVERSAL_BYTES 32       /* (MAX_TRAVERSALS / BITS_PER_BYTE) */
+constexpr auto MAX_TRAVERSALS  = 256;
+constexpr auto TRAVERSAL_BYTES = 32; /* (MAX_TRAVERSALS / BITS_PER_BYTE) */
 
-#define VALUE_REQUIRED     0
-#define VALUE_PROHIBITED   1
-#define VALUE_NOT_REQUIRED 2
+constexpr auto VALUE_REQUIRED     = 0;
+constexpr auto VALUE_PROHIBITED   = 1;
+constexpr auto VALUE_NOT_REQUIRED = 2;
 
 #include "Entities.h"
 #include "Construct.h"

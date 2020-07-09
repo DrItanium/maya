@@ -56,4 +56,30 @@
 #define PLATFORM_GENERIC
 #endif
 
+namespace maya {
+    constexpr auto PlatformIsLinux() noexcept {
+#ifdef PLATFORM_LINUX
+        return true;
+#else
+        return false;
+#endif
+    }
+
+    constexpr auto PlatformIsAndroid() noexcept {
+#ifdef PLATFORM_ANDROID
+        return true;
+#else
+        return false;
+#endif
+    }
+
+    constexpr auto PlatformIsGeneric() noexcept {
+#ifdef PLATFORM_GENERIC
+        return true;
+#else
+        return false;
+#endif
+    }
+} // end namespace maya
+
 #endif // end __PLATFORM_H__
