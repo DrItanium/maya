@@ -477,7 +477,7 @@ bool SetWatchItem(
             /*=======================================*/
 
             if ((wPtr->accessFunc == nullptr) ? false :
-                ((*wPtr->accessFunc)(theEnv, wPtr->code, newState, argExprs) == false)) {
+                !(*wPtr->accessFunc)(theEnv, wPtr->code, newState, argExprs)) {
                 SetEvaluationError(theEnv, true);
                 return false;
             }
@@ -505,7 +505,7 @@ bool SetWatchItem(
             /*=======================================*/
 
             if ((wPtr->accessFunc == nullptr) ? false :
-                ((*wPtr->accessFunc)(theEnv, wPtr->code, newState, argExprs) == false)) {
+                !(*wPtr->accessFunc)(theEnv, wPtr->code, newState, argExprs)) {
                 SetEvaluationError(theEnv, true);
                 return false;
             }
@@ -623,7 +623,7 @@ void WatchCommand(
 
     argument = theValue.lexemeValue->contents;
     wPtr = ValidWatchItem(theEnv, argument, &recognized);
-    if (recognized == false) {
+    if (!recognized) {
         SetEvaluationError(theEnv, true);
         UDFInvalidArgumentMessage(context, "watchable symbol");
         return;
@@ -669,7 +669,7 @@ void UnwatchCommand(
 
     argument = theValue.lexemeValue->contents;
     wPtr = ValidWatchItem(theEnv, argument, &recognized);
-    if (recognized == false) {
+    if (!recognized) {
         SetEvaluationError(theEnv, true);
         UDFInvalidArgumentMessage(context, "watchable symbol");
         return;
@@ -725,7 +725,7 @@ void ListWatchItemsCommand(
 
     if (!UDFFirstArgument(context, SYMBOL_BIT, &theValue)) return;
     wPtr = ValidWatchItem(theEnv, theValue.lexemeValue->contents, &recognized);
-    if ((recognized == false) || (wPtr == nullptr)) {
+    if (!recognized || (wPtr == nullptr)) {
         SetEvaluationError(theEnv, true);
         ExpectedTypeError1(theEnv, "list-watch-items", 1, "'watchable symbol'");
         return;
@@ -755,8 +755,8 @@ void ListWatchItemsCommand(
     /*============================================*/
 
     if (wPtr->printFunc != nullptr) {
-        if ((*wPtr->printFunc)(theEnv, STDOUT, wPtr->code,
-                               GetNextArgument(GetFirstArgument())) == false) { SetEvaluationError(theEnv, true); }
+        if (!(*wPtr->printFunc)(theEnv, STDOUT, wPtr->code,
+                                GetNextArgument(GetFirstArgument()))) { SetEvaluationError(theEnv, true); }
     }
 }
 
@@ -780,7 +780,7 @@ void GetWatchItemCommand(
 
     argument = theValue.lexemeValue->contents;
     ValidWatchItem(theEnv, argument, &recognized);
-    if (recognized == false) {
+    if (!recognized) {
         SetEvaluationError(theEnv, true);
         ExpectedTypeError1(theEnv, "get-watch-item", 1, "'watchable symbol'");
         returnValue->lexemeValue = FalseSymbol(theEnv);

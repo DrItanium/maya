@@ -314,8 +314,7 @@ bool CurrentGarbageFrameIsDirty(
 
     cgf = UtilityData(theEnv)->CurrentGarbageFrame;
 
-    if (cgf->dirty) { return true; }
-    else { return false; }
+    return cgf->dirty;
 }
 
 /*************************/

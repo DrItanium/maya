@@ -513,7 +513,7 @@ static bool ParseDefinstances(
             rtn_struct(theEnv, definstances, dobj);
             return true;
         }
-        if (ExpressionContainsVariables(mkinstance, false) == true) {
+        if (ExpressionContainsVariables(mkinstance, false)) {
             LocalVariableErrorMessage(theEnv, "definstances");
             ReturnExpression(theEnv, mkinstance);
             ReturnExpression(theEnv, dobj->mkinstance);
@@ -543,7 +543,7 @@ static bool ParseDefinstances(
             return false;
         }
 #if DEBUGGING_FUNCTIONS
-        if (GetConserveMemory(theEnv) == false) {
+        if (!GetConserveMemory(theEnv)) {
             if (dobj->mkinstance != nullptr)
                 PPBackup(theEnv);
             PPBackup(theEnv);

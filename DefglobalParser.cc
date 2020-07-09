@@ -110,7 +110,7 @@ bool ParseDefglobal(
     /*=================================================*/
 
 #if BLOAD_AND_BSAVE
-    if ((Bloaded(theEnv) == true) && (!ConstructData(theEnv)->CheckSyntaxMode)) {
+    if (Bloaded(theEnv) && (!ConstructData(theEnv)->CheckSyntaxMode)) {
         CannotLoadWithBloadMessage(theEnv, "defglobal");
         return true;
     }
@@ -346,7 +346,7 @@ static void AddDefglobal(
     /* Remove the old values from the defglobal. */
     /*===========================================*/
 
-    if (newGlobal == false) {
+    if (!newGlobal) {
         Release(theEnv, defglobalPtr->current.header);
         if (defglobalPtr->current.header->type == MULTIFIELD_TYPE) { ReturnMultifield(theEnv, defglobalPtr->current.multifieldValue); }
 
@@ -385,7 +385,7 @@ static void AddDefglobal(
     IncrementLexemeCount(name);
 
     SavePPBuffer(theEnv, "\n");
-    if (GetConserveMemory(theEnv) == true) { defglobalPtr->header.ppForm = nullptr; }
+    if (GetConserveMemory(theEnv)) { defglobalPtr->header.ppForm = nullptr; }
     else { defglobalPtr->header.ppForm = CopyPPBuffer(theEnv); }
 
     defglobalPtr->inScope = true;
@@ -394,7 +394,7 @@ static void AddDefglobal(
     /* If the defglobal was redefined, we're done. */
     /*=============================================*/
 
-    if (newGlobal == false) return;
+    if (!newGlobal) return;
 
     /*===================================*/
     /* Copy the defglobal variable name. */

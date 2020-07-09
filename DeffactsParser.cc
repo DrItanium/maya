@@ -91,7 +91,7 @@ bool ParseDeffacts(
     /*==========================================================*/
 
 #if BLOAD_AND_BSAVE
-    if ((Bloaded(theEnv) == true) && (!ConstructData(theEnv)->CheckSyntaxMode)) {
+    if (Bloaded(theEnv) && (!ConstructData(theEnv)->CheckSyntaxMode)) {
         CannotLoadWithBloadMessage(theEnv, "deffacts");
         return true;
     }
@@ -113,7 +113,7 @@ bool ParseDeffacts(
 
     temp = BuildRHSAssert(theEnv, readSource, &inputToken, &deffactsError, false, false, "deffacts");
 
-    if (deffactsError == true) { return true; }
+    if (deffactsError) { return true; }
 
     if (ExpressionContainsVariables(temp, false)) {
         LocalVariableErrorMessage(theEnv, "a deffacts construct");
@@ -149,7 +149,7 @@ bool ParseDeffacts(
     /* Save the pretty print representation of the deffacts. */
     /*=======================================================*/
 
-    if (GetConserveMemory(theEnv) == true) { newDeffacts->header.ppForm = nullptr; }
+    if (GetConserveMemory(theEnv)) { newDeffacts->header.ppForm = nullptr; }
     else { newDeffacts->header.ppForm = CopyPPBuffer(theEnv); }
 
     /*=============================================*/

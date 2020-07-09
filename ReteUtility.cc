@@ -1344,7 +1344,7 @@ unsigned long PrintBetaMemory(
     struct partialMatch *listOfMatches;
     unsigned long b, count = 0;
 
-    if (GetHaltExecution(theEnv) == true) { return count; }
+    if (GetHaltExecution(theEnv)) { return count; }
 
     for (b = 0; b < theMemory->size; b++) {
         listOfMatches = theMemory->beta[b];
@@ -1355,7 +1355,7 @@ unsigned long PrintBetaMemory(
             /* to stop the display of partial matches. */
             /*=========================================*/
 
-            if (GetHaltExecution(theEnv) == true) { return count; }
+            if (GetHaltExecution(theEnv)) { return count; }
 
             /*=========================================================*/
             /* The first partial match may have already been indented. */

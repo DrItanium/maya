@@ -160,7 +160,7 @@ bool ParseDefmodule(
     /*===============================*/
 
 #if BLOAD_AND_BSAVE
-    if ((Bloaded(theEnv) == true) && (!ConstructData(theEnv)->CheckSyntaxMode)) {
+    if (Bloaded(theEnv) && (!ConstructData(theEnv)->CheckSyntaxMode)) {
         CannotLoadWithBloadMessage(theEnv, "defmodule");
         return true;
     }
@@ -304,7 +304,7 @@ bool ParseDefmodule(
 
     SavePPBuffer(theEnv, "\n");
 
-    if (GetConserveMemory(theEnv) == true) { newDefmodule->header.ppForm = nullptr; }
+    if (GetConserveMemory(theEnv)) { newDefmodule->header.ppForm = nullptr; }
     else { newDefmodule->header.ppForm = CopyPPBuffer(theEnv); }
 
     /*==============================================*/

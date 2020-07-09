@@ -253,7 +253,7 @@ void NetworkAssertRight(
         /* appropriate action given the logic of this join.   */
         /*====================================================*/
 
-        if (exprResult != false) {
+        if (exprResult) {
             if (join->patternIsExists) {
                 AddBlockedLink(lhsBinds, rhsBinds);
                 PPDrive(theEnv, lhsBinds, nullptr, join, operation);
@@ -444,7 +444,7 @@ void NetworkAssertLeft(
         /* appropriate action given the logic of this join.   */
         /*====================================================*/
 
-        if (exprResult != false) {
+        if (exprResult) {
             /*==============================================*/
             /* Use the PPDrive routine when the join isn't  */
             /* associated with a not CE and it doesn't have */
@@ -592,7 +592,7 @@ bool EvaluateJoinExpression(
 
         else if (joinExpr->value == ExpressionData(theEnv)->PTR_OR) {
             result = false;
-            if (EvaluateJoinExpression(theEnv, joinExpr, joinPtr) == true) {
+            if (EvaluateJoinExpression(theEnv, joinExpr, joinPtr)) {
                 if (EvaluationData(theEnv)->EvaluationError) { return false; }
                 result = true;
             } else if (EvaluationData(theEnv)->EvaluationError) { return false; }
@@ -604,7 +604,7 @@ bool EvaluateJoinExpression(
 
         else if (joinExpr->value == ExpressionData(theEnv)->PTR_AND) {
             result = true;
-            if (EvaluateJoinExpression(theEnv, joinExpr, joinPtr) == false) {
+            if (!EvaluateJoinExpression(theEnv, joinExpr, joinPtr)) {
                 if (EvaluationData(theEnv)->EvaluationError) { return false; }
                 result = false;
             } else if (EvaluationData(theEnv)->EvaluationError) { return false; }
@@ -622,8 +622,7 @@ bool EvaluateJoinExpression(
                 return false;
             }
 
-            if (theResult.value == FalseSymbol(theEnv)) { result = false; }
-            else { result = true; }
+            result = theResult.value != FalseSymbol(theEnv);
         }
 
         /*====================================*/
@@ -631,8 +630,8 @@ bool EvaluateJoinExpression(
         /* the "and" and "or" functions.      */
         /*====================================*/
 
-        if ((andLogic == true) && (result == false)) { return false; }
-        else if ((andLogic == false) && (result == true)) { return true; }
+        if (andLogic && !result) { return false; }
+        else if (!andLogic && result) { return true; }
 
         /*==============================================*/
         /* Move to the next expression to be evaluated. */
@@ -937,7 +936,7 @@ static void EmptyDrive(
         EngineData(theEnv)->GlobalRHSBinds = oldRHSBinds;
         EngineData(theEnv)->GlobalJoin = oldJoin;
 
-        if (joinExpr == false) return;
+        if (!joinExpr) return;
     }
 
     if (join->secondaryNetworkTest != nullptr) {
@@ -958,7 +957,7 @@ static void EmptyDrive(
         EngineData(theEnv)->GlobalRHSBinds = oldRHSBinds;
         EngineData(theEnv)->GlobalJoin = oldJoin;
 
-        if (joinExpr == false) return;
+        if (!joinExpr) return;
     }
 
     /*========================================================*/

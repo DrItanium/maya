@@ -103,9 +103,8 @@ static bool DefaultCompareSwapFunction(
     ReturnExpression(theEnv, SortFunctionData(theEnv)->SortComparisonFunction->argList);
     SortFunctionData(theEnv)->SortComparisonFunction->argList = nullptr;
 
-    if (returnValue.value == FalseSymbol(theEnv)) { return false; }
+    return returnValue.value != FalseSymbol(theEnv);
 
-    return true;
 }
 
 /************************************/

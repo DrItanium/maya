@@ -150,13 +150,13 @@ void WhileFunction(
 
     UDFNthArgument(context, 1, ANY_TYPE_BITS, &theResult);
     while ((theResult.value != FalseSymbol(theEnv)) &&
-           (EvaluationData(theEnv)->HaltExecution != true)) {
-        if ((ProcedureFunctionData(theEnv)->BreakFlag == true) || (ProcedureFunctionData(theEnv)->ReturnFlag == true))
+           !EvaluationData(theEnv)->HaltExecution) {
+        if (ProcedureFunctionData(theEnv)->BreakFlag || ProcedureFunctionData(theEnv)->ReturnFlag)
             break;
 
         UDFNthArgument(context, 2, ANY_TYPE_BITS, &theResult);
 
-        if ((ProcedureFunctionData(theEnv)->BreakFlag == true) || (ProcedureFunctionData(theEnv)->ReturnFlag == true))
+        if (ProcedureFunctionData(theEnv)->BreakFlag || ProcedureFunctionData(theEnv)->ReturnFlag)
             break;
 
         CleanCurrentGarbageFrame(theEnv, nullptr);
@@ -179,7 +179,7 @@ void WhileFunction(
     /* value, otherwise return the symbol FALSE.          */
     /*====================================================*/
 
-    if (ProcedureFunctionData(theEnv)->ReturnFlag == true) {
+    if (ProcedureFunctionData(theEnv)->ReturnFlag) {
         returnValue->value = theResult.value;
         returnValue->begin = theResult.begin;
         returnValue->range = theResult.range;
@@ -227,13 +227,13 @@ void LoopForCountFunction(
 
     iterationEnd = theArg.integerValue->contents;
     while ((tmpCounter->loopCounter <= iterationEnd) &&
-           (EvaluationData(theEnv)->HaltExecution != true)) {
-        if ((ProcedureFunctionData(theEnv)->BreakFlag == true) || (ProcedureFunctionData(theEnv)->ReturnFlag == true))
+           !EvaluationData(theEnv)->HaltExecution) {
+        if (ProcedureFunctionData(theEnv)->BreakFlag || ProcedureFunctionData(theEnv)->ReturnFlag)
             break;
 
         UDFNthArgument(context, 3, ANY_TYPE_BITS, &theArg);
 
-        if ((ProcedureFunctionData(theEnv)->BreakFlag == true) || (ProcedureFunctionData(theEnv)->ReturnFlag == true))
+        if (ProcedureFunctionData(theEnv)->BreakFlag || ProcedureFunctionData(theEnv)->ReturnFlag)
             break;
 
         CleanCurrentGarbageFrame(theEnv, nullptr);
@@ -243,7 +243,7 @@ void LoopForCountFunction(
     }
 
     ProcedureFunctionData(theEnv)->BreakFlag = false;
-    if (ProcedureFunctionData(theEnv)->ReturnFlag == true) {
+    if (ProcedureFunctionData(theEnv)->ReturnFlag) {
         loopResult->value = theArg.value;
         loopResult->begin = theArg.begin;
         loopResult->range = theArg.range;
@@ -298,8 +298,8 @@ void IfFunction(
         return;
     }
 
-    if ((ProcedureFunctionData(theEnv)->BreakFlag == true) ||
-        (ProcedureFunctionData(theEnv)->ReturnFlag == true)) {
+    if (ProcedureFunctionData(theEnv)->BreakFlag ||
+        ProcedureFunctionData(theEnv)->ReturnFlag) {
         returnValue->value = FalseSymbol(theEnv);
         return;
     }
@@ -391,7 +391,7 @@ void BindFunction(
     theBind = ProcedureFunctionData(theEnv)->BindList;
     lastBind = nullptr;
 
-    while ((theBind != nullptr) && (found == false)) {
+    while ((theBind != nullptr) && !found) {
         if (theBind->supplementalInfo == (void *) variableName) { found = true; }
         else {
             lastBind = theBind;
@@ -405,8 +405,8 @@ void BindFunction(
     /* as a stack.                                            */
     /*========================================================*/
 
-    if (found == false) {
-        if (unbindVar == false) {
+    if (!found) {
+        if (!unbindVar) {
             theBind = get_struct(theEnv, udfValue);
             theBind->supplementalInfo = (void *) variableName;
             IncrementLexemeCount(variableName);
@@ -423,7 +423,7 @@ void BindFunction(
     /* Set the value of the variable. */
     /*================================*/
 
-    if (unbindVar == false) {
+    if (!unbindVar) {
         theBind->value = returnValue->value;
         theBind->begin = returnValue->begin;
         theBind->range = returnValue->range;
@@ -487,15 +487,15 @@ void PrognFunction(
         return;
     }
 
-    while ((argPtr != nullptr) && (GetHaltExecution(theEnv) != true)) {
+    while ((argPtr != nullptr) && !GetHaltExecution(theEnv)) {
         EvaluateExpression(theEnv, argPtr, returnValue);
 
-        if ((ProcedureFunctionData(theEnv)->BreakFlag == true) || (ProcedureFunctionData(theEnv)->ReturnFlag == true))
+        if (ProcedureFunctionData(theEnv)->BreakFlag || ProcedureFunctionData(theEnv)->ReturnFlag)
             break;
         argPtr = argPtr->nextArg;
     }
 
-    if (GetHaltExecution(theEnv) == true) {
+    if (GetHaltExecution(theEnv)) {
         returnValue->value = FalseSymbol(theEnv);
         return;
     }

@@ -401,7 +401,7 @@ void Matches(
     for (agendaPtr = ((defruleModule *) topDisjunct->header.whichModule)->agenda;
          agendaPtr != nullptr;
          agendaPtr = (activation *) GetNextActivation(theEnv, agendaPtr)) {
-        if (GetHaltExecution(theEnv) == true) return;
+        if (GetHaltExecution(theEnv)) return;
 
         if (((activation *) agendaPtr)->theRule->header.name == topDisjunct->header.name) {
             activations++;
@@ -630,7 +630,7 @@ static long long ListAlphaMatches(
     struct joinNode *theJoin;
     long long alphaCount = 0;
 
-    if (GetHaltExecution(theEnv) == true) { return (alphaCount); }
+    if (GetHaltExecution(theEnv)) { return (alphaCount); }
 
     theJoin = theInfo->theJoin;
 
@@ -667,7 +667,7 @@ static long long ListAlphaMatches(
         listOfMatches = listOfHashNodes->alphaMemory;
 
         while (listOfMatches != nullptr) {
-            if (GetHaltExecution(theEnv) == true) { return (alphaCount); }
+            if (GetHaltExecution(theEnv)) { return (alphaCount); }
 
             count++;
             if (output == VERBOSE) {
@@ -817,7 +817,7 @@ static long long ListBetaMatches(
     struct joinInformation *theInfo;
     unsigned long count;
 
-    if (GetHaltExecution(theEnv) == true) { return (betaCount); }
+    if (GetHaltExecution(theEnv)) { return (betaCount); }
 
     theInfo = &infoArray[joinIndex];
 
@@ -1057,7 +1057,7 @@ static void ListBetaJoinActivity(
     struct joinNode *theJoin, *nextJoin;
     struct joinInformation *theInfo;
 
-    if (GetHaltExecution(theEnv) == true) { return; }
+    if (GetHaltExecution(theEnv)) { return; }
 
     theInfo = &infoArray[joinIndex];
 

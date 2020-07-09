@@ -1074,8 +1074,7 @@ void CopyLHSParseNode(
         dest->expression = CopyLHSParseNodes(theEnv, src->expression);
         dest->secondaryExpression = CopyLHSParseNodes(theEnv, src->secondaryExpression);
         dest->constraints = CopyConstraintRecord(theEnv, src->constraints);
-        if (dest->constraints != nullptr) dest->derivedConstraints = true;
-        else dest->derivedConstraints = false;
+        dest->derivedConstraints = dest->constraints != nullptr;
     } else {
         dest->networkTest = src->networkTest;
         dest->externalNetworkTest = src->externalNetworkTest;
@@ -1399,7 +1398,7 @@ static void IncrementNandDepth(
         if ((theLHS->pnType == PATTERN_CE_NODE) || (theLHS->pnType == TEST_CE_NODE)) {
             theLHS->beginNandDepth++;
 
-            if (lastCE == false) theLHS->endNandDepth++;
+            if (!lastCE) theLHS->endNandDepth++;
             else if (theLHS->bottom != nullptr) theLHS->endNandDepth++;
         }
 
@@ -1740,9 +1739,8 @@ bool IsExistsSubjoin(
 
     while (theLHS->endNandDepth >= startDepth) { theLHS = theLHS->bottom; }
 
-    if (theLHS->endNandDepth <= parentDepth) { return true; }
+    return theLHS->endNandDepth <= parentDepth;
 
-    return false;
 }
 
 /***************************************************************************/

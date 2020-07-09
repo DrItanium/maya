@@ -294,7 +294,7 @@ static void DetachJoins(
         /*=================================================*/
 
         if (!destroy) {
-            if ((join->rightSideEntryStructure != nullptr) && (join->joinFromTheRight == false)) { RemoveIntranetworkLink(theEnv, join); }
+            if ((join->rightSideEntryStructure != nullptr) && join->joinFromTheRight == 0) { RemoveIntranetworkLink(theEnv, join); }
         }
 
         /*======================================*/

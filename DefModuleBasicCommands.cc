@@ -102,7 +102,7 @@ static void ClearDefmodules(
         Environment *theEnv,
         void *context) {
 #if (BLOAD_AND_BSAVE)
-    if (Bloaded(theEnv) == true) return;
+    if (Bloaded(theEnv)) return;
 #endif
     RemoveAllDefmodules(theEnv, nullptr);
 
@@ -179,7 +179,7 @@ void GetDefmoduleList(
     for (theConstruct = GetNextDefmodule(theEnv, nullptr), count = 0;
          theConstruct != nullptr;
          theConstruct = GetNextDefmodule(theEnv, theConstruct), count++) {
-        if (EvaluationData(theEnv)->HaltExecution == true) {
+        if (EvaluationData(theEnv)->HaltExecution) {
             returnValue->multifieldValue = CreateMultifield(theEnv, 0L);
             return;
         }

@@ -629,7 +629,7 @@ void ListItemsDriver(
         SetCurrentModule(theEnv, theModule);
         constructPtr = (*nextFunction)(theEnv, nullptr);
         while (constructPtr != nullptr) {
-            if (EvaluationData(theEnv)->HaltExecution == true) return;
+            if (EvaluationData(theEnv)->HaltExecution) return;
 
             if (doItFunction == nullptr) doIt = true;
             else doIt = (*doItFunction)(constructPtr);
@@ -806,7 +806,7 @@ CLIPSLexeme *GetConstructNameAndComment(
 
     separatorPosition = FindModuleSeparator(name->contents);
     if (separatorPosition) {
-        if (moduleNameAllowed == false) {
+        if (!moduleNameAllowed) {
             SyntaxErrorMessage(theEnv, "module specifier");
             return nullptr;
         }
@@ -873,7 +873,7 @@ CLIPSLexeme *GetConstructNameAndComment(
             redefining = true;
             if (deleteFunction != nullptr) {
                 RetainLexeme(theEnv, name);
-                if ((*deleteFunction)(theConstruct, theEnv) == false) {
+                if (!(*deleteFunction)(theConstruct, theEnv)) {
                     PrintErrorID(theEnv, "CSTRCPSR", 4, true);
                     WriteString(theEnv, STDERR, "Cannot redefine ");
                     WriteString(theEnv, STDERR, constructName);

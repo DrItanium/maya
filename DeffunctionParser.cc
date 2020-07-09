@@ -131,7 +131,7 @@ bool ParseDeffunction(
     SavePPBuffer(theEnv, "(deffunction ");
 
 #if BLOAD_AND_BSAVE
-    if ((Bloaded(theEnv) == true) && (!ConstructData(theEnv)->CheckSyntaxMode)) {
+    if (Bloaded(theEnv) && (!ConstructData(theEnv)->CheckSyntaxMode)) {
         CannotLoadWithBloadMessage(theEnv, "deffunctions");
         return true;
     }
@@ -148,7 +148,7 @@ bool ParseDeffunction(
 
     if (deffunctionName == nullptr) { return true; }
 
-    if (ValidDeffunctionName(theEnv, deffunctionName->contents) == false) { return true; }
+    if (!ValidDeffunctionName(theEnv, deffunctionName->contents)) { return true; }
 
     /*==========================*/
     /* Parse the argument list. */
@@ -464,7 +464,7 @@ static Deffunction *AddDeffunction(
 #if DEBUGGING_FUNCTIONS
     DeffunctionSetWatch(dfuncPtr, DFHadWatch ? true : DeffunctionData(theEnv)->WatchDeffunctions);
 
-    if ((GetConserveMemory(theEnv) == false) && (headerp == false)) { SetDeffunctionPPForm(theEnv, dfuncPtr, CopyPPBuffer(theEnv)); }
+    if (!GetConserveMemory(theEnv) && !headerp) { SetDeffunctionPPForm(theEnv, dfuncPtr, CopyPPBuffer(theEnv)); }
 #endif
 
     return dfuncPtr;

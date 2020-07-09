@@ -190,7 +190,7 @@ static struct lhsParseNode *GetLHSSlots(
         /* Determine if the slot is multiply defined. */
         /*============================================*/
 
-        if (MultiplyDefinedLHSSlots(theEnv, firstSlot, tempToken->lexemeValue) == true) {
+        if (MultiplyDefinedLHSSlots(theEnv, firstSlot, tempToken->lexemeValue)) {
             *error = true;
             ReturnLHSParseNodes(theEnv, firstSlot);
             return nullptr;

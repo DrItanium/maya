@@ -168,7 +168,7 @@ static struct lhsParseNode *RuleBodyParse(
 
     theNode = LHSPattern(theEnv, readSource, SYMBOL_TOKEN, "=>", error, true, theToken, ruleName);
 
-    if (*error == true) {
+    if (*error) {
         ReturnLHSParseNodes(theEnv, theNode);
         return nullptr;
     }
@@ -181,7 +181,7 @@ static struct lhsParseNode *RuleBodyParse(
 
     otherNodes = GroupPatterns(theEnv, readSource, SYMBOL_TOKEN, "=>", error);
 
-    if (*error == true) {
+    if (*error) {
         ReturnLHSParseNodes(theEnv, theNode);
         return nullptr;
     }
@@ -564,7 +564,7 @@ static struct lhsParseNode *LHSPattern(
     /* allocated data structures.     */
     /*================================*/
 
-    if (*error == true) {
+    if (*error) {
         ReturnLHSParseNodes(theEnv, theNode);
         return nullptr;
     }
@@ -682,7 +682,7 @@ static struct lhsParseNode *ConnectedPatternParse(
     /* If an error occured while parsing, return. */
     /*============================================*/
 
-    if (*error == true) {
+    if (*error) {
         ReturnLHSParseNodes(theEnv, theGroup);
         return nullptr;
     }
@@ -991,7 +991,7 @@ static struct lhsParseNode *AssignmentParse(
 
     theNode = SimplePatternParse(theEnv, readSource, &theToken, error);
 
-    if (*error == true) {
+    if (*error) {
         ReturnLHSParseNodes(theEnv, theNode);
         return nullptr;
     }

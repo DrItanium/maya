@@ -399,7 +399,7 @@ bool DefmessageHandlerIsDeletable(
 
     if (theDefclass->handlers[theIndex - 1].system == 1) { return false; }
 
-    return (HandlersExecuting(theDefclass) == false) ? true : false;
+    return !HandlersExecuting(theDefclass);
 }
 
 /******************************************************************************
@@ -818,7 +818,7 @@ static bool WildDeleteHandler(
         for (cls = GetNextDefclass(theEnv, nullptr);
              cls != nullptr;
              cls = GetNextDefclass(theEnv, cls))
-            if (DeleteHandler(theEnv, cls, msym, mtype, false) == false)
+            if (!DeleteHandler(theEnv, cls, msym, mtype, false))
                 success = false;
         return (success);
     }
@@ -929,8 +929,8 @@ static bool DefmessageHandlerWatchSupport(
             }
             theClass = GetNextDefclass(theEnv, nullptr);
             while (theClass != nullptr) {
-                if (WatchClassHandlers(theEnv, theClass, nullptr, -1, logName, newState,
-                                       true, printFunc, traceFunc) == false)
+                if (!WatchClassHandlers(theEnv, theClass, nullptr, -1, logName, newState,
+                                        true, printFunc, traceFunc))
                     return false;
                 theClass = GetNextDefclass(theEnv, theClass);
             }
@@ -982,8 +982,8 @@ static bool DefmessageHandlerWatchSupport(
             theHandlerStr = nullptr;
             theType = -1;
         }
-        if (WatchClassHandlers(theEnv, theClass, theHandlerStr, theType, logName,
-                               newState, false, printFunc, traceFunc) == false) {
+        if (!WatchClassHandlers(theEnv, theClass, theHandlerStr, theType, logName,
+                                newState, false, printFunc, traceFunc)) {
             ExpectedTypeError1(theEnv, funcName, argIndex, "handler");
             return false;
         }

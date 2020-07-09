@@ -354,7 +354,7 @@ bool Undeffunction(
     else { theEnv = theDeffunction->header.env; }
 
 #if BLOAD_AND_BSAVE
-    if (Bloaded(theEnv) == true)
+    if (Bloaded(theEnv))
         return false;
 #endif
 
@@ -365,7 +365,7 @@ bool Undeffunction(
         return success;
     }
 
-    if (DeffunctionIsDeletable(theDeffunction) == false) {
+    if (!DeffunctionIsDeletable(theDeffunction)) {
         GCBlockEnd(theEnv, &gcb);
         return false;
     }
@@ -648,8 +648,7 @@ static bool EvaluateDeffunctionCall(
         Deffunction *theDeffunction,
         UDFValue *returnValue) {
     CallDeffunction(theEnv, theDeffunction, GetFirstArgument(), returnValue);
-    if (returnValue->value == FalseSymbol(theEnv)) { return false; }
-    return true;
+    return returnValue->value != FalseSymbol(theEnv);
 }
 
 /***************************************************
@@ -742,7 +741,7 @@ static void ReturnModule(
 static bool ClearDeffunctionsReady(
         Environment *theEnv,
         void *context) {
-    return ((DeffunctionData(theEnv)->ExecutingDeffunction != nullptr) ? false : true);
+    return DeffunctionData(theEnv)->ExecutingDeffunction == nullptr;
 }
 
 /***************************************************
@@ -762,7 +761,7 @@ static bool RemoveAllDeffunctions(
 
 #if BLOAD_AND_BSAVE
 
-    if (Bloaded(theEnv) == true)
+    if (Bloaded(theEnv))
         return false;
 #endif
 

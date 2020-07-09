@@ -159,7 +159,7 @@ static bool MultifieldCardinalityViolation(
     /* a cardinality violation.       */
     /*================================*/
 
-    if (theNode->multifieldSlot == false) return false;
+    if (theNode->multifieldSlot == 0) return false;
 
     /*=============================================*/
     /* Determine the minimum and maximum number of */

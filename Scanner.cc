@@ -448,7 +448,7 @@ static CLIPSLexeme *ScanString(
         inchar = ReadRouter(theEnv, logicalName);
     }
 
-    if ((inchar == EOF) && (ScannerData(theEnv)->IgnoreCompletionErrors == false)) {
+    if ((inchar == EOF) && !ScannerData(theEnv)->IgnoreCompletionErrors) {
         PrintErrorID(theEnv, "SCANNER", 1, true);
         WriteString(theEnv, STDERR, "Encountered End-Of-File while scanning a string\n");
     }

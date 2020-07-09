@@ -553,9 +553,9 @@ static int ReplaceRHSVariable(
 #if DEFTEMPLATE_CONSTRUCT
     if (list->type == FCALL) {
         if (list->value == (void *) FindFunction(theEnv, "modify")) {
-            if (UpdateModifyDuplicate(theEnv, list, "modify", VtheLHS) == false) { return -1; }
+            if (!UpdateModifyDuplicate(theEnv, list, "modify", VtheLHS)) { return -1; }
         } else if (list->value == (void *) FindFunction(theEnv, "duplicate")) {
-            if (UpdateModifyDuplicate(theEnv, list, "duplicate", VtheLHS) == false) { return -1; }
+            if (!UpdateModifyDuplicate(theEnv, list, "duplicate", VtheLHS)) { return -1; }
         }
 
         return 0;

@@ -100,8 +100,7 @@ void SetResetGlobalsCommand(
 
     if (!UDFFirstArgument(context, ANY_TYPE_BITS, &theArg)) { return; }
 
-    if (theArg.value == FalseSymbol(theEnv)) { SetResetGlobals(theEnv, false); }
-    else { SetResetGlobals(theEnv, true); }
+    SetResetGlobals(theEnv, theArg.value != FalseSymbol(theEnv));
 
     /*========================================*/
     /* Return the old value of the attribute. */
@@ -218,7 +217,7 @@ void ShowDefglobals(
         for (constructPtr = theModuleItem->firstItem;
              constructPtr != nullptr;
              constructPtr = constructPtr->next) {
-            if (EvaluationData(theEnv)->HaltExecution == true) return;
+            if (EvaluationData(theEnv)->HaltExecution) return;
 
             if (allModules) WriteString(theEnv, logicalName, "   ");
             PrintDefglobalValueForm(theEnv, logicalName, (Defglobal *) constructPtr);

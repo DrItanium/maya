@@ -488,10 +488,9 @@ void UpdateDeftemplateScope(
             /* current module, then it is in scope.  */
             /*=======================================*/
 
-            if (FindImportedConstruct(theEnv, "deftemplate", theModule,
-                                      theDeftemplate->header.name->contents,
-                                      &moduleCount, true, nullptr) != nullptr) { theDeftemplate->inScope = true; }
-            else { theDeftemplate->inScope = false; }
+            theDeftemplate->inScope = FindImportedConstruct(theEnv, "deftemplate", theModule,
+                                                            theDeftemplate->header.name->contents,
+                                                            &moduleCount, true, nullptr) != nullptr;
         }
     }
 }
