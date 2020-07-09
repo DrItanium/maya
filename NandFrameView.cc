@@ -7,8 +7,8 @@
 namespace maya {
 
     NandFrameView::Optional NandFrameView::getNext() noexcept {
-        if (_raw.next) {
-            return NandFrameView(*_raw.next);
+        if (_raw.getNext()) {
+            return NandFrameView(*_raw.getNext());
         } else {
             return std::nullopt;
         }

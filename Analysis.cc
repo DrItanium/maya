@@ -134,7 +134,7 @@ bool VariableAnalysis(
             tempNandPtr = get_struct(theEnv, nandFrame);
             tempNandPtr->setNandCE(patternPtr);
             tempNandPtr->setDepth(currentDepth);
-            tempNandPtr->next = theNandFrames;
+            tempNandPtr->setNext(theNandFrames);
             theNandFrames = tempNandPtr;
             currentDepth++;
         }
@@ -217,7 +217,7 @@ bool VariableAnalysis(
         /*==================================*/
 
         while (patternPtr->endNandDepth < currentDepth) {
-            tempNandPtr = theNandFrames->next;
+            tempNandPtr = theNandFrames->getNext();
             rtn_struct(theEnv, nandFrame, theNandFrames);
             theNandFrames = tempNandPtr;
             currentDepth--;
@@ -246,7 +246,7 @@ static void ReleaseNandFrames(
     struct nandFrame *tmpFrame;
 
     while (theFrames != nullptr) {
-        tmpFrame = theFrames->next;
+        tmpFrame = theFrames->getNext();
         rtn_struct(theEnv, nandFrame, theFrames);
         theFrames = tmpFrame;
     }

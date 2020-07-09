@@ -53,12 +53,14 @@ struct nandFrame {
 private:
     int depth;
     lhsParseNode *nandCE;
+    nandFrame *next;
 public:
     constexpr auto getDepth() const noexcept { return depth; }
     void setDepth(int value) noexcept { depth = value; }
     auto getNandCE() const noexcept { return nandCE; }
     void setNandCE(lhsParseNode* value) noexcept { nandCE = value; }
-    struct nandFrame *next;
+    auto getNext() const noexcept { return next; }
+    void setNext(nandFrame* value) noexcept { next = value; }
 };
 
 bool VariableAnalysis(Environment *, struct lhsParseNode *);

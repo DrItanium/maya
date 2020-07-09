@@ -667,7 +667,7 @@ void AddNandUnification(
 
     for (theFrame = theNandFrames;
          theFrame != nullptr;
-         theFrame = theFrame->next) {
+         theFrame = theFrame->getNext()) {
         if (theFrame->getDepth() >= nodeList->referringNode->beginNandDepth) {
             // nodeList->referringNode->marked = true;
 
