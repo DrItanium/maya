@@ -407,7 +407,7 @@ void Matches(
             activations++;
 
             if (output == VERBOSE) {
-                PrintPartialMatch(theEnv, STDOUT, GetActivationBasis(theEnv, agendaPtr));
+                PrintPartialMatch(theEnv, STDOUT, agendaPtr->getBasis());
                 WriteString(theEnv, STDOUT, "\n");
             }
         }

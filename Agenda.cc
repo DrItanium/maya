@@ -312,15 +312,6 @@ Activation *GetNextActivation(
 /*********************************************/
 /* GetActivationBasis: Returns the basis of  */
 /*   the rule associated with an activation. */
-/*********************************************/
-struct partialMatch *GetActivationBasis(
-        Environment *theEnv,
-        Activation *actPtr) {
-#if MAC_XCD
-#pragma unused(theEnv)
-#endif
-    return actPtr->getBasis();
-}
 
 /*********************************************/
 /* ActivationRuleName: Returns the name of   */

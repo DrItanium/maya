@@ -138,7 +138,6 @@ struct agendaData {
 void AddActivation(Environment *, Defrule *, PartialMatch *);
 void ClearRuleFromAgenda(Environment *, Defrule *);
 Activation *GetNextActivation(Environment *, Activation *);
-struct partialMatch *GetActivationBasis(Environment *, Activation *);
 const char *ActivationRuleName(Activation *);
 void ActivationPPForm(Activation *, StringBuilder *);
 void GetActivationBasisPPForm(Environment *, char *, size_t, Activation *);
