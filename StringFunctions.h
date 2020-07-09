@@ -61,18 +61,18 @@
 
 #include "Entities.h"
 
-typedef enum {
+enum EvalError {
     EE_NO_ERROR = 0,
     EE_PARSING_ERROR,
     EE_PROCESSING_ERROR
-} EvalError;
+};
 
-typedef enum {
+enum BuildError {
     BE_NO_ERROR = 0,
     BE_COULD_NOT_BUILD_ERROR,
     BE_CONSTRUCT_NOT_FOUND_ERROR,
     BE_PARSING_ERROR,
-} BuildError;
+} ;
 
 BuildError Build(Environment *, const char *);
 EvalError Eval(Environment *, const char *, CLIPSValue *);

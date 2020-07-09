@@ -58,7 +58,7 @@
 #include "Constraint.h"
 #include "Evaluation.h"
 
-typedef enum {
+enum ConstraintViolationType {
     NO_VIOLATION,
     TYPE_VIOLATION,
     RANGE_VIOLATION,
@@ -66,7 +66,7 @@ typedef enum {
     FUNCTION_RETURN_TYPE_VIOLATION,
     CARDINALITY_VIOLATION,
     ALLOWED_CLASSES_VIOLATION
-} ConstraintViolationType;
+};
 
 bool CheckCardinalityConstraint(Environment *, size_t, CONSTRAINT_RECORD *);
 bool CheckAllowedValuesConstraint(int, void *, CONSTRAINT_RECORD *);

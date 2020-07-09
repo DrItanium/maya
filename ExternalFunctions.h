@@ -103,13 +103,13 @@ struct externalFunctionData {
 
 #define ExternalFunctionData(theEnv) ((externalFunctionData *) GetEnvironmentData(theEnv,EXTERNAL_FUNCTION_DATA))
 
-typedef enum {
+enum AddUDFError {
     AUE_NO_ERROR = 0,
     AUE_MIN_EXCEEDS_MAX_ERROR,
     AUE_FUNCTION_NAME_IN_USE_ERROR,
     AUE_INVALID_ARGUMENT_TYPE_ERROR,
     AUE_INVALID_RETURN_TYPE_ERROR
-} AddUDFError;
+};
 
 struct FunctionHash {
     struct functionDefinition *fdPtr;

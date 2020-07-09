@@ -58,7 +58,7 @@
 
 #define _H_crstrtgy
 
-typedef enum {
+enum StrategyType {
     DEPTH_STRATEGY,
     BREADTH_STRATEGY,
     LEX_STRATEGY,
@@ -66,7 +66,7 @@ typedef enum {
     COMPLEXITY_STRATEGY,
     SIMPLICITY_STRATEGY,
     RANDOM_STRATEGY
-} StrategyType;
+};
 
 #include "Agenda.h"
 #include "Entities.h"

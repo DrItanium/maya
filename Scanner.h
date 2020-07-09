@@ -47,7 +47,7 @@
 
 typedef struct token Token;
 
-typedef enum {
+enum TokenType {
     SYMBOL_TOKEN = 1025,
     STRING_TOKEN,
     INSTANCE_NAME_TOKEN,
@@ -66,7 +66,7 @@ typedef enum {
     OR_CONSTRAINT_TOKEN,
     STOP_TOKEN,
     UNKNOWN_VALUE_TOKEN,
-} TokenType;
+};
 
 struct token {
     TokenType tknType;

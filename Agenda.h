@@ -68,11 +68,11 @@ typedef struct activation Activation;
 #include "Symbol.h"
 #include "Match.h"
 
-typedef enum {
+enum SalienceEvaluationType {
     WHEN_DEFINED,
     WHEN_ACTIVATED,
     EVERY_CYCLE
-} SalienceEvaluationType;
+};
 
 constexpr auto MAX_DEFRULE_SALIENCE =  10000;
 constexpr auto MIN_DEFRULE_SALIENCE = -10000;

@@ -54,10 +54,10 @@
 
 #define _H_classcom
 
-typedef enum {
+enum ClassDefaultsMode {
     CONVENIENCE_MODE,
     CONSERVATION_MODE
-} ClassDefaultsMode;
+};
 
 #include "Construct.h"
 #include "Defmodule.h"

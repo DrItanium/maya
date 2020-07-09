@@ -226,11 +226,11 @@ void UpdateConstructHeader(Environment *, struct bsaveConstructHeader *,
 void UnmarkConstructHeader(Environment *, ConstructHeader *);
 
 #endif
-typedef enum {
+enum LoadError {
     LE_NO_ERROR = 0,
     LE_OPEN_FILE_ERROR,
     LE_PARSING_ERROR,
-} LoadError;
+};
 
 LoadError Load(Environment *, const char *);
 bool LoadConstructsFromLogicalName(Environment *, const char *);

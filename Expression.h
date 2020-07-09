@@ -162,11 +162,11 @@ bool ConstantType(int);
 struct expr *CombineExpressions(Environment *, struct expr *, struct expr *);
 struct expr *AppendExpressions(expr *, struct expr *);
 struct expr *NegateExpression(Environment *, struct expr *);
-typedef enum {
+enum FunctionArgumentsError{
     FAE_NO_ERROR = 0,
     FAE_COUNT_ERROR,
     FAE_TYPE_ERROR
-} FunctionArgumentsError;
+};
 
 struct expr *Function0Parse(Environment *, const char *);
 struct expr *Function1Parse(Environment *, const char *);

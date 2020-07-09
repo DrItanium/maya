@@ -61,7 +61,7 @@ constexpr auto WATCH_DATA = 54;
 
 typedef struct watchItemRecord WatchItemRecord;
 
-typedef enum {
+enum WatchItem {
     ALL,
     FACTS,
     INSTANCES,
@@ -77,7 +77,7 @@ typedef enum {
     STATISTICS,
     GLOBALS,
     FOCUS
-} WatchItem;
+};
 
 typedef bool WatchAccessFunction(Environment*, int, bool, struct expr*);
 typedef bool WatchPrintFunction(Environment*, const char*, int, struct expr*);

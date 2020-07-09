@@ -61,7 +61,7 @@ struct lhsParseNode;
 #include "Pattern.h"
 #include "Defrule.h"
 
-typedef enum {
+enum ParseNodeType {
     PATTERN_CE_NODE = 2049,
     AND_CE_NODE,
     OR_CE_NODE,
@@ -89,7 +89,7 @@ typedef enum {
     DEFTEMPLATE_PTR_NODE,
     DEFCLASS_PTR_NODE,
     UNKNOWN_NODE
-} ParseNodeType;
+};
 
 constexpr auto UNSPECIFIED_SLOT = USHRT_MAX;
 constexpr auto NO_INDEX = USHRT_MAX;

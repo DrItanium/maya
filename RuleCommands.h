@@ -80,11 +80,11 @@ struct joinInformation {
     struct joinNode *nextJoin;
 };
 
-typedef enum {
+enum Verbosity {
     VERBOSE,
     SUCCINCT,
     TERSE
-} Verbosity;
+};
 
 bool GetBetaMemoryResizing(Environment *);
 bool SetBetaMemoryResizing(Environment *, bool);

@@ -68,7 +68,7 @@ typedef struct moduleStackItem ModuleStackItem;
 typedef void *AllocateModuleFunction(Environment *);
 typedef void FreeModuleFunction(Environment *, void *);
 
-typedef enum {
+enum ConstructType {
     DEFMODULE,
     DEFRULE,
     DEFTEMPLATE,
@@ -80,7 +80,7 @@ typedef enum {
     DEFCLASS,
     DEFMESSAGE_HANDLER,
     DEFINSTANCES
-} ConstructType;
+};
 
 #include <cstdio>
 #include "Entities.h"
