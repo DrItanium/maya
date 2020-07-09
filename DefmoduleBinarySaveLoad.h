@@ -67,7 +67,7 @@ void UpdateDefmoduleItemHeader
 
 #if BLOAD_AND_BSAVE
 void AssignBsaveDefmdlItemHdrVals
-        (struct bsaveDefmoduleItemHeader *,
+        (bsaveDefmoduleItemHeader *,
          struct defmoduleItemHeader *);
 #endif
 

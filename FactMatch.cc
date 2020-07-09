@@ -181,7 +181,7 @@ void FactPatternMatch(
                 if (EvaluatePatternExpression(theEnv, patternPtr, patternPtr->networkTest->nextArg)) {
                     EvaluateExpression(theEnv, patternPtr->networkTest, &theResult);
 
-                    tempPtr = (struct factPatternNode *) FindHashedPatternNode(theEnv, patternPtr, theResult.header->type, theResult.value);
+                    tempPtr = (factPatternNode *) FindHashedPatternNode(theEnv, patternPtr, theResult.header->type, theResult.value);
                 } else { tempPtr = nullptr; }
 
                 if (tempPtr != nullptr) {
@@ -324,7 +324,7 @@ static void ProcessMultifieldNode(
             if (EvaluatePatternExpression(theEnv, thePattern, thePattern->networkTest->nextArg)) {
                 EvaluateExpression(theEnv, thePattern->networkTest, &theResult);
 
-                thePattern = (struct factPatternNode *) FindHashedPatternNode(theEnv, thePattern, theResult.header->type, theResult.value);
+                thePattern = (factPatternNode *) FindHashedPatternNode(theEnv, thePattern, theResult.header->type, theResult.value);
                 if (thePattern != nullptr) { success = true; }
                 else { success = false; }
             } else { success = false; }
@@ -391,7 +391,7 @@ static void ProcessMultifieldNode(
             if (EvaluatePatternExpression(theEnv, thePattern, thePattern->networkTest->nextArg)) {
                 EvaluateExpression(theEnv, thePattern->networkTest, &theResult);
 
-                tempPtr = (struct factPatternNode *) FindHashedPatternNode(theEnv, thePattern, theResult.header->type, theResult.value);
+                tempPtr = (factPatternNode *) FindHashedPatternNode(theEnv, thePattern, theResult.header->type, theResult.value);
                 if (tempPtr != nullptr) {
                     FactPatternMatch(theEnv, FactData(theEnv)->CurrentPatternFact,
                                      tempPtr->nextLevel, offset + repeatCount, multifieldsProcessed + 1,
@@ -508,18 +508,18 @@ static void ProcessFactAlphaMatch(
     /* Create the partial match for the pattern. */
     /*===========================================*/
 
-    theMatch = CreateAlphaMatch(theEnv, theFact, theMarks, (struct patternNodeHeader *) &thePattern->header, hashValue);
+    theMatch = CreateAlphaMatch(theEnv, theFact, theMarks, (patternNodeHeader *) &thePattern->header, hashValue);
     theMatch->owner = &thePattern->header;
 
     /*=======================================================*/
     /* Add the pattern to the list of matches for this fact. */
     /*=======================================================*/
 
-    listOfMatches = (struct patternMatch *) theFact->list;
+    listOfMatches = (patternMatch *) theFact->list;
     theFact->list = get_struct(theEnv, patternMatch);
-    ((struct patternMatch *) theFact->list)->next = listOfMatches;
-    ((struct patternMatch *) theFact->list)->matchingPattern = (struct patternNodeHeader *) thePattern;
-    ((struct patternMatch *) theFact->list)->theMatch = theMatch;
+    ((patternMatch *) theFact->list)->next = listOfMatches;
+    ((patternMatch *) theFact->list)->matchingPattern = (patternNodeHeader *) thePattern;
+    ((patternMatch *) theFact->list)->theMatch = theMatch;
 
     /*================================================================*/
     /* Send the partial match to the joins connected to this pattern. */
@@ -752,7 +752,7 @@ void MarkFactPatternForIncrementalReset(
         Environment *theEnv,
         struct patternNodeHeader *thePattern,
         bool value) {
-    struct factPatternNode *patternPtr = (struct factPatternNode *) thePattern;
+    struct factPatternNode *patternPtr = (factPatternNode *) thePattern;
     struct joinNode *theJoin;
 #if MAC_XCD
 #pragma unused(theEnv)

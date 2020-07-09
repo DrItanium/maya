@@ -126,10 +126,10 @@ void InitializeDefglobals(
                                               (EntityBusyCountFunction *) IncrementDefglobalBusyCount,
                                               nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    AllocateEnvironmentData(theEnv, DEFGLOBAL_DATA, sizeof(struct defglobalData), DeallocateDefglobalData);
+    AllocateEnvironmentData(theEnv, DEFGLOBAL_DATA, sizeof(defglobalData), DeallocateDefglobalData);
 
-    memcpy(&DefglobalData(theEnv)->GlobalInfo, &globalInfo, sizeof(struct entityRecord));
-    memcpy(&DefglobalData(theEnv)->DefglobalPtrRecord, &defglobalPtrRecord, sizeof(struct entityRecord));
+    memcpy(&DefglobalData(theEnv)->GlobalInfo, &globalInfo, sizeof(entityRecord));
+    memcpy(&DefglobalData(theEnv)->DefglobalPtrRecord, &defglobalPtrRecord, sizeof(entityRecord));
 
     DefglobalData(theEnv)->ResetGlobals = true;
     DefglobalData(theEnv)->LastModuleIndex = -1;
@@ -174,7 +174,7 @@ static void DeallocateDefglobalData(
     for (theModule = GetNextDefmodule(theEnv, nullptr);
          theModule != nullptr;
          theModule = GetNextDefmodule(theEnv, theModule)) {
-        theModuleItem = (struct defglobalModule *)
+        theModuleItem = (defglobalModule *)
                 GetModuleItem(theEnv, theModule,
                               DefglobalData(theEnv)->DefglobalModuleIndex);
         rtn_struct(theEnv, defglobalModule, theModuleItem);
@@ -234,7 +234,7 @@ static void *AllocateModule(
 static void ReturnModule(
         Environment *theEnv,
         void *theItem) {
-    FreeConstructHeaderModule(theEnv, (struct defmoduleItemHeader *) theItem, DefglobalData(theEnv)->DefglobalConstruct);
+    FreeConstructHeaderModule(theEnv, (defmoduleItemHeader *) theItem, DefglobalData(theEnv)->DefglobalConstruct);
     rtn_struct(theEnv, defglobalModule, theItem);
 }
 
@@ -245,7 +245,7 @@ static void ReturnModule(
 struct defglobalModule *GetDefglobalModuleItem(
         Environment *theEnv,
         Defmodule *theModule) {
-    return ((struct defglobalModule *) GetConstructModuleItemByIndex(theEnv, theModule, DefglobalData(theEnv)->DefglobalModuleIndex));
+    return ((defglobalModule *) GetConstructModuleItemByIndex(theEnv, theModule, DefglobalData(theEnv)->DefglobalModuleIndex));
 }
 
 /**************************************************/
@@ -821,7 +821,7 @@ void UpdateDefglobalScope(
         /* Loop through every defglobal in the module being examined. */
         /*============================================================*/
 
-        theItem = (struct defmoduleItemHeader *)
+        theItem = (defmoduleItemHeader *)
                 GetModuleItem(theEnv, theModule, DefglobalData(theEnv)->DefglobalModuleIndex);
 
         for (theDefglobal = (Defglobal *) theItem->firstItem;
@@ -875,7 +875,7 @@ Defglobal *GetNextDefglobalInScope(
         /*==========================================*/
 
         DefglobalData(theEnv)->TheDefmodule = GetNextDefmodule(theEnv, nullptr);
-        theItem = (struct defmoduleItemHeader *)
+        theItem = (defmoduleItemHeader *)
                 GetModuleItem(theEnv, DefglobalData(theEnv)->TheDefmodule, DefglobalData(theEnv)->DefglobalModuleIndex);
         theGlobal = (Defglobal *) theItem->firstItem;
     }
@@ -908,7 +908,7 @@ Defglobal *GetNextDefglobalInScope(
         /*================================================*/
 
         DefglobalData(theEnv)->TheDefmodule = GetNextDefmodule(theEnv, DefglobalData(theEnv)->TheDefmodule);
-        theItem = (struct defmoduleItemHeader *)
+        theItem = (defmoduleItemHeader *)
                 GetModuleItem(theEnv, DefglobalData(theEnv)->TheDefmodule, DefglobalData(theEnv)->DefglobalModuleIndex);
         theGlobal = (Defglobal *) theItem->firstItem;
     }

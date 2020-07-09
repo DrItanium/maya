@@ -112,9 +112,9 @@ void InitializeDeftemplates(
              (EntityBusyCountFunction *) DecrementDeftemplateBusyCount,
              (EntityBusyCountFunction *) IncrementDeftemplateBusyCount,
              nullptr, nullptr, nullptr, nullptr, nullptr};
-    AllocateEnvironmentData(theEnv, DEFTEMPLATE_DATA, sizeof(struct deftemplateData), DeallocateDeftemplateData);
+    AllocateEnvironmentData(theEnv, DEFTEMPLATE_DATA, sizeof(deftemplateData), DeallocateDeftemplateData);
 
-    memcpy(&DeftemplateData(theEnv)->DeftemplatePtrRecord, &deftemplatePtrRecord, sizeof(struct entityRecord));
+    memcpy(&DeftemplateData(theEnv)->DeftemplatePtrRecord, &deftemplatePtrRecord, sizeof(entityRecord));
 
     InitializeFacts(theEnv);
 
@@ -155,7 +155,7 @@ static void DeallocateDeftemplateData(
     for (theModule = GetNextDefmodule(theEnv, nullptr);
          theModule != nullptr;
          theModule = GetNextDefmodule(theEnv, theModule)) {
-        theModuleItem = (struct deftemplateModule *)
+        theModuleItem = (deftemplateModule *)
                 GetModuleItem(theEnv, theModule,
                               DeftemplateData(theEnv)->DeftemplateModuleIndex);
         rtn_struct(theEnv, deftemplateModule, theModuleItem);
@@ -216,7 +216,7 @@ static void *AllocateModule(
 static void ReturnModule(
         Environment *theEnv,
         void *theItem) {
-    FreeConstructHeaderModule(theEnv, (struct defmoduleItemHeader *) theItem, DeftemplateData(theEnv)->DeftemplateConstruct);
+    FreeConstructHeaderModule(theEnv, (defmoduleItemHeader *) theItem, DeftemplateData(theEnv)->DeftemplateConstruct);
     rtn_struct(theEnv, deftemplateModule, theItem);
 }
 
@@ -227,7 +227,7 @@ static void ReturnModule(
 struct deftemplateModule *GetDeftemplateModuleItem(
         Environment *theEnv,
         Defmodule *theModule) {
-    return ((struct deftemplateModule *) GetConstructModuleItemByIndex(theEnv, theModule, DeftemplateData(theEnv)->DeftemplateModuleIndex));
+    return ((deftemplateModule *) GetConstructModuleItemByIndex(theEnv, theModule, DeftemplateData(theEnv)->DeftemplateModuleIndex));
 }
 
 /***************************************************/

@@ -99,8 +99,8 @@ inline auto VoidConstant(Environment* theEnv) noexcept { return theEnv->VoidCons
 inline auto FalseSymbol(Environment* theEnv) noexcept { return theEnv->FalseSymbol; }
 inline auto TrueSymbol(Environment* theEnv) noexcept { return theEnv->TrueSymbol; }
 
-#define GetEnvironmentData(theEnv, position) (((struct environmentData *) theEnv)->theData[position])
-#define SetEnvironmentData(theEnv, position, value) (((struct environmentData *) theEnv)->theData[position] = value)
+#define GetEnvironmentData(theEnv, position) (((environmentData *) theEnv)->theData[position])
+#define SetEnvironmentData(theEnv, position, value) (((environmentData *) theEnv)->theData[position] = value)
 
 bool AllocateEnvironmentData(Environment *, unsigned, size_t, EnvironmentCleanupFunction *);
 bool AddEnvironmentCleanupFunction(Environment *, const char *, EnvironmentCleanupFunction *, int);

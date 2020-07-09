@@ -86,7 +86,7 @@ static void DeallocateBsaveData(Environment *);
 /**********************************************/
 void InitializeBsaveData(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, BSAVE_DATA, sizeof(struct bsaveData), DeallocateBsaveData);
+    AllocateEnvironmentData(theEnv, BSAVE_DATA, sizeof(bsaveData), DeallocateBsaveData);
 }
 
 /************************************************/

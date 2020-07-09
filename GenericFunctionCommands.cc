@@ -174,8 +174,8 @@ void SetupGenericFunctions(
              (EntityBusyCountFunction *) IncrementGenericBusyCount,
              nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    AllocateEnvironmentData(theEnv, DEFGENERIC_DATA, sizeof(struct defgenericData), DeallocateDefgenericData);
-    memcpy(&DefgenericData(theEnv)->GenericEntityRecord, &genericEntityRecord, sizeof(struct entityRecord));
+    AllocateEnvironmentData(theEnv, DEFGENERIC_DATA, sizeof(defgenericData), DeallocateDefgenericData);
+    memcpy(&DefgenericData(theEnv)->GenericEntityRecord, &genericEntityRecord, sizeof(entityRecord));
 
     InstallPrimitive(theEnv, &DefgenericData(theEnv)->GenericEntityRecord, GCALL);
 
@@ -280,7 +280,7 @@ static void DeallocateDefgenericData(
     for (theModule = GetNextDefmodule(theEnv, nullptr);
          theModule != nullptr;
          theModule = GetNextDefmodule(theEnv, theModule)) {
-        theModuleItem = (struct defgenericModule *)
+        theModuleItem = (defgenericModule *)
                 GetModuleItem(theEnv, theModule,
                               DefgenericData(theEnv)->DefgenericModuleIndex);
 

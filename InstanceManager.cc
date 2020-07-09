@@ -364,7 +364,7 @@ Instance *BuildInstance(
        any currently active basis - if the partial
        match was deleted, abort the instance creation
        ============================================== */
-    if (AddLogicalDependencies(theEnv, (struct patternEntity *) InstanceData(theEnv)->CurrentInstance, false)
+    if (AddLogicalDependencies(theEnv, (patternEntity *) InstanceData(theEnv)->CurrentInstance, false)
         == false) {
         rtn_struct(theEnv, instance, InstanceData(theEnv)->CurrentInstance);
         InstanceData(theEnv)->CurrentInstance = nullptr;
@@ -515,7 +515,7 @@ UnmakeInstanceError QuashInstance(
         PrintInstanceWatch(theEnv, UNMAKE_TRACE, ins);
 #endif
 
-    RemoveEntityDependencies(theEnv, (struct patternEntity *) ins);
+    RemoveEntityDependencies(theEnv, (patternEntity *) ins);
 
     if (ins->cls->reactive) {
         ins->garbage = 1;

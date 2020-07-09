@@ -80,7 +80,7 @@ ConstraintViolationType ConstraintCheckValue(Environment *, int, void *, CONSTRA
 ConstraintViolationType ConstraintCheckDataObject(Environment *, UDFValue *, CONSTRAINT_RECORD *);
 ConstraintViolationType ConstraintCheckExpression(Environment *, struct expr *,
                                                   CONSTRAINT_RECORD *);
-bool UnmatchableConstraint(struct constraintRecord *);
+bool UnmatchableConstraint(constraintRecord *);
 
 #endif /* _H_cstrnchk */
 

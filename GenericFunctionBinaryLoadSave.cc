@@ -140,7 +140,7 @@ static void DeallocateDefgenericBinaryData(Environment *);
  ***********************************************************/
 void SetupGenericsBload(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, GENRCBIN_DATA, sizeof(struct defgenericBinaryData), DeallocateDefgenericBinaryData);
+    AllocateEnvironmentData(theEnv, GENRCBIN_DATA, sizeof(defgenericBinaryData), DeallocateDefgenericBinaryData);
 #if BLOAD_AND_BSAVE
     AddBinaryItem(theEnv, "generic functions", 0, BsaveGenericsFind, BsaveGenericsExpressions,
                   BsaveStorageGenerics, BsaveGenerics,
@@ -164,13 +164,13 @@ static void DeallocateDefgenericBinaryData(
     space = DefgenericBinaryData(theEnv)->MethodCount * sizeof(Defmethod);
     if (space != 0) genfree(theEnv, DefgenericBinaryData(theEnv)->MethodArray, space);
 
-    space = DefgenericBinaryData(theEnv)->RestrictionCount * sizeof(struct restriction);
+    space = DefgenericBinaryData(theEnv)->RestrictionCount * sizeof(restriction);
     if (space != 0) genfree(theEnv, DefgenericBinaryData(theEnv)->RestrictionArray, space);
 
     space = DefgenericBinaryData(theEnv)->TypeCount * sizeof(void *);
     if (space != 0) genfree(theEnv, DefgenericBinaryData(theEnv)->TypeArray, space);
 
-    space = DefgenericBinaryData(theEnv)->ModuleCount * sizeof(struct defgenericModule);
+    space = DefgenericBinaryData(theEnv)->ModuleCount * sizeof(defgenericModule);
     if (space != 0) genfree(theEnv, DefgenericBinaryData(theEnv)->ModuleArray, space);
 #endif
 }

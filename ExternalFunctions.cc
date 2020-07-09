@@ -88,7 +88,7 @@ static void AssignErrorValue(UDFContext *);
 /*********************************************************/
 void InitializeExternalFunctionData(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, EXTERNAL_FUNCTION_DATA, sizeof(struct externalFunctionData), DeallocateExternalFunctionData);
+    AllocateEnvironmentData(theEnv, EXTERNAL_FUNCTION_DATA, sizeof(externalFunctionData), DeallocateExternalFunctionData);
 }
 
 /***********************************************************/
@@ -121,7 +121,7 @@ static void DeallocateExternalFunctionData(
     }
 
     genfree(theEnv, ExternalFunctionData(theEnv)->FunctionHashtable,
-            sizeof(struct FunctionHash *) * SIZE_FUNCTION_HASH);
+            sizeof(FunctionHash *) * SIZE_FUNCTION_HASH);
 }
 
 
@@ -458,8 +458,8 @@ static void InitializeFunctionHashTable(
         Environment *theEnv) {
     int i;
 
-    ExternalFunctionData(theEnv)->FunctionHashtable = (struct FunctionHash **)
-            gm2(theEnv, sizeof(struct FunctionHash *) *
+    ExternalFunctionData(theEnv)->FunctionHashtable = (FunctionHash **)
+            gm2(theEnv, sizeof(FunctionHash *) *
                         SIZE_FUNCTION_HASH);
 
     for (i = 0; i < SIZE_FUNCTION_HASH; i++) ExternalFunctionData(theEnv)->FunctionHashtable[i] = nullptr;

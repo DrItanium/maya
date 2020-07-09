@@ -64,7 +64,7 @@ void Dependents(Environment *, PatternEntity *);
 void DependenciesCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
 void DependentsCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
 void ReturnEntityDependencies(Environment *, PatternEntity *);
-PartialMatch *FindLogicalBind(struct joinNode *, PartialMatch *);
+PartialMatch *FindLogicalBind(joinNode *, PartialMatch *);
 
 #endif /* _H_lgcldpnd */
 

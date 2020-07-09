@@ -144,7 +144,7 @@ static void DeallocateObjectReteBinaryData(Environment *);
  ***********************************************************/
 void SetupObjectPatternsBload(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, OBJECTRETEBIN_DATA, sizeof(struct objectReteBinaryData), DeallocateObjectReteBinaryData);
+    AllocateEnvironmentData(theEnv, OBJECTRETEBIN_DATA, sizeof(objectReteBinaryData), DeallocateObjectReteBinaryData);
 
 #if BLOAD_AND_BSAVE
     AddBinaryItem(theEnv, "object patterns", 0, BsaveObjectPatternsFind, nullptr,
@@ -169,13 +169,13 @@ static void DeallocateObjectReteBinaryData(
                 theEnv)->AlphaArray[i].header, false);
     }
 
-    space = ObjectReteBinaryData(theEnv)->AlphaNodeCount * sizeof(struct objectAlphaNode);
+    space = ObjectReteBinaryData(theEnv)->AlphaNodeCount * sizeof(objectAlphaNode);
     if (space != 0) genfree(theEnv, ObjectReteBinaryData(theEnv)->AlphaArray, space);
 
-    space = ObjectReteBinaryData(theEnv)->PatternNodeCount * sizeof(struct objectPatternNode);
+    space = ObjectReteBinaryData(theEnv)->PatternNodeCount * sizeof(objectPatternNode);
     if (space != 0) genfree(theEnv, ObjectReteBinaryData(theEnv)->PatternArray, space);
 
-    space = ObjectReteBinaryData(theEnv)->AlphaLinkCount * sizeof(struct classAlphaLink);
+    space = ObjectReteBinaryData(theEnv)->AlphaLinkCount * sizeof(classAlphaLink);
     if (space != 0) genfree(theEnv, ObjectReteBinaryData(theEnv)->AlphaLinkArray, space);
 #endif
 }

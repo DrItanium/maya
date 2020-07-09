@@ -88,7 +88,7 @@ extern void UserFunctions(Environment *);
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void RemoveEnvironmentCleanupFunctions(struct environmentData *);
+static void RemoveEnvironmentCleanupFunctions(environmentData *);
 static Environment *CreateEnvironmentDriver(CLIPSLexeme **, CLIPSFloat **,
                                             CLIPSInteger **, CLIPSBitMap **,
                                             CLIPSExternalAddress **,
@@ -134,7 +134,7 @@ Environment *CreateEnvironmentDriver(
     struct environmentData *theEnvironment;
     void *theData;
 
-    theEnvironment = (struct environmentData *) malloc(sizeof(struct environmentData));
+    theEnvironment = (environmentData *) malloc(sizeof(environmentData));
 
     if (theEnvironment == nullptr) {
         printf("\n[ENVRNMNT5] Unable to create new environment.\n");
@@ -161,7 +161,7 @@ Environment *CreateEnvironmentDriver(
     /* Allocate storage for the cleanup functions. */
     /*=============================================*/
 
-    theData = malloc(sizeof(void (*)(struct environmentData *)) * MAXIMUM_ENVIRONMENT_POSITIONS);
+    theData = malloc(sizeof(void (*)(environmentData *)) * MAXIMUM_ENVIRONMENT_POSITIONS);
 
     if (theData == nullptr) {
         free(theEnvironment->theData);
@@ -170,7 +170,7 @@ Environment *CreateEnvironmentDriver(
         return nullptr;
     }
 
-    memset(theData, 0, sizeof(void (*)(struct environmentData *)) * MAXIMUM_ENVIRONMENT_POSITIONS);
+    memset(theData, 0, sizeof(void (*)(environmentData *)) * MAXIMUM_ENVIRONMENT_POSITIONS);
     theEnvironment->cleanupFunctions = (void (**)(Environment *)) theData;
 
     InitializeEnvironment(theEnvironment, symbolTable, floatTable, integerTable,

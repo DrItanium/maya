@@ -166,15 +166,15 @@ void SetupInstances(
                               nullptr, 0, 0, nullptr, nullptr, nullptr, nullptr,
                               nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    AllocateEnvironmentData(theEnv, INSTANCE_DATA, sizeof(struct instanceData), DeallocateInstanceData);
+    AllocateEnvironmentData(theEnv, INSTANCE_DATA, sizeof(instanceData), DeallocateInstanceData);
 
     InstanceData(theEnv)->MkInsMsgPass = true;
-    memcpy(&InstanceData(theEnv)->InstanceInfo, &instanceInfo, sizeof(struct patternEntityRecord));
+    memcpy(&InstanceData(theEnv)->InstanceInfo, &instanceInfo, sizeof(patternEntityRecord));
     dummyInstance.patternHeader.theInfo = &InstanceData(theEnv)->InstanceInfo;
     memcpy(&InstanceData(theEnv)->DummyInstance, &dummyInstance, sizeof(Instance));
 
     InitializeInstanceTable(theEnv);
-    InstallPrimitive(theEnv, (struct entityRecord *) &InstanceData(theEnv)->InstanceInfo, INSTANCE_ADDRESS_TYPE);
+    InstallPrimitive(theEnv, (entityRecord *) &InstanceData(theEnv)->InstanceInfo, INSTANCE_ADDRESS_TYPE);
 
     AddUDF(theEnv, "initialize-instance", "bn", 0, UNBOUNDED, nullptr, InactiveInitializeInstance, nullptr);
     AddUDF(theEnv, "active-initialize-instance", "bn", 0, UNBOUNDED, nullptr, InitializeInstanceCommand, nullptr);
@@ -246,14 +246,14 @@ static void DeallocateInstanceData(
     while (tmpIPtr != nullptr) {
         nextIPtr = tmpIPtr->nxtList;
 
-        theMatch = (struct patternMatch *) tmpIPtr->partialMatchList;
+        theMatch = (patternMatch *) tmpIPtr->partialMatchList;
         while (theMatch != nullptr) {
             tmpMatch = theMatch->next;
             rtn_struct(theEnv, patternMatch, theMatch);
             theMatch = tmpMatch;
         }
 
-        ReturnEntityDependencies(theEnv, (struct patternEntity *) tmpIPtr);
+        ReturnEntityDependencies(theEnv, (patternEntity *) tmpIPtr);
 
         for (i = 0; i < tmpIPtr->cls->instanceSlotCount; i++) {
             sp = tmpIPtr->slotAddresses[i];

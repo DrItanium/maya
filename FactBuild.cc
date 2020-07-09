@@ -58,7 +58,7 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static struct factPatternNode *FindPatternNode(struct factPatternNode *, struct lhsParseNode *,
+static struct factPatternNode *FindPatternNode(factPatternNode *, struct lhsParseNode *,
                                                struct factPatternNode **, bool, bool);
 static struct factPatternNode *CreateNewPatternNode(Environment *, struct lhsParseNode *, struct factPatternNode *,
                                                     struct factPatternNode *, bool, bool);
@@ -280,7 +280,7 @@ static struct patternNodeHeader *PlaceFactPattern(
     /* Return the leaf node of the newly added pattern. */
     /*==================================================*/
 
-    return ((struct patternNodeHeader *) newNode);
+    return ((patternNodeHeader *) newNode);
 }
 
 /*************************************************************/
@@ -539,7 +539,7 @@ static struct factPatternNode *CreateNewPatternNode(
     newNode->rightNode = nullptr;
     newNode->leftNode = nullptr;
     newNode->leaveFields = thePattern->singleFieldsAfter;
-    InitializePatternHeader(theEnv, (struct patternNodeHeader *) &newNode->header);
+    InitializePatternHeader(theEnv, (patternNodeHeader *) &newNode->header);
 
     if (thePattern->index > 0) { newNode->whichField = thePattern->index; }
     else newNode->whichField = 0;
@@ -659,7 +659,7 @@ static void DetachFactPattern(
     /* Get rid of any matches stored in the alpha memory.  */
     /*=====================================================*/
 
-    patternPtr = (struct factPatternNode *) thePattern;
+    patternPtr = (factPatternNode *) thePattern;
     ClearPatternMatches(theEnv, patternPtr);
 
     /*=======================================================*/
@@ -879,7 +879,7 @@ static void ClearPatternMatches(
         /*========================================*/
 
         lastMatch = nullptr;
-        theMatch = (struct patternMatch *) theFact->list;
+        theMatch = (patternMatch *) theFact->list;
 
         while (theMatch != nullptr) {
             /*================================================*/
@@ -887,7 +887,7 @@ static void ClearPatternMatches(
             /* then remove the match.                         */
             /*================================================*/
 
-            if (theMatch->matchingPattern == (struct patternNodeHeader *) patternPtr) {
+            if (theMatch->matchingPattern == (patternNodeHeader *) patternPtr) {
                 if (lastMatch == nullptr) {
                     /*=====================================*/
                     /* Remove the first match of the fact. */
@@ -895,7 +895,7 @@ static void ClearPatternMatches(
 
                     theFact->list = theMatch->next;
                     rtn_struct(theEnv, patternMatch, theMatch);
-                    theMatch = (struct patternMatch *) theFact->list;
+                    theMatch = (patternMatch *) theFact->list;
                 } else {
                     /*===================================*/
                     /* Remove a match for the fact which */

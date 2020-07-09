@@ -73,7 +73,7 @@ struct bloadData {
     struct voidCallFunctionItem *AbortBloadFunctions;
 };
 
-#define BloadData(theEnv) ((struct bloadData *) GetEnvironmentData(theEnv,BLOAD_DATA))
+#define BloadData(theEnv) ((bloadData *) GetEnvironmentData(theEnv,BLOAD_DATA))
 
 #define FunctionPointer(i) ((((i) == ULONG_MAX) ? nullptr : BloadData(theEnv)->FunctionArray[i]))
 

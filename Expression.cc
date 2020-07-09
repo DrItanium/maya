@@ -67,7 +67,7 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS  */
 /****************************************/
 
-static unsigned long ListToPacked(struct expr *, struct expr *, unsigned long);
+static unsigned long ListToPacked(expr *, struct expr *, unsigned long);
 static EXPRESSION_HN *FindHashedExpression(Environment *, Expression *, unsigned *, EXPRESSION_HN **);
 static unsigned HashExpression(Expression *);
 static void DeallocateExpressionData(Environment *);
@@ -81,7 +81,7 @@ void InitExpressionData(
         Environment *theEnv) {
     unsigned i;
 
-    AllocateEnvironmentData(theEnv, EXPRESSION_DATA, sizeof(struct expressionData), DeallocateExpressionData);
+    AllocateEnvironmentData(theEnv, EXPRESSION_DATA, sizeof(expressionData), DeallocateExpressionData);
 
     InitExpressionPointers(theEnv);
 
@@ -121,7 +121,7 @@ static void DeallocateExpressionData(
 #if (BLOAD_AND_BSAVE)
     if ((ExpressionData(theEnv)->NumberOfExpressions != 0) && Bloaded(theEnv)) {
         genfree(theEnv, ExpressionData(theEnv)->ExpressionArray,
-                ExpressionData(theEnv)->NumberOfExpressions * sizeof(struct expr));
+                ExpressionData(theEnv)->NumberOfExpressions * sizeof(expr));
     }
 #endif
 }
@@ -193,8 +193,8 @@ struct expr *PackExpression(
 
     if (original == nullptr) return nullptr;
 
-    packPtr = (struct expr *)
-            gm2(theEnv, sizeof(struct expr) * ExpressionSize(original));
+    packPtr = (expr *)
+            gm2(theEnv, sizeof(expr) * ExpressionSize(original));
     ListToPacked(original, packPtr, 0);
 
     return packPtr;
@@ -221,7 +221,7 @@ static unsigned long ListToPacked(
         if (original->argList == nullptr) { destination[i].argList = nullptr; }
         else {
             destination[i].argList =
-                    (struct expr *) &destination[count];
+                    (expr *) &destination[count];
             count = ListToPacked(original->argList, destination, count);
         }
 
@@ -245,7 +245,7 @@ void ReturnPackedExpression(
         Environment *theEnv,
         struct expr *packPtr) {
     if (packPtr != nullptr) {
-        rm(theEnv, packPtr, sizeof(struct expr) * ExpressionSize(packPtr));
+        rm(theEnv, packPtr, sizeof(expr) * ExpressionSize(packPtr));
     }
 }
 

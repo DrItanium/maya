@@ -82,7 +82,7 @@ static void DestroyDeffactsAction(Environment *, ConstructHeader *, void *);
 /***********************************************************/
 void InitializeDeffacts(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, DEFFACTS_DATA, sizeof(struct deffactsData), DeallocateDeffactsData);
+    AllocateEnvironmentData(theEnv, DEFFACTS_DATA, sizeof(deffactsData), DeallocateDeffactsData);
 
     InitializeDeffactsModules(theEnv);
 
@@ -121,7 +121,7 @@ static void DeallocateDeffactsData(
     for (theModule = GetNextDefmodule(theEnv, nullptr);
          theModule != nullptr;
          theModule = GetNextDefmodule(theEnv, theModule)) {
-        theModuleItem = (struct deffactsModule *)
+        theModuleItem = (deffactsModule *)
                 GetModuleItem(theEnv, theModule,
                               DeffactsData(theEnv)->DeffactsModuleIndex);
         rtn_struct(theEnv, deffactsModule, theModuleItem);
@@ -182,7 +182,7 @@ static void *AllocateModule(
 static void ReturnModule(
         Environment *theEnv,
         void *theItem) {
-    FreeConstructHeaderModule(theEnv, (struct defmoduleItemHeader *) theItem, DeffactsData(theEnv)->DeffactsConstruct);
+    FreeConstructHeaderModule(theEnv, (defmoduleItemHeader *) theItem, DeffactsData(theEnv)->DeffactsConstruct);
     rtn_struct(theEnv, deffactsModule, theItem);
 }
 
@@ -193,7 +193,7 @@ static void ReturnModule(
 struct deffactsModule *GetDeffactsModuleItem(
         Environment *theEnv,
         Defmodule *theModule) {
-    return ((struct deffactsModule *) GetConstructModuleItemByIndex(theEnv, theModule, DeffactsData(theEnv)->DeffactsModuleIndex));
+    return ((deffactsModule *) GetConstructModuleItemByIndex(theEnv, theModule, DeffactsData(theEnv)->DeffactsModuleIndex));
 }
 
 /************************************************/

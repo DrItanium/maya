@@ -165,7 +165,7 @@ struct utilityData {
     size_t CurrentReadBufferOffset;
 };
 
-#define UtilityData(theEnv) ((struct utilityData *) GetEnvironmentData(theEnv,UTILITY_DATA))
+#define UtilityData(theEnv) ((utilityData *) GetEnvironmentData(theEnv,UTILITY_DATA))
 
 /* Is c the start of a utf8 sequence? */
 constexpr bool IsUTF8Start(char ch) noexcept {

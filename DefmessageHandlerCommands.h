@@ -85,7 +85,7 @@ struct messageHandlerData {
     HANDLER_LINK *OldCore;
 };
 
-#define MessageHandlerData(theEnv) ((struct messageHandlerData *) GetEnvironmentData(theEnv,MESSAGE_HANDLER_DATA))
+#define MessageHandlerData(theEnv) ((messageHandlerData *) GetEnvironmentData(theEnv,MESSAGE_HANDLER_DATA))
 
 #define INIT_STRING   "init"
 #define DELETE_STRING "delete"

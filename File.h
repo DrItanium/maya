@@ -113,7 +113,7 @@ struct fileCommandData {
     char *batchPriorParsingFile;
 };
 
-#define FileCommandData(theEnv) ((struct fileCommandData *) GetEnvironmentData(theEnv,FILECOM_DATA))
+#define FileCommandData(theEnv) ((fileCommandData *) GetEnvironmentData(theEnv,FILECOM_DATA))
 
 void FileCommandDefinitions(Environment *);
 void BatchCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
@@ -136,7 +136,7 @@ struct fileRouterData {
     struct fileRouter *ListOfFileRouters;
 };
 
-#define FileRouterData(theEnv) ((struct fileRouterData *) GetEnvironmentData(theEnv,FILE_ROUTER_DATA))
+#define FileRouterData(theEnv) ((fileRouterData *) GetEnvironmentData(theEnv,FILE_ROUTER_DATA))
 
 void InitializeFileRouter(Environment *);
 FILE *FindFptr(Environment *, const char *);

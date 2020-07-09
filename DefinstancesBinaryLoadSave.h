@@ -52,7 +52,7 @@ struct definstancesBinaryData {
     DEFINSTANCES_MODULE *ModuleArray;
 };
 
-#define DefinstancesBinaryData(theEnv) ((struct definstancesBinaryData *) GetEnvironmentData(theEnv,DFINSBIN_DATA))
+#define DefinstancesBinaryData(theEnv) ((definstancesBinaryData *) GetEnvironmentData(theEnv,DFINSBIN_DATA))
 
 void SetupDefinstancesBload(Environment *);
 void *BloadDefinstancesModuleRef(Environment *, unsigned long);

@@ -84,7 +84,7 @@ static void DeallocateFileRouterData(Environment *);
 /***************************************************************/
 void InitializeFileRouter(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, FILE_ROUTER_DATA, sizeof(struct fileRouterData), DeallocateFileRouterData);
+    AllocateEnvironmentData(theEnv, FILE_ROUTER_DATA, sizeof(fileRouterData), DeallocateFileRouterData);
 
     AddRouter(theEnv, "fileio", 0, FindFile,
               WriteFileCallback, ReadFileCallback,
@@ -296,7 +296,7 @@ bool CloseFile(
             rm(theEnv, (void *) fptr->logicalName, strlen(fptr->logicalName) + 1);
             if (prev == nullptr) { FileRouterData(theEnv)->ListOfFileRouters = fptr->next; }
             else { prev->next = fptr->next; }
-            rm(theEnv, fptr, sizeof(struct fileRouter));
+            rm(theEnv, fptr, sizeof(fileRouter));
 
             return true;
         }
@@ -325,7 +325,7 @@ bool CloseAllFiles(
         prev = fptr;
         rm(theEnv, (void *) fptr->logicalName, strlen(fptr->logicalName) + 1);
         fptr = fptr->next;
-        rm(theEnv, prev, sizeof(struct fileRouter));
+        rm(theEnv, prev, sizeof(fileRouter));
     }
 
     FileRouterData(theEnv)->ListOfFileRouters = nullptr;

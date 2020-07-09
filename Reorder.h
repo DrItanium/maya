@@ -155,10 +155,10 @@ void ReturnLHSParseNodes(Environment *, struct lhsParseNode *);
 struct lhsParseNode *ExpressionToLHSParseNodes(Environment *, struct expr *);
 struct expr *LHSParseNodesToExpression(Environment *, struct lhsParseNode *);
 void AddInitialPatterns(Environment *, struct lhsParseNode *);
-bool IsExistsSubjoin(struct lhsParseNode *, int);
+bool IsExistsSubjoin(lhsParseNode *, int);
 struct lhsParseNode *CombineLHSParseNodes(Environment *, struct lhsParseNode *, struct lhsParseNode *);
-bool ConstantNode(struct lhsParseNode *);
-unsigned short NodeTypeToType(struct lhsParseNode *);
+bool ConstantNode(lhsParseNode *);
+unsigned short NodeTypeToType(lhsParseNode *);
 ParseNodeType TypeToNodeType(unsigned short);
 
 #endif /* _H_reorder */

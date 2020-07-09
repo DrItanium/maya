@@ -64,7 +64,7 @@ struct objectBinaryData {
     unsigned *MaphandlerArray;
 };
 
-#define ObjectBinaryData(theEnv) ((struct objectBinaryData *) GetEnvironmentData(theEnv,OBJECTBIN_DATA))
+#define ObjectBinaryData(theEnv) ((objectBinaryData *) GetEnvironmentData(theEnv,OBJECTBIN_DATA))
 
 #define DefclassPointer(i) (((i) == ULONG_MAX) ? nullptr : &ObjectBinaryData(theEnv)->DefclassArray[i])
 #define DefclassIndex(cls) (((cls) == nullptr) ? ULONG_MAX : ((ConstructHeader *) cls)->bsaveID)

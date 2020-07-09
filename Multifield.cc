@@ -91,7 +91,7 @@ Multifield *CreateUnmanagedMultifield(
 
     if (size == 0) newSize = 1;
 
-    theSegment = get_var_struct(theEnv, multifield, sizeof(struct clipsValue) * (newSize - 1));
+    theSegment = get_var_struct(theEnv, multifield, sizeof(clipsValue) * (newSize - 1));
 
     theSegment->header.type = MULTIFIELD_TYPE;
     theSegment->length = size;
@@ -114,7 +114,7 @@ void ReturnMultifield(
     if (theSegment->length == 0) newSize = 1;
     else newSize = theSegment->length;
 
-    rtn_var_struct(theEnv, multifield, sizeof(struct clipsValue) * (newSize - 1), theSegment);
+    rtn_var_struct(theEnv, multifield, sizeof(clipsValue) * (newSize - 1), theSegment);
 }
 
 /*********************/
@@ -300,7 +300,7 @@ Multifield *CreateMultifield(
     if (size == 0) newSize = 1;
     else newSize = size;
 
-    theSegment = get_var_struct(theEnv, multifield, sizeof(struct clipsValue) * (newSize - 1));
+    theSegment = get_var_struct(theEnv, multifield, sizeof(clipsValue) * (newSize - 1));
 
     theSegment->header.type = MULTIFIELD_TYPE;
     theSegment->length = size;
@@ -330,7 +330,7 @@ Multifield *DOToMultifield(
     dst = CreateUnmanagedMultifield(theEnv, (unsigned long) theValue->range);
 
     src = theValue->multifieldValue;
-    GenCopyMemory(struct clipsValue, dst->length,
+    GenCopyMemory(clipsValue, dst->length,
                   &(dst->contents[0]), &(src->contents[theValue->begin]));
 
     return dst;
@@ -364,7 +364,7 @@ void FlushMultifields(
         if (theSegment->busyCount == 0) {
             if (theSegment->length == 0) newSize = 1;
             else newSize = theSegment->length;
-            rtn_var_struct(theEnv, multifield, sizeof(struct clipsValue) * (newSize - 1), theSegment);
+            rtn_var_struct(theEnv, multifield, sizeof(clipsValue) * (newSize - 1), theSegment);
             if (lastPtr == nullptr) UtilityData(theEnv)->CurrentGarbageFrame->ListOfMultifields = nextPtr;
             else lastPtr->next = nextPtr;
 
@@ -415,7 +415,7 @@ void UDFToCLIPSValue(
     }
 
     copy = CreateMultifield(theEnv, uv->range);
-    GenCopyMemory(struct clipsValue, uv->range, &copy->contents[0],
+    GenCopyMemory(clipsValue, uv->range, &copy->contents[0],
                   &uv->multifieldValue->contents[uv->begin]);
 
     cv->multifieldValue = copy;
@@ -436,7 +436,7 @@ void NormalizeMultifield(
         (theMF->range == theMF->multifieldValue->length)) { return; }
 
     copy = CreateMultifield(theEnv, theMF->range);
-    GenCopyMemory(struct clipsValue, theMF->range, &copy->contents[0],
+    GenCopyMemory(clipsValue, theMF->range, &copy->contents[0],
                   &theMF->multifieldValue->contents[theMF->begin]);
     theMF->begin = 0;
     theMF->value = copy;
@@ -453,7 +453,7 @@ void DuplicateMultifield(
     dst->begin = 0;
     dst->range = src->range;
     dst->value = CreateUnmanagedMultifield(theEnv, (unsigned long) dst->range);
-    GenCopyMemory(struct clipsValue, dst->range, &dst->multifieldValue->contents[0],
+    GenCopyMemory(clipsValue, dst->range, &dst->multifieldValue->contents[0],
                   &src->multifieldValue->contents[src->begin]);
 }
 
@@ -466,7 +466,7 @@ Multifield *CopyMultifield(
     Multifield *dst;
 
     dst = CreateUnmanagedMultifield(theEnv, src->length);
-    GenCopyMemory(struct clipsValue, src->length, &(dst->contents[0]), &(src->contents[0]));
+    GenCopyMemory(clipsValue, src->length, &(dst->contents[0]), &(src->contents[0]));
     return dst;
 }
 

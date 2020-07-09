@@ -89,11 +89,11 @@ struct scannerData {
     bool IgnoreCompletionErrors;
 };
 
-#define ScannerData(theEnv) ((struct scannerData *) GetEnvironmentData(theEnv,SCANNER_DATA))
+#define ScannerData(theEnv) ((scannerData *) GetEnvironmentData(theEnv,SCANNER_DATA))
 
 void InitializeScannerData(Environment *);
 void GetToken(Environment *, const char *, struct token *);
-void CopyToken(struct token *, struct token *);
+void CopyToken(token *, struct token *);
 void ResetLineCount(Environment *);
 long GetLineCount(Environment *);
 long SetLineCount(Environment *, long);

@@ -174,7 +174,7 @@ bool ParseDeftemplate(
     newDeftemplate->patternNetwork = nullptr;
     newDeftemplate->factList = nullptr;
     newDeftemplate->lastFact = nullptr;
-    newDeftemplate->header.whichModule = (struct defmoduleItemHeader *)
+    newDeftemplate->header.whichModule = (defmoduleItemHeader *)
             GetModuleItem(theEnv, nullptr, DeftemplateData(theEnv)->DeftemplateModuleIndex);
 
     /*================================*/

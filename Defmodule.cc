@@ -88,7 +88,7 @@ static void DeallocateDefmoduleData(Environment *);
 /************************************************/
 void AllocateDefmoduleGlobals(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, DEFMODULE_DATA, sizeof(struct defmoduleData), nullptr);
+    AllocateEnvironmentData(theEnv, DEFMODULE_DATA, sizeof(defmoduleData), nullptr);
     AddEnvironmentCleanupFunction(theEnv, "defmodules", DeallocateDefmoduleData, -1000);
     DefmoduleData(theEnv)->CallModuleChangeFunctions = true;
     DefmoduleData(theEnv)->MainModuleRedefinable = true;
@@ -123,7 +123,7 @@ static void DeallocateDefmoduleData(
         DefmoduleData(theEnv)->ListOfDefmodules = nullptr;
     }
 
-    space = DefmoduleData(theEnv)->NumberOfPortItems * sizeof(struct portItem);
+    space = DefmoduleData(theEnv)->NumberOfPortItems * sizeof(portItem);
     if (space != 0) genfree(theEnv, DefmoduleData(theEnv)->PortItemArray, space);
 #endif
 
@@ -367,7 +367,7 @@ void SetModuleItem(
     }
 
     if (theModule->itemsArray == nullptr) return;
-    theModule->itemsArray[moduleItemIndex] = (struct defmoduleItemHeader *) newValue;
+    theModule->itemsArray[moduleItemIndex] = (defmoduleItemHeader *) newValue;
 }
 
 /******************************************************/
@@ -406,16 +406,16 @@ void CreateMainModule(
 
     if (DefmoduleData(theEnv)->NumberOfModuleItems == 0) newDefmodule->itemsArray = nullptr;
     else {
-        newDefmodule->itemsArray = (struct defmoduleItemHeader **)
+        newDefmodule->itemsArray = (defmoduleItemHeader **)
                 gm2(theEnv, sizeof(void *) * DefmoduleData(theEnv)->NumberOfModuleItems);
         for (i = 0, theItem = DefmoduleData(theEnv)->ListOfModuleItems;
              (i < DefmoduleData(theEnv)->NumberOfModuleItems) && (theItem != nullptr);
              i++, theItem = theItem->next) {
             if (theItem->allocateFunction == nullptr) { newDefmodule->itemsArray[i] = nullptr; }
             else {
-                newDefmodule->itemsArray[i] = (struct defmoduleItemHeader *)
+                newDefmodule->itemsArray[i] = (defmoduleItemHeader *)
                         (*theItem->allocateFunction)(theEnv);
-                theHeader = (struct defmoduleItemHeader *) newDefmodule->itemsArray[i];
+                theHeader = (defmoduleItemHeader *) newDefmodule->itemsArray[i];
                 theHeader->theModule = newDefmodule;
                 theHeader->firstItem = nullptr;
                 theHeader->lastItem = nullptr;

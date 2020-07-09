@@ -221,7 +221,7 @@ static void DeallocateObjectBinaryData(Environment *);
  ***********************************************************/
 void SetupObjectsBload(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, OBJECTBIN_DATA, sizeof(struct objectBinaryData), DeallocateObjectBinaryData);
+    AllocateEnvironmentData(theEnv, OBJECTBIN_DATA, sizeof(objectBinaryData), DeallocateObjectBinaryData);
 
     AddAbortBloadFunction(theEnv, "defclass", CreateSystemClasses, 0, nullptr);
 

@@ -80,7 +80,7 @@ struct parseFunctionData {
     size_t WarningMaximumPosition;
 };
 
-#define ParseFunctionData(theEnv) ((struct parseFunctionData *) GetEnvironmentData(theEnv,PARSEFUN_DATA))
+#define ParseFunctionData(theEnv) ((parseFunctionData *) GetEnvironmentData(theEnv,PARSEFUN_DATA))
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
@@ -97,7 +97,7 @@ static void SetErrorCaptureValues(Environment *, UDFValue *);
 /*****************************************/
 void ParseFunctionDefinitions(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, PARSEFUN_DATA, sizeof(struct parseFunctionData), nullptr);
+    AllocateEnvironmentData(theEnv, PARSEFUN_DATA, sizeof(parseFunctionData), nullptr);
 
     AddUDF(theEnv, "check-syntax", "ym", 1, 1, "s", CheckSyntaxFunction, nullptr);
 }

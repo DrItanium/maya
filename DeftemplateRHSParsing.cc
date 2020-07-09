@@ -65,7 +65,7 @@
 static struct expr *ParseAssertSlotValues(Environment *, const char *, struct token *, struct templateSlot *, bool *, bool);
 static struct expr *ReorderAssertSlotValues(Environment *, struct templateSlot *, struct expr *, bool *);
 static struct expr *GetSlotAssertValues(Environment *, struct templateSlot *, struct expr *, bool *);
-static struct expr *FindAssertSlotItem(struct templateSlot *, struct expr *);
+static struct expr *FindAssertSlotItem(templateSlot *, struct expr *);
 static struct templateSlot *ParseSlotLabel(Environment *, const char *, struct token *, Deftemplate *, bool *, TokenType);
 
 /******************************************************************/

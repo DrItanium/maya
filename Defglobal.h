@@ -101,7 +101,7 @@ struct defglobalModule {
     struct defmoduleItemHeader header;
 };
 
-#define DefglobalData(theEnv) ((struct defglobalData *) GetEnvironmentData(theEnv,DEFGLOBAL_DATA))
+#define DefglobalData(theEnv) ((defglobalData *) GetEnvironmentData(theEnv,DEFGLOBAL_DATA))
 
 void InitializeDefglobals(Environment *);
 Defglobal *FindDefglobal(Environment *, const char *);

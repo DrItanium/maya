@@ -112,7 +112,7 @@ static void DeallocateDeffunctionBloadData(Environment *);
  ***********************************************************/
 void SetupDeffunctionsBload(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, DFFNXBIN_DATA, sizeof(struct deffunctionBinaryData), DeallocateDeffunctionBloadData);
+    AllocateEnvironmentData(theEnv, DFFNXBIN_DATA, sizeof(deffunctionBinaryData), DeallocateDeffunctionBloadData);
 #if BLOAD_AND_BSAVE
     AddBinaryItem(theEnv, "deffunctions", 0, BsaveDeffunctionFind, BsaveDeffunctionExpressions,
                   BsaveStorageDeffunctions, BsaveDeffunctions,
@@ -137,7 +137,7 @@ static void DeallocateDeffunctionBloadData(
     space = DeffunctionBinaryData(theEnv)->DeffunctionCount * sizeof(Deffunction);
     if (space != 0) genfree(theEnv, DeffunctionBinaryData(theEnv)->DeffunctionArray, space);
 
-    space = DeffunctionBinaryData(theEnv)->ModuleCount * sizeof(struct deffunctionModuleData);
+    space = DeffunctionBinaryData(theEnv)->ModuleCount * sizeof(deffunctionModuleData);
     if (space != 0) genfree(theEnv, DeffunctionBinaryData(theEnv)->ModuleArray, space);
 #endif
 }

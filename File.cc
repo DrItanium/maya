@@ -105,7 +105,7 @@ static void DeallocateFileCommandData(Environment *);
 /***************************************/
 void FileCommandDefinitions(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, FILECOM_DATA, sizeof(struct fileCommandData), DeallocateFileCommandData);
+    AllocateEnvironmentData(theEnv, FILECOM_DATA, sizeof(fileCommandData), DeallocateFileCommandData);
 
 #if DEBUGGING_FUNCTIONS
     AddUDF(theEnv, "batch", "b", 1, 1, "sy", BatchCommand, nullptr);

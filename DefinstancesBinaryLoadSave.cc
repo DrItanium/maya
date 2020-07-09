@@ -110,7 +110,7 @@ static void DeallocateDefinstancesBinaryData(Environment *);
  ***********************************************************/
 void SetupDefinstancesBload(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, DFINSBIN_DATA, sizeof(struct definstancesBinaryData), DeallocateDefinstancesBinaryData);
+    AllocateEnvironmentData(theEnv, DFINSBIN_DATA, sizeof(definstancesBinaryData), DeallocateDefinstancesBinaryData);
 #if BLOAD_AND_BSAVE
     AddBinaryItem(theEnv, "definstances", 0, BsaveDefinstancesFind, BsaveDefinstancesExpressions,
                   BsaveStorageDefinstances, BsaveDefinstancesDriver,
@@ -132,10 +132,10 @@ static void DeallocateDefinstancesBinaryData(
     size_t space;
 
 #if (BLOAD_AND_BSAVE)
-    space = DefinstancesBinaryData(theEnv)->DefinstancesCount * sizeof(struct definstances);
+    space = DefinstancesBinaryData(theEnv)->DefinstancesCount * sizeof(definstances);
     if (space != 0) genfree(theEnv, DefinstancesBinaryData(theEnv)->DefinstancesArray, space);
 
-    space = DefinstancesBinaryData(theEnv)->ModuleCount * sizeof(struct definstancesModule);
+    space = DefinstancesBinaryData(theEnv)->ModuleCount * sizeof(definstancesModule);
     if (space != 0) genfree(theEnv, DefinstancesBinaryData(theEnv)->ModuleArray, space);
 #endif
 }

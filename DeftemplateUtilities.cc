@@ -477,7 +477,7 @@ void UpdateDeftemplateScope(
         /* Loop through each of the deftemplates in the module. */
         /*======================================================*/
 
-        theItem = (struct defmoduleItemHeader *)
+        theItem = (defmoduleItemHeader *)
                 GetModuleItem(theEnv, theModule, DeftemplateData(theEnv)->DeftemplateModuleIndex);
 
         for (theDeftemplate = (Deftemplate *) theItem->firstItem;
@@ -548,7 +548,7 @@ Deftemplate *CreateImpliedDeftemplate(
     if (GetWatchItem(theEnv, "facts") == 1) { DeftemplateSetWatch(newDeftemplate, true); }
 #endif
 
-    newDeftemplate->header.whichModule = (struct defmoduleItemHeader *)
+    newDeftemplate->header.whichModule = (defmoduleItemHeader *)
             GetModuleItem(theEnv, nullptr, DeftemplateData(theEnv)->DeftemplateModuleIndex);
 
     AddConstructToModule(&newDeftemplate->header);

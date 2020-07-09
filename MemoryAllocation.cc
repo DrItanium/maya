@@ -78,13 +78,13 @@
 /********************************************/
 void InitializeMemory(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, MEMORY_DATA, sizeof(struct memoryData), nullptr);
+    AllocateEnvironmentData(theEnv, MEMORY_DATA, sizeof(memoryData), nullptr);
 
     MemoryData(theEnv)->OutOfMemoryCallback = DefaultOutOfMemoryFunction;
 
 #if (MEM_TABLE_SIZE > 0)
-    MemoryData(theEnv)->MemoryTable = (struct memoryPtr **)
-            malloc((STD_SIZE) (sizeof(struct memoryPtr *) * MEM_TABLE_SIZE));
+    MemoryData(theEnv)->MemoryTable = (memoryPtr **)
+            malloc((STD_SIZE) (sizeof(memoryPtr *) * MEM_TABLE_SIZE));
 
     if (MemoryData(theEnv)->MemoryTable == nullptr) {
         PrintErrorID(theEnv, "MEMORY", 1, true);
@@ -285,7 +285,7 @@ void *gm1(
         return ((void *) tmpPtr);
     }
 
-    memPtr = (struct memoryPtr *) MemoryData(theEnv)->MemoryTable[size];
+    memPtr = (memoryPtr *) MemoryData(theEnv)->MemoryTable[size];
     if (memPtr == nullptr) {
         tmpPtr = (char *) genalloc(theEnv, size);
         for (i = 0; i < size; i++) { tmpPtr[i] = '\0'; }
@@ -315,7 +315,7 @@ void *gm2(
 #if (MEM_TABLE_SIZE > 0)
     if (size >= MEM_TABLE_SIZE) return genalloc(theEnv, size);
 
-    memPtr = (struct memoryPtr *) MemoryData(theEnv)->MemoryTable[size];
+    memPtr = (memoryPtr *) MemoryData(theEnv)->MemoryTable[size];
     if (memPtr == nullptr) { return genalloc(theEnv, size); }
 
     MemoryData(theEnv)->MemoryTable[size] = memPtr->next;
@@ -355,7 +355,7 @@ void rm(
         return;
     }
 
-    memPtr = (struct memoryPtr *) str;
+    memPtr = (memoryPtr *) str;
     memPtr->next = MemoryData(theEnv)->MemoryTable[size];
     MemoryData(theEnv)->MemoryTable[size] = memPtr;
 #else

@@ -70,7 +70,7 @@ static void DeallocatePrettyPrintData(Environment *);
 /****************************************************/
 void InitializePrettyPrintData(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, PRETTY_PRINT_DATA, sizeof(struct prettyPrintData), DeallocatePrettyPrintData);
+    AllocateEnvironmentData(theEnv, PRETTY_PRINT_DATA, sizeof(prettyPrintData), DeallocatePrettyPrintData);
 
     PrettyPrintData(theEnv)->PPBufferEnabled = true;
 }

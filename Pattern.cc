@@ -64,7 +64,7 @@
 static struct lhsParseNode *ConjuctiveRestrictionParse(Environment *, const char *, struct token *, bool *);
 static struct lhsParseNode *LiteralRestrictionParse(Environment *, const char *, struct token *, bool *);
 static bool CheckForVariableMixing(Environment *, struct lhsParseNode *);
-static void TallyFieldTypes(struct lhsParseNode *);
+static void TallyFieldTypes(lhsParseNode *);
 static void DeallocatePatternData(Environment *);
 static struct patternNodeHashEntry **CreatePatternHashTable(Environment *, unsigned long);
 
@@ -73,7 +73,7 @@ static struct patternNodeHashEntry **CreatePatternHashTable(Environment *, unsig
 /*****************************************************************************/
 void InitializePatterns(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, PATTERN_DATA, sizeof(struct patternData), DeallocatePatternData);
+    AllocateEnvironmentData(theEnv, PATTERN_DATA, sizeof(patternData), DeallocatePatternData);
     PatternData(theEnv)->NextPosition = 1;
     PatternData(theEnv)->PatternHashTable = CreatePatternHashTable(theEnv, SIZE_PATTERN_HASH);
     PatternData(theEnv)->PatternHashTableSize = SIZE_PATTERN_HASH;
@@ -88,8 +88,8 @@ static struct patternNodeHashEntry **CreatePatternHashTable(
     unsigned long i;
     struct patternNodeHashEntry **theTable;
 
-    theTable = (struct patternNodeHashEntry **)
-            gm2(theEnv, sizeof(struct patternNodeHashEntry *) * tableSize);
+    theTable = (patternNodeHashEntry **)
+            gm2(theEnv, sizeof(patternNodeHashEntry *) * tableSize);
 
     if (theTable == nullptr) ExitRouter(theEnv, EXIT_FAILURE);
 
@@ -134,7 +134,7 @@ static void DeallocatePatternData(
     }
 
     rm(theEnv, PatternData(theEnv)->PatternHashTable,
-       sizeof(struct patternNodeHashEntry *) * PatternData(theEnv)->PatternHashTableSize);
+       sizeof(patternNodeHashEntry *) * PatternData(theEnv)->PatternHashTableSize);
 }
 
 /******************************************************************************/
@@ -323,7 +323,7 @@ void GetNextPatternEntity(
         /*================================================================*/
 
     else if (theEntity != nullptr) {
-        *theEntity = (struct patternEntity *)
+        *theEntity = (patternEntity *)
                 (*(*theParser)->entityType->base.getNextFunction)(theEnv, *theEntity);
 
         if ((*theEntity) != nullptr) return;
@@ -348,7 +348,7 @@ void GetNextPatternEntity(
     /*================================================*/
 
     while ((*theEntity == nullptr) && (*theParser != nullptr)) {
-        *theEntity = (struct patternEntity *)
+        *theEntity = (patternEntity *)
                 (*(*theParser)->entityType->base.getNextFunction)(theEnv, *theEntity);
 
         if (*theEntity != nullptr) return;

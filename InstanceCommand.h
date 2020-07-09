@@ -121,7 +121,7 @@ struct instanceData {
     InstanceBuilderError instanceBuilderError;
 };
 
-#define InstanceData(theEnv) ((struct instanceData *) GetEnvironmentData(theEnv,INSTANCE_DATA))
+#define InstanceData(theEnv) ((instanceData *) GetEnvironmentData(theEnv,INSTANCE_DATA))
 
 void SetupInstances(Environment *);
 UnmakeInstanceError DeleteInstance(Instance *);

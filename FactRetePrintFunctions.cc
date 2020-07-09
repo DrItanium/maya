@@ -59,7 +59,7 @@ void PrintFactJNCompVars1(
 #if DEVELOPER
     struct factCompVarsJN1Call *hack;
 
-    hack = (struct factCompVarsJN1Call *) ((CLIPSBitMap *) theValue)->contents;
+    hack = (factCompVarsJN1Call *) ((CLIPSBitMap *) theValue)->contents;
     WriteString(theEnv,logicalName,"(fact-jn-cmp-vars1 ");
     if (hack->pass) WriteString(theEnv,logicalName,"= ");
     else WriteString(theEnv,logicalName,"<> ");
@@ -106,7 +106,7 @@ void PrintFactJNCompVars2(
 #if DEVELOPER
     struct factCompVarsJN2Call *hack;
 
-    hack = (struct factCompVarsJN2Call *) ((CLIPSBitMap *) theValue)->contents;
+    hack = (factCompVarsJN2Call *) ((CLIPSBitMap *) theValue)->contents;
     WriteString(theEnv,logicalName,"(fact-jn-cmp-vars2 ");
     if (hack->pass) WriteString(theEnv,logicalName,"= ");
     else WriteString(theEnv,logicalName,"<> ");
@@ -165,7 +165,7 @@ void PrintFactPNCompVars1(
 #if DEVELOPER
     struct factCompVarsPN1Call *hack;
 
-    hack = (struct factCompVarsPN1Call *) ((CLIPSBitMap *) theValue)->contents;
+    hack = (factCompVarsPN1Call *) ((CLIPSBitMap *) theValue)->contents;
     WriteString(theEnv,logicalName,"(fact-pn-cmp-vars ");
     if (hack->pass) WriteString(theEnv,logicalName,"p ");
     else WriteString(theEnv,logicalName,"n ");
@@ -193,7 +193,7 @@ void PrintFactSlotLength(
 #if DEVELOPER
     struct factCheckLengthPNCall *hack;
 
-    hack = (struct factCheckLengthPNCall *) ((CLIPSBitMap *) theValue)->contents;
+    hack = (factCheckLengthPNCall *) ((CLIPSBitMap *) theValue)->contents;
 
     WriteString(theEnv,logicalName,"(slot-length ");
     PrintUnsignedInteger(theEnv,logicalName,hack->whichSlot);
@@ -222,7 +222,7 @@ void PrintFactJNGetVar1(
 #if DEVELOPER
     struct factGetVarJN1Call *hack;
 
-    hack = (struct factGetVarJN1Call *) ((CLIPSBitMap *) theValue)->contents;
+    hack = (factGetVarJN1Call *) ((CLIPSBitMap *) theValue)->contents;
     WriteString(theEnv,logicalName,"(fact-jn-getvar-1 ");
     if (hack->factAddress) WriteString(theEnv,logicalName,"t ");
     else WriteString(theEnv,logicalName,"f ");
@@ -261,7 +261,7 @@ void PrintFactJNGetVar2(
 #if DEVELOPER
     struct factGetVarJN2Call *hack;
 
-    hack = (struct factGetVarJN2Call *) ((CLIPSBitMap *) theValue)->contents;
+    hack = (factGetVarJN2Call *) ((CLIPSBitMap *) theValue)->contents;
     WriteString(theEnv,logicalName,"(fact-jn-getvar-2");
 
     WriteString(theEnv,logicalName," p");
@@ -293,7 +293,7 @@ void PrintFactJNGetVar3(
 #if DEVELOPER
     struct factGetVarJN3Call *hack;
 
-    hack = (struct factGetVarJN3Call *) ((CLIPSBitMap *) theValue)->contents;
+    hack = (factGetVarJN3Call *) ((CLIPSBitMap *) theValue)->contents;
     WriteString(theEnv,logicalName,"(fact-jn-getvar-3 ");
     if (hack->fromBeginning) WriteString(theEnv,logicalName,"t ");
     else WriteString(theEnv,logicalName,"f ");
@@ -335,7 +335,7 @@ void PrintFactPNGetVar1(
 #if DEVELOPER
     struct factGetVarPN1Call *hack;
 
-    hack = (struct factGetVarPN1Call *) ((CLIPSBitMap *) theValue)->contents;
+    hack = (factGetVarPN1Call *) ((CLIPSBitMap *) theValue)->contents;
     WriteString(theEnv,logicalName,"(fact-pn-getvar-1 ");
     if (hack->factAddress) WriteString(theEnv,logicalName,"t ");
     else WriteString(theEnv,logicalName,"f ");
@@ -366,7 +366,7 @@ void PrintFactPNGetVar2(
 #if DEVELOPER
     struct factGetVarPN2Call *hack;
 
-    hack = (struct factGetVarPN2Call *) ((CLIPSBitMap *) theValue)->contents;
+    hack = (factGetVarPN2Call *) ((CLIPSBitMap *) theValue)->contents;
     WriteString(theEnv,logicalName,"(fact-pn-getvar-2 S");
     PrintUnsignedInteger(theEnv,logicalName,hack->whichSlot);
     WriteString(theEnv,logicalName,")");
@@ -390,7 +390,7 @@ void PrintFactPNGetVar3(
 #if DEVELOPER
     struct factGetVarPN3Call *hack;
 
-    hack = (struct factGetVarPN3Call *) ((CLIPSBitMap *) theValue)->contents;
+    hack = (factGetVarPN3Call *) ((CLIPSBitMap *) theValue)->contents;
     WriteString(theEnv,logicalName,"(fact-pn-getvar-3 ");
 
     if (hack->fromBeginning) WriteString(theEnv,logicalName,"t ");
@@ -424,7 +424,7 @@ void PrintFactPNConstant1(
 #if DEVELOPER
     struct factConstantPN1Call *hack;
 
-    hack = (struct factConstantPN1Call *) ((CLIPSBitMap *) theValue)->contents;
+    hack = (factConstantPN1Call *) ((CLIPSBitMap *) theValue)->contents;
 
     WriteString(theEnv,logicalName,"(fact-pn-constant1 ");
 
@@ -455,7 +455,7 @@ void PrintFactPNConstant2(
 #if DEVELOPER
     struct factConstantPN2Call *hack;
 
-    hack = (struct factConstantPN2Call *) ((CLIPSBitMap *) theValue)->contents;
+    hack = (factConstantPN2Call *) ((CLIPSBitMap *) theValue)->contents;
 
     WriteString(theEnv,logicalName,"(fact-pn-constant2 ");
 

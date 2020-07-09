@@ -102,13 +102,13 @@ static void IncrementNandDepth(Environment *, struct lhsParseNode *, bool);
 static struct lhsParseNode *CreateInitialPattern(Environment *);
 static struct lhsParseNode *ReorderDriver(Environment *, struct lhsParseNode *, bool *, int, int);
 static struct lhsParseNode *AddRemainingInitialPatterns(Environment *, struct lhsParseNode *);
-static struct lhsParseNode *AssignPatternIndices(struct lhsParseNode *, short, int, unsigned short);
-static void PropagateIndexSlotPatternValues(struct lhsParseNode *, short, unsigned short,
+static struct lhsParseNode *AssignPatternIndices(lhsParseNode *, short, int, unsigned short);
+static void PropagateIndexSlotPatternValues(lhsParseNode *, short, unsigned short,
                                             CLIPSLexeme *, unsigned short);
-static void PropagateJoinDepth(struct lhsParseNode *, unsigned short);
-static void PropagateNandDepth(struct lhsParseNode *, int, int);
-static void MarkExistsNands(struct lhsParseNode *);
-static unsigned short PropagateWhichCE(struct lhsParseNode *, unsigned short);
+static void PropagateJoinDepth(lhsParseNode *, unsigned short);
+static void PropagateNandDepth(lhsParseNode *, int, int);
+static void MarkExistsNands(lhsParseNode *);
+static unsigned short PropagateWhichCE(lhsParseNode *, unsigned short);
 /*
 static void                    PrintNodes(void *,const char *,struct lhsParseNode *);
 */

@@ -191,7 +191,7 @@ static void *GetBinaryAtomValue(Environment *, struct bsaveSlotValueAtom *);
 void SetupInstanceFileCommands(
         Environment *theEnv) {
 #if BLOAD_INSTANCES || BSAVE_INSTANCES
-    AllocateEnvironmentData(theEnv, INSTANCE_FILE_DATA, sizeof(struct instanceFileData), nullptr);
+    AllocateEnvironmentData(theEnv, INSTANCE_FILE_DATA, sizeof(instanceFileData), nullptr);
 
     InstanceFileData(theEnv)->InstanceBinaryPrefixID = "\5\6\7CLIPS";
     InstanceFileData(theEnv)->InstanceBinaryVersionID = "V6.00";
@@ -1037,7 +1037,7 @@ static void MarkSingleInstance(
 
     UtilityData(theEnv)->BinaryFileSize +=
             (sizeof(unsigned short) +
-             (sizeof(struct bsaveSlotValue) *
+             (sizeof(bsaveSlotValue) *
               theInstance->cls->instanceSlotCount) +
              sizeof(unsigned long));
 
@@ -1067,7 +1067,7 @@ static void MarkNeededAtom(
         Environment *theEnv,
         unsigned short type,
         void *value) {
-    UtilityData(theEnv)->BinaryFileSize += sizeof(struct bsaveSlotValueAtom);
+    UtilityData(theEnv)->BinaryFileSize += sizeof(bsaveSlotValueAtom);
 
     /* =====================================
        Assumes slot value atoms  can only be
@@ -1147,7 +1147,7 @@ static void SaveSingleInstanceBinary(
            =============================================== */
         bs.slotName = sp->desc->slotName->name->bucket;
         bs.valueCount = (unsigned long) (sp->desc->multiple ? sp->multifieldValue->length : 1);
-        fwrite(&bs, sizeof(struct bsaveSlotValue), 1, bsaveFP);
+        fwrite(&bs, sizeof(bsaveSlotValue), 1, bsaveFP);
         totalValueCount += bs.valueCount;
     }
 
@@ -1222,7 +1222,7 @@ static void SaveAtomBinary(
             bsa.value = ULONG_MAX;
     }
 
-    fwrite(&bsa, sizeof(struct bsaveSlotValueAtom), 1, bsaveFP);
+    fwrite(&bsa, sizeof(bsaveSlotValueAtom), 1, bsaveFP);
 }
 
 #endif
@@ -1487,15 +1487,15 @@ static bool LoadSingleBinaryInstance(
        Read all slot override info and slot
        value atoms into big arrays
        ==================================== */
-    bsArray = (struct bsaveSlotValue *) gm2(theEnv, (sizeof(struct bsaveSlotValue) * slotCount));
-    BufferedRead(theEnv, bsArray, (sizeof(struct bsaveSlotValue) * slotCount));
+    bsArray = (bsaveSlotValue *) gm2(theEnv, (sizeof(bsaveSlotValue) * slotCount));
+    BufferedRead(theEnv, bsArray, (sizeof(bsaveSlotValue) * slotCount));
 
     BufferedRead(theEnv, &totalValueCount, sizeof(unsigned long));
 
     if (totalValueCount != 0L) {
-        bsaArray = (struct bsaveSlotValueAtom *)
-                gm2(theEnv, (totalValueCount * sizeof(struct bsaveSlotValueAtom)));
-        BufferedRead(theEnv, bsaArray, (totalValueCount * sizeof(struct bsaveSlotValueAtom)));
+        bsaArray = (bsaveSlotValueAtom *)
+                gm2(theEnv, (totalValueCount * sizeof(bsaveSlotValueAtom)));
+        BufferedRead(theEnv, bsaArray, (totalValueCount * sizeof(bsaveSlotValueAtom)));
     }
 
     /* =========================
@@ -1511,7 +1511,7 @@ static bool LoadSingleBinaryInstance(
         sp = newInstance->slotAddresses[i];
         if (sp->desc->slotName->name != SymbolPointer(bsArray[i].slotName))
             goto LoadError;
-        CreateSlotValue(theEnv, &slotValue, (struct bsaveSlotValueAtom *) &bsaArray[j],
+        CreateSlotValue(theEnv, &slotValue, (bsaveSlotValueAtom *) &bsaArray[j],
                         bsArray[i].valueCount);
 
         if (PutSlotValue(theEnv, newInstance, sp, &slotValue, &junkValue, "bload-instances") != PSE_NO_ERROR)
@@ -1520,18 +1520,18 @@ static bool LoadSingleBinaryInstance(
         j += (unsigned long) bsArray[i].valueCount;
     }
 
-    rm(theEnv, bsArray, (sizeof(struct bsaveSlotValue) * slotCount));
+    rm(theEnv, bsArray, (sizeof(bsaveSlotValue) * slotCount));
 
     if (totalValueCount != 0L)
-        rm(theEnv, bsaArray, (totalValueCount * sizeof(struct bsaveSlotValueAtom)));
+        rm(theEnv, bsaArray, (totalValueCount * sizeof(bsaveSlotValueAtom)));
 
     return true;
 
     LoadError:
     BinaryLoadInstanceError(theEnv, instanceName, theDefclass);
     QuashInstance(theEnv, newInstance);
-    rm(theEnv, bsArray, (sizeof(struct bsaveSlotValue) * slotCount));
-    rm(theEnv, bsaArray, (totalValueCount * sizeof(struct bsaveSlotValueAtom)));
+    rm(theEnv, bsArray, (sizeof(bsaveSlotValue) * slotCount));
+    rm(theEnv, bsaArray, (totalValueCount * sizeof(bsaveSlotValueAtom)));
     return false;
 }
 

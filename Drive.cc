@@ -360,7 +360,7 @@ void NetworkAssertLeft(
 
     entryHashValue = lhsBinds->hashValue;
     if (join->joinFromTheRight) { rhsBinds = GetRightBetaMemory(join, entryHashValue); }
-    else { rhsBinds = GetAlphaMemory(theEnv, (struct patternNodeHeader *) join->rightSideEntryStructure, entryHashValue); }
+    else { rhsBinds = GetAlphaMemory(theEnv, (patternNodeHeader *) join->rightSideEntryStructure, entryHashValue); }
 
 #if DEVELOPER
     if (rhsBinds != nullptr)

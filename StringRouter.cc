@@ -75,7 +75,7 @@ static void WriteStringBuilderCallback(Environment *, const char *, const char *
 /**********************************************************/
 void InitializeStringRouter(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, STRING_ROUTER_DATA, sizeof(struct stringRouterData), DeallocateStringRouterData);
+    AllocateEnvironmentData(theEnv, STRING_ROUTER_DATA, sizeof(stringRouterData), DeallocateStringRouterData);
 
     AddRouter(theEnv, "string", 0, QueryStringCallback, WriteStringCallback, ReadStringCallback, UnreadStringCallback, nullptr, nullptr);
     AddRouter(theEnv, "stringBuilder", 0, QueryStringBuilderCallback, WriteStringBuilderCallback, nullptr, nullptr, nullptr, nullptr);

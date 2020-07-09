@@ -119,7 +119,7 @@ static void DeallocateConstructData(Environment *);
 /**************************************************/
 void InitializeConstructData(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, CONSTRUCT_DATA, sizeof(struct constructData), DeallocateConstructData);
+    AllocateEnvironmentData(theEnv, CONSTRUCT_DATA, sizeof(constructData), DeallocateConstructData);
 }
 
 /****************************************************/

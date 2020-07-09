@@ -81,7 +81,7 @@ struct factgenData {
     struct entityRecord FactPNConstant2Info;
 };
 
-#define FactgenData(theEnv) ((struct factgenData *) GetEnvironmentData(theEnv,FACTGEN_DATA))
+#define FactgenData(theEnv) ((factgenData *) GetEnvironmentData(theEnv,FACTGEN_DATA))
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
@@ -181,21 +181,21 @@ void InitializeFactReteFunctions(
                                                FactPNConstant2,
                                                nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    AllocateEnvironmentData(theEnv, FACTGEN_DATA, sizeof(struct factgenData), nullptr);
+    AllocateEnvironmentData(theEnv, FACTGEN_DATA, sizeof(factgenData), nullptr);
 
-    memcpy(&FactgenData(theEnv)->FactJNGV1Info, &factJNGV1Info, sizeof(struct entityRecord));
-    memcpy(&FactgenData(theEnv)->FactJNGV2Info, &factJNGV2Info, sizeof(struct entityRecord));
-    memcpy(&FactgenData(theEnv)->FactJNGV3Info, &factJNGV3Info, sizeof(struct entityRecord));
-    memcpy(&FactgenData(theEnv)->FactPNGV1Info, &factPNGV1Info, sizeof(struct entityRecord));
-    memcpy(&FactgenData(theEnv)->FactPNGV2Info, &factPNGV2Info, sizeof(struct entityRecord));
-    memcpy(&FactgenData(theEnv)->FactPNGV3Info, &factPNGV3Info, sizeof(struct entityRecord));
-    memcpy(&FactgenData(theEnv)->FactJNCV1Info, &factJNCV1Info, sizeof(struct entityRecord));
-    memcpy(&FactgenData(theEnv)->FactJNCV2Info, &factJNCV2Info, sizeof(struct entityRecord));
-    memcpy(&FactgenData(theEnv)->FactPNCV1Info, &factPNCV1Info, sizeof(struct entityRecord));
-    memcpy(&FactgenData(theEnv)->FactStoreMFInfo, &factStoreMFInfo, sizeof(struct entityRecord));
-    memcpy(&FactgenData(theEnv)->FactSlotLengthInfo, &factSlotLengthInfo, sizeof(struct entityRecord));
-    memcpy(&FactgenData(theEnv)->FactPNConstant1Info, &factPNConstant1Info, sizeof(struct entityRecord));
-    memcpy(&FactgenData(theEnv)->FactPNConstant2Info, &factPNConstant2Info, sizeof(struct entityRecord));
+    memcpy(&FactgenData(theEnv)->FactJNGV1Info, &factJNGV1Info, sizeof(entityRecord));
+    memcpy(&FactgenData(theEnv)->FactJNGV2Info, &factJNGV2Info, sizeof(entityRecord));
+    memcpy(&FactgenData(theEnv)->FactJNGV3Info, &factJNGV3Info, sizeof(entityRecord));
+    memcpy(&FactgenData(theEnv)->FactPNGV1Info, &factPNGV1Info, sizeof(entityRecord));
+    memcpy(&FactgenData(theEnv)->FactPNGV2Info, &factPNGV2Info, sizeof(entityRecord));
+    memcpy(&FactgenData(theEnv)->FactPNGV3Info, &factPNGV3Info, sizeof(entityRecord));
+    memcpy(&FactgenData(theEnv)->FactJNCV1Info, &factJNCV1Info, sizeof(entityRecord));
+    memcpy(&FactgenData(theEnv)->FactJNCV2Info, &factJNCV2Info, sizeof(entityRecord));
+    memcpy(&FactgenData(theEnv)->FactPNCV1Info, &factPNCV1Info, sizeof(entityRecord));
+    memcpy(&FactgenData(theEnv)->FactStoreMFInfo, &factStoreMFInfo, sizeof(entityRecord));
+    memcpy(&FactgenData(theEnv)->FactSlotLengthInfo, &factSlotLengthInfo, sizeof(entityRecord));
+    memcpy(&FactgenData(theEnv)->FactPNConstant1Info, &factPNConstant1Info, sizeof(entityRecord));
+    memcpy(&FactgenData(theEnv)->FactPNConstant2Info, &factPNConstant2Info, sizeof(entityRecord));
 
     InstallPrimitive(theEnv, (EntityRecord *) &FactData(theEnv)->FactInfo, FACT_ADDRESS_TYPE);
     InstallPrimitive(theEnv, &FactgenData(theEnv)->FactJNGV1Info, FACT_JN_VAR1);
@@ -234,14 +234,14 @@ struct expr *FactGenPNConstant(
     /*=================================================================*/
 
     if (theField->withinMultifieldSlot == false) {
-        ClearBitString(&hack1, sizeof(struct factConstantPN1Call));
+        ClearBitString(&hack1, sizeof(factConstantPN1Call));
 
         if (theField->negated) hack1.testForEquality = false;
         else hack1.testForEquality = true;
 
         hack1.whichSlot = (theField->slotNumber - 1);
 
-        top = GenConstant(theEnv, FACT_PN_CONSTANT1, AddBitMap(theEnv, &hack1, sizeof(struct factConstantPN1Call)));
+        top = GenConstant(theEnv, FACT_PN_CONSTANT1, AddBitMap(theEnv, &hack1, sizeof(factConstantPN1Call)));
 
         top->argList = GenConstant(theEnv, NodeTypeToType(theField), theField->value);
 
@@ -257,7 +257,7 @@ struct expr *FactGenPNConstant(
 
     else if ((theField->multiFieldsBefore == 0) ||
              ((theField->multiFieldsBefore == 1) && (theField->multiFieldsAfter == 0))) {
-        ClearBitString(&hack2, sizeof(struct factConstantPN2Call));
+        ClearBitString(&hack2, sizeof(factConstantPN2Call));
 
         if (theField->negated) hack2.testForEquality = false;
         else hack2.testForEquality = true;
@@ -272,7 +272,7 @@ struct expr *FactGenPNConstant(
             hack2.offset = theField->singleFieldsAfter;
         }
 
-        top = GenConstant(theEnv, FACT_PN_CONSTANT2, AddBitMap(theEnv, &hack2, sizeof(struct factConstantPN2Call)));
+        top = GenConstant(theEnv, FACT_PN_CONSTANT2, AddBitMap(theEnv, &hack2, sizeof(factConstantPN2Call)));
 
         top->argList = GenConstant(theEnv, NodeTypeToType(theField), theField->value);
 
@@ -413,7 +413,7 @@ struct expr *FactGenCheckLength(
     /* Initialize the length test arguments. */
     /*=======================================*/
 
-    ClearBitString(&hack, sizeof(struct factCheckLengthPNCall));
+    ClearBitString(&hack, sizeof(factCheckLengthPNCall));
     hack.whichSlot = (theNode->slotNumber - 1);
 
     /*============================================*/
@@ -438,7 +438,7 @@ struct expr *FactGenCheckLength(
     /* Generate call to test the length of a multifield slot. */
     /*========================================================*/
 
-    return (GenConstant(theEnv, FACT_SLOT_LENGTH, AddBitMap(theEnv, &hack, sizeof(struct factCheckLengthPNCall))));
+    return (GenConstant(theEnv, FACT_SLOT_LENGTH, AddBitMap(theEnv, &hack, sizeof(factCheckLengthPNCall))));
 }
 
 /**************************************************************/
@@ -451,13 +451,13 @@ struct expr *FactGenCheckZeroLength(
         unsigned short theSlot) {
     struct factCheckLengthPNCall hack;
 
-    ClearBitString(&hack, sizeof(struct factCheckLengthPNCall));
+    ClearBitString(&hack, sizeof(factCheckLengthPNCall));
 
     hack.whichSlot = theSlot - 1;
     hack.exactly = true;
     hack.minLength = 0;
 
-    return (GenConstant(theEnv, FACT_SLOT_LENGTH, AddBitMap(theEnv, &hack, sizeof(struct factCheckLengthPNCall))));
+    return (GenConstant(theEnv, FACT_SLOT_LENGTH, AddBitMap(theEnv, &hack, sizeof(factCheckLengthPNCall))));
 }
 
 /*********************************************************************/
@@ -583,7 +583,7 @@ static void *FactGetVarJN1(
     /* Clear the bitmap for storing the argument values. */
     /*===================================================*/
 
-    ClearBitString(&hack, sizeof(struct factGetVarJN1Call));
+    ClearBitString(&hack, sizeof(factGetVarJN1Call));
 
     /*=========================================*/
     /* Store the position in the partial match */
@@ -644,7 +644,7 @@ static void *FactGetVarJN1(
     /* Return the argument bitmap. */
     /*=============================*/
 
-    return (AddBitMap(theEnv, &hack, sizeof(struct factGetVarJN1Call)));
+    return (AddBitMap(theEnv, &hack, sizeof(factGetVarJN1Call)));
 }
 
 /**************************************************************/
@@ -665,7 +665,7 @@ static void *FactGetVarJN2(
     /* Clear the bitmap for storing the argument values. */
     /*===================================================*/
 
-    ClearBitString(&hack, sizeof(struct factGetVarJN2Call));
+    ClearBitString(&hack, sizeof(factGetVarJN2Call));
 
     /*=====================================================*/
     /* Store the position in the partial match from which  */
@@ -690,7 +690,7 @@ static void *FactGetVarJN2(
     /* Return the argument bitmap. */
     /*=============================*/
 
-    return AddBitMap(theEnv, &hack, sizeof(struct factGetVarJN2Call));
+    return AddBitMap(theEnv, &hack, sizeof(factGetVarJN2Call));
 }
 
 /*************************************************************/
@@ -715,7 +715,7 @@ static void *FactGetVarJN3(
     /* Clear the bitmap for storing the argument values. */
     /*===================================================*/
 
-    ClearBitString(&hack, sizeof(struct factGetVarJN3Call));
+    ClearBitString(&hack, sizeof(factGetVarJN3Call));
 
     /*=====================================================*/
     /* Store the position in the partial match from which  */
@@ -772,7 +772,7 @@ static void *FactGetVarJN3(
         /* Return the argument bitmap. */
         /*=============================*/
 
-        return (AddBitMap(theEnv, &hack, sizeof(struct factGetVarJN3Call)));
+        return (AddBitMap(theEnv, &hack, sizeof(factGetVarJN3Call)));
     }
 
     /*============================================================*/
@@ -795,7 +795,7 @@ static void *FactGetVarJN3(
     /* Return the argument bitmap. */
     /*=============================*/
 
-    return AddBitMap(theEnv, &hack, sizeof(struct factGetVarJN3Call));
+    return AddBitMap(theEnv, &hack, sizeof(factGetVarJN3Call));
 }
 
 /**************************************************************/
@@ -815,7 +815,7 @@ static void *FactGetVarPN1(
     /* Clear the bitmap for storing the argument values. */
     /*===================================================*/
 
-    ClearBitString(&hack, sizeof(struct factGetVarPN1Call));
+    ClearBitString(&hack, sizeof(factGetVarPN1Call));
 
     /*========================================*/
     /* A slot value of zero indicates that we */
@@ -861,7 +861,7 @@ static void *FactGetVarPN1(
     /* Return the argument bitmap. */
     /*=============================*/
 
-    return AddBitMap(theEnv, &hack, sizeof(struct factGetVarPN1Call));
+    return AddBitMap(theEnv, &hack, sizeof(factGetVarPN1Call));
 }
 
 /***************************************************************/
@@ -880,7 +880,7 @@ static void *FactGetVarPN2(
     /* Clear the bitmap for storing the argument values. */
     /*===================================================*/
 
-    ClearBitString(&hack, sizeof(struct factGetVarPN2Call));
+    ClearBitString(&hack, sizeof(factGetVarPN2Call));
 
     /*=======================================*/
     /* Store the slot in the fact from which */
@@ -893,7 +893,7 @@ static void *FactGetVarPN2(
     /* Return the argument bitmap. */
     /*=============================*/
 
-    return AddBitMap(theEnv, &hack, sizeof(struct factGetVarPN2Call));
+    return AddBitMap(theEnv, &hack, sizeof(factGetVarPN2Call));
 }
 
 /*************************************************************/
@@ -916,7 +916,7 @@ static void *FactGetVarPN3(
     /* Clear the bitmap for storing the argument values. */
     /*===================================================*/
 
-    ClearBitString(&hack, sizeof(struct factGetVarPN3Call));
+    ClearBitString(&hack, sizeof(factGetVarPN3Call));
 
     /*=======================================*/
     /* Store the slot in the fact from which */
@@ -957,7 +957,7 @@ static void *FactGetVarPN3(
             hack.endOffset = theNode->singleFieldsAfter;
         }
 
-        return (AddBitMap(theEnv, &hack, sizeof(struct factGetVarPN3Call)));
+        return (AddBitMap(theEnv, &hack, sizeof(factGetVarPN3Call)));
     }
 
     /*============================================================*/
@@ -980,7 +980,7 @@ static void *FactGetVarPN3(
     /* Return the argument bitmap. */
     /*=============================*/
 
-    return AddBitMap(theEnv, &hack, sizeof(struct factGetVarPN3Call));
+    return AddBitMap(theEnv, &hack, sizeof(factGetVarPN3Call));
 }
 
 /*************************************************************/
@@ -999,7 +999,7 @@ struct expr *FactPNVariableComparison(
     /* Clear the bitmap for storing the argument values. */
     /*===================================================*/
 
-    ClearBitString(&hack, sizeof(struct factCompVarsPN1Call));
+    ClearBitString(&hack, sizeof(factCompVarsPN1Call));
 
     /*================================================================*/
     /* If two single field slots of a deftemplate are being compared, */
@@ -1020,7 +1020,7 @@ struct expr *FactPNVariableComparison(
         if (selfNode->negated) hack.fail = 1;
         else hack.pass = 1;
 
-        top = GenConstant(theEnv, FACT_PN_CMP1, AddBitMap(theEnv, &hack, sizeof(struct factCompVarsPN1Call)));
+        top = GenConstant(theEnv, FACT_PN_CMP1, AddBitMap(theEnv, &hack, sizeof(factCompVarsPN1Call)));
     }
 
         /*================================================================*/
@@ -1070,7 +1070,7 @@ struct expr *FactJNVariableComparison(
         (referringNode->withinMultifieldSlot == false) &&
         (referringNode->slotNumber > 0) &&
         (referringNode->slotNumber != UNSPECIFIED_SLOT)) {
-        ClearBitString(&hack1, sizeof(struct factCompVarsJN1Call));
+        ClearBitString(&hack1, sizeof(factCompVarsJN1Call));
         hack1.pass = 0;
         hack1.fail = 0;
 
@@ -1097,7 +1097,7 @@ struct expr *FactJNVariableComparison(
         if (selfNode->negated) hack1.fail = 1;
         else hack1.pass = 1;
 
-        top = GenConstant(theEnv, FACT_JN_CMP1, AddBitMap(theEnv, &hack1, sizeof(struct factCompVarsJN1Call)));
+        top = GenConstant(theEnv, FACT_JN_CMP1, AddBitMap(theEnv, &hack1, sizeof(factCompVarsJN1Call)));
     }
 
         /*===============================================================*/
@@ -1119,7 +1119,7 @@ struct expr *FactJNVariableComparison(
              (referringNode->pnType == SF_VARIABLE_NODE) &&
              ((referringNode->multiFieldsBefore == 0) ||
               (referringNode->multiFieldsAfter == 0))) {
-        ClearBitString(&hack2, sizeof(struct factCompVarsJN2Call));
+        ClearBitString(&hack2, sizeof(factCompVarsJN2Call));
         hack2.pass = 0;
         hack2.fail = 0;
 
@@ -1162,7 +1162,7 @@ struct expr *FactJNVariableComparison(
         if (selfNode->negated) hack2.fail = 1;
         else hack2.pass = 1;
 
-        top = GenConstant(theEnv, FACT_JN_CMP2, AddBitMap(theEnv, &hack2, sizeof(struct factCompVarsJN2Call)));
+        top = GenConstant(theEnv, FACT_JN_CMP2, AddBitMap(theEnv, &hack2, sizeof(factCompVarsJN2Call)));
     }
 
         /*===============================================================*/

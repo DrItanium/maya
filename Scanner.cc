@@ -74,7 +74,7 @@ static void DeallocateScannerData(Environment *);
 /************************************************/
 void InitializeScannerData(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, SCANNER_DATA, sizeof(struct scannerData), DeallocateScannerData);
+    AllocateEnvironmentData(theEnv, SCANNER_DATA, sizeof(scannerData), DeallocateScannerData);
 }
 
 /**************************************************/

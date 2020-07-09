@@ -82,7 +82,7 @@ struct printUtilityData {
     bool InstanceAddressesToNames;
 };
 
-#define PrintUtilityData(theEnv) ((struct printUtilityData *) GetEnvironmentData(theEnv,PRINT_UTILITY_DATA))
+#define PrintUtilityData(theEnv) ((printUtilityData *) GetEnvironmentData(theEnv,PRINT_UTILITY_DATA))
 
 void InitializePrintUtilityData(Environment *);
 void WriteFloat(Environment *, const char *, double);

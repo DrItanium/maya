@@ -113,7 +113,7 @@ static void DeallocateUtilityData(Environment *);
 /************************************************/
 void InitializeUtilityData(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, UTILITY_DATA, sizeof(struct utilityData), DeallocateUtilityData);
+    AllocateEnvironmentData(theEnv, UTILITY_DATA, sizeof(utilityData), DeallocateUtilityData);
 
     UtilityData(theEnv)->CurrentGarbageFrame = &UtilityData(theEnv)->MasterGarbageFrame;
 
@@ -281,7 +281,7 @@ void GCBlockStart(
         Environment *theEnv,
         GCBlock *theBlock) {
     theBlock->oldGarbageFrame = UtilityData(theEnv)->CurrentGarbageFrame;
-    memset(&theBlock->newGarbageFrame, 0, sizeof(struct garbageFrame));
+    memset(&theBlock->newGarbageFrame, 0, sizeof(garbageFrame));
     theBlock->newGarbageFrame.priorFrame = theBlock->oldGarbageFrame;
     UtilityData(theEnv)->CurrentGarbageFrame = &theBlock->newGarbageFrame;
 }

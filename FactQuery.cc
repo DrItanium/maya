@@ -111,7 +111,7 @@ static void PopQuerySoln(Environment *);
  ****************************************************/
 void SetupFactQuery(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, FACT_QUERY_DATA, sizeof(struct factQueryData), nullptr);
+    AllocateEnvironmentData(theEnv, FACT_QUERY_DATA, sizeof(factQueryData), nullptr);
 
     FactQueryData(theEnv)->QUERY_DELIMITER_SYMBOL = CreateSymbol(theEnv, QUERY_DELIMITER_STRING);
     IncrementLexemeCount(FactQueryData(theEnv)->QUERY_DELIMITER_SYMBOL);

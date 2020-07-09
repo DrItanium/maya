@@ -124,7 +124,7 @@ void InitializeEvaluationData(
         Environment *theEnv) {
     struct externalAddressType cPointer = {"C", PrintCAddress, PrintCAddress, nullptr, NewCAddress, nullptr};
 
-    AllocateEnvironmentData(theEnv, EVALUATION_DATA, sizeof(struct evaluationData), DeallocateEvaluationData);
+    AllocateEnvironmentData(theEnv, EVALUATION_DATA, sizeof(evaluationData), DeallocateEvaluationData);
 
     InstallExternalAddressType(theEnv, &cPointer);
 }
@@ -298,8 +298,8 @@ int InstallExternalAddressType(
         ExitRouter(theEnv, EXIT_FAILURE);
     }
 
-    copyEAT = (struct externalAddressType *) genalloc(theEnv, sizeof(struct externalAddressType));
-    memcpy(copyEAT, theAddressType, sizeof(struct externalAddressType));
+    copyEAT = (externalAddressType *) genalloc(theEnv, sizeof(externalAddressType));
+    memcpy(copyEAT, theAddressType, sizeof(externalAddressType));
     EvaluationData(theEnv)->ExternalAddressTypes[EvaluationData(theEnv)->numberOfAddressTypes++] = copyEAT;
 
     return rv;

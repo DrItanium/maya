@@ -55,7 +55,7 @@ struct sortFunctionData {
     struct expr *SortComparisonFunction;
 };
 
-#define SortFunctionData(theEnv) ((struct sortFunctionData *) GetEnvironmentData(theEnv,SORTFUN_DATA))
+#define SortFunctionData(theEnv) ((sortFunctionData *) GetEnvironmentData(theEnv,SORTFUN_DATA))
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
@@ -73,7 +73,7 @@ static void DeallocateSortFunctionData(Environment *);
 /****************************************/
 void SortFunctionDefinitions(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, SORTFUN_DATA, sizeof(struct sortFunctionData), DeallocateSortFunctionData);
+    AllocateEnvironmentData(theEnv, SORTFUN_DATA, sizeof(sortFunctionData), DeallocateSortFunctionData);
     AddUDF(theEnv, "sort", "bm", 1, UNBOUNDED, "*;y", SortFunction, nullptr);
 }
 

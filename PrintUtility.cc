@@ -99,7 +99,7 @@
 /*****************************************************/
 void InitializePrintUtilityData(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, PRINT_UTILITY_DATA, sizeof(struct printUtilityData), nullptr);
+    AllocateEnvironmentData(theEnv, PRINT_UTILITY_DATA, sizeof(printUtilityData), nullptr);
 }
 
 /************************************************************/

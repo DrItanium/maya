@@ -170,12 +170,12 @@ void InstallProcedurePrimitives(
                         nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr };
 #endif
 
-    AllocateEnvironmentData(theEnv, PROCEDURAL_PRIMITIVE_DATA, sizeof(struct proceduralPrimitiveData), DeallocateProceduralPrimitiveData);
+    AllocateEnvironmentData(theEnv, PROCEDURAL_PRIMITIVE_DATA, sizeof(proceduralPrimitiveData), DeallocateProceduralPrimitiveData);
 
-    memcpy(&ProceduralPrimitiveData(theEnv)->ProcParameterInfo, &procParameterInfo, sizeof(struct entityRecord));
-    memcpy(&ProceduralPrimitiveData(theEnv)->ProcWildInfo, &procWildInfo, sizeof(struct entityRecord));
-    memcpy(&ProceduralPrimitiveData(theEnv)->ProcGetInfo, &procGetInfo, sizeof(struct entityRecord));
-    memcpy(&ProceduralPrimitiveData(theEnv)->ProcBindInfo, &procBindInfo, sizeof(struct entityRecord));
+    memcpy(&ProceduralPrimitiveData(theEnv)->ProcParameterInfo, &procParameterInfo, sizeof(entityRecord));
+    memcpy(&ProceduralPrimitiveData(theEnv)->ProcWildInfo, &procWildInfo, sizeof(entityRecord));
+    memcpy(&ProceduralPrimitiveData(theEnv)->ProcGetInfo, &procGetInfo, sizeof(entityRecord));
+    memcpy(&ProceduralPrimitiveData(theEnv)->ProcBindInfo, &procBindInfo, sizeof(entityRecord));
 
     InstallPrimitive(theEnv, &ProceduralPrimitiveData(theEnv)->ProcParameterInfo, PROC_PARAM);
     InstallPrimitive(theEnv, &ProceduralPrimitiveData(theEnv)->ProcWildInfo, PROC_WILD_PARAM);
@@ -193,12 +193,12 @@ void InstallProcedurePrimitives(
        =============================================== */
 
 #if !DEFFUNCTION_CONSTRUCT
-    memcpy(&ProceduralPrimitiveData(theEnv)->DeffunctionEntityRecord,&deffunctionEntityRecord,sizeof(struct entityRecord));
+    memcpy(&ProceduralPrimitiveData(theEnv)->DeffunctionEntityRecord,&deffunctionEntityRecord,sizeof(entityRecord));
     InstallPrimitive(theEnv,&ProceduralPrimitiveData(theEnv)->DeffunctionEntityRecord,PCALL);
 #endif
 
 #if !DEFGENERIC_CONSTRUCT
-    memcpy(&ProceduralPrimitiveData(theEnv)->GenericEntityRecord,&genericEntityRecord,sizeof(struct entityRecord));
+    memcpy(&ProceduralPrimitiveData(theEnv)->GenericEntityRecord,&genericEntityRecord,sizeof(entityRecord));
     InstallPrimitive(theEnv,&ProceduralPrimitiveData(theEnv)->GenericEntityRecord,GCALL);
 #endif
 

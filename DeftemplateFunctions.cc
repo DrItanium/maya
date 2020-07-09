@@ -1908,7 +1908,7 @@ bool UpdateModifyDuplicate(
     if (functionArgs->type == SF_VARIABLE) {
         if (SearchParsedBindNames(theEnv, functionArgs->lexemeValue) != 0) { return true; }
         templateName = FindTemplateForFactAddress(functionArgs->lexemeValue,
-                                                  (struct lhsParseNode *) vTheLHS);
+                                                  (lhsParseNode *) vTheLHS);
         if (templateName == nullptr) return true;
     } else { return true; }
 

@@ -74,7 +74,7 @@ struct stringRouterData {
     StringBuilderRouter *ListOfStringBuilderRouters;
 };
 
-#define StringRouterData(theEnv) ((struct stringRouterData *) GetEnvironmentData(theEnv,STRING_ROUTER_DATA))
+#define StringRouterData(theEnv) ((stringRouterData *) GetEnvironmentData(theEnv,STRING_ROUTER_DATA))
 
 /**************************/
 /* I/O ROUTER DEFINITIONS */

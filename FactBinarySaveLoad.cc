@@ -91,7 +91,7 @@ static void DeallocateFactBloadData(Environment *);
 /*****************************************************/
 void FactBinarySetup(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, FACTBIN_DATA, sizeof(struct factBinaryData), DeallocateFactBloadData);
+    AllocateEnvironmentData(theEnv, FACTBIN_DATA, sizeof(factBinaryData), DeallocateFactBloadData);
 
 #if BLOAD_AND_BSAVE
     AddBinaryItem(theEnv, "facts", 0, BsaveFind, nullptr,
@@ -114,7 +114,7 @@ static void DeallocateFactBloadData(
         DestroyAlphaMemory(theEnv, &FactBinaryData(theEnv)->FactPatternArray[i].header, false);
     }
 
-    space = FactBinaryData(theEnv)->NumberOfPatterns * sizeof(struct factPatternNode);
+    space = FactBinaryData(theEnv)->NumberOfPatterns * sizeof(factPatternNode);
     if (space != 0) genfree(theEnv, FactBinaryData(theEnv)->FactPatternArray, space);
 }
 
@@ -238,7 +238,7 @@ static void BsaveFactPatterns(
     /* in the binary image.                   */
     /*========================================*/
 
-    space = FactBinaryData(theEnv)->NumberOfPatterns * sizeof(struct bsaveFactPatternNode);
+    space = FactBinaryData(theEnv)->NumberOfPatterns * sizeof(bsaveFactPatternNode);
     GenWrite(&space, sizeof(size_t), fp);
 
     /*===========================*/
@@ -292,7 +292,7 @@ static void BsavePatternNode(
     tempNode.leftNode = BsaveFactPatternIndex(thePattern->leftNode);
     tempNode.rightNode = BsaveFactPatternIndex(thePattern->rightNode);
 
-    GenWrite(&tempNode, sizeof(struct bsaveFactPatternNode), fp);
+    GenWrite(&tempNode, sizeof(bsaveFactPatternNode), fp);
 }
 
 #endif /* BLOAD_AND_BSAVE */
@@ -323,8 +323,8 @@ static void BloadStorage(
         return;
     }
 
-    space = FactBinaryData(theEnv)->NumberOfPatterns * sizeof(struct factPatternNode);
-    FactBinaryData(theEnv)->FactPatternArray = (struct factPatternNode *) genalloc(theEnv, space);
+    space = FactBinaryData(theEnv)->NumberOfPatterns * sizeof(factPatternNode);
+    FactBinaryData(theEnv)->FactPatternArray = (factPatternNode *) genalloc(theEnv, space);
 }
 
 /************************************************************/
@@ -349,7 +349,7 @@ static void BloadBinaryItem(
     /* and refresh the pointers.                   */
     /*=============================================*/
 
-    BloadandRefresh(theEnv, FactBinaryData(theEnv)->NumberOfPatterns, sizeof(struct bsaveFactPatternNode),
+    BloadandRefresh(theEnv, FactBinaryData(theEnv)->NumberOfPatterns, sizeof(bsaveFactPatternNode),
                     UpdateFactPatterns);
 
     for (i = 0; i < FactBinaryData(theEnv)->NumberOfPatterns; i++) {
@@ -373,7 +373,7 @@ static void UpdateFactPatterns(
         unsigned long obji) {
     struct bsaveFactPatternNode *bp;
 
-    bp = (struct bsaveFactPatternNode *) buf;
+    bp = (bsaveFactPatternNode *) buf;
 
     UpdatePatternNodeHeader(theEnv, &FactBinaryData(theEnv)->FactPatternArray[obji].header, &bp->header);
 
@@ -408,7 +408,7 @@ static void ClearBload(
         }
     }
 
-    space = FactBinaryData(theEnv)->NumberOfPatterns * sizeof(struct factPatternNode);
+    space = FactBinaryData(theEnv)->NumberOfPatterns * sizeof(factPatternNode);
     if (space != 0) genfree(theEnv, FactBinaryData(theEnv)->FactPatternArray, space);
     FactBinaryData(theEnv)->NumberOfPatterns = 0;
 }

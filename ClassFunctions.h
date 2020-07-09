@@ -138,7 +138,7 @@ struct defclassData {
     int newSlotID;
 };
 
-#define DefclassData(theEnv) ((struct defclassData *) GetEnvironmentData(theEnv,DEFCLASS_DATA))
+#define DefclassData(theEnv) ((defclassData *) GetEnvironmentData(theEnv,DEFCLASS_DATA))
 
 #endif
 

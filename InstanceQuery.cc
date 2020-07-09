@@ -115,7 +115,7 @@ static void PopQuerySoln(Environment *);
  ****************************************************/
 void SetupQuery(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, INSTANCE_QUERY_DATA, sizeof(struct instanceQueryData), nullptr);
+    AllocateEnvironmentData(theEnv, INSTANCE_QUERY_DATA, sizeof(instanceQueryData), nullptr);
 
     InstanceQueryData(theEnv)->QUERY_DELIMITER_SYMBOL = CreateSymbol(theEnv, QUERY_DELIMITER_STRING);
     IncrementLexemeCount(InstanceQueryData(theEnv)->QUERY_DELIMITER_SYMBOL);

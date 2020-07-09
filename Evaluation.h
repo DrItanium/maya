@@ -144,7 +144,7 @@ struct evaluationData {
     struct externalAddressType *ExternalAddressTypes[MAXIMUM_EXTERNAL_ADDRESS_TYPES];
 };
 
-#define EvaluationData(theEnv) ((struct evaluationData *) GetEnvironmentData(theEnv,EVALUATION_DATA))
+#define EvaluationData(theEnv) ((evaluationData *) GetEnvironmentData(theEnv,EVALUATION_DATA))
 
 void InitializeEvaluationData(Environment *);
 bool EvaluateExpression(Environment *, struct expr *, UDFValue *);

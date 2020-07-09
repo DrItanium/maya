@@ -229,11 +229,11 @@ bool ParseDefrule(
     /* Store a pointer to the rule's module. */
     /*=======================================*/
 
-    theModuleItem = (struct defruleModule *)
+    theModuleItem = (defruleModule *)
             GetModuleItem(theEnv, nullptr, FindModuleItem(theEnv, "defrule")->moduleIndex);
 
     for (tempPtr = topDisjunct; tempPtr != nullptr; tempPtr = tempPtr->disjunct) {
-        tempPtr->header.whichModule = (struct defmoduleItemHeader *) theModuleItem;
+        tempPtr->header.whichModule = (defmoduleItemHeader *) theModuleItem;
         tempPtr->header.ppForm = topDisjunct->header.ppForm;
     }
 
@@ -502,7 +502,7 @@ static Defrule *CreateNewDisjunct(
     /*=====================================*/
 
     newDisjunct->header.whichModule =
-            (struct defmoduleItemHeader *)
+            (defmoduleItemHeader *)
                     GetModuleItem(theEnv, nullptr, FindModuleItem(theEnv, "defrule")->moduleIndex);
 
     /*============================================================*/
@@ -569,7 +569,7 @@ static int ReplaceRHSVariable(
     /* Check to see if the variable is bound on the LHS of the rule. */
     /*===============================================================*/
 
-    theVariable = FindVariable(list->lexemeValue, (struct lhsParseNode *) VtheLHS);
+    theVariable = FindVariable(list->lexemeValue, (lhsParseNode *) VtheLHS);
     if (theVariable == nullptr) return 0;
 
     /*================================================*/
@@ -887,7 +887,7 @@ static void AddToDefruleList(
     Defrule *tempRule;
     struct defruleModule *theModuleItem;
 
-    theModuleItem = (struct defruleModule *) rulePtr->header.whichModule;
+    theModuleItem = (defruleModule *) rulePtr->header.whichModule;
 
     if (theModuleItem->header.lastItem == nullptr) { theModuleItem->header.firstItem = &rulePtr->header; }
     else {

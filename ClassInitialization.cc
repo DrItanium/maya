@@ -157,10 +157,10 @@ void SetupObjectSystem(
                                          (EntityBusyCountFunction *) IncrementDefclassBusyCount,
                                          nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    AllocateEnvironmentData(theEnv, DEFCLASS_DATA, sizeof(struct defclassData), nullptr);
+    AllocateEnvironmentData(theEnv, DEFCLASS_DATA, sizeof(defclassData), nullptr);
     AddEnvironmentCleanupFunction(theEnv, "defclasses", DeallocateDefclassData, -500);
 
-    memcpy(&DefclassData(theEnv)->DefclassEntityRecord, &defclassEntityRecord, sizeof(struct entityRecord));
+    memcpy(&DefclassData(theEnv)->DefclassEntityRecord, &defclassEntityRecord, sizeof(entityRecord));
 
     DefclassData(theEnv)->newSlotID = 2; // IS_A and NAME assigned 0 and 1
 
@@ -215,7 +215,7 @@ static void DeallocateDefclassData(
         for (theModule = GetNextDefmodule(theEnv, nullptr);
              theModule != nullptr;
              theModule = GetNextDefmodule(theEnv, theModule)) {
-            theModuleItem = (struct defclassModule *)
+            theModuleItem = (defclassModule *)
                     GetModuleItem(theEnv, theModule,
                                   DefclassData(theEnv)->DefclassModuleIndex);
             rtn_struct(theEnv, defclassModule, theModuleItem);
@@ -549,7 +549,7 @@ static void *AllocateModule(
 static void ReturnModule(
         Environment *theEnv,
         void *theItem) {
-    FreeConstructHeaderModule(theEnv, (struct defmoduleItemHeader *) theItem, DefclassData(theEnv)->DefclassConstruct);
+    FreeConstructHeaderModule(theEnv, (defmoduleItemHeader *) theItem, DefclassData(theEnv)->DefclassConstruct);
     DeleteSlotName(theEnv, FindIDSlotNameHash(theEnv, ISA_ID));
     DeleteSlotName(theEnv, FindIDSlotNameHash(theEnv, NAME_ID));
     rtn_struct(theEnv, defclassModule, theItem);

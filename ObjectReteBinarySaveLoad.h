@@ -61,7 +61,7 @@ struct objectReteBinaryData {
     CLASS_ALPHA_LINK *AlphaLinkArray;
 };
 
-#define ObjectReteBinaryData(theEnv) ((struct objectReteBinaryData *) GetEnvironmentData(theEnv,OBJECTRETEBIN_DATA))
+#define ObjectReteBinaryData(theEnv) ((objectReteBinaryData *) GetEnvironmentData(theEnv,OBJECTRETEBIN_DATA))
 
 #define ClassAlphaPointer(i)   ((i == ULONG_MAX) ? nullptr : (CLASS_ALPHA_LINK *) &ObjectReteBinaryData(theEnv)->AlphaLinkArray[i])
 

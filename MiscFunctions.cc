@@ -144,7 +144,7 @@ struct miscFunctionData {
     CLIPSValue errorCode;
 };
 
-#define MiscFunctionData(theEnv) ((struct miscFunctionData *) GetEnvironmentData(theEnv,MISCFUN_DATA))
+#define MiscFunctionData(theEnv) ((miscFunctionData *) GetEnvironmentData(theEnv,MISCFUN_DATA))
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
@@ -160,7 +160,7 @@ static void ConvertTime(Environment *, UDFValue *, struct tm *);
 /*****************************************************************/
 void MiscFunctionDefinitions(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, MISCFUN_DATA, sizeof(struct miscFunctionData), nullptr);
+    AllocateEnvironmentData(theEnv, MISCFUN_DATA, sizeof(miscFunctionData), nullptr);
     MiscFunctionData(theEnv)->GensymNumber = 1;
     MiscFunctionData(theEnv)->errorCode.lexemeValue = FalseSymbol(theEnv);
     Retain(theEnv, MiscFunctionData(theEnv)->errorCode.header);

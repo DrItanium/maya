@@ -284,7 +284,7 @@ static void DetachJoins(
         /*==========================================================*/
 
         prevJoin = join->lastLevel;
-        if (join->joinFromTheRight) { rightJoin = (struct joinNode *) join->rightSideEntryStructure; }
+        if (join->joinFromTheRight) { rightJoin = (joinNode *) join->rightSideEntryStructure; }
         else { rightJoin = nullptr; }
 
         /*=================================================*/
@@ -464,7 +464,7 @@ static void RemoveIntranetworkLink(
     /* enters from the right.                         */
     /*================================================*/
 
-    patternPtr = (struct patternNodeHeader *) join->rightSideEntryStructure;
+    patternPtr = (patternNodeHeader *) join->rightSideEntryStructure;
     joinPtr = patternPtr->entryJoin;
     lastJoin = nullptr;
 

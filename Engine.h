@@ -144,7 +144,7 @@ struct engineData {
 #endif
 };
 
-#define EngineData(theEnv) ((struct engineData *) GetEnvironmentData(theEnv,ENGINE_DATA))
+#define EngineData(theEnv) ((engineData *) GetEnvironmentData(theEnv,ENGINE_DATA))
 
 #define MAX_PATTERNS_CHECKED 64
 

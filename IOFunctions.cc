@@ -150,7 +150,7 @@ struct IOFunctionData {
     bool useFullCRLF;
 };
 
-#define IOFunctionData(theEnv) ((struct IOFunctionData *) GetEnvironmentData(theEnv,IO_FUNCTION_DATA))
+#define IOFunctionData(theEnv) ((IOFunctionData *) GetEnvironmentData(theEnv,IO_FUNCTION_DATA))
 
 /****************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS  */
@@ -172,7 +172,7 @@ static void PrintDriver(UDFContext *, const char *, bool);
 /**************************************/
 void IOFunctionDefinitions(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, IO_FUNCTION_DATA, sizeof(struct IOFunctionData), nullptr);
+    AllocateEnvironmentData(theEnv, IO_FUNCTION_DATA, sizeof(IOFunctionData), nullptr);
 
 #if IO_FUNCTIONS
     IOFunctionData(theEnv)->useFullCRLF = false;

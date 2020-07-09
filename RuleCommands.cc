@@ -399,12 +399,12 @@ void Matches(
 
     if (output == VERBOSE) { WriteString(theEnv, STDOUT, "Activations\n"); }
 
-    for (agendaPtr = ((struct defruleModule *) topDisjunct->header.whichModule)->agenda;
+    for (agendaPtr = ((defruleModule *) topDisjunct->header.whichModule)->agenda;
          agendaPtr != nullptr;
-         agendaPtr = (struct activation *) GetNextActivation(theEnv, agendaPtr)) {
+         agendaPtr = (activation *) GetNextActivation(theEnv, agendaPtr)) {
         if (GetHaltExecution(theEnv) == true) return;
 
-        if (((struct activation *) agendaPtr)->theRule->header.name == topDisjunct->header.name) {
+        if (((activation *) agendaPtr)->theRule->header.name == topDisjunct->header.name) {
             activations++;
 
             if (output == VERBOSE) {
@@ -437,7 +437,7 @@ static unsigned short AlphaJoinCountDriver(
 
     if (theJoin == nullptr) { return alphaCount; }
 
-    if (theJoin->joinFromTheRight) { return AlphaJoinCountDriver(theEnv, (struct joinNode *) theJoin->rightSideEntryStructure); }
+    if (theJoin->joinFromTheRight) { return AlphaJoinCountDriver(theEnv, (joinNode *) theJoin->rightSideEntryStructure); }
     else if (theJoin->lastLevel != nullptr) { alphaCount += AlphaJoinCountDriver(theEnv, theJoin->lastLevel); }
 
     alphaCount++;
@@ -467,7 +467,7 @@ static void AlphaJoinsDriver(
     if (theJoin == nullptr) { return; }
 
     if (theJoin->joinFromTheRight) {
-        AlphaJoinsDriver(theEnv, (struct joinNode *) theJoin->rightSideEntryStructure, alphaIndex, theInfo);
+        AlphaJoinsDriver(theEnv, (joinNode *) theJoin->rightSideEntryStructure, alphaIndex, theInfo);
         return;
     } else if (theJoin->lastLevel != nullptr) { AlphaJoinsDriver(theEnv, theJoin->lastLevel, alphaIndex - 1, theInfo); }
 
@@ -503,7 +503,7 @@ static unsigned short BetaJoinCountDriver(
 
     betaCount++;
 
-    if (theJoin->joinFromTheRight) { betaCount += BetaJoinCountDriver(theEnv, (struct joinNode *) theJoin->rightSideEntryStructure); }
+    if (theJoin->joinFromTheRight) { betaCount += BetaJoinCountDriver(theEnv, (joinNode *) theJoin->rightSideEntryStructure); }
     else if (theJoin->lastLevel != nullptr) { betaCount += BetaJoinCountDriver(theEnv, theJoin->lastLevel); }
 
     return betaCount;
@@ -571,7 +571,7 @@ static void BetaJoinsDriver(
     /*==========================*/
 
     if (theJoin->joinFromTheRight) {
-        BetaJoinsDriver(theEnv, (struct joinNode *) theJoin->rightSideEntryStructure, betaIndex - 1, theJoinInfoArray, theJoin->rightMemory,
+        BetaJoinsDriver(theEnv, (joinNode *) theJoin->rightSideEntryStructure, betaIndex - 1, theJoinInfoArray, theJoin->rightMemory,
                         theJoin);
     } else if (theJoin->lastLevel != nullptr) {
         BetaJoinsDriver(theEnv, theJoin->lastLevel, betaIndex - 1, theJoinInfoArray, theJoin->leftMemory, theJoin);
@@ -602,7 +602,7 @@ struct joinInformation *CreateJoinArray(
         unsigned short size) {
     if (size == 0) return nullptr;
 
-    return (struct joinInformation *) genalloc(theEnv, sizeof(struct joinInformation) * size);
+    return (joinInformation *) genalloc(theEnv, sizeof(joinInformation) * size);
 }
 
 /*******************************************/
@@ -615,7 +615,7 @@ void FreeJoinArray(
         unsigned short size) {
     if (size == 0) return;
 
-    genfree(theEnv, theArray, sizeof(struct joinInformation) * size);
+    genfree(theEnv, theArray, sizeof(joinInformation) * size);
 }
 
 /*********************/
@@ -660,7 +660,7 @@ static long long ListAlphaMatches(
         return (alphaCount);
     }
 
-    listOfHashNodes = ((struct patternNodeHeader *) theJoin->rightSideEntryStructure)->firstHash;
+    listOfHashNodes = ((patternNodeHeader *) theJoin->rightSideEntryStructure)->firstHash;
 
     for (count = 0;
          listOfHashNodes != nullptr;
@@ -861,7 +861,7 @@ static int CountPatterns(
 
     while (theJoin != nullptr) {
         if (theJoin->joinFromTheRight) {
-            if (followRight) { theJoin = (struct joinNode *) theJoin->rightSideEntryStructure; }
+            if (followRight) { theJoin = (joinNode *) theJoin->rightSideEntryStructure; }
             else { theJoin = theJoin->lastLevel; }
         } else {
             theCount++;
@@ -1129,7 +1129,7 @@ static void JoinActivityReset(
         theJoin->memoryLeftDeletes = 0;
         theJoin->memoryRightDeletes = 0;
 
-        if (theJoin->joinFromTheRight) { theJoin = (struct joinNode *) theJoin->rightSideEntryStructure; }
+        if (theJoin->joinFromTheRight) { theJoin = (joinNode *) theJoin->rightSideEntryStructure; }
         else { theJoin = theJoin->lastLevel; }
     }
 }
@@ -1165,7 +1165,7 @@ void TimetagFunction(
         return;
     }
 
-    returnValue->integerValue = CreateInteger(theEnv, (long long) ((struct patternEntity *) ptr)->timeTag);
+    returnValue->integerValue = CreateInteger(theEnv, (long long) ((patternEntity *) ptr)->timeTag);
 }
 
 #endif /* DEBUGGING_FUNCTIONS */
@@ -1274,7 +1274,7 @@ static void ShowJoins(
            {
             numberOfJoins++;
             joinList[numberOfJoins] = theJoin;
-            theJoin = (struct joinNode *) theJoin->rightSideEntryStructure;
+            theJoin = (joinNode *) theJoin->rightSideEntryStructure;
            }
          else
            {

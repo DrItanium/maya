@@ -141,7 +141,7 @@ static void DeallocateCommandLineData(Environment *);
 /****************************************************/
 void InitializeCommandLineData(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, COMMANDLINE_DATA, sizeof(struct commandLineData), DeallocateCommandLineData);
+    AllocateEnvironmentData(theEnv, COMMANDLINE_DATA, sizeof(commandLineData), DeallocateCommandLineData);
 
     CommandLineData(theEnv)->BannerString = BANNER_STRING;
     CommandLineData(theEnv)->EventCallback = DefaultGetNextEvent;

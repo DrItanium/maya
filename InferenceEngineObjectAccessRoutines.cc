@@ -116,7 +116,7 @@ static void GetPatternObjectAndMarks(Environment *, unsigned short, bool, bool, 
 static void GetObjectValueGeneral(Environment *, UDFValue *, Instance *,
                                   struct multifieldMarker *, struct ObjectMatchVar1 *);
 static void GetObjectValueSimple(Environment *, UDFValue *, Instance *, struct ObjectMatchVar2 *);
-static size_t CalculateSlotField(struct multifieldMarker *, InstanceSlot *, size_t, size_t *);
+static size_t CalculateSlotField(multifieldMarker *, InstanceSlot *, size_t, size_t *);
 static void GetInsMultiSlotField(CLIPSValue *, Instance *, unsigned, unsigned, unsigned);
 static void DeallocateObjectReteData(Environment *);
 static void DestroyObjectPatternNetwork(Environment *, OBJECT_PATTERN_NODE *);
@@ -212,21 +212,21 @@ void InstallObjectPrimitives(
                                                 JNSimpleCompareFunction3,
                                                 nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    AllocateEnvironmentData(theEnv, OBJECT_RETE_DATA, sizeof(struct objectReteData), DeallocateObjectReteData);
+    AllocateEnvironmentData(theEnv, OBJECT_RETE_DATA, sizeof(objectReteData), DeallocateObjectReteData);
     ObjectReteData(theEnv)->CurrentObjectSlotLength = 1;
 
-    memcpy(&ObjectReteData(theEnv)->ObjectGVInfo1, &objectGVInfo1, sizeof(struct entityRecord));
-    memcpy(&ObjectReteData(theEnv)->ObjectGVInfo2, &objectGVInfo2, sizeof(struct entityRecord));
-    memcpy(&ObjectReteData(theEnv)->ObjectGVPNInfo1, &objectGVPNInfo1, sizeof(struct entityRecord));
-    memcpy(&ObjectReteData(theEnv)->ObjectGVPNInfo2, &objectGVPNInfo2, sizeof(struct entityRecord));
-    memcpy(&ObjectReteData(theEnv)->ObjectCmpConstantInfo, &objectCmpConstantInfo, sizeof(struct entityRecord));
-    memcpy(&ObjectReteData(theEnv)->LengthTestInfo, &lengthTestInfo, sizeof(struct entityRecord));
-    memcpy(&ObjectReteData(theEnv)->PNSimpleCompareInfo1, &pNSimpleCompareInfo1, sizeof(struct entityRecord));
-    memcpy(&ObjectReteData(theEnv)->PNSimpleCompareInfo2, &pNSimpleCompareInfo2, sizeof(struct entityRecord));
-    memcpy(&ObjectReteData(theEnv)->PNSimpleCompareInfo3, &pNSimpleCompareInfo3, sizeof(struct entityRecord));
-    memcpy(&ObjectReteData(theEnv)->JNSimpleCompareInfo1, &jNSimpleCompareInfo1, sizeof(struct entityRecord));
-    memcpy(&ObjectReteData(theEnv)->JNSimpleCompareInfo2, &jNSimpleCompareInfo2, sizeof(struct entityRecord));
-    memcpy(&ObjectReteData(theEnv)->JNSimpleCompareInfo3, &jNSimpleCompareInfo3, sizeof(struct entityRecord));
+    memcpy(&ObjectReteData(theEnv)->ObjectGVInfo1, &objectGVInfo1, sizeof(entityRecord));
+    memcpy(&ObjectReteData(theEnv)->ObjectGVInfo2, &objectGVInfo2, sizeof(entityRecord));
+    memcpy(&ObjectReteData(theEnv)->ObjectGVPNInfo1, &objectGVPNInfo1, sizeof(entityRecord));
+    memcpy(&ObjectReteData(theEnv)->ObjectGVPNInfo2, &objectGVPNInfo2, sizeof(entityRecord));
+    memcpy(&ObjectReteData(theEnv)->ObjectCmpConstantInfo, &objectCmpConstantInfo, sizeof(entityRecord));
+    memcpy(&ObjectReteData(theEnv)->LengthTestInfo, &lengthTestInfo, sizeof(entityRecord));
+    memcpy(&ObjectReteData(theEnv)->PNSimpleCompareInfo1, &pNSimpleCompareInfo1, sizeof(entityRecord));
+    memcpy(&ObjectReteData(theEnv)->PNSimpleCompareInfo2, &pNSimpleCompareInfo2, sizeof(entityRecord));
+    memcpy(&ObjectReteData(theEnv)->PNSimpleCompareInfo3, &pNSimpleCompareInfo3, sizeof(entityRecord));
+    memcpy(&ObjectReteData(theEnv)->JNSimpleCompareInfo1, &jNSimpleCompareInfo1, sizeof(entityRecord));
+    memcpy(&ObjectReteData(theEnv)->JNSimpleCompareInfo2, &jNSimpleCompareInfo2, sizeof(entityRecord));
+    memcpy(&ObjectReteData(theEnv)->JNSimpleCompareInfo3, &jNSimpleCompareInfo3, sizeof(entityRecord));
 
     InstallPrimitive(theEnv, &ObjectReteData(theEnv)->ObjectGVInfo1, OBJ_GET_SLOT_JNVAR1);
     InstallPrimitive(theEnv, &ObjectReteData(theEnv)->ObjectGVInfo2, OBJ_GET_SLOT_JNVAR2);
@@ -324,7 +324,7 @@ bool ObjectCmpConstantFunction(
     bool rv;
     Multifield *theSegment;
 
-    hack = (struct ObjectCmpPNConstant *) ((CLIPSBitMap *) theValue)->contents;
+    hack = (ObjectCmpPNConstant *) ((CLIPSBitMap *) theValue)->contents;
     if (hack->general) {
         EvaluateExpression(theEnv, GetFirstArgument(), &theVar);
         constantExp = GetFirstArgument()->nextArg;
@@ -365,7 +365,7 @@ static void PrintObjectGetVarJN1(
 #if DEVELOPER
     struct ObjectMatchVar1 *hack;
 
-    hack = (struct ObjectMatchVar1 *) ((CLIPSBitMap *) theValue)->contents;
+    hack = (ObjectMatchVar1 *) ((CLIPSBitMap *) theValue)->contents;
 
     if (hack->objectAddress)
       {
@@ -406,7 +406,7 @@ static bool ObjectGetVarJNFunction1(
     Instance *theInstance;
     struct multifieldMarker *theMarks;
 
-    hack = (struct ObjectMatchVar1 *) ((CLIPSBitMap *) theValue)->contents;
+    hack = (ObjectMatchVar1 *) ((CLIPSBitMap *) theValue)->contents;
     GetPatternObjectAndMarks(theEnv, hack->whichPattern, hack->lhs, hack->rhs, &theInstance, &theMarks);
     GetObjectValueGeneral(theEnv, theResult, theInstance, theMarks, hack);
     return true;
@@ -419,7 +419,7 @@ static void PrintObjectGetVarJN2(
 #if DEVELOPER
     struct ObjectMatchVar2 *hack;
 
-    hack = (struct ObjectMatchVar2 *) ((CLIPSBitMap *) theValue)->contents;
+    hack = (ObjectMatchVar2 *) ((CLIPSBitMap *) theValue)->contents;
     WriteString(theEnv,logicalName,"(obj-slot-quick-var ");
     PrintUnsignedInteger(theEnv,logicalName,hack->whichPattern);
     WriteString(theEnv,logicalName," ");
@@ -452,7 +452,7 @@ static bool ObjectGetVarJNFunction2(
     Instance *theInstance;
     struct multifieldMarker *theMarks;
 
-    hack = (struct ObjectMatchVar2 *) ((CLIPSBitMap *) theValue)->contents;
+    hack = (ObjectMatchVar2 *) ((CLIPSBitMap *) theValue)->contents;
     GetPatternObjectAndMarks(theEnv, hack->whichPattern, hack->lhs, hack->rhs, &theInstance, &theMarks);
     GetObjectValueSimple(theEnv, theResult, theInstance, hack);
     return true;
@@ -465,7 +465,7 @@ static void PrintObjectGetVarPN1(
 #if DEVELOPER
     struct ObjectMatchVar1 *hack;
 
-    hack = (struct ObjectMatchVar1 *) ((CLIPSBitMap *) theValue)->contents;
+    hack = (ObjectMatchVar1 *) ((CLIPSBitMap *) theValue)->contents;
 
     if (hack->objectAddress)
       WriteString(theEnv,logicalName,"(ptn-obj-ptr ");
@@ -497,7 +497,7 @@ static bool ObjectGetVarPNFunction1(
         UDFValue *theResult) {
     struct ObjectMatchVar1 *hack;
 
-    hack = (struct ObjectMatchVar1 *) ((CLIPSBitMap *) theValue)->contents;
+    hack = (ObjectMatchVar1 *) ((CLIPSBitMap *) theValue)->contents;
     GetObjectValueGeneral(theEnv, theResult, ObjectReteData(theEnv)->CurrentPatternObject,
                           ObjectReteData(theEnv)->CurrentPatternObjectMarks, hack);
     return true;
@@ -510,7 +510,7 @@ static void PrintObjectGetVarPN2(
 #if DEVELOPER
     struct ObjectMatchVar2 *hack;
 
-    hack = (struct ObjectMatchVar2 *) ((CLIPSBitMap *) theValue)->contents;
+    hack = (ObjectMatchVar2 *) ((CLIPSBitMap *) theValue)->contents;
     WriteString(theEnv,logicalName,"(ptn-obj-slot-quick-var ");
     WriteString(theEnv,logicalName,FindIDSlotName(theEnv,hack->whichSlot)->contents);
     if (hack->fromBeginning)
@@ -539,7 +539,7 @@ static bool ObjectGetVarPNFunction2(
         UDFValue *theResult) {
     struct ObjectMatchVar2 *hack;
 
-    hack = (struct ObjectMatchVar2 *) ((CLIPSBitMap *) theValue)->contents;
+    hack = (ObjectMatchVar2 *) ((CLIPSBitMap *) theValue)->contents;
     GetObjectValueSimple(theEnv, theResult, ObjectReteData(theEnv)->CurrentPatternObject, hack);
     return true;
 }
@@ -551,7 +551,7 @@ static void PrintObjectCmpConstant(
 #if DEVELOPER
     struct ObjectCmpPNConstant *hack;
 
-    hack = (struct ObjectCmpPNConstant *) ((CLIPSBitMap *) theValue)->contents;
+    hack = (ObjectCmpPNConstant *) ((CLIPSBitMap *) theValue)->contents;
 
     WriteString(theEnv,logicalName,"(obj-const ");
     WriteString(theEnv,logicalName,hack->pass ? "p " : "n ");
@@ -581,7 +581,7 @@ static void PrintSlotLengthTest(
 #if DEVELOPER
     struct ObjectMatchLength *hack;
 
-    hack = (struct ObjectMatchLength *) ((CLIPSBitMap *) theValue)->contents;
+    hack = (ObjectMatchLength *) ((CLIPSBitMap *) theValue)->contents;
 
     WriteString(theEnv,logicalName,"(obj-slot-len ");
     if (hack->exactly)
@@ -606,7 +606,7 @@ static bool SlotLengthTestFunction(
     struct ObjectMatchLength *hack;
 
     theResult->value = FalseSymbol(theEnv);
-    hack = (struct ObjectMatchLength *) ((CLIPSBitMap *) theValue)->contents;
+    hack = (ObjectMatchLength *) ((CLIPSBitMap *) theValue)->contents;
     if (ObjectReteData(theEnv)->CurrentObjectSlotLength < hack->minLength)
         return false;
     if (hack->exactly && (ObjectReteData(theEnv)->CurrentObjectSlotLength > hack->minLength))
@@ -622,7 +622,7 @@ static void PrintPNSimpleCompareFunction1(
 #if DEVELOPER
     struct ObjectCmpPNSingleSlotVars1 *hack;
 
-    hack = (struct ObjectCmpPNSingleSlotVars1 *) ((CLIPSBitMap *) theValue)->contents;
+    hack = (ObjectCmpPNSingleSlotVars1 *) ((CLIPSBitMap *) theValue)->contents;
 
     WriteString(theEnv,logicalName,"(pslot-cmp1 ");
     WriteString(theEnv,logicalName,hack->pass ? "p " : "n ");
@@ -647,7 +647,7 @@ static bool PNSimpleCompareFunction1(
     InstanceSlot *is1, *is2;
     bool rv;
 
-    hack = (struct ObjectCmpPNSingleSlotVars1 *) ((CLIPSBitMap *) theValue)->contents;
+    hack = (ObjectCmpPNSingleSlotVars1 *) ((CLIPSBitMap *) theValue)->contents;
     is1 = GetInsSlot(ObjectReteData(theEnv)->CurrentPatternObject, hack->firstSlot);
     is2 = GetInsSlot(ObjectReteData(theEnv)->CurrentPatternObject, hack->secondSlot);
     if (is1->type != is2->type)
@@ -667,7 +667,7 @@ static void PrintPNSimpleCompareFunction2(
 #if DEVELOPER
     struct ObjectCmpPNSingleSlotVars2 *hack;
 
-    hack = (struct ObjectCmpPNSingleSlotVars2 *) ((CLIPSBitMap *) theValue)->contents;
+    hack = (ObjectCmpPNSingleSlotVars2 *) ((CLIPSBitMap *) theValue)->contents;
 
     WriteString(theEnv,logicalName,"(pslot-cmp2 ");
     WriteString(theEnv,logicalName,hack->pass ? "p " : "n ");
@@ -695,7 +695,7 @@ static bool PNSimpleCompareFunction2(
     CLIPSValue f1;
     InstanceSlot *is2;
 
-    hack = (struct ObjectCmpPNSingleSlotVars2 *) ((CLIPSBitMap *) theValue)->contents;
+    hack = (ObjectCmpPNSingleSlotVars2 *) ((CLIPSBitMap *) theValue)->contents;
     GetInsMultiSlotField(&f1, ObjectReteData(theEnv)->CurrentPatternObject, hack->firstSlot,
                          hack->fromBeginning, hack->offset);
     is2 = GetInsSlot(ObjectReteData(theEnv)->CurrentPatternObject, hack->secondSlot);
@@ -714,7 +714,7 @@ static void PrintPNSimpleCompareFunction3(
 #if DEVELOPER
     struct ObjectCmpPNSingleSlotVars3 *hack;
 
-    hack = (struct ObjectCmpPNSingleSlotVars3 *) ((CLIPSBitMap *) theValue)->contents;
+    hack = (ObjectCmpPNSingleSlotVars3 *) ((CLIPSBitMap *) theValue)->contents;
 
     WriteString(theEnv,logicalName,"(pslot-cmp3 ");
     WriteString(theEnv,logicalName,hack->pass ? "p " : "n ");
@@ -743,7 +743,7 @@ static bool PNSimpleCompareFunction3(
     bool rv;
     CLIPSValue f1, f2;
 
-    hack = (struct ObjectCmpPNSingleSlotVars3 *) ((CLIPSBitMap *) theValue)->contents;
+    hack = (ObjectCmpPNSingleSlotVars3 *) ((CLIPSBitMap *) theValue)->contents;
     GetInsMultiSlotField(&f1, ObjectReteData(theEnv)->CurrentPatternObject, hack->firstSlot,
                          hack->firstFromBeginning, hack->firstOffset);
     GetInsMultiSlotField(&f2, ObjectReteData(theEnv)->CurrentPatternObject, hack->secondSlot,
@@ -763,7 +763,7 @@ static void PrintJNSimpleCompareFunction1(
 #if DEVELOPER
     struct ObjectCmpJoinSingleSlotVars1 *hack;
 
-    hack = (struct ObjectCmpJoinSingleSlotVars1 *) ((CLIPSBitMap *) theValue)->contents;
+    hack = (ObjectCmpJoinSingleSlotVars1 *) ((CLIPSBitMap *) theValue)->contents;
 
     WriteString(theEnv,logicalName,"(jslot-cmp1 ");
     WriteString(theEnv,logicalName,hack->pass ? "p " : "n ");
@@ -794,7 +794,7 @@ static bool JNSimpleCompareFunction1(
     bool rv;
     InstanceSlot *is1, *is2;
 
-    hack = (struct ObjectCmpJoinSingleSlotVars1 *) ((CLIPSBitMap *) theValue)->contents;
+    hack = (ObjectCmpJoinSingleSlotVars1 *) ((CLIPSBitMap *) theValue)->contents;
     GetPatternObjectAndMarks(theEnv, hack->firstPattern, hack->firstPatternLHS, hack->firstPatternRHS, &ins1, &theMarks);
     is1 = GetInsSlot(ins1, hack->firstSlot);
     GetPatternObjectAndMarks(theEnv, hack->secondPattern, hack->secondPatternLHS, hack->secondPatternRHS, &ins2, &theMarks);
@@ -816,7 +816,7 @@ static void PrintJNSimpleCompareFunction2(
 #if DEVELOPER
     struct ObjectCmpJoinSingleSlotVars2 *hack;
 
-    hack = (struct ObjectCmpJoinSingleSlotVars2 *) ((CLIPSBitMap *) theValue)->contents;
+    hack = (ObjectCmpJoinSingleSlotVars2 *) ((CLIPSBitMap *) theValue)->contents;
 
     WriteString(theEnv,logicalName,"(jslot-cmp2 ");
     WriteString(theEnv,logicalName,hack->pass ? "p " : "n ");
@@ -850,7 +850,7 @@ static bool JNSimpleCompareFunction2(
     CLIPSValue f1;
     InstanceSlot *is2;
 
-    hack = (struct ObjectCmpJoinSingleSlotVars2 *) ((CLIPSBitMap *) theValue)->contents;
+    hack = (ObjectCmpJoinSingleSlotVars2 *) ((CLIPSBitMap *) theValue)->contents;
     GetPatternObjectAndMarks(theEnv, hack->firstPattern, hack->firstPatternLHS, hack->firstPatternRHS, &ins1, &theMarks);
     GetInsMultiSlotField(&f1, ins1, hack->firstSlot,
                          hack->fromBeginning, hack->offset);
@@ -871,7 +871,7 @@ static void PrintJNSimpleCompareFunction3(
 #if DEVELOPER
     struct ObjectCmpJoinSingleSlotVars3 *hack;
 
-    hack = (struct ObjectCmpJoinSingleSlotVars3 *) ((CLIPSBitMap *) theValue)->contents;
+    hack = (ObjectCmpJoinSingleSlotVars3 *) ((CLIPSBitMap *) theValue)->contents;
 
     WriteString(theEnv,logicalName,"(jslot-cmp3 ");
     WriteString(theEnv,logicalName,hack->pass ? "p " : "n ");
@@ -906,7 +906,7 @@ static bool JNSimpleCompareFunction3(
     bool rv;
     CLIPSValue f1, f2;
 
-    hack = (struct ObjectCmpJoinSingleSlotVars3 *) ((CLIPSBitMap *) theValue)->contents;
+    hack = (ObjectCmpJoinSingleSlotVars3 *) ((CLIPSBitMap *) theValue)->contents;
     GetPatternObjectAndMarks(theEnv, hack->firstPattern, hack->firstPatternLHS, hack->firstPatternRHS, &ins1, &theMarks);
     GetInsMultiSlotField(&f1, ins1, hack->firstSlot,
                          hack->firstFromBeginning,

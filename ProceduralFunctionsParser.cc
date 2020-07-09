@@ -83,7 +83,7 @@ struct procedureParserData {
     struct BindInfo *ListOfParsedBindNames;
 };
 
-#define ProcedureParserData(theEnv) ((struct procedureParserData *) GetEnvironmentData(theEnv,PRCDRPSR_DATA))
+#define ProcedureParserData(theEnv) ((procedureParserData *) GetEnvironmentData(theEnv,PRCDRPSR_DATA))
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
@@ -106,7 +106,7 @@ static struct expr *SwitchParse(Environment *, struct expr *, const char *);
 /*****************************/
 void ProceduralFunctionParsers(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, PRCDRPSR_DATA, sizeof(struct procedureParserData), DeallocateProceduralFunctionData);
+    AllocateEnvironmentData(theEnv, PRCDRPSR_DATA, sizeof(procedureParserData), DeallocateProceduralFunctionData);
 
     AddFunctionParser(theEnv, "bind", BindParse);
     AddFunctionParser(theEnv, "progn", PrognParse);

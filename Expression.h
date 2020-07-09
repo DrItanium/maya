@@ -118,7 +118,7 @@ struct expressionData {
     bool SequenceOpMode;
 };
 
-#define ExpressionData(theEnv) ((struct expressionData *) GetEnvironmentData(theEnv,EXPRESSION_DATA))
+#define ExpressionData(theEnv) ((expressionData *) GetEnvironmentData(theEnv,EXPRESSION_DATA))
 
 /********************/
 /* Global Functions */
@@ -138,7 +138,7 @@ void RemoveHashedExpression(Environment *, Expression *);
 #if BLOAD_AND_BSAVE
 unsigned long HashedExpressionIndex(Environment *, Expression *);
 #endif
-#define ExpressionPointer(i) ((struct expr *) (((i) == ULONG_MAX) ? nullptr : &ExpressionData(theEnv)->ExpressionArray[i]))
+#define ExpressionPointer(i) ((expr *) (((i) == ULONG_MAX) ? nullptr : &ExpressionData(theEnv)->ExpressionArray[i]))
 #define HashedExpressionPointer(i) ExpressionPointer(i)
 
 void AllocateExpressions(Environment *);
@@ -149,18 +149,18 @@ void BsaveHashedExpressions(Environment *, FILE *);
 void BsaveConstructExpressions(Environment *, FILE *);
 void BsaveExpression(Environment *, struct expr *, FILE *);
 
-bool ConstantExpression(struct expr *);
+bool ConstantExpression(expr *);
 void PrintExpression(Environment *, const char *, struct expr *);
-unsigned long ExpressionSize(struct expr *);
-unsigned short CountArguments(struct expr *);
+unsigned long ExpressionSize(expr *);
+unsigned short CountArguments(expr *);
 struct expr *CopyExpression(Environment *, struct expr *);
-bool ExpressionContainsVariables(struct expr *, bool);
-bool IdenticalExpression(struct expr *, struct expr *);
+bool ExpressionContainsVariables(expr *, bool);
+bool IdenticalExpression(expr *, struct expr *);
 struct expr *GenConstant(Environment *, unsigned short, void *);
 bool CheckArgumentAgainstRestriction(Environment *, struct expr *, unsigned);
 bool ConstantType(int);
 struct expr *CombineExpressions(Environment *, struct expr *, struct expr *);
-struct expr *AppendExpressions(struct expr *, struct expr *);
+struct expr *AppendExpressions(expr *, struct expr *);
 struct expr *NegateExpression(Environment *, struct expr *);
 typedef enum {
     FAE_NO_ERROR = 0,

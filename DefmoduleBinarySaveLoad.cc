@@ -237,8 +237,8 @@ static void BsaveBinaryItem(
     /* and port item data structures in the binary image.      */
     /*=========================================================*/
 
-    space = DefmoduleData(theEnv)->BNumberOfDefmodules * sizeof(struct bsaveDefmodule);
-    space += DefmoduleData(theEnv)->NumberOfPortItems * sizeof(struct bsavePortItem);
+    space = DefmoduleData(theEnv)->BNumberOfDefmodules * sizeof(bsaveDefmodule);
+    space += DefmoduleData(theEnv)->NumberOfPortItems * sizeof(bsavePortItem);
     GenWrite(&space, sizeof(size_t), fp);
 
     /*==========================================*/
@@ -271,7 +271,7 @@ static void BsaveBinaryItem(
         }
 
         newDefmodule.bsaveID = defmodulePtr->header.bsaveID;
-        GenWrite(&newDefmodule, sizeof(struct bsaveDefmodule), fp);
+        GenWrite(&newDefmodule, sizeof(bsaveDefmodule), fp);
     }
 
     /*==========================================*/
@@ -297,7 +297,7 @@ static void BsaveBinaryItem(
             if (theList->next == nullptr) newPortItem.next = ULONG_MAX;
             else newPortItem.next = DefmoduleData(theEnv)->NumberOfPortItems;
 
-            GenWrite(&newPortItem, sizeof(struct bsavePortItem), fp);
+            GenWrite(&newPortItem, sizeof(bsavePortItem), fp);
         }
 
         for (theList = defmodulePtr->exportList;
@@ -316,7 +316,7 @@ static void BsaveBinaryItem(
             if (theList->next == nullptr) newPortItem.next = ULONG_MAX;
             else newPortItem.next = DefmoduleData(theEnv)->NumberOfPortItems;
 
-            GenWrite(&newPortItem, sizeof(struct bsavePortItem), fp);
+            GenWrite(&newPortItem, sizeof(bsavePortItem), fp);
         }
 
         defmodulePtr = GetNextDefmodule(theEnv, defmodulePtr);
@@ -375,8 +375,8 @@ static void BloadStorage(
         return;
     }
 
-    space = (DefmoduleData(theEnv)->NumberOfPortItems * sizeof(struct portItem));
-    DefmoduleData(theEnv)->PortItemArray = (struct portItem *) genalloc(theEnv, space);
+    space = (DefmoduleData(theEnv)->NumberOfPortItems * sizeof(portItem));
+    DefmoduleData(theEnv)->PortItemArray = (portItem *) genalloc(theEnv, space);
 }
 
 /********************************************/
@@ -390,8 +390,8 @@ static void BloadBinaryItem(
     GenReadBinary(theEnv, &space, sizeof(size_t));
     if (DefmoduleData(theEnv)->BNumberOfDefmodules == 0) return;
 
-    BloadandRefresh(theEnv, DefmoduleData(theEnv)->BNumberOfDefmodules, sizeof(struct bsaveDefmodule), UpdateDefmodule);
-    BloadandRefresh(theEnv, DefmoduleData(theEnv)->NumberOfPortItems, sizeof(struct bsavePortItem), UpdatePortItem);
+    BloadandRefresh(theEnv, DefmoduleData(theEnv)->BNumberOfDefmodules, sizeof(bsaveDefmodule), UpdateDefmodule);
+    BloadandRefresh(theEnv, DefmoduleData(theEnv)->NumberOfPortItems, sizeof(bsavePortItem), UpdatePortItem);
 
     SetListOfDefmodules(theEnv, DefmoduleData(theEnv)->DefmoduleArray);
     SetCurrentModule(theEnv, GetNextDefmodule(theEnv, nullptr));
@@ -409,7 +409,7 @@ static void UpdateDefmodule(
     struct moduleItem *theItem;
     unsigned int i;
 
-    bdp = (struct bsaveDefmodule *) buf;
+    bdp = (bsaveDefmodule *) buf;
 
     UpdateConstructHeader(theEnv, &bdp->header, &DefmoduleData(theEnv)->DefmoduleArray[obji].header, DEFMODULE,
                           0, nullptr, sizeof(Defmodule), DefmoduleData(theEnv)->DefmoduleArray);
@@ -417,7 +417,7 @@ static void UpdateDefmodule(
     if (GetNumberOfModuleItems(theEnv) == 0) { DefmoduleData(theEnv)->DefmoduleArray[obji].itemsArray = nullptr; }
     else {
         DefmoduleData(theEnv)->DefmoduleArray[obji].itemsArray =
-                (struct defmoduleItemHeader **) gm2(theEnv, sizeof(void *) * GetNumberOfModuleItems(theEnv));
+                (defmoduleItemHeader **) gm2(theEnv, sizeof(void *) * GetNumberOfModuleItems(theEnv));
     }
 
     for (i = 0, theItem = GetListOfModuleItems(theEnv);
@@ -426,7 +426,7 @@ static void UpdateDefmodule(
         if (theItem->bloadModuleReference == nullptr) { DefmoduleData(theEnv)->DefmoduleArray[obji].itemsArray[i] = nullptr; }
         else {
             DefmoduleData(theEnv)->DefmoduleArray[obji].itemsArray[i] =
-                    (struct defmoduleItemHeader *)
+                    (defmoduleItemHeader *)
                             (*theItem->bloadModuleReference)(theEnv, obji);
         }
     }
@@ -434,11 +434,11 @@ static void UpdateDefmodule(
     DefmoduleData(theEnv)->DefmoduleArray[obji].header.ppForm = nullptr;
 
     if (bdp->importList != ULONG_MAX) {
-        DefmoduleData(theEnv)->DefmoduleArray[obji].importList = (struct portItem *) &DefmoduleData(theEnv)->PortItemArray[bdp->importList];
+        DefmoduleData(theEnv)->DefmoduleArray[obji].importList = (portItem *) &DefmoduleData(theEnv)->PortItemArray[bdp->importList];
     } else { DefmoduleData(theEnv)->DefmoduleArray[obji].importList = nullptr; }
 
     if (bdp->exportList != ULONG_MAX) {
-        DefmoduleData(theEnv)->DefmoduleArray[obji].exportList = (struct portItem *) &DefmoduleData(theEnv)->PortItemArray[bdp->exportList];
+        DefmoduleData(theEnv)->DefmoduleArray[obji].exportList = (portItem *) &DefmoduleData(theEnv)->PortItemArray[bdp->exportList];
     } else { DefmoduleData(theEnv)->DefmoduleArray[obji].exportList = nullptr; }
     DefmoduleData(theEnv)->DefmoduleArray[obji].header.bsaveID = bdp->bsaveID;
 }
@@ -453,7 +453,7 @@ static void UpdatePortItem(
         unsigned long obji) {
     struct bsavePortItem *bdp;
 
-    bdp = (struct bsavePortItem *) buf;
+    bdp = (bsavePortItem *) buf;
 
     if (bdp->moduleName != ULONG_MAX) {
         DefmoduleData(theEnv)->PortItemArray[obji].moduleName = SymbolPointer(bdp->moduleName);
@@ -471,7 +471,7 @@ static void UpdatePortItem(
     } else { DefmoduleData(theEnv)->PortItemArray[obji].constructName = nullptr; }
 
     if (bdp->next != ULONG_MAX) {
-        DefmoduleData(theEnv)->PortItemArray[obji].next = (struct portItem *) &DefmoduleData(theEnv)->PortItemArray[bdp->next];
+        DefmoduleData(theEnv)->PortItemArray[obji].next = (portItem *) &DefmoduleData(theEnv)->PortItemArray[bdp->next];
     } else { DefmoduleData(theEnv)->PortItemArray[obji].next = nullptr; }
 }
 
@@ -525,7 +525,7 @@ static void ClearBload(
     /* the port item data structures. */
     /*================================*/
 
-    space = DefmoduleData(theEnv)->NumberOfPortItems * sizeof(struct portItem);
+    space = DefmoduleData(theEnv)->NumberOfPortItems * sizeof(portItem);
     if (space != 0) genfree(theEnv, DefmoduleData(theEnv)->PortItemArray, space);
     DefmoduleData(theEnv)->NumberOfPortItems = 0;
 

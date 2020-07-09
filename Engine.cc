@@ -128,7 +128,7 @@ static void DeallocateEngineData(Environment *);
 /*****************************************************************************/
 void InitializeEngine(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, ENGINE_DATA, sizeof(struct engineData), DeallocateEngineData);
+    AllocateEnvironmentData(theEnv, ENGINE_DATA, sizeof(engineData), DeallocateEngineData);
 
 #if DEBUGGING_FUNCTIONS
     AddWatchItem(theEnv, "statistics", 0, &EngineData(theEnv)->WatchStatistics, 20, nullptr, nullptr);
@@ -273,9 +273,9 @@ long long Run(
         /*===========================================*/
 
         DetachActivation(theEnv, theActivation);
-        theTM = AddTrackedMemory(theEnv, theActivation, sizeof(struct activation));
+        theTM = AddTrackedMemory(theEnv, theActivation, sizeof(activation));
         ruleFiring = ActivationRuleName(theActivation);
-        theBasis = (struct partialMatch *) GetActivationBasis(theEnv, theActivation);
+        theBasis = (partialMatch *) GetActivationBasis(theEnv, theActivation);
         EngineData(theEnv)->ExecutingRule = GetActivationRule(theEnv, theActivation);
 
         /*=============================================*/
@@ -495,7 +495,7 @@ long long Run(
         /* Determine the next activation to fire. */
         /*========================================*/
 
-        theActivation = (struct activation *) NextActivationToFire(theEnv);
+        theActivation = (activation *) NextActivationToFire(theEnv);
 
         /*==============================*/
         /* Check for a rule breakpoint. */

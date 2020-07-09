@@ -72,7 +72,7 @@ static struct lhsParseNode *ConnectedPatternParse(Environment *, const char *, s
 static struct lhsParseNode *GroupPatterns(Environment *, const char *, TokenType, const char *, bool *);
 static struct lhsParseNode *TestPattern(Environment *, const char *, bool *);
 static struct lhsParseNode *AssignmentParse(Environment *, const char *, CLIPSLexeme *, bool *);
-static void TagLHSLogicalNodes(struct lhsParseNode *);
+static void TagLHSLogicalNodes(lhsParseNode *);
 static struct lhsParseNode *SimplePatternParse(Environment *, const char *, struct token *, bool *);
 static void ParseSalience(Environment *, const char *, const char *, bool *);
 static void ParseAutoFocus(Environment *, const char *, bool *);

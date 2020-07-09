@@ -891,15 +891,15 @@ static bool LoadSingleBinaryFact(
     /* value atoms into big arrays.       */
     /*====================================*/
 
-    bsArray = (struct bsaveSlotValue *) gm2(theEnv, (sizeof(struct bsaveSlotValue) * slotCount));
-    BufferedRead(theEnv, bsArray, (sizeof(struct bsaveSlotValue) * slotCount));
+    bsArray = (bsaveSlotValue *) gm2(theEnv, (sizeof(bsaveSlotValue) * slotCount));
+    BufferedRead(theEnv, bsArray, (sizeof(bsaveSlotValue) * slotCount));
 
     BufferedRead(theEnv, &totalValueCount, sizeof(unsigned long));
 
     if (totalValueCount != 0L) {
-        bsaArray = (struct bsaveSlotValueAtom *)
-                gm2(theEnv, (totalValueCount * sizeof(struct bsaveSlotValueAtom)));
-        BufferedRead(theEnv, bsaArray, (totalValueCount * sizeof(struct bsaveSlotValueAtom)));
+        bsaArray = (bsaveSlotValueAtom *)
+                gm2(theEnv, (totalValueCount * sizeof(bsaveSlotValueAtom)));
+        BufferedRead(theEnv, bsaArray, (totalValueCount * sizeof(bsaveSlotValueAtom)));
     }
 
     /*==================================*/
@@ -931,7 +931,7 @@ static bool LoadSingleBinaryFact(
 
         isMultislot = implied || (sp->multislot == true);
 
-        CreateSlotValue(theEnv, &slotValue, (struct bsaveSlotValueAtom *) &bsaArray[j],
+        CreateSlotValue(theEnv, &slotValue, (bsaveSlotValueAtom *) &bsaArray[j],
                         bsArray[i].valueCount, isMultislot);
 
         newFact->theProposition.contents[i].value = slotValue.value;
@@ -941,9 +941,9 @@ static bool LoadSingleBinaryFact(
         if (!implied) { sp = sp->next; }
     }
 
-    rm(theEnv, bsArray, (sizeof(struct bsaveSlotValue) * slotCount));
+    rm(theEnv, bsArray, (sizeof(bsaveSlotValue) * slotCount));
 
-    if (totalValueCount != 0L) { rm(theEnv, bsaArray, (totalValueCount * sizeof(struct bsaveSlotValueAtom))); }
+    if (totalValueCount != 0L) { rm(theEnv, bsaArray, (totalValueCount * sizeof(bsaveSlotValueAtom))); }
 
     if (success) { Assert(newFact); }
 
@@ -1298,7 +1298,7 @@ static void MarkSingleFact(
 
     if (theFact->whichDeftemplate->implied) {
         *neededSpace += (sizeof(unsigned short) + // Number of slots
-                         sizeof(struct bsaveSlotValue) +
+                         sizeof(bsaveSlotValue) +
                          sizeof(unsigned long)); // Number of atoms
 
         CLIPSValue *theValue = &theFact->theProposition.contents[0];
@@ -1308,7 +1308,7 @@ static void MarkSingleFact(
         }
     } else {
         *neededSpace += (sizeof(unsigned short) + // Number of slots
-                         (sizeof(struct bsaveSlotValue) * theFact->whichDeftemplate->numberOfSlots) +
+                         (sizeof(bsaveSlotValue) * theFact->whichDeftemplate->numberOfSlots) +
                          sizeof(unsigned long)); // Number of atoms
 
         sp = theFact->whichDeftemplate->slotList;
@@ -1334,7 +1334,7 @@ static void MarkNeededAtom(
         Environment *theEnv,
         CLIPSValue *theValue,
         size_t *neededSpace) {
-    *neededSpace += sizeof(struct bsaveSlotValueAtom);
+    *neededSpace += sizeof(bsaveSlotValueAtom);
 
     /* =====================================
        Assumes slot value atoms  can only be
@@ -1495,7 +1495,7 @@ static void SaveSingleFactBinary(
 
         bs.slotName = ULONG_MAX;
         bs.valueCount = (unsigned long) theValue->multifieldValue->length;
-        fwrite(&bs, sizeof(struct bsaveSlotValue), 1, filePtr);
+        fwrite(&bs, sizeof(bsaveSlotValue), 1, filePtr);
         totalValueCount += bs.valueCount;
     } else {
         TemplateSlot *sp = theFact->whichDeftemplate->slotList;
@@ -1508,7 +1508,7 @@ static void SaveSingleFactBinary(
 
             bs.slotName = sp->slotName->bucket;
             bs.valueCount = (unsigned long) (sp->multislot ? theValue->multifieldValue->length : 1);
-            fwrite(&bs, sizeof(struct bsaveSlotValue), 1, filePtr);
+            fwrite(&bs, sizeof(bsaveSlotValue), 1, filePtr);
             totalValueCount += bs.valueCount;
             sp = sp->next;
         }
@@ -1590,7 +1590,7 @@ static void SaveAtomBinary(
             bsa.value = ULONG_MAX;
     }
 
-    fwrite(&bsa, sizeof(struct bsaveSlotValueAtom), 1, bsaveFP);
+    fwrite(&bsa, sizeof(bsaveSlotValueAtom), 1, bsaveFP);
 }
 
 #endif /* DEFTEMPLATE_CONSTRUCT */

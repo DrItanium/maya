@@ -134,7 +134,7 @@ struct factsData {
     FactBuilderError factBuilderError;
 };
 
-#define FactData(theEnv) ((struct factsData *) GetEnvironmentData(theEnv,FACTS_DATA))
+#define FactData(theEnv) ((factsData *) GetEnvironmentData(theEnv,FACTS_DATA))
 
 Fact *Assert(Fact *);
 AssertStringError GetAssertStringError(Environment *);
@@ -262,7 +262,7 @@ struct factQueryData {
     bool AbortQuery;
 };
 
-#define FactQueryData(theEnv) ((struct factQueryData *) GetEnvironmentData(theEnv,FACT_QUERY_DATA))
+#define FactQueryData(theEnv) ((factQueryData *) GetEnvironmentData(theEnv,FACT_QUERY_DATA))
 
 #define QUERY_DELIMITER_STRING     "(QDS)"
 
@@ -328,12 +328,12 @@ struct factBinaryData {
     unsigned long NumberOfPatterns;
 };
 
-#define FactBinaryData(theEnv) ((struct factBinaryData *) GetEnvironmentData(theEnv,FACTBIN_DATA))
+#define FactBinaryData(theEnv) ((factBinaryData *) GetEnvironmentData(theEnv,FACTBIN_DATA))
 
 void FactBinarySetup(Environment *);
 
-#define BsaveFactPatternIndex(patPtr) ((patPtr == nullptr) ? ULONG_MAX : ((struct factPatternNode *) patPtr)->bsaveID)
-#define BloadFactPatternPointer(i) ((struct factPatternNode *) ((i == ULONG_MAX) ? nullptr : &FactBinaryData(theEnv)->FactPatternArray[i]))
+#define BsaveFactPatternIndex(patPtr) ((patPtr == nullptr) ? ULONG_MAX : ((factPatternNode *) patPtr)->bsaveID)
+#define BloadFactPatternPointer(i) ((factPatternNode *) ((i == ULONG_MAX) ? nullptr : &FactBinaryData(theEnv)->FactPatternArray[i]))
 
 struct factPatternNode {
     struct patternNodeHeader header;

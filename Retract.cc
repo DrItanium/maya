@@ -127,7 +127,7 @@ void PosEntryRetractAlpha(
 
     betaMatch = alphaMatch->children;
     while (betaMatch != nullptr) {
-        joinPtr = (struct joinNode *) betaMatch->owner;
+        joinPtr = (joinNode *) betaMatch->owner;
 
         if (betaMatch->children != nullptr) { PosEntryRetractBeta(theEnv, betaMatch, betaMatch->children, operation); }
 
@@ -136,7 +136,7 @@ void PosEntryRetractAlpha(
         /* Remove the beta match. */
 
         if ((joinPtr->ruleToActivate != nullptr) ?
-            (betaMatch->marker != nullptr) : false) { RemoveActivation(theEnv, (struct activation *) betaMatch->marker, true, true); }
+            (betaMatch->marker != nullptr) : false) { RemoveActivation(theEnv, (activation *) betaMatch->marker, true, true); }
 
         tempMatch = betaMatch->nextRightChild;
 
@@ -161,7 +161,7 @@ static void NegEntryRetractAlpha(
 
     betaMatch = alphaMatch->blockList;
     while (betaMatch != nullptr) {
-        joinPtr = (struct joinNode *) betaMatch->owner;
+        joinPtr = (joinNode *) betaMatch->owner;
 
         if ((!joinPtr->patternIsNegated) &&
             (!joinPtr->patternIsExists) &&
@@ -249,11 +249,11 @@ void PosEntryRetractBeta(
         }
 
         if (betaMatch->blockList != nullptr) { NegEntryRetractAlpha(theEnv, betaMatch, operation); }
-        else if ((((struct joinNode *) betaMatch->owner)->ruleToActivate != nullptr) ?
-                 (betaMatch->marker != nullptr) : false) { RemoveActivation(theEnv, (struct activation *) betaMatch->marker, true, true); }
+        else if ((((joinNode *) betaMatch->owner)->ruleToActivate != nullptr) ?
+                 (betaMatch->marker != nullptr) : false) { RemoveActivation(theEnv, (activation *) betaMatch->marker, true, true); }
 
-        if (betaMatch->rhsMemory) { UnlinkNonLeftLineage(theEnv, (struct joinNode *) betaMatch->owner, betaMatch, CLIPS_RHS); }
-        else { UnlinkNonLeftLineage(theEnv, (struct joinNode *) betaMatch->owner, betaMatch, CLIPS_LHS); }
+        if (betaMatch->rhsMemory) { UnlinkNonLeftLineage(theEnv, (joinNode *) betaMatch->owner, betaMatch, CLIPS_RHS); }
+        else { UnlinkNonLeftLineage(theEnv, (joinNode *) betaMatch->owner, betaMatch, CLIPS_LHS); }
 
         if (betaMatch->dependents != nullptr) RemoveLogicalSupport(theEnv, betaMatch);
         ReturnPartialMatch(theEnv, betaMatch);
@@ -522,7 +522,7 @@ void ReturnPartialMatch(
 
     if (waste->betaMemory == false) {
         if (waste->binds[0].gm.theMatch->markers != nullptr) { ReturnMarkers(theEnv, waste->binds[0].gm.theMatch->markers); }
-        rm(theEnv, waste->binds[0].gm.theMatch, sizeof(struct alphaMatch));
+        rm(theEnv, waste->binds[0].gm.theMatch, sizeof(alphaMatch));
     }
 
     /*=================================================*/
@@ -537,7 +537,7 @@ void ReturnPartialMatch(
     /* Return the partial match to the pool of free memory. */
     /*======================================================*/
 
-    rtn_var_struct(theEnv, partialMatch, sizeof(struct genericMatch *) *
+    rtn_var_struct(theEnv, partialMatch, sizeof(genericMatch *) *
                                          (waste->bcount - 1),
                    waste);
 }
@@ -558,7 +558,7 @@ void DestroyPartialMatch(
 
     if (waste->betaMemory == false) {
         if (waste->binds[0].gm.theMatch->markers != nullptr) { ReturnMarkers(theEnv, waste->binds[0].gm.theMatch->markers); }
-        rm(theEnv, waste->binds[0].gm.theMatch, sizeof(struct alphaMatch));
+        rm(theEnv, waste->binds[0].gm.theMatch, sizeof(alphaMatch));
     }
 
     /*=================================================*/
@@ -573,7 +573,7 @@ void DestroyPartialMatch(
     /* Return the partial match to the pool of free memory. */
     /*======================================================*/
 
-    rtn_var_struct(theEnv, partialMatch, sizeof(struct genericMatch *) *
+    rtn_var_struct(theEnv, partialMatch, sizeof(genericMatch *) *
                                          (waste->bcount - 1),
                    waste);
 }

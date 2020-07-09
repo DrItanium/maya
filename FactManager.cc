@@ -182,11 +182,11 @@ void InitializeFacts(
                       nullptr, nullptr, nullptr, nullptr, nullptr,
                       {{MULTIFIELD_TYPE}, 1, 0UL, nullptr, {{{nullptr}}}}};
 
-    AllocateEnvironmentData(theEnv, FACTS_DATA, sizeof(struct factsData), DeallocateFactData);
+    AllocateEnvironmentData(theEnv, FACTS_DATA, sizeof(factsData), DeallocateFactData);
 
-    memcpy(&FactData(theEnv)->FactInfo, &factInfo, sizeof(struct patternEntityRecord));
+    memcpy(&FactData(theEnv)->FactInfo, &factInfo, sizeof(patternEntityRecord));
     dummyFact.patternHeader.theInfo = &FactData(theEnv)->FactInfo;
-    memcpy(&FactData(theEnv)->DummyFact, &dummyFact, sizeof(struct fact));
+    memcpy(&FactData(theEnv)->DummyFact, &dummyFact, sizeof(fact));
     FactData(theEnv)->LastModuleIndex = -1;
 
     /*=========================================*/
@@ -276,20 +276,20 @@ static void DeallocateFactData(
     }
 
     rm(theEnv, FactData(theEnv)->FactHashTable,
-       sizeof(struct factHashEntry *) * FactData(theEnv)->FactHashTableSize);
+       sizeof(factHashEntry *) * FactData(theEnv)->FactHashTableSize);
 
     tmpFactPtr = FactData(theEnv)->FactList;
     while (tmpFactPtr != nullptr) {
         nextFactPtr = tmpFactPtr->nextFact;
 
-        theMatch = (struct patternMatch *) tmpFactPtr->list;
+        theMatch = (patternMatch *) tmpFactPtr->list;
         while (theMatch != nullptr) {
             tmpMatch = theMatch->next;
             rtn_struct(theEnv, patternMatch, theMatch);
             theMatch = tmpMatch;
         }
 
-        ReturnEntityDependencies(theEnv, (struct patternEntity *) tmpFactPtr);
+        ReturnEntityDependencies(theEnv, (patternEntity *) tmpFactPtr);
 
         ReturnFact(theEnv, tmpFactPtr);
         tmpFactPtr = nextFactPtr;
@@ -560,7 +560,7 @@ RetractError RetractDriver(
     /* used to keep track of logical dependencies.   */
     /*===============================================*/
 
-    RemoveEntityDependencies(theEnv, (struct patternEntity *) theFact);
+    RemoveEntityDependencies(theEnv, (patternEntity *) theFact);
 
     /*===========================================*/
     /* Remove the fact from the fact hash table. */
@@ -624,7 +624,7 @@ RetractError RetractDriver(
     /*===========================================*/
 
     EngineData(theEnv)->JoinOperationInProgress = true;
-    NetworkRetract(theEnv, (struct patternMatch *) theFact->list);
+    NetworkRetract(theEnv, (patternMatch *) theFact->list);
     theFact->list = nullptr;
     EngineData(theEnv)->JoinOperationInProgress = false;
 
@@ -803,7 +803,7 @@ Fact *AssertDriver(
     /* fact and the partial match which is its logical support. */
     /*==========================================================*/
 
-    if (AddLogicalDependencies(theEnv, (struct patternEntity *) theFact, false) == false) {
+    if (AddLogicalDependencies(theEnv, (patternEntity *) theFact, false) == false) {
         if (reuseIndex == 0) { ReturnFact(theEnv, theFact); }
         else {
             theFact->nextFact = FactData(theEnv)->GarbageFacts;
@@ -1370,7 +1370,7 @@ Fact *CreateFactBySize(
     if (size <= 0) newSize = 1;
     else newSize = size;
 
-    theFact = get_var_struct(theEnv, fact, sizeof(struct clipsValue) * (newSize - 1));
+    theFact = get_var_struct(theEnv, fact, sizeof(clipsValue) * (newSize - 1));
 
     theFact->patternHeader.header.type = FACT_ADDRESS_TYPE;
     theFact->garbage = false;
@@ -1417,7 +1417,7 @@ void ReturnFact(
     if (theFact->theProposition.length == 0) newSize = 1;
     else newSize = theFact->theProposition.length;
 
-    rtn_var_struct(theEnv, fact, sizeof(struct clipsValue) * (newSize - 1), theFact);
+    rtn_var_struct(theEnv, fact, sizeof(clipsValue) * (newSize - 1), theFact);
 }
 
 /*************************************************************/

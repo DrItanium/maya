@@ -139,11 +139,11 @@ struct defruleData {
 #endif
 };
 
-#define DefruleData(theEnv) ((struct defruleData *) GetEnvironmentData(theEnv,DEFRULE_DATA))
+#define DefruleData(theEnv) ((defruleData *) GetEnvironmentData(theEnv,DEFRULE_DATA))
 
 #define GetPreviousJoin(theJoin) \
    (((theJoin)->joinFromTheRight) ? \
-    ((struct joinNode *) (theJoin)->rightSideEntryStructure) : \
+    ((joinNode *) (theJoin)->rightSideEntryStructure) : \
     ((theJoin)->lastLevel))
 #define GetPatternForJoin(theJoin) \
    (((theJoin)->joinFromTheRight) ? \

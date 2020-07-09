@@ -43,7 +43,7 @@
 #include "Scanner.h"
 
 struct lhsParseNode *ParseRuleLHS(Environment *, const char *, struct token *, const char *, bool *);
-void PropagatePatternType(struct lhsParseNode *, struct patternParser *);
+void PropagatePatternType(lhsParseNode *, struct patternParser *);
 
 #endif
 

@@ -72,20 +72,20 @@ struct partialMatch *CopyPartialMatch(Environment *, struct partialMatch *);
 struct partialMatch *MergePartialMatches(Environment *, struct partialMatch *, struct partialMatch *);
 long IncrementPseudoFactIndex();
 struct partialMatch *GetAlphaMemory(Environment *, struct patternNodeHeader *, unsigned long);
-struct partialMatch *GetLeftBetaMemory(struct joinNode *, unsigned long);
-struct partialMatch *GetRightBetaMemory(struct joinNode *, unsigned long);
+struct partialMatch *GetLeftBetaMemory(joinNode *, unsigned long);
+struct partialMatch *GetRightBetaMemory(joinNode *, unsigned long);
 void ReturnLeftMemory(Environment *, struct joinNode *);
 void ReturnRightMemory(Environment *, struct joinNode *);
 void DestroyBetaMemory(Environment *, struct joinNode *, int);
 void FlushBetaMemory(Environment *, struct joinNode *, int);
-bool BetaMemoryNotEmpty(struct joinNode *);
+bool BetaMemoryNotEmpty(joinNode *);
 void RemoveAlphaMemoryMatches(Environment *, struct patternNodeHeader *, struct partialMatch *,
                               struct alphaMatch *);
 void DestroyAlphaMemory(Environment *, struct patternNodeHeader *, bool);
 void FlushAlphaMemory(Environment *, struct patternNodeHeader *);
 void FlushAlphaBetaMemory(Environment *, struct partialMatch *);
 void DestroyAlphaBetaMemory(Environment *, struct partialMatch *);
-int GetPatternNumberFromJoin(struct joinNode *);
+int GetPatternNumberFromJoin(joinNode *);
 struct multifieldMarker *CopyMultifieldMarkers(Environment *, struct multifieldMarker *);
 struct partialMatch *CreateAlphaMatch(Environment *, void *, struct multifieldMarker *,
                                       struct patternNodeHeader *, unsigned long);
@@ -93,16 +93,16 @@ void TraceErrorToRule(Environment *, struct joinNode *, const char *);
 void InitializePatternHeader(Environment *, struct patternNodeHeader *);
 void MarkRuleNetwork(Environment *, bool);
 void TagRuleNetwork(Environment *, unsigned long *, unsigned long *, unsigned long *, unsigned long *);
-bool FindEntityInPartialMatch(struct patternEntity *, struct partialMatch *);
+bool FindEntityInPartialMatch(patternEntity *, struct partialMatch *);
 unsigned long ComputeRightHashValue(Environment *, struct patternNodeHeader *);
 void UpdateBetaPMLinks(Environment *, struct partialMatch *, struct partialMatch *, struct partialMatch *,
                        struct joinNode *, unsigned long, int);
 void UnlinkBetaPMFromNodeAndLineage(Environment *, struct joinNode *, struct partialMatch *, int);
 void UnlinkNonLeftLineage(Environment *, struct joinNode *, struct partialMatch *, int);
 struct partialMatch *CreateEmptyPartialMatch(Environment *);
-void MarkRuleJoins(struct joinNode *, bool);
-void AddBlockedLink(struct partialMatch *, struct partialMatch *);
-void RemoveBlockedLink(struct partialMatch *);
+void MarkRuleJoins(joinNode *, bool);
+void AddBlockedLink(partialMatch *, struct partialMatch *);
+void RemoveBlockedLink(partialMatch *);
 unsigned long PrintBetaMemory(Environment *, const char *, struct betaMemory *, bool, const char *, Verbosity);
 
 #endif /* _H_reteutil */

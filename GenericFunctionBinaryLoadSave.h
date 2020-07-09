@@ -54,7 +54,7 @@ struct defgenericBinaryData {
     void **TypeArray;
 };
 
-#define DefgenericBinaryData(theEnv) ((struct defgenericBinaryData *) GetEnvironmentData(theEnv,GENRCBIN_DATA))
+#define DefgenericBinaryData(theEnv) ((defgenericBinaryData *) GetEnvironmentData(theEnv,GENRCBIN_DATA))
 
 #define GenericPointer(i) (((i) == ULONG_MAX) ? nullptr : &DefgenericBinaryData(theEnv)->DefgenericArray[i])
 

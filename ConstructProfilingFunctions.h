@@ -90,7 +90,7 @@ struct profileFunctionData {
     const char *OutputString;
 };
 
-#define ProfileFunctionData(theEnv) ((struct profileFunctionData *) GetEnvironmentData(theEnv,PROFLFUN_DATA))
+#define ProfileFunctionData(theEnv) ((profileFunctionData *) GetEnvironmentData(theEnv,PROFLFUN_DATA))
 
 void ConstructProfilingFunctionDefinitions(Environment *);
 void ProfileCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
@@ -99,7 +99,7 @@ void StartProfile(Environment *, struct profileFrameInfo *,
                   struct userData **, bool);
 void EndProfile(Environment *, struct profileFrameInfo *);
 void ProfileResetCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void ResetProfileInfo(struct constructProfileInfo *);
+void ResetProfileInfo(constructProfileInfo *);
 
 void SetProfilePercentThresholdCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
 double SetProfilePercentThreshold(Environment *, double);

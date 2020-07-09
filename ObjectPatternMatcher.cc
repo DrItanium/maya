@@ -685,7 +685,7 @@ static struct patternNodeHeader *PlaceObjectPattern(
         if ((newClassBitMap == newAlphaNode->classbmp) &&
             (newSlotBitMap == newAlphaNode->slotbmp) &&
             IdenticalExpression(newAlphaNode->header.rightHash, rightHash))
-            return ((struct patternNodeHeader *) newAlphaNode);
+            return ((patternNodeHeader *) newAlphaNode);
         newAlphaNode = newAlphaNode->nxtInGroup;
     }
 
@@ -722,7 +722,7 @@ static struct patternNodeHeader *PlaceObjectPattern(
         }
     }
 
-    return ((struct patternNodeHeader *) newAlphaNode);
+    return ((patternNodeHeader *) newAlphaNode);
 }
 
 /************************************************************************
@@ -902,7 +902,7 @@ static OBJECT_PATTERN_NODE *CreateNewObjectPatternNode(
            (curNode->whichField == nodeSlotGroup->whichField)) {
         if ((curNode->networkTest == nullptr) ? false :
             ((curNode->networkTest->type != OBJ_PN_CONSTANT) ? false :
-             ((struct ObjectCmpPNConstant *) curNode->networkTest->bitMapValue->contents)->pass))
+             ((ObjectCmpPNConstant *) curNode->networkTest->bitMapValue->contents)->pass))
             break;
         prvNode = curNode;
         curNode = curNode->rightNode;
@@ -1154,7 +1154,7 @@ static void ClearObjectPatternMatches(
        ============================================= */
     ins = InstanceData(theEnv)->InstanceList;
     while (ins != nullptr) {
-        RemoveObjectPartialMatches(theEnv, ins, (struct patternNodeHeader *) alphaPtr);
+        RemoveObjectPartialMatches(theEnv, ins, (patternNodeHeader *) alphaPtr);
         ins = ins->nxtList;
     }
 
@@ -1163,7 +1163,7 @@ static void ClearObjectPatternMatches(
        ============================ */
     igrb = InstanceData(theEnv)->InstanceGarbageList;
     while (igrb != nullptr) {
-        RemoveObjectPartialMatches(theEnv, igrb->ins, (struct patternNodeHeader *) alphaPtr);
+        RemoveObjectPartialMatches(theEnv, igrb->ins, (patternNodeHeader *) alphaPtr);
         igrb = igrb->nxt;
     }
 }
@@ -1187,7 +1187,7 @@ static void RemoveObjectPartialMatches(
     struct patternMatch *match_before, *match_ptr;
 
     match_before = nullptr;
-    match_ptr = (struct patternMatch *) ins->partialMatchList;
+    match_ptr = (patternMatch *) ins->partialMatchList;
 
     /* =======================================
        Loop through every match for the object
@@ -1198,7 +1198,7 @@ static void RemoveObjectPartialMatches(
             if (match_before == nullptr) {
                 ins->partialMatchList = (void *) match_ptr->next;
                 rtn_struct(theEnv, patternMatch, match_ptr);
-                match_ptr = (struct patternMatch *) ins->partialMatchList;
+                match_ptr = (patternMatch *) ins->partialMatchList;
             } else {
                 match_before->next = match_ptr->next;
                 rtn_struct(theEnv, patternMatch, match_ptr);

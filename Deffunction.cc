@@ -163,8 +163,8 @@ void SetupDeffunctions(
              (EntityBusyCountFunction *) IncrementDeffunctionBusyCount,
              nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    AllocateEnvironmentData(theEnv, DEFFUNCTION_DATA, sizeof(struct deffunctionData), DeallocateDeffunctionData);
-    memcpy(&DeffunctionData(theEnv)->DeffunctionEntityRecord, &deffunctionEntityRecord, sizeof(struct entityRecord));
+    AllocateEnvironmentData(theEnv, DEFFUNCTION_DATA, sizeof(deffunctionData), DeallocateDeffunctionData);
+    memcpy(&DeffunctionData(theEnv)->DeffunctionEntityRecord, &deffunctionEntityRecord, sizeof(entityRecord));
 
     InstallPrimitive(theEnv, &DeffunctionData(theEnv)->DeffunctionEntityRecord, PCALL);
 
@@ -238,7 +238,7 @@ static void DeallocateDeffunctionData(
     for (theModule = GetNextDefmodule(theEnv, nullptr);
          theModule != nullptr;
          theModule = GetNextDefmodule(theEnv, theModule)) {
-        theModuleItem = (struct deffunctionModuleData *)
+        theModuleItem = (deffunctionModuleData *)
                 GetModuleItem(theEnv, theModule,
                               DeffunctionData(theEnv)->DeffunctionModuleIndex);
         rtn_struct(theEnv, deffunctionModuleData, theModuleItem);
@@ -721,7 +721,7 @@ static void *AllocateModule(
 static void ReturnModule(
         Environment *theEnv,
         void *theItem) {
-    FreeConstructHeaderModule(theEnv, (struct defmoduleItemHeader *) theItem, DeffunctionData(theEnv)->DeffunctionConstruct);
+    FreeConstructHeaderModule(theEnv, (defmoduleItemHeader *) theItem, DeffunctionData(theEnv)->DeffunctionConstruct);
     rtn_struct(theEnv, deffunctionModuleData, theItem);
 }
 

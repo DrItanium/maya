@@ -90,7 +90,7 @@ struct commandLineData {
     BeforeCommandExecutionFunction *BeforeCommandExecutionCallback;
 };
 
-#define CommandLineData(theEnv) ((struct commandLineData *) GetEnvironmentData(theEnv,COMMANDLINE_DATA))
+#define CommandLineData(theEnv) ((commandLineData *) GetEnvironmentData(theEnv,COMMANDLINE_DATA))
 
 void InitializeCommandLineData(Environment *);
 bool ExpandCommandString(Environment *, int);

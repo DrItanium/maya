@@ -1132,7 +1132,7 @@ ConstructHeader *GetNextConstructItem(
     struct defmoduleItemHeader *theModuleItem;
 
     if (theConstruct == nullptr) {
-        theModuleItem = (struct defmoduleItemHeader *)
+        theModuleItem = (defmoduleItemHeader *)
                 GetModuleItem(theEnv, nullptr, moduleIndex);
         if (theModuleItem == nullptr) return nullptr;
         return (theModuleItem->firstItem);
@@ -1154,11 +1154,11 @@ struct defmoduleItemHeader *GetConstructModuleItemByIndex(
         Defmodule *theModule,
         unsigned moduleIndex) {
     if (theModule != nullptr) {
-        return ((struct defmoduleItemHeader *)
+        return ((defmoduleItemHeader *)
                 GetModuleItem(theEnv, theModule, moduleIndex));
     }
 
-    return ((struct defmoduleItemHeader *)
+    return ((defmoduleItemHeader *)
             GetModuleItem(theEnv, GetCurrentModule(theEnv), moduleIndex));
 }
 
@@ -1221,7 +1221,7 @@ void DoForAllConstructs(
         /* Perform the action for each of the constructs. */
         /*================================================*/
 
-        theModuleItem = (struct defmoduleItemHeader *)
+        theModuleItem = (defmoduleItemHeader *)
                 GetModuleItem(theEnv, theModule, moduleItemIndex);
 
         for (theConstruct = theModuleItem->firstItem;
@@ -1291,7 +1291,7 @@ void DoForAllConstructsInModule(
     /* Perform the action for each of the constructs. */
     /*================================================*/
 
-    theModuleItem = (struct defmoduleItemHeader *)
+    theModuleItem = (defmoduleItemHeader *)
             GetModuleItem(theEnv, theModule, moduleItemIndex);
 
     for (theConstruct = theModuleItem->firstItem;
@@ -1329,7 +1329,7 @@ void InitializeConstructHeader(
     struct defmoduleItemHeader *theItemHeader;
 
     theModuleItem = FindModuleItem(theEnv, constructNameString);
-    theItemHeader = (struct defmoduleItemHeader *)
+    theItemHeader = (defmoduleItemHeader *)
             GetModuleItem(theEnv, nullptr, theModuleItem->moduleIndex);
 
     theConstruct->whichModule = theItemHeader;

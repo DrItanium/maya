@@ -67,7 +67,7 @@ struct procedureFunctionData {
     UDFValue *BindList;
 };
 
-#define ProcedureFunctionData(theEnv) ((struct procedureFunctionData *) GetEnvironmentData(theEnv,PRCDRFUN_DATA))
+#define ProcedureFunctionData(theEnv) ((procedureFunctionData *) GetEnvironmentData(theEnv,PRCDRFUN_DATA))
 
 void ProceduralFunctionDefinitions(Environment *);
 void WhileFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);

@@ -192,7 +192,7 @@ static void MarkJoinsForIncrementalReset(
         if (joinPtr->initialize) {
             joinPtr->initialize = value;
             if (joinPtr->joinFromTheRight == false) {
-                patternPtr = (struct patternNodeHeader *) GetPatternForJoin(joinPtr);
+                patternPtr = (patternNodeHeader *) GetPatternForJoin(joinPtr);
                 if (patternPtr != nullptr) { MarkPatternForIncrementalReset(theEnv, joinPtr->rhsType, patternPtr, value); }
             }
         }
@@ -227,7 +227,7 @@ static void CheckForPrimableJoins(
                 if (joinPtr->joinFromTheRight == false) {
                     if ((joinPtr->rightSideEntryStructure == nullptr) ||
                         (joinPtr->patternIsNegated) ||
-                        (((struct patternNodeHeader *) joinPtr->rightSideEntryStructure)->initialize == false)) {
+                        (((patternNodeHeader *) joinPtr->rightSideEntryStructure)->initialize == false)) {
                         PrimeJoinFromLeftMemory(theEnv, joinPtr);
                         joinPtr->marked = true;
                     }
@@ -239,7 +239,7 @@ static void CheckForPrimableJoins(
                 PrimeJoinFromLeftMemory(theEnv, joinPtr);
                 joinPtr->marked = true;
             } else if ((joinPtr->joinFromTheRight) &&
-                       (((struct joinNode *) joinPtr->rightSideEntryStructure)->initialize == false)) {
+                       (((joinNode *) joinPtr->rightSideEntryStructure)->initialize == false)) {
                 PrimeJoinFromRightMemory(theEnv, joinPtr);
                 joinPtr->marked = true;
             }
@@ -285,7 +285,7 @@ static void PrimeJoinFromLeftMemory(
                 if (EvaluateSecondaryNetworkTest(theEnv, notParent, joinPtr) == false) { return; }
             }
 
-            for (listOfHashNodes = ((struct patternNodeHeader *) joinPtr->rightSideEntryStructure)->firstHash;
+            for (listOfHashNodes = ((patternNodeHeader *) joinPtr->rightSideEntryStructure)->firstHash;
                  listOfHashNodes != nullptr;
                  listOfHashNodes = listOfHashNodes->nextHash) {
                 if (listOfHashNodes->alphaMemory != nullptr) {
@@ -296,7 +296,7 @@ static void PrimeJoinFromLeftMemory(
 
             EPMDrive(theEnv, notParent, joinPtr, NETWORK_ASSERT);
         } else {
-            for (listOfHashNodes = ((struct patternNodeHeader *) joinPtr->rightSideEntryStructure)->firstHash;
+            for (listOfHashNodes = ((patternNodeHeader *) joinPtr->rightSideEntryStructure)->firstHash;
                  listOfHashNodes != nullptr;
                  listOfHashNodes = listOfHashNodes->nextHash) {
                 for (theList = listOfHashNodes->alphaMemory;
@@ -376,7 +376,7 @@ static void PrimeJoinFromRightMemory(
     /* can retrieve the partial matches.      */
     /*========================================*/
 
-    tempLink = ((struct joinNode *) joinPtr->rightSideEntryStructure)->nextLinks;
+    tempLink = ((joinNode *) joinPtr->rightSideEntryStructure)->nextLinks;
     while (tempLink != nullptr) {
         if ((tempLink->join != joinPtr) &&
             (tempLink->join->initialize == false)) { break; }

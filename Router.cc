@@ -102,7 +102,7 @@ static void DeallocateRouterData(Environment *);
 /*********************************************************/
 void InitializeDefaultRouters(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, ROUTER_DATA, sizeof(struct routerData), DeallocateRouterData);
+    AllocateEnvironmentData(theEnv, ROUTER_DATA, sizeof(routerData), DeallocateRouterData);
 
     RouterData(theEnv)->CommandBufferInputCount = 0;
     RouterData(theEnv)->InputUngets = 0;
@@ -470,11 +470,11 @@ bool DeleteRouter(
             genfree(theEnv, (void *) currentPtr->name, strlen(currentPtr->name) + 1);
             if (lastPtr == nullptr) {
                 RouterData(theEnv)->ListOfRouters = currentPtr->next;
-                rm(theEnv, currentPtr, sizeof(struct router));
+                rm(theEnv, currentPtr, sizeof(router));
                 return true;
             }
             lastPtr->next = currentPtr->next;
-            rm(theEnv, currentPtr, sizeof(struct router));
+            rm(theEnv, currentPtr, sizeof(router));
             return true;
         }
         lastPtr = currentPtr;

@@ -181,7 +181,7 @@ struct symbolData {
 #endif
 };
 
-#define SymbolData(theEnv) ((struct symbolData *) GetEnvironmentData(theEnv,SYMBOL_DATA))
+#define SymbolData(theEnv) ((symbolData *) GetEnvironmentData(theEnv,SYMBOL_DATA))
 
 void InitializeAtomTables(Environment *, CLIPSLexeme **, CLIPSFloat **,
                           CLIPSInteger **, CLIPSBitMap **,

@@ -90,7 +90,7 @@ void InitializeBloadData(
     sprintf(sizeBuffer, "%2zu%2zu%2zu%2zu%2zu", sizeof(void *), sizeof(double),
             sizeof(int), sizeof(long), sizeof(long long));
 
-    AllocateEnvironmentData(theEnv, BLOAD_DATA, sizeof(struct bloadData), nullptr);
+    AllocateEnvironmentData(theEnv, BLOAD_DATA, sizeof(bloadData), nullptr);
     AddEnvironmentCleanupFunction(theEnv, "bload", DeallocateBloadData, -1500);
     AddClearFunction(theEnv, "bload", ClearBloadCallback, 10000, nullptr);
 
@@ -360,7 +360,7 @@ bool Bload(
 
     if (BloadData(theEnv)->FunctionArray != nullptr) {
         genfree(theEnv, BloadData(theEnv)->FunctionArray,
-                sizeof(struct functionDefinition *) * numberOfFunctions);
+                sizeof(functionDefinition *) * numberOfFunctions);
     }
     FreeAtomicValueStorage(theEnv);
 
@@ -483,8 +483,8 @@ static struct functionDefinition **ReadNeededFunctions(
     /* Store the function pointers in the function array. */
     /*====================================================*/
 
-    temp = sizeof(struct functionDefinition *) * *numberOfFunctions;
-    newFunctionArray = (struct functionDefinition **) genalloc(theEnv, temp);
+    temp = sizeof(functionDefinition *) * *numberOfFunctions;
+    newFunctionArray = (functionDefinition **) genalloc(theEnv, temp);
     namePtr = functionNames;
     functionPtr = nullptr;
     for (i = 0; i < *numberOfFunctions; i++) {

@@ -94,7 +94,7 @@ struct watchData {
     WatchItemRecord *ListOfWatchItems;
 };
 
-#define WatchData(theEnv) ((struct watchData *) GetEnvironmentData(theEnv,WATCH_DATA))
+#define WatchData(theEnv) ((watchData *) GetEnvironmentData(theEnv,WATCH_DATA))
 
 void Watch(Environment *, WatchItem);
 void Unwatch(Environment *, WatchItem);

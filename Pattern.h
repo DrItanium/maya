@@ -65,53 +65,53 @@ constexpr auto MAXIMUM_NUMBER_OF_PATTERNS = 128;
 
 struct patternParser {
     const char *name;
-    struct patternEntityRecord *entityType;
+    patternEntityRecord *entityType;
     unsigned short positionInArray;
     bool (*recognizeFunction)(CLIPSLexeme *);
-    struct lhsParseNode *(*parseFunction)(Environment *, const char *, struct token *);
-    bool (*postAnalysisFunction)(Environment *, struct lhsParseNode *);
-    struct patternNodeHeader *(*addPatternFunction)(Environment *, struct lhsParseNode *);
-    void (*removePatternFunction)(Environment *, struct patternNodeHeader *);
-    struct expr *(*genJNConstantFunction)(void *, struct lhsParseNode *, int);
-    void (*replaceGetJNValueFunction)(Environment *, struct expr *, struct lhsParseNode *, int);
-    struct expr *(*genGetJNValueFunction)(Environment *, struct lhsParseNode *, int);
-    struct expr *(*genCompareJNValuesFunction)(Environment *, struct lhsParseNode *, struct lhsParseNode *, bool);
-    struct expr *(*genPNConstantFunction)(Environment *, struct lhsParseNode *);
-    void (*replaceGetPNValueFunction)(Environment *, struct expr *, struct lhsParseNode *);
-    struct expr *(*genGetPNValueFunction)(Environment *, struct lhsParseNode *);
-    struct expr *(*genComparePNValuesFunction)(Environment *, struct lhsParseNode *, struct lhsParseNode *);
+    lhsParseNode *(*parseFunction)(Environment *, const char *, token *);
+    bool (*postAnalysisFunction)(Environment *, lhsParseNode *);
+    patternNodeHeader *(*addPatternFunction)(Environment *, lhsParseNode *);
+    void (*removePatternFunction)(Environment *, patternNodeHeader *);
+    expr *(*genJNConstantFunction)(void *, lhsParseNode *, int);
+    void (*replaceGetJNValueFunction)(Environment *, expr *, lhsParseNode *, int);
+    expr *(*genGetJNValueFunction)(Environment *, lhsParseNode *, int);
+    expr *(*genCompareJNValuesFunction)(Environment *, lhsParseNode *, lhsParseNode *, bool);
+    expr *(*genPNConstantFunction)(Environment *, lhsParseNode *);
+    void (*replaceGetPNValueFunction)(Environment *, expr *, lhsParseNode *);
+    expr *(*genGetPNValueFunction)(Environment *, lhsParseNode *);
+    expr *(*genComparePNValuesFunction)(Environment *, lhsParseNode *, lhsParseNode *);
     void (*returnUserDataFunction)(Environment *, void *);
     void *(*copyUserDataFunction)(Environment *, void *);
-    void (*markIRPatternFunction)(Environment *, struct patternNodeHeader *, bool);
+    void (*markIRPatternFunction)(Environment *, patternNodeHeader *, bool);
     void (*incrementalResetFunction)(Environment *);
     void (*codeReferenceFunction)(Environment *, void *, FILE *, unsigned int, unsigned int);
     int priority;
-    struct patternParser *next;
+    patternParser *next;
 };
 
 struct reservedSymbol {
     const char *theSymbol;
     const char *reservedBy;
-    struct reservedSymbol *next;
+    reservedSymbol *next;
 };
 
 constexpr auto MAX_POSITIONS = 8;
 constexpr auto PATTERN_DATA = 19;
 
 struct patternData {
-    struct patternParser *ListOfPatternParsers;
-    struct patternParser *PatternParserArray[MAX_POSITIONS];
+    patternParser *ListOfPatternParsers;
+    patternParser *PatternParserArray[MAX_POSITIONS];
     unsigned short NextPosition;
-    struct reservedSymbol *ListOfReservedPatternSymbols;
+    reservedSymbol *ListOfReservedPatternSymbols;
     bool WithinNotCE;
     int GlobalSalience;
     bool GlobalAutoFocus;
-    struct expr *SalienceExpression;
-    struct patternNodeHashEntry **PatternHashTable;
+    expr *SalienceExpression;
+    patternNodeHashEntry **PatternHashTable;
     unsigned long PatternHashTableSize;
 };
 
-#define PatternData(theEnv) ((struct patternData *) GetEnvironmentData(theEnv,PATTERN_DATA))
+#define PatternData(theEnv) ((patternData *) GetEnvironmentData(theEnv,PATTERN_DATA))
 
 void InitializePatterns(Environment *);
 bool AddPatternParser(Environment *, struct patternParser *);

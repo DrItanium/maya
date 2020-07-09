@@ -105,7 +105,7 @@ struct deffunctionData {
     Deffunction *ExecutingDeffunction;
 };
 
-#define DeffunctionData(theEnv) ((struct deffunctionData *) GetEnvironmentData(theEnv,DEFFUNCTION_DATA))
+#define DeffunctionData(theEnv) ((deffunctionData *) GetEnvironmentData(theEnv,DEFFUNCTION_DATA))
 
 bool CheckDeffunctionCall(Environment *, Deffunction *, int);
 void DeffunctionGetBind(UDFValue *);

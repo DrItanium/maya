@@ -174,7 +174,7 @@ struct systemDependentData {
     jmp_buf *jmpBuffer;
 };
 
-#define SystemDependentData(theEnv) ((struct systemDependentData *) GetEnvironmentData(theEnv,SYSTEM_DEPENDENT_DATA))
+#define SystemDependentData(theEnv) ((systemDependentData *) GetEnvironmentData(theEnv,SYSTEM_DEPENDENT_DATA))
 
 /********************************************************/
 /* InitializeSystemDependentData: Allocates environment */
@@ -182,7 +182,7 @@ struct systemDependentData {
 /********************************************************/
 void InitializeSystemDependentData(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, SYSTEM_DEPENDENT_DATA, sizeof(struct systemDependentData), nullptr);
+    AllocateEnvironmentData(theEnv, SYSTEM_DEPENDENT_DATA, sizeof(systemDependentData), nullptr);
 }
 
 /*********************************************************/

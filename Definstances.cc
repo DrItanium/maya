@@ -148,7 +148,7 @@ static void DeallocateDefinstancesData(Environment *);
  ***************************************************/
 void SetupDefinstances(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, DEFINSTANCES_DATA, sizeof(struct definstancesData), DeallocateDefinstancesData);
+    AllocateEnvironmentData(theEnv, DEFINSTANCES_DATA, sizeof(definstancesData), DeallocateDefinstancesData);
 
     DefinstancesData(theEnv)->DefinstancesModuleIndex =
             RegisterModuleItem(theEnv, "definstances",
@@ -213,7 +213,7 @@ static void DeallocateDefinstancesData(
     for (theModule = GetNextDefmodule(theEnv, nullptr);
          theModule != nullptr;
          theModule = GetNextDefmodule(theEnv, theModule)) {
-        theModuleItem = (struct definstancesModule *)
+        theModuleItem = (definstancesModule *)
                 GetModuleItem(theEnv, theModule,
                               DefinstancesData(theEnv)->DefinstancesModuleIndex);
         rtn_struct(theEnv, definstancesModule, theModuleItem);
@@ -231,7 +231,7 @@ static void DestroyDefinstancesAction(
 #if MAC_XCD
 #pragma unused(buffer)
 #endif
-    struct definstances *theDefinstances = (struct definstances *) theConstruct;
+    struct definstances *theDefinstances = (definstances *) theConstruct;
 
     if (theDefinstances == nullptr) return;
 
@@ -673,7 +673,7 @@ static void *AllocateModule(
 static void ReturnModule(
         Environment *theEnv,
         void *theItem) {
-    FreeConstructHeaderModule(theEnv, (struct defmoduleItemHeader *) theItem, DefinstancesData(theEnv)->DefinstancesConstruct);
+    FreeConstructHeaderModule(theEnv, (defmoduleItemHeader *) theItem, DefinstancesData(theEnv)->DefinstancesConstruct);
     rtn_struct(theEnv, definstancesModule, theItem);
 }
 

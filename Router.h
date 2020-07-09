@@ -114,7 +114,7 @@ struct routerData {
     bool Abort;
 };
 
-#define RouterData(theEnv) ((struct routerData *) GetEnvironmentData(theEnv,ROUTER_DATA))
+#define RouterData(theEnv) ((routerData *) GetEnvironmentData(theEnv,ROUTER_DATA))
 
 void InitializeDefaultRouters(Environment *);
 void WriteString(Environment *, const char *, const char *);

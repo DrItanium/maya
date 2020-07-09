@@ -87,9 +87,9 @@ static struct expr *GenJNVariableComparison(Environment *, struct lhsParseNode *
                                             struct lhsParseNode *, bool);
 static struct expr *GenPNVariableComparison(Environment *, struct lhsParseNode *,
                                             struct lhsParseNode *);
-static bool AllVariablesInPattern(struct lhsParseNode *,
+static bool AllVariablesInPattern(lhsParseNode *,
                                   int);
-static bool AllVariablesInExpression(struct lhsParseNode *,
+static bool AllVariablesInExpression(lhsParseNode *,
                                      int);
 
 /*******************************************************/

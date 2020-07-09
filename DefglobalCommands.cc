@@ -213,7 +213,7 @@ void ShowDefglobals(
         /* currently being examined.           */
         /*=====================================*/
 
-        theModuleItem = (struct defmoduleItemHeader *) GetModuleItem(theEnv, theModule, DefglobalData(theEnv)->DefglobalModuleIndex);
+        theModuleItem = (defmoduleItemHeader *) GetModuleItem(theEnv, theModule, DefglobalData(theEnv)->DefglobalModuleIndex);
 
         for (constructPtr = theModuleItem->firstItem;
              constructPtr != nullptr;

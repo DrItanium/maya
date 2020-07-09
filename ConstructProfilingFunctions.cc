@@ -93,9 +93,9 @@ void ConstructProfilingFunctionDefinitions(
         Environment *theEnv) {
     struct userDataRecord profileDataInfo = {0, CreateProfileData, DeleteProfileData};
 
-    AllocateEnvironmentData(theEnv, PROFLFUN_DATA, sizeof(struct profileFunctionData), nullptr);
+    AllocateEnvironmentData(theEnv, PROFLFUN_DATA, sizeof(profileFunctionData), nullptr);
 
-    memcpy(&ProfileFunctionData(theEnv)->ProfileDataInfo, &profileDataInfo, sizeof(struct userDataRecord));
+    memcpy(&ProfileFunctionData(theEnv)->ProfileDataInfo, &profileDataInfo, sizeof(userDataRecord));
 
     ProfileFunctionData(theEnv)->LastProfileInfo = NO_PROFILE;
     ProfileFunctionData(theEnv)->PercentThreshold = 0.0;
@@ -121,8 +121,8 @@ void *CreateProfileData(
         Environment *theEnv) {
     struct constructProfileInfo *theInfo;
 
-    theInfo = (struct constructProfileInfo *)
-            genalloc(theEnv, sizeof(struct constructProfileInfo));
+    theInfo = (constructProfileInfo *)
+            genalloc(theEnv, sizeof(constructProfileInfo));
 
     theInfo->numberOfEntries = 0;
     theInfo->childCall = false;
@@ -139,7 +139,7 @@ void *CreateProfileData(
 void DeleteProfileData(
         Environment *theEnv,
         void *theData) {
-    genfree(theEnv, theData, sizeof(struct constructProfileInfo));
+    genfree(theEnv, theData, sizeof(constructProfileInfo));
 }
 
 /**************************************/
@@ -282,7 +282,7 @@ void StartProfile(
         return;
     }
 
-    profileInfo = (struct constructProfileInfo *) FetchUserData(theEnv, ProfileFunctionData(theEnv)->ProfileDataID, theList);
+    profileInfo = (constructProfileInfo *) FetchUserData(theEnv, ProfileFunctionData(theEnv)->ProfileDataID, theList);
 
     theFrame->profileOnExit = true;
     theFrame->parentCall = false;
@@ -424,13 +424,13 @@ void ProfileResetCommand(
     for (theFunction = GetFunctionList(theEnv);
          theFunction != nullptr;
          theFunction = theFunction->next) {
-        ResetProfileInfo((struct constructProfileInfo *)
+        ResetProfileInfo((constructProfileInfo *)
                                  TestUserData(ProfileFunctionData(theEnv)->ProfileDataID, theFunction->usrData));
     }
 
     for (i = 0; i < MAXIMUM_PRIMITIVES; i++) {
         if (EvaluationData(theEnv)->PrimitivesArray[i] != nullptr) {
-            ResetProfileInfo((struct constructProfileInfo *)
+            ResetProfileInfo((constructProfileInfo *)
                                      TestUserData(ProfileFunctionData(theEnv)->ProfileDataID,
                                                   EvaluationData(theEnv)->PrimitivesArray[i]->usrData));
         }
@@ -440,7 +440,7 @@ void ProfileResetCommand(
     for (theDeffunction = GetNextDeffunction(theEnv, nullptr);
          theDeffunction != nullptr;
          theDeffunction = GetNextDeffunction(theEnv, theDeffunction)) {
-        ResetProfileInfo((struct constructProfileInfo *)
+        ResetProfileInfo((constructProfileInfo *)
                                  TestUserData(ProfileFunctionData(theEnv)->ProfileDataID, theDeffunction->header.usrData));
     }
 #endif
@@ -448,7 +448,7 @@ void ProfileResetCommand(
     for (theDefrule = GetNextDefrule(theEnv, nullptr);
          theDefrule != nullptr;
          theDefrule = GetNextDefrule(theEnv, theDefrule)) {
-        ResetProfileInfo((struct constructProfileInfo *)
+        ResetProfileInfo((constructProfileInfo *)
                                  TestUserData(ProfileFunctionData(theEnv)->ProfileDataID, theDefrule->header.usrData));
     }
 
@@ -456,14 +456,14 @@ void ProfileResetCommand(
     for (theDefgeneric = GetNextDefgeneric(theEnv, nullptr);
          theDefgeneric != nullptr;
          theDefgeneric = GetNextDefgeneric(theEnv, theDefgeneric)) {
-        ResetProfileInfo((struct constructProfileInfo *)
+        ResetProfileInfo((constructProfileInfo *)
                                  TestUserData(ProfileFunctionData(theEnv)->ProfileDataID, theDefgeneric->header.usrData));
 
         for (methodIndex = GetNextDefmethod(theDefgeneric, 0);
              methodIndex != 0;
              methodIndex = GetNextDefmethod(theDefgeneric, methodIndex)) {
             theMethod = GetDefmethodPointer(theDefgeneric, methodIndex);
-            ResetProfileInfo((struct constructProfileInfo *)
+            ResetProfileInfo((constructProfileInfo *)
                                      TestUserData(ProfileFunctionData(theEnv)->ProfileDataID, theMethod->header.usrData));
         }
     }
@@ -472,13 +472,13 @@ void ProfileResetCommand(
     for (theDefclass = GetNextDefclass(theEnv, nullptr);
          theDefclass != nullptr;
          theDefclass = GetNextDefclass(theEnv, theDefclass)) {
-        ResetProfileInfo((struct constructProfileInfo *)
+        ResetProfileInfo((constructProfileInfo *)
                                  TestUserData(ProfileFunctionData(theEnv)->ProfileDataID, theDefclass->header.usrData));
         for (handlerIndex = GetNextDefmessageHandler(theDefclass, 0);
              handlerIndex != 0;
              handlerIndex = GetNextDefmessageHandler(theDefclass, handlerIndex)) {
             theHandler = GetDefmessageHandlerPointer(theDefclass, handlerIndex);
-            ResetProfileInfo((struct constructProfileInfo *)
+            ResetProfileInfo((constructProfileInfo *)
                                      TestUserData(ProfileFunctionData(theEnv)->ProfileDataID, theHandler->header.usrData));
         }
     }
@@ -511,7 +511,7 @@ static void OutputUserFunctionsInfo(
          theFunction != nullptr;
          theFunction = theFunction->next) {
         OutputProfileInfo(theEnv, theFunction->callFunctionName->contents,
-                          (struct constructProfileInfo *)
+                          (constructProfileInfo *)
                                   TestUserData(ProfileFunctionData(theEnv)->ProfileDataID,
                                                theFunction->usrData),
                           nullptr, nullptr, nullptr, nullptr);
@@ -520,7 +520,7 @@ static void OutputUserFunctionsInfo(
     for (i = 0; i < MAXIMUM_PRIMITIVES; i++) {
         if (EvaluationData(theEnv)->PrimitivesArray[i] != nullptr) {
             OutputProfileInfo(theEnv, EvaluationData(theEnv)->PrimitivesArray[i]->name,
-                              (struct constructProfileInfo *)
+                              (constructProfileInfo *)
                                       TestUserData(ProfileFunctionData(theEnv)->ProfileDataID,
                                                    EvaluationData(theEnv)->PrimitivesArray[i]->usrData),
                               nullptr, nullptr, nullptr, nullptr);
@@ -556,7 +556,7 @@ static void OutputConstructsCodeInfo(
          theDeffunction != nullptr;
          theDeffunction = GetNextDeffunction(theEnv, theDeffunction)) {
         OutputProfileInfo(theEnv, DeffunctionName(theDeffunction),
-                          (struct constructProfileInfo *)
+                          (constructProfileInfo *)
                                   TestUserData(ProfileFunctionData(theEnv)->ProfileDataID, theDeffunction->header.usrData),
                           nullptr, nullptr, nullptr, &banner);
     }
@@ -579,7 +579,7 @@ static void OutputConstructsCodeInfo(
 
             DefmethodDescription(theDefgeneric, methodIndex, theSB);
             if (OutputProfileInfo(theEnv, theSB->contents,
-                                  (struct constructProfileInfo *)
+                                  (constructProfileInfo *)
                                           TestUserData(ProfileFunctionData(theEnv)->ProfileDataID, theMethod->header.usrData),
                                   prefixBefore, prefix, prefixAfter, &banner)) {
                 prefixBefore = nullptr;
@@ -604,7 +604,7 @@ static void OutputConstructsCodeInfo(
              handlerIndex = GetNextDefmessageHandler(theDefclass, handlerIndex)) {
             theHandler = GetDefmessageHandlerPointer(theDefclass, handlerIndex);
             if (OutputProfileInfo(theEnv, DefmessageHandlerName(theDefclass, handlerIndex),
-                                  (struct constructProfileInfo *)
+                                  (constructProfileInfo *)
                                           TestUserData(ProfileFunctionData(theEnv)->ProfileDataID,
                                                        theHandler->header.usrData),
                                   prefixBefore, prefix, prefixAfter, &banner)) {
@@ -622,7 +622,7 @@ static void OutputConstructsCodeInfo(
          theDefrule != nullptr;
          theDefrule = GetNextDefrule(theEnv, theDefrule)) {
         OutputProfileInfo(theEnv, DefruleName(theDefrule),
-                          (struct constructProfileInfo *)
+                          (constructProfileInfo *)
                                   TestUserData(ProfileFunctionData(theEnv)->ProfileDataID, theDefrule->header.usrData),
                           nullptr, nullptr, nullptr, &banner);
     }

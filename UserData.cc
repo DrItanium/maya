@@ -36,7 +36,7 @@
 /*************************************************/
 void InitializeUserDataData(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, USER_DATA_DATA, sizeof(struct userDataData), nullptr);
+    AllocateEnvironmentData(theEnv, USER_DATA_DATA, sizeof(userDataData), nullptr);
 }
 
 /******************************************************/
@@ -69,7 +69,7 @@ struct userData *FetchUserData(
         if (theData->dataID == userDataID) { return (theData); }
     }
 
-    theData = (struct userData *) (*UserDataData(theEnv)->UserDataRecordArray[userDataID]->createUserData)(theEnv);
+    theData = (userData *) (*UserDataData(theEnv)->UserDataRecordArray[userDataID]->createUserData)(theEnv);
     theData->dataID = userDataID;
     theData->next = *theList;
     *theList = theData;

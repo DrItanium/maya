@@ -96,7 +96,7 @@ struct bsaveData {
 #endif
 };
 
-#define BsaveData(theEnv) ((struct bsaveData *) GetEnvironmentData(theEnv,BSAVE_DATA))
+#define BsaveData(theEnv) ((bsaveData *) GetEnvironmentData(theEnv,BSAVE_DATA))
 
 void InitializeBsaveData(Environment *);
 void BsaveCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);

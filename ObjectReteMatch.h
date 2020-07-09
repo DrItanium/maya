@@ -67,9 +67,9 @@
 typedef struct objectAlphaNode OBJECT_ALPHA_NODE;
 typedef struct classAlphaLink CLASS_ALPHA_LINK;
 
-#define OBJECT_ASSERT  1
-#define OBJECT_RETRACT 2
-#define OBJECT_MODIFY  3
+constexpr auto OBJECT_ASSERT  = 1;
+constexpr auto OBJECT_RETRACT = 2;
+constexpr auto OBJECT_MODIFY  = 3;
 
 #include "Evaluation.h"
 #include "Expression.h"
@@ -78,18 +78,21 @@ typedef struct classAlphaLink CLASS_ALPHA_LINK;
 #include "Object.h"
 #include "Symbol.h"
 
-typedef struct classBitMap {
+struct classBitMap {
     unsigned short maxid;
     char map[1];
-} CLASS_BITMAP;
+};
+
+using CLASS_BITMAP = classBitMap;
 
 #define ClassBitMapSize(bmp) ((sizeof(CLASS_BITMAP) + \
                                      (sizeof(char) * (bmp->maxid / BITS_PER_BYTE))))
 
-typedef struct slotBitMap {
+struct slotBitMap {
     unsigned short maxid;
     char map[1];
-} SLOT_BITMAP;
+};
+using SLOT_BITMAP = slotBitMap;
 
 #define SlotBitMapSize(bmp) ((sizeof(SLOT_BITMAP) + \
                                      (sizeof(char) * (bmp->maxid / BITS_PER_BYTE))))
@@ -104,36 +107,37 @@ typedef struct objectPatternNode {
     unsigned long long matchTimeTag;
     unsigned short slotNameID;
     Expression *networkTest;
-    struct objectPatternNode *nextLevel;
-    struct objectPatternNode *lastLevel;
-    struct objectPatternNode *leftNode;
-    struct objectPatternNode *rightNode;
+    objectPatternNode *nextLevel;
+    objectPatternNode *lastLevel;
+    objectPatternNode *leftNode;
+    objectPatternNode *rightNode;
     OBJECT_ALPHA_NODE *alphaNode;
     unsigned long bsaveID;
 } OBJECT_PATTERN_NODE;
 
 struct objectAlphaNode {
-    struct patternNodeHeader header;
+    patternNodeHeader header;
     unsigned long long matchTimeTag;
     CLIPSBitMap *classbmp, *slotbmp;
     OBJECT_PATTERN_NODE *patternNode;
-    struct objectAlphaNode *nxtInGroup,
-            *nxtTerminal;
+    objectAlphaNode *nxtInGroup, *nxtTerminal;
     unsigned long bsaveID;
 };
 
 struct classAlphaLink {
     OBJECT_ALPHA_NODE *alphaNode;
-    struct classAlphaLink *next;
+    classAlphaLink *next;
     unsigned long bsaveID;
 };
 
-typedef struct objectMatchAction {
+struct objectMatchAction {
     int type;
     Instance *ins;
     SLOT_BITMAP *slotNameIDs;
-    struct objectMatchAction *nxt;
-} OBJECT_MATCH_ACTION;
+    objectMatchAction *nxt;
+};
+using OBJECT_MATCH_ACTION = objectMatchAction;
+
 
 void ObjectMatchDelay(Environment *theEnv, UDFContext *context, UDFValue *ret);
 bool SetDelayObjectPatternMatching(Environment *, bool);

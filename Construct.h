@@ -156,7 +156,7 @@ struct constructData {
     BeforeResetFunction *BeforeResetCallback;
 };
 
-#define ConstructData(theEnv) ((struct constructData *) GetEnvironmentData(theEnv,CONSTRUCT_DATA))
+#define ConstructData(theEnv) ((constructData *) GetEnvironmentData(theEnv,CONSTRUCT_DATA))
 
 bool Clear(Environment *);
 void Reset(Environment *);
@@ -218,7 +218,7 @@ struct bsaveConstructHeader {
 };
 
 void MarkConstructHeaderNeededItems(ConstructHeader *, unsigned long);
-void AssignBsaveConstructHeaderVals(struct bsaveConstructHeader *,
+void AssignBsaveConstructHeaderVals(bsaveConstructHeader *,
                                     ConstructHeader *);
 
 void UpdateConstructHeader(Environment *, struct bsaveConstructHeader *,

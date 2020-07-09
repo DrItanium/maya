@@ -120,13 +120,13 @@ struct defruleBinaryData {
     struct joinLink *LinkArray;
 };
 
-#define DefruleBinaryData(theEnv) ((struct defruleBinaryData *) GetEnvironmentData(theEnv,RULEBIN_DATA))
+#define DefruleBinaryData(theEnv) ((defruleBinaryData *) GetEnvironmentData(theEnv,RULEBIN_DATA))
 
 #define BloadDefrulePointer(x, i) ((Defrule *) ((i == ULONG_MAX) ? nullptr : &x[i]))
-#define BsaveJoinIndex(joinPtr) ((joinPtr == nullptr) ? ULONG_MAX :  ((struct joinNode *) joinPtr)->bsaveID)
-#define BloadJoinPointer(i) ((struct joinNode *) ((i == ULONG_MAX) ? nullptr : &DefruleBinaryData(theEnv)->JoinArray[i]))
-#define BsaveJoinLinkIndex(linkPtr) ((linkPtr == nullptr) ? ULONG_MAX :  ((struct joinLink *) linkPtr)->bsaveID)
-#define BloadJoinLinkPointer(i) ((struct joinLink *) ((i == ULONG_MAX) ? nullptr : &DefruleBinaryData(theEnv)->LinkArray[i]))
+#define BsaveJoinIndex(joinPtr) ((joinPtr == nullptr) ? ULONG_MAX :  ((joinNode *) joinPtr)->bsaveID)
+#define BloadJoinPointer(i) ((joinNode *) ((i == ULONG_MAX) ? nullptr : &DefruleBinaryData(theEnv)->JoinArray[i]))
+#define BsaveJoinLinkIndex(linkPtr) ((linkPtr == nullptr) ? ULONG_MAX :  ((joinLink *) linkPtr)->bsaveID)
+#define BloadJoinLinkPointer(i) ((joinLink *) ((i == ULONG_MAX) ? nullptr : &DefruleBinaryData(theEnv)->LinkArray[i]))
 
 void DefruleBinarySetup(Environment *);
 void UpdatePatternNodeHeader(Environment *, struct patternNodeHeader *,

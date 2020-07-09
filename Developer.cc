@@ -611,10 +611,10 @@ if (theJoin->depth > 2)
   { ExamineMemory(theEnv,theJoin,theJoin->leftMemory); }
 
 if (theJoin->joinFromTheRight)
-  { TraverseBetaMemories(theEnv,(struct joinNode *) theJoin->rightSideEntryStructure); }
+  { TraverseBetaMemories(theEnv,(joinNode *) theJoin->rightSideEntryStructure); }
 
 if ((theJoin->joinFromTheRight) &&
-    (((struct joinNode *) (theJoin->rightSideEntryStructure))->depth > 1))
+    (((joinNode *) (theJoin->rightSideEntryStructure))->depth > 1))
   { ExamineMemory(theEnv,theJoin,theJoin->rightMemory); }
 }
 

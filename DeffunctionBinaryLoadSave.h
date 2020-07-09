@@ -53,7 +53,7 @@ struct deffunctionBinaryData {
     DeffunctionModuleData *ModuleArray;
 };
 
-#define DeffunctionBinaryData(theEnv) ((struct deffunctionBinaryData *) GetEnvironmentData(theEnv,DFFNXBIN_DATA))
+#define DeffunctionBinaryData(theEnv) ((deffunctionBinaryData *) GetEnvironmentData(theEnv,DFFNXBIN_DATA))
 
 #define DeffunctionPointer(i) (((i) == ULONG_MAX) ? nullptr : &DeffunctionBinaryData(theEnv)->DeffunctionArray[i])
 

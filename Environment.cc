@@ -208,7 +208,7 @@ bool AddEnvironmentCleanupFunction(
         int priority) {
     struct environmentCleanupFunction *newPtr, *currentPtr, *lastPtr = nullptr;
 
-    newPtr = (struct environmentCleanupFunction *) malloc(sizeof(struct environmentCleanupFunction));
+    newPtr = (environmentCleanupFunction *) malloc(sizeof(environmentCleanupFunction));
     if (newPtr == nullptr) { return false; }
 
     newPtr->name = name;

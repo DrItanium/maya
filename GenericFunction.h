@@ -127,7 +127,7 @@ struct defgenericData {
     unsigned OldGenericBusySave;
 };
 
-#define DefgenericData(theEnv) ((struct defgenericData *) GetEnvironmentData(theEnv,DEFGENERIC_DATA))
+#define DefgenericData(theEnv) ((defgenericData *) GetEnvironmentData(theEnv,DEFGENERIC_DATA))
 #define SaveBusyCount(gfunc)    (DefgenericData(theEnv)->OldGenericBusySave = gfunc->busy)
 #define RestoreBusyCount(gfunc) (gfunc->busy = DefgenericData(theEnv)->OldGenericBusySave)
 

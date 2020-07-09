@@ -61,7 +61,7 @@
 /***************************************/
 
 static void GenObjectGetVar(Environment *, bool, Expression *, struct lhsParseNode *, int);
-static bool IsSimpleSlotVariable(struct lhsParseNode *);
+static bool IsSimpleSlotVariable(lhsParseNode *);
 static Expression *GenerateSlotComparisonTest(Environment *, bool, bool, struct lhsParseNode *, struct lhsParseNode *);
 
 /* =========================================
@@ -125,7 +125,7 @@ Expression *GenObjectPNConstantCompare(
 
        Otherwise, use a general eq/neq test.
        =============================================================== */
-    ClearBitString(&hack, sizeof(struct ObjectCmpPNConstant));
+    ClearBitString(&hack, sizeof(ObjectCmpPNConstant));
     if (theNode->negated)
         hack.fail = 1;
     else
@@ -142,12 +142,12 @@ Expression *GenObjectPNConstantCompare(
         } else
             hack.offset = theNode->singleFieldsAfter;
         theExp = GenConstant(theEnv, OBJ_PN_CONSTANT, AddBitMap(theEnv, &hack,
-                                                                sizeof(struct ObjectCmpPNConstant)));
+                                                                sizeof(ObjectCmpPNConstant)));
         theExp->argList = GenConstant(theEnv, NodeTypeToType(theNode), theNode->value);
     } else {
         hack.general = 1;
         theExp = GenConstant(theEnv, OBJ_PN_CONSTANT, AddBitMap(theEnv, &hack,
-                                                                sizeof(struct ObjectCmpPNConstant)));
+                                                                sizeof(ObjectCmpPNConstant)));
         theExp->argList = GenConstant(theEnv, 0, nullptr);
         tmpType = theNode->pnType;
         theNode->pnType = SF_VARIABLE_NODE;
@@ -204,7 +204,7 @@ void GenObjectLengthTest(
         (theNode->pnType != SF_WILDCARD_NODE))
         return;
 
-    ClearBitString(&hack, sizeof(struct ObjectMatchLength));
+    ClearBitString(&hack, sizeof(ObjectMatchLength));
 
     if ((theNode->pnType != MF_VARIABLE_NODE) &&
         (theNode->pnType != MF_WILDCARD_NODE) &&
@@ -219,7 +219,7 @@ void GenObjectLengthTest(
         hack.minLength = theNode->singleFieldsAfter;
 
     theTest = GenConstant(theEnv, OBJ_SLOT_LENGTH, AddBitMap(theEnv, &hack,
-                                                             sizeof(struct ObjectMatchLength)));
+                                                             sizeof(ObjectMatchLength)));
 
     if (theNode->constantSelector != nullptr) { theNode->constantSelector->nextArg = CopyExpression(theEnv, theTest); }
 
@@ -243,11 +243,11 @@ void GenObjectZeroLengthTest(
     struct ObjectMatchLength hack;
     Expression *theTest;
 
-    ClearBitString(&hack, sizeof(struct ObjectMatchLength));
+    ClearBitString(&hack, sizeof(ObjectMatchLength));
     hack.exactly = 1;
     hack.minLength = 0;
     theTest = GenConstant(theEnv, OBJ_SLOT_LENGTH,
-                          AddBitMap(theEnv, &hack, sizeof(struct ObjectMatchLength)));
+                          AddBitMap(theEnv, &hack, sizeof(ObjectMatchLength)));
     theNode->networkTest = CombineExpressions(theEnv, theTest, theNode->networkTest);
 }
 
@@ -285,8 +285,8 @@ static void GenObjectGetVar(
     struct ObjectMatchVar1 hack1;
     struct ObjectMatchVar2 hack2;
 
-    ClearBitString(&hack1, sizeof(struct ObjectMatchVar1));
-    ClearBitString(&hack2, sizeof(struct ObjectMatchVar2));
+    ClearBitString(&hack1, sizeof(ObjectMatchVar1));
+    ClearBitString(&hack2, sizeof(ObjectMatchVar2));
 
     if (joinReference) {
         if (side == CLIPS_LHS) {
@@ -317,7 +317,7 @@ static void GenObjectGetVar(
         hack1.objectAddress = 1;
         if (joinReference) { theItem->type = OBJ_GET_SLOT_JNVAR1; }
         else { theItem->type = OBJ_GET_SLOT_PNVAR1; }
-        theItem->value = AddBitMap(theEnv, &hack1, sizeof(struct ObjectMatchVar1));
+        theItem->value = AddBitMap(theEnv, &hack1, sizeof(ObjectMatchVar1));
         return;
     }
 
@@ -334,7 +334,7 @@ static void GenObjectGetVar(
         hack1.allFields = 1;
         hack1.whichSlot = theNode->slotNumber;
         theItem->type = (joinReference ? OBJ_GET_SLOT_JNVAR1 : OBJ_GET_SLOT_PNVAR1);
-        theItem->value = AddBitMap(theEnv, &hack1, sizeof(struct ObjectMatchVar1));
+        theItem->value = AddBitMap(theEnv, &hack1, sizeof(ObjectMatchVar1));
         return;
     }
 
@@ -354,7 +354,7 @@ static void GenObjectGetVar(
             hack2.endOffset = theNode->singleFieldsAfter;
         }
         theItem->type = (joinReference ? OBJ_GET_SLOT_JNVAR2 : OBJ_GET_SLOT_PNVAR2);
-        theItem->value = AddBitMap(theEnv, &hack2, sizeof(struct ObjectMatchVar2));
+        theItem->value = AddBitMap(theEnv, &hack2, sizeof(ObjectMatchVar2));
         return;
     }
 
@@ -367,7 +367,7 @@ static void GenObjectGetVar(
         hack2.beginningOffset = theNode->singleFieldsBefore;
         hack2.endOffset = theNode->singleFieldsAfter;
         theItem->type = (joinReference ? OBJ_GET_SLOT_JNVAR2 : OBJ_GET_SLOT_PNVAR2);
-        theItem->value = AddBitMap(theEnv, &hack2, sizeof(struct ObjectMatchVar2));
+        theItem->value = AddBitMap(theEnv, &hack2, sizeof(ObjectMatchVar2));
         return;
     }
 
@@ -377,7 +377,7 @@ static void GenObjectGetVar(
     hack1.whichSlot = theNode->slotNumber;
     hack1.whichField = theNode->index;
     theItem->type = (joinReference ? OBJ_GET_SLOT_JNVAR1 : OBJ_GET_SLOT_PNVAR1);
-    theItem->value = AddBitMap(theEnv, &hack1, sizeof(struct ObjectMatchVar1));
+    theItem->value = AddBitMap(theEnv, &hack1, sizeof(ObjectMatchVar1));
 }
 
 /****************************************************************
@@ -471,8 +471,8 @@ static Expression *GenerateSlotComparisonTest(
            ============================== */
         if ((firstNode->withinMultifieldSlot == false) &&
             (referringNode->withinMultifieldSlot == false)) {
-            ClearBitString(&phack1, sizeof(struct ObjectCmpPNSingleSlotVars1));
-            ClearBitString(&jhack1, sizeof(struct ObjectCmpJoinSingleSlotVars1));
+            ClearBitString(&phack1, sizeof(ObjectCmpPNSingleSlotVars1));
+            ClearBitString(&jhack1, sizeof(ObjectCmpJoinSingleSlotVars1));
             if (selfNode->negated)
                 phack1.fail = jhack1.fail = 1;
             else
@@ -495,10 +495,10 @@ static Expression *GenerateSlotComparisonTest(
                 }
 
                 theExp = GenConstant(theEnv, OBJ_JN_CMP1, AddBitMap(theEnv, &jhack1,
-                                                                    sizeof(struct ObjectCmpJoinSingleSlotVars1)));
+                                                                    sizeof(ObjectCmpJoinSingleSlotVars1)));
             } else
                 theExp = GenConstant(theEnv, OBJ_PN_CMP1, AddBitMap(theEnv, &phack1,
-                                                                    sizeof(struct ObjectCmpPNSingleSlotVars1)));
+                                                                    sizeof(ObjectCmpPNSingleSlotVars1)));
         }
             /* ============================================
                Compare a single-field slot with a
@@ -507,8 +507,8 @@ static Expression *GenerateSlotComparisonTest(
                ============================================ */
         else if ((firstNode->withinMultifieldSlot == false) ||
                  (referringNode->withinMultifieldSlot == false)) {
-            ClearBitString(&phack2, sizeof(struct ObjectCmpPNSingleSlotVars2));
-            ClearBitString(&jhack2, sizeof(struct ObjectCmpJoinSingleSlotVars2));
+            ClearBitString(&phack2, sizeof(ObjectCmpPNSingleSlotVars2));
+            ClearBitString(&jhack2, sizeof(ObjectCmpJoinSingleSlotVars2));
 
             if (selfNode->negated)
                 phack2.fail = jhack2.fail = 1;
@@ -564,10 +564,10 @@ static Expression *GenerateSlotComparisonTest(
             }
             if (joinTest)
                 theExp = GenConstant(theEnv, OBJ_JN_CMP2, AddBitMap(theEnv, &jhack2,
-                                                                    sizeof(struct ObjectCmpJoinSingleSlotVars2)));
+                                                                    sizeof(ObjectCmpJoinSingleSlotVars2)));
             else
                 theExp = GenConstant(theEnv, OBJ_PN_CMP2, AddBitMap(theEnv, &phack2,
-                                                                    sizeof(struct ObjectCmpPNSingleSlotVars2)));
+                                                                    sizeof(ObjectCmpPNSingleSlotVars2)));
         }
 
             /* ===================================
@@ -575,8 +575,8 @@ static Expression *GenerateSlotComparisonTest(
                within multifield slots
                =================================== */
         else {
-            ClearBitString(&phack3, sizeof(struct ObjectCmpPNSingleSlotVars3));
-            ClearBitString(&jhack3, sizeof(struct ObjectCmpJoinSingleSlotVars3));
+            ClearBitString(&phack3, sizeof(ObjectCmpPNSingleSlotVars3));
+            ClearBitString(&jhack3, sizeof(ObjectCmpJoinSingleSlotVars3));
 
             if (selfNode->negated)
                 phack3.fail = jhack3.fail = 1;
@@ -613,10 +613,10 @@ static Expression *GenerateSlotComparisonTest(
                 }
 
                 theExp = GenConstant(theEnv, OBJ_JN_CMP3, AddBitMap(theEnv, &jhack3,
-                                                                    sizeof(struct ObjectCmpJoinSingleSlotVars3)));
+                                                                    sizeof(ObjectCmpJoinSingleSlotVars3)));
             } else
                 theExp = GenConstant(theEnv, OBJ_PN_CMP3, AddBitMap(theEnv, &phack3,
-                                                                    sizeof(struct ObjectCmpPNSingleSlotVars3)));
+                                                                    sizeof(ObjectCmpPNSingleSlotVars3)));
         }
     }
 

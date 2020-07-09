@@ -130,7 +130,7 @@ void UpdateConstructHeader(
     if (theBsaveConstruct->whichModule != ULONG_MAX) {
         moduleOffset = itemModuleSize * theBsaveConstruct->whichModule;
         theConstruct->whichModule =
-                (struct defmoduleItemHeader *) &((char *) itemModuleArray)[moduleOffset];
+                (defmoduleItemHeader *) &((char *) itemModuleArray)[moduleOffset];
     } else { theConstruct->whichModule = nullptr; }
 
     if (theBsaveConstruct->name != ULONG_MAX) {

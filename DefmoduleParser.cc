@@ -282,15 +282,15 @@ bool ParseDefmodule(
     if (redefiningMainModule != nullptr) { /* Do nothing */ }
     else if (DefmoduleData(theEnv)->NumberOfModuleItems == 0) newDefmodule->itemsArray = nullptr;
     else {
-        newDefmodule->itemsArray = (struct defmoduleItemHeader **) gm2(theEnv, sizeof(void *) * DefmoduleData(theEnv)->NumberOfModuleItems);
+        newDefmodule->itemsArray = (defmoduleItemHeader **) gm2(theEnv, sizeof(void *) * DefmoduleData(theEnv)->NumberOfModuleItems);
         for (i = 0, theItem = DefmoduleData(theEnv)->ListOfModuleItems;
              (i < DefmoduleData(theEnv)->NumberOfModuleItems) && (theItem != nullptr);
              i++, theItem = theItem->next) {
             if (theItem->allocateFunction == nullptr) { newDefmodule->itemsArray[i] = nullptr; }
             else {
-                newDefmodule->itemsArray[i] = (struct defmoduleItemHeader *)
+                newDefmodule->itemsArray[i] = (defmoduleItemHeader *)
                         (*theItem->allocateFunction)(theEnv);
-                theHeader = (struct defmoduleItemHeader *) newDefmodule->itemsArray[i];
+                theHeader = (defmoduleItemHeader *) newDefmodule->itemsArray[i];
                 theHeader->theModule = newDefmodule;
                 theHeader->firstItem = nullptr;
                 theHeader->lastItem = nullptr;
@@ -631,7 +631,7 @@ static bool ParseExportSpec(
         /*==============================*/
 
         if (strcmp(theToken->lexemeValue->contents, "ALL") == 0) {
-            newPort = (struct portItem *) get_struct(theEnv, portItem);
+            newPort = (portItem *) get_struct(theEnv, portItem);
             newPort->moduleName = moduleName;
             newPort->constructType = nullptr;
             newPort->constructName = nullptr;
@@ -715,7 +715,7 @@ static bool ParseExportSpec(
         /*==============================*/
 
         if (strcmp(theToken->lexemeValue->contents, "ALL") == 0) {
-            newPort = (struct portItem *) get_struct(theEnv, portItem);
+            newPort = (portItem *) get_struct(theEnv, portItem);
             newPort->moduleName = moduleName;
             newPort->constructType = theConstruct;
             newPort->constructName = nullptr;
@@ -791,7 +791,7 @@ static bool ParseExportSpec(
         /* the named construct.                   */
         /*========================================*/
 
-        newPort = (struct portItem *) get_struct(theEnv, portItem);
+        newPort = (portItem *) get_struct(theEnv, portItem);
         newPort->moduleName = moduleName;
         newPort->constructType = theConstruct;
         newPort->constructName = theToken->lexemeValue;

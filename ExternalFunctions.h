@@ -85,7 +85,7 @@ struct functionDefinition {
     void *context;
 };
 
-#define UnknownFunctionType(target) (((struct functionDefinition *) target)->unknownReturnValueType)
+#define UnknownFunctionType(target) (((functionDefinition *) target)->unknownReturnValueType)
 #define ExpressionFunctionPointer(target) ((target)->functionValue->functionPointer)
 #define ExpressionFunctionCallName(target) ((target)->functionValue->callFunctionName)
 #define ExpressionUnknownFunctionType(target) ((target)->functionValue->unknownReturnValueType)
@@ -101,7 +101,7 @@ struct externalFunctionData {
     struct FunctionHash **FunctionHashtable;
 };
 
-#define ExternalFunctionData(theEnv) ((struct externalFunctionData *) GetEnvironmentData(theEnv,EXTERNAL_FUNCTION_DATA))
+#define ExternalFunctionData(theEnv) ((externalFunctionData *) GetEnvironmentData(theEnv,EXTERNAL_FUNCTION_DATA))
 
 typedef enum {
     AUE_NO_ERROR = 0,
@@ -130,8 +130,8 @@ void InstallFunctionList(Environment *, struct functionDefinition *);
 struct functionDefinition *FindFunction(Environment *, const char *);
 unsigned GetNthRestriction(Environment *, struct functionDefinition *, unsigned int);
 bool RemoveUDF(Environment *, const char *);
-int GetMinimumArgs(struct functionDefinition *);
-int GetMaximumArgs(struct functionDefinition *);
+int GetMinimumArgs(functionDefinition *);
+int GetMaximumArgs(functionDefinition *);
 unsigned int UDFArgumentCount(UDFContext *);
 bool UDFNthArgument(UDFContext *, unsigned int, unsigned, UDFValue *);
 void UDFInvalidArgumentMessage(UDFContext *, const char *);

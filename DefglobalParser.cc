@@ -401,7 +401,7 @@ static void AddDefglobal(
     /*===================================*/
 
     defglobalPtr->busyCount = 0;
-    defglobalPtr->header.whichModule = (struct defmoduleItemHeader *)
+    defglobalPtr->header.whichModule = (defmoduleItemHeader *)
             GetModuleItem(theEnv, nullptr, FindModuleItem(theEnv, "defglobal")->moduleIndex);
 
     /*=============================================*/

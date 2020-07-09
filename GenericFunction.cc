@@ -152,7 +152,7 @@ void *AllocateDefgenericModule(
 void FreeDefgenericModule(
         Environment *theEnv,
         void *theItem) {
-    FreeConstructHeaderModule(theEnv, (struct defmoduleItemHeader *) theItem, DefgenericData(theEnv)->DefgenericConstruct);
+    FreeConstructHeaderModule(theEnv, (defmoduleItemHeader *) theItem, DefgenericData(theEnv)->DefgenericConstruct);
     rtn_struct(theEnv, defgenericModule, theItem);
 }
 

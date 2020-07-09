@@ -1053,7 +1053,7 @@ static void CreateObjectAlphaMatch(
             ObjectReteData(theEnv)->CurrentPatternObject->busy++;
             theMatch = CreateAlphaMatch(theEnv, ObjectReteData(theEnv)->CurrentPatternObject,
                                         ObjectReteData(theEnv)->CurrentPatternObjectMarks,
-                                        (struct patternNodeHeader *) alphaPtr, hashValue);
+                                        (patternNodeHeader *) alphaPtr, hashValue);
             theMatch->owner = alphaPtr;
 
             /* ======================================
@@ -1061,8 +1061,8 @@ static void CreateObjectAlphaMatch(
                to ease later retraction
                ====================================== */
             newMatch = get_struct(theEnv, patternMatch);
-            newMatch->next = (struct patternMatch *) ObjectReteData(theEnv)->CurrentPatternObject->partialMatchList;
-            newMatch->matchingPattern = (struct patternNodeHeader *) alphaPtr;
+            newMatch->next = (patternMatch *) ObjectReteData(theEnv)->CurrentPatternObject->partialMatchList;
+            newMatch->matchingPattern = (patternNodeHeader *) alphaPtr;
             newMatch->theMatch = theMatch;
             ObjectReteData(theEnv)->CurrentPatternObject->partialMatchList = (void *) newMatch;
 
@@ -1115,7 +1115,7 @@ static bool EvaluateObjectPatternTest(
         rv = ObjectCmpConstantFunction(theEnv, networkTest->value, &vresult);
         EvaluationData(theEnv)->CurrentExpression = oldArgument;
         if (rv) {
-            if (((struct ObjectCmpPNConstant *)
+            if (((ObjectCmpPNConstant *)
                     networkTest->bitMapValue->contents)->pass)
                 patternNode->blocked = true;
             return true;
@@ -1256,19 +1256,19 @@ static void ObjectRetractAction(
 
     if (slotNameIDs == nullptr) {
         if (ins->partialMatchList != nullptr) {
-            tmpMatch = (struct patternMatch *) ins->partialMatchList;
+            tmpMatch = (patternMatch *) ins->partialMatchList;
             while (tmpMatch != nullptr) {
                 ins->busy--;
                 tmpMatch = tmpMatch->next;
             }
-            NetworkRetract(theEnv, (struct patternMatch *) ins->partialMatchList);
+            NetworkRetract(theEnv, (patternMatch *) ins->partialMatchList);
             ins->partialMatchList = nullptr;
         }
     } else {
         deleteMatch = nullptr;
         lastDeleteMatch = nullptr;
         prvMatch = nullptr;
-        tmpMatch = (struct patternMatch *) ins->partialMatchList;
+        tmpMatch = (patternMatch *) ins->partialMatchList;
         while (tmpMatch != nullptr) {
             alphaPtr = (OBJECT_ALPHA_NODE *) tmpMatch->matchingPattern;
             if (alphaPtr->slotbmp != nullptr) {

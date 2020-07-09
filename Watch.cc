@@ -84,7 +84,7 @@ static void DeallocateWatchData(Environment *);
 /**********************************************/
 void InitializeWatchData(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, WATCH_DATA, sizeof(struct watchData), DeallocateWatchData);
+    AllocateEnvironmentData(theEnv, WATCH_DATA, sizeof(watchData), DeallocateWatchData);
 }
 
 /************************************************/

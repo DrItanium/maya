@@ -72,7 +72,7 @@
 /***************************************/
 
 static void InstallConstraintRecord(Environment *, CONSTRAINT_RECORD *);
-static bool ConstraintCompare(struct constraintRecord *, struct constraintRecord *);
+static bool ConstraintCompare(constraintRecord *, struct constraintRecord *);
 static void ReturnConstraintRecord(Environment *, CONSTRAINT_RECORD *);
 static void DeinstallConstraintRecord(Environment *, CONSTRAINT_RECORD *);
 static void DeallocateConstraintData(Environment *);
@@ -86,10 +86,10 @@ void InitializeConstraints(
         Environment *theEnv) {
     int i;
 
-    AllocateEnvironmentData(theEnv, CONSTRAINT_DATA, sizeof(struct constraintData), DeallocateConstraintData);
+    AllocateEnvironmentData(theEnv, CONSTRAINT_DATA, sizeof(constraintData), DeallocateConstraintData);
 
-    ConstraintData(theEnv)->ConstraintHashtable = (struct constraintRecord **)
-            gm2(theEnv, sizeof(struct constraintRecord *) *
+    ConstraintData(theEnv)->ConstraintHashtable = (constraintRecord **)
+            gm2(theEnv, sizeof(constraintRecord *) *
                         SIZE_CONSTRAINT_HASH);
 
     if (ConstraintData(theEnv)->ConstraintHashtable == nullptr) ExitRouter(theEnv, EXIT_FAILURE);
@@ -119,7 +119,7 @@ static void DeallocateConstraintData(
     }
 
     rm(theEnv, ConstraintData(theEnv)->ConstraintHashtable,
-       sizeof(struct constraintRecord *) * SIZE_CONSTRAINT_HASH);
+       sizeof(constraintRecord *) * SIZE_CONSTRAINT_HASH);
 
 #if (BLOAD_AND_BSAVE)
     if (ConstraintData(theEnv)->NumberOfConstraints != 0) {

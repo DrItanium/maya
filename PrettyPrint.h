@@ -54,7 +54,7 @@ struct prettyPrintData {
     char *PrettyPrintBuffer;
 };
 
-#define PrettyPrintData(theEnv) ((struct prettyPrintData *) GetEnvironmentData(theEnv,PRETTY_PRINT_DATA))
+#define PrettyPrintData(theEnv) ((prettyPrintData *) GetEnvironmentData(theEnv,PRETTY_PRINT_DATA))
 
 void InitializePrettyPrintData(Environment *);
 void FlushPPBuffer(Environment *);

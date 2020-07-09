@@ -65,7 +65,7 @@ struct instanceFileData {
     const char *InstanceBinaryVersionID;
 };
 
-#define InstanceFileData(theEnv) ((struct instanceFileData *) GetEnvironmentData(theEnv,INSTANCE_FILE_DATA))
+#define InstanceFileData(theEnv) ((instanceFileData *) GetEnvironmentData(theEnv,INSTANCE_FILE_DATA))
 
 #endif /* BLOAD_INSTANCES || BSAVE_INSTANCES */
 

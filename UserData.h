@@ -56,7 +56,7 @@ struct userDataData {
     unsigned char UserDataRecordCount;
 };
 
-#define UserDataData(theEnv) ((struct userDataData *) GetEnvironmentData(theEnv,USER_DATA_DATA))
+#define UserDataData(theEnv) ((userDataData *) GetEnvironmentData(theEnv,USER_DATA_DATA))
 
 void InitializeUserDataData(Environment *);
 unsigned char InstallUserDataRecord(Environment *, struct userDataRecord *);

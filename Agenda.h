@@ -114,7 +114,7 @@ struct agendaData {
     StrategyType Strategy;
 };
 
-#define AgendaData(theEnv) ((struct agendaData *) GetEnvironmentData(theEnv,AGENDA_DATA))
+#define AgendaData(theEnv) ((agendaData *) GetEnvironmentData(theEnv,AGENDA_DATA))
 
 /****************************************/
 /* GLOBAL EXTERNAL FUNCTION DEFINITIONS */

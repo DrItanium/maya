@@ -132,7 +132,7 @@ struct multiFunctionData {
     FIELD_VAR_STACK *FieldVarStack;
 };
 
-#define MultiFunctionData(theEnv) ((struct multiFunctionData *) GetEnvironmentData(theEnv,MULTIFUN_DATA))
+#define MultiFunctionData(theEnv) ((multiFunctionData *) GetEnvironmentData(theEnv,MULTIFUN_DATA))
 
 /**********************************************/
 /* MultifieldFunctionDefinitions: Initializes */
@@ -140,7 +140,7 @@ struct multiFunctionData {
 /**********************************************/
 void MultifieldFunctionDefinitions(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, MULTIFUN_DATA, sizeof(struct multiFunctionData), nullptr);
+    AllocateEnvironmentData(theEnv, MULTIFUN_DATA, sizeof(multiFunctionData), nullptr);
 
     AddUDF(theEnv, "first$", "m", 1, 1, "m", FirstFunction, nullptr);
     AddUDF(theEnv, "rest$", "m", 1, 1, "m", RestFunction, nullptr);

@@ -86,7 +86,7 @@ struct instanceQueryData {
     bool AbortQuery;
 };
 
-#define InstanceQueryData(theEnv) ((struct instanceQueryData *) GetEnvironmentData(theEnv,INSTANCE_QUERY_DATA))
+#define InstanceQueryData(theEnv) ((instanceQueryData *) GetEnvironmentData(theEnv,INSTANCE_QUERY_DATA))
 
 #define QUERY_DELIMITER_STRING     "(QDS)"
 
