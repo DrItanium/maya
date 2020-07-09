@@ -224,20 +224,19 @@ void InitializeConstraintParseRecord(
 /************************************************************************/
 bool StandardConstraint(
         const char *constraintName) {
-    if ((strcmp(constraintName, "type") == 0) ||
-        (strcmp(constraintName, "range") == 0) ||
-        (strcmp(constraintName, "cardinality") == 0) ||
-        (strcmp(constraintName, "allowed-symbols") == 0) ||
-        (strcmp(constraintName, "allowed-strings") == 0) ||
-        (strcmp(constraintName, "allowed-lexemes") == 0) ||
-        (strcmp(constraintName, "allowed-integers") == 0) ||
-        (strcmp(constraintName, "allowed-floats") == 0) ||
-        (strcmp(constraintName, "allowed-numbers") == 0) ||
-        (strcmp(constraintName, "allowed-instance-names") == 0) ||
-        (strcmp(constraintName, "allowed-classes") == 0) ||
-        (strcmp(constraintName, "allowed-values") == 0)) { return true; }
+    return (strcmp(constraintName, "type") == 0) ||
+           (strcmp(constraintName, "range") == 0) ||
+           (strcmp(constraintName, "cardinality") == 0) ||
+           (strcmp(constraintName, "allowed-symbols") == 0) ||
+           (strcmp(constraintName, "allowed-strings") == 0) ||
+           (strcmp(constraintName, "allowed-lexemes") == 0) ||
+           (strcmp(constraintName, "allowed-integers") == 0) ||
+           (strcmp(constraintName, "allowed-floats") == 0) ||
+           (strcmp(constraintName, "allowed-numbers") == 0) ||
+           (strcmp(constraintName, "allowed-instance-names") == 0) ||
+           (strcmp(constraintName, "allowed-classes") == 0) ||
+           (strcmp(constraintName, "allowed-values") == 0);
 
-    return false;
 }
 
 /***********************************************************************/
@@ -838,7 +837,7 @@ static bool ParseTypeAttribute(
             /* ?VARIABLE can't be used with type constants. */
             /*==============================================*/
 
-            if (variableParsed == true) {
+            if (variableParsed) {
                 SyntaxErrorMessage(theEnv, "type attribute");
                 return false;
             }
@@ -972,8 +971,8 @@ static bool ParseRangeCardinalityAttribute(
     /* The cardinality attribute can only be used with multifield slots. */
     /*===================================================================*/
 
-    if ((range == false) &&
-        (multipleValuesAllowed == false)) {
+    if (!range &&
+        !multipleValuesAllowed) {
         PrintErrorID(theEnv, "CSTRNPSR", 5, true);
         WriteString(theEnv, STDERR, "The 'cardinality' attribute ");
         WriteString(theEnv, STDERR, "can only be used with multifield slots.\n");
@@ -985,7 +984,7 @@ static bool ParseRangeCardinalityAttribute(
     /* allowed-values/numbers/integers/floats attributes. */
     /*====================================================*/
 
-    if ((range == true) &&
+    if (range &&
         (parsedConstraints->allowedValues ||
          parsedConstraints->allowedNumbers ||
          parsedConstraints->allowedIntegers ||

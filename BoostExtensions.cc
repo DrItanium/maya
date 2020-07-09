@@ -98,8 +98,8 @@ void GetDirectoryContents(Environment *theEnv, UDFContext *context, UDFValue *re
             auto mb = CreateMultifieldBuilder(theEnv, 10);
             try {
                 DirectoryIterator it(p);
-                for (const auto &path : it) {
-                    MBAppendString(mb, path.path().string().c_str());
+                for (const auto &directoryEntry : it) {
+                    MBAppendString(mb, directoryEntry.path().string().c_str());
                 }
                 ret->multifieldValue = MBCreate(mb);
                 MBDispose(mb);

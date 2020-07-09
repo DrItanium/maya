@@ -691,18 +691,17 @@ bool UnmatchableConstraint(
         CONSTRAINT_RECORD *theConstraint) {
     if (theConstraint == nullptr) return false;
 
-    if ((!theConstraint->anyAllowed) &&
-        (!theConstraint->symbolsAllowed) &&
-        (!theConstraint->stringsAllowed) &&
-        (!theConstraint->floatsAllowed) &&
-        (!theConstraint->integersAllowed) &&
-        (!theConstraint->instanceNamesAllowed) &&
-        (!theConstraint->instanceAddressesAllowed) &&
-        (!theConstraint->multifieldsAllowed) &&
-        (!theConstraint->externalAddressesAllowed) &&
-        (!theConstraint->voidAllowed) &&
-        (!theConstraint->factAddressesAllowed)) { return true; }
+    return (!theConstraint->anyAllowed) &&
+           (!theConstraint->symbolsAllowed) &&
+           (!theConstraint->stringsAllowed) &&
+           (!theConstraint->floatsAllowed) &&
+           (!theConstraint->integersAllowed) &&
+           (!theConstraint->instanceNamesAllowed) &&
+           (!theConstraint->instanceAddressesAllowed) &&
+           (!theConstraint->multifieldsAllowed) &&
+           (!theConstraint->externalAddressesAllowed) &&
+           (!theConstraint->voidAllowed) &&
+           (!theConstraint->factAddressesAllowed);
 
-    return false;
 }
 

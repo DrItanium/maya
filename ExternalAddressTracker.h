@@ -18,8 +18,8 @@ namespace maya {
             ~ExternalAddressTracker() = delete;
             ExternalAddressTracker(ExternalAddressTracker&&) = delete;
             ExternalAddressTracker(const ExternalAddressTracker&) = delete;
-            ExternalAddressTracker& operator=(const ExternalAddress&) = delete;
-            ExternalAddressTracker& operator=(ExternalAddress&&) = delete;
+            ExternalAddressTracker& operator=(const ExternalAddressTracker&) = delete;
+            ExternalAddressTracker& operator=(ExternalAddressTracker&&) = delete;
             static int getExternalAddressId(Environment* env) {
                 return getExternalAddressId_Internal(env);
             }

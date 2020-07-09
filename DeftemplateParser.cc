@@ -346,9 +346,8 @@ static struct templateSlot *ParseSlot(
     /* Determine if multifield slot is being parsed. */
     /*===============================================*/
 
-    if ((strcmp(inputToken->lexemeValue->contents, "multifield") == 0) ||
-        (strcmp(inputToken->lexemeValue->contents, "multislot") == 0)) { parsingMultislot = true; }
-    else { parsingMultislot = false; }
+    parsingMultislot = (strcmp(inputToken->lexemeValue->contents, "multifield") == 0) ||
+                       (strcmp(inputToken->lexemeValue->contents, "multislot") == 0);
 
     /*========================================*/
     /* The name of the slot must be a symbol. */

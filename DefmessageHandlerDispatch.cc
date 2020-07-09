@@ -191,7 +191,7 @@ void Send(
 
     iexp = GenConstant(theEnv, idata->header->type, idata->value);
     iexp->nextArg = ParseConstantArguments(theEnv, args, &error);
-    if (error == true) {
+    if (error) {
         ReturnExpression(theEnv, iexp);
         SetEvaluationError(theEnv, true);
         return;
@@ -307,12 +307,12 @@ bool NextHandlerAvailable(
     if (MessageHandlerData(theEnv)->CurrentCore == nullptr) { return false; }
 
     if (MessageHandlerData(theEnv)->CurrentCore->hnd->type == MAROUND) {
-        return (MessageHandlerData(theEnv)->NextInCore != nullptr) ? true : false;
+        return MessageHandlerData(theEnv)->NextInCore != nullptr;
     }
 
     if ((MessageHandlerData(theEnv)->CurrentCore->hnd->type == MPRIMARY) &&
         (MessageHandlerData(theEnv)->NextInCore != nullptr)) {
-        return (MessageHandlerData(theEnv)->NextInCore->hnd->type == MPRIMARY) ? true : false;
+        return MessageHandlerData(theEnv)->NextInCore->hnd->type == MPRIMARY;
     }
 
     return false;
@@ -357,7 +357,7 @@ void CallNextHandler(
     EvaluationData(theEnv)->EvaluationError = false;
     if (EvaluationData(theEnv)->HaltExecution)
         return;
-    if (NextHandlerAvailable(theEnv) == false) {
+    if (!NextHandlerAvailable(theEnv)) {
         PrintErrorID(theEnv, "MSGPASS", 1, false);
         WriteString(theEnv, STDERR, "Shadowed message-handlers not applicable in current context.\n");
         SetEvaluationError(theEnv, true);
@@ -777,8 +777,8 @@ bool HandlerSlotPutFunction(
        to its default value
        ====================================== */
     if (GetFirstArgument()) {
-        if (EvaluateAndStoreInDataObject(theEnv, sp->desc->multiple,
-                                         GetFirstArgument(), &theSetVal, true) == false)
+        if (!EvaluateAndStoreInDataObject(theEnv, sp->desc->multiple,
+                                          GetFirstArgument(), &theSetVal, true))
             goto HandlerPutError2;
     } else {
         theSetVal.begin = 0;
@@ -817,7 +817,7 @@ void DynamicHandlerGetSlot(
     UDFValue temp;
 
     returnValue->value = FalseSymbol(theEnv);
-    if (CheckCurrentMessage(theEnv, "dynamic-get", true) == false)
+    if (!CheckCurrentMessage(theEnv, "dynamic-get", true))
         return;
     EvaluateExpression(theEnv, GetFirstArgument(), &temp);
     if (temp.header->type != SYMBOL_TYPE) {
@@ -863,7 +863,7 @@ void DynamicHandlerPutSlot(
     UDFValue temp;
 
     returnValue->value = FalseSymbol(theEnv);
-    if (CheckCurrentMessage(theEnv, "dynamic-put", true) == false)
+    if (!CheckCurrentMessage(theEnv, "dynamic-put", true))
         return;
     EvaluateExpression(theEnv, GetFirstArgument(), &temp);
     if (temp.header->type != SYMBOL_TYPE) {
@@ -891,8 +891,8 @@ void DynamicHandlerPutSlot(
         return;
     }
     if (GetFirstArgument()->nextArg) {
-        if (EvaluateAndStoreInDataObject(theEnv, sp->desc->multiple,
-                                         GetFirstArgument()->nextArg, &temp, true) == false)
+        if (!EvaluateAndStoreInDataObject(theEnv, sp->desc->multiple,
+                                          GetFirstArgument()->nextArg, &temp, true))
             return;
     } else {
         temp.begin = 0;
