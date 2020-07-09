@@ -70,9 +70,9 @@
 
 #include "Setup.h"
 
-#include <stdio.h>
+#include <cstdio>
 #include <stdlib.h>
-#include <string.h>
+#include <cstring>
 #include <ctype.h>
 
 #include "ArgumentAccess.h"

@@ -63,8 +63,8 @@
 
 #if DEFTEMPLATE_CONSTRUCT
 
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <cstring>
 
 #include "ArgumentAccess.h"
 #include "Construct.h"

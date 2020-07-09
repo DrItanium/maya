@@ -68,7 +68,7 @@
 
 #if DEFGLOBAL_CONSTRUCT
 
-#include <stdio.h>
+#include <cstdio>
 
 #if BLOAD_AND_BSAVE
 #include "BinaryLoad.h"

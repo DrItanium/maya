@@ -71,7 +71,7 @@
 
 constexpr auto COMMANDLINE_DATA = 40;
 
-#include <stdlib.h>
+#include <cstdlib>
 
 typedef void AfterPromptFunction(Environment *);
 typedef bool BeforeCommandExecutionFunction(Environment *);

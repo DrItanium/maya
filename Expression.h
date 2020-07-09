@@ -50,7 +50,7 @@
 struct exprHashNode;
 typedef struct savedContexts SavedContexts;
 
-#include <stdio.h>
+#include <cstdio>
 #include "Entities.h"
 #include "Construct.h"
 #include "ExternalFunctions.h"

@@ -37,7 +37,7 @@
 #include "Setup.h"
 
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "Analysis.h"
 #include "ConstraintChecking.h"

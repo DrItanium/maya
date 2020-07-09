@@ -48,8 +48,8 @@
 
 #if DEFFUNCTION_CONSTRUCT
 
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <cstring>
 
 #include "Construct.h"
 #include "Environment.h"

@@ -82,7 +82,7 @@ typedef enum {
     DEFINSTANCES
 } ConstructType;
 
-#include <stdio.h>
+#include <cstdio>
 #include "Entities.h"
 #include "UserData.h"
 #include "Utility.h"

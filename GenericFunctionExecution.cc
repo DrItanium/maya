@@ -54,7 +54,7 @@
 
 #if DEFGENERIC_CONSTRUCT
 
-#include <string.h>
+#include <cstring>
 
 #include "ClassCommands.h"
 #include "ClassFunctions.h"

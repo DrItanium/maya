@@ -44,8 +44,8 @@
 
 #if BLOAD_AND_BSAVE
 
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <cstring>
 
 #include "Agenda.h"
 #include "BinaryLoad.h"

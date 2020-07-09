@@ -48,7 +48,7 @@
 #include "Setup.h"
 
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "ClassFunctions.h"
 #include "Environment.h"

@@ -67,7 +67,7 @@
 
 #include "ConstructProfilingFunctions.h"
 
-#include <string.h>
+#include <cstring>
 
 #define NO_PROFILE      0
 #define USER_FUNCTIONS  1

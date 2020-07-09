@@ -52,7 +52,7 @@
 
 #if DEFFACTS_CONSTRUCT
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "DeffactsBasicCommands.h"
 #include "DeffactsParser.h"

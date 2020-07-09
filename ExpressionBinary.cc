@@ -31,7 +31,7 @@
 
 #if (BLOAD_AND_BSAVE)
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "BinaryLoad.h"
 #include "BinarySave.h"

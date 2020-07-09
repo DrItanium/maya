@@ -51,7 +51,7 @@
 
 #if DEFGLOBAL_CONSTRUCT
 
-#include <string.h>
+#include <cstring>
 
 #if BLOAD_AND_BSAVE
 #include "BinaryLoad.h"

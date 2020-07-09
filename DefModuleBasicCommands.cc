@@ -46,8 +46,8 @@
 
 #include "Setup.h"
 
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <cstring>
 
 #include "ArgumentAccess.h"
 #include "BinaryLoad.h"

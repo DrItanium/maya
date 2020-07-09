@@ -43,7 +43,7 @@
 
 #if DEFTEMPLATE_CONSTRUCT
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "Constants.h"
 #include "Construct.h"

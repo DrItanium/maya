@@ -49,7 +49,7 @@
 
 #define _H_pattern
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "Evaluation.h"
 #include "Entities.h"

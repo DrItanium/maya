@@ -41,7 +41,7 @@
 
 #if DEFTEMPLATE_CONSTRUCT
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "ArgumentAccess.h"
 #include "Environment.h"

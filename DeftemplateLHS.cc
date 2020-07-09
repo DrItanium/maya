@@ -36,8 +36,8 @@
 
 #if DEFTEMPLATE_CONSTRUCT
 
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <cstring>
 
 #include "Constants.h"
 #include "Construct.h"

@@ -66,7 +66,7 @@ typedef struct restriction RESTRICTION;
 typedef struct defmethod Defmethod;
 typedef struct defgeneric Defgeneric;
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "Entities.h"
 #include "Construct.h"

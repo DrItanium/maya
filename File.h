@@ -64,7 +64,7 @@
 
 #define _H_filecom
 
-#include <stdio.h>
+#include <cstdio>
 #include <stdlib.h>
 
 #include "Entities.h"

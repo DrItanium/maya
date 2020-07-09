@@ -52,7 +52,7 @@
 /*                                                           */
 /*************************************************************/
 
-#include <stdio.h>
+#include <cstdio>
 #include <stdlib.h>
 
 #include "Setup.h"

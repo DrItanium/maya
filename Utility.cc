@@ -78,8 +78,8 @@
 
 #include <ctype.h>
 #include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <cstring>
 
 #include "CommandLine.h"
 #include "Environment.h"

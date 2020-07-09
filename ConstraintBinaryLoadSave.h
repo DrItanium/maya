@@ -36,7 +36,7 @@
 
 #define _H_cstrnbin
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "Evaluation.h"
 #include "Constraint.h"

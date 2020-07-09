@@ -68,7 +68,7 @@
 #include "Setup.h"
 
 
-#include <stdio.h>
+#include <cstdio>
 #include <stdlib.h>
 
 #include "ArgumentAccess.h"

@@ -32,7 +32,7 @@
 
 #define _H_CLIPS_API
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "Setup.h"
 #include "ArgumentAccess.h"

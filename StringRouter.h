@@ -48,7 +48,7 @@
 typedef struct stringRouter StringRouter;
 typedef struct stringBuilderRouter StringBuilderRouter;
 
-#include <stdio.h>
+#include <cstdio>
 #include "Utility.h"
 
 constexpr auto STRING_ROUTER_DATA = 48;

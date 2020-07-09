@@ -42,8 +42,8 @@
 /*                                                           */
 /*************************************************************/
 
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <cstring>
 #include <ctype.h>
 
 #include "Setup.h"

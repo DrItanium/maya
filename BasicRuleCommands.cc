@@ -62,7 +62,7 @@
 
 #include "Setup.h"
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "ArgumentAccess.h"
 #include "Construct.h"

@@ -68,10 +68,10 @@
 /*                                                           */
 /*************************************************************/
 
-#include <stdio.h>
+#include <cstdio>
 #include <stdint.h>
 #include <stdlib.h>
-#include <string.h>
+#include <cstring>
 #include <ctype.h>
 
 #include "Setup.h"

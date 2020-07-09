@@ -84,9 +84,9 @@
 
 #if STRING_FUNCTIONS
 
-#include <stdio.h>
+#include <cstdio>
 #include <ctype.h>
-#include <string.h>
+#include <cstring>
 
 #include "ArgumentAccess.h"
 #include "CommandLine.h"

@@ -83,7 +83,7 @@
 #define _H_symbol
 
 #include <stdlib.h>
-#include <stdio.h>
+#include <cstdio>
 
 #include "Entities.h"
 

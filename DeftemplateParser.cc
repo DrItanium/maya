@@ -48,8 +48,8 @@
 #include "Setup.h"
 #if DEFTEMPLATE_CONSTRUCT
 
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <cstring>
 
 #if BLOAD_AND_BSAVE
 #include "BinaryLoad.h"

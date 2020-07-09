@@ -58,7 +58,7 @@
 
 #if INSTANCE_SET_QUERIES
 
-#include <string.h>
+#include <cstring>
 
 #include "ClassCommands.h"
 #include "Environment.h"

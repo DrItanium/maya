@@ -61,7 +61,7 @@
 
 #if DEFTEMPLATE_CONSTRUCT
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "Construct.h"
 #include "ConstraintChecking.h"

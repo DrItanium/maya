@@ -68,9 +68,9 @@
 
 #include "Setup.h"
 
-#include <stdio.h>
+#include <cstdio>
 #include <stdlib.h>
-#include <string.h>
+#include <cstring>
 
 #include "Environment.h"
 #include "Router.h"

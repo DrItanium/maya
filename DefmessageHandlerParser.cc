@@ -58,7 +58,7 @@
 #include "Setup.h"
 
 
-#include <string.h>
+#include <cstring>
 
 #if BLOAD_AND_BSAVE
 #include "BinaryLoad.h"

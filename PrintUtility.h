@@ -70,7 +70,7 @@
 
 #define _H_prntutil
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "Entities.h"
 

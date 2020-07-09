@@ -82,7 +82,7 @@
 
 #if DEFGENERIC_CONSTRUCT
 
-#include <string.h>
+#include <cstring>
 
 #include "ArgumentAccess.h"
 #if BLOAD_AND_BSAVE

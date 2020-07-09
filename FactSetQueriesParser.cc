@@ -58,7 +58,7 @@
 
 #if FACT_SET_QUERIES
 
-#include <string.h>
+#include <cstring>
 
 #include "Environment.h"
 #include "Expression.h"

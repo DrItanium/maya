@@ -39,7 +39,7 @@
 
 #include "Setup.h"
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "Constants.h"
 #include "ConstraintChecking.h"

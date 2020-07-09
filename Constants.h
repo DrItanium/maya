@@ -43,9 +43,9 @@
 
 #define _H_constant
 
-#include <stdbool.h>
-#include <stdint.h>
-#include <limits.h>
+
+#include <cstdint>
+#include <climits>
 
 #define X(name, idx) constexpr auto name = idx
 X(EXACTLY, 0);

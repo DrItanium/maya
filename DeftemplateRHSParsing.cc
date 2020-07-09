@@ -41,7 +41,7 @@
 
 #if DEFTEMPLATE_CONSTRUCT
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "DefaultAttribute.h"
 #include "ExternalFunctions.h"

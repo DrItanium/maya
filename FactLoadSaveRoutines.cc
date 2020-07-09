@@ -33,7 +33,7 @@
    ***************************************** */
 
 #include <stdlib.h>
-#include <string.h>
+#include <cstring>
 
 #include "Setup.h"
 

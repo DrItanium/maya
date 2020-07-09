@@ -71,7 +71,7 @@
 
 #define _H_router
 
-#include <stdio.h>
+#include <cstdio>
 
 typedef struct router Router;
 typedef bool RouterQueryFunction(Environment *, const char *, void *);

@@ -43,8 +43,8 @@
 #include "Setup.h"
 
 
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <cstring>
 
 #include "Agenda.h"
 #if BLOAD_AND_BSAVE

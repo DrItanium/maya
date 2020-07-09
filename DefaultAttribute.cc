@@ -43,9 +43,9 @@
 
 #include "Setup.h"
 
-#include <stdio.h>
+#include <cstdio>
 #include <stdlib.h>
-#include <string.h>
+#include <cstring>
 
 #include "Constants.h"
 #include "Constraint.h"

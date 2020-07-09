@@ -35,7 +35,7 @@
 
 #if DEFTEMPLATE_CONSTRUCT && (BLOAD_AND_BSAVE)
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "Fact.h"
 #include "BinaryLoad.h"

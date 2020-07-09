@@ -66,7 +66,7 @@
 #include "Setup.h"
 
 
-#include <string.h>
+#include <cstring>
 #include <stdlib.h>
 
 #include "ClassCommands.h"

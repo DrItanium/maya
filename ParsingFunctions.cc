@@ -52,7 +52,7 @@
 
 #include "Setup.h"
 
-#include <string.h>
+#include <cstring>
 
 #include "ArgumentAccess.h"
 #include "Construct.h"

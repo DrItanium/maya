@@ -102,7 +102,7 @@
 
 #define _H_sysdep
 
-#include <stdio.h>
+#include <cstdio>
 #include <setjmp.h>
 
 double gentime();
