@@ -112,7 +112,7 @@ static void DeallocateConstraintData(
     for (i = 0; i < SIZE_CONSTRAINT_HASH; i++) {
         tmpPtr = ConstraintData(theEnv)->ConstraintHashtable[i];
         while (tmpPtr != nullptr) {
-            nextPtr = tmpPtr->next;
+            nextPtr = tmpPtr->getNext();
             ReturnConstraintRecord(theEnv, tmpPtr);
             tmpPtr = nextPtr;
         }
@@ -212,8 +212,8 @@ void RemoveConstraint(
         if (tmpPtr == theConstraint) {
             theConstraint->count--;
             if (theConstraint->count == 0) {
-                if (prevPtr == nullptr) { ConstraintData(theEnv)->ConstraintHashtable[theConstraint->bucket] = theConstraint->next; }
-                else { prevPtr->next = theConstraint->next; }
+                if (prevPtr == nullptr) { ConstraintData(theEnv)->ConstraintHashtable[theConstraint->bucket] = theConstraint->getNext(); }
+                else { prevPtr->setNext(theConstraint->getNext()); }
                 DeinstallConstraintRecord(theEnv, theConstraint);
                 ReturnConstraintRecord(theEnv, theConstraint);
             }
@@ -221,7 +221,7 @@ void RemoveConstraint(
         }
 
         prevPtr = tmpPtr;
-        tmpPtr = tmpPtr->next;
+        tmpPtr = tmpPtr->getNext();
     }
 
     return;
@@ -389,7 +389,7 @@ struct constraintRecord *AddConstraint(
 
     for (tmpPtr = ConstraintData(theEnv)->ConstraintHashtable[hashValue];
          tmpPtr != nullptr;
-         tmpPtr = tmpPtr->next) {
+         tmpPtr = tmpPtr->getNext()) {
         if (ConstraintCompare(theConstraint, tmpPtr)) {
             tmpPtr->count++;
             ReturnConstraintRecord(theEnv, theConstraint);
@@ -401,7 +401,7 @@ struct constraintRecord *AddConstraint(
     theConstraint->count = 1;
     theConstraint->bucket = (unsigned int) hashValue;
     theConstraint->installed = true;
-    theConstraint->next = ConstraintData(theEnv)->ConstraintHashtable[hashValue];
+    theConstraint->setNext(ConstraintData(theEnv)->ConstraintHashtable[hashValue]);
     ConstraintData(theEnv)->ConstraintHashtable[hashValue] = theConstraint;
     return theConstraint;
 }

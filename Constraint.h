@@ -99,7 +99,11 @@ public:
     expr *minFields;
     expr *maxFields;
     constraintRecord *multifield;
+private:
     constraintRecord *next;
+public:
+    auto getNext() const noexcept { return next; }
+    void setNext(constraintRecord* value) noexcept { next = value; }
     unsigned int bucket;
     unsigned int count;
 };

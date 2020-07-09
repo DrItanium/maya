@@ -114,7 +114,7 @@ void WriteNeededConstraints(
     for (i = 0; i < SIZE_CONSTRAINT_HASH; i++) {
         for (tmpPtr = ConstraintData(theEnv)->ConstraintHashtable[i];
              tmpPtr != nullptr;
-             tmpPtr = tmpPtr->next) {
+             tmpPtr = tmpPtr->getNext()) {
             tmpPtr->bsaveID = theIndex++;
             numberOfUsedConstraints++;
         }
@@ -144,7 +144,7 @@ void WriteNeededConstraints(
     for (i = 0; i < SIZE_CONSTRAINT_HASH; i++) {
         for (tmpPtr = ConstraintData(theEnv)->ConstraintHashtable[i];
              tmpPtr != nullptr;
-             tmpPtr = tmpPtr->next) {
+             tmpPtr = tmpPtr->getNext()) {
             CopyToBsaveConstraintRecord(theEnv, tmpPtr, &bsaveConstraints);
             GenWrite(&bsaveConstraints, sizeof(BSAVE_CONSTRAINT_RECORD), fp);
         }

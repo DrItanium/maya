@@ -86,7 +86,7 @@ struct constraintRecord *GetConstraintRecord(
     constraints->bucket = 0;
     constraints->count = 0;
     constraints->multifield = nullptr;
-    constraints->next = nullptr;
+    constraints->setNext(nullptr);
 
     return constraints;
 }
@@ -164,7 +164,7 @@ struct constraintRecord *CopyConstraintRecord(
     theConstraint->installed = false;
     theConstraint->count = 0;
     theConstraint->multifield = CopyConstraintRecord(theEnv, sourceConstraint->multifield);
-    theConstraint->next = nullptr;
+    theConstraint->setNext(nullptr);
 
     return (theConstraint);
 }
