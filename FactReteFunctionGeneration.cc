@@ -259,8 +259,7 @@ struct expr *FactGenPNConstant(
              ((theField->multiFieldsBefore == 1) && (theField->multiFieldsAfter == 0))) {
         ClearBitString(&hack2, sizeof(factConstantPN2Call));
 
-        if (theField->negated) hack2.testForEquality = false;
-        else hack2.testForEquality = true;
+        hack2.testForEquality = theField->negated == 0;
 
         hack2.whichSlot = (theField->slotNumber - 1);
 

@@ -669,9 +669,7 @@ static bool IsQueryFunction(
         return true;
     if (fptr == (int (*)()) QueryDoForAllInstances)
         return true;
-    if (fptr == (int (*)()) DelayedQueryDoForAllInstances)
-        return true;
-    return false;
+    return fptr == (int (*)()) DelayedQueryDoForAllInstances;
 }
 
 #endif

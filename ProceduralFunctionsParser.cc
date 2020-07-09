@@ -170,7 +170,7 @@ void ClearParsedBindNames(
 /*************************/
 bool ParsedBindNamesEmpty(
         Environment *theEnv) {
-    return !(ProcedureParserData(theEnv)->ListOfParsedBindNames != nullptr);
+    return ProcedureParserData(theEnv)->ListOfParsedBindNames == nullptr;
 
 }
 

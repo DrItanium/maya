@@ -405,9 +405,7 @@ static bool IsSimpleSlotVariable(
         return true;
     if (node->multifieldSlot == true)
         return false;
-    if ((node->multiFieldsBefore == 0) || (node->multiFieldsAfter == 0))
-        return true;
-    return false;
+    return (node->multiFieldsBefore == 0) || (node->multiFieldsAfter == 0);
 }
 
 /***************************************************************
