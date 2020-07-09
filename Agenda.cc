@@ -300,10 +300,8 @@ void ClearRuleFromAgenda(
 Activation *GetNextActivation(
         Environment *theEnv,
         Activation *actPtr) {
-    struct defruleModule *theModuleItem;
-
     if (actPtr == nullptr) {
-        theModuleItem = (defruleModule *) GetModuleItem(theEnv, nullptr, DefruleData(theEnv)->DefruleModuleIndex);
+        auto theModuleItem = (defruleModule *) GetModuleItem(theEnv, nullptr, DefruleData(theEnv)->DefruleModuleIndex);
         if (theModuleItem == nullptr) return nullptr;
         return theModuleItem->agenda;
     } else { return actPtr->getNext(); }
@@ -322,29 +320,11 @@ const char *ActivationRuleName(
     return actPtr->getRule()->header.name->contents;
 }
 
-/***************************************/
-/* GetActivationRule: Returns the rule */
-/*   associated with an activation.    */
-
-/************************************************/
-/* ActivationGetSalience: Returns the salience  */
-/*   of the rule associated with an activation. */
-
-/**************************************/
-/* ActivationSetSalience: Sets the    */
-/*   salience value of an activation. */
-
-/********************************************/
-/* ActivationPPForm: Returns the pretty     */
-/*   print representation of an activation. */
-/********************************************/
-void ActivationPPForm(
-        Activation *theActivation,
-        StringBuilder *theSB) {
-    Environment *theEnv = theActivation->getRule()->header.env;
-
+void
+activation::getPPForm(StringBuilder* theSB) noexcept {
+    auto theEnv = theRule->header.env;
     OpenStringBuilderDestination(theEnv, "ActPPForm", theSB);
-    PrintActivation(theEnv, "ActPPForm", theActivation);
+    PrintActivation(theEnv, "ActPPForm", this);
     CloseStringBuilderDestination(theEnv, "ActPPForm");
 }
 

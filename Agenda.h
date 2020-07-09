@@ -105,6 +105,7 @@ public:
     auto getPrevious() const noexcept { return prev; }
     void setNext(activation* value) noexcept { next = value; }
     auto getNext() const noexcept { return next; }
+    void getPPForm(StringBuilder*) noexcept;
 };
 
 struct SalienceGroup {
@@ -172,7 +173,6 @@ void AddActivation(Environment *, Defrule *, PartialMatch *);
 void ClearRuleFromAgenda(Environment *, Defrule *);
 Activation *GetNextActivation(Environment *, Activation *);
 const char *ActivationRuleName(Activation *);
-void ActivationPPForm(Activation *, StringBuilder *);
 void GetActivationBasisPPForm(Environment *, char *, size_t, Activation *);
 bool MoveActivationToTop(Environment *, Activation *);
 void DeleteActivation(Activation *);
