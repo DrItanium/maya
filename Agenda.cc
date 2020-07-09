@@ -156,10 +156,10 @@ void AddActivation(
     newActivation = get_struct(theEnv, activation);
     newActivation->setRule(theRule);
     newActivation->setBasis(binds);
-    newActivation->timetag = AgendaData(theEnv)->CurrentTimetag++;
+    newActivation->setTimetag(AgendaData(theEnv)->CurrentTimetag++);
     newActivation->setSalience(EvaluateSalience(theEnv, theRule));
 
-    newActivation->randomID = genrand();
+    newActivation->setRandomID(genrand());
     newActivation->prev = nullptr;
     newActivation->next = nullptr;
 

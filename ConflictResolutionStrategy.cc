@@ -180,7 +180,7 @@ static Activation *PlaceDepthActivation(
     /* Set up initial information for the search. */
     /*============================================*/
 
-    timetag = newActivation->timetag;
+    timetag = newActivation->getTimetag();
     if (theGroup->prev == nullptr) { lastAct = nullptr; }
     else { lastAct = theGroup->prev->last; }
 
@@ -195,7 +195,7 @@ static Activation *PlaceDepthActivation(
 
     actPtr = theGroup->first;
     while (actPtr != nullptr) {
-        if (timetag < actPtr->timetag) {
+        if (timetag < actPtr->getTimetag()) {
             lastAct = actPtr;
             if (actPtr == theGroup->last) { break; }
             else { actPtr = actPtr->next; }
@@ -235,7 +235,7 @@ static Activation *PlaceBreadthActivation(
     /* Set up initial information for the search. */
     /*============================================*/
 
-    timetag = newActivation->timetag;
+    timetag = newActivation->getTimetag();
     if (theGroup->last == nullptr) {
         if (theGroup->prev == nullptr) { lastAct = nullptr; }
         else { lastAct = theGroup->prev->last; }
@@ -252,7 +252,7 @@ static Activation *PlaceBreadthActivation(
 
     actPtr = theGroup->last;
     while (actPtr != nullptr) {
-        if (timetag < actPtr->timetag) {
+        if (timetag < actPtr->getTimetag()) {
             if (actPtr == theGroup->first) {
                 if (theGroup->prev == nullptr) { lastAct = nullptr; }
                 else { lastAct = theGroup->prev->last; }
@@ -299,7 +299,7 @@ static Activation *PlaceLEXActivation(
     /* Set up initial information for the search. */
     /*============================================*/
 
-    timetag = newActivation->timetag;
+    timetag = newActivation->getTimetag();
     if (theGroup->prev == nullptr) { lastAct = nullptr; }
     else { lastAct = theGroup->prev->last; }
 
@@ -313,7 +313,7 @@ static Activation *PlaceLEXActivation(
         flag = ComparePartialMatches(theEnv, actPtr, newActivation);
 
         if ((flag == LESS_THAN) ||
-            ((flag == EQUAL) && (timetag > actPtr->timetag))) {
+            ((flag == EQUAL) && (timetag > actPtr->getTimetag()))) {
             theGroup->last = newActivation;
 
             return actPtr;
@@ -339,7 +339,7 @@ static Activation *PlaceLEXActivation(
         } else if (flag == GREATER_THAN) { break; }
         else /* flag == EQUAL */
         {
-            if (timetag > actPtr->timetag) {
+            if (timetag > actPtr->getTimetag()) {
                 lastAct = actPtr;
                 if (actPtr == theGroup->last) { break; }
                 else { actPtr = actPtr->next; }
@@ -384,7 +384,7 @@ static Activation *PlaceMEAActivation(
     /* Set up initial information for the search. */
     /*============================================*/
 
-    timetag = newActivation->timetag;
+    timetag = newActivation->getTimetag();
     if (theGroup->prev == nullptr) { lastAct = nullptr; }
     else { lastAct = theGroup->prev->last; }
 
@@ -413,7 +413,7 @@ static Activation *PlaceMEAActivation(
         else { flag = ComparePartialMatches(theEnv, actPtr, newActivation); }
 
         if ((flag == LESS_THAN) ||
-            ((flag == EQUAL) && (timetag > actPtr->timetag))) {
+            ((flag == EQUAL) && (timetag > actPtr->getTimetag()))) {
             theGroup->last = newActivation;
 
             return actPtr;
@@ -451,7 +451,7 @@ static Activation *PlaceMEAActivation(
         } else if (flag == GREATER_THAN) { break; }
         else /* flag == EQUAL */
         {
-            if (timetag > actPtr->timetag) {
+            if (timetag > actPtr->getTimetag()) {
                 lastAct = actPtr;
                 if (actPtr == theGroup->last) { break; }
                 else { actPtr = actPtr->next; }
@@ -493,7 +493,7 @@ static Activation *PlaceComplexityActivation(
     /* Set up initial information for search. */
     /*========================================*/
 
-    timetag = newActivation->timetag;
+    timetag = newActivation->getTimetag();
     complexity = newActivation->getRule()->complexity;
     if (theGroup->prev == nullptr) { lastAct = nullptr; }
     else { lastAct = theGroup->prev->last; }
@@ -513,7 +513,7 @@ static Activation *PlaceComplexityActivation(
             if (actPtr == theGroup->last) { break; }
             else { actPtr = actPtr->next; }
         } else if (complexity > actPtr->getRule()->complexity) { break; }
-        else if (timetag > actPtr->timetag) {
+        else if (timetag > actPtr->getTimetag()) {
             lastAct = actPtr;
             if (actPtr == theGroup->last) { break; }
             else { actPtr = actPtr->next; }
@@ -554,7 +554,7 @@ static Activation *PlaceSimplicityActivation(
     /* Set up initial information for the search. */
     /*============================================*/
 
-    timetag = newActivation->timetag;
+    timetag = newActivation->getTimetag();
     complexity = newActivation->getRule()->complexity;
     if (theGroup->prev == nullptr) { lastAct = nullptr; }
     else { lastAct = theGroup->prev->last; }
@@ -574,7 +574,7 @@ static Activation *PlaceSimplicityActivation(
             if (actPtr == theGroup->last) { break; }
             else { actPtr = actPtr->next; }
         } else if (complexity < actPtr->getRule()->complexity) { break; }
-        else if (timetag > actPtr->timetag) {
+        else if (timetag > actPtr->getTimetag()) {
             lastAct = actPtr;
             if (actPtr == theGroup->last) { break; }
             else { actPtr = actPtr->next; }
@@ -615,8 +615,8 @@ static Activation *PlaceRandomActivation(
     /* Set up initial information for the search. */
     /*============================================*/
 
-    timetag = newActivation->timetag;
-    randomID = newActivation->randomID;
+    timetag = newActivation->getTimetag();
+    randomID = newActivation->getRandomID();
     if (theGroup->prev == nullptr) { lastAct = nullptr; }
     else { lastAct = theGroup->prev->last; }
 
@@ -630,12 +630,12 @@ static Activation *PlaceRandomActivation(
 
     actPtr = theGroup->first;
     while (actPtr != nullptr) {
-        if (randomID > actPtr->randomID) {
+        if (randomID > actPtr->getRandomID()) {
             lastAct = actPtr;
             if (actPtr == theGroup->last) { break; }
             else { actPtr = actPtr->next; }
-        } else if (randomID < actPtr->randomID) { break; }
-        else if (timetag > actPtr->timetag) {
+        } else if (randomID < actPtr->getRandomID()) { break; }
+        else if (timetag > actPtr->getTimetag()) {
             lastAct = actPtr;
             if (actPtr == theGroup->last) { break; }
             else { actPtr = actPtr->next; }

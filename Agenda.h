@@ -86,6 +86,8 @@ private:
     Defrule *theRule;
     struct partialMatch *basis;
     int salience;
+    unsigned long long timetag;
+    int randomID;
 public:
     auto getRule() const noexcept { return theRule; }
     void setRule(Defrule* value) noexcept { theRule = value; }
@@ -93,10 +95,10 @@ public:
     void setBasis(partialMatch* value) noexcept { basis = value; }
     constexpr auto getSalience() const noexcept { return salience; }
     void setSalience(int value) noexcept { salience = value; }
-    unsigned long long timetag;
     constexpr auto getTimetag() const noexcept { return timetag; }
-    int randomID;
+    void setTimetag(unsigned long long value) noexcept { timetag = value; }
     constexpr auto getRandomID() const noexcept { return randomID; }
+    void setRandomID(int value) noexcept { randomID = value; }
     activation *prev;
     activation *next;
 };
