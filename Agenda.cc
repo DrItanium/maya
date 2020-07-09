@@ -410,7 +410,7 @@ bool MoveActivationToTop(
     /* Mark the agenda as changed. */
     /*=============================*/
 
-    AgendaData(theEnv)->AgendaChanged = true;
+    AgendaData(theEnv)->markAgendaHasChanged();
 
     return true;
 }
@@ -503,7 +503,7 @@ bool DetachActivation(
     /* Mark the agenda as changed. */
     /*=============================*/
 
-    AgendaData(theEnv)->AgendaChanged = true;
+    AgendaData(theEnv)->markAgendaHasChanged();
 
     return true;
 }
@@ -597,7 +597,7 @@ void RemoveActivation(
         /* Mark the agenda as changed. */
         /*=============================*/
 
-        AgendaData(theEnv)->AgendaChanged = true;
+        AgendaData(theEnv)->markAgendaHasChanged();
     }
 
     /*============================================*/
@@ -706,7 +706,7 @@ void RemoveAllActivations(
 /**********************************************/
 bool GetAgendaChanged(
         Environment *theEnv) {
-    return (AgendaData(theEnv)->AgendaChanged);
+    return (AgendaData(theEnv)->agendaHasChanged());
 }
 
 /*****************************************************************/
@@ -716,7 +716,7 @@ bool GetAgendaChanged(
 void SetAgendaChanged(
         Environment *theEnv,
         bool value) {
-    AgendaData(theEnv)->AgendaChanged = value;
+    AgendaData(theEnv)->markAgendaHasChanged(value);
 }
 
 /**********************/

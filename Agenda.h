@@ -139,6 +139,7 @@ struct agendaData {
 private:
     unsigned long NumberOfActivations;
     unsigned long long CurrentTimetag;
+    bool AgendaChanged;
 public:
     constexpr auto getNumberOfActivations() const noexcept { return NumberOfActivations; }
     void setNumberOfActivations(unsigned long value) noexcept { NumberOfActivations = value; }
@@ -151,8 +152,8 @@ public:
         ++CurrentTimetag;
         return output;
     }
-    bool AgendaChanged;
     constexpr auto agendaHasChanged() const noexcept { return AgendaChanged; }
+    void markAgendaHasChanged(bool value = true) noexcept { AgendaChanged = value; }
     SalienceEvaluationType SalienceEvaluation;
     StrategyType Strategy;
     constexpr auto getStrategy() const noexcept { return Strategy; }
