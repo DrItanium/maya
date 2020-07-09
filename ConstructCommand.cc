@@ -134,7 +134,7 @@ bool DeleteNamedConstruct(
     /*=============================*/
 
 #if BLOAD_AND_BSAVE
-    if (Bloaded(theEnv) == true) return false;
+    if (Bloaded(theEnv)) return false;
 #endif
 
     /*===============================*/
@@ -326,7 +326,7 @@ void UndefconstructCommand(
         /* If the construct does exist, try deleting it. */
         /*===============================================*/
 
-    else if (DeleteNamedConstruct(theEnv, constructName, constructClass) == false) {
+    else if (!DeleteNamedConstruct(theEnv, constructName, constructClass)) {
         CantDeleteItemErrorMessage(theEnv, constructClass->constructName, constructName);
         return;
     }
@@ -384,7 +384,7 @@ void PPConstructCommand(
         return;
     }
 
-    if (PPConstruct(theEnv, constructName, logicalName, constructClass) == false) {
+    if (!PPConstruct(theEnv, constructName, logicalName, constructClass)) {
         CantFindItemErrorMessage(theEnv, constructClass->constructName, constructName, true);
     }
 }
@@ -617,7 +617,7 @@ bool Undefconstruct(
     /* Return false if the construct cannot be deleted. */
     /*==================================================*/
 
-    if ((*constructClass->isConstructDeletableFunction)(theConstruct) == false) { return false; }
+    if (!(*constructClass->isConstructDeletableFunction)(theConstruct)) { return false; }
 
     /*===================================*/
     /* Start a garbage collection block. */
@@ -1062,7 +1062,7 @@ void ListConstruct(
         for (constructPtr = (*constructClass->getNextItemFunction)(theEnv, nullptr);
              constructPtr != nullptr;
              constructPtr = (*constructClass->getNextItemFunction)(theEnv, constructPtr)) {
-            if (EvaluationData(theEnv)->HaltExecution == true) return;
+            if (EvaluationData(theEnv)->HaltExecution) return;
 
             constructName = (*constructClass->getConstructNameFunction)(constructPtr);
 
@@ -1232,7 +1232,7 @@ void DoForAllConstructs(
             /*==========================================*/
 
             if (interruptable) {
-                if (GetHaltExecution(theEnv) == true) {
+                if (GetHaltExecution(theEnv)) {
                     RestoreCurrentModule(theEnv);
                     return;
                 }
@@ -1298,7 +1298,7 @@ void DoForAllConstructsInModule(
          theConstruct != nullptr;
          theConstruct = theConstruct->next) {
         if (interruptable) {
-            if (GetHaltExecution(theEnv) == true) {
+            if (GetHaltExecution(theEnv)) {
                 RestoreCurrentModule(theEnv);
                 return;
             }
@@ -1440,7 +1440,7 @@ static bool ConstructWatchSupport(
             /* listing of constructs with the name of the module. */
             /*====================================================*/
 
-            if (setFlag == false) {
+            if (!setFlag) {
                 WriteString(theEnv, logName, DefmoduleName(theModule));
                 WriteString(theEnv, logName, ":\n");
             }
@@ -1609,8 +1609,6 @@ bool ConstructsDeletable(
 #endif
 
 #if BLOAD_AND_BSAVE
-    if (Bloaded(theEnv))
-        return false;
-    return true;
+    return !Bloaded(theEnv);
 #endif
 }

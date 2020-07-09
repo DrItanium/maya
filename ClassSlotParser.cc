@@ -226,11 +226,11 @@ TEMP_SLOT_LINK *ParseSlot(
             SyntaxErrorMessage(theEnv, "defclass slot");
             goto ParseSlotError;
         } else if (strcmp(DefclassData(theEnv)->ObjectParseToken.lexemeValue->contents, DEFAULT_FACET) == 0) {
-            if (ParseDefaultFacet(theEnv, readSource, specbits, slot) == false)
+            if (!ParseDefaultFacet(theEnv, readSource, specbits, slot))
                 goto ParseSlotError;
         } else if (strcmp(DefclassData(theEnv)->ObjectParseToken.lexemeValue->contents, DYNAMIC_FACET) == 0) {
             SetBitMap(specbits, DEFAULT_DYNAMIC_BIT);
-            if (ParseDefaultFacet(theEnv, readSource, specbits, slot) == false)
+            if (!ParseDefaultFacet(theEnv, readSource, specbits, slot))
                 goto ParseSlotError;
         } else if (strcmp(DefclassData(theEnv)->ObjectParseToken.lexemeValue->contents, ACCESS_FACET) == 0) {
             rtnCode = ParseSimpleFacet(theEnv, readSource, slot, specbits, ACCESS_FACET, ACCESS_BIT,
@@ -297,8 +297,8 @@ TEMP_SLOT_LINK *ParseSlot(
             }
             slot->overrideMessageSpecified = true;
         } else if (StandardConstraint(DefclassData(theEnv)->ObjectParseToken.lexemeValue->contents)) {
-            if (ParseStandardConstraint(theEnv, readSource, DefclassData(theEnv)->ObjectParseToken.lexemeValue->contents,
-                                        slot->constraint, &parsedConstraint, true) == false)
+            if (!ParseStandardConstraint(theEnv, readSource, DefclassData(theEnv)->ObjectParseToken.lexemeValue->contents,
+                                         slot->constraint, &parsedConstraint, true))
                 goto ParseSlotError;
         } else {
             SyntaxErrorMessage(theEnv, "defclass slot");
@@ -321,11 +321,11 @@ TEMP_SLOT_LINK *ParseSlot(
 
     if (slot->composite)
         BuildCompositeFacets(theEnv, slot, preclist, specbits, &parsedConstraint);
-    if (CheckForFacetConflicts(theEnv, slot, &parsedConstraint) == false)
+    if (!CheckForFacetConflicts(theEnv, slot, &parsedConstraint))
         goto ParseSlotError;
-    if (CheckConstraintParseConflicts(theEnv, slot->constraint) == false)
+    if (!CheckConstraintParseConflicts(theEnv, slot->constraint))
         goto ParseSlotError;
-    if (EvaluateSlotDefaultValue(theEnv, slot, specbits) == false)
+    if (!EvaluateSlotDefaultValue(theEnv, slot, specbits))
         goto ParseSlotError;
     if ((slot->dynamicDefault == 0) && (slot->noWrite == 1) &&
         (slot->initializeOnly == 0))
@@ -598,7 +598,7 @@ static bool ParseDefaultFacet(
     error = false;
     tmp = ParseDefault(theEnv, readSource, true, TestBitMap(specbits, DEFAULT_DYNAMIC_BIT),
                        false, &noneSpecified, &deriveSpecified, &error);
-    if (error == true)
+    if (error)
         return false;
     if (noneSpecified || deriveSpecified) {
         if (noneSpecified) {
@@ -793,7 +793,7 @@ static bool EvaluateSlotDefaultValue(
             olddcc = SetDynamicConstraintChecking(theEnv, true);
             vPass = EvaluateAndStoreInDataObject(theEnv, sd->multiple,
                                                  (Expression *) sd->defaultValue, &temp, true);
-            if (vPass != false)
+            if (vPass)
                 vPass = (ValidSlotValue(theEnv, &temp, sd, nullptr, "the 'default' facet") == PSE_NO_ERROR);
             SetDynamicConstraintChecking(theEnv, olddcc);
             SetExecutingConstruct(theEnv, oldce);

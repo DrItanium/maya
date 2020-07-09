@@ -413,7 +413,7 @@ bool DeleteHandler(
                 }
             }
         }
-        if ((found == false) ? (strcmp(mname->contents, "*") == 0) : false) {
+        if (!found ? (strcmp(mname->contents, "*") == 0) : false) {
             for (i = 0; i < cls->handlerCount; i++)
                 if (cls->handlers[i].system == 0)
                     cls->handlers[i].mark = 1;
@@ -588,7 +588,7 @@ bool CheckCurrentMessage(
         return false;
     }
     activeMsgArg = GetNthMessageArgument(theEnv, 0);
-    if ((ins_reqd == true) ? (activeMsgArg->header->type != INSTANCE_ADDRESS_TYPE) : false) {
+    if (ins_reqd ? (activeMsgArg->header->type != INSTANCE_ADDRESS_TYPE) : false) {
         PrintErrorID(theEnv, "MSGFUN", 5, false);
         WriteString(theEnv, STDERR, "The function '");
         WriteString(theEnv, STDERR, func);

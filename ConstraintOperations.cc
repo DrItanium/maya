@@ -137,11 +137,9 @@ struct constraintRecord *IntersectConstraints(
         return (rv);
     }
 
-    if (c1->multifieldsAllowed && c2->multifieldsAllowed) { rv->multifieldsAllowed = true; }
-    else { rv->multifieldsAllowed = false; }
+    rv->multifieldsAllowed = c1->multifieldsAllowed && c2->multifieldsAllowed;
 
-    if (c1->singlefieldsAllowed && c2->singlefieldsAllowed) { rv->singlefieldsAllowed = true; }
-    else { rv->singlefieldsAllowed = false; }
+    rv->singlefieldsAllowed = c1->singlefieldsAllowed && c2->singlefieldsAllowed;
 
     if (c1->anyAllowed && c2->anyAllowed) rv->anyAllowed = true;
     else {
@@ -570,16 +568,15 @@ static bool RestrictionOnType(
         CONSTRAINT_RECORD *theConstraint) {
     if (theConstraint == nullptr) return false;
 
-    if ((theConstraint->anyRestriction) ||
-        (theConstraint->symbolRestriction && (theType == SYMBOL_TYPE)) ||
-        (theConstraint->stringRestriction && (theType == STRING_TYPE)) ||
-        (theConstraint->floatRestriction && (theType == FLOAT_TYPE)) ||
-        (theConstraint->integerRestriction && (theType == INTEGER_TYPE)) ||
-        (theConstraint->classRestriction && ((theType == INSTANCE_ADDRESS_TYPE) ||
-                                             (theType == INSTANCE_NAME_TYPE))) ||
-        (theConstraint->instanceNameRestriction && (theType == INSTANCE_NAME_TYPE))) { return true; }
+    return (theConstraint->anyRestriction) ||
+           (theConstraint->symbolRestriction && (theType == SYMBOL_TYPE)) ||
+           (theConstraint->stringRestriction && (theType == STRING_TYPE)) ||
+           (theConstraint->floatRestriction && (theType == FLOAT_TYPE)) ||
+           (theConstraint->integerRestriction && (theType == INTEGER_TYPE)) ||
+           (theConstraint->classRestriction && ((theType == INSTANCE_ADDRESS_TYPE) ||
+                                                (theType == INSTANCE_NAME_TYPE))) ||
+           (theConstraint->instanceNameRestriction && (theType == INSTANCE_NAME_TYPE));
 
-    return false;
 }
 
 /**********************************************************/

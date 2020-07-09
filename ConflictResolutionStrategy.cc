@@ -405,9 +405,9 @@ static Activation *PlaceMEAActivation(
             oSet = true;
         } else { oSet = false; }
 
-        if ((cSet == false) && (oSet == false)) { flag = ComparePartialMatches(theEnv, actPtr, newActivation); }
-        else if ((cSet == true) && (oSet == false)) { flag = GREATER_THAN; }
-        else if ((cSet == false) && (oSet == true)) { flag = LESS_THAN; }
+        if (!cSet && !oSet) { flag = ComparePartialMatches(theEnv, actPtr, newActivation); }
+        else if (cSet && !oSet) { flag = GREATER_THAN; }
+        else if (!cSet && oSet) { flag = LESS_THAN; }
         else if (oWhoset < cWhoset) { flag = GREATER_THAN; }
         else if (oWhoset > cWhoset) { flag = LESS_THAN; }
         else { flag = ComparePartialMatches(theEnv, actPtr, newActivation); }
@@ -689,7 +689,7 @@ static unsigned long long *SortPartialMatch(
     /*=================*/
 
     for (flag = true, k = binds->bcount - 1;
-         flag == true;
+         flag;
          k--) {
         flag = false;
         for (j = 0; j < k; j++) {

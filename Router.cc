@@ -494,7 +494,7 @@ bool QueryRouters(
 
     currentPtr = RouterData(theEnv)->ListOfRouters;
     while (currentPtr != nullptr) {
-        if (QueryRouter(theEnv, logicalName, currentPtr) == true) return true;
+        if (QueryRouter(theEnv, logicalName, currentPtr)) return true;
         currentPtr = currentPtr->next;
     }
 

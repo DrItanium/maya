@@ -329,7 +329,7 @@ bool LoadConstructsFromLogicalName(
     /* Parse the file until the end of file is reached. */
     /*==================================================*/
 
-    while ((foundConstruct == true) && (GetHaltExecution(theEnv) == false)) {
+    while (foundConstruct && !GetHaltExecution(theEnv)) {
         /*===========================================================*/
         /* Clear the pretty print buffer in preparation for parsing. */
         /*===========================================================*/
@@ -474,7 +474,7 @@ static bool FindConstructBeginning(
             /* print an error message, otherwise, print an error message.      */
             /*=================================================================*/
 
-        else if ((theToken->tknType == SYMBOL_TOKEN) && (leftParenthesisFound == true)) {
+        else if ((theToken->tknType == SYMBOL_TOKEN) && leftParenthesisFound) {
             /*===========================================================*/
             /* Is this a valid construct name (e.g., defrule, deffacts). */
             /*===========================================================*/
@@ -546,10 +546,9 @@ static bool QueryErrorCallback(
 #pragma unused(theEnv,context)
 #endif
 
-    if ((strcmp(logicalName, STDERR) == 0) ||
-        (strcmp(logicalName, STDWRN) == 0)) { return true; }
+    return (strcmp(logicalName, STDERR) == 0) ||
+           (strcmp(logicalName, STDWRN) == 0);
 
-    return false;
 }
 
 /***********************************************************/

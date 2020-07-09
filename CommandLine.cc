@@ -256,7 +256,7 @@ bool ExpandCommandString(
                                                                   &RouterData(theEnv)->CommandBufferInputCount,
                                                                   &CommandLineData(theEnv)->MaximumCharacters,
                                                                   CommandLineData(theEnv)->MaximumCharacters + 80);
-    return ((RouterData(theEnv)->CommandBufferInputCount != k) ? true : false);
+    return RouterData(theEnv)->CommandBufferInputCount != k;
 }
 
 /******************************************************************/
@@ -447,7 +447,7 @@ int CompleteCommand(
                 /*====================================================*/
 
             case '(' :
-                if ((depth > 0) || (moreThanZero == false)) {
+                if ((depth > 0) || !moreThanZero) {
                     depth++;
                     moreThanZero = true;
                 }
@@ -462,7 +462,7 @@ int CompleteCommand(
 
             case ')' :
                 if (depth > 0) depth--;
-                else if (moreThanZero == false) error = true;
+                else if (!moreThanZero) error = true;
                 break;
 
                 /*=====================================================*/
@@ -619,7 +619,7 @@ void CommandLoop(
         /* event function.                                   */
         /*===================================================*/
 
-        if (BatchActive(theEnv) == true) {
+        if (BatchActive(theEnv)) {
             inchar = LLGetcBatch(theEnv, STDIN, true);
             if (inchar == EOF) { (*CommandLineData(theEnv)->EventCallback)(theEnv); }
             else { ExpandCommandString(theEnv, (char) inchar); }
@@ -630,7 +630,7 @@ void CommandLoop(
         /* from the command buffer.                        */
         /*=================================================*/
 
-        if (GetHaltExecution(theEnv) == true) {
+        if (GetHaltExecution(theEnv)) {
             SetHaltExecution(theEnv, false);
             SetEvaluationError(theEnv, false);
             FlushCommandString(theEnv);
@@ -690,7 +690,7 @@ void CommandLoopBatchDriver(
     int inchar;
 
     while (true) {
-        if (GetHaltCommandLoopBatch(theEnv) == true) {
+        if (GetHaltCommandLoopBatch(theEnv)) {
             CloseAllBatchSources(theEnv);
             SetHaltCommandLoopBatch(theEnv, false);
         }
@@ -701,7 +701,7 @@ void CommandLoopBatchDriver(
         /* event function.                                   */
         /*===================================================*/
 
-        if (BatchActive(theEnv) == true) {
+        if (BatchActive(theEnv)) {
             inchar = LLGetcBatch(theEnv, STDIN, true);
             if (inchar == EOF) { return; }
             else { ExpandCommandString(theEnv, (char) inchar); }
@@ -712,7 +712,7 @@ void CommandLoopBatchDriver(
         /* from the command buffer.                        */
         /*=================================================*/
 
-        if (GetHaltExecution(theEnv) == true) {
+        if (GetHaltExecution(theEnv)) {
             SetHaltExecution(theEnv, false);
             SetEvaluationError(theEnv, false);
             FlushCommandString(theEnv);
@@ -737,7 +737,7 @@ bool ExecuteIfCommandComplete(
         Environment *theEnv) {
     if ((CompleteCommand(CommandLineData(theEnv)->CommandString) == 0) ||
         (RouterData(theEnv)->CommandBufferInputCount == 0) ||
-        (RouterData(theEnv)->AwaitingInput == false)) { return false; }
+        !RouterData(theEnv)->AwaitingInput) { return false; }
 
     if (CommandLineData(theEnv)->BeforeCommandExecutionCallback != nullptr) {
         if (!(*CommandLineData(theEnv)->BeforeCommandExecutionCallback)(theEnv)) { return false; }
@@ -768,11 +768,10 @@ bool ExecuteIfCommandComplete(
 /*******************************/
 bool CommandCompleteAndNotEmpty(
         Environment *theEnv) {
-    if ((CompleteCommand(CommandLineData(theEnv)->CommandString) == 0) ||
-        (RouterData(theEnv)->CommandBufferInputCount == 0) ||
-        (RouterData(theEnv)->AwaitingInput == false)) { return false; }
+    return !((CompleteCommand(CommandLineData(theEnv)->CommandString) == 0) ||
+             (RouterData(theEnv)->CommandBufferInputCount == 0) ||
+             (RouterData(theEnv)->AwaitingInput == false));
 
-    return true;
 }
 
 /*******************************************/
@@ -919,8 +918,7 @@ bool RouteCommand(
             SetWarningFileName(theEnv, nullptr);
             SetErrorFileName(theEnv, nullptr);
 
-            if (errorFlag == BE_NO_ERROR) return true;
-            else return false;
+            return errorFlag == BE_NO_ERROR;
         }
     }
 

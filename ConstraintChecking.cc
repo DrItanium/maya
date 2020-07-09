@@ -567,7 +567,7 @@ ConstraintViolationType ConstraintCheckDataObject(
     if (theConstraints == nullptr) return NO_VIOLATION;
 
     if (theData->header->type == MULTIFIELD_TYPE) {
-        if (CheckCardinalityConstraint(theEnv, theData->range, theConstraints) == false) { return CARDINALITY_VIOLATION; }
+        if (!CheckCardinalityConstraint(theEnv, theData->range, theConstraints)) { return CARDINALITY_VIOLATION; }
 
         theMultifield = theData->multifieldValue->contents;
         for (i = theData->begin; i < theData->begin + theData->range; i++) {
@@ -579,7 +579,7 @@ ConstraintViolationType ConstraintCheckDataObject(
         return NO_VIOLATION;
     }
 
-    if (CheckCardinalityConstraint(theEnv, 1, theConstraints) == false) { return CARDINALITY_VIOLATION; }
+    if (!CheckCardinalityConstraint(theEnv, 1, theConstraints)) { return CARDINALITY_VIOLATION; }
 
     return ConstraintCheckValue(theEnv, theData->header->type, theData->value, theConstraints);
 }
@@ -593,16 +593,16 @@ ConstraintViolationType ConstraintCheckValue(
         int theType,
         void *theValue,
         CONSTRAINT_RECORD *theConstraints) {
-    if (CheckTypeConstraint(theType, theConstraints) == false) { return TYPE_VIOLATION; }
+    if (!CheckTypeConstraint(theType, theConstraints)) { return TYPE_VIOLATION; }
 
-    else if (CheckAllowedValuesConstraint(theType, theValue, theConstraints) == false) { return ALLOWED_VALUES_VIOLATION; }
+    else if (!CheckAllowedValuesConstraint(theType, theValue, theConstraints)) { return ALLOWED_VALUES_VIOLATION; }
 
-    else if (CheckAllowedClassesConstraint(theEnv, theType, theValue, theConstraints) == false) { return ALLOWED_CLASSES_VIOLATION; }
+    else if (!CheckAllowedClassesConstraint(theEnv, theType, theValue, theConstraints)) { return ALLOWED_CLASSES_VIOLATION; }
 
-    else if (CheckRangeConstraint(theEnv, theType, theValue, theConstraints) == false) { return RANGE_VIOLATION; }
+    else if (!CheckRangeConstraint(theEnv, theType, theValue, theConstraints)) { return RANGE_VIOLATION; }
 
     else if (theType == FCALL) {
-        if (CheckFunctionReturnType(UnknownFunctionType(theValue), theConstraints) == false) { return FUNCTION_RETURN_TYPE_VIOLATION; }
+        if (!CheckFunctionReturnType(UnknownFunctionType(theValue), theConstraints)) { return FUNCTION_RETURN_TYPE_VIOLATION; }
     }
 
     return NO_VIOLATION;
@@ -640,7 +640,7 @@ ConstraintViolationType ConstraintCheckExpressionChain(
     /*====================================*/
 
     if (max == 0) max = min;
-    if (CheckRangeAgainstCardinalityConstraint(theEnv, min, max, theConstraints) == false) { return CARDINALITY_VIOLATION; }
+    if (!CheckRangeAgainstCardinalityConstraint(theEnv, min, max, theConstraints)) { return CARDINALITY_VIOLATION; }
 
     /*========================================*/
     /* Check for other constraint violations. */

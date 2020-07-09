@@ -198,7 +198,7 @@ static void NegEntryRetractBeta(
         return;
     } else if (joinPtr->firstJoin && (joinPtr->patternIsNegated || joinPtr->joinFromTheRight) && (!joinPtr->patternIsExists)) {
         if (joinPtr->secondaryNetworkTest != nullptr) {
-            if (EvaluateSecondaryNetworkTest(theEnv, betaMatch, joinPtr) == false) { return; }
+            if (!EvaluateSecondaryNetworkTest(theEnv, betaMatch, joinPtr)) { return; }
         }
 
         EPMDrive(theEnv, betaMatch, joinPtr, operation);
@@ -207,7 +207,7 @@ static void NegEntryRetractBeta(
     }
 
     if (joinPtr->secondaryNetworkTest != nullptr) {
-        if (EvaluateSecondaryNetworkTest(theEnv, betaMatch, joinPtr) == false) { return; }
+        if (!EvaluateSecondaryNetworkTest(theEnv, betaMatch, joinPtr)) { return; }
     }
 
     /*=========================================================*/
@@ -372,7 +372,7 @@ static bool FindNextConflictingMatch(
         /* indicate a conflict was found.               */
         /*==============================================*/
 
-        if (result != false) {
+        if (result) {
             AddBlockedLink(theBind, possibleConflicts);
             EngineData(theEnv)->GlobalLHSBinds = oldLHSBinds;
             EngineData(theEnv)->GlobalRHSBinds = oldRHSBinds;

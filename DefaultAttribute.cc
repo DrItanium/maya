@@ -300,7 +300,7 @@ struct expr *ParseDefault(
         /* expressions contained within the default list.     */
         /*====================================================*/
 
-        if (ExpressionContainsVariables(newItem, false) == true) {
+        if (ExpressionContainsVariables(newItem, false)) {
             ReturnExpression(theEnv, defaultList);
             ReturnExpression(theEnv, newItem);
             *error = true;
@@ -338,7 +338,7 @@ struct expr *ParseDefault(
     /* must contain a single value.            */
     /*=========================================*/
 
-    if (multifield == false) {
+    if (!multifield) {
         if (defaultList == nullptr) { *error = true; }
         else if (defaultList->nextArg != nullptr) { *error = true; }
         else {
@@ -373,8 +373,8 @@ struct expr *ParseDefault(
         if (EvaluateExpression(theEnv, newItem, &theValue)) *error = true;
 
         if ((theValue.header->type == MULTIFIELD_TYPE) &&
-            (multifield == false) &&
-            (*error == false)) {
+            !multifield &&
+            !*error) {
             PrintErrorID(theEnv, "DEFAULT", 1, true);
             WriteString(theEnv, STDERR, "The default value for a single field slot must be a single field value.\n");
             *error = true;
