@@ -649,7 +649,7 @@ struct lhsParseNode *RestrictionParse(
         tempConstraints = GetConstraintRecord(theEnv);
         SetConstraintType(MULTIFIELD_TYPE, tempConstraints);
         tempConstraints->singlefieldsAllowed = false;
-        tempConstraints->multifield = nextNode->constraints;
+        tempConstraints->setMultifield(nextNode->constraints);
         nextNode->constraints = tempConstraints;
 
         /*=====================================================*/

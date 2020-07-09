@@ -206,8 +206,8 @@ struct constraintRecord *IntersectConstraints(
     /*============================================*/
 
     if (rv->multifieldsAllowed) {
-        rv->multifield = IntersectConstraints(theEnv, c1->multifield, c2->multifield);
-        if (UnmatchableConstraint(rv->multifield)) { rv->multifieldsAllowed = false; }
+        rv->setMultifield(IntersectConstraints(theEnv, c1->getMultifield(), c2->getMultifield()));
+        if (UnmatchableConstraint(rv->getMultifield())) { rv->multifieldsAllowed = false; }
     }
 
     /*========================*/
@@ -679,7 +679,7 @@ struct constraintRecord *UnionConstraints(
     /* the constraint record for them.        */
     /*========================================*/
 
-    if (rv->multifieldsAllowed) { rv->multifield = UnionConstraints(theEnv, c1->multifield, c2->multifield); }
+    if (rv->multifieldsAllowed) { rv->setMultifield(UnionConstraints(theEnv, c1->getMultifield(), c2->getMultifield())); }
 
     /*====================*/
     /* Return the unioned */

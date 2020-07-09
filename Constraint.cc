@@ -148,7 +148,7 @@ static void ReturnConstraintRecord(
         ReturnExpression(theEnv, constraints->maxFields);
     }
 
-    ReturnConstraintRecord(theEnv, constraints->multifield);
+    ReturnConstraintRecord(theEnv, constraints->getMultifield());
 
     rtn_struct(theEnv, constraintRecord, constraints);
 }
@@ -177,7 +177,7 @@ static void DeinstallConstraintRecord(
         ExpressionDeinstall(theEnv, constraints->maxFields);
     }
 
-    if (constraints->multifield != nullptr) { DeinstallConstraintRecord(theEnv, constraints->multifield); }
+    if (constraints->getMultifield() != nullptr) { DeinstallConstraintRecord(theEnv, constraints->getMultifield()); }
 }
 
 /******************************************/
@@ -287,7 +287,7 @@ unsigned long HashConstraint(
         count += GetAtomicHashValue(tmpPtr->type, tmpPtr->value, i++);
     }
 
-    if (theConstraint->multifield != nullptr) { count += HashConstraint(theConstraint->multifield); }
+    if (theConstraint->getMultifield() != nullptr) { count += HashConstraint(theConstraint->getMultifield()); }
 
     hashValue = count % SIZE_CONSTRAINT_HASH;
 
@@ -366,11 +366,11 @@ static bool ConstraintCompare(
     }
     if (tmpPtr1 != tmpPtr2) return false;
 
-    if (((constraint1->multifield == nullptr) && (constraint2->multifield != nullptr)) ||
-        ((constraint1->multifield != nullptr) && (constraint2->multifield == nullptr))) { return false; }
-    else if (constraint1->multifield == constraint2->multifield) { return true; }
+    if (((constraint1->getMultifield() == nullptr) && (constraint2->getMultifield() != nullptr)) ||
+        ((constraint1->getMultifield() != nullptr) && (constraint2->getMultifield() == nullptr))) { return false; }
+    else if (constraint1->getMultifield() == constraint2->getMultifield()) { return true; }
 
-    return (ConstraintCompare(constraint1->multifield, constraint2->multifield));
+    return (ConstraintCompare(constraint1->getMultifield(), constraint2->getMultifield()));
 }
 
 /************************************/
@@ -440,7 +440,7 @@ static void InstallConstraintRecord(
     ReturnExpression(theEnv, constraints->maxFields);
     constraints->maxFields = tempExpr;
 
-    if (constraints->multifield != nullptr) { InstallConstraintRecord(theEnv, constraints->multifield); }
+    if (constraints->getMultifield() != nullptr) { InstallConstraintRecord(theEnv, constraints->getMultifield()); }
 }
 
 

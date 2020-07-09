@@ -524,7 +524,7 @@ static bool ReorderAndAnalyzeObjectPattern(
                            match slot so that no cardinality errors will be flagged
                            ======================================================== */
                         if ((subNode->pnType == MF_WILDCARD_NODE) ||
-                            (subNode->pnType == MF_VARIABLE_NODE)) { theConstraint = subNode->constraints->multifield; }
+                            (subNode->pnType == MF_VARIABLE_NODE)) { theConstraint = subNode->constraints->getMultifield(); }
                         else { theConstraint = subNode->constraints; }
 
                         tmpmin = theConstraint->minFields;

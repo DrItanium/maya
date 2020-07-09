@@ -98,12 +98,14 @@ public:
     expr *maxValue;
     expr *minFields;
     expr *maxFields;
-    constraintRecord *multifield;
 private:
+    constraintRecord *multifield;
     constraintRecord *next;
     unsigned int bucket;
     unsigned int count;
 public:
+    auto getMultifield() const noexcept { return multifield; }
+    void setMultifield(constraintRecord* value) noexcept { multifield = value; }
     auto getNext() const noexcept { return next; }
     void setNext(constraintRecord* value) noexcept { next = value; }
     constexpr auto getBucket() const noexcept { return bucket; }

@@ -246,7 +246,7 @@ static void CopyFromBsaveConstraintRecord(
     constraints->maxValue = HashedExpressionPointer(bsaveConstraints->maxValue);
     constraints->minFields = HashedExpressionPointer(bsaveConstraints->minFields);
     constraints->maxFields = HashedExpressionPointer(bsaveConstraints->maxFields);
-    constraints->multifield = nullptr;
+    constraints->setMultifield(nullptr);
 }
 
 /********************************************************/
