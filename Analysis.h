@@ -50,7 +50,11 @@
 /*   as the patterns of a rule are analyzed.         */
 /*****************************************************/
 struct nandFrame {
+private:
     int depth;
+public:
+    constexpr auto getDepth() const noexcept { return depth; }
+    void setDepth(int value) noexcept { depth = value; }
     struct lhsParseNode *nandCE;
     struct nandFrame *next;
 };

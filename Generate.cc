@@ -668,7 +668,7 @@ void AddNandUnification(
     for (theFrame = theNandFrames;
          theFrame != nullptr;
          theFrame = theFrame->next) {
-        if (theFrame->depth >= nodeList->referringNode->beginNandDepth) {
+        if (theFrame->getDepth() >= nodeList->referringNode->beginNandDepth) {
             // nodeList->referringNode->marked = true;
 
             tempExpression = GenJNVariableComparison(theEnv, nodeList->referringNode, nodeList->referringNode, true);

@@ -133,7 +133,7 @@ bool VariableAnalysis(
         while (patternPtr->beginNandDepth > currentDepth) {
             tempNandPtr = get_struct(theEnv, nandFrame);
             tempNandPtr->nandCE = patternPtr;
-            tempNandPtr->depth = currentDepth;
+            tempNandPtr->setDepth(currentDepth);
             tempNandPtr->next = theNandFrames;
             theNandFrames = tempNandPtr;
             currentDepth++;

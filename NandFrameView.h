@@ -15,7 +15,7 @@ namespace maya {
         using Parent = GenericView<nandFrame>;
         using Optional = std::optional<Self>;
         using Parent::Parent;
-        [[nodiscard]] constexpr auto getDepth() const noexcept { return _raw.depth; }
+        [[nodiscard]] constexpr auto getDepth() const noexcept { return _raw.getDepth(); }
         [[nodiscard]] inline Optional getNext() noexcept;
         ///@todo implement LHSParseNodeView
         //[[nodiscard]] std::optional<LHSParseNodeView> getNandCE() noexcept;
