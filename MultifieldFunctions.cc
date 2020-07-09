@@ -140,7 +140,7 @@ struct multiFunctionData {
 /**********************************************/
 void MultifieldFunctionDefinitions(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, MULTIFUN_DATA, sizeof(multiFunctionData), nullptr);
+    AllocateEnvironmentData(theEnv, MULTIFUN_DATA, sizeof(multiFunctionData));
 
     AddUDF(theEnv, "first$", "m", 1, 1, "m", FirstFunction);
     AddUDF(theEnv, "rest$", "m", 1, 1, "m", RestFunction);

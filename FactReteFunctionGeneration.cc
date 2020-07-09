@@ -181,7 +181,7 @@ void InitializeFactReteFunctions(
                                                FactPNConstant2,
                                                nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    AllocateEnvironmentData(theEnv, FACTGEN_DATA, sizeof(factgenData), nullptr);
+    AllocateEnvironmentData(theEnv, FACTGEN_DATA, sizeof(factgenData));
 
     memcpy(&FactgenData(theEnv)->FactJNGV1Info, &factJNGV1Info, sizeof(entityRecord));
     memcpy(&FactgenData(theEnv)->FactJNGV2Info, &factJNGV2Info, sizeof(entityRecord));

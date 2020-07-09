@@ -36,7 +36,7 @@
 /*************************************************/
 void InitializeUserDataData(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, USER_DATA_DATA, sizeof(userDataData), nullptr);
+    AllocateEnvironmentData(theEnv, USER_DATA_DATA, sizeof(userDataData));
 }
 
 /******************************************************/

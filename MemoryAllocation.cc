@@ -78,7 +78,7 @@ constexpr auto STRICT_ALIGN_SIZE = sizeof(double);
 /********************************************/
 void InitializeMemory(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, MEMORY_DATA, sizeof(memoryData), nullptr);
+    AllocateEnvironmentData(theEnv, MEMORY_DATA, sizeof(memoryData));
 
     MemoryData(theEnv)->OutOfMemoryCallback = DefaultOutOfMemoryFunction;
 

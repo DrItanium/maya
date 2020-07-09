@@ -97,7 +97,7 @@ static void SetErrorCaptureValues(Environment *, UDFValue *);
 /*****************************************/
 void ParseFunctionDefinitions(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, PARSEFUN_DATA, sizeof(parseFunctionData), nullptr);
+    AllocateEnvironmentData(theEnv, PARSEFUN_DATA, sizeof(parseFunctionData));
 
     AddUDF(theEnv, "check-syntax", "ym", 1, 1, "s", CheckSyntaxFunction);
 }

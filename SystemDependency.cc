@@ -182,7 +182,7 @@ struct systemDependentData {
 /********************************************************/
 void InitializeSystemDependentData(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, SYSTEM_DEPENDENT_DATA, sizeof(systemDependentData), nullptr);
+    AllocateEnvironmentData(theEnv, SYSTEM_DEPENDENT_DATA, sizeof(systemDependentData));
 }
 
 /*********************************************************/

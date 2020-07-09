@@ -88,7 +88,7 @@ static void DeallocateDefmoduleData(Environment *);
 /************************************************/
 void AllocateDefmoduleGlobals(
         Environment *theEnv) {
-    AllocateEnvironmentData(theEnv, DEFMODULE_DATA, sizeof(defmoduleData), nullptr);
+    AllocateEnvironmentData(theEnv, DEFMODULE_DATA, sizeof(defmoduleData));
     AddEnvironmentCleanupFunction(theEnv, "defmodules", DeallocateDefmoduleData, -1000);
     DefmoduleData(theEnv)->CallModuleChangeFunctions = true;
     DefmoduleData(theEnv)->MainModuleRedefinable = true;
