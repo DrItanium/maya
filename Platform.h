@@ -57,6 +57,13 @@
 #endif
 
 namespace maya {
+    constexpr auto PlatformIsNt() noexcept {
+#ifdef PLATFORM_NT
+        return true;
+#else
+        return false;
+#endif
+    }
     constexpr auto PlatformIsLinux() noexcept {
 #ifdef PLATFORM_LINUX
         return true;
