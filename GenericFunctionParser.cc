@@ -161,7 +161,7 @@ bool ParseDefgeneric(
     SetIndentDepth(theEnv, 3);
 
 #if BLOAD_AND_BSAVE
-    if ((Bloaded(theEnv) == true) && (!ConstructData(theEnv)->CheckSyntaxMode)) {
+    if (Bloaded(theEnv) && (!ConstructData(theEnv)->CheckSyntaxMode)) {
         CannotLoadWithBloadMessage(theEnv, "defgeneric");
         return true;
     }
@@ -173,7 +173,7 @@ bool ParseDefgeneric(
     if (gname == nullptr)
         return true;
 
-    if (ValidGenericName(theEnv, gname->contents) == false)
+    if (!ValidGenericName(theEnv, gname->contents))
         return true;
 
     if (genericInputToken.tknType != RIGHT_PARENTHESIS_TOKEN) {
@@ -237,7 +237,7 @@ bool ParseDefmethod(
     SavePPBuffer(theEnv, "(defmethod ");
 
 #if BLOAD_AND_BSAVE
-    if ((Bloaded(theEnv) == true) && (!ConstructData(theEnv)->CheckSyntaxMode)) {
+    if (Bloaded(theEnv) && (!ConstructData(theEnv)->CheckSyntaxMode)) {
         CannotLoadWithBloadMessage(theEnv, "defmethod");
         return true;
     }
@@ -247,7 +247,7 @@ bool ParseDefmethod(
     if (gname == nullptr)
         return true;
 
-    if (ValidGenericName(theEnv, gname->contents) == false)
+    if (!ValidGenericName(theEnv, gname->contents))
         return true;
 
     /* ========================================================
@@ -702,7 +702,7 @@ static bool ValidGenericName(
        ======================================= */
     systemFunction = FindFunction(theEnv, theDefgenericName);
     if ((systemFunction != nullptr) ?
-        (systemFunction->overloadable == false) : false) {
+        !systemFunction->overloadable : false) {
         PrintErrorID(theEnv, "GENRCPSR", 16, false);
         WriteString(theEnv, STDERR, "The system function '");
         WriteString(theEnv, STDERR, theDefgenericName);
@@ -1318,7 +1318,7 @@ static int RestrictionsCompare(
            expressions must be identical as well for the restrictions
            to be the same
            ========================================================== */
-        if (IdenticalExpression(r1->query, r2->query) == false)
+        if (!IdenticalExpression(r1->query, r2->query))
             diff = true;
         params = params->nextArg;
     }

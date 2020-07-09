@@ -205,9 +205,8 @@ bool FactWillBeAsserted(
     hashValue = HashFact(theFact);
 
     tempPtr = FactExists(theEnv, theFact, hashValue);
-    if (tempPtr == nullptr) return true;
+    return tempPtr == nullptr;
 
-    return false;
 }
 
 /*****************************************************/

@@ -127,7 +127,7 @@ void SavePPBuffer(
     /* then don't bother writing to it.         */
     /*==========================================*/
 
-    if ((PrettyPrintData(theEnv)->PPBufferStatus == false) || (!PrettyPrintData(theEnv)->PPBufferEnabled)) { return; }
+    if (!PrettyPrintData(theEnv)->PPBufferStatus || (!PrettyPrintData(theEnv)->PPBufferEnabled)) { return; }
 
     /*===============================*/
     /* Determine the increment size. */
@@ -173,7 +173,7 @@ void SavePPBuffer(
 /***************************************************/
 void PPBackup(
         Environment *theEnv) {
-    if ((PrettyPrintData(theEnv)->PPBufferStatus == false) ||
+    if (!PrettyPrintData(theEnv)->PPBufferStatus ||
         (PrettyPrintData(theEnv)->PrettyPrintBuffer == nullptr) ||
         (!PrettyPrintData(theEnv)->PPBufferEnabled)) { return; }
 
@@ -219,7 +219,7 @@ void PPCRAndIndent(
     char *buffer;
     char fixedBuffer[PP_CR_FIXED_BUFFER_SIZE];
 
-    if ((PrettyPrintData(theEnv)->PPBufferStatus == false) ||
+    if (!PrettyPrintData(theEnv)->PPBufferStatus ||
         (!PrettyPrintData(theEnv)->PPBufferEnabled)) { return; }
 
     if ((PrettyPrintData(theEnv)->IndentationDepth + 2) > PP_CR_FIXED_BUFFER_SIZE) {

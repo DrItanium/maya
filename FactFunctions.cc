@@ -510,8 +510,7 @@ void PPFactFunction(
     if (UDFHasNextArgument(context)) {
         UDFNextArgument(context, ANY_TYPE_BITS, &theArg);
 
-        if (theArg.value == FalseSymbol(theEnv)) { ignoreDefaults = false; }
-        else { ignoreDefaults = true; }
+        ignoreDefaults = theArg.value != FalseSymbol(theEnv);
     }
 
     /*============================================================*/
@@ -529,7 +528,7 @@ void PPFactFunction(
         SBDispose(theSB);
 
         return;
-    } else if (QueryRouters(theEnv, logicalName) == false) {
+    } else if (!QueryRouters(theEnv, logicalName)) {
         UnrecognizedRouterMessage(theEnv, logicalName);
         return;
     }

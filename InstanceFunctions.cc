@@ -470,7 +470,7 @@ Instance *FindInstanceInModule(
        For ::<name> formats, we need to
        search imported modules too
        ================================ */
-    if (searchImports == false)
+    if (!searchImports)
         return nullptr;
     MarkModulesAsUnvisited(theEnv);
     return (FindImportedInstance(theEnv, theModule, currentModule, startInstance));

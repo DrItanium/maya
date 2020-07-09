@@ -556,7 +556,7 @@ int ReplaceProcVars(
         }
 #if DEFGLOBAL_CONSTRUCT
         else if (actions->type == GBL_VARIABLE) {
-            if (ReplaceGlobalVariable(theEnv, actions) == false)
+            if (!ReplaceGlobalVariable(theEnv, actions))
                 return (-1);
         }
 #endif
@@ -1032,7 +1032,7 @@ static void EvaluateProcParameters(
 
     rva = (UDFValue *) gm2(theEnv, (sizeof(UDFValue) * numberOfParameters));
     while (parameterList != nullptr) {
-        if ((EvaluateExpression(theEnv, parameterList, &temp) == true) ? true :
+        if (EvaluateExpression(theEnv, parameterList, &temp) ? true :
             (temp.header->type == VOID_TYPE)) {
             if (temp.header->type == VOID_TYPE) {
                 PrintErrorID(theEnv, "PRCCODE", 2, false);

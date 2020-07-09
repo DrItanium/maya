@@ -216,7 +216,7 @@ bool EvaluateExpression(
 
         case MF_VARIABLE:
         case SF_VARIABLE:
-            if (GetBoundVariable(theEnv, returnValue, problem->lexemeValue) == false) {
+            if (!GetBoundVariable(theEnv, returnValue, problem->lexemeValue)) {
                 PrintErrorID(theEnv, "EVALUATN", 1, false);
                 WriteString(theEnv, STDERR, "Variable ");
                 if (problem->type == MF_VARIABLE) { WriteString(theEnv, STDERR, "$?"); }
@@ -321,7 +321,7 @@ void SetEvaluationError(
         Environment *theEnv,
         bool value) {
     EvaluationData(theEnv)->EvaluationError = value;
-    if (value == true) { EvaluationData(theEnv)->HaltExecution = true; }
+    if (value) { EvaluationData(theEnv)->HaltExecution = true; }
 }
 
 /*********************************************************/
@@ -961,7 +961,7 @@ bool DOsEqual(
     if (dobj1->header->type != dobj2->header->type) { return false; }
 
     if (dobj1->header->type == MULTIFIELD_TYPE) {
-        if (MultifieldDOsEqual(dobj1, dobj2) == false) { return false; }
+        if (!MultifieldDOsEqual(dobj1, dobj2)) { return false; }
     } else if (dobj1->value != dobj2->value) { return false; }
 
     return true;
@@ -998,12 +998,12 @@ bool EvaluateAndStoreInDataObject(
         return true;
     }
 
-    if ((mfp == false) && (theExp->nextArg == nullptr))
+    if (!mfp && (theExp->nextArg == nullptr))
         EvaluateExpression(theEnv, theExp, val);
     else
         StoreInMultifield(theEnv, val, theExp, garbageSegment);
 
-    return (EvaluationData(theEnv)->EvaluationError ? false : true);
+    return !EvaluationData(theEnv)->EvaluationError;
 }
 
 /******************/
@@ -1406,7 +1406,7 @@ FunctionCallBuilderError FCBCall(
 
 #if DEFFUNCTION_CONSTRUCT
     if (theReference.type == PCALL) {
-        if (CheckDeffunctionCall(theEnv, (Deffunction *) theReference.value, CountArguments(theReference.argList)) == false) {
+        if (!CheckDeffunctionCall(theEnv, (Deffunction *) theReference.value, CountArguments(theReference.argList))) {
             ExpressionDeinstall(theEnv, &theReference);
             ReturnExpression(theEnv, theReference.argList);
             return FCBE_ARGUMENT_COUNT_ERROR;

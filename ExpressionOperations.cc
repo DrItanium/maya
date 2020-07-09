@@ -173,7 +173,7 @@ bool IdenticalExpression(
         /* Compare the arguments lists. */
         /*==============================*/
 
-        if (IdenticalExpression(firstList->argList, secondList->argList) == false) { return false; }
+        if (!IdenticalExpression(firstList->argList, secondList->argList)) { return false; }
     }
 
     /*=====================================================*/
@@ -182,13 +182,12 @@ bool IdenticalExpression(
     /* other.                                              */
     /*=====================================================*/
 
-    if (firstList != secondList) return false;
+    return firstList == secondList;
 
     /*============================*/
     /* Expressions are identical. */
     /*============================*/
 
-    return true;
 }
 
 /****************************************************/
@@ -253,7 +252,7 @@ bool ExpressionContainsVariables(
             (theExpression->type == SF_VARIABLE) ||
             (((theExpression->type == GBL_VARIABLE) ||
               (theExpression->type == MF_GBL_VARIABLE)) &&
-             (globalsAreVariables == true))) { return true; }
+             globalsAreVariables)) { return true; }
 
         theExpression = theExpression->nextArg;
     }

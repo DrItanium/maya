@@ -300,7 +300,7 @@ void ObjectNetworkAction(
         /* 6.05 Bug Fix */
         ins->reteSynchronized = false;
 
-        if (ObjectReteData(theEnv)->DelayObjectPatternMatching == false)
+        if (!ObjectReteData(theEnv)->DelayObjectPatternMatching)
             switch (type) {
                 case OBJECT_ASSERT  :
                     ObjectAssertAction(theEnv, ins);
@@ -582,7 +582,7 @@ static void ProcessObjectMatchQueue(
     OBJECT_MATCH_ACTION *cur;
 
     while ((ObjectReteData(theEnv)->ObjectMatchActionQueue != nullptr) &&
-           (ObjectReteData(theEnv)->DelayObjectPatternMatching == false)) {
+           !ObjectReteData(theEnv)->DelayObjectPatternMatching) {
         cur = ObjectReteData(theEnv)->ObjectMatchActionQueue;
         ObjectReteData(theEnv)->ObjectMatchActionQueue = cur->nxt;
 
@@ -1155,8 +1155,7 @@ static bool EvaluateObjectPatternTest(
     else if (networkTest->value == ExpressionData(theEnv)->PTR_AND) {
         networkTest = networkTest->argList;
         while (networkTest != nullptr) {
-            if (EvaluateObjectPatternTest(theEnv, objectSlotField, selfSlotMarker, networkTest, patternNode)
-                == false) {
+            if (!EvaluateObjectPatternTest(theEnv, objectSlotField, selfSlotMarker, networkTest, patternNode)) {
                 patternNode->blocked = false;
                 return false;
             }

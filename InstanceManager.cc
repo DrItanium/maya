@@ -147,7 +147,7 @@ void InitializeInstanceCommand(
     ins = CheckInstance(context);
     if (ins == nullptr)
         return;
-    if (CoreInitializeInstance(theEnv, ins, GetFirstArgument()->nextArg) == true) { returnValue->value = ins->name; }
+    if (CoreInitializeInstance(theEnv, ins, GetFirstArgument()->nextArg)) { returnValue->value = ins->name; }
 }
 
 /****************************************************************
@@ -211,7 +211,7 @@ void MakeInstanceCommand(
     ins = BuildInstance(theEnv, iname, cls, true);
     if (ins == nullptr) return;
 
-    if (CoreInitializeInstance(theEnv, ins, GetFirstArgument()->nextArg->nextArg) == true) {
+    if (CoreInitializeInstance(theEnv, ins, GetFirstArgument()->nextArg->nextArg)) {
         returnValue->value = GetFullInstanceName(theEnv, ins);
     } else
         QuashInstance(theEnv, ins);
@@ -364,8 +364,7 @@ Instance *BuildInstance(
        any currently active basis - if the partial
        match was deleted, abort the instance creation
        ============================================== */
-    if (AddLogicalDependencies(theEnv, (patternEntity *) InstanceData(theEnv)->CurrentInstance, false)
-        == false) {
+    if (!AddLogicalDependencies(theEnv, (patternEntity *) InstanceData(theEnv)->CurrentInstance, false)) {
         rtn_struct(theEnv, instance, InstanceData(theEnv)->CurrentInstance);
         InstanceData(theEnv)->CurrentInstance = nullptr;
         return nullptr;
@@ -453,7 +452,7 @@ void InitSlotsCommand(
         UDFValue *returnValue) {
     EvaluationData(theEnv)->EvaluationError = false;
 
-    if (CheckCurrentMessage(theEnv, "init-slots", true) == false) {
+    if (!CheckCurrentMessage(theEnv, "init-slots", true)) {
         returnValue->lexemeValue = FalseSymbol(theEnv);
         return;
     }
@@ -561,7 +560,7 @@ UnmakeInstanceError QuashInstance(
         RemoveInstanceData(theEnv, ins);
 
     if ((ins->busy == 0) &&
-        (InstanceData(theEnv)->MaintainGarbageInstances == false)
+        !InstanceData(theEnv)->MaintainGarbageInstances
         && (ins->patternHeader.busyCount == 0)
             ) {
         ReleaseLexeme(theEnv, ins->name);
@@ -756,7 +755,7 @@ static void InstallInstance(
         Environment *theEnv,
         Instance *ins,
         bool set) {
-    if (set == true) {
+    if (set) {
         if (ins->installed)
             return;
 #if DEBUGGING_FUNCTIONS
@@ -892,7 +891,7 @@ static bool CoreInitializeInstance(
     ins->initializeInProgress = 1;
     ins->initSlotsCalled = 0;
 
-    if (InsertSlotOverrides(theEnv, ins, ovrexp) == false) {
+    if (!InsertSlotOverrides(theEnv, ins, ovrexp)) {
         ins->installed = 1;
         ins->busy--;
         return false;
@@ -961,7 +960,7 @@ static bool CoreInitializeInstanceCV(
     ins->initializeInProgress = 1;
     ins->initSlotsCalled = 0;
 
-    if (InsertSlotOverridesCV(theEnv, ins, overrides) == false) {
+    if (!InsertSlotOverridesCV(theEnv, ins, overrides)) {
         ins->installed = 1;
         ins->busy--;
         return false;
@@ -1010,7 +1009,7 @@ static bool InsertSlotOverrides(
 
     EvaluationData(theEnv)->EvaluationError = false;
     while (slot_exp != nullptr) {
-        if ((EvaluateExpression(theEnv, slot_exp, &temp) == true) ? true :
+        if (EvaluateExpression(theEnv, slot_exp, &temp) ? true :
             (temp.header->type != SYMBOL_TYPE)) {
             PrintErrorID(theEnv, "INSMNGR", 9, false);
             WriteString(theEnv, STDERR, "Expected a valid slot name for slot-override.\n");
@@ -1533,7 +1532,7 @@ Instance *IBMake(
         return nullptr;
     }
 
-    if (CoreInitializeInstanceCV(theIB->ibEnv, theInstance, theIB->ibValueArray) == false) {
+    if (!CoreInitializeInstanceCV(theIB->ibEnv, theInstance, theIB->ibValueArray)) {
         InstanceData(theEnv)->instanceBuilderError = IBE_COULD_NOT_CREATE_ERROR;
         QuashInstance(theIB->ibEnv, theInstance);
         SetDelayObjectPatternMatching(theEnv, ov);

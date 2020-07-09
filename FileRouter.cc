@@ -150,9 +150,8 @@ bool FindFile(
         Environment *theEnv,
         const char *logicalName,
         void *context) {
-    if (FindFptr(theEnv, logicalName) != nullptr) return true;
+    return FindFptr(theEnv, logicalName) != nullptr;
 
-    return false;
 }
 
 /***************************************************/
@@ -428,8 +427,7 @@ bool SeekFile(
          fptr != nullptr;
          fptr = fptr->next) {
         if (strcmp(fptr->logicalName, fid) == 0) {
-            if (GenSeek(theEnv, fptr->stream, offset, whereFrom)) { return false; }
-            else { return true; }
+            return GenSeek(theEnv, fptr->stream, offset, whereFrom) == 0;
         }
     }
 

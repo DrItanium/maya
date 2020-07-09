@@ -254,8 +254,8 @@ long long Run(
     theActivation = NextActivationToFire(theEnv);
     while ((theActivation != nullptr) &&
            (runLimit != 0) &&
-           (EvaluationData(theEnv)->HaltExecution == false) &&
-           (EngineData(theEnv)->HaltRules == false)) {
+           !EvaluationData(theEnv)->HaltExecution &&
+           !EngineData(theEnv)->HaltRules) {
         /*========================================*/
         /* Execute the list of functions that are */
         /* to be called before each rule firing.  */
@@ -486,7 +486,7 @@ long long Run(
         /* from the focus stack                   */
         /*========================================*/
 
-        if (ProcedureFunctionData(theEnv)->ReturnFlag == true) {
+        if (ProcedureFunctionData(theEnv)->ReturnFlag) {
             RemoveFocus(theEnv, EngineData(theEnv)->ExecutingRule->header.whichModule->theModule);
         }
         ProcedureFunctionData(theEnv)->ReturnFlag = false;
@@ -1222,7 +1222,7 @@ void RemoveBreakCommand(
         return;
     }
 
-    if (RemoveBreak(defrulePtr) == false) {
+    if (!RemoveBreak(defrulePtr)) {
         WriteString(theEnv, STDERR, "Rule ");
         WriteString(theEnv, STDERR, argument);
         WriteString(theEnv, STDERR, " does not have a breakpoint set.\n");

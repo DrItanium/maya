@@ -482,7 +482,7 @@ bool DefmethodIsDeletable(
     if (theDefgeneric->methods[mi].system)
         return false;
 
-    return (MethodsExecuting(theDefgeneric) == false) ? true : false;
+    return !MethodsExecuting(theDefgeneric);
 }
 
 /**********************************************************
@@ -587,9 +587,9 @@ bool Undefgeneric(
 
     GCBlockStart(theEnv, &gcb);
     if (theDefgeneric == nullptr) {
-        if (ClearDefmethods(theEnv) == false)
+        if (!ClearDefmethods(theEnv))
             success = false;
-        if (ClearDefgenerics(theEnv) == false)
+        if (!ClearDefgenerics(theEnv))
             success = false;
 
         GCBlockEnd(theEnv, &gcb);
@@ -597,7 +597,7 @@ bool Undefgeneric(
         return success;
     }
 
-    if (DefgenericIsDeletable(theDefgeneric) == false) {
+    if (!DefgenericIsDeletable(theDefgeneric)) {
         GCBlockEnd(theEnv, &gcb);
         return false;
     }
@@ -631,7 +631,7 @@ bool Undefmethod(
     else { theEnv = theDefgeneric->header.env; }
 
 #if BLOAD_AND_BSAVE
-    if (Bloaded(theEnv) == true) {
+    if (Bloaded(theEnv)) {
         PrintErrorID(theEnv, "PRNTUTIL", 4, false);
         WriteString(theEnv, STDERR, "Unable to delete method ");
         if (theDefgeneric != nullptr) {

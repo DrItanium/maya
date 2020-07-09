@@ -262,7 +262,7 @@ void PrintErrorID(
     /*==================================================*/
 
     if ((ConstructData(theEnv)->ParserErrorCallback == nullptr) &&
-        (GetLoadInProgress(theEnv) == true)) {
+        GetLoadInProgress(theEnv)) {
         const char *fileName;
 
         fileName = GetParsingFileName(theEnv);
@@ -299,7 +299,7 @@ void PrintWarningID(
     /*==================================================*/
 
     if ((ConstructData(theEnv)->ParserErrorCallback == nullptr) &&
-        (GetLoadInProgress(theEnv) == true)) {
+        GetLoadInProgress(theEnv)) {
         const char *fileName;
 
         fileName = GetParsingFileName(theEnv);

@@ -331,8 +331,8 @@ bool FuncSeqOvlFlags(
         return false;
     }
 
-    fdPtr->sequenceuseok = (seqp ? true : false);
-    fdPtr->overloadable = (ovlp ? true : false);
+    fdPtr->sequenceuseok = seqp;
+    fdPtr->overloadable = ovlp;
 
     return true;
 }

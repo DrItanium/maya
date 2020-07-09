@@ -553,7 +553,7 @@ void Facts(
         /* flag has been set (normally by user action).     */
         /*==================================================*/
 
-        if (GetHaltExecution(theEnv) == true) {
+        if (GetHaltExecution(theEnv)) {
             SetCurrentModule(theEnv, oldModule);
             return;
         }

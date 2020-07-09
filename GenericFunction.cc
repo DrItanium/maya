@@ -123,7 +123,7 @@ static void DisplayGenericCore(Environment *, Defgeneric *);
 bool ClearDefgenericsReady(
         Environment *theEnv,
         void *context) {
-    return ((DefgenericData(theEnv)->CurrentGeneric != nullptr) ? false : true);
+    return DefgenericData(theEnv)->CurrentGeneric == nullptr;
 }
 
 /*****************************************************
@@ -182,12 +182,12 @@ bool ClearDefmethods(
     bool success = true;
 
 #if BLOAD_AND_BSAVE
-    if (Bloaded(theEnv) == true) return false;
+    if (Bloaded(theEnv)) return false;
 #endif
 
     gfunc = GetNextDefgeneric(theEnv, nullptr);
     while (gfunc != nullptr) {
-        if (RemoveAllExplicitMethods(theEnv, gfunc) == false)
+        if (!RemoveAllExplicitMethods(theEnv, gfunc))
             success = false;
         gfunc = GetNextDefgeneric(theEnv, gfunc);
     }
@@ -211,7 +211,7 @@ bool RemoveAllExplicitMethods(
     unsigned short systemMethodCount = 0;
     Defmethod *narr;
 
-    if (MethodsExecuting(gfunc) == false) {
+    if (!MethodsExecuting(gfunc)) {
         for (i = 0; i < gfunc->mcnt; i++) {
             if (gfunc->methods[i].system)
                 systemMethodCount++;
@@ -282,14 +282,14 @@ bool ClearDefgenerics(
     bool success = true;
 
 #if BLOAD_AND_BSAVE
-    if (Bloaded(theEnv) == true) return false;
+    if (Bloaded(theEnv)) return false;
 #endif
 
     gfunc = GetNextDefgeneric(theEnv, nullptr);
     while (gfunc != nullptr) {
         gtmp = gfunc;
         gfunc = GetNextDefgeneric(theEnv, gfunc);
-        if (RemoveAllExplicitMethods(theEnv, gtmp) == false) {
+        if (!RemoveAllExplicitMethods(theEnv, gtmp)) {
             CantDeleteItemErrorMessage(theEnv, "generic function", DefgenericName(gtmp));
             success = false;
         } else {
@@ -689,7 +689,7 @@ static void DisplayGenericCore(
         }
         gfunc->methods[i].busy--;
     }
-    if (rtn == false) {
+    if (!rtn) {
         WriteString(theEnv, STDOUT, "No applicable methods for ");
         WriteString(theEnv, STDOUT, DefgenericName(gfunc));
         WriteString(theEnv, STDOUT, ".\n");

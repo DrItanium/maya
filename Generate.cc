@@ -374,7 +374,7 @@ static void ExtractFieldTest(
     if ((theField->pnType == STRING_NODE) || (theField->pnType == SYMBOL_NODE) ||
         (theField->pnType == INSTANCE_NAME_NODE) ||
         (theField->pnType == FLOAT_NODE) || (theField->pnType == INTEGER_NODE)) {
-        if (testInPatternNetwork == true) {
+        if (testInPatternNetwork) {
             *patternNetTest = GenPNConstant(theEnv, theField);
 
             if (!theField->negated) {
@@ -389,8 +389,8 @@ static void ExtractFieldTest(
         /*===========================================================*/
 
     else if (theField->pnType == PREDICATE_CONSTRAINT_NODE) {
-        if ((testInPatternNetwork == true) &&
-            (AllVariablesInExpression(theField->expression, theField->pattern) == true)) { *patternNetTest = GenPNColon(theEnv, theField); }
+        if (testInPatternNetwork &&
+            AllVariablesInExpression(theField->expression, theField->pattern)) { *patternNetTest = GenPNColon(theEnv, theField); }
         else { *joinNetTest = GenJNColon(theEnv, theField, false, theNandFrames); } // TBD Remove false
     }
 
@@ -399,8 +399,8 @@ static void ExtractFieldTest(
         /*==============================================================*/
 
     else if (theField->pnType == RETURN_VALUE_CONSTRAINT_NODE) {
-        if ((testInPatternNetwork == true) &&
-            (AllVariablesInExpression(theField->expression, theField->pattern) == true)) { *patternNetTest = GenPNEq(theEnv, theField); }
+        if (testInPatternNetwork &&
+            AllVariablesInExpression(theField->expression, theField->pattern)) { *patternNetTest = GenPNEq(theEnv, theField); }
         else { *joinNetTest = GenJNEq(theEnv, theField, false, theNandFrames); } // TBD Remove false
     }
 
@@ -409,7 +409,7 @@ static void ExtractFieldTest(
         /*=====================================================================*/
 
     else if ((theField->pnType == SF_VARIABLE_NODE) || (theField->pnType == MF_VARIABLE_NODE)) {
-        if ((testInPatternNetwork == true) &&
+        if (testInPatternNetwork &&
             ((theField->referringNode != nullptr) ?
              (theField->referringNode->pattern == theField->pattern) :
              false)) { *patternNetTest = GenPNVariableComparison(theEnv, theField, theField->referringNode); }
@@ -915,7 +915,7 @@ static bool AllVariablesInPattern(
 
             else if ((andField->pnType == PREDICATE_CONSTRAINT_NODE) ||
                      (andField->pnType == RETURN_VALUE_CONSTRAINT_NODE)) {
-                if (AllVariablesInExpression(andField->expression, pattern) == false) { return false; }
+                if (!AllVariablesInExpression(andField->expression, pattern)) { return false; }
             }
         }
     }
@@ -956,7 +956,7 @@ static bool AllVariablesInExpression(
         /* Recursively check all expressions in the bottom link. */
         /*=======================================================*/
 
-        if (AllVariablesInExpression(theExpression->bottom, pattern) == false) { return false; }
+        if (!AllVariablesInExpression(theExpression->bottom, pattern)) { return false; }
     }
 
     /*========================================*/

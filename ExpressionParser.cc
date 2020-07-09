@@ -313,7 +313,7 @@ struct expr *Function2Parse(
 
 #if DEFFUNCTION_CONSTRUCT
     else if (top->type == PCALL) {
-        if (CheckDeffunctionCall(theEnv, (Deffunction *) top->value, CountArguments(top->argList)) == false) {
+        if (!CheckDeffunctionCall(theEnv, (Deffunction *) top->value, CountArguments(top->argList))) {
             ReturnExpression(theEnv, top);
             return nullptr;
         }
@@ -356,7 +356,7 @@ bool ReplaceSequenceExpansionOps(
     Expression *theExp;
 
     while (actions != nullptr) {
-        if ((ExpressionData(theEnv)->SequenceOpMode == false) &&
+        if (!ExpressionData(theEnv)->SequenceOpMode &&
             ((actions->type == MF_VARIABLE) || (actions->type == MF_GBL_VARIABLE))) {
             if (actions->type == MF_VARIABLE) { actions->type = SF_VARIABLE; }
             else if (actions->type == MF_GBL_VARIABLE) { actions->type = GBL_VARIABLE; }
@@ -365,7 +365,7 @@ bool ReplaceSequenceExpansionOps(
         if ((actions->type == MF_VARIABLE) || (actions->type == MF_GBL_VARIABLE) ||
             (actions->value == expmult)) {
             if ((fcallexp->type != FCALL) ? false :
-                (fcallexp->functionValue->sequenceuseok == false)) {
+                !fcallexp->functionValue->sequenceuseok) {
                 PrintErrorID(theEnv, "EXPRNPSR", 4, false);
                 WriteString(theEnv, STDERR, "$ Sequence operator not a valid argument for function '");
                 WriteString(theEnv, STDERR, fcallexp->functionValue->callFunctionName->contents);
@@ -572,7 +572,7 @@ struct expr *CollectArguments(
         errorFlag = false;
         nextOne = ArgumentParse(theEnv, logicalName, &errorFlag);
 
-        if (errorFlag == true) {
+        if (errorFlag) {
             ReturnExpression(theEnv, top);
             return nullptr;
         }

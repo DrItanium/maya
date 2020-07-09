@@ -223,7 +223,7 @@ static struct expr *WhileParse(
     /* Process the while actions. */
     /*============================*/
 
-    if (ExpressionData(theEnv)->svContexts->rtn == true) { ExpressionData(theEnv)->ReturnContext = true; }
+    if (ExpressionData(theEnv)->svContexts->rtn) { ExpressionData(theEnv)->ReturnContext = true; }
     ExpressionData(theEnv)->BreakContext = true;
 
     parse->argList->nextArg = GroupActions(theEnv, infile, &theToken, read_first_token, nullptr, false);
@@ -363,7 +363,7 @@ static struct expr *LoopForCountParse(
     /*=====================================*/
     /* Process the loop-for-count actions. */
     /*=====================================*/
-    if (ExpressionData(theEnv)->svContexts->rtn == true)
+    if (ExpressionData(theEnv)->svContexts->rtn)
         ExpressionData(theEnv)->ReturnContext = true;
     ExpressionData(theEnv)->BreakContext = true;
     oldBindList = GetParsedBindNames(theEnv);
@@ -490,9 +490,9 @@ static struct expr *IfParse(
     /*==============================*/
 
     PPCRAndIndent(theEnv);
-    if (ExpressionData(theEnv)->svContexts->rtn == true)
+    if (ExpressionData(theEnv)->svContexts->rtn)
         ExpressionData(theEnv)->ReturnContext = true;
-    if (ExpressionData(theEnv)->svContexts->brk == true)
+    if (ExpressionData(theEnv)->svContexts->brk)
         ExpressionData(theEnv)->BreakContext = true;
     top->argList->nextArg = GroupActions(theEnv, infile, &theToken, true, "else", false);
 
@@ -673,9 +673,9 @@ static struct expr *ReturnParse(
     bool error_flag = false;
     struct token theToken;
 
-    if (ExpressionData(theEnv)->svContexts->rtn == true)
+    if (ExpressionData(theEnv)->svContexts->rtn)
         ExpressionData(theEnv)->ReturnContext = true;
-    if (ExpressionData(theEnv)->ReturnContext == false) {
+    if (!ExpressionData(theEnv)->ReturnContext) {
         PrintErrorID(theEnv, "PRCDRPSR", 2, true);
         WriteString(theEnv, STDERR, "The return function is not valid in this context.\n");
         ReturnExpression(theEnv, top);
@@ -717,7 +717,7 @@ static struct expr *BreakParse(
         const char *infile) {
     struct token theToken;
 
-    if (ExpressionData(theEnv)->svContexts->brk == false) {
+    if (!ExpressionData(theEnv)->svContexts->brk) {
         PrintErrorID(theEnv, "PRCDRPSR", 2, true);
         WriteString(theEnv, STDERR, "The break function not valid in this context.\n");
         ReturnExpression(theEnv, top);
@@ -799,9 +799,9 @@ static struct expr *SwitchParse(
         } else
             goto SwitchParseErrorAndMessage;
         theExp = theExp->nextArg;
-        if (ExpressionData(theEnv)->svContexts->rtn == true)
+        if (ExpressionData(theEnv)->svContexts->rtn)
             ExpressionData(theEnv)->ReturnContext = true;
-        if (ExpressionData(theEnv)->svContexts->brk == true)
+        if (ExpressionData(theEnv)->svContexts->brk)
             ExpressionData(theEnv)->BreakContext = true;
         IncrementIndentDepth(theEnv, 3);
         PPCRAndIndent(theEnv);

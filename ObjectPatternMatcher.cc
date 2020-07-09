@@ -187,7 +187,7 @@ void SetupObjectPatternStuff(
         Environment *theEnv) {
     struct patternParser *newPtr;
 
-    if (ReservedPatternSymbol(theEnv, "object", nullptr) == true) {
+    if (ReservedPatternSymbol(theEnv, "object", nullptr)) {
         SystemError(theEnv, "OBJRTBLD", 1);
         ExitRouter(theEnv, EXIT_FAILURE);
     }
@@ -335,7 +335,7 @@ static struct lhsParseNode *ObjectLHSParse(
             if (tmpNode == nullptr)
                 goto ObjectLHSParseERROR;
             InitializeClassBitMap(theEnv, tmpset, false);
-            if (ProcessClassRestriction(theEnv, tmpset, &tmpNode->bottom, true) == false) {
+            if (!ProcessClassRestriction(theEnv, tmpset, &tmpNode->bottom, true)) {
                 ReturnLHSParseNodes(theEnv, tmpNode);
                 goto ObjectLHSParseERROR;
             }
@@ -484,7 +484,7 @@ static bool ReorderAndAnalyzeObjectPattern(
             }
             rexp = rexp->nextArg;
         }
-        clssetChanged = IdenticalClassBitMap(tmpset, clsset) ? false : true;
+        clssetChanged = !IdenticalClassBitMap(tmpset, clsset);
     } else
         GenCopyMemory(char, tmpset->maxid / BITS_PER_BYTE + 1, tmpset->map, clsset->map);
 

@@ -210,7 +210,7 @@ bool CheckSyntax(
 
         CloseStringSource(theEnv, "check-syntax");
 
-        if ((rv != false) || (ParseFunctionData(theEnv)->WarningString != nullptr)) {
+        if (rv || (ParseFunctionData(theEnv)->WarningString != nullptr)) {
             SetErrorCaptureValues(theEnv, returnValue);
             DeactivateErrorCapture(theEnv);
             return true;

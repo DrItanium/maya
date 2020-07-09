@@ -137,7 +137,7 @@ void EqFunction(
         }
 
         if (nextItem.header->type == MULTIFIELD_TYPE) {
-            if (MultifieldDOsEqual(&nextItem, &item) == false) {
+            if (!MultifieldDOsEqual(&nextItem, &item)) {
                 returnValue->lexemeValue = FalseSymbol(theEnv);
                 return;
             }
@@ -198,7 +198,7 @@ void NeqFunction(
         EvaluateExpression(theEnv, theExpression, &nextItem);
         if (nextItem.header->type != item.header->type) { continue; }
         else if (nextItem.header->type == MULTIFIELD_TYPE) {
-            if (MultifieldDOsEqual(&nextItem, &item) == true) {
+            if (MultifieldDOsEqual(&nextItem, &item)) {
                 returnValue->lexemeValue = FalseSymbol(theEnv);
                 return;
             }

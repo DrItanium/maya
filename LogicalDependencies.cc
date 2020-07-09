@@ -488,7 +488,7 @@ void Dependencies(
     for (fdPtr = (dependency *) theEntity->dependents;
          fdPtr != nullptr;
          fdPtr = fdPtr->next) {
-        if (GetHaltExecution(theEnv) == true) return;
+        if (GetHaltExecution(theEnv)) return;
         PrintPartialMatch(theEnv, STDOUT, (partialMatch *) fdPtr->dPtr);
         WriteString(theEnv, STDOUT, "\n");
     }
@@ -513,7 +513,7 @@ void Dependents(
     for (GetNextPatternEntity(theEnv, &theParser, &entityPtr);
          entityPtr != nullptr;
          GetNextPatternEntity(theEnv, &theParser, &entityPtr)) {
-        if (GetHaltExecution(theEnv) == true) return;
+        if (GetHaltExecution(theEnv)) return;
 
         /*====================================*/
         /* Loop through every dependency link */
@@ -523,7 +523,7 @@ void Dependents(
         for (fdPtr = (dependency *) entityPtr->dependents;
              fdPtr != nullptr;
              fdPtr = fdPtr->next) {
-            if (GetHaltExecution(theEnv) == true) return;
+            if (GetHaltExecution(theEnv)) return;
 
             /*=====================================================*/
             /* If the data entity which was the argument passed to */
@@ -535,7 +535,7 @@ void Dependents(
             /*=====================================================*/
 
             theBinds = (partialMatch *) fdPtr->dPtr;
-            if (FindEntityInPartialMatch(theEntity, theBinds) == true) {
+            if (FindEntityInPartialMatch(theEntity, theBinds)) {
                 if (found) WriteString(theEnv, STDOUT, ",");
                 (*entityPtr->theInfo->base.shortPrintFunction)(theEnv, STDOUT, entityPtr);
                 found = true;

@@ -536,7 +536,7 @@ void PPInstanceCommand(
         UDFValue *returnValue) {
     Instance *ins;
 
-    if (CheckCurrentMessage(theEnv, "ppinstance", true) == false)
+    if (!CheckCurrentMessage(theEnv, "ppinstance", true))
         return;
     ins = GetActiveInstance(theEnv);
     if (ins->garbage == 1)
@@ -583,7 +583,7 @@ void Instances(
     if (theModule == nullptr) {
         theModule = GetNextDefmodule(theEnv, nullptr);
         while (theModule != nullptr) {
-            if (GetHaltExecution(theEnv) == true) {
+            if (GetHaltExecution(theEnv)) {
                 RestoreCurrentModule(theEnv);
                 ReleaseTraversalID(theEnv);
                 return;
@@ -609,7 +609,7 @@ void Instances(
 
     RestoreCurrentModule(theEnv);
     ReleaseTraversalID(theEnv);
-    if (EvaluationData(theEnv)->HaltExecution == false) { PrintTally(theEnv, logicalName, count, "instance", "instances"); }
+    if (!EvaluationData(theEnv)->HaltExecution) { PrintTally(theEnv, logicalName, count, "instance", "instances"); }
 }
 
 #endif /* DEBUGGING_FUNCTIONS */
@@ -1617,8 +1617,7 @@ void InstanceExistPCommand(
     }
 
     if (CVIsType(&theArg, INSTANCE_NAME_BIT | SYMBOL_BIT)) {
-        returnValue->lexemeValue = CreateBoolean(theEnv, ((FindInstanceBySymbol(theEnv, theArg.lexemeValue) != nullptr) ?
-                                                          true : false));
+        returnValue->lexemeValue = CreateBoolean(theEnv, FindInstanceBySymbol(theEnv, theArg.lexemeValue) != nullptr);
         return;
     }
     ExpectedTypeError1(theEnv, "instance-existp", 1, "instance name, instance address or symbol");
@@ -1689,7 +1688,7 @@ static unsigned long ListInstancesInModule(
         else {
             theInstance = GetNextInstanceInScope(theEnv, nullptr);
             while (theInstance != nullptr) {
-                if (GetHaltExecution(theEnv) == true) { return (count); }
+                if (GetHaltExecution(theEnv)) { return (count); }
 
                 count++;
                 PrintInstanceNameAndClass(theEnv, logicalName, theInstance, true);

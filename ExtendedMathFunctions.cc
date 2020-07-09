@@ -516,7 +516,7 @@ void AcotFunction(
     if (!SingleNumberCheck(context, returnValue)) { return; }
 
     num = CVCoerceToFloat(returnValue);
-    if (TestProximity(num, 1e-25) == true) {
+    if (TestProximity(num, 1e-25)) {
         returnValue->floatValue = CreateFloat(theEnv, PID2);
         return;
     }
@@ -595,7 +595,7 @@ void CschFunction(
     if (num == 0.0) {
         SingularityErrorMessage(context, returnValue);
         return;
-    } else if (TestProximity(num, 1e-25) == true) {
+    } else if (TestProximity(num, 1e-25)) {
         ArgumentOverflowErrorMessage(context, returnValue);
         return;
     }
@@ -621,7 +621,7 @@ void CothFunction(
     if (num == 0.0) {
         SingularityErrorMessage(context, returnValue);
         return;
-    } else if (TestProximity(num, 1e-25) == true) {
+    } else if (TestProximity(num, 1e-25)) {
         ArgumentOverflowErrorMessage(context, returnValue);
         return;
     }

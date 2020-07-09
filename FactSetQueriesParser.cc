@@ -146,7 +146,7 @@ Expression *FactParseQueryNoAction(
     IncrementIndentDepth(theEnv, 3);
     PPCRAndIndent(theEnv);
 
-    if (ParseQueryTestExpression(theEnv, top, readSource) == false) {
+    if (!ParseQueryTestExpression(theEnv, top, readSource)) {
         DecrementIndentDepth(theEnv, 3);
         ReturnExpression(theEnv, factQuerySetVars);
         return nullptr;
@@ -215,7 +215,7 @@ Expression *FactParseQueryAction(
     IncrementIndentDepth(theEnv, 3);
     PPCRAndIndent(theEnv);
 
-    if (ParseQueryTestExpression(theEnv, top, readSource) == false) {
+    if (!ParseQueryTestExpression(theEnv, top, readSource)) {
         DecrementIndentDepth(theEnv, 3);
         ReturnExpression(theEnv, factQuerySetVars);
         return nullptr;
@@ -223,7 +223,7 @@ Expression *FactParseQueryAction(
 
     PPCRAndIndent(theEnv);
 
-    if (ParseQueryActionExpression(theEnv, top, readSource, factQuerySetVars, &queryInputToken) == false) {
+    if (!ParseQueryActionExpression(theEnv, top, readSource, factQuerySetVars, &queryInputToken)) {
         DecrementIndentDepth(theEnv, 3);
         ReturnExpression(theEnv, factQuerySetVars);
         return nullptr;
@@ -323,13 +323,13 @@ static Expression *ParseQueryRestrictions(
 
         if (templateExp == nullptr) { goto ParseQueryRestrictionsError1; }
 
-        if (ReplaceTemplateNameWithReference(theEnv, templateExp) == false) { goto ParseQueryRestrictionsError2; }
+        if (!ReplaceTemplateNameWithReference(theEnv, templateExp)) { goto ParseQueryRestrictionsError2; }
 
         lastTemplateExp = templateExp;
         SavePPBuffer(theEnv, " ");
 
         while ((tmp = ArgumentParse(theEnv, readSource, &error)) != nullptr) {
-            if (ReplaceTemplateNameWithReference(theEnv, tmp) == false)
+            if (!ReplaceTemplateNameWithReference(theEnv, tmp))
                 goto ParseQueryRestrictionsError2;
             lastTemplateExp->nextArg = tmp;
             lastTemplateExp = tmp;
@@ -446,7 +446,7 @@ static bool ParseQueryTestExpression(
 
     qtest = ArgumentParse(theEnv, readSource, &error);
 
-    if (error == true) {
+    if (error) {
         ClearParsedBindNames(theEnv);
         SetParsedBindNames(theEnv, oldBindList);
         ReturnExpression(theEnv, top);
@@ -464,7 +464,7 @@ static bool ParseQueryTestExpression(
     qtest->nextArg = top->argList;
     top->argList = qtest;
 
-    if (ParsedBindNamesEmpty(theEnv) == false) {
+    if (!ParsedBindNamesEmpty(theEnv)) {
         ClearParsedBindNames(theEnv);
         SetParsedBindNames(theEnv, oldBindList);
         PrintErrorID(theEnv, "FACTQPSR", 2, false);
@@ -602,7 +602,7 @@ static bool ReplaceFactVariables(
                 eptr = GenConstant(theEnv, INTEGER_TYPE, CreateInteger(theEnv, ndepth));
                 eptr->nextArg = GenConstant(theEnv, INTEGER_TYPE, CreateInteger(theEnv, posn));
                 bexp->argList = eptr;
-            } else if (sdirect == true) {
+            } else if (sdirect) {
                 if (ReplaceSlotReference(theEnv, vlist, bexp, rslot_func, ndepth)) { return true; }
             }
         }

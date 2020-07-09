@@ -682,8 +682,8 @@ bool MultifieldsEqual(
 
     while (i < length) {
         if (elem1[i].header->type == MULTIFIELD_TYPE) {
-            if (MultifieldsEqual(elem1[i].multifieldValue,
-                                 elem2[i].multifieldValue) == false) { return false; }
+            if (!MultifieldsEqual(elem1[i].multifieldValue,
+                                  elem2[i].multifieldValue)) { return false; }
         } else if (elem1[i].value != elem2[i].value) { return false; }
 
         i++;

@@ -86,12 +86,11 @@ static bool QueryDribbleCallback(
 #pragma unused(theEnv,context)
 #endif
 
-    if ((strcmp(logicalName, STDOUT) == 0) ||
-        (strcmp(logicalName, STDIN) == 0) ||
-        (strcmp(logicalName, STDERR) == 0) ||
-        (strcmp(logicalName, STDWRN) == 0)) { return true; }
+    return (strcmp(logicalName, STDOUT) == 0) ||
+           (strcmp(logicalName, STDIN) == 0) ||
+           (strcmp(logicalName, STDERR) == 0) ||
+           (strcmp(logicalName, STDWRN) == 0);
 
-    return false;
 }
 
 /******************/
@@ -195,7 +194,7 @@ static void PutcDribbleBuffer(
         /* the character to the file, the dribble buffer is flushed. */
         /*===========================================================*/
 
-    else if (RouterData(theEnv)->AwaitingInput == false) {
+    else if (!RouterData(theEnv)->AwaitingInput) {
         if (FileCommandData(theEnv)->DribbleCurrentPosition > 0) {
             fprintf(FileCommandData(theEnv)->DribbleFP, "%s", FileCommandData(theEnv)->DribbleBuffer);
             FileCommandData(theEnv)->DribbleCurrentPosition = 0;
@@ -453,7 +452,7 @@ int LLGetcBatch(
         if (FileCommandData(theEnv)->BatchCurrentPosition > 0) WriteString(theEnv, STDOUT, (char *) FileCommandData(theEnv)->BatchBuffer);
         DeleteRouter(theEnv, "batch");
         RemoveBatch(theEnv);
-        if (returnOnEOF == true) { return (EOF); }
+        if (returnOnEOF) { return (EOF); }
         else { return ReadRouter(theEnv, logicalName); }
     }
 
@@ -621,7 +620,7 @@ bool OpenStringBatch(
         const char *stringName,
         const char *theString,
         bool placeAtEnd) {
-    if (OpenStringSource(theEnv, stringName, theString, 0) == false) { return false; }
+    if (!OpenStringSource(theEnv, stringName, theString, 0)) { return false; }
 
     if (FileCommandData(theEnv)->TopOfBatchList == nullptr) {
         AddRouter(theEnv, "batch", 20,
@@ -673,7 +672,7 @@ static void AddBatch(
         FileCommandData(theEnv)->BatchFileSource = theFileSource;
         FileCommandData(theEnv)->BatchLogicalSource = bptr->logicalSource;
         FileCommandData(theEnv)->BatchCurrentPosition = 0;
-    } else if (placeAtEnd == false) {
+    } else if (!placeAtEnd) {
         bptr->next = FileCommandData(theEnv)->TopOfBatchList;
         FileCommandData(theEnv)->TopOfBatchList = bptr;
         FileCommandData(theEnv)->BatchType = type;

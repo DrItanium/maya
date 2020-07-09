@@ -221,8 +221,7 @@ static struct patternNodeHeader *PlaceFactPattern(
         /* a multifield slot is being processed.      */
         /*============================================*/
 
-        if ((thePattern->right == nullptr) && (tempPattern != nullptr)) { endSlot = true; }
-        else { endSlot = false; }
+        endSlot = (thePattern->right == nullptr) && (tempPattern != nullptr);
 
         /*========================================*/
         /* Is there a node in the pattern network */

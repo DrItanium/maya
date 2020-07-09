@@ -446,8 +446,8 @@ void ReplaceMemberFunction(
     }
     minkp = nullptr;
     while (FindDOsInSegment(delVals, argCnt - 2, &resultValue, &j, &k, minkp, minkp ? 1 : 0)) {
-        if (ReplaceMultiValueFieldSizet(theEnv, &tmpVal, &resultValue, j, k,
-                                        &replVal, "replace-member$") == false) {
+        if (!ReplaceMultiValueFieldSizet(theEnv, &tmpVal, &resultValue, j, k,
+                                         &replVal, "replace-member$")) {
             rm(theEnv, delVals, delSize);
             SetEvaluationError(theEnv, true);
             SetMultifieldErrorValue(theEnv, returnValue);
@@ -510,8 +510,8 @@ void InsertFunction(
     /* Insert the value in the multifield value. */
     /*===========================================*/
 
-    if (InsertMultiValueField(theEnv, returnValue, &value1, uindex,
-                              &value3, "insert$") == false) {
+    if (!InsertMultiValueField(theEnv, returnValue, &value1, uindex,
+                               &value3, "insert$")) {
         SetEvaluationError(theEnv, true);
         SetMultifieldErrorValue(theEnv, returnValue);
     }

@@ -233,7 +233,7 @@ void PrintoutFunction(
     /*============================================================*/
 
     if (strcmp(logicalName, "nil") == 0) { return; }
-    else if (QueryRouters(theEnv, logicalName) == false) {
+    else if (!QueryRouters(theEnv, logicalName)) {
         UnrecognizedRouterMessage(theEnv, logicalName);
         return;
     }
@@ -361,7 +361,7 @@ void ReadFunction(
     /* Check to see that the logical name exists. */
     /*============================================*/
 
-    if (QueryRouters(theEnv, logicalName) == false) {
+    if (!QueryRouters(theEnv, logicalName)) {
         UnrecognizedRouterMessage(theEnv, logicalName);
         SetHaltExecution(theEnv, true);
         SetEvaluationError(theEnv, true);
@@ -693,7 +693,7 @@ void RewindFunction(
     /* Check to see that the logical name exists. */
     /*============================================*/
 
-    if (QueryRouters(theEnv, logicalName) == false) {
+    if (!QueryRouters(theEnv, logicalName)) {
         UnrecognizedRouterMessage(theEnv, logicalName);
         SetHaltExecution(theEnv, true);
         SetEvaluationError(theEnv, true);
@@ -737,7 +737,7 @@ void TellFunction(
     /* Check to see that the logical name exists. */
     /*============================================*/
 
-    if (QueryRouters(theEnv, logicalName) == false) {
+    if (!QueryRouters(theEnv, logicalName)) {
         UnrecognizedRouterMessage(theEnv, logicalName);
         SetHaltExecution(theEnv, true);
         SetEvaluationError(theEnv, true);
@@ -784,7 +784,7 @@ void SeekFunction(
     /* Check to see that the logical name exists. */
     /*============================================*/
 
-    if (QueryRouters(theEnv, logicalName) == false) {
+    if (!QueryRouters(theEnv, logicalName)) {
         UnrecognizedRouterMessage(theEnv, logicalName);
         SetHaltExecution(theEnv, true);
         SetEvaluationError(theEnv, true);
@@ -858,7 +858,7 @@ void GetCharFunction(
     /* Check to see that the logical name exists. */
     /*============================================*/
 
-    if (QueryRouters(theEnv, logicalName) == false) {
+    if (!QueryRouters(theEnv, logicalName)) {
         UnrecognizedRouterMessage(theEnv, logicalName);
         SetHaltExecution(theEnv, true);
         SetEvaluationError(theEnv, true);
@@ -921,7 +921,7 @@ void UngetCharFunction(
         }
     }
 
-    if (QueryRouters(theEnv, logicalName) == false) {
+    if (!QueryRouters(theEnv, logicalName)) {
         UnrecognizedRouterMessage(theEnv, logicalName);
         SetHaltExecution(theEnv, true);
         SetEvaluationError(theEnv, true);
@@ -981,7 +981,7 @@ void PutCharFunction(
         }
     }
 
-    if (QueryRouters(theEnv, logicalName) == false) {
+    if (!QueryRouters(theEnv, logicalName)) {
         UnrecognizedRouterMessage(theEnv, logicalName);
         SetHaltExecution(theEnv, true);
         SetEvaluationError(theEnv, true);
@@ -1172,7 +1172,7 @@ void FormatFunction(
     }
 
     if (strcmp(logicalName, "nil") == 0) { /* do nothing */ }
-    else if (QueryRouters(theEnv, logicalName) == false) {
+    else if (!QueryRouters(theEnv, logicalName)) {
         UnrecognizedRouterMessage(theEnv, logicalName);
         returnValue->value = hptr;
         return;
@@ -1494,7 +1494,7 @@ void ReadlineFunction(
         }
     }
 
-    if (QueryRouters(theEnv, logicalName) == false) {
+    if (!QueryRouters(theEnv, logicalName)) {
         UnrecognizedRouterMessage(theEnv, logicalName);
         SetHaltExecution(theEnv, true);
         SetEvaluationError(theEnv, true);
@@ -1645,7 +1645,7 @@ void ReadNumberFunction(
     /* Check to see that the logical name exists. */
     /*============================================*/
 
-    if (QueryRouters(theEnv, logicalName) == false) {
+    if (!QueryRouters(theEnv, logicalName)) {
         UnrecognizedRouterMessage(theEnv, logicalName);
         SetHaltExecution(theEnv, true);
         SetEvaluationError(theEnv, true);

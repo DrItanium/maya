@@ -111,7 +111,7 @@ struct expr *BuildRHSAssert(
     /* at least one fact was expected).                              */
     /*===============================================================*/
 
-    if (readFirstParen == false) {
+    if (!readFirstParen) {
         if (theToken->tknType == RIGHT_PARENTHESIS_TOKEN) {
             if (atLeastOne) {
                 *error = true;

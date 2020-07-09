@@ -762,7 +762,7 @@ void ExpandFuncCall(
     fcallexp->argList = newargexp;
     if (fcallexp->type == FCALL) {
         func = fcallexp->functionValue;
-        if (CheckFunctionArgCount(theEnv, func, CountArguments(newargexp)) == false) {
+        if (!CheckFunctionArgCount(theEnv, func, CountArguments(newargexp))) {
             returnValue->lexemeValue = FalseSymbol(theEnv);
             ReturnExpression(theEnv, fcallexp);
             return;
@@ -770,8 +770,8 @@ void ExpandFuncCall(
     }
 #if DEFFUNCTION_CONSTRUCT
     else if (fcallexp->type == PCALL) {
-        if (CheckDeffunctionCall(theEnv, (Deffunction *) fcallexp->value,
-                                 CountArguments(fcallexp->argList)) == false) {
+        if (!CheckDeffunctionCall(theEnv, (Deffunction *) fcallexp->value,
+                                  CountArguments(fcallexp->argList))) {
             returnValue->lexemeValue = FalseSymbol(theEnv);
             ReturnExpression(theEnv, fcallexp);
             SetEvaluationError(theEnv, true);
@@ -842,7 +842,7 @@ static void ExpandFuncMultifield(
             if ((EvaluationData(theEnv)->EvaluationError) ||
                 (returnValue->header->type != MULTIFIELD_TYPE)) {
                 theExp->argList = nullptr;
-                if ((EvaluationData(theEnv)->EvaluationError == false) &&
+                if (!EvaluationData(theEnv)->EvaluationError &&
                     (returnValue->header->type != MULTIFIELD_TYPE))
                     ExpectedTypeError2(theEnv, "expand$", 1);
                 theExp->value = FindFunction(theEnv, "(set-evaluation-error)");
@@ -1117,7 +1117,7 @@ void FuncallFunction(
 
 #if DEFFUNCTION_CONSTRUCT
     if (theReference.type == PCALL) {
-        if (CheckDeffunctionCall(theEnv, (Deffunction *) theReference.value, CountArguments(theReference.argList)) == false) {
+        if (!CheckDeffunctionCall(theEnv, (Deffunction *) theReference.value, CountArguments(theReference.argList))) {
             PrintErrorID(theEnv, "MISCFUN", 4, false);
             WriteString(theEnv, STDERR, "Function 'funcall' called with the wrong number of arguments for deffunction '");
             WriteString(theEnv, STDERR, DeffunctionName((Deffunction *) theReference.value));

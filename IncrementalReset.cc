@@ -282,7 +282,7 @@ static void PrimeJoinFromLeftMemory(
             notParent = joinPtr->leftMemory->beta[0];
 
             if (joinPtr->secondaryNetworkTest != nullptr) {
-                if (EvaluateSecondaryNetworkTest(theEnv, notParent, joinPtr) == false) { return; }
+                if (!EvaluateSecondaryNetworkTest(theEnv, notParent, joinPtr)) { return; }
             }
 
             for (listOfHashNodes = ((patternNodeHeader *) joinPtr->rightSideEntryStructure)->firstHash;
@@ -391,7 +391,7 @@ static void PrimeJoinFromRightMemory(
             notParent = joinPtr->leftMemory->beta[0];
 
             if (joinPtr->secondaryNetworkTest != nullptr) {
-                if (EvaluateSecondaryNetworkTest(theEnv, notParent, joinPtr) == false) { return; }
+                if (!EvaluateSecondaryNetworkTest(theEnv, notParent, joinPtr)) { return; }
             }
 
             EPMDrive(theEnv, notParent, joinPtr, NETWORK_ASSERT);
@@ -428,7 +428,7 @@ static void PrimeJoinFromRightMemory(
         notParent = joinPtr->leftMemory->beta[0];
 
         if (joinPtr->secondaryNetworkTest != nullptr) {
-            if (EvaluateSecondaryNetworkTest(theEnv, notParent, joinPtr) == false) { return; }
+            if (!EvaluateSecondaryNetworkTest(theEnv, notParent, joinPtr)) { return; }
         }
 
         EPMDrive(theEnv, notParent, joinPtr, NETWORK_ASSERT);
