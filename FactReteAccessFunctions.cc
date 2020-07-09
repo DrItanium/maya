@@ -285,12 +285,10 @@ bool FactPNConstant1(
 
     theConstant = GetFirstArgument();
     if (theConstant->value != fieldPtr->value) {
-        if (1 - hack->testForEquality) { return true; }
-        else { return false; }
+        return 1 - hack->testForEquality != 0;
     }
 
-    if (hack->testForEquality) { return true; }
-    else { return false; }
+    return hack->testForEquality != 0;
 }
 
 /****************************************************************/
@@ -343,12 +341,10 @@ bool FactPNConstant2(
 
     theConstant = GetFirstArgument();
     if (theConstant->value != fieldPtr->value) {
-        if (1 - hack->testForEquality) { return true; }
-        else { return false; }
+        return 1 - hack->testForEquality != 0;
     }
 
-    if (hack->testForEquality) { return true; }
-    else { return false; }
+    return hack->testForEquality != 0;
 }
 
 /**************************************************************/

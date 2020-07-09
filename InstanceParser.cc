@@ -220,7 +220,7 @@ Expression *ParseInitializeInstance(
         if ((top->argList->type != SYMBOL_TYPE) ? false :
             (strcmp(top->argList->lexemeValue->contents, CLASS_RLN) == 0)) {
             top->argList->nextArg = ArgumentParse(theEnv, readSource, &error);
-            if (error == true)
+            if (error)
                 goto ParseInitializeInstanceError;
             if (top->argList->nextArg == nullptr) {
                 SyntaxErrorMessage(theEnv, "instance class");
@@ -257,7 +257,7 @@ Expression *ParseInitializeInstance(
            If the class name is a constant, go ahead and
            look it up now and replace it with the pointer
            ============================================== */
-        if (ReplaceClassNameWithReference(theEnv, top->argList->nextArg) == false)
+        if (!ReplaceClassNameWithReference(theEnv, top->argList->nextArg))
             goto ParseInitializeInstanceError;
 
         PPCRAndIndent(theEnv);
@@ -335,7 +335,7 @@ Expression *ParseSlotOverrides(
     while (DefclassData(theEnv)->ObjectParseToken.tknType == LEFT_PARENTHESIS_TOKEN) {
         *error = false;
         theExp = ArgumentParse(theEnv, readSource, error);
-        if (*error == true) {
+        if (*error) {
             ReturnExpression(theEnv, top);
             return nullptr;
         } else if (theExp == nullptr) {
@@ -431,7 +431,7 @@ Expression *ParseSimpleInstance(
     top->argList->nextArg =
             GenConstant(theEnv, SYMBOL_TYPE, DefclassData(theEnv)->ObjectParseToken.value);
     theExp = top->argList->nextArg;
-    if (ReplaceClassNameWithReference(theEnv, theExp) == false)
+    if (!ReplaceClassNameWithReference(theEnv, theExp))
         goto MakeInstanceError;
     GetToken(theEnv, readSource, &DefclassData(theEnv)->ObjectParseToken);
     while (DefclassData(theEnv)->ObjectParseToken.tknType == LEFT_PARENTHESIS_TOKEN) {

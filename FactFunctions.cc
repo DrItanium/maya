@@ -193,9 +193,8 @@ bool FactExistp(
 
     if (theFact->garbage) return false;
 
-    if (theFact->factIndex == 0LL) return false;
+    return theFact->factIndex != 0LL;
 
-    return true;
 }
 
 /********************************************/

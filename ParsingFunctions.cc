@@ -194,8 +194,7 @@ bool CheckSyntax(
     if (FindConstruct(theEnv, name)) {
         ConstructData(theEnv)->CheckSyntaxMode = true;
 
-        if (ParseConstruct(theEnv, name, "check-syntax") == BE_PARSING_ERROR) { rv = true; }
-        else { rv = false; }
+        rv = ParseConstruct(theEnv, name, "check-syntax") == BE_PARSING_ERROR;
 
         GetToken(theEnv, "check-syntax", &theToken);
         ConstructData(theEnv)->CheckSyntaxMode = false;
@@ -323,10 +322,9 @@ static bool QueryErrorCaptureCallback(
 #pragma unused(theEnv,context)
 #endif
 
-    if ((strcmp(logicalName, STDERR) == 0) ||
-        (strcmp(logicalName, STDWRN) == 0)) { return true; }
+    return (strcmp(logicalName, STDERR) == 0) ||
+           (strcmp(logicalName, STDWRN) == 0);
 
-    return false;
 }
 
 /*********************************************/

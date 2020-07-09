@@ -343,7 +343,7 @@ void QueryFindInstance(
     InstanceQueryData(theEnv)->QueryCore->solns = (Instance **)
             gm2(theEnv, (sizeof(Instance *) * rcnt));
     InstanceQueryData(theEnv)->QueryCore->query = GetFirstArgument();
-    if (TestForFirstInChain(theEnv, qclasses, 0) == true) {
+    if (TestForFirstInChain(theEnv, qclasses, 0)) {
         returnValue->value = CreateMultifield(theEnv, rcnt);
         returnValue->range = rcnt;
         for (i = 0; i < rcnt; i++) {
@@ -450,7 +450,7 @@ void QueryDoForInstance(
     InstanceQueryData(theEnv)->QueryCore->query = GetFirstArgument();
     InstanceQueryData(theEnv)->QueryCore->action = GetFirstArgument()->nextArg;
 
-    if (TestForFirstInChain(theEnv, qclasses, 0) == true) {
+    if (TestForFirstInChain(theEnv, qclasses, 0)) {
         for (i = 0; i < rcnt; i++) { InstanceQueryData(theEnv)->QueryCore->solns[i]->busy++; }
 
         EvaluateExpression(theEnv, InstanceQueryData(theEnv)->QueryCore->action, returnValue);
@@ -734,7 +734,7 @@ static QUERY_CLASS *DetermineQueryClasses(
         } else if ((tmp = FormChain(theEnv, func, theClass, &temp)) != nullptr) {
             if (clist == nullptr)
                 clist = cnxt = cchain = tmp;
-            else if (new_list == true) {
+            else if (new_list) {
                 new_list = false;
                 cnxt->nxt = tmp;
                 cnxt = cchain = tmp;
@@ -907,7 +907,7 @@ static bool TestForFirstInChain(
             return true;
         }
         ReleaseTraversalID(theEnv);
-        if ((EvaluationData(theEnv)->HaltExecution == true) || (InstanceQueryData(theEnv)->AbortQuery == true))
+        if (EvaluationData(theEnv)->HaltExecution || InstanceQueryData(theEnv)->AbortQuery)
             return false;
     }
     return false;
@@ -943,7 +943,7 @@ static bool TestForFirstInstanceInClass(
     if (TestTraversalID(cls->traversalRecord, id))
         return false;
     SetTraversalID(cls->traversalRecord, id);
-    if (DefclassInScope(theEnv, cls, theModule) == false)
+    if (!DefclassInScope(theEnv, cls, theModule))
         return false;
 
     GCBlockStart(theEnv, &gcb);
@@ -953,12 +953,12 @@ static bool TestForFirstInstanceInClass(
         InstanceQueryData(theEnv)->QueryCore->solns[indx] = ins;
         if (qchain->nxt != nullptr) {
             ins->busy++;
-            if (TestForFirstInChain(theEnv, qchain->nxt, indx + 1) == true) {
+            if (TestForFirstInChain(theEnv, qchain->nxt, indx + 1)) {
                 ins->busy--;
                 break;
             }
             ins->busy--;
-            if ((EvaluationData(theEnv)->HaltExecution == true) || (InstanceQueryData(theEnv)->AbortQuery == true))
+            if (EvaluationData(theEnv)->HaltExecution || InstanceQueryData(theEnv)->AbortQuery)
                 break;
         } else {
             for (j = 0; j < indx; j++) {
@@ -971,7 +971,7 @@ static bool TestForFirstInstanceInClass(
             ins->busy++;
             EvaluateExpression(theEnv, InstanceQueryData(theEnv)->QueryCore->query, &temp);
             ins->busy--;
-            if (EvaluationData(theEnv)->HaltExecution == true)
+            if (EvaluationData(theEnv)->HaltExecution)
                 break;
             if (temp.value != FalseSymbol(theEnv))
                 break;
@@ -991,13 +991,12 @@ static bool TestForFirstInstanceInClass(
     CallPeriodicTasks(theEnv);
 
     if (ins != nullptr)
-        return (((EvaluationData(theEnv)->HaltExecution == true) || (InstanceQueryData(theEnv)->AbortQuery == true))
-                ? false : true);
+        return !(EvaluationData(theEnv)->HaltExecution || InstanceQueryData(theEnv)->AbortQuery);
     for (i = 0; i < cls->directSubclasses.classCount; i++) {
         if (TestForFirstInstanceInClass(theEnv, theModule, id, cls->directSubclasses.classArray[i],
                                         qchain, indx))
             return true;
-        if ((EvaluationData(theEnv)->HaltExecution == true) || (InstanceQueryData(theEnv)->AbortQuery == true))
+        if (EvaluationData(theEnv)->HaltExecution || InstanceQueryData(theEnv)->AbortQuery)
             return false;
     }
     return false;
@@ -1030,7 +1029,7 @@ static void TestEntireChain(
             return;
         TestEntireClass(theEnv, qptr->theModule, id, qptr->cls, qchain, indx);
         ReleaseTraversalID(theEnv);
-        if ((EvaluationData(theEnv)->HaltExecution == true) || (InstanceQueryData(theEnv)->AbortQuery == true))
+        if (EvaluationData(theEnv)->HaltExecution || InstanceQueryData(theEnv)->AbortQuery)
             return;
     }
 }
@@ -1066,7 +1065,7 @@ static void TestEntireClass(
     if (TestTraversalID(cls->traversalRecord, id))
         return;
     SetTraversalID(cls->traversalRecord, id);
-    if (DefclassInScope(theEnv, cls, theModule) == false)
+    if (!DefclassInScope(theEnv, cls, theModule))
         return;
 
     GCBlockStart(theEnv, &gcb);
@@ -1078,7 +1077,7 @@ static void TestEntireClass(
             ins->busy++;
             TestEntireChain(theEnv, qchain->nxt, indx + 1);
             ins->busy--;
-            if ((EvaluationData(theEnv)->HaltExecution == true) || (InstanceQueryData(theEnv)->AbortQuery == true))
+            if (EvaluationData(theEnv)->HaltExecution || InstanceQueryData(theEnv)->AbortQuery)
                 break;
         } else {
             for (j = 0; j < indx; j++) {
@@ -1090,7 +1089,7 @@ static void TestEntireClass(
             EvaluateExpression(theEnv, InstanceQueryData(theEnv)->QueryCore->query, &temp);
 
             ins->busy--;
-            if (EvaluationData(theEnv)->HaltExecution == true)
+            if (EvaluationData(theEnv)->HaltExecution)
                 break;
             if (temp.value != FalseSymbol(theEnv)) {
                 if (InstanceQueryData(theEnv)->QueryCore->action != nullptr) {
@@ -1105,7 +1104,7 @@ static void TestEntireClass(
                         InstanceQueryData(theEnv)->AbortQuery = true;
                         break;
                     }
-                    if (EvaluationData(theEnv)->HaltExecution == true)
+                    if (EvaluationData(theEnv)->HaltExecution)
                         break;
                 } else
                     AddSolution(theEnv);
@@ -1129,7 +1128,7 @@ static void TestEntireClass(
         return;
     for (i = 0; i < cls->directSubclasses.classCount; i++) {
         TestEntireClass(theEnv, theModule, id, cls->directSubclasses.classArray[i], qchain, indx);
-        if ((EvaluationData(theEnv)->HaltExecution == true) || (InstanceQueryData(theEnv)->AbortQuery == true))
+        if (EvaluationData(theEnv)->HaltExecution || InstanceQueryData(theEnv)->AbortQuery)
             return;
     }
 }

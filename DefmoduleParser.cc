@@ -248,8 +248,7 @@ bool ParseDefmodule(
             newDefmodule->exportList = oldExportList;
         }
 
-        if (parseError) return true;
-        return false;
+        return parseError;
     }
 
     /*===============================================*/

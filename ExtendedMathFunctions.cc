@@ -177,8 +177,7 @@ static bool SingleNumberCheck(
 static bool TestProximity(
         double theNumber,
         double range) {
-    if ((theNumber >= (-range)) && (theNumber <= range)) return true;
-    else return false;
+    return (theNumber >= (-range)) && (theNumber <= range);
 }
 
 /********************************************************/

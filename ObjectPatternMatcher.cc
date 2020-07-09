@@ -260,10 +260,8 @@ void SetupObjectPatternStuff(
  *****************************************************/
 static bool PatternParserFind(
         CLIPSLexeme *value) {
-    if (strcmp(value->contents, OBJECT_PATTERN_INDICATOR) == 0)
-        return true;
+    return strcmp(value->contents, OBJECT_PATTERN_INDICATOR) == 0;
 
-    return false;
 }
 
 /************************************************************************************
@@ -635,10 +633,9 @@ static struct patternNodeHeader *PlaceObjectPattern(
         /* a multifield slot is being processed.      */
         /*============================================*/
 
-        if (((thePattern->pnType == MF_WILDCARD_NODE) ||
-             (thePattern->pnType == MF_VARIABLE_NODE)) &&
-            (thePattern->right == nullptr) && (tempPattern != nullptr)) { endSlot = true; }
-        else { endSlot = false; }
+        endSlot = ((thePattern->pnType == MF_WILDCARD_NODE) ||
+                   (thePattern->pnType == MF_VARIABLE_NODE)) &&
+                  (thePattern->right == nullptr) && (tempPattern != nullptr);
 
         /*========================================*/
         /* Is there a node in the pattern network */
@@ -834,8 +831,7 @@ static OBJECT_PATTERN_NODE *CreateNewObjectPatternNode(
     newNode->leftNode = nullptr;
     newNode->bsaveID = 0L;
 
-    if ((thePattern->constantSelector != nullptr) && (!constantSelector)) { newNode->selector = true; }
-    else { newNode->selector = false; }
+    newNode->selector = (thePattern->constantSelector != nullptr) && (!constantSelector);
 
     /*===========================================================*/
     /* Install the expression associated with this pattern node. */

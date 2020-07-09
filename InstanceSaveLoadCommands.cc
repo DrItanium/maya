@@ -412,12 +412,12 @@ long BinaryLoadInstances(
 
     if (EvaluationData(theEnv)->CurrentExpression == nullptr) { ResetErrorFlags(theEnv); }
 
-    if (GenOpenReadBinary(theEnv, "bload-instances", theFile) == false) {
+    if (!GenOpenReadBinary(theEnv, "bload-instances", theFile)) {
         OpenErrorMessage(theEnv, "bload-instances", theFile);
         SetEvaluationError(theEnv, true);
         return -1L;
     }
-    if (VerifyBinaryHeader(theEnv, theFile) == false) {
+    if (!VerifyBinaryHeader(theEnv, theFile)) {
         GenCloseBinary(theEnv);
         SetEvaluationError(theEnv, true);
         return -1L;
@@ -432,7 +432,7 @@ long BinaryLoadInstances(
     GenReadBinary(theEnv, &instanceCount, sizeof(long));
 
     for (i = 0L; i < instanceCount; i++) {
-        if (LoadSingleBinaryInstance(theEnv) == false) {
+        if (!LoadSingleBinaryInstance(theEnv)) {
             FreeReadBuffer(theEnv);
             FreeAtomicValueStorage(theEnv);
             GenCloseBinary(theEnv);
@@ -759,7 +759,7 @@ static struct classItem *ProcessSaveClassList(
 
         if (theDefclass == nullptr)
             goto ProcessClassListError;
-        else if (theDefclass->abstract && (inheritFlag == false))
+        else if (theDefclass->abstract && !inheritFlag)
             goto ProcessClassListError;
 
         prv = newItem = head;
@@ -875,7 +875,7 @@ static long SaveOrMarkInstances(
         }
     } else {
         for (ins = GetNextInstanceInScope(theEnv, nullptr);
-             (ins != nullptr) && (EvaluationData(theEnv)->HaltExecution != true);
+             (ins != nullptr) && !EvaluationData(theEnv)->HaltExecution;
              ins = GetNextInstanceInScope(theEnv, ins)) {
             if ((saveCode == VISIBLE_SAVE) ? true :
                 (ins->cls->header.whichModule->theModule == currentModule)) {
@@ -1283,7 +1283,7 @@ static long LoadOrRestoreInstances(
 
     GCBlockStart(theEnv, &gcb);
 
-    while ((DefclassData(theEnv)->ObjectParseToken.tknType != STOP_TOKEN) && (EvaluationData(theEnv)->HaltExecution != true)) {
+    while ((DefclassData(theEnv)->ObjectParseToken.tknType != STOP_TOKEN) && !EvaluationData(theEnv)->HaltExecution) {
         if (DefclassData(theEnv)->ObjectParseToken.tknType != LEFT_PARENTHESIS_TOKEN) {
             SyntaxErrorMessage(theEnv, "instance definition");
             rtn_struct(theEnv, expr, top);

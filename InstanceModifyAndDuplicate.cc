@@ -663,8 +663,8 @@ static UDFValue *EvaluateSlotOverrides(
         }
         slotName = ovs[ovi].value;
         if (ovExprs->nextArg->argList) {
-            if (EvaluateAndStoreInDataObject(theEnv, false, ovExprs->nextArg->argList,
-                                             &ovs[ovi], true) == false)
+            if (!EvaluateAndStoreInDataObject(theEnv, false, ovExprs->nextArg->argList,
+                                              &ovs[ovi], true))
                 goto EvaluateOverridesError;
         } else {
             ovs[ovi].begin = 0;
@@ -726,7 +726,7 @@ static void ModifyMsgHandlerSupport(
     InstanceSlot *insSlot;
 
     returnValue->value = FalseSymbol(theEnv);
-    if (InstanceData(theEnv)->ObjectModDupMsgValid == false) {
+    if (!InstanceData(theEnv)->ObjectModDupMsgValid) {
         PrintErrorID(theEnv, "INSMODDP", 1, false);
         WriteString(theEnv, STDERR, "Direct/message-modify message valid only in modify-instance.\n");
         SetEvaluationError(theEnv, true);
@@ -818,7 +818,7 @@ static void DuplicateMsgHandlerSupport(
     bool success;
 
     returnValue->value = FalseSymbol(theEnv);
-    if (InstanceData(theEnv)->ObjectModDupMsgValid == false) {
+    if (!InstanceData(theEnv)->ObjectModDupMsgValid) {
         PrintErrorID(theEnv, "INSMODDP", 2, false);
         WriteString(theEnv, STDERR, "Direct/message-duplicate message valid only in duplicate-instance.\n");
         SetEvaluationError(theEnv, true);

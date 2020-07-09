@@ -532,8 +532,7 @@ static bool PropagateVariableDriver(
         /* sequence expansion is desired).                            */
         /*============================================================*/
 
-        if (patternHeadType == TEST_CE_NODE) ignoreVariableMixing = true;
-        else ignoreVariableMixing = false;
+        ignoreVariableMixing = patternHeadType == TEST_CE_NODE;
 
         /*==========================*/
         /* Propagate the reference. */

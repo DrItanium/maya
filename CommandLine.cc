@@ -770,7 +770,7 @@ bool CommandCompleteAndNotEmpty(
         Environment *theEnv) {
     return !((CompleteCommand(CommandLineData(theEnv)->CommandString) == 0) ||
              (RouterData(theEnv)->CommandBufferInputCount == 0) ||
-             (RouterData(theEnv)->AwaitingInput == false));
+             !RouterData(theEnv)->AwaitingInput);
 
 }
 

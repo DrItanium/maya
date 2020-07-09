@@ -252,7 +252,7 @@ void MVSlotInsertCommand(
 
     uindex = (size_t) theIndex;
 
-    if (InsertMultiValueField(theEnv, &newseg, &oldseg, uindex, &newval, "slot-insert$") == false)
+    if (!InsertMultiValueField(theEnv, &newseg, &oldseg, uindex, &newval, "slot-insert$"))
         return;
 
     arg.type = MULTIFIELD_TYPE;
@@ -371,7 +371,7 @@ void DirectMVReplaceCommand(
     size_t i, j, k;
     UDFValue newval, newseg, oldseg;
 
-    if (CheckCurrentMessage(theEnv, "direct-slot-replace$", true) == false) {
+    if (!CheckCurrentMessage(theEnv, "direct-slot-replace$", true)) {
         returnValue->lexemeValue = FalseSymbol(theEnv);
         return;
     }
@@ -471,7 +471,7 @@ void DirectMVInsertCommand(
     UDFValue newval, newseg, oldseg;
     size_t uindex;
 
-    if (CheckCurrentMessage(theEnv, "direct-slot-insert$", true) == false) {
+    if (!CheckCurrentMessage(theEnv, "direct-slot-insert$", true)) {
         returnValue->lexemeValue = FalseSymbol(theEnv);
         return;
     }
@@ -523,7 +523,7 @@ void DirectMVDeleteCommand(
     UDFValue newseg, oldseg;
     long long start, end;
 
-    if (CheckCurrentMessage(theEnv, "direct-slot-delete$", true) == false) {
+    if (!CheckCurrentMessage(theEnv, "direct-slot-delete$", true)) {
         returnValue->lexemeValue = FalseSymbol(theEnv);
         return;
     }
@@ -714,7 +714,7 @@ static InstanceSlot *CheckMultifieldSlotModify(
         args = args->nextArg;
     }
     if ((code == INSERT) || (code == REPLACE)) {
-        if (EvaluateAndStoreInDataObject(theEnv, 1, args, newval, true) == false)
+        if (!EvaluateAndStoreInDataObject(theEnv, 1, args, newval, true))
             return nullptr;
     }
     return (sp);

@@ -140,7 +140,7 @@ Expression *ParseQueryNoAction(
         return nullptr;
     IncrementIndentDepth(theEnv, 3);
     PPCRAndIndent(theEnv);
-    if (ParseQueryTestExpression(theEnv, top, readSource) == false) {
+    if (!ParseQueryTestExpression(theEnv, top, readSource)) {
         DecrementIndentDepth(theEnv, 3);
         ReturnExpression(theEnv, insQuerySetVars);
         return nullptr;
@@ -205,13 +205,13 @@ Expression *ParseQueryAction(
         return nullptr;
     IncrementIndentDepth(theEnv, 3);
     PPCRAndIndent(theEnv);
-    if (ParseQueryTestExpression(theEnv, top, readSource) == false) {
+    if (!ParseQueryTestExpression(theEnv, top, readSource)) {
         DecrementIndentDepth(theEnv, 3);
         ReturnExpression(theEnv, insQuerySetVars);
         return nullptr;
     }
     PPCRAndIndent(theEnv);
-    if (ParseQueryActionExpression(theEnv, top, readSource, insQuerySetVars, &queryInputToken) == false) {
+    if (!ParseQueryActionExpression(theEnv, top, readSource, insQuerySetVars, &queryInputToken)) {
         DecrementIndentDepth(theEnv, 3);
         ReturnExpression(theEnv, insQuerySetVars);
         return nullptr;
@@ -306,12 +306,12 @@ static Expression *ParseQueryRestrictions(
             goto ParseQueryRestrictionsError2;
         if (classExp == nullptr)
             goto ParseQueryRestrictionsError1;
-        if (ReplaceClassNameWithReference(theEnv, classExp) == false)
+        if (!ReplaceClassNameWithReference(theEnv, classExp))
             goto ParseQueryRestrictionsError2;
         lastClassExp = classExp;
         SavePPBuffer(theEnv, " ");
         while ((tmp = ArgumentParse(theEnv, readSource, &error)) != nullptr) {
-            if (ReplaceClassNameWithReference(theEnv, tmp) == false)
+            if (!ReplaceClassNameWithReference(theEnv, tmp))
                 goto ParseQueryRestrictionsError2;
             lastClassExp->nextArg = tmp;
             lastClassExp = tmp;
@@ -410,7 +410,7 @@ static bool ParseQueryTestExpression(
     oldBindList = GetParsedBindNames(theEnv);
     SetParsedBindNames(theEnv, nullptr);
     qtest = ArgumentParse(theEnv, readSource, &error);
-    if (error == true) {
+    if (error) {
         ClearParsedBindNames(theEnv);
         SetParsedBindNames(theEnv, oldBindList);
         ReturnExpression(theEnv, top);
@@ -425,7 +425,7 @@ static bool ParseQueryTestExpression(
     }
     qtest->nextArg = top->argList;
     top->argList = qtest;
-    if (ParsedBindNamesEmpty(theEnv) == false) {
+    if (!ParsedBindNamesEmpty(theEnv)) {
         ClearParsedBindNames(theEnv);
         SetParsedBindNames(theEnv, oldBindList);
         PrintErrorID(theEnv, "INSQYPSR", 2, false);
@@ -556,7 +556,7 @@ static bool ReplaceInstanceVariables(
                 eptr = GenConstant(theEnv, INTEGER_TYPE, CreateInteger(theEnv, ndepth));
                 eptr->nextArg = GenConstant(theEnv, INTEGER_TYPE, CreateInteger(theEnv, posn));
                 bexp->argList = eptr;
-            } else if (sdirect == true) {
+            } else if (sdirect) {
                 if (ReplaceSlotReference(theEnv, vlist, bexp, rslot_func, ndepth)) { return true; }
             }
         }

@@ -246,9 +246,8 @@ static bool MultifieldCardinalityViolation(
     /* Determine if the final cardinality for the slot can be satisfied. */
     /*===================================================================*/
 
-    if (UnmatchableConstraint(newConstraint)) return true;
+    return UnmatchableConstraint(newConstraint);
 
-    return false;
 }
 
 /***************************************************/

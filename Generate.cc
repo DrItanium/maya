@@ -514,8 +514,7 @@ static struct expr *GenJNColon(
     /* the appropriate value from the data entity.      */
     /*==================================================*/
 
-    if (isNand) { conversion = GetvarReplace(theEnv, theField->expression, true, theNandFrames); }
-    else { conversion = GetvarReplace(theEnv, theField->expression, false, theNandFrames); }
+    conversion = GetvarReplace(theEnv, theField->expression, isNand, theNandFrames);
 
     /*================================================*/
     /* If the predicate constraint is negated by a ~, */
@@ -581,8 +580,7 @@ static struct expr *GenJNEq(
     /* the appropriate value from the data entity.      */
     /*==================================================*/
 
-    if (isNand) { conversion = GetvarReplace(theEnv, theField->expression, true, theNandFrames); }
-    else { conversion = GetvarReplace(theEnv, theField->expression, false, theNandFrames); }
+    conversion = GetvarReplace(theEnv, theField->expression, isNand, theNandFrames);
 
     /*============================================================*/
     /* If the return value constraint is negated by a ~, then use */

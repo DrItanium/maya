@@ -453,9 +453,8 @@ bool RestrictionExists(
         i++;
     }
 
-    if (position == currentPosition) return true;
+    return position == currentPosition;
 
-    return false;
 }
 
 

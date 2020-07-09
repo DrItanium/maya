@@ -990,7 +990,7 @@ static bool TestForFirstFactInTemplate(
     CallPeriodicTasks(theEnv);
 
     if (theFact != nullptr)
-        return !((EvaluationData(theEnv)->HaltExecution == true) || (FactQueryData(theEnv)->AbortQuery == true));
+        return !(EvaluationData(theEnv)->HaltExecution || FactQueryData(theEnv)->AbortQuery);
 
     return false;
 }

@@ -328,9 +328,8 @@ bool DribbleOn(
 /**********************************************/
 bool DribbleActive(
         Environment *theEnv) {
-    if (FileCommandData(theEnv)->DribbleFP != nullptr) return true;
+    return FileCommandData(theEnv)->DribbleFP != nullptr;
 
-    return false;
 }
 
 /**********************************/
@@ -400,9 +399,8 @@ static bool QueryBatchCallback(
 #pragma unused(theEnv)
 #endif
 
-    if (strcmp(logicalName, STDIN) == 0) { return true; }
+    return strcmp(logicalName, STDIN) == 0;
 
-    return false;
 }
 
 /************************************/
@@ -776,9 +774,8 @@ bool RemoveBatch(
 /****************************************/
 bool BatchActive(
         Environment *theEnv) {
-    if (FileCommandData(theEnv)->TopOfBatchList != nullptr) return true;
+    return FileCommandData(theEnv)->TopOfBatchList != nullptr;
 
-    return false;
 }
 
 /******************************************************/

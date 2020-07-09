@@ -1040,9 +1040,7 @@ static bool WatchClassHandlers(
         }
         theHandler = GetNextDefmessageHandler(theClass, theHandler);
     }
-    if ((theHandlerStr != nullptr) && (theType != -1) && (found == false))
-        return false;
-    return true;
+    return !((theHandlerStr != nullptr) && (theType != -1) && (found == false));
 }
 
 /***************************************************
