@@ -213,8 +213,7 @@ void SetBetaMemoryResizingCommand(
 
     if (!UDFFirstArgument(context, ANY_TYPE_BITS, &theArg)) { return; }
 
-    if (theArg.value == FalseSymbol(theEnv)) { SetBetaMemoryResizing(theEnv, false); }
-    else { SetBetaMemoryResizing(theEnv, true); }
+    SetBetaMemoryResizing(theEnv, theArg.value != FalseSymbol(theEnv));
 }
 
 /****************************************************/
@@ -857,7 +856,7 @@ static int CountPatterns(
 
     if (theJoin == nullptr) return theCount;
 
-    if (theJoin->joinFromTheRight && (followRight == false)) { theCount++; }
+    if (theJoin->joinFromTheRight && !followRight) { theCount++; }
 
     while (theJoin != nullptr) {
         if (theJoin->joinFromTheRight) {
@@ -1018,7 +1017,7 @@ static const char *ActivityHeaderString(
 
     gensprintf(buffer, "%d", theInfo->whichCE);
     returnString = AppendStrings(theEnv, returnString, buffer);
-    if (nestedCEs == false) { return returnString; }
+    if (!nestedCEs) { return returnString; }
 
     if (theInfo->patternBegin == theInfo->patternEnd) {
         returnString = AppendStrings(theEnv, returnString, " (P");

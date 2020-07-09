@@ -368,7 +368,7 @@ void ExitRouter(
     currentPtr = RouterData(theEnv)->ListOfRouters;
     while (currentPtr != nullptr) {
         nextPtr = currentPtr->next;
-        if (currentPtr->active == true) {
+        if (currentPtr->active) {
             if (currentPtr->exitCallback != nullptr) {
                 (*currentPtr->exitCallback)(theEnv, num, currentPtr->context);
             }
@@ -513,7 +513,7 @@ static bool QueryRouter(
     /* If the router is inactive, then it can't respond. */
     /*===================================================*/
 
-    if (currentPtr->active == false) { return false; }
+    if (!currentPtr->active) { return false; }
 
     /*=============================================================*/
     /* If the router has no query function, then it can't respond. */
@@ -526,9 +526,8 @@ static bool QueryRouter(
     /* if it recognizes the logical name.      */
     /*=========================================*/
 
-    if ((*currentPtr->queryCallback)(theEnv, logicalName, currentPtr->context) == true) { return true; }
+    return (*currentPtr->queryCallback)(theEnv, logicalName, currentPtr->context);
 
-    return false;
 }
 
 /*******************************************************/

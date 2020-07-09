@@ -223,8 +223,7 @@ struct joinNode *ConstructJoins(
         /* Determine if the join being added is a logical join. */
         /*======================================================*/
 
-        if ((startDepth == 1) && (joinNumber == logicalJoin)) isLogical = true;
-        else isLogical = false;
+        isLogical = (startDepth == 1) && (joinNumber == logicalJoin);
 
         /*===============================================*/
         /* Get the list of joins which could potentially */
@@ -244,7 +243,7 @@ struct joinNode *ConstructJoins(
         /* Determine if the next join to be added can be shared. */
         /*=======================================================*/
 
-        if ((tryToReuse == true) &&
+        if (tryToReuse &&
             ((oldJoin = FindShareableJoin(theLinks, listOfJoins, useLinks, rhsStruct, firstJoin,
                                           theLHS->negated, isExists, isLogical,
                                           networkTest, secondaryNetworkTest,
@@ -940,7 +939,7 @@ static bool TestJoinForReuse(
     /* joins associate an extra field with each partial match). */
     /*==========================================================*/
 
-    if ((isLogical == true) &&
+    if (isLogical &&
         (testJoin->logicalJoin == false) &&
         BetaMemoryNotEmpty(testJoin)) { return false; }
 

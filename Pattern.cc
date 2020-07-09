@@ -265,9 +265,8 @@ bool ReservedPatternSymbol(
         if (strcmp(theSymbol, currentSymbol->theSymbol) == 0) {
             if ((currentSymbol->reservedBy == nullptr) || (checkedBy == nullptr)) { return true; }
 
-            if (strcmp(checkedBy, currentSymbol->reservedBy) == 0) return false;
+            return strcmp(checkedBy, currentSymbol->reservedBy) != 0;
 
-            return true;
         }
     }
 
@@ -542,7 +541,7 @@ struct lhsParseNode *RestrictionParse(
         /* slot so that the fields don't run together.            */
         /*========================================================*/
 
-        if ((theToken->tknType != RIGHT_PARENTHESIS_TOKEN) && (multifieldSlot == true)) {
+        if ((theToken->tknType != RIGHT_PARENTHESIS_TOKEN) && multifieldSlot) {
             PPBackup(theEnv);
             SavePPBuffer(theEnv, " ");
             SavePPBuffer(theEnv, theToken->printForm);
@@ -797,7 +796,7 @@ static struct lhsParseNode *ConjuctiveRestrictionParse(
 
     theNode = LiteralRestrictionParse(theEnv, readSource, theToken, error);
 
-    if (*error == true) { return nullptr; }
+    if (*error) { return nullptr; }
 
     GetToken(theEnv, readSource, theToken);
 
@@ -834,7 +833,7 @@ static struct lhsParseNode *ConjuctiveRestrictionParse(
         GetToken(theEnv, readSource, theToken);
         theNode = LiteralRestrictionParse(theEnv, readSource, theToken, error);
 
-        if (*error == true) {
+        if (*error) {
             ReturnLHSParseNodes(theEnv, bindNode);
             return nullptr;
         }
