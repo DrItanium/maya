@@ -128,7 +128,7 @@ static void DeallocateDefruleBloadData(
 
         theActivation = theModuleItem->agenda;
         while (theActivation != nullptr) {
-            tmpActivation = theActivation->next;
+            tmpActivation = theActivation->getNext();
 
             rtn_struct(theEnv, activation, theActivation);
 

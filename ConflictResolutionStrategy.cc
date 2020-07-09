@@ -151,15 +151,17 @@ void PlaceActivation(
 
     if (placeAfter == nullptr) /* then place it at the beginning of then agenda. */
     {
-        newActivation->next = *whichAgenda;
+        newActivation->setNext(*whichAgenda);
         *whichAgenda = newActivation;
-        if (newActivation->next != nullptr) newActivation->next->prev = newActivation;
+        if (newActivation->getNext()!= nullptr) newActivation->getNext()->setPrevious(newActivation);
     } else /* insert it in the agenda. */
     {
-        newActivation->next = placeAfter->next;
-        newActivation->prev = placeAfter;
-        placeAfter->next = newActivation;
-        if (newActivation->next != nullptr) { newActivation->next->prev = newActivation; }
+        newActivation->setNext(placeAfter->getNext());
+        newActivation->setPrevious(placeAfter);
+        placeAfter->setNext(newActivation);
+        if (newActivation->getNext() != nullptr) {
+            newActivation->getNext()->setPrevious(newActivation);
+        }
     }
 }
 
@@ -198,7 +200,7 @@ static Activation *PlaceDepthActivation(
         if (timetag < actPtr->getTimetag()) {
             lastAct = actPtr;
             if (actPtr == theGroup->last) { break; }
-            else { actPtr = actPtr->next; }
+            else { actPtr = actPtr->getNext(); }
         } else { break; }
     }
 
@@ -257,7 +259,7 @@ static Activation *PlaceBreadthActivation(
                 if (theGroup->prev == nullptr) { lastAct = nullptr; }
                 else { lastAct = theGroup->prev->last; }
                 break;
-            } else { actPtr = actPtr->prev; }
+            } else { actPtr = actPtr->getPrevious(); }
         } else {
             lastAct = actPtr;
             break;
@@ -335,14 +337,14 @@ static Activation *PlaceLEXActivation(
         if (flag == LESS_THAN) {
             lastAct = actPtr;
             if (actPtr == theGroup->last) { break; }
-            else { actPtr = actPtr->next; }
+            else { actPtr = actPtr->getNext(); }
         } else if (flag == GREATER_THAN) { break; }
         else /* flag == EQUAL */
         {
             if (timetag > actPtr->getTimetag()) {
                 lastAct = actPtr;
                 if (actPtr == theGroup->last) { break; }
-                else { actPtr = actPtr->next; }
+                else { actPtr = actPtr->getNext(); }
             } else { break; }
         }
     }
@@ -447,14 +449,14 @@ static Activation *PlaceMEAActivation(
         if (flag == LESS_THAN) {
             lastAct = actPtr;
             if (actPtr == theGroup->last) { break; }
-            else { actPtr = actPtr->next; }
+            else { actPtr = actPtr->getNext(); }
         } else if (flag == GREATER_THAN) { break; }
         else /* flag == EQUAL */
         {
             if (timetag > actPtr->getTimetag()) {
                 lastAct = actPtr;
                 if (actPtr == theGroup->last) { break; }
-                else { actPtr = actPtr->next; }
+                else { actPtr = actPtr->getNext(); }
             } else { break; }
         }
     }
@@ -511,12 +513,12 @@ static Activation *PlaceComplexityActivation(
         if (complexity < actPtr->getRule()->complexity) {
             lastAct = actPtr;
             if (actPtr == theGroup->last) { break; }
-            else { actPtr = actPtr->next; }
+            else { actPtr = actPtr->getNext(); }
         } else if (complexity > actPtr->getRule()->complexity) { break; }
         else if (timetag > actPtr->getTimetag()) {
             lastAct = actPtr;
             if (actPtr == theGroup->last) { break; }
-            else { actPtr = actPtr->next; }
+            else { actPtr = actPtr->getNext(); }
         } else { break; }
     }
 
@@ -572,12 +574,12 @@ static Activation *PlaceSimplicityActivation(
         if (complexity > actPtr->getRule()->complexity) {
             lastAct = actPtr;
             if (actPtr == theGroup->last) { break; }
-            else { actPtr = actPtr->next; }
+            else { actPtr = actPtr->getNext(); }
         } else if (complexity < actPtr->getRule()->complexity) { break; }
         else if (timetag > actPtr->getTimetag()) {
             lastAct = actPtr;
             if (actPtr == theGroup->last) { break; }
-            else { actPtr = actPtr->next; }
+            else { actPtr = actPtr->getNext(); }
         } else { break; }
     }
 
@@ -633,12 +635,12 @@ static Activation *PlaceRandomActivation(
         if (randomID > actPtr->getRandomID()) {
             lastAct = actPtr;
             if (actPtr == theGroup->last) { break; }
-            else { actPtr = actPtr->next; }
+            else { actPtr = actPtr->getNext(); }
         } else if (randomID < actPtr->getRandomID()) { break; }
         else if (timetag > actPtr->getTimetag()) {
             lastAct = actPtr;
             if (actPtr == theGroup->last) { break; }
-            else { actPtr = actPtr->next; }
+            else { actPtr = actPtr->getNext(); }
         } else { break; }
     }
 

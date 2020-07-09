@@ -88,6 +88,8 @@ private:
     int salience;
     unsigned long long timetag;
     int randomID;
+    activation *prev;
+    activation *next;
 public:
     auto getRule() const noexcept { return theRule; }
     void setRule(Defrule* value) noexcept { theRule = value; }
@@ -99,8 +101,10 @@ public:
     void setTimetag(unsigned long long value) noexcept { timetag = value; }
     constexpr auto getRandomID() const noexcept { return randomID; }
     void setRandomID(int value) noexcept { randomID = value; }
-    activation *prev;
-    activation *next;
+    void setPrevious(activation* value) noexcept { prev = value; }
+    auto getPrevious() const noexcept { return prev; }
+    void setNext(activation* value) noexcept { next = value; }
+    auto getNext() const noexcept { return next; }
 };
 
 struct salienceGroup {

@@ -160,8 +160,8 @@ void AddActivation(
     newActivation->setSalience(EvaluateSalience(theEnv, theRule));
 
     newActivation->setRandomID(genrand());
-    newActivation->prev = nullptr;
-    newActivation->next = nullptr;
+    newActivation->setPrevious(nullptr);
+    newActivation->setNext(nullptr);
 
     AgendaData(theEnv)->NumberOfActivations++;
 
@@ -270,7 +270,7 @@ void ClearRuleFromAgenda(
     /*==============================================*/
 
     while (agendaPtr != nullptr) {
-        agendaNext = agendaPtr->next;
+        agendaNext = agendaPtr->getNext();
 
         /*========================================================*/
         /* Check each disjunct of the rule against the activation */
@@ -306,7 +306,7 @@ Activation *GetNextActivation(
         theModuleItem = (defruleModule *) GetModuleItem(theEnv, nullptr, DefruleData(theEnv)->DefruleModuleIndex);
         if (theModuleItem == nullptr) return nullptr;
         return theModuleItem->agenda;
-    } else { return actPtr->next; }
+    } else { return actPtr->getNext(); }
 }
 
 /*********************************************/
@@ -391,9 +391,9 @@ bool MoveActivationToTop(
     /* and following the activation being moved.       */
     /*=================================================*/
 
-    prevPtr = theActivation->prev;
-    prevPtr->next = theActivation->next;
-    if (theActivation->next != nullptr) theActivation->next->prev = prevPtr;
+    prevPtr = theActivation->getPrevious();
+    prevPtr->setNext(theActivation->getNext());
+    if (theActivation->getNext() != nullptr) theActivation->getNext()->setPrevious(prevPtr);
 
     /*=======================================================*/
     /* Move the activation and then update its pointers, the */
@@ -401,9 +401,9 @@ bool MoveActivationToTop(
     /* module pointer to the top activation on the agenda.   */
     /*=======================================================*/
 
-    theActivation->next = theModuleItem->agenda;
-    theModuleItem->agenda->prev = theActivation;
-    theActivation->prev = nullptr;
+    theActivation->setNext(theModuleItem->agenda);
+    theModuleItem->agenda->setPrevious(theActivation);
+    theActivation->setPrevious(nullptr);
     theModuleItem->agenda = theActivation;
 
     /*=============================*/
@@ -436,7 +436,7 @@ void DeleteAllActivations(
 
     theActivation = GetDefruleModuleItem(theEnv, nullptr)->agenda;
     while (theActivation != nullptr) {
-        tempPtr = theActivation->next;
+        tempPtr = theActivation->getNext();
         RemoveActivation(theEnv, theActivation, true, true);
         theActivation = tempPtr;
     }
@@ -478,26 +478,26 @@ bool DetachActivation(
     /* then update the module pointer to agenda.              */
     /*========================================================*/
 
-    if (theActivation == theModuleItem->agenda) { theModuleItem->agenda = theActivation->next; }
+    if (theActivation == theModuleItem->agenda) { theModuleItem->agenda = theActivation->getNext(); }
 
     /*==================================================*/
     /* Update the pointers in the preceding activation. */
     /*==================================================*/
 
-    if (theActivation->prev != nullptr) { theActivation->prev->next = theActivation->next; }
+    if (theActivation->getPrevious() != nullptr) { theActivation->getPrevious()->setNext(theActivation->getNext()); }
 
     /*==================================================*/
     /* Update the pointers in the following activation. */
     /*==================================================*/
 
-    if (theActivation->next != nullptr) { theActivation->next->prev = theActivation->prev; }
+    if (theActivation->getNext() != nullptr) { theActivation->getNext()->setPrevious(theActivation->getPrevious()); }
 
     /*=================================================*/
     /* Update the pointers in the detached activation. */
     /*=================================================*/
 
-    theActivation->prev = nullptr;
-    theActivation->next = nullptr;
+    theActivation->setPrevious(nullptr);
+    theActivation->setNext(nullptr);
 
     /*=============================*/
     /* Mark the agenda as changed. */
@@ -570,12 +570,12 @@ void RemoveActivation(
         /* Update the pointer links between activations. */
         /*===============================================*/
 
-        if (theActivation->prev == nullptr) {
-            theModuleItem->agenda = theModuleItem->agenda->next;
-            if (theModuleItem->agenda != nullptr) theModuleItem->agenda->prev = nullptr;
+        if (theActivation->getPrevious() == nullptr) {
+            theModuleItem->agenda = theModuleItem->agenda->getNext() ;
+            if (theModuleItem->agenda != nullptr) theModuleItem->agenda->setPrevious(nullptr);
         } else {
-            theActivation->prev->next = theActivation->next;
-            if (theActivation->next != nullptr) { theActivation->next->prev = theActivation->prev; }
+            theActivation->getPrevious()->setNext(theActivation->getNext());
+            if (theActivation->getNext() != nullptr) { theActivation->getNext()->setPrevious(theActivation->getPrevious()); }
         }
 
         /*===================================*/
@@ -647,14 +647,14 @@ static void RemoveActivationFromGroup(
             /* but there are other activations which follow.        */
             /*======================================================*/
 
-        else { theGroup->first = theActivation->next; }
+        else { theGroup->first = theActivation->getNext(); }
     } else {
         /*====================================================*/
         /* Otherwise if the activation isn't the first in the */
         /* group, then check to see if it's the last.         */
         /*====================================================*/
 
-        if (theActivation == theGroup->last) { theGroup->last = theActivation->prev; }
+        if (theActivation == theGroup->last) { theGroup->last = theActivation->getPrevious(); }
 
             /*==================================================*/
             /* Otherwise the activation is in the middle of the */
@@ -686,7 +686,7 @@ void RemoveAllActivations(
 
     theActivation = GetDefruleModuleItem(theEnv, nullptr)->agenda;
     while (theActivation != nullptr) {
-        tempPtr = theActivation->next;
+        tempPtr = theActivation->getNext();
         RemoveActivation(theEnv, theActivation, true, true);
         theActivation = tempPtr;
     }
@@ -769,9 +769,9 @@ void ReorderAgenda(
     /*=========================================*/
 
     while (theActivation != nullptr) {
-        tempPtr = theActivation->next;
-        theActivation->next = nullptr;
-        theActivation->prev = nullptr;
+        tempPtr = theActivation->getNext();
+        theActivation->setNext(nullptr);
+        theActivation->setPrevious(nullptr);
         theGroup = ReuseOrCreateSalienceGroup(theEnv, theModuleItem, theActivation->getSalience());
         PlaceActivation(theEnv, &(theModuleItem->agenda), theActivation, theGroup);
         theActivation = tempPtr;
