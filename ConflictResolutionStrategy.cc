@@ -141,8 +141,8 @@ void PlaceActivation(
                 break;
         }
     } else {
-        theGroup->first = newActivation;
-        theGroup->last = newActivation;
+        theGroup->setFirst(newActivation);
+        theGroup->setLast(newActivation);
     }
 
     /*==============================================================*/
@@ -183,8 +183,8 @@ static Activation *PlaceDepthActivation(
     /*============================================*/
 
     timetag = newActivation->getTimetag();
-    if (theGroup->prev == nullptr) { lastAct = nullptr; }
-    else { lastAct = theGroup->prev->last; }
+    if (theGroup->getPrevious() == nullptr) { lastAct = nullptr; }
+    else { lastAct = theGroup->getPrevious()->getLast(); }
 
     /*=========================================================*/
     /* Find the insertion point in the agenda. The activation  */
@@ -195,11 +195,11 @@ static Activation *PlaceDepthActivation(
     /* depth first traversal).                                 */
     /*=========================================================*/
 
-    actPtr = theGroup->first;
+    actPtr = theGroup->getFirst();
     while (actPtr != nullptr) {
         if (timetag < actPtr->getTimetag()) {
             lastAct = actPtr;
-            if (actPtr == theGroup->last) { break; }
+            if (actPtr == theGroup->getLast()) { break; }
             else { actPtr = actPtr->getNext(); }
         } else { break; }
     }
@@ -209,9 +209,9 @@ static Activation *PlaceDepthActivation(
     /*========================================*/
 
     if ((lastAct == nullptr) ||
-        ((theGroup->prev != nullptr) && (theGroup->prev->last == lastAct))) { theGroup->first = newActivation; }
+        ((theGroup->getPrevious() != nullptr) && (theGroup->getPrevious()->getLast() == lastAct))) { theGroup->setFirst(newActivation); }
 
-    if ((theGroup->last == nullptr) || (theGroup->last == lastAct)) { theGroup->last = newActivation; }
+    if ((theGroup->getLast() == nullptr) || (theGroup->getLast() == lastAct)) { theGroup->setLast(newActivation); }
 
     /*===========================================*/
     /* Return the insertion point in the agenda. */
@@ -238,10 +238,10 @@ static Activation *PlaceBreadthActivation(
     /*============================================*/
 
     timetag = newActivation->getTimetag();
-    if (theGroup->last == nullptr) {
-        if (theGroup->prev == nullptr) { lastAct = nullptr; }
-        else { lastAct = theGroup->prev->last; }
-    } else { lastAct = theGroup->last; }
+    if (theGroup->getLast() == nullptr) {
+        if (theGroup->getPrevious() == nullptr) { lastAct = nullptr; }
+        else { lastAct = theGroup->getPrevious()->getLast(); }
+    } else { lastAct = theGroup->getLast(); }
 
     /*=========================================================*/
     /* Find the insertion point in the agenda. The activation  */
@@ -252,12 +252,12 @@ static Activation *PlaceBreadthActivation(
     /* first traversal).                                       */
     /*=========================================================*/
 
-    actPtr = theGroup->last;
+    actPtr = theGroup->getLast();
     while (actPtr != nullptr) {
         if (timetag < actPtr->getTimetag()) {
-            if (actPtr == theGroup->first) {
-                if (theGroup->prev == nullptr) { lastAct = nullptr; }
-                else { lastAct = theGroup->prev->last; }
+            if (actPtr == theGroup->getFirst()) {
+                if (theGroup->getPrevious() == nullptr) { lastAct = nullptr; }
+                else { lastAct = theGroup->getPrevious()->getLast(); }
                 break;
             } else { actPtr = actPtr->getPrevious(); }
         } else {
@@ -271,9 +271,9 @@ static Activation *PlaceBreadthActivation(
     /*========================================*/
 
     if ((lastAct == nullptr) ||
-        ((theGroup->prev != nullptr) && (theGroup->prev->last == lastAct))) { theGroup->first = newActivation; }
+        ((theGroup->getPrevious() != nullptr) && (theGroup->getPrevious()->getLast() == lastAct))) { theGroup->setFirst(newActivation); }
 
-    if ((theGroup->last == nullptr) || (theGroup->last == lastAct)) { theGroup->last = newActivation; }
+    if ((theGroup->getLast() == nullptr) || (theGroup->getLast() == lastAct)) { theGroup->setLast(newActivation); }
 
     /*===========================================*/
     /* Return the insertion point in the agenda. */
@@ -302,21 +302,21 @@ static Activation *PlaceLEXActivation(
     /*============================================*/
 
     timetag = newActivation->getTimetag();
-    if (theGroup->prev == nullptr) { lastAct = nullptr; }
-    else { lastAct = theGroup->prev->last; }
+    if (theGroup->getPrevious() == nullptr) { lastAct = nullptr; }
+    else { lastAct = theGroup->getPrevious()->getLast(); }
 
     /*================================================*/
     /* Look first at the very end of the group to see */
     /* if the activation should be placed there.      */
     /*================================================*/
 
-    actPtr = theGroup->last;
+    actPtr = theGroup->getLast();
     if (actPtr != nullptr) {
         flag = ComparePartialMatches(theEnv, actPtr, newActivation);
 
         if ((flag == LESS_THAN) ||
             ((flag == EQUAL) && (timetag > actPtr->getTimetag()))) {
-            theGroup->last = newActivation;
+            theGroup->setLast(newActivation);
 
             return actPtr;
         }
@@ -330,20 +330,20 @@ static Activation *PlaceLEXActivation(
     /* determining placement.                                  */
     /*=========================================================*/
 
-    actPtr = theGroup->first;
+    actPtr = theGroup->getFirst();
     while (actPtr != nullptr) {
         flag = ComparePartialMatches(theEnv, actPtr, newActivation);
 
         if (flag == LESS_THAN) {
             lastAct = actPtr;
-            if (actPtr == theGroup->last) { break; }
+            if (actPtr == theGroup->getLast()) { break; }
             else { actPtr = actPtr->getNext(); }
         } else if (flag == GREATER_THAN) { break; }
         else /* flag == EQUAL */
         {
             if (timetag > actPtr->getTimetag()) {
                 lastAct = actPtr;
-                if (actPtr == theGroup->last) { break; }
+                if (actPtr == theGroup->getLast()) { break; }
                 else { actPtr = actPtr->getNext(); }
             } else { break; }
         }
@@ -354,9 +354,9 @@ static Activation *PlaceLEXActivation(
     /*========================================*/
 
     if ((lastAct == nullptr) ||
-        ((theGroup->prev != nullptr) && (theGroup->prev->last == lastAct))) { theGroup->first = newActivation; }
+        ((theGroup->getPrevious() != nullptr) && (theGroup->getPrevious()->getLast() == lastAct))) { theGroup->setFirst(newActivation); }
 
-    if ((theGroup->last == nullptr) || (theGroup->last == lastAct)) { theGroup->last = newActivation; }
+    if ((theGroup->getLast() == nullptr) || (theGroup->getLast() == lastAct)) { theGroup->setLast(newActivation); }
 
     /*===========================================*/
     /* Return the insertion point in the agenda. */
@@ -387,15 +387,15 @@ static Activation *PlaceMEAActivation(
     /*============================================*/
 
     timetag = newActivation->getTimetag();
-    if (theGroup->prev == nullptr) { lastAct = nullptr; }
-    else { lastAct = theGroup->prev->last; }
+    if (theGroup->getPrevious() == nullptr) { lastAct = nullptr; }
+    else { lastAct = theGroup->getPrevious()->getLast(); }
 
     /*================================================*/
     /* Look first at the very end of the group to see */
     /* if the activation should be placed there.      */
     /*================================================*/
 
-    actPtr = theGroup->last;
+    actPtr = theGroup->getLast();
     if (actPtr != nullptr) {
         if (GetMatchingItem(newActivation, 0) != nullptr) {
             cWhoset = GetMatchingItem(newActivation, 0)->timeTag;
@@ -416,7 +416,7 @@ static Activation *PlaceMEAActivation(
 
         if ((flag == LESS_THAN) ||
             ((flag == EQUAL) && (timetag > actPtr->getTimetag()))) {
-            theGroup->last = newActivation;
+            theGroup->setLast(newActivation);
 
             return actPtr;
         }
@@ -430,7 +430,7 @@ static Activation *PlaceMEAActivation(
     /* determining placement.                                  */
     /*=========================================================*/
 
-    actPtr = theGroup->first;
+    actPtr = theGroup->getFirst();
     while (actPtr != nullptr) {
         cWhoset = 0;
         oWhoset = 0;
@@ -448,14 +448,14 @@ static Activation *PlaceMEAActivation(
 
         if (flag == LESS_THAN) {
             lastAct = actPtr;
-            if (actPtr == theGroup->last) { break; }
+            if (actPtr == theGroup->getLast()) { break; }
             else { actPtr = actPtr->getNext(); }
         } else if (flag == GREATER_THAN) { break; }
         else /* flag == EQUAL */
         {
             if (timetag > actPtr->getTimetag()) {
                 lastAct = actPtr;
-                if (actPtr == theGroup->last) { break; }
+                if (actPtr == theGroup->getLast()) { break; }
                 else { actPtr = actPtr->getNext(); }
             } else { break; }
         }
@@ -466,9 +466,9 @@ static Activation *PlaceMEAActivation(
     /*========================================*/
 
     if ((lastAct == nullptr) ||
-        ((theGroup->prev != nullptr) && (theGroup->prev->last == lastAct))) { theGroup->first = newActivation; }
+        ((theGroup->getPrevious() != nullptr) && (theGroup->getPrevious()->getLast() == lastAct))) { theGroup->setFirst(newActivation); }
 
-    if ((theGroup->last == nullptr) || (theGroup->last == lastAct)) { theGroup->last = newActivation; }
+    if ((theGroup->getLast() == nullptr) || (theGroup->getLast() == lastAct)) { theGroup->setLast(newActivation); }
 
     /*===========================================*/
     /* Return the insertion point in the agenda. */
@@ -497,8 +497,8 @@ static Activation *PlaceComplexityActivation(
 
     timetag = newActivation->getTimetag();
     complexity = newActivation->getRule()->complexity;
-    if (theGroup->prev == nullptr) { lastAct = nullptr; }
-    else { lastAct = theGroup->prev->last; }
+    if (theGroup->getPrevious() == nullptr) { lastAct = nullptr; }
+    else { lastAct = theGroup->getPrevious()->getLast(); }
 
     /*=========================================================*/
     /* Find the insertion point in the agenda. The activation  */
@@ -508,16 +508,16 @@ static Activation *PlaceComplexityActivation(
     /* activations of equal or lessor complexity.              */
     /*=========================================================*/
 
-    actPtr = theGroup->first;
+    actPtr = theGroup->getFirst();
     while (actPtr != nullptr) {
         if (complexity < actPtr->getRule()->complexity) {
             lastAct = actPtr;
-            if (actPtr == theGroup->last) { break; }
+            if (actPtr == theGroup->getLast()) { break; }
             else { actPtr = actPtr->getNext(); }
         } else if (complexity > actPtr->getRule()->complexity) { break; }
         else if (timetag > actPtr->getTimetag()) {
             lastAct = actPtr;
-            if (actPtr == theGroup->last) { break; }
+            if (actPtr == theGroup->getLast()) { break; }
             else { actPtr = actPtr->getNext(); }
         } else { break; }
     }
@@ -527,9 +527,9 @@ static Activation *PlaceComplexityActivation(
     /*========================================*/
 
     if ((lastAct == nullptr) ||
-        ((theGroup->prev != nullptr) && (theGroup->prev->last == lastAct))) { theGroup->first = newActivation; }
+        ((theGroup->getPrevious() != nullptr) && (theGroup->getPrevious()->getLast() == lastAct))) { theGroup->setFirst(newActivation); }
 
-    if ((theGroup->last == nullptr) || (theGroup->last == lastAct)) { theGroup->last = newActivation; }
+    if ((theGroup->getLast() == nullptr) || (theGroup->getLast() == lastAct)) { theGroup->setLast(newActivation); }
 
     /*===========================================*/
     /* Return the insertion point in the agenda. */
@@ -558,8 +558,8 @@ static Activation *PlaceSimplicityActivation(
 
     timetag = newActivation->getTimetag();
     complexity = newActivation->getRule()->complexity;
-    if (theGroup->prev == nullptr) { lastAct = nullptr; }
-    else { lastAct = theGroup->prev->last; }
+    if (theGroup->getPrevious() == nullptr) { lastAct = nullptr; }
+    else { lastAct = theGroup->getPrevious()->getLast(); }
 
     /*=========================================================*/
     /* Find the insertion point in the agenda. The activation  */
@@ -569,16 +569,16 @@ static Activation *PlaceSimplicityActivation(
     /* activations of equal or greater complexity.             */
     /*=========================================================*/
 
-    actPtr = theGroup->first;
+    actPtr = theGroup->getFirst();
     while (actPtr != nullptr) {
         if (complexity > actPtr->getRule()->complexity) {
             lastAct = actPtr;
-            if (actPtr == theGroup->last) { break; }
+            if (actPtr == theGroup->getLast()) { break; }
             else { actPtr = actPtr->getNext(); }
         } else if (complexity < actPtr->getRule()->complexity) { break; }
         else if (timetag > actPtr->getTimetag()) {
             lastAct = actPtr;
-            if (actPtr == theGroup->last) { break; }
+            if (actPtr == theGroup->getLast()) { break; }
             else { actPtr = actPtr->getNext(); }
         } else { break; }
     }
@@ -588,9 +588,9 @@ static Activation *PlaceSimplicityActivation(
     /*========================================*/
 
     if ((lastAct == nullptr) ||
-        ((theGroup->prev != nullptr) && (theGroup->prev->last == lastAct))) { theGroup->first = newActivation; }
+        ((theGroup->getPrevious() != nullptr) && (theGroup->getPrevious()->getLast() == lastAct))) { theGroup->setFirst(newActivation); }
 
-    if ((theGroup->last == nullptr) || (theGroup->last == lastAct)) { theGroup->last = newActivation; }
+    if ((theGroup->getLast() == nullptr) || (theGroup->getLast() == lastAct)) { theGroup->setLast(newActivation); }
 
     /*===========================================*/
     /* Return the insertion point in the agenda. */
@@ -619,8 +619,8 @@ static Activation *PlaceRandomActivation(
 
     timetag = newActivation->getTimetag();
     randomID = newActivation->getRandomID();
-    if (theGroup->prev == nullptr) { lastAct = nullptr; }
-    else { lastAct = theGroup->prev->last; }
+    if (theGroup->getPrevious() == nullptr) { lastAct = nullptr; }
+    else { lastAct = theGroup->getPrevious()->getLast(); }
 
     /*=========================================================*/
     /* Find the insertion point in the agenda. The activation  */
@@ -630,16 +630,16 @@ static Activation *PlaceRandomActivation(
     /* determined through the generation of a random number.   */
     /*=========================================================*/
 
-    actPtr = theGroup->first;
+    actPtr = theGroup->getFirst();
     while (actPtr != nullptr) {
         if (randomID > actPtr->getRandomID()) {
             lastAct = actPtr;
-            if (actPtr == theGroup->last) { break; }
+            if (actPtr == theGroup->getLast()) { break; }
             else { actPtr = actPtr->getNext(); }
         } else if (randomID < actPtr->getRandomID()) { break; }
         else if (timetag > actPtr->getTimetag()) {
             lastAct = actPtr;
-            if (actPtr == theGroup->last) { break; }
+            if (actPtr == theGroup->getLast()) { break; }
             else { actPtr = actPtr->getNext(); }
         } else { break; }
     }
@@ -649,9 +649,9 @@ static Activation *PlaceRandomActivation(
     /*========================================*/
 
     if ((lastAct == nullptr) ||
-        ((theGroup->prev != nullptr) && (theGroup->prev->last == lastAct))) { theGroup->first = newActivation; }
+        ((theGroup->getPrevious() != nullptr) && (theGroup->getPrevious()->getLast() == lastAct))) { theGroup->setFirst(newActivation); }
 
-    if ((theGroup->last == nullptr) || (theGroup->last == lastAct)) { theGroup->last = newActivation; }
+    if ((theGroup->getLast() == nullptr) || (theGroup->getLast() == lastAct)) { theGroup->setLast(newActivation); }
 
     /*===========================================*/
     /* Return the insertion point in the agenda. */

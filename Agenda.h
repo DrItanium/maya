@@ -110,13 +110,21 @@ public:
 struct SalienceGroup {
 private:
     int salience;
+    activation *first;
+    activation *last;
+    SalienceGroup *next;
+    SalienceGroup *prev;
 public:
     constexpr auto getSalience() const noexcept { return salience; }
     void setSalience(int value) noexcept { salience = value; }
-    struct activation *first;
-    struct activation *last;
-    struct SalienceGroup *next;
-    struct SalienceGroup *prev;
+    void setFirst(activation* value) noexcept { first = value; }
+    auto getFirst() const noexcept { return first; }
+    void setLast(activation* value) noexcept { last = value; }
+    auto getLast() const noexcept { return last; }
+    void setPrevious(SalienceGroup* value) noexcept { prev = value; }
+    auto getPrevious() const noexcept { return prev; }
+    void setNext(SalienceGroup* value) noexcept { next = value; }
+    auto getNext() const noexcept { return next; }
 };
 
 #include "ConflictResolutionStrategy.h"

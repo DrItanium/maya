@@ -208,7 +208,7 @@ static struct SalienceGroup *ReuseOrCreateSalienceGroup(
 
     for (lastGroup = nullptr, theGroup = theRuleModule->groupings;
          theGroup != nullptr;
-         lastGroup = theGroup, theGroup = theGroup->next) {
+         lastGroup = theGroup, theGroup = theGroup->getNext()) {
         if (theGroup->getSalience() == salience) { return (theGroup); }
 
         if (theGroup->getSalience() < salience) { break; }
@@ -216,14 +216,14 @@ static struct SalienceGroup *ReuseOrCreateSalienceGroup(
 
     newGroup = get_struct(theEnv, SalienceGroup);
     newGroup->setSalience(salience);
-    newGroup->first = nullptr;
-    newGroup->last = nullptr;
-    newGroup->next = theGroup;
-    newGroup->prev = lastGroup;
+    newGroup->setFirst(nullptr);
+    newGroup->setLast(nullptr);
+    newGroup->setNext(theGroup);
+    newGroup->setPrevious(lastGroup);
 
-    if (newGroup->next != nullptr) { newGroup->next->prev = newGroup; }
+    if (newGroup->getNext()!= nullptr) { newGroup->getNext()->setPrevious(newGroup); }
 
-    if (newGroup->prev != nullptr) { newGroup->prev->next = newGroup; }
+    if (newGroup->getPrevious() != nullptr) { newGroup->getPrevious()->setNext(newGroup); }
 
     if (lastGroup == nullptr) { theRuleModule->groupings = newGroup; }
 
@@ -240,7 +240,7 @@ static struct SalienceGroup *FindSalienceGroup(
 
     for (theGroup = theRuleModule->groupings;
          theGroup != nullptr;
-         theGroup = theGroup->next) {
+         theGroup = theGroup->getNext()) {
         if (theGroup->getSalience() == salience) { return (theGroup); }
 
         if (theGroup->getSalience() < salience) { break; }
@@ -443,7 +443,7 @@ void DeleteAllActivations(
 
     theGroup = GetDefruleModuleItem(theEnv, nullptr)->groupings;
     while (theGroup != nullptr) {
-        tempGroup = theGroup->next;
+        tempGroup = theGroup->getNext();
         rtn_struct(theEnv, SalienceGroup, theGroup);
         theGroup = tempGroup;
     }
@@ -627,17 +627,17 @@ static void RemoveActivationFromGroup(
     theGroup = FindSalienceGroup(theRuleModule, theActivation->getSalience());
     if (theGroup == nullptr) return;
 
-    if (theActivation == theGroup->first) {
+    if (theActivation == theGroup->getFirst()) {
         /*====================================================*/
         /* If the activation is the only remaining activation */
         /* in the group, then the group needs to be removed.  */
         /*====================================================*/
 
-        if (theActivation == theGroup->last) {
-            if (theGroup->prev == nullptr) { theRuleModule->groupings = theGroup->next; }
-            else { theGroup->prev->next = theGroup->next; }
+        if (theActivation == theGroup->getLast()) {
+            if (theGroup->getPrevious() == nullptr) { theRuleModule->groupings = theGroup->getNext(); }
+            else { theGroup->getPrevious()->setNext(theGroup->getNext()); }
 
-            if (theGroup->next != nullptr) { theGroup->next->prev = theGroup->prev; }
+            if (theGroup->getNext() != nullptr) { theGroup->getNext()->setPrevious( theGroup->getPrevious()); }
 
             rtn_struct(theEnv, SalienceGroup, theGroup);
         }
@@ -647,14 +647,14 @@ static void RemoveActivationFromGroup(
             /* but there are other activations which follow.        */
             /*======================================================*/
 
-        else { theGroup->first = theActivation->getNext(); }
+        else { theGroup->setFirst(theActivation->getNext()); }
     } else {
         /*====================================================*/
         /* Otherwise if the activation isn't the first in the */
         /* group, then check to see if it's the last.         */
         /*====================================================*/
 
-        if (theActivation == theGroup->last) { theGroup->last = theActivation->getPrevious(); }
+        if (theActivation == theGroup->getLast()) { theGroup->setLast(theActivation->getPrevious()); }
 
             /*==================================================*/
             /* Otherwise the activation is in the middle of the */
@@ -693,7 +693,7 @@ void RemoveAllActivations(
 
     theGroup = GetDefruleModuleItem(theEnv, nullptr)->groupings;
     while (theGroup != nullptr) {
-        tempGroup = theGroup->next;
+        tempGroup = theGroup->getNext();
         rtn_struct(theEnv, SalienceGroup, theGroup);
         theGroup = tempGroup;
     }
@@ -756,7 +756,7 @@ void ReorderAgenda(
 
     theGroup = theModuleItem->groupings;
     while (theGroup != nullptr) {
-        tempGroup = theGroup->next;
+        tempGroup = theGroup->getNext();
         rtn_struct(theEnv, SalienceGroup, theGroup);
         theGroup = tempGroup;
     }

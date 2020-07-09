@@ -137,7 +137,7 @@ static void DeallocateDefruleBloadData(
 
         theGroup = theModuleItem->groupings;
         while (theGroup != nullptr) {
-            tmpGroup = theGroup->next;
+            tmpGroup = theGroup->getNext();
 
             rtn_struct(theEnv, SalienceGroup, theGroup);
 
