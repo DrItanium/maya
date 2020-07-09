@@ -77,7 +77,7 @@
 
 #define _H_utility
 
-#include <stdlib.h>
+#include <cstdlib>
 
 typedef struct callFunctionItem CallFunctionItem;
 typedef struct callFunctionItemWithArg CallFunctionItemWithArg;

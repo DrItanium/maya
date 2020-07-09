@@ -44,7 +44,7 @@
 #include "Setup.h"
 
 #include <cstdio>
-#include <stdlib.h>
+#include <cstdlib>
 #include <cstring>
 #include <ctype.h>
 

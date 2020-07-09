@@ -65,7 +65,7 @@
 #include <cstdio>
 #include <cstring>
 #include <ctype.h>
-#include <stdlib.h>
+#include <cstdlib>
 
 #include "ConstraintChecking.h"
 #include "Environment.h"

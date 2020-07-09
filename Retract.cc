@@ -45,7 +45,7 @@
 /*************************************************************/
 
 #include <cstdio>
-#include <stdlib.h>
+#include <cstdlib>
 
 #include "Setup.h"
 

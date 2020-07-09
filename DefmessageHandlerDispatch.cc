@@ -69,7 +69,7 @@
 
 
 #include <cstdio>
-#include <stdlib.h>
+#include <cstdlib>
 
 #include "ArgumentAccess.h"
 #include "ClassCommands.h"

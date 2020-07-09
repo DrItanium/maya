@@ -34,7 +34,7 @@
 #include "Setup.h"
 
 #include <cstdio>
-#include <stdlib.h>
+#include <cstdlib>
 
 #include "Constants.h"
 #include "Constraint.h"

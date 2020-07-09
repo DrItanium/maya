@@ -108,7 +108,7 @@
 
 #if IO_FUNCTIONS
 #include <locale.h>
-#include <stdlib.h>
+#include <cstdlib>
 #include <ctype.h>
 #endif
 

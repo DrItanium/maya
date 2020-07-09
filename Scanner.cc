@@ -43,7 +43,7 @@
 #include <cstdio>
 #include <cstring>
 #include <errno.h>
-#include <stdlib.h>
+#include <cstdlib>
 
 #include "Setup.h"
 

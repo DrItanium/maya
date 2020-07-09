@@ -62,7 +62,7 @@
 #include "Router.h"
 #include "Utility.h"
 
-#include <stdlib.h>
+#include <cstdlib>
 
 #if WIN_MVC
 #include <malloc.h>

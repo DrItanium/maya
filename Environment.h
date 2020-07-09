@@ -64,7 +64,7 @@
 #define _H_envrnmnt
 
 #include <stdbool.h>
-#include <stdlib.h>
+#include <cstdlib>
 
 typedef struct environmentData Environment;
 

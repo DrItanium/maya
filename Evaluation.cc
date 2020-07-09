@@ -70,7 +70,7 @@
 
 #include <cstdio>
 #include <stdint.h>
-#include <stdlib.h>
+#include <cstdlib>
 #include <cstring>
 #include <ctype.h>
 

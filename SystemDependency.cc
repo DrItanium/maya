@@ -118,7 +118,7 @@
 #include <cstdio>
 #include <cstring>
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <time.h>
 #include <stdarg.h>
 #include <errno.h>

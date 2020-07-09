@@ -69,7 +69,7 @@
 #include "Setup.h"
 
 #include <cstdio>
-#include <stdlib.h>
+#include <cstdlib>
 #include <cstring>
 
 #include "Environment.h"

@@ -56,7 +56,7 @@
 #include "Setup.h"
 
 #include <ctype.h>
-#include <stdlib.h>
+#include <cstdlib>
 
 #include "ArgumentAccess.h"
 #include "Constants.h"
