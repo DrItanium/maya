@@ -309,7 +309,7 @@ bool CheckAllowedValuesConstraint(
     /* matches one of the allowed values in the list.          */
     /*=========================================================*/
 
-    for (tmpPtr = constraints->restrictionList;
+    for (tmpPtr = constraints->getRestrictionList();
          tmpPtr != nullptr;
          tmpPtr = tmpPtr->nextArg) {
         if ((tmpPtr->type == type) && (tmpPtr->value == vPtr)) return true;

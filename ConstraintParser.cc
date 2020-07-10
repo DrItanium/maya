@@ -583,7 +583,7 @@ static bool ParseAllowedValuesAttribute(
     /*=================================================*/
 
     if (strcmp(constraintName, "allowed-classes") == 0) { lastValue = constraints->classList; }
-    else { lastValue = constraints->restrictionList; }
+    else { lastValue = constraints->getRestrictionList(); }
 
     if (lastValue != nullptr) { while (lastValue->nextArg != nullptr) lastValue = lastValue->nextArg; }
 
@@ -702,7 +702,7 @@ static bool ParseAllowedValuesAttribute(
 
         if (lastValue == nullptr) {
             if (strcmp(constraintName, "allowed-classes") == 0) { constraints->classList = newValue; }
-            else { constraints->restrictionList = newValue; }
+            else { constraints->setRestrictionList(newValue); }
         } else { lastValue->nextArg = newValue; }
         lastValue = newValue;
 

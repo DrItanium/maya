@@ -331,7 +331,7 @@ static bool ConstraintCompare(
     }
     if (tmpPtr1 != tmpPtr2) return false;
 
-    for (tmpPtr1 = constraint1->restrictionList, tmpPtr2 = constraint2->restrictionList;
+    for (tmpPtr1 = constraint1->getRestrictionList(), tmpPtr2 = constraint2->getRestrictionList();
          (tmpPtr1 != nullptr) && (tmpPtr2 != nullptr);
          tmpPtr1 = tmpPtr1->nextArg, tmpPtr2 = tmpPtr2->nextArg) {
         if ((tmpPtr1->type != tmpPtr2->type) || (tmpPtr1->value != tmpPtr2->value)) { return false; }
@@ -420,9 +420,9 @@ static void InstallConstraintRecord(
     ReturnExpression(theEnv, constraints->getClassList());
     constraints->classList = tempExpr;
 
-    tempExpr = AddHashedExpression(theEnv, constraints->restrictionList);
-    ReturnExpression(theEnv, constraints->restrictionList);
-    constraints->restrictionList = tempExpr;
+    tempExpr = AddHashedExpression(theEnv, constraints->getRestrictionList());
+    ReturnExpression(theEnv, constraints->getRestrictionList());
+    constraints->setRestrictionList(tempExpr);
 
     tempExpr = AddHashedExpression(theEnv, constraints->getMaxValue());
     ReturnExpression(theEnv, constraints->getMaxValue());

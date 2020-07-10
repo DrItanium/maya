@@ -964,10 +964,10 @@ static void UnionAllowedValueExpressions(
         CONSTRAINT_RECORD *newConstraint) {
     struct expr *theHead = nullptr;
 
-    theHead = AddToUnionList(theEnv, constraint1->restrictionList, theHead, newConstraint);
-    theHead = AddToUnionList(theEnv, constraint2->restrictionList, theHead, newConstraint);
+    theHead = AddToUnionList(theEnv, constraint1->getRestrictionList(), theHead, newConstraint);
+    theHead = AddToUnionList(theEnv, constraint2->getRestrictionList(), theHead, newConstraint);
 
-    newConstraint->restrictionList = theHead;
+    newConstraint->setRestrictionList(theHead);
 }
 
 /************************************************************/
@@ -1042,12 +1042,12 @@ void RemoveConstantFromConstraint(
 
     if (theConstraint == nullptr) return;
 
-    theList = theConstraint->restrictionList;
-    theConstraint->restrictionList = nullptr;
+    theList = theConstraint->getRestrictionList();
+    theConstraint->setRestrictionList(nullptr);
 
     while (theList != nullptr) {
         if ((theList->type != theType) || (theList->value != theValue)) {
-            if (lastOne == nullptr) { theConstraint->restrictionList = theList; }
+            if (lastOne == nullptr) { theConstraint->setRestrictionList(theList); }
             else { lastOne->nextArg = theList; }
             lastOne = theList;
             theList = theList->nextArg;

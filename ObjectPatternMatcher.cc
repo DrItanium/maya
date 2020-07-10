@@ -472,8 +472,8 @@ static bool ReorderAndAnalyzeObjectPattern(
        ========================================================== */
     if ((isa_node == nullptr) ? false :
         ((isa_node->constraints == nullptr) ? false :
-         (isa_node->constraints->restrictionList != nullptr))) {
-        rexp = isa_node->constraints->restrictionList;
+         (isa_node->constraints->getRestrictionList() != nullptr))) {
+        rexp = isa_node->constraints->getRestrictionList();
         while (rexp != nullptr) {
             cls = LookupDefclassInScope(theEnv, rexp->lexemeValue->contents);
             if (cls != nullptr) {

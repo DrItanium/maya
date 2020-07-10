@@ -158,15 +158,13 @@ static void *FindDefaultValue(
         int theType,
         CONSTRAINT_RECORD *theConstraints,
         void *standardDefault) {
-    struct expr *theList;
-
     /*=====================================================*/
     /* Look on the the allowed values list to see if there */
     /* is a value of the requested type. Return the first  */
     /* value found of the requested type.                  */
     /*=====================================================*/
 
-    theList = theConstraints->restrictionList;
+    auto theList = theConstraints->getRestrictionList();
     while (theList != nullptr) {
         if (theList->type == theType) return (theList->value);
         theList = theList->nextArg;

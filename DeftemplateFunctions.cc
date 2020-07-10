@@ -1220,15 +1220,15 @@ bool DeftemplateSlotAllowedValues(
     /* Return the allowed values of the slot. */
     /*========================================*/
 
-    if ((theSlot->constraints != nullptr) ? (theSlot->constraints->restrictionList == nullptr) : true) {
+    if ((theSlot->constraints != nullptr) ? (theSlot->constraints->getRestrictionList() == nullptr) : true) {
         returnValue->value = FalseSymbol(theEnv);
         return true;
     }
 
-    returnValue->value = CreateMultifield(theEnv, ExpressionSize(theSlot->constraints->restrictionList));
+    returnValue->value = CreateMultifield(theEnv, ExpressionSize(theSlot->constraints->getRestrictionList()));
     i = 0;
 
-    theExp = theSlot->constraints->restrictionList;
+    theExp = theSlot->constraints->getRestrictionList();
     while (theExp != nullptr) {
         returnValue->multifieldValue->contents[i].value = theExp->value;
         theExp = theExp->nextArg;

@@ -114,8 +114,8 @@ public:
 #undef X
     unsigned long bsaveID;
     expr *classList;
-    expr *restrictionList;
 private:
+    expr *restrictionList;
     expr *minValue;
     expr *maxValue;
     expr *minFields;

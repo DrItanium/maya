@@ -830,14 +830,14 @@ bool SlotAllowedValues(
         return false;
     }
 
-    if ((sp->constraint != nullptr) ? (sp->constraint->restrictionList == nullptr) : true) {
+    if ((sp->constraint != nullptr) ? (sp->constraint->getRestrictionList() == nullptr) : true) {
         returnValue->value = FalseSymbol(theEnv);
         return true;
     }
 
-    returnValue->value = CreateMultifield(theEnv, ExpressionSize(sp->constraint->restrictionList));
+    returnValue->value = CreateMultifield(theEnv, ExpressionSize(sp->constraint->getRestrictionList()));
     i = 0;
-    theExp = sp->constraint->restrictionList;
+    theExp = sp->constraint->getRestrictionList();
     while (theExp != nullptr) {
         returnValue->multifieldValue->contents[i].value = theExp->value;
         theExp = theExp->nextArg;
