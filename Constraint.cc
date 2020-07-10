@@ -418,7 +418,7 @@ static void InstallConstraintRecord(
 
     tempExpr = AddHashedExpression(theEnv, constraints->getClassList());
     ReturnExpression(theEnv, constraints->getClassList());
-    constraints->classList = tempExpr;
+    constraints->setClassList(tempExpr);
 
     tempExpr = AddHashedExpression(theEnv, constraints->getRestrictionList());
     ReturnExpression(theEnv, constraints->getRestrictionList());

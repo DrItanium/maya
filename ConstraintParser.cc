@@ -582,7 +582,7 @@ static bool ParseAllowedValuesAttribute(
     /* allowed values will be appended there).         */
     /*=================================================*/
 
-    if (strcmp(constraintName, "allowed-classes") == 0) { lastValue = constraints->classList; }
+    if (strcmp(constraintName, "allowed-classes") == 0) { lastValue = constraints->getClassList(); }
     else { lastValue = constraints->getRestrictionList(); }
 
     if (lastValue != nullptr) { while (lastValue->nextArg != nullptr) lastValue = lastValue->nextArg; }
@@ -701,7 +701,7 @@ static bool ParseAllowedValuesAttribute(
         newValue = GenConstant(theEnv, genType, inputToken.value);
 
         if (lastValue == nullptr) {
-            if (strcmp(constraintName, "allowed-classes") == 0) { constraints->classList = newValue; }
+            if (strcmp(constraintName, "allowed-classes") == 0) { constraints->setClassList(newValue); }
             else { constraints->setRestrictionList(newValue); }
         } else { lastValue->nextArg = newValue; }
         lastValue = newValue;

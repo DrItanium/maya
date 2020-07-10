@@ -113,8 +113,8 @@ public:
 #undef Y
 #undef X
     unsigned long bsaveID;
-    expr *classList;
 private:
+    expr *classList;
     expr *restrictionList;
     expr *minValue;
     expr *maxValue;

@@ -865,13 +865,13 @@ bool SlotAllowedClasses(
         returnValue->value = result.value;
         return false;
     }
-    if ((sp->constraint != nullptr) ? (sp->constraint->classList == nullptr) : true) {
+    if ((sp->constraint != nullptr) ? (sp->constraint->getClassList() == nullptr) : true) {
         returnValue->value = FalseSymbol(theEnv);
         return true;
     }
-    returnValue->value = CreateMultifield(theEnv, ExpressionSize(sp->constraint->classList));
+    returnValue->value = CreateMultifield(theEnv, ExpressionSize(sp->constraint->getClassList()));
     i = 0;
-    theExp = sp->constraint->classList;
+    theExp = sp->constraint->getClassList();
     while (theExp != nullptr) {
         returnValue->multifieldValue->contents[i].value = theExp->value;
         theExp = theExp->nextArg;

@@ -350,7 +350,7 @@ bool CheckAllowedClassesConstraint(
     /* aren't any class restrictions.       */
     /*======================================*/
 
-    if (constraints->classList == nullptr) { return true; }
+    if (constraints->getClassList() == nullptr) { return true; }
 
     /*==================================*/
     /* Class restrictions only apply to */
@@ -375,7 +375,7 @@ bool CheckAllowedClassesConstraint(
     /*======================================================*/
 
     insClass = InstanceClass(ins);
-    for (tmpPtr = constraints->classList;
+    for (tmpPtr = constraints->getClassList();
          tmpPtr != nullptr;
          tmpPtr = tmpPtr->nextArg) {
         cmpClass = LookupDefclassByMdlOrScope(theEnv, tmpPtr->lexemeValue->contents);

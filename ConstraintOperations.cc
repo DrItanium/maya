@@ -947,10 +947,10 @@ static void UnionAllowedClassExpressions(
         CONSTRAINT_RECORD *newConstraint) {
     struct expr *theHead = nullptr;
 
-    theHead = AddToUnionList(theEnv, constraint1->classList, theHead, newConstraint);
-    theHead = AddToUnionList(theEnv, constraint2->classList, theHead, newConstraint);
+    theHead = AddToUnionList(theEnv, constraint1->getClassList(), theHead, newConstraint);
+    theHead = AddToUnionList(theEnv, constraint2->getClassList(), theHead, newConstraint);
 
-    newConstraint->classList = theHead;
+    newConstraint->setClassList(theHead);
 }
 
 /***************************************************/
