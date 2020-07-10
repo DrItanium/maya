@@ -249,20 +249,21 @@ long long ReleaseMem(
     unsigned int i;
     long long returns = 0;
     long long amount = 0;
-
-    for (i = (MEM_TABLE_SIZE - 1); i >= sizeof(char *); i--) {
-        YieldTime(theEnv);
-        memPtr = MemoryData(theEnv)->MemoryTable[i];
-        while (memPtr != nullptr) {
-            tmpPtr = memPtr->next;
-            genfree(theEnv, memPtr, i);
-            memPtr = tmpPtr;
-            amount += i;
-            returns++;
-            if ((returns % 100) == 0) { YieldTime(theEnv); }
+    if constexpr (MEM_TABLE_SIZE > 0) {
+        for (i = (MEM_TABLE_SIZE - 1); i >= sizeof(char *); i--) {
+            YieldTime(theEnv);
+            memPtr = MemoryData(theEnv)->MemoryTable[i];
+            while (memPtr != nullptr) {
+                tmpPtr = memPtr->next;
+                genfree(theEnv, memPtr, i);
+                memPtr = tmpPtr;
+                amount += i;
+                returns++;
+                if ((returns % 100) == 0) { YieldTime(theEnv); }
+            }
+            MemoryData(theEnv)->MemoryTable[i] = nullptr;
+            if ((amount > maximum) && (maximum > 0)) { return amount; }
         }
-        MemoryData(theEnv)->MemoryTable[i] = nullptr;
-        if ((amount > maximum) && (maximum > 0)) { return amount; }
     }
 
     return amount;

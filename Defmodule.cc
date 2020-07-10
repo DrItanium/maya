@@ -387,6 +387,7 @@ void CreateMainModule(
     /*=======================================*/
 
     newDefmodule = get_struct(theEnv, defmodule);
+    zeroMemory(newDefmodule);
     newDefmodule->header.name = CreateSymbol(theEnv, "MAIN");
     IncrementLexemeCount(newDefmodule->header.name);
     newDefmodule->header.whichModule = nullptr;
