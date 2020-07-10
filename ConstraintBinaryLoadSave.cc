@@ -115,7 +115,7 @@ void WriteNeededConstraints(
         for (tmpPtr = ConstraintData(theEnv)->ConstraintHashtable[i];
              tmpPtr != nullptr;
              tmpPtr = tmpPtr->getNext()) {
-            tmpPtr->bsaveID = theIndex++;
+            tmpPtr->setBSaveID(theIndex++);
             numberOfUsedConstraints++;
         }
     }

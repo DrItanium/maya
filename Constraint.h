@@ -86,6 +86,19 @@ public:
     bool multifieldsAllowed: 1;
     bool singlefieldsAllowed: 1;
     bool installed: 1;
+private:
+    unsigned long bsaveID;
+    expr *classList;
+    expr *restrictionList;
+    expr *minValue;
+    expr *maxValue;
+    expr *minFields;
+    expr *maxFields;
+    constraintRecord *multifield;
+    constraintRecord *next;
+    unsigned int bucket;
+    unsigned int count;
+public:
 #define X(field,form) \
     constexpr auto get ## form () const noexcept { return field ;} \
     void set ## form (bool value) noexcept { field = value ; }
@@ -112,19 +125,9 @@ public:
 #undef Z
 #undef Y
 #undef X
-    unsigned long bsaveID;
-private:
-    expr *classList;
-    expr *restrictionList;
-    expr *minValue;
-    expr *maxValue;
-    expr *minFields;
-    expr *maxFields;
-    constraintRecord *multifield;
-    constraintRecord *next;
-    unsigned int bucket;
-    unsigned int count;
 public:
+    constexpr auto getBSaveID() const noexcept { return bsaveID; }
+    void setBSaveID(unsigned long value) noexcept { bsaveID = value; }
 #define X(field, form) \
     auto get ## form () const noexcept { return field ; } \
     void set ## form (expr* value) noexcept { field = value ; }
