@@ -1403,6 +1403,7 @@ static Defgeneric *NewGeneric(
     Defgeneric *ngen;
 
     ngen = get_struct(theEnv, defgeneric);
+    zeroMemory(ngen);
     InitializeConstructHeader(theEnv, "defgeneric", DEFGENERIC, &ngen->header, gname);
     ngen->busy = 0;
     ngen->new_index = 1;

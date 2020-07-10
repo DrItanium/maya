@@ -154,6 +154,7 @@ void AddActivation(
     /*=======================================================*/
 
     newActivation = get_struct(theEnv, activation);
+    zeroMemory(newActivation);
     newActivation->setRule(theRule);
     newActivation->setBasis(binds);
     newActivation->setTimetag(AgendaData(theEnv)->newTimetag());
@@ -215,6 +216,7 @@ static struct SalienceGroup *ReuseOrCreateSalienceGroup(
     }
 
     newGroup = get_struct(theEnv, SalienceGroup);
+    zeroMemory(newGroup);
     newGroup->setSalience(salience);
     newGroup->setFirst(nullptr);
     newGroup->setLast(nullptr);

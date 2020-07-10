@@ -335,6 +335,7 @@ static void AddDefglobal(
     if (defglobalPtr == nullptr) {
         newGlobal = true;
         defglobalPtr = get_struct(theEnv, defglobal);
+        zeroMemory(defglobalPtr);
     } else {
         DeinstallConstructHeader(theEnv, &defglobalPtr->header);
 #if DEBUGGING_FUNCTIONS

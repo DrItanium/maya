@@ -1263,6 +1263,7 @@ StringBuilder *CreateStringBuilder(
 
     theSB = get_struct(theEnv, stringBuilder);
     if (theSB == nullptr) return nullptr;
+    zeroMemory(theSB);
 
     theSize++;
     theSB->sbEnv = theEnv;
@@ -1270,6 +1271,7 @@ StringBuilder *CreateStringBuilder(
     theSB->bufferMaximum = theSize;
     theSB->length = 0;
     theSB->contents = (char *) gm2(theEnv, theSize);
+    zeroMemory(theSB->contents);
     theSB->contents[0] = EOS;
 
     return theSB;
