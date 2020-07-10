@@ -291,6 +291,11 @@ DefmessageHandler *InsertHandlerHeader(
     hnd = cls->handlers;
     arr = cls->handlerOrderMap;
     nhnd = (DefmessageHandler *) gm2(theEnv, (sizeof(DefmessageHandler) * (cls->handlerCount + 1)));
+    char* buf = (char*)nhnd;
+    for (int k = 0; k < (sizeof(DefmessageHandler) * (cls->handlerCount + 1)); ++k) {
+        buf[k] = 0;
+    }
+    // need to zero out memory ahead of time
     narr = (unsigned *) gm2(theEnv, (sizeof(unsigned) * (cls->handlerCount + 1)));
     GenCopyMemory(DefmessageHandler, cls->handlerCount, nhnd, hnd);
     for (i = 0, j = 0; i < cls->handlerCount; i++, j++) {
@@ -306,6 +311,7 @@ DefmessageHandler *InsertHandlerHeader(
     if (ni == -1)
         ni = (int) cls->handlerCount;
     narr[ni] = cls->handlerCount;
+    nhnd[cls->handlerCount] = DefmessageHandler();
     nhnd[cls->handlerCount].system = 0;
     nhnd[cls->handlerCount].type = mtype;
     nhnd[cls->handlerCount].busy = 0;

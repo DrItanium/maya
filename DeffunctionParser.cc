@@ -408,6 +408,11 @@ static Deffunction *AddDeffunction(
     dfuncPtr = FindDeffunctionInModule(theEnv, name->contents);
     if (dfuncPtr == nullptr) {
         dfuncPtr = get_struct(theEnv, deffunction);
+        char* tmpBuf = (char*)dfuncPtr;
+        /// hack for zeroing out memory
+        for (int i = 0; i < sizeof(deffunction); ++i) {
+            tmpBuf[i] = 0;
+        }
         InitializeConstructHeader(theEnv, "deffunction", DEFFUNCTION, &dfuncPtr->header, name);
         IncrementLexemeCount(name);
         dfuncPtr->code = nullptr;
