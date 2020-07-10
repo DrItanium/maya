@@ -1133,7 +1133,7 @@ bool DeftemplateSlotCardinality(
 
     if (theSlot->constraints != nullptr) {
         returnValue->multifieldValue->contents[0].value = theSlot->constraints->minFields->value;
-        returnValue->multifieldValue->contents[1].value = theSlot->constraints->maxFields->value;
+        returnValue->multifieldValue->contents[1].value = theSlot->constraints->getMaxFields()->value;
     } else {
         returnValue->multifieldValue->contents[0].integerValue = SymbolData(theEnv)->Zero;
         returnValue->multifieldValue->contents[1].lexemeValue = SymbolData(theEnv)->PositiveInfinity;

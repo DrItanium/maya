@@ -529,11 +529,11 @@ static bool ReorderAndAnalyzeObjectPattern(
 
                         tmpmin = theConstraint->minFields;
                         theConstraint->minFields = sd->constraint->minFields;
-                        tmpmax = theConstraint->maxFields;
-                        theConstraint->maxFields = sd->constraint->maxFields;
+                        tmpmax = theConstraint->getMaxFields();
+                        theConstraint->setMaxFields(sd->constraint->getMaxFields());
                         crossConstraints = IntersectConstraints(theEnv, theConstraint, sd->constraint);
                         theConstraint->minFields = tmpmin;
-                        theConstraint->maxFields = tmpmax;
+                        theConstraint->setMaxFields(tmpmax);
 
                         incompatibleConstraint = UnmatchableConstraint(crossConstraints);
                         RemoveConstraint(theEnv, crossConstraints);

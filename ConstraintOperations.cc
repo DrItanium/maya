@@ -237,7 +237,7 @@ static void IntersectAllowedValueExpressions(
     /* restrictions for both constraint records. */
     /*===========================================*/
 
-    for (theList1 = constraint1->restrictionList;
+    for (theList1 = constraint1->getRestrictionList();
          theList1 != nullptr;
          theList1 = theList1->nextArg) {
         if (CheckAllowedValuesConstraint(theList1->type, theList1->value, constraint1) &&
@@ -255,7 +255,7 @@ static void IntersectAllowedValueExpressions(
     /* restrictions for both constraint records. */
     /*===========================================*/
 
-    for (theList2 = constraint2->restrictionList;
+    for (theList2 = constraint2->getRestrictionList();
          theList2 != nullptr;
          theList2 = theList2->nextArg) {
         if (FindItemInExpression(theList2->type, theList2->value, true, theHead)) { /* The value is already in the list--Do nothing */ }
@@ -273,7 +273,7 @@ static void IntersectAllowedValueExpressions(
     /* other constraint records.                      */
     /*================================================*/
 
-    newConstraint->restrictionList = theHead;
+    newConstraint->setRestrictionList(theHead);
 }
 
 /*************************************************/
@@ -295,7 +295,7 @@ static void IntersectAllowedClassExpressions(
     /* restrictions for both constraint records.  */
     /*============================================*/
 
-    for (theList1 = constraint1->classList;
+    for (theList1 = constraint1->getClassList();
          theList1 != nullptr;
          theList1 = theList1->nextArg) {
         if (CheckAllowedClassesConstraint(theEnv, theList1->type, theList1->value, constraint1) &&
@@ -313,7 +313,7 @@ static void IntersectAllowedClassExpressions(
     /* restrictions for both constraint records.  */
     /*============================================*/
 
-    for (theList2 = constraint2->classList;
+    for (theList2 = constraint2->getClassList();
          theList2 != nullptr;
          theList2 = theList2->nextArg) {
         if (FindItemInExpression(theList2->type, theList2->value, true, theHead)) { /* The value is already in the list--Do nothing */ }
@@ -331,7 +331,7 @@ static void IntersectAllowedClassExpressions(
     /* other constraint records.                       */
     /*=================================================*/
 
-    newConstraint->classList = theHead;
+    newConstraint->setClassList(theHead);
 }
 
 /*********************************************************/
@@ -362,11 +362,11 @@ static void IntersectNumericExpressions(
     /*=================================*/
 
     if (range) {
-        tmpmin1 = constraint1->minValue;
-        tmpmax1 = constraint1->maxValue;
+        tmpmin1 = constraint1->getMinValue();
+        tmpmax1 = constraint1->getMaxValue();
     } else {
-        tmpmin1 = constraint1->minFields;
-        tmpmax1 = constraint1->maxFields;
+        tmpmin1 = constraint1->getMinFields();
+        tmpmax1 = constraint1->getMaxFields();
     }
 
     /*===========================================*/
@@ -383,11 +383,11 @@ static void IntersectNumericExpressions(
         /*============================================*/
 
         if (range) {
-            tmpmin2 = constraint2->minValue;
-            tmpmax2 = constraint2->maxValue;
+            tmpmin2 = constraint2->getMinValue();
+            tmpmax2 = constraint2->getMaxValue();
         } else {
-            tmpmin2 = constraint2->minFields;
-            tmpmax2 = constraint2->maxFields;
+            tmpmin2 = constraint2->getMinFields();
+            tmpmax2 = constraint2->getMaxFields();
         }
 
         /*================================================*/
@@ -466,15 +466,15 @@ static void IntersectNumericExpressions(
 
     if (theMinList != nullptr) {
         if (range) {
-            ReturnExpression(theEnv, newConstraint->minValue);
-            ReturnExpression(theEnv, newConstraint->maxValue);
-            newConstraint->minValue = theMinList;
-            newConstraint->maxValue = theMaxList;
+            ReturnExpression(theEnv, newConstraint->getMinValue());
+            ReturnExpression(theEnv, newConstraint->getMaxValue());
+            newConstraint->setMinValue(theMinList);
+            newConstraint->setMaxValue(theMaxList);
         } else {
-            ReturnExpression(theEnv, newConstraint->minFields);
-            ReturnExpression(theEnv, newConstraint->maxFields);
-            newConstraint->minFields = theMinList;
-            newConstraint->maxFields = theMaxList;
+            ReturnExpression(theEnv, newConstraint->getMinFields());
+            ReturnExpression(theEnv, newConstraint->getMaxFields());
+            newConstraint->setMinFields(theMinList);
+            newConstraint->setMaxFields(theMaxList);
         }
     }
 
@@ -509,29 +509,29 @@ static void IntersectNumericExpressions(
 /************************************************************/
 static void UpdateRestrictionFlags(
         CONSTRAINT_RECORD *rv) {
-    if ((rv->anyRestriction) && (rv->restrictionList == nullptr)) {
+    if ((rv->anyRestriction) && (rv->getRestrictionList() == nullptr)) {
         SetAnyAllowedFlags(rv, true);
         rv->setAnyAllowed(false);
     }
 
     if ((rv->symbolRestriction) && (rv->symbolsAllowed)) {
-        rv->symbolsAllowed = FindItemInExpression(SYMBOL_TYPE, nullptr, false, rv->restrictionList);
+        rv->symbolsAllowed = FindItemInExpression(SYMBOL_TYPE, nullptr, false, rv->getRestrictionList());
     }
 
     if ((rv->stringRestriction) && (rv->stringsAllowed)) {
-        rv->stringsAllowed = FindItemInExpression(STRING_TYPE, nullptr, false, rv->restrictionList);
+        rv->stringsAllowed = FindItemInExpression(STRING_TYPE, nullptr, false, rv->getRestrictionList());
     }
 
     if ((rv->floatRestriction) && (rv->floatsAllowed)) {
-        rv->floatsAllowed = FindItemInExpression(FLOAT_TYPE, nullptr, false, rv->restrictionList);
+        rv->floatsAllowed = FindItemInExpression(FLOAT_TYPE, nullptr, false, rv->getRestrictionList());
     }
 
     if ((rv->integerRestriction) && (rv->integersAllowed)) {
-        rv->integersAllowed = FindItemInExpression(INTEGER_TYPE, nullptr, false, rv->restrictionList);
+        rv->integersAllowed = FindItemInExpression(INTEGER_TYPE, nullptr, false, rv->getRestrictionList());
     }
 
     if ((rv->instanceNameRestriction) && (rv->instanceNamesAllowed)) {
-        rv->instanceNamesAllowed = FindItemInExpression(INSTANCE_NAME_TYPE, nullptr, false, rv->restrictionList);
+        rv->instanceNamesAllowed = FindItemInExpression(INSTANCE_NAME_TYPE, nullptr, false, rv->getRestrictionList());
     }
 }
 
@@ -720,7 +720,7 @@ static void UnionNumericExpressions(
         tmpmax = constraint1->maxValue;
     } else {
         tmpmin = constraint1->minFields;
-        tmpmax = constraint1->maxFields;
+        tmpmax = constraint1->getMaxFields();
     }
 
     /*============================================*/
@@ -744,7 +744,7 @@ static void UnionNumericExpressions(
         tmpmax = constraint2->maxValue;
     } else {
         tmpmin = constraint2->minFields;
-        tmpmax = constraint2->maxFields;
+        tmpmax = constraint2->getMaxFields();
     }
 
     /*=============================================*/
@@ -772,9 +772,9 @@ static void UnionNumericExpressions(
             newConstraint->maxValue = theMaxList;
         } else {
             ReturnExpression(theEnv, newConstraint->minFields);
-            ReturnExpression(theEnv, newConstraint->maxFields);
+            ReturnExpression(theEnv, newConstraint->getMaxFields());
             newConstraint->minFields = theMinList;
-            newConstraint->maxFields = theMaxList;
+            newConstraint->setMaxFields(theMaxList);
         }
     }
 

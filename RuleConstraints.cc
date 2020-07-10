@@ -194,15 +194,15 @@ static bool MultifieldCardinalityViolation(
             /* pairs will be the first in the list.  */
             /*=======================================*/
 
-            if (tmpNode->constraints->minFields->value !=
-                SymbolData(theEnv)->NegativeInfinity) { minFields += tmpNode->constraints->minFields->integerValue->contents; }
+            if (tmpNode->constraints->getMinFields()->value !=
+                SymbolData(theEnv)->NegativeInfinity) { minFields += tmpNode->constraints->getMinFields()->integerValue->contents; }
 
             /*=========================================*/
             /* The greatest maximum of all the min/max */
             /* pairs will be the last in the list.     */
             /*=========================================*/
 
-            tmpMax = tmpNode->constraints->maxFields;
+            tmpMax = tmpNode->constraints->getMaxFields();
             while (tmpMax->nextArg != nullptr) tmpMax = tmpMax->nextArg;
             if (tmpMax->value == SymbolData(theEnv)->PositiveInfinity) { posInfinity = true; }
             else { maxFields += tmpMax->integerValue->contents; }
@@ -225,10 +225,10 @@ static bool MultifieldCardinalityViolation(
     if (theNode->constraints == nullptr) tempConstraint = GetConstraintRecord(theEnv);
     else tempConstraint = CopyConstraintRecord(theEnv, theNode->constraints);
     ReturnExpression(theEnv, tempConstraint->minFields);
-    ReturnExpression(theEnv, tempConstraint->maxFields);
+    ReturnExpression(theEnv, tempConstraint->getMaxFields());
     tempConstraint->minFields = GenConstant(theEnv, INTEGER_TYPE, CreateInteger(theEnv, minFields));
-    if (posInfinity) tempConstraint->maxFields = GenConstant(theEnv, SYMBOL_TYPE, SymbolData(theEnv)->PositiveInfinity);
-    else tempConstraint->maxFields = GenConstant(theEnv, INTEGER_TYPE, CreateInteger(theEnv, maxFields));
+    if (posInfinity) tempConstraint->setMaxFields(GenConstant(theEnv, SYMBOL_TYPE, SymbolData(theEnv)->PositiveInfinity));
+    else tempConstraint->setMaxFields(GenConstant(theEnv, INTEGER_TYPE, CreateInteger(theEnv, maxFields)));
 
     /*================================================================*/
     /* Determine the final cardinality for the multifield slot by     */

@@ -1219,16 +1219,16 @@ static void DisplaySlotConstraintInfo(
             OpenStringDestination(theEnv, strdest, buf + strlen(buf), (maxlen - strlen(buf) - 1));
             if (cr->integersAllowed || cr->floatsAllowed || cr->getAnyAllowed()) {
                 WriteString(theEnv, strdest, "RNG:[");
-                PrintExpression(theEnv, strdest, cr->minValue);
+                PrintExpression(theEnv, strdest, cr->getMinValue());
                 WriteString(theEnv, strdest, "..");
-                PrintExpression(theEnv, strdest, cr->maxValue);
+                PrintExpression(theEnv, strdest, cr->getMaxValue());
                 WriteString(theEnv, strdest, "] ");
             }
             if (cls->instanceTemplate[i]->multiple) {
                 WriteString(theEnv, strdest, "CRD:[");
-                PrintExpression(theEnv, strdest, cr->minFields);
+                PrintExpression(theEnv, strdest, cr->getMinFields());
                 WriteString(theEnv, strdest, "..");
-                PrintExpression(theEnv, strdest, cr->maxFields);
+                PrintExpression(theEnv, strdest, cr->getMaxFields());
                 WriteString(theEnv, strdest, "]");
             }
         } else {

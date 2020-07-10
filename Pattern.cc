@@ -628,9 +628,9 @@ struct lhsParseNode *RestrictionParse(
         /*==========================================*/
 
         ReturnExpression(theEnv, nextNode->constraints->minFields);
-        ReturnExpression(theEnv, nextNode->constraints->maxFields);
+        ReturnExpression(theEnv, nextNode->constraints->getMaxFields());
         nextNode->constraints->minFields = GenConstant(theEnv, SYMBOL_TYPE, SymbolData(theEnv)->NegativeInfinity);
-        nextNode->constraints->maxFields = GenConstant(theEnv, SYMBOL_TYPE, SymbolData(theEnv)->PositiveInfinity);
+        nextNode->constraints->setMaxFields(GenConstant(theEnv, SYMBOL_TYPE, SymbolData(theEnv)->PositiveInfinity));
         nextNode->derivedConstraints = true;
 
         /*====================================================*/
@@ -659,11 +659,11 @@ struct lhsParseNode *RestrictionParse(
         /* field values contained in the slot.                 */
         /*=====================================================*/
 
-        if (theConstraints->maxFields->value != SymbolData(theEnv)->PositiveInfinity) {
-            ReturnExpression(theEnv, tempConstraints->maxFields);
-            tempConstraints->maxFields = GenConstant(theEnv, INTEGER_TYPE, CreateInteger(theEnv,
-                                                                                         theConstraints->maxFields->integerValue->contents -
-                                                                                         numberOfSingleFields));
+        if (theConstraints->getMaxFields()->value != SymbolData(theEnv)->PositiveInfinity) {
+            ReturnExpression(theEnv, tempConstraints->getMaxFields());
+            tempConstraints->setMaxFields(GenConstant(theEnv, INTEGER_TYPE, CreateInteger(theEnv,
+                                                                                         theConstraints->getMaxFields()->integerValue->contents -
+                                                                                         numberOfSingleFields)));
         }
 
         if ((numberOfMultifields == 1) && (theConstraints->minFields->value != SymbolData(theEnv)->NegativeInfinity)) {

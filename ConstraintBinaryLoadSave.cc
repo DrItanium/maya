@@ -179,12 +179,12 @@ static void CopyToBsaveConstraintRecord(
     bsaveConstraints->classRestriction = constraints->classRestriction;
     bsaveConstraints->instanceNameRestriction = constraints->instanceNameRestriction;
 
-    bsaveConstraints->restrictionList = HashedExpressionIndex(theEnv, constraints->restrictionList);
-    bsaveConstraints->classList = HashedExpressionIndex(theEnv, constraints->classList);
-    bsaveConstraints->minValue = HashedExpressionIndex(theEnv, constraints->minValue);
-    bsaveConstraints->maxValue = HashedExpressionIndex(theEnv, constraints->maxValue);
-    bsaveConstraints->minFields = HashedExpressionIndex(theEnv, constraints->minFields);
-    bsaveConstraints->maxFields = HashedExpressionIndex(theEnv, constraints->maxFields);
+    bsaveConstraints->restrictionList = HashedExpressionIndex(theEnv, constraints->getRestrictionList());
+    bsaveConstraints->classList = HashedExpressionIndex(theEnv, constraints->getClassList());
+    bsaveConstraints->minValue = HashedExpressionIndex(theEnv, constraints->getMinValue());
+    bsaveConstraints->maxValue = HashedExpressionIndex(theEnv, constraints->getMaxValue());
+    bsaveConstraints->minFields = HashedExpressionIndex(theEnv, constraints->getMinFields());
+    bsaveConstraints->maxFields = HashedExpressionIndex(theEnv, constraints->getMaxFields());
 }
 
 #endif /* BLOAD_AND_BSAVE */
@@ -240,12 +240,12 @@ static void CopyFromBsaveConstraintRecord(
     constraints->classRestriction = bsaveConstraints->classRestriction;
     constraints->instanceNameRestriction = bsaveConstraints->instanceNameRestriction;
 
-    constraints->restrictionList = HashedExpressionPointer(bsaveConstraints->restrictionList);
-    constraints->classList = HashedExpressionPointer(bsaveConstraints->classList);
-    constraints->minValue = HashedExpressionPointer(bsaveConstraints->minValue);
-    constraints->maxValue = HashedExpressionPointer(bsaveConstraints->maxValue);
-    constraints->minFields = HashedExpressionPointer(bsaveConstraints->minFields);
-    constraints->maxFields = HashedExpressionPointer(bsaveConstraints->maxFields);
+    constraints->setRestrictionList ( HashedExpressionPointer(bsaveConstraints->restrictionList));
+    constraints->setClassList ( HashedExpressionPointer(bsaveConstraints->classList));
+    constraints->setMinValue ( HashedExpressionPointer(bsaveConstraints->minValue));
+    constraints->setMaxValue ( HashedExpressionPointer(bsaveConstraints->maxValue));
+    constraints->setMinFields ( HashedExpressionPointer(bsaveConstraints->minFields));
+    constraints->setMaxFields ( HashedExpressionPointer(bsaveConstraints->maxFields));
     constraints->setMultifield(nullptr);
 }
 

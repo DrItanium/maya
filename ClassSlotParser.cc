@@ -729,9 +729,9 @@ static bool CheckForFacetConflicts(
             return false;
         } else {
             ReturnExpression(theEnv, sd->constraint->minFields);
-            ReturnExpression(theEnv, sd->constraint->maxFields);
+            ReturnExpression(theEnv, sd->constraint->getMaxFields());
             sd->constraint->minFields = GenConstant(theEnv, INTEGER_TYPE, CreateInteger(theEnv, 1LL));
-            sd->constraint->maxFields = GenConstant(theEnv, INTEGER_TYPE, CreateInteger(theEnv, 1LL));
+            sd->constraint->setMaxFields(GenConstant(theEnv, INTEGER_TYPE, CreateInteger(theEnv, 1LL)));
         }
     }
     if (sd->noDefault && sd->noWrite) {

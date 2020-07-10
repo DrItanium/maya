@@ -124,7 +124,7 @@ bool CheckConstraintParseConflicts(
     } else if (constraints->anyRestriction) {
         struct expr *theExp;
 
-        for (theExp = constraints->restrictionList;
+        for (theExp = constraints->getRestrictionList();
              theExp != nullptr;
              theExp = theExp->nextArg) {
             if (ConstraintCheckValue(theEnv, theExp->type, theExp->value, constraints) != NO_VIOLATION) {
@@ -138,22 +138,22 @@ bool CheckConstraintParseConflicts(
     /* Check to see if range attribute conflicts with type attribute. */
     /*================================================================*/
 
-    if ((constraints->maxValue != nullptr) &&
+    if ((constraints->getMaxValue() != nullptr) &&
         (!constraints->getAnyAllowed())) {
-        if (((constraints->maxValue->type == INTEGER_TYPE) &&
+        if (((constraints->getMaxValue()->type == INTEGER_TYPE) &&
              (constraints->integersAllowed == false)) ||
-            ((constraints->maxValue->type == FLOAT_TYPE) &&
+            ((constraints->getMaxValue()->type == FLOAT_TYPE) &&
              (constraints->floatsAllowed == false))) {
             AttributeConflictErrorMessage(theEnv, "type", "range");
             return false;
         }
     }
 
-    if ((constraints->minValue != nullptr) &&
+    if ((constraints->getMinValue()!= nullptr) &&
         (constraints->getAnyAllowed() == false)) {
-        if (((constraints->minValue->type == INTEGER_TYPE) &&
+        if (((constraints->getMinValue()->type == INTEGER_TYPE) &&
              (constraints->integersAllowed == false)) ||
-            ((constraints->minValue->type == FLOAT_TYPE) &&
+            ((constraints->getMinValue()->type == FLOAT_TYPE) &&
              (constraints->floatsAllowed == false))) {
             AttributeConflictErrorMessage(theEnv, "type", "range");
             return false;
@@ -165,7 +165,7 @@ bool CheckConstraintParseConflicts(
     /* conflicts with type attribute.          */
     /*=========================================*/
 
-    if ((constraints->classList != nullptr) &&
+    if ((constraints->getClassList() != nullptr) &&
         (constraints->getAnyAllowed() == false) &&
         (constraints->instanceNamesAllowed == false) &&
         (constraints->instanceAddressesAllowed == false)) {
@@ -337,15 +337,15 @@ void OverlayConstraint(
     }
 
     if (pc->range == 0) {
-        ReturnExpression(theEnv, cdst->minValue);
-        ReturnExpression(theEnv, cdst->maxValue);
-        cdst->minValue = CopyExpression(theEnv, csrc->minValue);
-        cdst->maxValue = CopyExpression(theEnv, csrc->maxValue);
+        ReturnExpression(theEnv, cdst->getMinValue());
+        ReturnExpression(theEnv, cdst->getMaxValue());
+        cdst->setMinValue ( CopyExpression(theEnv, csrc->getMinValue()));
+        cdst->setMaxValue ( CopyExpression(theEnv, csrc->getMaxValue()));
     }
 
     if (pc->allowedClasses == 0) {
-        ReturnExpression(theEnv, cdst->classList);
-        cdst->classList = CopyExpression(theEnv, csrc->classList);
+        ReturnExpression(theEnv, cdst->getClassList());
+        cdst->setClassList(CopyExpression(theEnv, csrc->getClassList()));
     }
 
     if (pc->allowedValues == 0) {
@@ -363,7 +363,7 @@ void OverlayConstraint(
             cdst->integerRestriction = csrc->integerRestriction;
             cdst->classRestriction = csrc->classRestriction;
             cdst->instanceNameRestriction = csrc->instanceNameRestriction;
-            cdst->restrictionList = CopyExpression(theEnv, csrc->restrictionList);
+            cdst->setRestrictionList(CopyExpression(theEnv, csrc->getRestrictionList()));
         } else {
             if ((pc->allowedSymbols == 0) && csrc->symbolRestriction) {
                 cdst->symbolRestriction = 1;
@@ -401,10 +401,10 @@ void OverlayConstraint(
     }
 
     if (pc->cardinality == 0) {
-        ReturnExpression(theEnv, cdst->minFields);
-        ReturnExpression(theEnv, cdst->maxFields);
-        cdst->minFields = CopyExpression(theEnv, csrc->minFields);
-        cdst->maxFields = CopyExpression(theEnv, csrc->maxFields);
+        ReturnExpression(theEnv, cdst->getMinFields());
+        ReturnExpression(theEnv, cdst->getMaxFields());
+        cdst->setMinFields(CopyExpression(theEnv, csrc->getMinFields()));
+        cdst->setMaxFields(CopyExpression(theEnv, csrc->getMaxFields()));
     }
 }
 
@@ -441,11 +441,11 @@ static void AddToRestrictionList(
         CONSTRAINT_RECORD *csrc) {
     struct expr *theExp, *tmp;
 
-    for (theExp = csrc->restrictionList; theExp != nullptr; theExp = theExp->nextArg) {
+    for (theExp = csrc->getRestrictionList(); theExp != nullptr; theExp = theExp->nextArg) {
         if (theExp->type == type) {
             tmp = GenConstant(theEnv, theExp->type, theExp->value);
-            tmp->nextArg = cdst->restrictionList;
-            cdst->restrictionList = tmp;
+            tmp->nextArg = cdst->getRestrictionList();
+            cdst->setRestrictionList(tmp);
         }
     }
 }
@@ -1039,9 +1039,9 @@ static bool ParseRangeCardinalityAttribute(
             if (inputToken.tknType == INTEGER_TOKEN) { constraints->maxValue = GenConstant(theEnv, INTEGER_TYPE, inputToken.value); }
             else { constraints->maxValue = GenConstant(theEnv, FLOAT_TYPE, inputToken.value); }
         } else {
-            ReturnExpression(theEnv, constraints->maxFields);
-            if (inputToken.tknType == INTEGER_TOKEN) { constraints->maxFields = GenConstant(theEnv, INTEGER_TYPE, inputToken.value); }
-            else { constraints->maxFields = GenConstant(theEnv, FLOAT_TYPE, inputToken.value); }
+            ReturnExpression(theEnv, constraints->getMaxFields());
+            if (inputToken.tknType == INTEGER_TOKEN) { constraints->setMaxFields(GenConstant(theEnv, INTEGER_TYPE, inputToken.value)); }
+            else { constraints->setMaxFields(GenConstant(theEnv, FLOAT_TYPE, inputToken.value)); }
         }
     } else if ((inputToken.tknType == SF_VARIABLE_TOKEN) && (strcmp(inputToken.printForm, "?VARIABLE") == 0)) { /* Do nothing. */ }
     else {
@@ -1078,8 +1078,8 @@ static bool ParseRangeCardinalityAttribute(
     } else {
         if (CompareNumbers(theEnv, constraints->minFields->type,
                            constraints->minFields->value,
-                           constraints->maxFields->type,
-                           constraints->maxFields->value) == GREATER_THAN) {
+                           constraints->getMaxFields()->type,
+                           constraints->getMaxFields()->value) == GREATER_THAN) {
             PrintErrorID(theEnv, "CSTRNPSR", 2, true);
             WriteString(theEnv, STDERR, "Minimum 'cardinality' value must be less than ");
             WriteString(theEnv, STDERR, "or equal to the maximum 'cardinality' value.\n");

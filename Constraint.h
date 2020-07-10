@@ -97,13 +97,23 @@ public:
     expr *minValue;
     expr *maxValue;
     expr *minFields;
-    expr *maxFields;
 private:
+    expr *maxFields;
     constraintRecord *multifield;
     constraintRecord *next;
     unsigned int bucket;
     unsigned int count;
 public:
+#define X(field, form) \
+    auto get ## form () const noexcept { return field ; } \
+    void set ## form (expr* value) noexcept { field = value ; }
+    X(maxFields, MaxFields);
+    X(minFields, MinFields);
+    X(maxValue, MaxValue);
+    X(minValue, MinValue);
+    X(restrictionList, RestrictionList);
+    X(classList, ClassList);
+#undef X
     auto getMultifield() const noexcept { return multifield; }
     void setMultifield(constraintRecord* value) noexcept { multifield = value; }
     auto getNext() const noexcept { return next; }

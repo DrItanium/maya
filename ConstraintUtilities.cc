@@ -76,12 +76,12 @@ struct constraintRecord *GetConstraintRecord(
     constraints->integerRestriction = false;
     constraints->classRestriction = false;
     constraints->instanceNameRestriction = false;
-    constraints->classList = nullptr;
-    constraints->restrictionList = nullptr;
-    constraints->minValue = GenConstant(theEnv, SYMBOL_TYPE, SymbolData(theEnv)->NegativeInfinity);
-    constraints->maxValue = GenConstant(theEnv, SYMBOL_TYPE, SymbolData(theEnv)->PositiveInfinity);
-    constraints->minFields = GenConstant(theEnv, INTEGER_TYPE, SymbolData(theEnv)->Zero);
-    constraints->maxFields = GenConstant(theEnv, SYMBOL_TYPE, SymbolData(theEnv)->PositiveInfinity);
+    constraints->setClassList ( nullptr);
+    constraints->setRestrictionList ( nullptr);
+    constraints->setMinValue ( GenConstant(theEnv, SYMBOL_TYPE, SymbolData(theEnv)->NegativeInfinity));
+    constraints->setMaxValue ( GenConstant(theEnv, SYMBOL_TYPE, SymbolData(theEnv)->PositiveInfinity));
+    constraints->setMinFields ( GenConstant(theEnv, INTEGER_TYPE, SymbolData(theEnv)->Zero));
+    constraints->setMaxFields ( GenConstant(theEnv, SYMBOL_TYPE, SymbolData(theEnv)->PositiveInfinity));
     constraints->installed = false;
     constraints->setBucket(0);
     constraints->setCount(0);
@@ -154,12 +154,12 @@ struct constraintRecord *CopyConstraintRecord(
     theConstraint->integerRestriction = sourceConstraint->integerRestriction;
     theConstraint->classRestriction = sourceConstraint->classRestriction;
     theConstraint->instanceNameRestriction = sourceConstraint->instanceNameRestriction;
-    theConstraint->classList = CopyExpression(theEnv, sourceConstraint->classList);
-    theConstraint->restrictionList = CopyExpression(theEnv, sourceConstraint->restrictionList);
-    theConstraint->minValue = CopyExpression(theEnv, sourceConstraint->minValue);
-    theConstraint->maxValue = CopyExpression(theEnv, sourceConstraint->maxValue);
-    theConstraint->minFields = CopyExpression(theEnv, sourceConstraint->minFields);
-    theConstraint->maxFields = CopyExpression(theEnv, sourceConstraint->maxFields);
+    theConstraint->setClassList ( CopyExpression(theEnv, sourceConstraint->getClassList()));
+    theConstraint->setRestrictionList ( CopyExpression(theEnv, sourceConstraint->getRestrictionList()));
+    theConstraint->setMinValue ( CopyExpression(theEnv, sourceConstraint->getMinValue()));
+    theConstraint->setMaxValue ( CopyExpression(theEnv, sourceConstraint->getMaxValue()));
+    theConstraint->setMinFields ( CopyExpression(theEnv, sourceConstraint->getMinFields()));
+    theConstraint->setMaxFields ( CopyExpression(theEnv, sourceConstraint->getMaxFields()));
     theConstraint->setBucket(0);
     theConstraint->installed = false;
     theConstraint->setCount(0);
@@ -457,7 +457,7 @@ CONSTRAINT_RECORD *ExpressionToConstraintRecord(
 
     if (rv->floatsAllowed || rv->integersAllowed || rv->symbolsAllowed ||
         rv->stringsAllowed || rv->instanceNamesAllowed) {
-        rv->restrictionList = GenConstant(theEnv, theExpression->type, theExpression->value);
+        rv->setRestrictionList(GenConstant(theEnv, theExpression->type, theExpression->value));
     }
 
     return rv;

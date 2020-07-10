@@ -140,12 +140,12 @@ static void ReturnConstraintRecord(
     if (constraints == nullptr) return;
 
     if (!constraints->installed) {
-        ReturnExpression(theEnv, constraints->classList);
-        ReturnExpression(theEnv, constraints->restrictionList);
-        ReturnExpression(theEnv, constraints->maxValue);
-        ReturnExpression(theEnv, constraints->minValue);
-        ReturnExpression(theEnv, constraints->minFields);
-        ReturnExpression(theEnv, constraints->maxFields);
+        ReturnExpression(theEnv, constraints->getClassList());
+        ReturnExpression(theEnv, constraints->getRestrictionList());
+        ReturnExpression(theEnv, constraints->getMaxValue());
+        ReturnExpression(theEnv, constraints->getMinValue());
+        ReturnExpression(theEnv, constraints->getMinFields());
+        ReturnExpression(theEnv, constraints->getMaxFields());
     }
 
     ReturnConstraintRecord(theEnv, constraints->getMultifield());
@@ -162,19 +162,19 @@ static void DeinstallConstraintRecord(
         Environment *theEnv,
         CONSTRAINT_RECORD *constraints) {
     if (constraints->installed) {
-        RemoveHashedExpression(theEnv, constraints->classList);
-        RemoveHashedExpression(theEnv, constraints->restrictionList);
-        RemoveHashedExpression(theEnv, constraints->maxValue);
-        RemoveHashedExpression(theEnv, constraints->minValue);
-        RemoveHashedExpression(theEnv, constraints->minFields);
-        RemoveHashedExpression(theEnv, constraints->maxFields);
+        RemoveHashedExpression(theEnv, constraints->getClassList());
+        RemoveHashedExpression(theEnv, constraints->getRestrictionList());
+        RemoveHashedExpression(theEnv, constraints->getMaxValue());
+        RemoveHashedExpression(theEnv, constraints->getMinValue());
+        RemoveHashedExpression(theEnv, constraints->getMinFields());
+        RemoveHashedExpression(theEnv, constraints->getMaxFields());
     } else {
-        ExpressionDeinstall(theEnv, constraints->classList);
-        ExpressionDeinstall(theEnv, constraints->restrictionList);
-        ExpressionDeinstall(theEnv, constraints->maxValue);
-        ExpressionDeinstall(theEnv, constraints->minValue);
-        ExpressionDeinstall(theEnv, constraints->minFields);
-        ExpressionDeinstall(theEnv, constraints->maxFields);
+        ExpressionDeinstall(theEnv, constraints->getClassList());
+        ExpressionDeinstall(theEnv, constraints->getRestrictionList());
+        ExpressionDeinstall(theEnv, constraints->getMaxValue());
+        ExpressionDeinstall(theEnv, constraints->getMinValue());
+        ExpressionDeinstall(theEnv, constraints->getMinFields());
+        ExpressionDeinstall(theEnv, constraints->getMaxFields());
     }
 
     if (constraints->getMultifield() != nullptr) { DeinstallConstraintRecord(theEnv, constraints->getMultifield()); }
@@ -263,27 +263,27 @@ unsigned long HashConstraint(
             (theConstraint->classRestriction * 11) +
             (theConstraint->instanceNameRestriction * 7);
 
-    for (tmpPtr = theConstraint->classList; tmpPtr != nullptr; tmpPtr = tmpPtr->nextArg) {
+    for (tmpPtr = theConstraint->getClassList(); tmpPtr != nullptr; tmpPtr = tmpPtr->nextArg) {
         count += GetAtomicHashValue(tmpPtr->type, tmpPtr->value, i++);
     }
 
-    for (tmpPtr = theConstraint->restrictionList; tmpPtr != nullptr; tmpPtr = tmpPtr->nextArg) {
+    for (tmpPtr = theConstraint->getRestrictionList(); tmpPtr != nullptr; tmpPtr = tmpPtr->nextArg) {
         count += GetAtomicHashValue(tmpPtr->type, tmpPtr->value, i++);
     }
 
-    for (tmpPtr = theConstraint->minValue; tmpPtr != nullptr; tmpPtr = tmpPtr->nextArg) {
+    for (tmpPtr = theConstraint->getMinValue(); tmpPtr != nullptr; tmpPtr = tmpPtr->nextArg) {
         count += GetAtomicHashValue(tmpPtr->type, tmpPtr->value, i++);
     }
 
-    for (tmpPtr = theConstraint->maxValue; tmpPtr != nullptr; tmpPtr = tmpPtr->nextArg) {
+    for (tmpPtr = theConstraint->getMaxValue(); tmpPtr != nullptr; tmpPtr = tmpPtr->nextArg) {
         count += GetAtomicHashValue(tmpPtr->type, tmpPtr->value, i++);
     }
 
-    for (tmpPtr = theConstraint->minFields; tmpPtr != nullptr; tmpPtr = tmpPtr->nextArg) {
+    for (tmpPtr = theConstraint->getMinFields(); tmpPtr != nullptr; tmpPtr = tmpPtr->nextArg) {
         count += GetAtomicHashValue(tmpPtr->type, tmpPtr->value, i++);
     }
 
-    for (tmpPtr = theConstraint->maxFields; tmpPtr != nullptr; tmpPtr = tmpPtr->nextArg) {
+    for (tmpPtr = theConstraint->getMaxFields(); tmpPtr != nullptr; tmpPtr = tmpPtr->nextArg) {
         count += GetAtomicHashValue(tmpPtr->type, tmpPtr->value, i++);
     }
 
@@ -324,7 +324,7 @@ static bool ConstraintCompare(
         (constraint1->classRestriction != constraint2->classRestriction) ||
         (constraint1->instanceNameRestriction != constraint2->instanceNameRestriction)) { return false; }
 
-    for (tmpPtr1 = constraint1->classList, tmpPtr2 = constraint2->classList;
+    for (tmpPtr1 = constraint1->getClassList(), tmpPtr2 = constraint2->getClassList();
          (tmpPtr1 != nullptr) && (tmpPtr2 != nullptr);
          tmpPtr1 = tmpPtr1->nextArg, tmpPtr2 = tmpPtr2->nextArg) {
         if ((tmpPtr1->type != tmpPtr2->type) || (tmpPtr1->value != tmpPtr2->value)) { return false; }
@@ -359,7 +359,7 @@ static bool ConstraintCompare(
     }
     if (tmpPtr1 != tmpPtr2) return false;
 
-    for (tmpPtr1 = constraint1->maxFields, tmpPtr2 = constraint2->maxFields;
+    for (tmpPtr1 = constraint1->getMaxFields(), tmpPtr2 = constraint2->getMaxFields();
          (tmpPtr1 != nullptr) && (tmpPtr2 != nullptr);
          tmpPtr1 = tmpPtr1->nextArg, tmpPtr2 = tmpPtr2->nextArg) {
         if ((tmpPtr1->type != tmpPtr2->type) || (tmpPtr1->value != tmpPtr2->value)) { return false; }
@@ -416,8 +416,8 @@ static void InstallConstraintRecord(
         CONSTRAINT_RECORD *constraints) {
     struct expr *tempExpr;
 
-    tempExpr = AddHashedExpression(theEnv, constraints->classList);
-    ReturnExpression(theEnv, constraints->classList);
+    tempExpr = AddHashedExpression(theEnv, constraints->getClassList());
+    ReturnExpression(theEnv, constraints->getClassList());
     constraints->classList = tempExpr;
 
     tempExpr = AddHashedExpression(theEnv, constraints->restrictionList);
@@ -436,9 +436,9 @@ static void InstallConstraintRecord(
     ReturnExpression(theEnv, constraints->minFields);
     constraints->minFields = tempExpr;
 
-    tempExpr = AddHashedExpression(theEnv, constraints->maxFields);
-    ReturnExpression(theEnv, constraints->maxFields);
-    constraints->maxFields = tempExpr;
+    tempExpr = AddHashedExpression(theEnv, constraints->getMaxFields());
+    ReturnExpression(theEnv, constraints->getMaxFields());
+    constraints->setMaxFields(tempExpr);
 
     if (constraints->getMultifield() != nullptr) { InstallConstraintRecord(theEnv, constraints->getMultifield()); }
 }

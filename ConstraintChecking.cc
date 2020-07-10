@@ -183,9 +183,9 @@ bool CheckCardinalityConstraint(
     /* than the maximum cardinality.       */
     /*=====================================*/
 
-    if (constraints->maxFields != nullptr) {
-        if (constraints->maxFields->value != SymbolData(theEnv)->PositiveInfinity) {
-            if (number > (size_t) constraints->maxFields->integerValue->contents) { return false; }
+    if (constraints->getMaxFields()!= nullptr) {
+        if (constraints->getMaxFields()->value != SymbolData(theEnv)->PositiveInfinity) {
+            if (number > (size_t) constraints->getMaxFields()->integerValue->contents) { return false; }
         }
     }
 
@@ -222,9 +222,9 @@ static bool CheckRangeAgainstCardinalityConstraint(
     /* false is returned.                                            */
     /*===============================================================*/
 
-    if (constraints->maxFields != nullptr) {
-        if (constraints->maxFields->value != SymbolData(theEnv)->PositiveInfinity) {
-            if (min > constraints->maxFields->integerValue->contents) { return false; }
+    if (constraints->getMaxFields() != nullptr) {
+        if (constraints->getMaxFields()->value != SymbolData(theEnv)->PositiveInfinity) {
+            if (min > constraints->getMaxFields()->integerValue->contents) { return false; }
         }
     }
 
