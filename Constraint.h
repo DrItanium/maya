@@ -67,8 +67,8 @@ struct constraintRecord {
 private:
     bool anyAllowed: 1;
     bool symbolsAllowed: 1;
-public:
     bool stringsAllowed: 1;
+public:
     bool floatsAllowed: 1;
     bool integersAllowed: 1;
     bool instanceNamesAllowed: 1;

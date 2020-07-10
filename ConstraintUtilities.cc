@@ -113,14 +113,14 @@ void SetAnyAllowedFlags(
 
     theConstraint->setAnyAllowed(flag1);
     theConstraint->setSymbolsAllowed( flag2);
-    theConstraint->stringsAllowed = flag2;
-    theConstraint->floatsAllowed = flag2;
-    theConstraint->integersAllowed = flag2;
-    theConstraint->instanceNamesAllowed = flag2;
-    theConstraint->instanceAddressesAllowed = flag2;
-    theConstraint->externalAddressesAllowed = flag2;
-    theConstraint->voidAllowed = flag2;
-    theConstraint->factAddressesAllowed = flag2;
+    theConstraint->setStringsAllowed(flag2);
+    theConstraint->setFloatsAllowed ( flag2);
+    theConstraint->setIntegersAllowed ( flag2);
+    theConstraint->setInstanceNamesAllowed ( flag2);
+    theConstraint->setInstanceAddressesAllowed ( flag2);
+    theConstraint->setExternalAddressesAllowed ( flag2);
+    theConstraint->setVoidAllowed ( flag2);
+    theConstraint->setFactAddressesAllowed ( flag2);
 }
 
 /*****************************************************/
@@ -137,23 +137,23 @@ struct constraintRecord *CopyConstraintRecord(
 
     theConstraint->setAnyAllowed(sourceConstraint->getAnyAllowed());
     theConstraint->setSymbolsAllowed(sourceConstraint->getSymbolsAllowed());
-    theConstraint->stringsAllowed = sourceConstraint->stringsAllowed;
-    theConstraint->floatsAllowed = sourceConstraint->floatsAllowed;
-    theConstraint->integersAllowed = sourceConstraint->integersAllowed;
-    theConstraint->instanceNamesAllowed = sourceConstraint->instanceNamesAllowed;
-    theConstraint->instanceAddressesAllowed = sourceConstraint->instanceAddressesAllowed;
-    theConstraint->externalAddressesAllowed = sourceConstraint->externalAddressesAllowed;
-    theConstraint->voidAllowed = sourceConstraint->voidAllowed;
-    theConstraint->multifieldsAllowed = sourceConstraint->multifieldsAllowed;
-    theConstraint->singlefieldsAllowed = sourceConstraint->singlefieldsAllowed;
-    theConstraint->factAddressesAllowed = sourceConstraint->factAddressesAllowed;
-    theConstraint->anyRestriction = sourceConstraint->anyRestriction;
-    theConstraint->symbolRestriction = sourceConstraint->symbolRestriction;
-    theConstraint->stringRestriction = sourceConstraint->stringRestriction;
-    theConstraint->floatRestriction = sourceConstraint->floatRestriction;
-    theConstraint->integerRestriction = sourceConstraint->integerRestriction;
-    theConstraint->classRestriction = sourceConstraint->classRestriction;
-    theConstraint->instanceNameRestriction = sourceConstraint->instanceNameRestriction;
+    theConstraint->setStringsAllowed ( sourceConstraint-> getStringsAllowed());
+    theConstraint->setFloatsAllowed ( sourceConstraint->  getFloatsAllowed());
+    theConstraint->setIntegersAllowed ( sourceConstraint->getIntegersAllowed());
+    theConstraint->setInstanceNamesAllowed ( sourceConstraint->getInstanceNamesAllowed());
+    theConstraint->setInstanceAddressesAllowed ( sourceConstraint->getInstanceAddressesAllowed());
+    theConstraint->setExternalAddressesAllowed ( sourceConstraint->getExternalAddressesAllowed());
+    theConstraint->setVoidAllowed ( sourceConstraint->getVoidAllowed());
+    theConstraint->setMultifieldsAllowed ( sourceConstraint->getMultifieldsAllowed());
+    theConstraint->setSinglefieldsAllowed ( sourceConstraint->getSinglefieldsAllowed());
+    theConstraint->setFactAddressesAllowed ( sourceConstraint->getFactAddressesAllowed());
+    theConstraint->setAnyRestriction ( sourceConstraint->getAnyRestriction());
+    theConstraint->setSymbolRestriction ( sourceConstraint->getSymbolRestriction());
+    theConstraint->setStringRestriction ( sourceConstraint->getStringRestriction());
+    theConstraint->setFloatRestriction ( sourceConstraint->getFloatRestriction());
+    theConstraint->setIntegerRestriction ( sourceConstraint->getIntegerRestriction());
+    theConstraint->setClassRestriction ( sourceConstraint->getClassRestriction());
+    theConstraint->setInstanceNameRestriction ( sourceConstraint->getInstanceNameRestriction());
     theConstraint->setClassList ( CopyExpression(theEnv, sourceConstraint->getClassList()));
     theConstraint->setRestrictionList ( CopyExpression(theEnv, sourceConstraint->getRestrictionList()));
     theConstraint->setMinValue ( CopyExpression(theEnv, sourceConstraint->getMinValue()));
@@ -221,8 +221,8 @@ bool SetConstraintType(
             break;
 
         case STRING_TYPE:
-            rv = constraints->stringsAllowed;
-            constraints->stringsAllowed = true;
+            rv = constraints->getStringsAllowed();
+            constraints->setStringsAllowed(true);
             break;
 
         case SYMBOL_OR_STRING:
@@ -438,8 +438,8 @@ CONSTRAINT_RECORD *ExpressionToConstraintRecord(
             break;
 
         case STRING_TYPE:
-            rv->stringRestriction = true;
-            rv->stringsAllowed = true;
+            rv->setStringRestriction(true);
+            rv->setStringsAllowed(true);
             break;
 
         case INSTANCE_NAME_TYPE:
@@ -455,8 +455,8 @@ CONSTRAINT_RECORD *ExpressionToConstraintRecord(
             break;
     }
 
-    if (rv->floatsAllowed || rv->integersAllowed || rv->getSymbolsAllowed() ||
-        rv->stringsAllowed || rv->instanceNamesAllowed) {
+    if (rv->getFloatsAllowed() || rv->getIntegersAllowed() || rv->getSymbolsAllowed() ||
+        rv->getStringsAllowed()|| rv->getInstanceNamesAllowed()) {
         rv->setRestrictionList(GenConstant(theEnv, theExpression->type, theExpression->value));
     }
 
@@ -491,7 +491,7 @@ CONSTRAINT_RECORD *ArgumentTypeToConstraintRecord(
     if (bitTypes & FLOAT_BIT) { rv->floatsAllowed = true; }
     if (bitTypes & INTEGER_BIT) { rv->integersAllowed = true; }
     if (bitTypes & SYMBOL_BIT) { rv->setSymbolsAllowed(true); }
-    if (bitTypes & STRING_BIT) { rv->stringsAllowed = true; }
+    if (bitTypes & STRING_BIT) { rv->setStringsAllowed(true); }
     if (bitTypes & MULTIFIELD_BIT) { rv->multifieldsAllowed = true; }
     if (bitTypes & EXTERNAL_ADDRESS_BIT) { rv->externalAddressesAllowed = true; }
     if (bitTypes & FACT_ADDRESS_BIT) { rv->factAddressesAllowed = true; }

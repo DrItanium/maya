@@ -153,15 +153,15 @@ struct constraintRecord *IntersectConstraints(
 
         rv->setAnyAllowed(false);
         rv->setSymbolsAllowed((c1->getSymbolsAllowed() && c2->getSymbolsAllowed()));
-        rv->stringsAllowed = (c1->stringsAllowed && c2->stringsAllowed);
-        rv->floatsAllowed = (c1->floatsAllowed && c2->floatsAllowed);
-        rv->integersAllowed = (c1->integersAllowed && c2->integersAllowed);
-        rv->instanceNamesAllowed = (c1->instanceNamesAllowed && c2->instanceNamesAllowed);
-        rv->instanceAddressesAllowed = (c1->instanceAddressesAllowed && c2->instanceAddressesAllowed);
-        rv->externalAddressesAllowed = (c1->externalAddressesAllowed && c2->externalAddressesAllowed);
-        rv->voidAllowed = (c1->voidAllowed && c2->voidAllowed);
-        rv->multifieldsAllowed = (c1->multifieldsAllowed && c2->multifieldsAllowed);
-        rv->factAddressesAllowed = (c1->factAddressesAllowed && c2->factAddressesAllowed);
+        rv->setStringsAllowed ( (c1->getStringsAllowed() && c2->getStringsAllowed()));
+        rv->setFloatsAllowed ( (c1->getFloatsAllowed() && c2->getFloatsAllowed()));
+        rv->setIntegersAllowed ( (c1->getIntegersAllowed() && c2->getIntegersAllowed()));
+        rv->setInstanceNamesAllowed ( (c1->getInstanceNamesAllowed() && c2->getInstanceNamesAllowed()));
+        rv->setInstanceAddressesAllowed ( (c1->getInstanceAddressesAllowed() && c2->getInstanceAddressesAllowed()));
+        rv->setExternalAddressesAllowed ( (c1->getExternalAddressesAllowed() && c2->getExternalAddressesAllowed()));
+        rv->setVoidAllowed ( (c1->getVoidAllowed() && c2->getVoidAllowed()));
+        rv->setMultifieldsAllowed ( (c1->getMultifieldsAllowed() && c2->getMultifieldsAllowed()));
+        rv->setFactAddressesAllowed ( (c1->getFactAddressesAllowed() && c2->getFactAddressesAllowed()));
 
         if (c1Changed) SetAnyAllowedFlags(c1, true);
         if (c2Changed) SetAnyAllowedFlags(c2, true);
@@ -518,8 +518,8 @@ static void UpdateRestrictionFlags(
         rv->setSymbolsAllowed(FindItemInExpression(SYMBOL_TYPE, nullptr, false, rv->getRestrictionList()));
     }
 
-    if ((rv->stringRestriction) && (rv->stringsAllowed)) {
-        rv->stringsAllowed = FindItemInExpression(STRING_TYPE, nullptr, false, rv->getRestrictionList());
+    if ((rv->stringRestriction) && (rv->getStringsAllowed())) {
+        rv->setStringsAllowed(FindItemInExpression(STRING_TYPE, nullptr, false, rv->getRestrictionList()));
     }
 
     if ((rv->floatRestriction) && (rv->floatsAllowed)) {
@@ -628,7 +628,7 @@ struct constraintRecord *UnionConstraints(
     else {
         rv->setAnyAllowed(false);
         rv->setSymbolsAllowed((c1->getSymbolsAllowed() || c2->getSymbolsAllowed()));
-        rv->stringsAllowed = (c1->stringsAllowed || c2->stringsAllowed);
+        rv->setStringsAllowed ( (c1->getStringsAllowed() || c2->getStringsAllowed()));
         rv->floatsAllowed = (c1->floatsAllowed || c2->floatsAllowed);
         rv->integersAllowed = (c1->integersAllowed || c2->integersAllowed);
         rv->instanceNamesAllowed = (c1->instanceNamesAllowed || c2->instanceNamesAllowed);

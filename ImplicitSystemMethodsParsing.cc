@@ -288,11 +288,11 @@ static Expression *ParseRestrictionCreateTypes(
     Expression *types = nullptr;
 
     if (rv->getAnyAllowed()== false) {
-        if (rv->getSymbolsAllowed()&& rv->stringsAllowed)
+        if (rv->getSymbolsAllowed()&& rv->getStringsAllowed())
             types = GenTypeExpression(theEnv, types, LEXEME_TYPE_CODE, -1, LEXEME_TYPE_NAME);
         else if (rv->getSymbolsAllowed())
             types = GenTypeExpression(theEnv, types, SYMBOL_TYPE, SYMBOL_TYPE, nullptr);
-        else if (rv->stringsAllowed)
+        else if (rv->getStringsAllowed())
             types = GenTypeExpression(theEnv, types, STRING_TYPE, STRING_TYPE, nullptr);
 
         if (rv->floatsAllowed && rv->integersAllowed)

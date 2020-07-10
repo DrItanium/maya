@@ -105,7 +105,7 @@ void DeriveDefaultFromConstraints(
 
     if (constraints->getAnyAllowed()|| constraints->getSymbolsAllowed()) {
         theValue = FindDefaultValue(theEnv, SYMBOL_TYPE, constraints, CreateSymbol(theEnv, "nil"));
-    } else if (constraints->stringsAllowed) { theValue = FindDefaultValue(theEnv, STRING_TYPE, constraints, CreateString(theEnv, "")); }
+    } else if (constraints->getStringsAllowed()) { theValue = FindDefaultValue(theEnv, STRING_TYPE, constraints, CreateString(theEnv, "")); }
 
     else if (constraints->integersAllowed) { theValue = FindDefaultValue(theEnv, INTEGER_TYPE, constraints, CreateInteger(theEnv, 0LL)); }
 

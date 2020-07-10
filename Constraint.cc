@@ -242,26 +242,26 @@ unsigned long HashConstraint(
     count +=
             (theConstraint->getAnyAllowed() * 17) +
             (theConstraint->getSymbolsAllowed()* 5) +
-            (theConstraint->stringsAllowed * 23) +
-            (theConstraint->floatsAllowed * 19) +
-            (theConstraint->integersAllowed * 29) +
-            (theConstraint->instanceNamesAllowed * 31) +
-            (theConstraint->instanceAddressesAllowed * 17);
+            (theConstraint->getStringsAllowed() * 23) +
+            (theConstraint->getFloatsAllowed() * 19) +
+            (theConstraint->getIntegersAllowed() * 29) +
+            (theConstraint->getInstanceNamesAllowed() * 31) +
+            (theConstraint->getInstanceAddressesAllowed() * 17);
 
     count +=
-            (theConstraint->externalAddressesAllowed * 29) +
-            (theConstraint->voidAllowed * 29) +
-            (theConstraint->multifieldsAllowed * 29) +
-            (theConstraint->factAddressesAllowed * 79) +
-            (theConstraint->anyRestriction * 59) +
-            (theConstraint->symbolRestriction * 61);
+            (theConstraint->getExternalAddressesAllowed() * 29) +
+            (theConstraint->getVoidAllowed() * 29) +
+            (theConstraint->getMultifieldsAllowed() * 29) +
+            (theConstraint->getFactAddressesAllowed() * 79) +
+            (theConstraint->getAnyRestriction() * 59) +
+            (theConstraint->getSymbolRestriction() * 61);
 
     count +=
-            (theConstraint->stringRestriction * 3) +
-            (theConstraint->floatRestriction * 37) +
-            (theConstraint->integerRestriction * 9) +
-            (theConstraint->classRestriction * 11) +
-            (theConstraint->instanceNameRestriction * 7);
+            (theConstraint->getStringRestriction() * 3) +
+            (theConstraint->getFloatRestriction() * 37) +
+            (theConstraint->getIntegerRestriction() * 9) +
+            (theConstraint->getClassRestriction() * 11) +
+            (theConstraint->getInstanceNameRestriction() * 7);
 
     for (tmpPtr = theConstraint->getClassList(); tmpPtr != nullptr; tmpPtr = tmpPtr->nextArg) {
         count += GetAtomicHashValue(tmpPtr->type, tmpPtr->value, i++);
@@ -306,7 +306,7 @@ static bool ConstraintCompare(
 
     if ((constraint1->getAnyAllowed() != constraint2->getAnyAllowed()) ||
         (constraint1->getSymbolsAllowed()!= constraint2->getSymbolsAllowed()) ||
-        (constraint1->stringsAllowed != constraint2->stringsAllowed) ||
+        (constraint1->getStringsAllowed() != constraint2->getStringsAllowed()) ||
         (constraint1->floatsAllowed != constraint2->floatsAllowed) ||
         (constraint1->integersAllowed != constraint2->integersAllowed) ||
         (constraint1->instanceNamesAllowed != constraint2->instanceNamesAllowed) ||

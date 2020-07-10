@@ -1447,7 +1447,7 @@ bool DeftemplateSlotTypes(
         returnValue->multifieldValue->contents[i++].lexemeValue = CreateSymbol(theEnv, "SYMBOL");
     }
 
-    if (allTypes || theSlot->constraints->stringsAllowed) {
+    if (allTypes || theSlot->constraints->getStringsAllowed()) {
         returnValue->multifieldValue->contents[i++].lexemeValue = CreateSymbol(theEnv, "STRING");
     }
 

@@ -97,9 +97,9 @@ static bool CheckFunctionReturnType(
 
     if (constraints->getSymbolsAllowed()) { if (functionReturnType & (SYMBOL_BIT | BOOLEAN_BIT)) return true; }
 
-    if (constraints->stringsAllowed) { if (functionReturnType & STRING_BIT) return true; }
+    if (constraints->getStringsAllowed()) { if (functionReturnType & STRING_BIT) return true; }
 
-    if (constraints->instanceNamesAllowed) { if (functionReturnType & INSTANCE_NAME_BIT) return true; }
+    if (constraints->getInstanceNamesAllowed()) { if (functionReturnType & INSTANCE_NAME_BIT) return true; }
 
     if (constraints->floatsAllowed) { if (functionReturnType & FLOAT_BIT) return true; }
 
@@ -132,7 +132,7 @@ static bool CheckTypeConstraint(
 
     if ((type == SYMBOL_TYPE) && (constraints->getSymbolsAllowed()!= true)) { return false; }
 
-    if ((type == STRING_TYPE) && (constraints->stringsAllowed != true)) { return false; }
+    if ((type == STRING_TYPE) && (constraints->getStringsAllowed() != true)) { return false; }
 
     if ((type == FLOAT_TYPE) && (constraints->floatsAllowed != true)) { return false; }
 
@@ -693,15 +693,15 @@ bool UnmatchableConstraint(
 
     return (!theConstraint->getAnyAllowed()) &&
            (!theConstraint->getSymbolsAllowed()) &&
-           (!theConstraint->stringsAllowed) &&
-           (!theConstraint->floatsAllowed) &&
-           (!theConstraint->integersAllowed) &&
-           (!theConstraint->instanceNamesAllowed) &&
-           (!theConstraint->instanceAddressesAllowed) &&
-           (!theConstraint->multifieldsAllowed) &&
-           (!theConstraint->externalAddressesAllowed) &&
-           (!theConstraint->voidAllowed) &&
-           (!theConstraint->factAddressesAllowed);
+           (!theConstraint->getStringsAllowed()) &&
+           (!theConstraint->getFloatsAllowed()) &&
+           (!theConstraint->getIntegersAllowed()) &&
+           (!theConstraint->getInstanceNamesAllowed()) &&
+           (!theConstraint->getInstanceAddressesAllowed()) &&
+           (!theConstraint->getMultifieldsAllowed()) &&
+           (!theConstraint->getExternalAddressesAllowed()) &&
+           (!theConstraint->getVoidAllowed()) &&
+           (!theConstraint->getFactAddressesAllowed());
 
 }
 
