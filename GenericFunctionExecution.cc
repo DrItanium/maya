@@ -281,22 +281,20 @@ void UnboundMethodErr(
   NOTES        : Uses globals ProcParamArraySize and ProcParamArray
  ***********************************************************************/
 bool IsMethodApplicable(
-        const Environment&theEnv,
+        const Environment& theEnv,
         Defmethod *meth) {
     UDFValue temp;
-    unsigned int i, j, k;
     RESTRICTION *rp;
-    Defclass *type;
-
     if (((ProceduralPrimitiveData(theEnv)->ProcParamArraySize < meth->minRestrictions) &&
          (meth->minRestrictions != RESTRICTIONS_UNBOUNDED)) ||
         ((ProceduralPrimitiveData(theEnv)->ProcParamArraySize > meth->minRestrictions) &&
          (meth->maxRestrictions != RESTRICTIONS_UNBOUNDED))) // TBD minRestrictions || maxRestrictions
         return false;
-    for (i = 0, k = 0; i < ProceduralPrimitiveData(theEnv)->ProcParamArraySize; i++) {
+    unsigned int j = 0;
+    for (unsigned int i = 0, k = 0; i < ProceduralPrimitiveData(theEnv)->ProcParamArraySize; i++) {
         rp = &meth->restrictions[k];
         if (rp->tcnt != 0) {
-            type = DetermineRestrictionClass(theEnv, &ProceduralPrimitiveData(theEnv)->ProcParamArray[i]);
+            auto type = DetermineRestrictionClass(theEnv, &ProceduralPrimitiveData(theEnv)->ProcParamArray[i]);
             if (type == nullptr)
                 return false;
             for (j = 0; j < rp->tcnt; j++) {
@@ -647,8 +645,12 @@ static Defclass *DetermineRestrictionClass(
     } else if (dobj->header->type == INSTANCE_ADDRESS_TYPE) {
         ins = dobj->instanceValue;
         cls = (ins->garbage == 0) ? ins->cls : nullptr;
-    } else
-        return (DefclassData(theEnv)->PrimitiveClassMap[dobj->header->type]);
+    } else {
+        auto dd = DefclassData(theEnv);
+        auto targetType = dobj->header->type;
+        return dd->PrimitiveClassMap[targetType];
+        //return (DefclassData(theEnv)->PrimitiveClassMap[dobj->header->type]);
+    }
     if (cls == nullptr) {
         SetEvaluationError(theEnv, true);
         PrintErrorID(theEnv, "GENRCEXE", 3, false);

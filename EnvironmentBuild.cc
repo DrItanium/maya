@@ -149,7 +149,6 @@ Environment CreateEnvironmentDriver(
         std::cout << "\n[ENVRNMNT6] Unable to create environment data.\n";
         return nullptr;
     }
-
     memset(theData, 0, sizeof(void *) * MAXIMUM_ENVIRONMENT_POSITIONS);
 
     theEnvironment->initialized = false;
