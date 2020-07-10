@@ -65,7 +65,7 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static bool GetVariables(Environment *, struct lhsParseNode *, ParseNodeType, struct nandFrame *);
+static bool GetVariables(Environment *, lhsParseNode *, ParseNodeType, nandFrame *);
 static bool UnboundVariablesInPattern(Environment *, struct lhsParseNode *, unsigned short);
 static bool PropagateVariableToNodes(Environment *, struct lhsParseNode *, ParseNodeType,
                                      CLIPSLexeme *, struct lhsParseNode *,
@@ -79,27 +79,27 @@ static void VariableReferenceErrorMessage(Environment *,
                                           CLIPSLexeme *,
                                           int);
 static bool ProcessField(Environment *,
-                         struct lhsParseNode *,
-                         struct lhsParseNode *,
-                         struct lhsParseNode *,
+                         lhsParseNode *,
+                         lhsParseNode *,
+                         lhsParseNode *,
                          ParseNodeType,
-                         struct nandFrame *);
+                         nandFrame *);
 static bool ProcessVariable(Environment *,
-                            struct lhsParseNode *,
-                            struct lhsParseNode *,
-                            struct lhsParseNode *,
+                            lhsParseNode *,
+                            lhsParseNode *,
+                            lhsParseNode *,
                             ParseNodeType,
-                            struct nandFrame *);
+                            nandFrame *);
 static void VariableMixingErrorMessage(Environment *, CLIPSLexeme *);
 static bool PropagateVariableDriver(Environment *,
-                                    struct lhsParseNode *,
-                                    struct lhsParseNode *,
-                                    struct lhsParseNode *,
+                                    lhsParseNode *,
+                                    lhsParseNode *,
+                                    lhsParseNode *,
                                     ParseNodeType, CLIPSLexeme *,
-                                    struct lhsParseNode *,
+                                    lhsParseNode *,
                                     bool, ParseNodeType);
-static bool TestCEAnalysis(Environment *, struct lhsParseNode *, struct lhsParseNode *, bool, bool *, struct nandFrame *);
-static void ReleaseNandFrames(Environment *, struct nandFrame *);
+static bool TestCEAnalysis(Environment *, lhsParseNode *, lhsParseNode *, bool, bool *, nandFrame *);
+static void ReleaseNandFrames(Environment *, nandFrame *);
 
 /******************************************************************/
 /* VariableAnalysis: Propagates variables references to other     */
@@ -113,7 +113,7 @@ bool VariableAnalysis(
         Environment *theEnv,
         struct lhsParseNode *patternPtr) {
     bool errorFlag = false;
-    struct nandFrame *theNandFrames = nullptr, *tempNandPtr;
+    nandFrame *theNandFrames = nullptr, *tempNandPtr;
     int currentDepth = 1;
 
     /*======================================================*/
@@ -242,11 +242,9 @@ bool VariableAnalysis(
 /******************************************************/
 static void ReleaseNandFrames(
         Environment *theEnv,
-        struct nandFrame *theFrames) {
-    struct nandFrame *tmpFrame;
-
+        nandFrame *theFrames) {
     while (theFrames != nullptr) {
-        tmpFrame = theFrames->getNext();
+        auto tmpFrame = theFrames->getNext();
         rtn_struct(theEnv, nandFrame, theFrames);
         theFrames = tmpFrame;
     }
@@ -260,12 +258,11 @@ static void ReleaseNandFrames(
 /*******************************************************************/
 static bool TestCEAnalysis(
         Environment *theEnv,
-        struct lhsParseNode *patternPtr,
-        struct lhsParseNode *theExpression,
+        lhsParseNode *patternPtr,
+        lhsParseNode *theExpression,
         bool secondary,
         bool *errorFlag,
-        struct nandFrame *theNandFrames) {
-    struct lhsParseNode *rv, *theList, *tempList, *tempRight;
+        nandFrame *theNandFrames) {
 
     if (theExpression == nullptr) return false;
 
@@ -273,7 +270,7 @@ static bool TestCEAnalysis(
     /* Verify that all variables were referenced properly. */
     /*=====================================================*/
 
-    rv = CheckExpression(theEnv, theExpression, nullptr, patternPtr->whichCE, nullptr, 0);
+    auto rv = CheckExpression(theEnv, theExpression, nullptr, patternPtr->whichCE, nullptr, 0);
 
     /*====================================================================*/
     /* Temporarily disconnect the right nodes. If this is a pattern node  */
@@ -281,7 +278,7 @@ static bool TestCEAnalysis(
     /* patterns, not to nodes of this pattern which preceded the test CE. */
     /*====================================================================*/
 
-    tempRight = patternPtr->right;
+    auto tempRight = patternPtr->right;
     patternPtr->right = nullptr;
 
     /*=========================================================*/
@@ -291,8 +288,8 @@ static bool TestCEAnalysis(
     /* (+ ?x 1) implies that ?x is a number.                   */
     /*=========================================================*/
 
-    theList = GetExpressionVarConstraints(theEnv, theExpression);
-    for (tempList = theList; tempList != nullptr; tempList = tempList->right) {
+    auto theList = GetExpressionVarConstraints(theEnv, theExpression);
+    for (auto tempList = theList; tempList != nullptr; tempList = tempList->right) {
         if (PropagateVariableDriver(theEnv, patternPtr, patternPtr, nullptr, SF_VARIABLE_NODE,
                                     tempList->lexemeValue, tempList, false, TEST_CE_NODE)) {
             ReturnLHSParseNodes(theEnv, theList);
@@ -335,11 +332,11 @@ static bool TestCEAnalysis(
 /****************************************************************/
 static bool GetVariables(
         Environment *theEnv,
-        struct lhsParseNode *thePattern,
+        lhsParseNode *thePattern,
         ParseNodeType patternHeadType,
-        struct nandFrame *theNandFrames) {
-    struct lhsParseNode *patternHead = thePattern;
-    struct lhsParseNode *multifieldHeader = nullptr;
+        nandFrame *theNandFrames) {
+    lhsParseNode *patternHead = thePattern;
+    lhsParseNode *multifieldHeader = nullptr;
 
     /*======================================================*/
     /* Loop through all the fields/slots found in a pattern */
@@ -404,14 +401,14 @@ static bool GetVariables(
 /******************************************************/
 static bool ProcessVariable(
         Environment *theEnv,
-        struct lhsParseNode *thePattern,
-        struct lhsParseNode *multifieldHeader,
-        struct lhsParseNode *patternHead,
+        lhsParseNode *thePattern,
+        lhsParseNode *multifieldHeader,
+        lhsParseNode *patternHead,
         ParseNodeType patternHeadType,
-        struct nandFrame *theNandFrames) {
+        nandFrame *theNandFrames) {
     ParseNodeType theType;
     CLIPSLexeme *theVariable;
-    struct constraintRecord *theConstraints;
+    constraintRecord *theConstraints;
 
     /*=============================================================*/
     /* If a pattern address is being propagated, then treat it as  */
@@ -564,7 +561,7 @@ static bool ProcessField(
         struct lhsParseNode *multifieldHeader,
         struct lhsParseNode *patternHead,
         ParseNodeType patternHeadType,
-        struct nandFrame *theNandFrames) {
+        nandFrame *theNandFrames) {
     struct lhsParseNode *theList, *tempList;
 
     /*====================================================*/

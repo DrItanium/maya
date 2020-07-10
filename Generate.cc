@@ -640,10 +640,8 @@ static struct expr *GenPNEq(
 /************************************************************************/
 void AddNandUnification(
         Environment *theEnv,
-        struct lhsParseNode *nodeList,
-        struct nandFrame *theNandFrames) {
-    struct nandFrame *theFrame;
-    struct expr *tempExpression;
+        lhsParseNode *nodeList,
+        nandFrame *theNandFrames) {
 
     /*====================================================*/
     /* If the reference is to a prior variable within the */
@@ -665,13 +663,13 @@ void AddNandUnification(
     /* Find the frame to which the test should be attached. */
     /*======================================================*/
 
-    for (theFrame = theNandFrames;
+    for (auto theFrame = theNandFrames;
          theFrame != nullptr;
          theFrame = theFrame->getNext()) {
         if (theFrame->getDepth() >= nodeList->referringNode->beginNandDepth) {
             // nodeList->referringNode->marked = true;
 
-            tempExpression = GenJNVariableComparison(theEnv, nodeList->referringNode, nodeList->referringNode, true);
+            auto tempExpression = GenJNVariableComparison(theEnv, nodeList->referringNode, nodeList->referringNode, true);
 
             theFrame->getNandCE()->externalNetworkTest = CombineExpressions(theEnv, theFrame->getNandCE()->externalNetworkTest, tempExpression);
 

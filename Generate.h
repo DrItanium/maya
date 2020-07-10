@@ -47,9 +47,9 @@
 #include "Expression.h"
 #include "Reorder.h"
 
-void FieldConversion(Environment *, struct lhsParseNode *, struct lhsParseNode *, struct nandFrame *);
-struct expr *GetvarReplace(Environment *, struct lhsParseNode *, bool, struct nandFrame *);
-void AddNandUnification(Environment *, struct lhsParseNode *, struct nandFrame *);
+void FieldConversion(Environment *, lhsParseNode *, lhsParseNode *, nandFrame *);
+expr *GetvarReplace(Environment *, lhsParseNode *, bool, nandFrame *);
+void AddNandUnification(Environment *, lhsParseNode *, nandFrame *);
 
 #endif /* _H_generate */
 
