@@ -1322,8 +1322,8 @@ bool DeftemplateSlotRange(
         (theSlot->constraints->getAnyAllowed() || theSlot->constraints->floatsAllowed ||
          theSlot->constraints->integersAllowed)) {
         returnValue->value = CreateMultifield(theEnv, 2L);
-        returnValue->multifieldValue->contents[0].value = theSlot->constraints->minValue->value;
-        returnValue->multifieldValue->contents[1].value = theSlot->constraints->maxValue->value;
+        returnValue->multifieldValue->contents[0].value = theSlot->constraints->getMinValue()->value;
+        returnValue->multifieldValue->contents[1].value = theSlot->constraints->getMaxValue()->value;
     } else { returnValue->value = FalseSymbol(theEnv); }
 
     return true;

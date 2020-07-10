@@ -179,20 +179,20 @@ static void *FindDefaultValue(
     /*=============================================================*/
 
     if (theType == INTEGER_TYPE) {
-        if (theConstraints->minValue->type == INTEGER_TYPE) { return (theConstraints->minValue->value); }
-        else if (theConstraints->minValue->type == FLOAT_TYPE) {
-            return (CreateInteger(theEnv, (long long) theConstraints->minValue->floatValue->contents));
-        } else if (theConstraints->maxValue->type == INTEGER_TYPE) { return (theConstraints->maxValue->value); }
-        else if (theConstraints->maxValue->type == FLOAT_TYPE) {
-            return (CreateInteger(theEnv, (long long) theConstraints->maxValue->floatValue->contents));
+        if (theConstraints->getMinValue()->type == INTEGER_TYPE) { return (theConstraints->getMinValue()->value); }
+        else if (theConstraints->getMinValue()->type == FLOAT_TYPE) {
+            return (CreateInteger(theEnv, (long long) theConstraints->getMinValue()->floatValue->contents));
+        } else if (theConstraints->getMaxValue()->type == INTEGER_TYPE) { return (theConstraints->getMaxValue()->value); }
+        else if (theConstraints->getMaxValue()->type == FLOAT_TYPE) {
+            return (CreateInteger(theEnv, (long long) theConstraints->getMaxValue()->floatValue->contents));
         }
     } else if (theType == FLOAT_TYPE) {
-        if (theConstraints->minValue->type == FLOAT_TYPE) { return (theConstraints->minValue->value); }
-        else if (theConstraints->minValue->type == INTEGER_TYPE) {
-            return (CreateFloat(theEnv, (double) theConstraints->minValue->integerValue->contents));
-        } else if (theConstraints->maxValue->type == FLOAT_TYPE) { return (theConstraints->maxValue->value); }
-        else if (theConstraints->maxValue->type == INTEGER_TYPE) {
-            return (CreateFloat(theEnv, (double) theConstraints->maxValue->integerValue->contents));
+        if (theConstraints->getMinValue()->type == FLOAT_TYPE) { return (theConstraints->getMinValue()->value); }
+        else if (theConstraints->getMinValue()->type == INTEGER_TYPE) {
+            return (CreateFloat(theEnv, (double) theConstraints->getMinValue()->integerValue->contents));
+        } else if (theConstraints->getMaxValue()->type == FLOAT_TYPE) { return (theConstraints->getMaxValue()->value); }
+        else if (theConstraints->getMaxValue()->type == INTEGER_TYPE) {
+            return (CreateFloat(theEnv, (double) theConstraints->getMaxValue()->integerValue->contents));
         }
     }
 

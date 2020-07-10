@@ -1035,9 +1035,9 @@ static bool ParseRangeCardinalityAttribute(
     GetToken(theEnv, readSource, &inputToken);
     if ((inputToken.tknType == INTEGER_TOKEN) || ((inputToken.tknType == FLOAT_TOKEN) && range)) {
         if (range) {
-            ReturnExpression(theEnv, constraints->maxValue);
-            if (inputToken.tknType == INTEGER_TOKEN) { constraints->maxValue = GenConstant(theEnv, INTEGER_TYPE, inputToken.value); }
-            else { constraints->maxValue = GenConstant(theEnv, FLOAT_TYPE, inputToken.value); }
+            ReturnExpression(theEnv, constraints->getMaxValue());
+            if (inputToken.tknType == INTEGER_TOKEN) { constraints->setMaxValue(GenConstant(theEnv, INTEGER_TYPE, inputToken.value)); }
+            else { constraints->setMaxValue( GenConstant(theEnv, FLOAT_TYPE, inputToken.value)); }
         } else {
             ReturnExpression(theEnv, constraints->getMaxFields());
             if (inputToken.tknType == INTEGER_TOKEN) { constraints->setMaxFields(GenConstant(theEnv, INTEGER_TYPE, inputToken.value)); }
@@ -1066,10 +1066,10 @@ static bool ParseRangeCardinalityAttribute(
     /*====================================================*/
 
     if (range) {
-        if (CompareNumbers(theEnv, constraints->minValue->type,
-                           constraints->minValue->value,
-                           constraints->maxValue->type,
-                           constraints->maxValue->value) == GREATER_THAN) {
+        if (CompareNumbers(theEnv, constraints->getMinValue()->type,
+                           constraints->getMinValue()->value,
+                           constraints->getMaxValue()->type,
+                           constraints->getMaxValue()->value) == GREATER_THAN) {
             PrintErrorID(theEnv, "CSTRNPSR", 2, true);
             WriteString(theEnv, STDERR, "Minimum 'range' value must be less than ");
             WriteString(theEnv, STDERR, "or equal to the maximum 'range' value.\n");

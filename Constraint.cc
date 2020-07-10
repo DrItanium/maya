@@ -345,7 +345,7 @@ static bool ConstraintCompare(
     }
     if (tmpPtr1 != tmpPtr2) return false;
 
-    for (tmpPtr1 = constraint1->maxValue, tmpPtr2 = constraint2->maxValue;
+    for (tmpPtr1 = constraint1->getMaxValue(), tmpPtr2 = constraint2->getMaxValue();
          (tmpPtr1 != nullptr) && (tmpPtr2 != nullptr);
          tmpPtr1 = tmpPtr1->nextArg, tmpPtr2 = tmpPtr2->nextArg) {
         if ((tmpPtr1->type != tmpPtr2->type) || (tmpPtr1->value != tmpPtr2->value)) { return false; }
@@ -424,13 +424,13 @@ static void InstallConstraintRecord(
     ReturnExpression(theEnv, constraints->restrictionList);
     constraints->restrictionList = tempExpr;
 
-    tempExpr = AddHashedExpression(theEnv, constraints->maxValue);
-    ReturnExpression(theEnv, constraints->maxValue);
-    constraints->maxValue = tempExpr;
+    tempExpr = AddHashedExpression(theEnv, constraints->getMaxValue());
+    ReturnExpression(theEnv, constraints->getMaxValue());
+    constraints->setMaxValue(tempExpr);
 
-    tempExpr = AddHashedExpression(theEnv, constraints->minValue);
-    ReturnExpression(theEnv, constraints->minValue);
-    constraints->minValue = tempExpr;
+    tempExpr = AddHashedExpression(theEnv, constraints->getMinValue());
+    ReturnExpression(theEnv, constraints->getMinValue());
+    constraints->setMinValue( tempExpr);
 
     tempExpr = AddHashedExpression(theEnv, constraints->getMinFields());
     ReturnExpression(theEnv, constraints->getMinFields());

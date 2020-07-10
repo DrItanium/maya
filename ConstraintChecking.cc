@@ -424,8 +424,8 @@ static bool CheckRangeConstraint(
     /* return true since the constraint is satisifed.      */
     /*=====================================================*/
 
-    minList = constraints->minValue;
-    maxList = constraints->maxValue;
+    minList = constraints->getMinValue();
+    maxList = constraints->getMaxValue();
 
     while (minList != nullptr) {
         if (CompareNumbers(theEnv, type, vPtr, minList->type, minList->value) == LESS_THAN) {
@@ -545,10 +545,10 @@ static void PrintRange(
                 theEnv)->NegativeInfinity->contents);
     } else PrintExpression(theEnv, logicalName, theConstraint->minValue);
     WriteString(theEnv, logicalName, " to ");
-    if (theConstraint->maxValue->value == SymbolData(theEnv)->PositiveInfinity) {
+    if (theConstraint->getMaxValue()->value == SymbolData(theEnv)->PositiveInfinity) {
         WriteString(theEnv, logicalName, SymbolData(
                 theEnv)->PositiveInfinity->contents);
-    } else PrintExpression(theEnv, logicalName, theConstraint->maxValue);
+    } else PrintExpression(theEnv, logicalName, theConstraint->getMaxValue());
 }
 
 /*************************************************************/

@@ -89,14 +89,35 @@ public:
 #define X(field,form) \
     constexpr auto get ## form () const noexcept { return field ;} \
     void set ## form (bool value) noexcept { field = value ; }
-    X(anyAllowed, AnyAllowed);
+#define Y(field, form) X(field ## Allowed, form ## Allowed)
+#define Z(field, form) X(field ## Restriction, form ## Restriction)
+    Y(any, Any);
+    Y(symbols, Symbols);
+    Y(floats, Floats);
+    Y(integers, Integers);
+    Y(instanceNames, InstanceNames);
+    Y(instanceAddresses, InstanceAddresses);
+    Y(externalAddresses, ExternalAddresses);
+    Y(factAddresses, FactAddresses);
+    Y(void, Void);
+    Z(any, Any);
+    Z(symbol, Symbol);
+    Z(string, String);
+    Z(float, Float);
+    Z(integer, Integer);
+    Z(class, Class);
+    Z(instanceName, InstanceName);
+    Y(multifields, Multifields);
+    Y(singlefields, Singlefields);
+#undef Z
+#undef Y
 #undef X
     unsigned long bsaveID;
     expr *classList;
     expr *restrictionList;
     expr *minValue;
-    expr *maxValue;
 private:
+    expr *maxValue;
     expr *minFields;
     expr *maxFields;
     constraintRecord *multifield;
