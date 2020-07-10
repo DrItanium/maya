@@ -1417,14 +1417,14 @@ bool DeftemplateSlotTypes(
         /*==============================================*/
 
     else {
-        numTypes = theSlot->constraints->symbolsAllowed +
-                   theSlot->constraints->stringsAllowed +
-                   theSlot->constraints->floatsAllowed +
-                   theSlot->constraints->integersAllowed +
-                   theSlot->constraints->instanceNamesAllowed +
-                   theSlot->constraints->instanceAddressesAllowed +
-                   theSlot->constraints->externalAddressesAllowed +
-                   theSlot->constraints->factAddressesAllowed;
+        numTypes = theSlot->constraints->getSymbolsAllowed() +
+                   theSlot->constraints->getStringsAllowed() +
+                   theSlot->constraints->getFloatsAllowed() +
+                   theSlot->constraints->getIntegersAllowed() +
+                   theSlot->constraints->getInstanceNamesAllowed()+
+                   theSlot->constraints->getInstanceAddressesAllowed()+
+                   theSlot->constraints->getExternalAddressesAllowed()+
+                   theSlot->constraints->getFactAddressesAllowed();
     }
 
     /*========================================*/
@@ -1443,7 +1443,7 @@ bool DeftemplateSlotTypes(
         returnValue->multifieldValue->contents[i++].lexemeValue = CreateSymbol(theEnv, "INTEGER");
     }
 
-    if (allTypes || theSlot->constraints->symbolsAllowed) {
+    if (allTypes || theSlot->constraints->getSymbolsAllowed()) {
         returnValue->multifieldValue->contents[i++].lexemeValue = CreateSymbol(theEnv, "SYMBOL");
     }
 

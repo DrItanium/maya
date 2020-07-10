@@ -1257,7 +1257,7 @@ static struct lhsParseNode *ParseClassRestriction(
 
     rv = GetConstraintRecord(theEnv);
     rv->setAnyAllowed(false);
-    rv->symbolsAllowed = 1;
+    rv->setSymbolsAllowed (true);
     rln = theToken->lexemeValue;
     SavePPBuffer(theEnv, " ");
     GetToken(theEnv, readSource, theToken);

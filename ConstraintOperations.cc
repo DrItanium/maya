@@ -152,7 +152,7 @@ struct constraintRecord *IntersectConstraints(
         }
 
         rv->setAnyAllowed(false);
-        rv->symbolsAllowed = (c1->symbolsAllowed && c2->symbolsAllowed);
+        rv->setSymbolsAllowed((c1->getSymbolsAllowed() && c2->getSymbolsAllowed()));
         rv->stringsAllowed = (c1->stringsAllowed && c2->stringsAllowed);
         rv->floatsAllowed = (c1->floatsAllowed && c2->floatsAllowed);
         rv->integersAllowed = (c1->integersAllowed && c2->integersAllowed);
@@ -514,8 +514,8 @@ static void UpdateRestrictionFlags(
         rv->setAnyAllowed(false);
     }
 
-    if ((rv->symbolRestriction) && (rv->symbolsAllowed)) {
-        rv->symbolsAllowed = FindItemInExpression(SYMBOL_TYPE, nullptr, false, rv->getRestrictionList());
+    if ((rv->symbolRestriction) && (rv->getSymbolsAllowed())) {
+        rv->setSymbolsAllowed(FindItemInExpression(SYMBOL_TYPE, nullptr, false, rv->getRestrictionList()));
     }
 
     if ((rv->stringRestriction) && (rv->stringsAllowed)) {
@@ -627,7 +627,7 @@ struct constraintRecord *UnionConstraints(
     if (c1->getAnyAllowed()|| c2->getAnyAllowed()) rv->setAnyAllowed(true);
     else {
         rv->setAnyAllowed(false);
-        rv->symbolsAllowed = (c1->symbolsAllowed || c2->symbolsAllowed);
+        rv->setSymbolsAllowed((c1->getSymbolsAllowed() || c2->getSymbolsAllowed()));
         rv->stringsAllowed = (c1->stringsAllowed || c2->stringsAllowed);
         rv->floatsAllowed = (c1->floatsAllowed || c2->floatsAllowed);
         rv->integersAllowed = (c1->integersAllowed || c2->integersAllowed);

@@ -1207,7 +1207,7 @@ static void DisplaySlotConstraintInfo(
         cr = cls->instanceTemplate[i]->constraint;
         gensprintf(buf, slotNamePrintFormat, cls->instanceTemplate[i]->slotName->name->contents);
         if (cr != nullptr) {
-            genstrcat(buf, ConstraintCode(cr, cr->symbolsAllowed, cr->symbolRestriction));
+            genstrcat(buf, ConstraintCode(cr, cr->getSymbolsAllowed(), cr->symbolRestriction));
             genstrcat(buf, ConstraintCode(cr, cr->stringsAllowed, cr->stringRestriction));
             genstrcat(buf, ConstraintCode(cr, cr->instanceNamesAllowed,
                                           (cr->instanceNameRestriction || cr->classRestriction)));

@@ -762,23 +762,23 @@ bool SlotTypes(
     } else {
         typemap[0] = typemap[1] = (char) 0x00;
         msize = 0;
-        if (sp->constraint->symbolsAllowed) {
+        if (sp->constraint->getSymbolsAllowed()) {
             msize++;
             SetBitMap(typemap, SYMBOL_TYPE);
         }
-        if (sp->constraint->stringsAllowed) {
+        if (sp->constraint->getStringsAllowed()) {
             msize++;
             SetBitMap(typemap, STRING_TYPE);
         }
-        if (sp->constraint->floatsAllowed) {
+        if (sp->constraint->getFloatsAllowed()) {
             msize++;
             SetBitMap(typemap, FLOAT_TYPE);
         }
-        if (sp->constraint->integersAllowed) {
+        if (sp->constraint->getIntegersAllowed()) {
             msize++;
             SetBitMap(typemap, INTEGER_TYPE);
         }
-        if (sp->constraint->instanceNamesAllowed) {
+        if (sp->constraint->getInstanceNamesAllowed()) {
             msize++;
             SetBitMap(typemap, INSTANCE_NAME_TYPE);
         }

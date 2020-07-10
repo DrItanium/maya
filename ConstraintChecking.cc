@@ -95,7 +95,7 @@ static bool CheckFunctionReturnType(
 
     if (constraints->voidAllowed) { if (functionReturnType & VOID_BIT) return true; }
 
-    if (constraints->symbolsAllowed) { if (functionReturnType & (SYMBOL_BIT | BOOLEAN_BIT)) return true; }
+    if (constraints->getSymbolsAllowed()) { if (functionReturnType & (SYMBOL_BIT | BOOLEAN_BIT)) return true; }
 
     if (constraints->stringsAllowed) { if (functionReturnType & STRING_BIT) return true; }
 
@@ -130,7 +130,7 @@ static bool CheckTypeConstraint(
 
     if (constraints->getAnyAllowed()== true) return true;
 
-    if ((type == SYMBOL_TYPE) && (constraints->symbolsAllowed != true)) { return false; }
+    if ((type == SYMBOL_TYPE) && (constraints->getSymbolsAllowed()!= true)) { return false; }
 
     if ((type == STRING_TYPE) && (constraints->stringsAllowed != true)) { return false; }
 
@@ -692,7 +692,7 @@ bool UnmatchableConstraint(
     if (theConstraint == nullptr) return false;
 
     return (!theConstraint->getAnyAllowed()) &&
-           (!theConstraint->symbolsAllowed) &&
+           (!theConstraint->getSymbolsAllowed()) &&
            (!theConstraint->stringsAllowed) &&
            (!theConstraint->floatsAllowed) &&
            (!theConstraint->integersAllowed) &&

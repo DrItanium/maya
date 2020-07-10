@@ -66,8 +66,8 @@ typedef struct constraintRecord CONSTRAINT_RECORD;
 struct constraintRecord {
 private:
     bool anyAllowed: 1;
-public:
     bool symbolsAllowed: 1;
+public:
     bool stringsAllowed: 1;
     bool floatsAllowed: 1;
     bool integersAllowed: 1;
@@ -106,6 +106,7 @@ public:
 #define Z(field, form) X(field ## Restriction, form ## Restriction)
     Y(any, Any);
     Y(symbols, Symbols);
+    Y(strings, Strings);
     Y(floats, Floats);
     Y(integers, Integers);
     Y(instanceNames, InstanceNames);
@@ -125,7 +126,6 @@ public:
 #undef Z
 #undef Y
 #undef X
-public:
     constexpr auto getBSaveID() const noexcept { return bsaveID; }
     void setBSaveID(unsigned long value) noexcept { bsaveID = value; }
 #define X(field, form) \

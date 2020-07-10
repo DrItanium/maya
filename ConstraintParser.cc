@@ -97,7 +97,7 @@ bool CheckConstraintParseConflicts(
 
     if (constraints->getAnyAllowed() == true) { /* Do Nothing */ }
     else if (constraints->symbolRestriction &&
-             (constraints->symbolsAllowed == false)) {
+             (constraints->getSymbolsAllowed() == false)) {
         AttributeConflictErrorMessage(theEnv, "type", "allowed-symbols");
         return false;
     } else if (constraints->stringRestriction &&
@@ -325,7 +325,7 @@ void OverlayConstraint(
         CONSTRAINT_RECORD *csrc) {
     if (pc->type == 0) {
         cdst->setAnyAllowed(csrc->getAnyAllowed());
-        cdst->symbolsAllowed = csrc->symbolsAllowed;
+        cdst->setSymbolsAllowed(csrc->getSymbolsAllowed());
         cdst->stringsAllowed = csrc->stringsAllowed;
         cdst->floatsAllowed = csrc->floatsAllowed;
         cdst->integersAllowed = csrc->integersAllowed;

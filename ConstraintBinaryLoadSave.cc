@@ -161,23 +161,23 @@ static void CopyToBsaveConstraintRecord(
         CONSTRAINT_RECORD *constraints,
         BSAVE_CONSTRAINT_RECORD *bsaveConstraints) {
     bsaveConstraints->anyAllowed = constraints->getAnyAllowed();
-    bsaveConstraints->symbolsAllowed = constraints->symbolsAllowed;
-    bsaveConstraints->stringsAllowed = constraints->stringsAllowed;
-    bsaveConstraints->floatsAllowed = constraints->floatsAllowed;
-    bsaveConstraints->integersAllowed = constraints->integersAllowed;
-    bsaveConstraints->instanceNamesAllowed = constraints->instanceNamesAllowed;
-    bsaveConstraints->instanceAddressesAllowed = constraints->instanceAddressesAllowed;
-    bsaveConstraints->externalAddressesAllowed = constraints->externalAddressesAllowed;
-    bsaveConstraints->multifieldsAllowed = constraints->multifieldsAllowed;
-    bsaveConstraints->singlefieldsAllowed = constraints->singlefieldsAllowed;
-    bsaveConstraints->factAddressesAllowed = constraints->factAddressesAllowed;
-    bsaveConstraints->anyRestriction = constraints->anyRestriction;
-    bsaveConstraints->symbolRestriction = constraints->symbolRestriction;
-    bsaveConstraints->stringRestriction = constraints->stringRestriction;
-    bsaveConstraints->floatRestriction = constraints->floatRestriction;
-    bsaveConstraints->integerRestriction = constraints->integerRestriction;
-    bsaveConstraints->classRestriction = constraints->classRestriction;
-    bsaveConstraints->instanceNameRestriction = constraints->instanceNameRestriction;
+    bsaveConstraints->symbolsAllowed = constraints->getSymbolsAllowed();
+    bsaveConstraints->stringsAllowed = constraints->getStringsAllowed();
+    bsaveConstraints->floatsAllowed = constraints->getFloatsAllowed();
+    bsaveConstraints->integersAllowed = constraints->getIntegersAllowed();
+    bsaveConstraints->instanceNamesAllowed = constraints->getInstanceNamesAllowed();
+    bsaveConstraints->instanceAddressesAllowed = constraints->getInstanceAddressesAllowed();
+    bsaveConstraints->externalAddressesAllowed = constraints->getExternalAddressesAllowed();
+    bsaveConstraints->multifieldsAllowed = constraints->getMultifieldsAllowed();
+    bsaveConstraints->singlefieldsAllowed = constraints->getSinglefieldsAllowed();
+    bsaveConstraints->factAddressesAllowed = constraints->getFactAddressesAllowed();
+    bsaveConstraints->anyRestriction = constraints->getAnyRestriction();
+    bsaveConstraints->symbolRestriction = constraints->getSymbolRestriction();
+    bsaveConstraints->stringRestriction = constraints->getStringRestriction();
+    bsaveConstraints->floatRestriction = constraints->getFloatRestriction();
+    bsaveConstraints->integerRestriction = constraints->getIntegerRestriction();
+    bsaveConstraints->classRestriction = constraints->getClassRestriction();
+    bsaveConstraints->instanceNameRestriction = constraints->getInstanceNameRestriction();
 
     bsaveConstraints->restrictionList = HashedExpressionIndex(theEnv, constraints->getRestrictionList());
     bsaveConstraints->classList = HashedExpressionIndex(theEnv, constraints->getClassList());
@@ -221,7 +221,7 @@ static void CopyFromBsaveConstraintRecord(
     constraints = (CONSTRAINT_RECORD *) &ConstraintData(theEnv)->ConstraintArray[theIndex];
 
     constraints->setAnyAllowed(bsaveConstraints->anyAllowed);
-    constraints->symbolsAllowed = bsaveConstraints->symbolsAllowed;
+    constraints->setSymbolsAllowed ( bsaveConstraints->symbolsAllowed);
     constraints->stringsAllowed = bsaveConstraints->stringsAllowed;
     constraints->floatsAllowed = bsaveConstraints->floatsAllowed;
     constraints->integersAllowed = bsaveConstraints->integersAllowed;

@@ -112,7 +112,7 @@ void SetAnyAllowedFlags(
     }
 
     theConstraint->setAnyAllowed(flag1);
-    theConstraint->symbolsAllowed = flag2;
+    theConstraint->setSymbolsAllowed( flag2);
     theConstraint->stringsAllowed = flag2;
     theConstraint->floatsAllowed = flag2;
     theConstraint->integersAllowed = flag2;
@@ -136,7 +136,7 @@ struct constraintRecord *CopyConstraintRecord(
     theConstraint = get_struct(theEnv, constraintRecord);
 
     theConstraint->setAnyAllowed(sourceConstraint->getAnyAllowed());
-    theConstraint->symbolsAllowed = sourceConstraint->symbolsAllowed;
+    theConstraint->setSymbolsAllowed(sourceConstraint->getSymbolsAllowed());
     theConstraint->stringsAllowed = sourceConstraint->stringsAllowed;
     theConstraint->floatsAllowed = sourceConstraint->floatsAllowed;
     theConstraint->integersAllowed = sourceConstraint->integersAllowed;
@@ -216,8 +216,8 @@ bool SetConstraintType(
             break;
 
         case SYMBOL_TYPE:
-            rv = constraints->symbolsAllowed;
-            constraints->symbolsAllowed = true;
+            rv = constraints->getSymbolsAllowed();
+            constraints->setSymbolsAllowed(true);
             break;
 
         case STRING_TYPE:
@@ -226,9 +226,9 @@ bool SetConstraintType(
             break;
 
         case SYMBOL_OR_STRING:
-            rv = (constraints->stringsAllowed || constraints->symbolsAllowed);
-            constraints->symbolsAllowed = true;
-            constraints->stringsAllowed = true;
+            rv = (constraints->getStringsAllowed() || constraints->getSymbolsAllowed());
+            constraints->setSymbolsAllowed(true);
+            constraints->setStringsAllowed(true);
             break;
 
         case INTEGER_TYPE:
@@ -433,8 +433,8 @@ CONSTRAINT_RECORD *ExpressionToConstraintRecord(
             break;
 
         case SYMBOL_TYPE:
-            rv->symbolRestriction = true;
-            rv->symbolsAllowed = true;
+            rv->setSymbolRestriction(true);
+            rv->setSymbolsAllowed(true);
             break;
 
         case STRING_TYPE:
@@ -455,7 +455,7 @@ CONSTRAINT_RECORD *ExpressionToConstraintRecord(
             break;
     }
 
-    if (rv->floatsAllowed || rv->integersAllowed || rv->symbolsAllowed ||
+    if (rv->floatsAllowed || rv->integersAllowed || rv->getSymbolsAllowed() ||
         rv->stringsAllowed || rv->instanceNamesAllowed) {
         rv->setRestrictionList(GenConstant(theEnv, theExpression->type, theExpression->value));
     }
@@ -490,14 +490,14 @@ CONSTRAINT_RECORD *ArgumentTypeToConstraintRecord(
     if (bitTypes & VOID_BIT) { rv->voidAllowed = true; }
     if (bitTypes & FLOAT_BIT) { rv->floatsAllowed = true; }
     if (bitTypes & INTEGER_BIT) { rv->integersAllowed = true; }
-    if (bitTypes & SYMBOL_BIT) { rv->symbolsAllowed = true; }
+    if (bitTypes & SYMBOL_BIT) { rv->setSymbolsAllowed(true); }
     if (bitTypes & STRING_BIT) { rv->stringsAllowed = true; }
     if (bitTypes & MULTIFIELD_BIT) { rv->multifieldsAllowed = true; }
     if (bitTypes & EXTERNAL_ADDRESS_BIT) { rv->externalAddressesAllowed = true; }
     if (bitTypes & FACT_ADDRESS_BIT) { rv->factAddressesAllowed = true; }
     if (bitTypes & INSTANCE_ADDRESS_BIT) { rv->instanceAddressesAllowed = true; }
     if (bitTypes & INSTANCE_NAME_BIT) { rv->instanceNamesAllowed = true; }
-    if (bitTypes & BOOLEAN_BIT) { rv->symbolsAllowed = true; }
+    if (bitTypes & BOOLEAN_BIT) { rv->setSymbolsAllowed(true); }
 
     if (bitTypes == ANY_TYPE_BITS) { rv->setAnyAllowed(true); }
 
