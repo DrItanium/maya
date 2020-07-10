@@ -132,47 +132,17 @@ Environment CreateEnvironmentDriver(
         CLIPSInteger **integerTable,
         CLIPSBitMap **bitmapTable,
         CLIPSExternalAddress **externalAddressTable,
-        struct functionDefinition *functions) {
-    void *theData;
+        functionDefinition *functions) {
     auto theEnvironment = std::make_shared<environmentData>();
-    //theEnvironment = (environmentData *) malloc(sizeof(environmentData));
 
     if (theEnvironment == nullptr) {
         std::cout << "\n[ENVRNMNT5] Unable to create new environment.\n";
         return nullptr;
     }
 
-    theData = malloc(sizeof(void *) * MAXIMUM_ENVIRONMENT_POSITIONS);
-
-    if (theData == nullptr) {
-     //   free(theEnvironment);
-        std::cout << "\n[ENVRNMNT6] Unable to create environment data.\n";
-        return nullptr;
-    }
-    memset(theData, 0, sizeof(void *) * MAXIMUM_ENVIRONMENT_POSITIONS);
-
-    theEnvironment->initialized = false;
-    theEnvironment->theData = (void **) theData;
-    theEnvironment->next = nullptr;
-    theEnvironment->listOfCleanupEnvironmentFunctions = nullptr;
-    theEnvironment->context = nullptr;
-
     /*=============================================*/
     /* Allocate storage for the cleanup functions. */
     /*=============================================*/
-
-    theData = malloc(sizeof(void (*)(environmentData *)) * MAXIMUM_ENVIRONMENT_POSITIONS);
-
-    if (theData == nullptr) {
-        free(theEnvironment->theData);
-        //free(theEnvironment);
-        std::cout << "\n[ENVRNMNT7] Unable to create environment data.\n";
-        return nullptr;
-    }
-
-    memset(theData, 0, sizeof(void (*)(environmentData *)) * MAXIMUM_ENVIRONMENT_POSITIONS);
-    theEnvironment->cleanupFunctions = (void (**)(const Environment&)) theData;
-
     InitializeEnvironment(theEnvironment, symbolTable, floatTable, integerTable,
                           bitmapTable, externalAddressTable, functions);
 

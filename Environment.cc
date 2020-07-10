@@ -126,7 +126,7 @@
 /*    for the specified environment data record.       */
 /*******************************************************/
 bool AllocateEnvironmentData(
-        const Environment&theEnvironment,
+        const Environment& theEnvironment,
         unsigned position,
         size_t size,
         EnvironmentCleanupFunction *cleanupFunction) {

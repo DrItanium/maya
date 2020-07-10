@@ -66,11 +66,18 @@
 #include <stdbool.h>
 #include <cstdlib>
 #include <memory>
+#include <vector>
+#include <array>
+#include <any>
+#include <functional>
+#include <tuple>
+#include <iostream>
 
 //typedef struct environmentData Environment;
 
 using Environment = std::shared_ptr<struct environmentData>;
-typedef void EnvironmentCleanupFunction(const Environment&);
+//typedef void EnvironmentCleanupFunction(const Environment&);
+using EnvironmentCleanupFunction = std::function<void(const Environment&)>;
 
 #include "Entities.h"
 #include "ExternalFunctions.h"
@@ -84,17 +91,91 @@ struct environmentCleanupFunction {
     int priority;
     struct environmentCleanupFunction *next;
 };
+class EnvironmentModule {
+public:
+    virtual ~EnvironmentModule() = default;
+};
+template<typename T>
+class EnvironmentModuleTypeToIndex final {
+    EnvironmentModuleTypeToIndex() = delete;
+    ~EnvironmentModuleTypeToIndex() = delete;
+    EnvironmentModuleTypeToIndex(EnvironmentModuleTypeToIndex<T>&&) = delete;
+    EnvironmentModuleTypeToIndex(const EnvironmentModuleTypeToIndex<T>&) = delete;
+    EnvironmentModuleTypeToIndex<T>& operator=(const EnvironmentModuleTypeToIndex<T>&) = delete;
+    EnvironmentModuleTypeToIndex<T>& operator=(EnvironmentModuleTypeToIndex<T>&&) = delete;
+};
+
+template<size_t index>
+class EnvironmentModuleIndexToType final {
+    EnvironmentModuleIndexToType() = delete;
+    ~EnvironmentModuleIndexToType() = delete;
+    EnvironmentModuleIndexToType(EnvironmentModuleIndexToType<index>&&) = delete;
+    EnvironmentModuleIndexToType(const EnvironmentModuleIndexToType<index>&) = delete;
+    EnvironmentModuleIndexToType<index>& operator=(const EnvironmentModuleIndexToType<index>&) = delete;
+    EnvironmentModuleIndexToType<index>& operator=(EnvironmentModuleIndexToType<index>&&) = delete;
+};
+
+template<typename T>
+constexpr size_t EnvironmentModuleIndex = EnvironmentModuleTypeToIndex<T>::index;
+template<size_t index>
+using EnvironmentModuleType = typename EnvironmentModuleIndexToType<index>::type;
+#define RegisterEnvironmentModule(actual_type, pos) \
+template<> class EnvironmentModuleTypeToIndex<actual_type> final { \
+    EnvironmentModuleTypeToIndex() = delete; \
+~EnvironmentModuleTypeToIndex() = delete; \
+EnvironmentModuleTypeToIndex(EnvironmentModuleTypeToIndex< actual_type >&&) = delete;\
+EnvironmentModuleTypeToIndex(const EnvironmentModuleTypeToIndex< actual_type >&) = delete; \
+EnvironmentModuleTypeToIndex< actual_type >& operator=(const EnvironmentModuleTypeToIndex< actual_type >&) = delete; \
+EnvironmentModuleTypeToIndex< actual_type >& operator=(EnvironmentModuleTypeToIndex< actual_type >&&) = delete; \
+public: \
+static constexpr size_t index = pos ; \
+}; \
+template<> class EnvironmentModuleIndexToType< pos > final { \
+    EnvironmentModuleIndexToType() = delete; \
+~EnvironmentModuleIndexToType() = delete; \
+EnvironmentModuleIndexToType(EnvironmentModuleIndexToType< pos >&&) = delete;\
+EnvironmentModuleIndexToType(const EnvironmentModuleIndexToType< pos >&) = delete; \
+EnvironmentModuleIndexToType< pos >& operator=(const EnvironmentModuleIndexToType< pos >&) = delete; \
+EnvironmentModuleIndexToType< pos >& operator=(EnvironmentModuleIndexToType< pos >&&) = delete; \
+public: \
+using type = actual_type ; \
+} \
+
 
 struct environmentData {
-    bool initialized: 1;
-    void *context;
-    CLIPSLexeme *TrueSymbol;
-    CLIPSLexeme *FalseSymbol;
-    CLIPSVoid *VoidConstant;
-    void **theData;
-    void (**cleanupFunctions)(const Environment&);
-    environmentCleanupFunction *listOfCleanupEnvironmentFunctions;
-    environmentData *next;
+    bool initialized = false;
+    void *context = nullptr;
+    CLIPSLexeme *TrueSymbol = nullptr;
+    CLIPSLexeme *FalseSymbol = nullptr;
+    CLIPSVoid *VoidConstant = nullptr;
+    std::array<std::unique_ptr<EnvironmentModule>, MAXIMUM_ENVIRONMENT_POSITIONS> environmentModules;
+    environmentCleanupFunction *listOfCleanupEnvironmentFunctions = nullptr;
+    environmentData *next = nullptr;
+    template<typename T>
+    bool installEnvironmentModule(std::unique_ptr<T>&& module) noexcept {
+        constexpr auto position = EnvironmentModuleIndex<T>;
+        if (position >= MAXIMUM_ENVIRONMENT_POSITIONS) {
+            std::cout << "\n[ENVRNMNT2] Environment data position " << position << " exceeds the maximum allowed.\n";
+            return false;
+        }
+        if (auto& ptr = environmentModules[position]; ptr) {
+            // already populated, stop now
+            std::cout << "\n[ENVRNMNT3] Environment data position " << position << " already allocated.\n";
+            return false;
+        }
+        environmentModules[position] = std::move(module);
+        return true;
+    }
+    template<size_t position>
+    const std::unique_ptr<EnvironmentModuleType<position>>& getEnvironmentModule() noexcept {
+        if (position >= MAXIMUM_ENVIRONMENT_POSITIONS) {
+            std::cout << "\n[ENVRNMNT2] Environment data position " << position << " exceeds the maximum allowed.\n";
+            return false;
+        } else {
+            return static_cast<std::shared_ptr<EnvironmentModuleType<position>>>(environmentModules[position]);
+        }
+    }
+
 };
 
 
@@ -102,14 +183,7 @@ inline auto VoidConstant(const Environment& theEnv) noexcept { return theEnv->Vo
 inline auto FalseSymbol(const Environment& theEnv) noexcept { return theEnv->FalseSymbol; }
 inline auto TrueSymbol(const Environment& theEnv) noexcept { return theEnv->TrueSymbol; }
 
-inline void* getEnvironmentData(const Environment& theEnv, size_t position) noexcept {
-    return theEnv->theData[position];
-}
-inline void setEnvironmentData(const Environment& theEnv, size_t position, void* value) noexcept {
-    theEnv->theData[position] = value;
-}
-#define GetEnvironmentData(theEnv, position) (getEnvironmentData(theEnv, position))
-#define SetEnvironmentData(theEnv, position, value) (setEnvironmentData(theEnv, position, value))
+#define GetEnvironmentData(theEnv, position) (theEnv->getEnvironmentModule<position>())
 
 bool AllocateEnvironmentData(const Environment&, unsigned, size_t, EnvironmentCleanupFunction * = nullptr);
 bool AddEnvironmentCleanupFunction(const Environment&, const char *, EnvironmentCleanupFunction *, int);
