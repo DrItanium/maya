@@ -527,6 +527,7 @@ Deftemplate *CreateImpliedDeftemplate(
     Deftemplate *newDeftemplate;
 
     newDeftemplate = get_struct(theEnv, deftemplate);
+    zeroMemory(newDeftemplate);
     newDeftemplate->header.name = deftemplateName;
     newDeftemplate->header.ppForm = nullptr;
     newDeftemplate->header.usrData = nullptr;

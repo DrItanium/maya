@@ -477,6 +477,7 @@ static Defrule *CreateNewDisjunct(
     /*===================================================*/
 
     newDisjunct = get_struct(theEnv, defrule);
+    zeroMemory(newDisjunct);
     newDisjunct->header.ppForm = nullptr;
     newDisjunct->header.next = nullptr;
     newDisjunct->header.usrData = nullptr;

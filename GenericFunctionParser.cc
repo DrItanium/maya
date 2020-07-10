@@ -1216,6 +1216,7 @@ static Defmethod *AddGenericMethod(
     long b, e;
 
     narr = (Defmethod *) gm2(theEnv, (sizeof(Defmethod) * (gfunc->mcnt + 1)));
+    zeroMemory(narr);
     for (b = e = 0; b < gfunc->mcnt; b++, e++) {
         if (b == mposn)
             e++;

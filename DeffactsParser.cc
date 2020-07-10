@@ -139,6 +139,7 @@ bool ParseDeffacts(
 
     ExpressionInstall(theEnv, temp);
     newDeffacts = get_struct(theEnv, deffacts);
+    zeroMemory(newDeffacts);
     IncrementLexemeCount(deffactsName);
     InitializeConstructHeader(theEnv, "deffacts", DEFFACTS, &newDeffacts->header, deffactsName);
 

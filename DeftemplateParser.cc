@@ -160,6 +160,7 @@ bool ParseDeftemplate(
     /*=====================================*/
 
     newDeftemplate = get_struct(theEnv, deftemplate);
+    zeroMemory(newDeftemplate);
     newDeftemplate->header.name = deftemplateName;
     newDeftemplate->header.next = nullptr;
     newDeftemplate->header.usrData = nullptr;

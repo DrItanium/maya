@@ -502,6 +502,7 @@ Defclass *NewClass(
     Defclass *cls;
 
     cls = get_struct(theEnv, defclass);
+    zeroMemory(cls);
     InitializeConstructHeader(theEnv, "defclass", DEFCLASS, &cls->header, className);
 
     cls->id = 0;
