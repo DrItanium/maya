@@ -115,8 +115,8 @@ public:
     unsigned long bsaveID;
     expr *classList;
     expr *restrictionList;
-    expr *minValue;
 private:
+    expr *minValue;
     expr *maxValue;
     expr *minFields;
     expr *maxFields;

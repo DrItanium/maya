@@ -1005,9 +1005,9 @@ static bool ParseRangeCardinalityAttribute(
     GetToken(theEnv, readSource, &inputToken);
     if ((inputToken.tknType == INTEGER_TOKEN) || ((inputToken.tknType == FLOAT_TOKEN) && range)) {
         if (range) {
-            ReturnExpression(theEnv, constraints->minValue);
-            if (inputToken.tknType == INTEGER_TOKEN) { constraints->minValue = GenConstant(theEnv, INTEGER_TYPE, inputToken.value); }
-            else { constraints->minValue = GenConstant(theEnv, FLOAT_TYPE, inputToken.value); }
+            ReturnExpression(theEnv, constraints->getMinValue());
+            if (inputToken.tknType == INTEGER_TOKEN) { constraints->setMinValue(GenConstant(theEnv, INTEGER_TYPE, inputToken.value)); }
+            else { constraints->setMinValue( GenConstant(theEnv, FLOAT_TYPE, inputToken.value)); }
         } else {
             if (inputToken.integerValue->contents < 0LL) {
                 PrintErrorID(theEnv, "CSTRNPSR", 6, true);

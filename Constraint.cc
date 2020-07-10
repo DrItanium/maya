@@ -338,7 +338,7 @@ static bool ConstraintCompare(
     }
     if (tmpPtr1 != tmpPtr2) return false;
 
-    for (tmpPtr1 = constraint1->minValue, tmpPtr2 = constraint2->minValue;
+    for (tmpPtr1 = constraint1->getMinValue(), tmpPtr2 = constraint2->getMinValue();
          (tmpPtr1 != nullptr) && (tmpPtr2 != nullptr);
          tmpPtr1 = tmpPtr1->nextArg, tmpPtr2 = tmpPtr2->nextArg) {
         if ((tmpPtr1->type != tmpPtr2->type) || (tmpPtr1->value != tmpPtr2->value)) { return false; }

@@ -540,10 +540,10 @@ static void PrintRange(
         Environment *theEnv,
         const char *logicalName,
         CONSTRAINT_RECORD *theConstraint) {
-    if (theConstraint->minValue->value == SymbolData(theEnv)->NegativeInfinity) {
+    if (theConstraint->getMinValue()->value == SymbolData(theEnv)->NegativeInfinity) {
         WriteString(theEnv, logicalName, SymbolData(
                 theEnv)->NegativeInfinity->contents);
-    } else PrintExpression(theEnv, logicalName, theConstraint->minValue);
+    } else PrintExpression(theEnv, logicalName, theConstraint->getMinValue());
     WriteString(theEnv, logicalName, " to ");
     if (theConstraint->getMaxValue()->value == SymbolData(theEnv)->PositiveInfinity) {
         WriteString(theEnv, logicalName, SymbolData(

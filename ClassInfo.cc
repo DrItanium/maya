@@ -901,7 +901,7 @@ bool SlotRange(
         (sp->constraint->getAnyAllowed() || sp->constraint->floatsAllowed ||
          sp->constraint->integersAllowed)) {
         returnValue->value = CreateMultifield(theEnv, 2L);
-        returnValue->multifieldValue->contents[0].value = sp->constraint->minValue->value;
+        returnValue->multifieldValue->contents[0].value = sp->constraint->getMinValue()->value;
         returnValue->multifieldValue->contents[1].value = sp->constraint->getMaxValue()->value;
     } else {
         returnValue->value = FalseSymbol(theEnv);
