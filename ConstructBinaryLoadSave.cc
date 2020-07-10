@@ -117,7 +117,7 @@ void AssignBsaveConstructHeaderVals(
   NOTES        : None
  ***************************************************/
 void UpdateConstructHeader(
-        Environment *theEnv,
+        const Environment& theEnv,
         struct bsaveConstructHeader *theBsaveConstruct,
         ConstructHeader *theConstruct,
         ConstructType theType,
@@ -160,7 +160,7 @@ void UpdateConstructHeader(
   NOTES        : None
  *******************************************************/
 void UnmarkConstructHeader(
-        Environment *theEnv,
+        const Environment&theEnv,
         ConstructHeader *theConstruct) {
     ReleaseLexeme(theEnv, theConstruct->name);
 }

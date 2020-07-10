@@ -53,17 +53,17 @@
 #include "Object.h"
 #include "InstanceCommand.h"
 
-void InitializeInstanceCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void MakeInstanceCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-CLIPSLexeme *GetFullInstanceName(Environment *, Instance *);
-Instance *BuildInstance(Environment *, CLIPSLexeme *, Defclass *, bool);
-void InitSlotsCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-UnmakeInstanceError QuashInstance(Environment *, Instance *);
+void InitializeInstanceCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void MakeInstanceCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+CLIPSLexeme *GetFullInstanceName(const Environment&, Instance *);
+Instance *BuildInstance(const Environment&, CLIPSLexeme *, Defclass *, bool);
+void InitSlotsCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+UnmakeInstanceError QuashInstance(const Environment&, Instance *);
 
-void InactiveInitializeInstance(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void InactiveMakeInstance(Environment *theEnv, UDFContext *context, UDFValue *ret);
+void InactiveInitializeInstance(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void InactiveMakeInstance(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 
-InstanceBuilder *CreateInstanceBuilder(Environment *, const char *);
+InstanceBuilder *CreateInstanceBuilder(const Environment&, const char *);
 PutSlotError IBPutSlot(InstanceBuilder *, const char *, CLIPSValue *);
 
 Instance *IBMake(InstanceBuilder *, const char *);
@@ -87,9 +87,9 @@ PutSlotError IBPutSlotFact(InstanceBuilder *, const char *, Fact *);
 PutSlotError IBPutSlotInstance(InstanceBuilder *, const char *, Instance *);
 PutSlotError IBPutSlotExternalAddress(InstanceBuilder *, const char *, CLIPSExternalAddress *);
 PutSlotError IBPutSlotMultifield(InstanceBuilder *, const char *, Multifield *);
-InstanceBuilderError IBError(Environment *);
+InstanceBuilderError IBError(const Environment&);
 
-InstanceModifier *CreateInstanceModifier(Environment *, Instance *);
+InstanceModifier *CreateInstanceModifier(const Environment&, Instance *);
 PutSlotError IMPutSlot(InstanceModifier *, const char *, CLIPSValue *);
 void IMDispose(InstanceModifier *);
 void IMAbort(InstanceModifier *);
@@ -111,7 +111,7 @@ PutSlotError IMPutSlotFact(InstanceModifier *, const char *, Fact *);
 PutSlotError IMPutSlotInstance(InstanceModifier *, const char *, Instance *);
 PutSlotError IMPutSlotExternalAddress(InstanceModifier *, const char *, CLIPSExternalAddress *);
 PutSlotError IMPutSlotMultifield(InstanceModifier *, const char *, Multifield *);
-InstanceModifierError IMError(Environment *);
+InstanceModifierError IMError(const Environment&);
 
 #endif /* _H_insmngr */
 

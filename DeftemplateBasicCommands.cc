@@ -90,13 +90,13 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void SaveDeftemplates(Environment *, Defmodule *, const char *, void *);
+static void SaveDeftemplates(const Environment&, Defmodule *, const char *, void *);
 
 /*********************************************************************/
 /* DeftemplateBasicCommands: Initializes basic deftemplate commands. */
 /*********************************************************************/
 void DeftemplateBasicCommands(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     AddSaveFunction(theEnv, "deftemplate", SaveDeftemplates, 10, nullptr);
 
     AddUDF(theEnv, "get-deftemplate-list", "m", 0, 1, "y", GetDeftemplateListFunction);
@@ -119,7 +119,7 @@ void DeftemplateBasicCommands(
 /*   for use with the save command.           */
 /**********************************************/
 static void SaveDeftemplates(
-        Environment *theEnv,
+        const Environment&theEnv,
         Defmodule *theModule,
         const char *logicalName,
         void *context) {
@@ -131,7 +131,7 @@ static void SaveDeftemplates(
 /*   for the undeftemplate command.           */
 /**********************************************/
 void UndeftemplateCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UndefconstructCommand(context, "undeftemplate", DeftemplateData(theEnv)->DeftemplateConstruct);
@@ -143,8 +143,8 @@ void UndeftemplateCommand(
 /************************************/
 bool Undeftemplate(
         Deftemplate *theDeftemplate,
-        Environment *allEnv) {
-    Environment *theEnv;
+        const Environment&allEnv) {
+    Environment theEnv;
 
     if (theDeftemplate == nullptr) {
         theEnv = allEnv;
@@ -160,7 +160,7 @@ bool Undeftemplate(
 /*   for the get-deftemplate-list function.         */
 /****************************************************/
 void GetDeftemplateListFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     GetConstructListFunction(context, returnValue, DeftemplateData(theEnv)->DeftemplateConstruct);
@@ -171,7 +171,7 @@ void GetDeftemplateListFunction(
 /*   the get-deftemplate-list function.     */
 /********************************************/
 void GetDeftemplateList(
-        Environment *theEnv,
+        const Environment&theEnv,
         CLIPSValue *returnValue,
         Defmodule *theModule) {
     UDFValue result;
@@ -186,7 +186,7 @@ void GetDeftemplateList(
 /*   for the deftemplate-module function.          */
 /***************************************************/
 void DeftemplateModuleFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     returnValue->value = GetConstructModuleCommand(context, "deftemplate-module", DeftemplateData(theEnv)->DeftemplateConstruct);
@@ -199,7 +199,7 @@ void DeftemplateModuleFunction(
 /*   for the ppdeftemplate command.           */
 /**********************************************/
 void PPDeftemplateCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     PPConstructCommand(context, "ppdeftemplate", DeftemplateData(theEnv)->DeftemplateConstruct, returnValue);
@@ -210,7 +210,7 @@ void PPDeftemplateCommand(
 /*   the ppdeftemplate command.        */
 /***************************************/
 bool PPDeftemplate(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *deftemplateName,
         const char *logicalName) {
     return (PPConstruct(theEnv, deftemplateName, logicalName, DeftemplateData(theEnv)->DeftemplateConstruct));
@@ -221,7 +221,7 @@ bool PPDeftemplate(
 /*   for the list-deftemplates command.          */
 /*************************************************/
 void ListDeftemplatesCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     ListConstructCommand(context, DeftemplateData(theEnv)->DeftemplateConstruct);
@@ -232,7 +232,7 @@ void ListDeftemplatesCommand(
 /*   for the list-deftemplates command. */
 /****************************************/
 void ListDeftemplates(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         Defmodule *theModule) {
     ListConstruct(theEnv, DeftemplateData(theEnv)->DeftemplateConstruct, logicalName, theModule);
@@ -262,7 +262,7 @@ void DeftemplateSetWatch(
 /*   watch flag of a deftemplate via the watch command.   */
 /**********************************************************/
 bool DeftemplateWatchAccess(
-        Environment *theEnv,
+        const Environment&theEnv,
         int code,
         bool newState,
         Expression *argExprs) {
@@ -280,7 +280,7 @@ bool DeftemplateWatchAccess(
 /*   have their watch flag set via the list-watch-items command.         */
 /*************************************************************************/
 bool DeftemplateWatchPrint(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logName,
         int code,
         Expression *argExprs) {

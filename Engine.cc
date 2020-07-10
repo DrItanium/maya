@@ -120,14 +120,14 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static Defmodule *RemoveFocus(Environment *, Defmodule *);
-static void DeallocateEngineData(Environment *);
+static Defmodule *RemoveFocus(const Environment&, Defmodule *);
+static void DeallocateEngineData(const Environment&);
 
 /*****************************************************************************/
 /* InitializeEngine: Initializes the activations and statistics watch items. */
 /*****************************************************************************/
 void InitializeEngine(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     AllocateEnvironmentData(theEnv, ENGINE_DATA, sizeof(engineData), DeallocateEngineData);
 
 #if DEBUGGING_FUNCTIONS
@@ -141,7 +141,7 @@ void InitializeEngine(
 /*    data for engine functionality.             */
 /*************************************************/
 static void DeallocateEngineData(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     FocalModule *tmpPtr, *nextPtr;
 
     DeallocateRuleFiredCallList(theEnv, EngineData(theEnv)->ListOfAfterRuleFiresFunctions);
@@ -159,7 +159,7 @@ static void DeallocateEngineData(
 /* Run: C access routine for the run command. */
 /**********************************************/
 long long Run(
-        Environment *theEnv,
+        const Environment&theEnv,
         long long runLimit) {
     long long rulesFired = 0;
     UDFValue returnValue;
@@ -654,7 +654,7 @@ long long Run(
 /*   should be executed based on the current focus.        */
 /***********************************************************/
 Activation *NextActivationToFire(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     struct activation *theActivation;
     Defmodule *theModule;
 
@@ -693,7 +693,7 @@ Activation *NextActivationToFire(
 /*   specified module from the focus stack.        */
 /***************************************************/
 static Defmodule *RemoveFocus(
-        Environment *theEnv,
+        const Environment&theEnv,
         Defmodule *theModule) {
     FocalModule *tempFocus, *prevFocus, *nextFocus;
     bool found = false;
@@ -782,7 +782,7 @@ static Defmodule *RemoveFocus(
 /* PopFocus: C access routine for the pop-focus function. */
 /**********************************************************/
 Defmodule *PopFocus(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     if (EngineData(theEnv)->CurrentFocus == nullptr) return nullptr;
     return RemoveFocus(theEnv, EngineData(theEnv)->CurrentFocus->theModule);
 }
@@ -791,7 +791,7 @@ Defmodule *PopFocus(
 /* GetNextFocus: Returns the next focus on the focus stack. */
 /************************************************************/
 FocalModule *GetNextFocus(
-        Environment *theEnv,
+        const Environment&theEnv,
         FocalModule *theFocus) {
     /*==================================================*/
     /* If nullptr is passed as an argument, return the top */
@@ -830,7 +830,7 @@ Defmodule *FocalModuleModule(
 void Focus(
         Defmodule *theModule) {
     FocalModule *tempFocus;
-    Environment *theEnv;
+    Environment theEnv;
 
     if (theModule == nullptr) return;
 
@@ -881,7 +881,7 @@ void Focus(
 /*   for the clear-focus-stack command.         */
 /************************************************/
 void ClearFocusStackCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     ClearFocusStack(theEnv);
@@ -892,7 +892,7 @@ void ClearFocusStackCommand(
 /*   for the clear-focus-stack command. */
 /****************************************/
 void ClearFocusStack(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     while (EngineData(theEnv)->CurrentFocus != nullptr) PopFocus(theEnv);
 
     EngineData(theEnv)->FocusChanged = true;
@@ -903,7 +903,7 @@ void ClearFocusStack(
 /*   to the ListOfAfterRuleFiresFunctions.    */
 /**********************************************/
 bool AddAfterRuleFiresFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name,
         RuleFiredFunction *functionPtr,
         int priority,
@@ -919,7 +919,7 @@ bool AddAfterRuleFiresFunction(
 /*   to the ListOfBeforeRuleFiresFunctions.    */
 /***********************************************/
 bool AddBeforeRuleFiresFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name,
         RuleFiredFunction *functionPtr,
         int priority,
@@ -935,7 +935,7 @@ bool AddBeforeRuleFiresFunction(
 /*   from the ListOfAfterRuleFiresFunctions.        */
 /****************************************************/
 bool RemoveAfterRuleFiresFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name) {
     bool found;
 
@@ -950,7 +950,7 @@ bool RemoveAfterRuleFiresFunction(
 /*   from the ListOfBeforeRuleFiresFunctions.        */
 /*****************************************************/
 bool RemoveBeforeRuleFiresFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name) {
     bool found;
 
@@ -965,7 +965,7 @@ bool RemoveBeforeRuleFiresFunction(
 /*   to a rule fired function list.                */
 /***************************************************/
 RuleFiredFunctionItem *AddRuleFiredFunctionToCallList(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name,
         int priority,
         RuleFiredFunction *func,
@@ -1011,7 +1011,7 @@ RuleFiredFunctionItem *AddRuleFiredFunctionToCallList(
 /*   from a rule fired function list.                      */
 /***********************************************************/
 RuleFiredFunctionItem *RemoveRuleFiredFunctionFromCallList(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name,
         RuleFiredFunctionItem *head,
         bool *found) {
@@ -1044,7 +1044,7 @@ RuleFiredFunctionItem *RemoveRuleFiredFunctionFromCallList(
 /*   from a list of rule fired functions.             */
 /******************************************************/
 void DeallocateRuleFiredCallList(
-        Environment *theEnv,
+        const Environment&theEnv,
         RuleFiredFunctionItem *theList) {
     RuleFiredFunctionItem *tmpPtr, *nextPtr;
 
@@ -1061,7 +1061,7 @@ void DeallocateRuleFiredCallList(
 /* RunCommand: H/L access routine for the run command. */
 /*******************************************************/
 void RunCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     unsigned int numArgs;
@@ -1082,7 +1082,7 @@ void RunCommand(
 /* HaltCommand: Causes rule execution to halt. */
 /***********************************************/
 void HaltCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Halt(theEnv);
@@ -1093,7 +1093,7 @@ void HaltCommand(
 /*   for the halt command. */
 /***************************/
 void Halt(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     EngineData(theEnv)->HaltRules = true;
 }
 
@@ -1137,7 +1137,7 @@ bool RemoveBreak(
 /* RemoveAllBreakpoints: Removes all breakpoints. */
 /**************************************************/
 void RemoveAllBreakpoints(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     Defrule *theRule;
     Defmodule *theDefmodule = nullptr;
 
@@ -1152,7 +1152,7 @@ void RemoveAllBreakpoints(
 /*   for the show-breaks command. */
 /**********************************/
 void ShowBreaks(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         Defmodule *theModule) {
     ListItemsDriver(theEnv, logicalName, theModule,
@@ -1177,7 +1177,7 @@ bool DefruleHasBreakpoint(
 /*   for the set-break command.          */
 /*****************************************/
 void SetBreakCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -1201,7 +1201,7 @@ void SetBreakCommand(
 /*   for the remove-break command.          */
 /********************************************/
 void RemoveBreakCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -1234,7 +1234,7 @@ void RemoveBreakCommand(
 /*   for the show-breaks command.          */
 /*******************************************/
 void ShowBreaksCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     unsigned int numArgs;
@@ -1256,7 +1256,7 @@ void ShowBreaksCommand(
 /*   for the list-focus-stack command.         */
 /***********************************************/
 void ListFocusStackCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     ListFocusStack(theEnv, STDOUT);
@@ -1267,7 +1267,7 @@ void ListFocusStackCommand(
 /*   for the list-focus-stack command. */
 /***************************************/
 void ListFocusStack(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName) {
     FocalModule *theFocus;
 
@@ -1286,7 +1286,7 @@ void ListFocusStack(
 /*   for the get-focus-stack function.         */
 /***********************************************/
 void GetFocusStackFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     CLIPSValue result;
@@ -1300,7 +1300,7 @@ void GetFocusStackFunction(
 /*   for the get-focus-stack function. */
 /***************************************/
 void GetFocusStack(
-        Environment *theEnv,
+        const Environment&theEnv,
         CLIPSValue *returnValue) {
     FocalModule *theFocus;
     Multifield *theList;
@@ -1346,7 +1346,7 @@ void GetFocusStack(
 /*   for the pop-focus function.          */
 /******************************************/
 void PopFocusFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Defmodule *theModule;
@@ -1365,7 +1365,7 @@ void PopFocusFunction(
 /*   for the focus function.          */
 /**************************************/
 void FocusCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -1405,7 +1405,7 @@ void FocusCommand(
 /* GetFocusChanged: Returns the value of the variable FocusChanged. */
 /********************************************************************/
 bool GetFocusChanged(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     return EngineData(theEnv)->FocusChanged;
 }
 
@@ -1413,7 +1413,7 @@ bool GetFocusChanged(
 /* SetFocusChanged: Sets the value of the variable FocusChanged. */
 /*****************************************************************/
 void SetFocusChanged(
-        Environment *theEnv,
+        const Environment&theEnv,
         bool value) {
     EngineData(theEnv)->FocusChanged = value;
 }
@@ -1422,7 +1422,7 @@ void SetFocusChanged(
 /* SetHaltRules: Sets the HaltRules flag. */
 /******************************************/
 void SetHaltRules(
-        Environment *theEnv,
+        const Environment&theEnv,
         bool value) {
     EngineData(theEnv)->HaltRules = value;
 }
@@ -1431,7 +1431,7 @@ void SetHaltRules(
 /* GetHaltRules: Returns the HaltExecution flag. */
 /*************************************************/
 bool GetHaltRules(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     return (EngineData(theEnv)->HaltRules);
 }
 

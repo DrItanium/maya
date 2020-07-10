@@ -53,27 +53,27 @@
 
 #include "Evaluation.h"
 
-void ClassAbstractPCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void ClassReactivePCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
+void ClassAbstractPCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void ClassReactivePCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 Defclass *ClassInfoFnxArgs(UDFContext *, const char *, bool *);
-void ClassSlotsCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void ClassSuperclassesCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void ClassSubclassesCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void GetDefmessageHandlersListCmd(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void SlotFacetsCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void SlotSourcesCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void SlotTypesCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void SlotAllowedValuesCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void SlotAllowedClassesCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void SlotRangeCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void SlotCardinalityCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
+void ClassSlotsCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void ClassSuperclassesCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void ClassSubclassesCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void GetDefmessageHandlersListCmd(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SlotFacetsCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SlotSourcesCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SlotTypesCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SlotAllowedValuesCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SlotAllowedClassesCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SlotRangeCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SlotCardinalityCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 bool ClassAbstractP(Defclass *);
 bool ClassReactiveP(Defclass *);
 void ClassSlots(Defclass *, CLIPSValue *, bool);
-void GetDefmessageHandlerList(Environment *, Defclass *, CLIPSValue *, bool);
+void GetDefmessageHandlerList(const Environment&, Defclass *, CLIPSValue *, bool);
 void ClassSuperclasses(Defclass *, CLIPSValue *, bool);
 void ClassSubclasses(Defclass *, CLIPSValue *, bool);
-void ClassSubclassAddresses(Environment *, Defclass *, UDFValue *, bool);
+void ClassSubclassAddresses(const Environment&, Defclass *, UDFValue *, bool);
 bool SlotFacets(Defclass *, const char *, CLIPSValue *);
 bool SlotSources(Defclass *, const char *, CLIPSValue *);
 bool SlotTypes(Defclass *, const char *, CLIPSValue *);

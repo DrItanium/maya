@@ -67,14 +67,14 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void *FindDefaultValue(Environment *, int, CONSTRAINT_RECORD *, void *);
+static void *FindDefaultValue(const Environment&, int, CONSTRAINT_RECORD *, void *);
 
 /********************************************************/
 /* DeriveDefaultFromConstraints: Returns an appropriate */
 /*   default value for the supplied constraints.        */
 /********************************************************/
 void DeriveDefaultFromConstraints(
-        Environment *theEnv,
+        const Environment&theEnv,
         CONSTRAINT_RECORD *constraints,
         UDFValue *theDefault,
         bool multifield,
@@ -154,7 +154,7 @@ void DeriveDefaultFromConstraints(
 /*   maximum value.                                                    */
 /************************************************************************/
 static void *FindDefaultValue(
-        Environment *theEnv,
+        const Environment&theEnv,
         int theType,
         CONSTRAINT_RECORD *theConstraints,
         void *standardDefault) {
@@ -207,7 +207,7 @@ static void *FindDefaultValue(
 /* ParseDefault: Parses a default value list. */
 /**********************************************/
 struct expr *ParseDefault(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *readSource,
         bool multifield,
         bool dynamic,

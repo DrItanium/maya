@@ -68,24 +68,24 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static bool ParsePortSpecifications(Environment *,
+static bool ParsePortSpecifications(const Environment&,
                                     const char *, struct token *,
                                     Defmodule *);
-static bool ParseImportSpec(Environment *, const char *, struct token *,
+static bool ParseImportSpec(const Environment&, const char *, struct token *,
                             Defmodule *);
-static bool ParseExportSpec(Environment *, const char *, struct token *,
+static bool ParseExportSpec(const Environment&, const char *, struct token *,
                             Defmodule *,
                             Defmodule *);
-static bool DeleteDefmodule(Defmodule *, Environment *);
-static bool FindMultiImportConflict(Environment *, Defmodule *);
-static void NotExportedErrorMessage(Environment *, const char *, const char *, const char *);
+static bool DeleteDefmodule(Defmodule *, const Environment&);
+static bool FindMultiImportConflict(const Environment&, Defmodule *);
+static void NotExportedErrorMessage(const Environment&, const char *, const char *, const char *);
 
 /******************************************/
 /* SetNumberOfDefmodules: Sets the number */
 /*   of defmodules currently defined.     */
 /******************************************/
 void SetNumberOfDefmodules(
-        Environment *theEnv,
+        const Environment&theEnv,
         unsigned short value) {
     DefmoduleData(theEnv)->NumberOfDefmodules = value;
 }
@@ -96,7 +96,7 @@ void SetNumberOfDefmodules(
 /*   after a module change occurs.                  */
 /****************************************************/
 void AddAfterModuleDefinedFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name,
         VoidCallFunction *func,
         int priority,
@@ -110,7 +110,7 @@ void AddAfterModuleDefinedFunction(
 /*   items that can be imported/exported by a module. */
 /******************************************************/
 void AddPortConstructItem(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *theName,
         TokenType theType) {
     struct portConstructItem *newItem;
@@ -128,7 +128,7 @@ void AddPortConstructItem(
 /*   the current environment.                         */
 /******************************************************/
 bool ParseDefmodule(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *readSource) {
     CLIPSLexeme *defmoduleName;
     Defmodule *newDefmodule;
@@ -327,7 +327,7 @@ bool ParseDefmodule(
 
     for (defineFunctions = DefmoduleData(theEnv)->AfterModuleDefinedFunctions;
          defineFunctions != nullptr;
-         defineFunctions = defineFunctions->next) { (*(void (*)(void *)) defineFunctions->func)(theEnv); }
+         defineFunctions = defineFunctions->next) { (*(void (*)(void *)) defineFunctions->func)(&(const_cast<Environment&>(theEnv))); }
 
     /*===============================================*/
     /* Defmodule successfully parsed with no errors. */
@@ -343,8 +343,8 @@ bool ParseDefmodule(
 /*************************************************************/
 static bool DeleteDefmodule(
         Defmodule *theDefmodule,
-        Environment *allEnv) {
-    Environment *theEnv;
+        const Environment&allEnv) {
+    Environment theEnv;
 
     if (theDefmodule == nullptr) { theEnv = allEnv; }
     else { theEnv = theDefmodule->header.env; }
@@ -359,7 +359,7 @@ static bool DeleteDefmodule(
 /*   specifications found in a defmodule construct.      */
 /*********************************************************/
 static bool ParsePortSpecifications(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *readSource,
         struct token *theToken,
         Defmodule *theDefmodule) {
@@ -448,7 +448,7 @@ static bool ParsePortSpecifications(
 /*                   <construct-name> <names>*            */
 /**********************************************************/
 static bool ParseImportSpec(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *readSource,
         struct token *theToken,
         Defmodule *newModule) {
@@ -593,7 +593,7 @@ static bool ParseImportSpec(
 /*   specification after the module name.                 */
 /**********************************************************/
 static bool ParseExportSpec(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *readSource,
         struct token *theToken,
         Defmodule *newModule,
@@ -839,7 +839,7 @@ static bool ParseExportSpec(
 /*   and imported, otherwise false is returned.              */
 /*************************************************************/
 struct portConstructItem *ValidPortConstructItem(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *theName) {
     struct portConstructItem *theItem;
 
@@ -856,7 +856,7 @@ struct portConstructItem *ValidPortConstructItem(
 /*   (i.e. an ambiguous reference which is not allowed).   */
 /***********************************************************/
 static bool FindMultiImportConflict(
-        Environment *theEnv,
+        const Environment&theEnv,
         Defmodule *theModule) {
     Defmodule *testModule;
     unsigned int count;
@@ -940,7 +940,7 @@ static bool FindMultiImportConflict(
 /*  named construct is not exported.                  */
 /******************************************************/
 static void NotExportedErrorMessage(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *theModule,
         const char *theConstruct,
         const char *theName) {
@@ -973,7 +973,7 @@ static void NotExportedErrorMessage(
 /*   is found, otherwise false is returned.                  */
 /*************************************************************/
 bool FindImportExportConflict(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *constructName,
         Defmodule *matchModule,
         const char *findName) {

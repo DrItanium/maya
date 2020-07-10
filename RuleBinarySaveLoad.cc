@@ -66,33 +66,33 @@
 /***************************************/
 
 #if BLOAD_AND_BSAVE
-static void BsaveFind(Environment *);
-static void BsaveExpressions(Environment *, FILE *);
-static void BsaveStorage(Environment *, FILE *);
-static void BsaveBinaryItem(Environment *, FILE *);
-static void BsaveJoins(Environment *, FILE *);
-static void BsaveJoin(Environment *, FILE *, struct joinNode *);
-static void BsaveDisjuncts(Environment *, FILE *, Defrule *);
-static void BsaveTraverseJoins(Environment *, FILE *, struct joinNode *);
-static void BsaveLinks(Environment *, FILE *);
-static void BsaveTraverseLinks(Environment *, FILE *, struct joinNode *);
+static void BsaveFind(const Environment&);
+static void BsaveExpressions(const Environment&, FILE *);
+static void BsaveStorage(const Environment&, FILE *);
+static void BsaveBinaryItem(const Environment&, FILE *);
+static void BsaveJoins(const Environment&, FILE *);
+static void BsaveJoin(const Environment&, FILE *, struct joinNode *);
+static void BsaveDisjuncts(const Environment&, FILE *, Defrule *);
+static void BsaveTraverseJoins(const Environment&, FILE *, struct joinNode *);
+static void BsaveLinks(const Environment&, FILE *);
+static void BsaveTraverseLinks(const Environment&, FILE *, struct joinNode *);
 static void BsaveLink(FILE *, struct joinLink *);
 #endif
-static void BloadStorage(Environment *);
-static void BloadBinaryItem(Environment *);
-static void UpdateDefruleModule(Environment *, void *, unsigned long);
-static void UpdateDefrule(Environment *, void *, unsigned long);
-static void UpdateJoin(Environment *, void *, unsigned long);
-static void UpdateLink(Environment *, void *, unsigned long);
-static void ClearBload(Environment *);
-static void DeallocateDefruleBloadData(Environment *);
+static void BloadStorage(const Environment&);
+static void BloadBinaryItem(const Environment&);
+static void UpdateDefruleModule(const Environment&, void *, unsigned long);
+static void UpdateDefrule(const Environment&, void *, unsigned long);
+static void UpdateJoin(const Environment&, void *, unsigned long);
+static void UpdateLink(const Environment&, void *, unsigned long);
+static void ClearBload(const Environment&);
+static void DeallocateDefruleBloadData(const Environment&);
 
 /*****************************************************/
 /* DefruleBinarySetup: Installs the binary save/load */
 /*   feature for the defrule construct.              */
 /*****************************************************/
 void DefruleBinarySetup(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     AllocateEnvironmentData(theEnv, RULEBIN_DATA, sizeof(defruleBinaryData), DeallocateDefruleBloadData);
 
 #if BLOAD_AND_BSAVE
@@ -108,7 +108,7 @@ void DefruleBinarySetup(
 /*    data for the defrule bsave functionality.        */
 /*******************************************************/
 static void DeallocateDefruleBloadData(
-        Environment *theEnv) {
+        const Environment&theEnv) {
 #if (BLOAD_AND_BSAVE)
     size_t space;
     unsigned long i;
@@ -169,7 +169,7 @@ static void DeallocateDefruleBloadData(
 /*   the memory needed for their associated expressions.     */
 /*************************************************************/
 static void BsaveFind(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     Defrule *theDefrule, *theDisjunct;
     Defmodule *theModule;
 
@@ -258,7 +258,7 @@ static void BsaveFind(
 /*   by defrules to the binary save file.       */
 /************************************************/
 static void BsaveExpressions(
-        Environment *theEnv,
+        const Environment&theEnv,
         FILE *fp) {
     Defrule *theDefrule, *theDisjunct;
     Defmodule *theModule;
@@ -313,7 +313,7 @@ static void BsaveExpressions(
 /*   all defrule structures to the binary file       */
 /*****************************************************/
 static void BsaveStorage(
-        Environment *theEnv,
+        const Environment&theEnv,
         FILE *fp) {
     size_t space;
     unsigned long value;
@@ -341,7 +341,7 @@ static void BsaveStorage(
 /*   structures to the binary file.        */
 /*******************************************/
 static void BsaveBinaryItem(
-        Environment *theEnv,
+        const Environment&theEnv,
         FILE *fp) {
     size_t space;
     Defrule *theDefrule;
@@ -422,7 +422,7 @@ static void BsaveBinaryItem(
 /*   structures for a specific rule to the binary file.     */
 /************************************************************/
 static void BsaveDisjuncts(
-        Environment *theEnv,
+        const Environment&theEnv,
         FILE *fp,
         Defrule *theDefrule) {
     Defrule *theDisjunct;
@@ -499,7 +499,7 @@ static void BsaveDisjuncts(
 /*   data structures to the binary file.    */
 /********************************************/
 static void BsaveJoins(
-        Environment *theEnv,
+        const Environment&theEnv,
         FILE *fp) {
     Defrule *rulePtr, *disjunctPtr;
     Defmodule *theModule;
@@ -540,7 +540,7 @@ static void BsaveJoins(
 /* BsaveTraverseJoins: Traverses the join network for a rule. */
 /**************************************************************/
 static void BsaveTraverseJoins(
-        Environment *theEnv,
+        const Environment&theEnv,
         FILE *fp,
         struct joinNode *joinPtr) {
     for (;
@@ -557,7 +557,7 @@ static void BsaveTraverseJoins(
 /*   data structure to the binary file.     */
 /********************************************/
 static void BsaveJoin(
-        Environment *theEnv,
+        const Environment&theEnv,
         FILE *fp,
         struct joinNode *joinPtr) {
     struct bsaveJoinNode tempJoin;
@@ -595,7 +595,7 @@ static void BsaveJoin(
 /*   data structures to the binary file.    */
 /********************************************/
 static void BsaveLinks(
-        Environment *theEnv,
+        const Environment&theEnv,
         FILE *fp) {
     Defrule *rulePtr, *disjunctPtr;
     Defmodule *theModule;
@@ -646,7 +646,7 @@ static void BsaveLinks(
 /*   for a rule saving the join links.            */
 /**************************************************/
 static void BsaveTraverseLinks(
-        Environment *theEnv,
+        const Environment&theEnv,
         FILE *fp,
         struct joinNode *joinPtr) {
     struct joinLink *theLink;
@@ -687,7 +687,7 @@ static void BsaveLink(
 /*   values to a bsave pattern header record.              */
 /***********************************************************/
 void AssignBsavePatternHeaderValues(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct bsavePatternNodeHeader *theBsaveHeader,
         struct patternNodeHeader *theHeader) {
     theBsaveHeader->multifieldNode = theHeader->multifieldNode;
@@ -707,7 +707,7 @@ void AssignBsavePatternHeaderValues(
 /*   the defrules used by this binary image.    */
 /************************************************/
 static void BloadStorage(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     size_t space;
 
     /*=================================================*/
@@ -773,7 +773,7 @@ static void BloadStorage(
 /*   constructs used by this binary image.          */
 /****************************************************/
 static void BloadBinaryItem(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     size_t space;
 
     /*======================================================*/
@@ -825,7 +825,7 @@ static void BloadBinaryItem(
 /*   for defrule module data structures.      */
 /**********************************************/
 static void UpdateDefruleModule(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *buf,
         unsigned long obji) {
     struct bsaveDefruleModule *bdmPtr;
@@ -844,7 +844,7 @@ static void UpdateDefruleModule(
 /*   for defrule data structures.       */
 /****************************************/
 static void UpdateDefrule(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *buf,
         unsigned long obji) {
     struct bsaveDefrule *br;
@@ -877,7 +877,7 @@ static void UpdateDefrule(
 /*   for joinNode data structures.   */
 /*************************************/
 static void UpdateJoin(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *buf,
         unsigned long obji) {
     struct bsaveJoinNode *bj;
@@ -918,7 +918,7 @@ static void UpdateJoin(
 /*   for joinLink data structures.   */
 /*************************************/
 static void UpdateLink(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *buf,
         unsigned long obji) {
     struct bsaveJoinLink *bj;
@@ -934,7 +934,7 @@ static void UpdateLink(
 /*   node headers from the loaded binary image.             */
 /************************************************************/
 void UpdatePatternNodeHeader(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct patternNodeHeader *theHeader,
         struct bsavePatternNodeHeader *theBsaveHeader) {
     struct joinNode *theJoin;
@@ -965,7 +965,7 @@ void UpdatePatternNodeHeader(
 /*   when a binary load is in effect. */
 /**************************************/
 static void ClearBload(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     size_t space;
     unsigned long i;
     struct patternParser *theParser = nullptr;
@@ -1048,7 +1048,7 @@ static void ClearBload(
 /*   module pointer for using with the bload function. */
 /*******************************************************/
 void *BloadDefruleModuleReference(
-        Environment *theEnv,
+        const Environment&theEnv,
         unsigned long theIndex) {
     return ((void *) &DefruleBinaryData(theEnv)->ModuleArray[theIndex]);
 }

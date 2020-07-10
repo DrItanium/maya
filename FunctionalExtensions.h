@@ -26,7 +26,7 @@
 #include <cstdint>
 
 #include "clips.h"
-void InstallFunctionalExtensions(Environment *theEnv);
+void InstallFunctionalExtensions(const Environment&theEnv);
 namespace maya {
     class TreatLexemeAsSymbol final { };
     class TreatLexemeAsString final { };
@@ -38,7 +38,7 @@ namespace maya {
         using ErrorKind = ::FunctionCallBuilderError;
         using String = const std::string &;
     public:
-        FunctionCallBuilder(Environment *theEnv, size_t size = 0);
+        FunctionCallBuilder(const Environment&theEnv, size_t size = 0);
         ~FunctionCallBuilder();
         ErrorKind call(String functionName, CLIPSValue *ret) noexcept;
         void reset() noexcept { FCBReset(_builder); }
@@ -65,7 +65,7 @@ namespace maya {
         using MB = ::MultifieldBuilder;
         using String = const std::string &;
     public:
-        MultifieldBuilder(Environment *theEnv, size_t size = 0);
+        MultifieldBuilder(const Environment&theEnv, size_t size = 0);
         ~MultifieldBuilder();
         Multifield *create() noexcept { return MBCreate(_builder); }
         void reset() noexcept { MBReset(_builder); }

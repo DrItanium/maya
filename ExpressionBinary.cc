@@ -71,7 +71,7 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void UpdateExpression(Environment *, void *, unsigned long);
+static void UpdateExpression(const Environment&, void *, unsigned long);
 
 /***********************************************************/
 /* AllocateExpressions: Determines the amount of space     */
@@ -79,7 +79,7 @@ static void UpdateExpression(Environment *, void *, unsigned long);
 /*   and allocates that amount of space.                   */
 /***********************************************************/
 void AllocateExpressions(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     size_t space;
 
     GenReadBinary(theEnv, &ExpressionData(theEnv)->NumberOfExpressions, sizeof(long));
@@ -96,7 +96,7 @@ void AllocateExpressions(
 /*   used by the expression binary image.     */
 /**********************************************/
 void RefreshExpressions(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     if (ExpressionData(theEnv)->ExpressionArray == nullptr) return;
 
     BloadandRefresh(theEnv, ExpressionData(theEnv)->NumberOfExpressions,
@@ -115,7 +115,7 @@ void RefreshExpressions(
   NOTES        : None
  *********************************************************/
 static void UpdateExpression(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *buf,
         unsigned long obji) {
     BSAVE_EXPRESSION *bexp;
@@ -225,7 +225,7 @@ static void UpdateExpression(
 /*   utilized by an expression binary image. */
 /*********************************************/
 void ClearBloadedExpressions(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     unsigned long i;
     size_t space;
 
@@ -294,7 +294,7 @@ void ClearBloadedExpressions(
   NOTES        : None
  ***************************************************/
 void FindHashedExpressions(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     unsigned i;
     EXPRESSION_HN *exphash;
 
@@ -315,7 +315,7 @@ void FindHashedExpressions(
   NOTES        : None
  ***************************************************/
 void BsaveHashedExpressions(
-        Environment *theEnv,
+        const Environment&theEnv,
         FILE *fp) {
     unsigned i;
     EXPRESSION_HN *exphash;
@@ -330,7 +330,7 @@ void BsaveHashedExpressions(
 /*   constructs for this binary image to the binary save file. */
 /***************************************************************/
 void BsaveConstructExpressions(
-        Environment *theEnv,
+        const Environment&theEnv,
         FILE *fp) {
     struct BinaryItem *biPtr;
 
@@ -346,7 +346,7 @@ void BsaveConstructExpressions(
 /*   an expression to the binary file. */
 /***************************************/
 void BsaveExpression(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct expr *testPtr,
         FILE *fp) {
     BSAVE_EXPRESSION newTest;

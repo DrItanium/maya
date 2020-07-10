@@ -139,15 +139,15 @@ struct objectMatchAction {
 using OBJECT_MATCH_ACTION = objectMatchAction;
 
 
-void ObjectMatchDelay(Environment *theEnv, UDFContext *context, UDFValue *ret);
-bool SetDelayObjectPatternMatching(Environment *, bool);
-bool GetDelayObjectPatternMatching(Environment *);
-OBJECT_PATTERN_NODE *ObjectNetworkPointer(Environment *);
-OBJECT_ALPHA_NODE *ObjectNetworkTerminalPointer(Environment *);
-void SetObjectNetworkPointer(Environment *, OBJECT_PATTERN_NODE *);
-void SetObjectNetworkTerminalPointer(Environment *, OBJECT_ALPHA_NODE *);
-void ObjectNetworkAction(Environment *, int, Instance *, int);
-void ResetObjectMatchTimeTags(Environment *);
+void ObjectMatchDelay(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+bool SetDelayObjectPatternMatching(const Environment&, bool);
+bool GetDelayObjectPatternMatching(const Environment&);
+OBJECT_PATTERN_NODE *ObjectNetworkPointer(const Environment&);
+OBJECT_ALPHA_NODE *ObjectNetworkTerminalPointer(const Environment&);
+void SetObjectNetworkPointer(const Environment&, OBJECT_PATTERN_NODE *);
+void SetObjectNetworkTerminalPointer(const Environment&, OBJECT_ALPHA_NODE *);
+void ObjectNetworkAction(const Environment&, int, Instance *, int);
+void ResetObjectMatchTimeTags(const Environment&);
 
 #endif /* _H_objrtmch */
 

@@ -73,15 +73,15 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void EmptyDrive(Environment *, struct joinNode *, struct partialMatch *, int);
-static void JoinNetErrorMessage(Environment *, struct joinNode *);
+static void EmptyDrive(const Environment&, struct joinNode *, struct partialMatch *, int);
+static void JoinNetErrorMessage(const Environment&, struct joinNode *);
 
 /************************************************/
 /* NetworkAssert: Primary routine for filtering */
 /*   a partial match through the join network.  */
 /************************************************/
 void NetworkAssert(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct partialMatch *binds,
         struct joinNode *join) {
     /*=========================================================*/
@@ -115,7 +115,7 @@ void NetworkAssert(
 /*   the RHS of a join.                              */
 /*****************************************************/
 void NetworkAssertRight(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct partialMatch *rhsBinds,
         struct joinNode *join,
         int operation) {
@@ -293,7 +293,7 @@ void NetworkAssertRight(
 /*   entering through the left side of a join.      */
 /****************************************************/
 void NetworkAssertLeft(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct partialMatch *lhsBinds,
         struct joinNode *join,
         int operation) {
@@ -536,7 +536,7 @@ void NetworkAssertLeft(
 /*   than if EvaluateExpression was used directly.     */
 /*******************************************************/
 bool EvaluateJoinExpression(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct expr *joinExpr,
         struct joinNode *joinPtr) {
     UDFValue theResult;
@@ -651,7 +651,7 @@ bool EvaluateJoinExpression(
 /* EvaluateSecondaryNetworkTest: */
 /*********************************/
 bool EvaluateSecondaryNetworkTest(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct partialMatch *leftMatch,
         struct joinNode *joinPtr) {
     bool joinExpr;
@@ -685,7 +685,7 @@ bool EvaluateSecondaryNetworkTest(
 /* BetaMemoryHashValue: */
 /************************/
 unsigned long BetaMemoryHashValue(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct expr *hashExpr,
         struct partialMatch *lbinds,
         struct partialMatch *rbinds,
@@ -808,7 +808,7 @@ unsigned long BetaMemoryHashValue(
 /*   which the merge took place.                                   */
 /*******************************************************************/
 void PPDrive(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct partialMatch *lhsBinds,
         struct partialMatch *rhsBinds,
         struct joinNode *join,
@@ -871,7 +871,7 @@ void PPDrive(
 /*   that is the first CE of a rule.                                   */
 /***********************************************************************/
 void EPMDrive(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct partialMatch *parent,
         struct joinNode *join,
         int operation) {
@@ -899,7 +899,7 @@ void EPMDrive(
 /*   a rule (i.e. a join that cannot be entered from the LHS). */
 /***************************************************************/
 static void EmptyDrive(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct joinNode *join,
         struct partialMatch *rhsBinds,
         int operation) {
@@ -1055,7 +1055,7 @@ static void EmptyDrive(
 /*   was being evaluated.                                           */
 /********************************************************************/
 static void JoinNetErrorMessage(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct joinNode *joinPtr) {
     PrintErrorID(theEnv, "DRIVE", 1, true);
     WriteString(theEnv, STDERR, "This error occurred in the join network.\n");

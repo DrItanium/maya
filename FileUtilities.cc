@@ -60,18 +60,18 @@
 /***************************************/
 
 #if DEBUGGING_FUNCTIONS
-static bool QueryDribbleCallback(Environment *, const char *, void *);
-static int ReadDribbleCallback(Environment *, const char *, void *);
-static int UnreadDribbleCallback(Environment *, const char *, int, void *);
-static void ExitDribbleCallback(Environment *, int, void *);
-static void WriteDribbleCallback(Environment *, const char *, const char *, void *);
-static void PutcDribbleBuffer(Environment *, int);
+static bool QueryDribbleCallback(const Environment&, const char *, void *);
+static int ReadDribbleCallback(const Environment&, const char *, void *);
+static int UnreadDribbleCallback(const Environment&, const char *, int, void *);
+static void ExitDribbleCallback(const Environment&, int, void *);
+static void WriteDribbleCallback(const Environment&, const char *, const char *, void *);
+static void PutcDribbleBuffer(const Environment&, int);
 #endif
-static bool QueryBatchCallback(Environment *, const char *, void *);
-static int ReadBatchCallback(Environment *, const char *, void *);
-static int UnreadBatchCallback(Environment *, const char *, int, void *);
-static void ExitBatchCallback(Environment *, int, void *);
-static void AddBatch(Environment *, bool, FILE *, const char *, int, const char *, const char *);
+static bool QueryBatchCallback(const Environment&, const char *, void *);
+static int ReadBatchCallback(const Environment&, const char *, void *);
+static int UnreadBatchCallback(const Environment&, const char *, int, void *);
+static void ExitBatchCallback(const Environment&, int, void *);
+static void AddBatch(const Environment&, bool, FILE *, const char *, int, const char *, const char *);
 
 #if DEBUGGING_FUNCTIONS
 /****************************************/
@@ -79,7 +79,7 @@ static void AddBatch(Environment *, bool, FILE *, const char *, int, const char 
 /*   for the dribble router.            */
 /****************************************/
 static bool QueryDribbleCallback(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         void *context) {
 #if MAC_XCD
@@ -97,7 +97,7 @@ static bool QueryDribbleCallback(
 /* AppendDribble: */
 /******************/
 void AppendDribble(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *str) {
     int i;
 
@@ -111,7 +111,7 @@ void AppendDribble(
 /*    for the dribble router.           */
 /****************************************/
 static void WriteDribbleCallback(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         const char *str,
         void *context) {
@@ -137,7 +137,7 @@ static void WriteDribbleCallback(
 /*    for the dribble router.         */
 /**************************************/
 static int ReadDribbleCallback(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         void *context) {
     int rv;
@@ -169,7 +169,7 @@ static int ReadDribbleCallback(
 /* PutcDribbleBuffer: Putc routine for the dribble router. */
 /***********************************************************/
 static void PutcDribbleBuffer(
-        Environment *theEnv,
+        const Environment&theEnv,
         int rv) {
     /*===================================================*/
     /* Receiving an end-of-file character will cause the */
@@ -221,7 +221,7 @@ static void PutcDribbleBuffer(
 /*    for the dribble router.             */
 /******************************************/
 static int UnreadDribbleCallback(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         int ch,
         void *context) {
@@ -255,7 +255,7 @@ static int UnreadDribbleCallback(
 /*    for the dribble router.         */
 /**************************************/
 static void ExitDribbleCallback(
-        Environment *theEnv,
+        const Environment&theEnv,
         int num,
         void *context) {
 #if MAC_XCD
@@ -274,7 +274,7 @@ static void ExitDribbleCallback(
 /*   for the dribble-on command. */
 /*********************************/
 bool DribbleOn(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *fileName) {
     /*==============================*/
     /* If a dribble file is already */
@@ -327,7 +327,7 @@ bool DribbleOn(
 /*   router is active, otherwise false.       */
 /**********************************************/
 bool DribbleActive(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     return FileCommandData(theEnv)->DribbleFP != nullptr;
 
 }
@@ -337,7 +337,7 @@ bool DribbleActive(
 /*   for the dribble-off command. */
 /**********************************/
 bool DribbleOff(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     bool rv = false;
 
     /*================================================*/
@@ -392,7 +392,7 @@ bool DribbleOff(
 /*    for the batch router.           */
 /**************************************/
 static bool QueryBatchCallback(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         void *context) {
 #if MAC_XCD
@@ -408,7 +408,7 @@ static bool QueryBatchCallback(
 /*    for the batch router.         */
 /************************************/
 static int ReadBatchCallback(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         void *context) {
     return (LLGetcBatch(theEnv, logicalName, false));
@@ -419,7 +419,7 @@ static int ReadBatchCallback(
 /*   a character when a batch file is active.      */
 /***************************************************/
 int LLGetcBatch(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         bool returnOnEOF) {
     int rv = EOF, flag = 1;
@@ -498,7 +498,7 @@ int LLGetcBatch(
 /*    for the batch router.             */
 /****************************************/
 static int UnreadBatchCallback(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         int ch,
         void *context) {
@@ -519,7 +519,7 @@ static int UnreadBatchCallback(
 /*    for the batch router.         */
 /************************************/
 static void ExitBatchCallback(
-        Environment *theEnv,
+        const Environment&theEnv,
         int num,
         void *context) {
 #if MAC_XCD
@@ -532,7 +532,7 @@ static void ExitBatchCallback(
 /* Batch: C access routine for the batch command. */
 /**************************************************/
 bool Batch(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *fileName) { return (OpenBatch(theEnv, fileName, false)); }
 
 /***********************************************/
@@ -540,7 +540,7 @@ bool Batch(
 /*   opened with the batch command.            */
 /***********************************************/
 bool OpenBatch(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *fileName,
         bool placeAtEnd) {
     FILE *theFile;
@@ -614,7 +614,7 @@ bool OpenBatch(
 /*   processing for the  string is completed.                    */
 /*****************************************************************/
 bool OpenStringBatch(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *stringName,
         const char *theString,
         bool placeAtEnd) {
@@ -637,7 +637,7 @@ bool OpenStringBatch(
 /*   adds it to the list of opened batch files.        */
 /*******************************************************/
 static void AddBatch(
-        Environment *theEnv,
+        const Environment&theEnv,
         bool placeAtEnd,
         FILE *theFileSource,
         const char *theLogicalSource,
@@ -687,7 +687,7 @@ static void AddBatch(
 /* RemoveBatch: Removes the top entry on the list of batch files. */
 /******************************************************************/
 bool RemoveBatch(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     struct batchEntry *bptr;
     bool rv, fileBatch = false;
 
@@ -773,7 +773,7 @@ bool RemoveBatch(
 /*   file is open, otherwise false.     */
 /****************************************/
 bool BatchActive(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     return FileCommandData(theEnv)->TopOfBatchList != nullptr;
 
 }
@@ -782,7 +782,7 @@ bool BatchActive(
 /* CloseAllBatchSources: Closes all open batch files. */
 /******************************************************/
 void CloseAllBatchSources(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     /*================================================*/
     /* Free the batch buffer if it contains anything. */
     /*================================================*/
@@ -813,7 +813,7 @@ void CloseAllBatchSources(
 /* BatchStar: C access routine for the batch* command. */
 /*******************************************************/
 bool BatchStar(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *fileName) {
     int inchar;
     bool done = false;

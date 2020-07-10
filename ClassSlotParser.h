@@ -64,8 +64,8 @@ public:
 };
 using TEMP_SLOT_LINK  = tempSlotLink;
 
-TEMP_SLOT_LINK *ParseSlot(Environment *, const char *, const char *, TEMP_SLOT_LINK *, PACKED_CLASS_LINKS *, bool);
-void DeleteSlots(Environment *, TEMP_SLOT_LINK *);
+TEMP_SLOT_LINK *ParseSlot(const Environment&, const char *, const char *, TEMP_SLOT_LINK *, PACKED_CLASS_LINKS *, bool);
+void DeleteSlots(const Environment&, TEMP_SLOT_LINK *);
 
 #endif
 

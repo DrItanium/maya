@@ -123,21 +123,21 @@ struct instanceData {
 
 #define InstanceData(theEnv) ((instanceData *) GetEnvironmentData(theEnv,INSTANCE_DATA))
 
-void SetupInstances(Environment *);
+void SetupInstances(const Environment&);
 UnmakeInstanceError DeleteInstance(Instance *);
-UnmakeInstanceError DeleteAllInstances(Environment *);
+UnmakeInstanceError DeleteAllInstances(const Environment&);
 UnmakeInstanceError UnmakeInstance(Instance *);
-bool UnmakeInstanceCallback(Instance *, Environment *);
-UnmakeInstanceError UnmakeAllInstances(Environment *);
+bool UnmakeInstanceCallback(Instance *, const Environment&);
+UnmakeInstanceError UnmakeAllInstances(const Environment&);
 #if DEBUGGING_FUNCTIONS
-void InstancesCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void PPInstanceCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void Instances(Environment *, const char *, Defmodule *, const char *, bool);
+void InstancesCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void PPInstanceCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void Instances(const Environment&, const char *, Defmodule *, const char *, bool);
 #endif
-Instance *MakeInstance(Environment *, const char *);
-MakeInstanceError GetMakeInstanceError(Environment *);
-Instance *CreateRawInstance(Environment *, Defclass *, const char *);
-Instance *FindInstance(Environment *, Defmodule *, const char *, bool);
+Instance *MakeInstance(const Environment&, const char *);
+MakeInstanceError GetMakeInstanceError(const Environment&);
+Instance *CreateRawInstance(const Environment&, Defclass *, const char *);
+Instance *FindInstance(const Environment&, Defmodule *, const char *, bool);
 bool ValidInstanceAddress(Instance *);
 GetSlotError DirectGetSlot(Instance *, const char *, CLIPSValue *);
 PutSlotError DirectPutSlot(Instance *, const char *, CLIPSValue *);
@@ -155,23 +155,23 @@ PutSlotError DirectPutSlotMultifield(Instance *, const char *, Multifield *);
 PutSlotError DirectPutSlotCLIPSExternalAddress(Instance *, const char *, CLIPSExternalAddress *);
 const char *InstanceName(Instance *);
 Defclass *InstanceClass(Instance *);
-unsigned long GetGlobalNumberOfInstances(Environment *);
-Instance *GetNextInstance(Environment *, Instance *);
-Instance *GetNextInstanceInScope(Environment *, Instance *);
+unsigned long GetGlobalNumberOfInstances(const Environment&);
+Instance *GetNextInstance(const Environment&, Instance *);
+Instance *GetNextInstanceInScope(const Environment&, Instance *);
 Instance *GetNextInstanceInClass(Defclass *, Instance *);
 Instance *GetNextInstanceInClassAndSubclasses(Defclass **, Instance *, UDFValue *);
 void InstancePPForm(Instance *, StringBuilder *);
-void ClassCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void DeleteInstanceCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void UnmakeInstanceCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void SymbolToInstanceNameFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void InstanceNameToSymbolFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void InstanceAddressCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void InstanceNameCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void InstanceAddressPCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void InstanceNamePCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void InstancePCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void InstanceExistPCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void CreateInstanceHandler(Environment *theEnv, UDFContext *context, UDFValue *ret);
+void ClassCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void DeleteInstanceCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void UnmakeInstanceCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SymbolToInstanceNameFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void InstanceNameToSymbolFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void InstanceAddressCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void InstanceNameCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void InstanceAddressPCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void InstanceNamePCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void InstancePCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void InstanceExistPCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void CreateInstanceHandler(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 
 #endif /* _H_inscom */

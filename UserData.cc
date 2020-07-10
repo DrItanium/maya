@@ -35,7 +35,7 @@
 /*    data for user data routines.               */
 /*************************************************/
 void InitializeUserDataData(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     AllocateEnvironmentData(theEnv, USER_DATA_DATA, sizeof(userDataData));
 }
 
@@ -45,7 +45,7 @@ void InitializeUserDataData(
 /*   integer data ID associated with the record.      */
 /******************************************************/
 unsigned char InstallUserDataRecord(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct userDataRecord *theRecord) {
     theRecord->dataID = UserDataData(theEnv)->UserDataRecordCount;
     UserDataData(theEnv)->UserDataRecordArray[UserDataData(theEnv)->UserDataRecordCount] = theRecord;
@@ -58,7 +58,7 @@ unsigned char InstallUserDataRecord(
 /*   data structure is created if one is not found.  */
 /*****************************************************/
 struct userData *FetchUserData(
-        Environment *theEnv,
+        const Environment&theEnv,
         unsigned char userDataID,
         struct userData **theList) {
     struct userData *theData;
@@ -101,7 +101,7 @@ struct userData *TestUserData(
 /* ClearUserDataList: Deallocates a linked list of user data.  */
 /***************************************************************/
 void ClearUserDataList(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct userData *theList) {
     struct userData *nextData;
 
@@ -117,7 +117,7 @@ void ClearUserDataList(
 /*   from a list of user data structures.        */
 /*************************************************/
 struct userData *DeleteUserData(
-        Environment *theEnv,
+        const Environment&theEnv,
         unsigned char userDataID,
         struct userData *theList) {
     struct userData *theData, *lastData = nullptr;

@@ -150,17 +150,17 @@ struct defruleData {
     nullptr : \
     ((theJoin)->rightSideEntryStructure))
 
-void InitializeDefrules(Environment *);
-Defrule *FindDefrule(Environment *, const char *);
-Defrule *FindDefruleInModule(Environment *, const char *);
-Defrule *GetNextDefrule(Environment *, Defrule *);
-struct defruleModule *GetDefruleModuleItem(Environment *, Defmodule *);
+void InitializeDefrules(const Environment&);
+Defrule *FindDefrule(const Environment&, const char *);
+Defrule *FindDefruleInModule(const Environment&, const char *);
+Defrule *GetNextDefrule(const Environment&, Defrule *);
+struct defruleModule *GetDefruleModuleItem(const Environment&, Defmodule *);
 bool DefruleIsDeletable(Defrule *);
 #if BLOAD_AND_BSAVE
-void AddBetaMemoriesToJoin(Environment *, struct joinNode *);
+void AddBetaMemoriesToJoin(const Environment&, struct joinNode *);
 #endif
-long GetDisjunctCount(Environment *, Defrule *);
-Defrule *GetNthDisjunct(Environment *, Defrule *, long);
+long GetDisjunctCount(const Environment&, Defrule *);
+Defrule *GetNthDisjunct(const Environment&, Defrule *, long);
 const char *DefruleModule(Defrule *);
 const char *DefruleName(Defrule *);
 const char *DefrulePPForm(Defrule *);

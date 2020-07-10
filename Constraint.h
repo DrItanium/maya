@@ -164,14 +164,14 @@ struct constraintData {
 
 #define ConstraintData(theEnv) ((constraintData *) GetEnvironmentData(theEnv,CONSTRAINT_DATA))
 
-void InitializeConstraints(Environment *);
-void GDCCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void SDCCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-bool SetDynamicConstraintChecking(Environment *, bool);
-bool GetDynamicConstraintChecking(Environment *);
+void InitializeConstraints(const Environment&);
+void GDCCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SDCCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+bool SetDynamicConstraintChecking(const Environment&, bool);
+bool GetDynamicConstraintChecking(const Environment&);
 unsigned long HashConstraint(constraintRecord *);
-struct constraintRecord *AddConstraint(Environment *, struct constraintRecord *);
-void RemoveConstraint(Environment *, struct constraintRecord *);
+struct constraintRecord *AddConstraint(const Environment&, struct constraintRecord *);
+void RemoveConstraint(const Environment&, struct constraintRecord *);
 
 #endif
 

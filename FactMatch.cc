@@ -72,22 +72,22 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static bool EvaluatePatternExpression(Environment *, struct factPatternNode *, struct expr *);
-static void TraceErrorToJoin(Environment *, struct factPatternNode *, bool);
-static void ProcessFactAlphaMatch(Environment *, Fact *, struct multifieldMarker *, struct factPatternNode *);
-static struct factPatternNode *GetNextFactPatternNode(Environment *, bool, struct factPatternNode *);
-static bool SkipFactPatternNode(Environment *, struct factPatternNode *);
-static void ProcessMultifieldNode(Environment *,
+static bool EvaluatePatternExpression(const Environment&, struct factPatternNode *, struct expr *);
+static void TraceErrorToJoin(const Environment&, struct factPatternNode *, bool);
+static void ProcessFactAlphaMatch(const Environment&, Fact *, struct multifieldMarker *, struct factPatternNode *);
+static struct factPatternNode *GetNextFactPatternNode(const Environment&, bool, struct factPatternNode *);
+static bool SkipFactPatternNode(const Environment&, struct factPatternNode *);
+static void ProcessMultifieldNode(const Environment&,
                                   struct factPatternNode *,
                                   struct multifieldMarker *,
                                   struct multifieldMarker *, size_t, size_t);
-static void PatternNetErrorMessage(Environment *, struct factPatternNode *);
+static void PatternNetErrorMessage(const Environment&, struct factPatternNode *);
 
 /*************************************************************************/
 /* FactPatternMatch: Implements the core loop for fact pattern matching. */
 /*************************************************************************/
 void FactPatternMatch(
-        Environment *theEnv,
+        const Environment&theEnv,
         Fact *theFact,
         struct factPatternNode *patternPtr,
         size_t offset,
@@ -261,7 +261,7 @@ void FactPatternMatch(
 /*  wildcard or variable.                                     */
 /**************************************************************/
 static void ProcessMultifieldNode(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct factPatternNode *thePattern,
         struct multifieldMarker *markers,
         struct multifieldMarker *endMark,
@@ -421,7 +421,7 @@ static void ProcessMultifieldNode(
 /*   node is computed using a depth first traversal.  */
 /******************************************************/
 static struct factPatternNode *GetNextFactPatternNode(
-        Environment *theEnv,
+        const Environment&theEnv,
         bool finishedMatching,
         struct factPatternNode *thePattern) {
     EvaluationData(theEnv)->EvaluationError = false;
@@ -488,7 +488,7 @@ static struct factPatternNode *GetNextFactPatternNode(
 /*   new alpha match through the join network.         */
 /*******************************************************/
 static void ProcessFactAlphaMatch(
-        Environment *theEnv,
+        const Environment&theEnv,
         Fact *theFact,
         struct multifieldMarker *theMarks,
         struct factPatternNode *thePattern) {
@@ -535,7 +535,7 @@ static void ProcessFactAlphaMatch(
 /*   were used directly.                                         */
 /*****************************************************************/
 static bool EvaluatePatternExpression(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct factPatternNode *patternPtr,
         struct expr *theTest) {
     UDFValue theResult;
@@ -653,7 +653,7 @@ static bool EvaluatePatternExpression(
 /*   be printed.                                                        */
 /************************************************************************/
 static void PatternNetErrorMessage(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct factPatternNode *patternPtr) {
     char buffer[60];
     struct templateSlot *theSlots;
@@ -703,7 +703,7 @@ static void PatternNetErrorMessage(
 /*   that the name of the rule(s) containing the pattern can be printed.   */
 /***************************************************************************/
 static void TraceErrorToJoin(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct factPatternNode *patternPtr,
         bool traceRight) {
     struct joinNode *joinPtr;
@@ -728,7 +728,7 @@ static void TraceErrorToJoin(
 /*   the node should be skipped.                                       */
 /***********************************************************************/
 static bool SkipFactPatternNode(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct factPatternNode *thePattern) {
     return EngineData(theEnv)->IncrementalResetInProgress &&
            (thePattern->header.initialize == false);
@@ -745,7 +745,7 @@ static bool SkipFactPatternNode(
 /*  incremental reset.                                         */
 /***************************************************************/
 void MarkFactPatternForIncrementalReset(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct patternNodeHeader *thePattern,
         bool value) {
     struct factPatternNode *patternPtr = (factPatternNode *) thePattern;
@@ -795,7 +795,7 @@ void MarkFactPatternForIncrementalReset(
 /*   only active patterns in the fact pattern network.        */
 /**************************************************************/
 void FactsIncrementalReset(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     Fact *factPtr;
 
     for (factPtr = GetNextFact(theEnv, nullptr);

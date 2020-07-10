@@ -46,8 +46,8 @@
 
 #define _H_ruledlt
 
-void ReturnDefrule(Environment *, Defrule *);
-void DestroyDefrule(Environment *, Defrule *);
+void ReturnDefrule(const Environment&, Defrule *);
+void DestroyDefrule(const Environment&, Defrule *);
 
 #endif /* _H_ruledlt */
 

@@ -140,7 +140,7 @@ struct gcBlock {
 };
 
 struct stringBuilder {
-    Environment *sbEnv;
+    Environment sbEnv;
     char *contents;
     size_t bufferReset;
     size_t length;
@@ -180,58 +180,58 @@ constexpr bool IsUTF8MultiByteContinuation(char ch) noexcept {
 }
 
 
-void InitializeUtilityData(Environment *);
-bool AddCleanupFunction(Environment *, const char *, VoidCallFunction *, int, void *context = nullptr);
-bool AddPeriodicFunction(Environment *, const char *, VoidCallFunction *, int, void *context = nullptr);
-bool RemoveCleanupFunction(Environment *, const char *);
-bool RemovePeriodicFunction(Environment *, const char *);
-char *CopyString(Environment *, const char *);
-void DeleteString(Environment *, char *);
-const char *AppendStrings(Environment *, const char *, const char *);
-const char *StringPrintForm(Environment *, const char *);
-char *AppendToString(Environment *, const char *, char *, size_t *, size_t *);
-char *InsertInString(Environment *, const char *, size_t, char *, size_t *, size_t *);
-char *AppendNToString(Environment *, const char *, char *, size_t, size_t *, size_t *);
-char *EnlargeString(Environment *, size_t, char *, size_t *, size_t *);
-char *ExpandStringWithChar(Environment *, int, char *, size_t *, size_t *, size_t);
-VoidCallFunctionItem *AddVoidFunctionToCallList(Environment *, const char *, int, VoidCallFunction *,
+void InitializeUtilityData(const Environment&);
+bool AddCleanupFunction(const Environment&, const char *, VoidCallFunction *, int, void *context = nullptr);
+bool AddPeriodicFunction(const Environment&, const char *, VoidCallFunction *, int, void *context = nullptr);
+bool RemoveCleanupFunction(const Environment&, const char *);
+bool RemovePeriodicFunction(const Environment&, const char *);
+char *CopyString(const Environment&, const char *);
+void DeleteString(const Environment&, char *);
+const char *AppendStrings(const Environment&, const char *, const char *);
+const char *StringPrintForm(const Environment&, const char *);
+char *AppendToString(const Environment&, const char *, char *, size_t *, size_t *);
+char *InsertInString(const Environment&, const char *, size_t, char *, size_t *, size_t *);
+char *AppendNToString(const Environment&, const char *, char *, size_t, size_t *, size_t *);
+char *EnlargeString(const Environment&, size_t, char *, size_t *, size_t *);
+char *ExpandStringWithChar(const Environment&, int, char *, size_t *, size_t *, size_t);
+VoidCallFunctionItem *AddVoidFunctionToCallList(const Environment&, const char *, int, VoidCallFunction *,
                                                 VoidCallFunctionItem *, void *context = nullptr);
-BoolCallFunctionItem *AddBoolFunctionToCallList(Environment *, const char *, int, BoolCallFunction *,
+BoolCallFunctionItem *AddBoolFunctionToCallList(const Environment&, const char *, int, BoolCallFunction *,
                                                 BoolCallFunctionItem *, void *context = nullptr);
-VoidCallFunctionItem *RemoveVoidFunctionFromCallList(Environment *, const char *,
+VoidCallFunctionItem *RemoveVoidFunctionFromCallList(const Environment&, const char *,
                                                      VoidCallFunctionItem *, bool *);
-BoolCallFunctionItem *RemoveBoolFunctionFromCallList(Environment *, const char *,
+BoolCallFunctionItem *RemoveBoolFunctionFromCallList(const Environment&, const char *,
                                                      BoolCallFunctionItem *, bool *);
-void DeallocateVoidCallList(Environment *, VoidCallFunctionItem *);
-void DeallocateBoolCallList(Environment *, BoolCallFunctionItem *);
-CallFunctionItemWithArg *AddFunctionToCallListWithArg(Environment *, const char *, int,
+void DeallocateVoidCallList(const Environment&, VoidCallFunctionItem *);
+void DeallocateBoolCallList(const Environment&, BoolCallFunctionItem *);
+CallFunctionItemWithArg *AddFunctionToCallListWithArg(const Environment&, const char *, int,
                                                       VoidCallFunctionWithArg *,
                                                       CallFunctionItemWithArg *, void *context = nullptr);
-CallFunctionItemWithArg *RemoveFunctionFromCallListWithArg(Environment *, const char *,
+CallFunctionItemWithArg *RemoveFunctionFromCallListWithArg(const Environment&, const char *,
                                                            struct callFunctionItemWithArg *,
                                                            bool *);
-void DeallocateCallListWithArg(Environment *, struct callFunctionItemWithArg *);
-VoidCallFunctionItem *GetVoidFunctionFromCallList(Environment *, const char *, VoidCallFunctionItem *);
-BoolCallFunctionItem *GetBoolFunctionFromCallList(Environment *, const char *, BoolCallFunctionItem *);
-size_t ItemHashValue(Environment *, unsigned short, void *, size_t);
-void YieldTime(Environment *);
-bool EnablePeriodicFunctions(Environment *, bool);
-bool EnableYieldFunction(Environment *, bool);
-struct trackedMemory *AddTrackedMemory(Environment *, void *, size_t);
-void RemoveTrackedMemory(Environment *, struct trackedMemory *);
+void DeallocateCallListWithArg(const Environment&, struct callFunctionItemWithArg *);
+VoidCallFunctionItem *GetVoidFunctionFromCallList(const Environment&, const char *, VoidCallFunctionItem *);
+BoolCallFunctionItem *GetBoolFunctionFromCallList(const Environment&, const char *, BoolCallFunctionItem *);
+size_t ItemHashValue(const Environment&, unsigned short, void *, size_t);
+void YieldTime(const Environment&);
+bool EnablePeriodicFunctions(const Environment&, bool);
+bool EnableYieldFunction(const Environment&, bool);
+struct trackedMemory *AddTrackedMemory(const Environment&, void *, size_t);
+void RemoveTrackedMemory(const Environment&, struct trackedMemory *);
 void UTF8Increment(const char *, size_t *);
 size_t UTF8Offset(const char *, size_t);
 size_t UTF8Length(const char *);
 size_t UTF8CharNum(const char *, size_t);
-void RestorePriorGarbageFrame(Environment *, struct garbageFrame *, struct garbageFrame *, UDFValue *);
-void CallCleanupFunctions(Environment *);
-void CallPeriodicTasks(Environment *);
-void CleanCurrentGarbageFrame(Environment *, UDFValue *);
-void GCBlockStart(Environment *, GCBlock *);
-void GCBlockEnd(Environment *, GCBlock *);
-void GCBlockEndUDF(Environment *, GCBlock *, UDFValue *);
-bool CurrentGarbageFrameIsDirty(Environment *);
-StringBuilder *CreateStringBuilder(Environment *, size_t);
+void RestorePriorGarbageFrame(const Environment&, struct garbageFrame *, struct garbageFrame *, UDFValue *);
+void CallCleanupFunctions(const Environment&);
+void CallPeriodicTasks(const Environment&);
+void CleanCurrentGarbageFrame(const Environment&, UDFValue *);
+void GCBlockStart(const Environment&, GCBlock *);
+void GCBlockEnd(const Environment&, GCBlock *);
+void GCBlockEndUDF(const Environment&, GCBlock *, UDFValue *);
+bool CurrentGarbageFrameIsDirty(const Environment&);
+StringBuilder *CreateStringBuilder(const Environment&, size_t);
 void SBDispose(StringBuilder *);
 void SBAppend(StringBuilder *, const char *);
 void SBAppendInteger(StringBuilder *, long long);
@@ -239,9 +239,9 @@ void SBAppendFloat(StringBuilder *, double);
 void SBAddChar(StringBuilder *, int);
 void SBReset(StringBuilder *);
 char *SBCopy(StringBuilder *);
-void *GetPeriodicFunctionContext(Environment *, const char *);
-void BufferedRead(Environment *, void *, size_t);
-void FreeReadBuffer(Environment *);
+void *GetPeriodicFunctionContext(const Environment&, const char *);
+void BufferedRead(const Environment&, void *, size_t);
+void FreeReadBuffer(const Environment&);
 
 #endif /* _H_utility */
 

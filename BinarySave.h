@@ -60,13 +60,13 @@ struct BinaryItem;
 
 struct BinaryItem {
     const char *name;
-    void (*findFunction)(Environment *);
-    void (*bloadStorageFunction)(Environment *);
-    void (*bloadFunction)(Environment *);
-    void (*clearFunction)(Environment *);
-    void (*expressionFunction)(Environment *, FILE *);
-    void (*bsaveStorageFunction)(Environment *, FILE *);
-    void (*bsaveFunction)(Environment *, FILE *);
+    void (*findFunction)(const Environment&);
+    void (*bloadStorageFunction)(const Environment&);
+    void (*bloadFunction)(const Environment&);
+    void (*clearFunction)(const Environment&);
+    void (*expressionFunction)(const Environment&, FILE *);
+    void (*bsaveStorageFunction)(const Environment&, FILE *);
+    void (*bsaveFunction)(const Environment&, FILE *);
     int priority;
     struct BinaryItem *next;
 };
@@ -98,22 +98,22 @@ struct bsaveData {
 
 #define BsaveData(theEnv) ((bsaveData *) GetEnvironmentData(theEnv,BSAVE_DATA))
 
-void InitializeBsaveData(Environment *);
-void BsaveCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
+void InitializeBsaveData(const Environment&);
+void BsaveCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 #if BLOAD_AND_BSAVE
-bool Bsave(Environment *, const char *);
-void MarkNeededItems(Environment *, struct expr *);
-void SaveBloadCount(Environment *, unsigned long);
-void RestoreBloadCount(Environment *, unsigned long *);
+bool Bsave(const Environment&, const char *);
+void MarkNeededItems(const Environment&, struct expr *);
+void SaveBloadCount(const Environment&, unsigned long);
+void RestoreBloadCount(const Environment&, unsigned long *);
 #endif
-bool AddBinaryItem(Environment *, const char *, int,
-                   void (*)(Environment *),
-                   void (*)(Environment *, FILE *),
-                   void (*)(Environment *, FILE *),
-                   void (*)(Environment *, FILE *),
-                   void (*)(Environment *),
-                   void (*)(Environment *),
-                   void (*)(Environment *));
+bool AddBinaryItem(const Environment&, const char *, int,
+                   void (*)(const Environment&),
+                   void (*)(const Environment&, FILE *),
+                   void (*)(const Environment&, FILE *),
+                   void (*)(const Environment&, FILE *),
+                   void (*)(const Environment&),
+                   void (*)(const Environment&),
+                   void (*)(const Environment&));
 
 #endif /* _H_bsave */
 

@@ -78,13 +78,13 @@ struct deffactsModule {
 
 #define DeffactsData(theEnv) ((deffactsData *) GetEnvironmentData(theEnv,DEFFACTS_DATA))
 
-void InitializeDeffacts(Environment *);
-Deffacts *FindDeffacts(Environment *, const char *);
-Deffacts *FindDeffactsInModule(Environment *, const char *);
-Deffacts *GetNextDeffacts(Environment *, Deffacts *);
+void InitializeDeffacts(const Environment&);
+Deffacts *FindDeffacts(const Environment&, const char *);
+Deffacts *FindDeffactsInModule(const Environment&, const char *);
+Deffacts *GetNextDeffacts(const Environment&, Deffacts *);
 void CreateInitialFactDeffacts();
 bool DeffactsIsDeletable(Deffacts *);
-struct deffactsModule *GetDeffactsModuleItem(Environment *, Defmodule *);
+struct deffactsModule *GetDeffactsModuleItem(const Environment&, Defmodule *);
 const char *DeffactsModule(Deffacts *);
 const char *DeffactsName(Deffacts *);
 const char *DeffactsPPForm(Deffacts *);

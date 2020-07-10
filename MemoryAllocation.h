@@ -64,7 +64,7 @@
 
 struct memoryPtr;
 
-typedef bool OutOfMemoryFunction(Environment *, size_t);
+typedef bool OutOfMemoryFunction(const Environment&, size_t);
 
 #ifndef MEM_TABLE_SIZE
 #define MEM_TABLE_SIZE 500
@@ -166,24 +166,24 @@ struct memoryData {
 
 #define MemoryData(theEnv) ((struct memoryData *) GetEnvironmentData(theEnv,MEMORY_DATA))
 
-void InitializeMemory(Environment *);
-void *genalloc(Environment *, size_t);
-bool DefaultOutOfMemoryFunction(Environment *, size_t);
-OutOfMemoryFunction *SetOutOfMemoryFunction(Environment *, OutOfMemoryFunction *);
-void genfree(Environment *, void *, size_t);
-void *genrealloc(Environment *, void *, size_t, size_t);
-long long MemUsed(Environment *);
-long long MemRequests(Environment *);
-long long UpdateMemoryUsed(Environment *, long long);
-long long UpdateMemoryRequests(Environment *, long long);
-long long ReleaseMem(Environment *, long long);
-void *gm1(Environment *, size_t);
-void *gm2(Environment *, size_t);
-void rm(Environment *, void *, size_t);
-unsigned long PoolSize(Environment *);
-unsigned long ActualPoolSize(Environment *);
-bool SetConserveMemory(Environment *, bool);
-bool GetConserveMemory(Environment *);
+void InitializeMemory(const Environment&);
+void *genalloc(const Environment&, size_t);
+bool DefaultOutOfMemoryFunction(const Environment&, size_t);
+OutOfMemoryFunction *SetOutOfMemoryFunction(const Environment&, OutOfMemoryFunction *);
+void genfree(const Environment&, void *, size_t);
+void *genrealloc(const Environment&, void *, size_t, size_t);
+long long MemUsed(const Environment&);
+long long MemRequests(const Environment&);
+long long UpdateMemoryUsed(const Environment&, long long);
+long long UpdateMemoryRequests(const Environment&, long long);
+long long ReleaseMem(const Environment&, long long);
+void *gm1(const Environment&, size_t);
+void *gm2(const Environment&, size_t);
+void rm(const Environment&, void *, size_t);
+unsigned long PoolSize(const Environment&);
+unsigned long ActualPoolSize(const Environment&);
+bool SetConserveMemory(const Environment&, bool);
+bool GetConserveMemory(const Environment&);
 void genmemcpy(char *, char *, unsigned long);
 
 #endif /* _H_memalloc */

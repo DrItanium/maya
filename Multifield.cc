@@ -84,7 +84,7 @@
 /* CreateUnmanagedMultifield: */
 /******************************/
 Multifield *CreateUnmanagedMultifield(
-        Environment *theEnv,
+        const Environment&theEnv,
         size_t size) {
     Multifield *theSegment;
     size_t newSize = size;
@@ -105,7 +105,7 @@ Multifield *CreateUnmanagedMultifield(
 /* ReturnMultifield: */
 /*********************/
 void ReturnMultifield(
-        Environment *theEnv,
+        const Environment&theEnv,
         Multifield *theSegment) {
     size_t newSize;
 
@@ -121,7 +121,7 @@ void ReturnMultifield(
 /* RetainMultifield: */
 /*********************/
 void RetainMultifield(
-        Environment *theEnv,
+        const Environment&theEnv,
         Multifield *theSegment) {
     size_t length, i;
     CLIPSValue *contents;
@@ -140,7 +140,7 @@ void RetainMultifield(
 /* ReleaseMultifield: */
 /**********************/
 void ReleaseMultifield(
-        Environment *theEnv,
+        const Environment&theEnv,
         Multifield *theSegment) {
     size_t length, i;
     CLIPSValue *contents;
@@ -158,7 +158,7 @@ void ReleaseMultifield(
 /* IncrementCLIPSValueMultifieldReferenceCount: */
 /************************************************/
 void IncrementCLIPSValueMultifieldReferenceCount(
-        Environment *theEnv,
+        const Environment&theEnv,
         Multifield *theSegment) {
     size_t length, i;
     CLIPSValue *contents;
@@ -177,7 +177,7 @@ void IncrementCLIPSValueMultifieldReferenceCount(
 /* DecrementCLIPSValueMultifieldReferenceCount: */
 /************************************************/
 void DecrementCLIPSValueMultifieldReferenceCount(
-        Environment *theEnv,
+        const Environment&theEnv,
         Multifield *theSegment) {
     size_t length, i;
     CLIPSValue *contents;
@@ -196,7 +196,7 @@ void DecrementCLIPSValueMultifieldReferenceCount(
 /*    that represents the string sent as the argument. */
 /*******************************************************/
 Multifield *StringToMultifield(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *theString) {
     struct token theToken;
     Multifield *theSegment;
@@ -264,7 +264,7 @@ Multifield *StringToMultifield(
 /* ArrayToMultifield: */
 /**********************/
 Multifield *ArrayToMultifield(
-        Environment *theEnv,
+        const Environment&theEnv,
         CLIPSValue *theArray,
         unsigned long size) // TBD size_t
 {
@@ -283,7 +283,7 @@ Multifield *ArrayToMultifield(
 /*   0 and adds it to the list of segments.        */
 /***************************************************/
 Multifield *EmptyMultifield(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     return CreateMultifield(theEnv, 0);
 }
 
@@ -292,7 +292,7 @@ Multifield *EmptyMultifield(
 /*   size and adds it to the list of segments.             */
 /***********************************************************/
 Multifield *CreateMultifield(
-        Environment *theEnv,
+        const Environment&theEnv,
         size_t size) {
     Multifield *theSegment;
     size_t newSize;
@@ -321,7 +321,7 @@ Multifield *CreateMultifield(
 /* DOToMultifield: */
 /*******************/
 Multifield *DOToMultifield(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFValue *theValue) {
     Multifield *dst, *src;
 
@@ -340,7 +340,7 @@ Multifield *DOToMultifield(
 /* AddToMultifieldList: */
 /************************/
 void AddToMultifieldList(
-        Environment *theEnv,
+        const Environment&theEnv,
         Multifield *theSegment) {
     theSegment->next = UtilityData(theEnv)->CurrentGarbageFrame->ListOfMultifields;
     UtilityData(theEnv)->CurrentGarbageFrame->ListOfMultifields = theSegment;
@@ -354,7 +354,7 @@ void AddToMultifieldList(
 /* FlushMultifields: */
 /*********************/
 void FlushMultifields(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     Multifield *theSegment, *nextPtr, *lastPtr = nullptr;
     size_t newSize;
 
@@ -398,7 +398,7 @@ void CLIPSToUDFValue(
 /* UDFToCLIPSValue: */
 /********************/
 void UDFToCLIPSValue(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFValue *uv,
         CLIPSValue *cv) {
     Multifield *copy;
@@ -426,7 +426,7 @@ void UDFToCLIPSValue(
 /*   and copies results from old value to new.  */
 /************************************************/
 void NormalizeMultifield(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFValue *theMF) {
     Multifield *copy;
 
@@ -447,7 +447,7 @@ void NormalizeMultifield(
 /*   old value to new. This value is not put on the ListOfMultifields.  */
 /************************************************************************/
 void DuplicateMultifield(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFValue *dst,
         UDFValue *src) {
     dst->begin = 0;
@@ -461,7 +461,7 @@ void DuplicateMultifield(
 /* CopyMultifield: */
 /*******************/
 Multifield *CopyMultifield(
-        Environment *theEnv,
+        const Environment&theEnv,
         Multifield *src) {
     Multifield *dst;
 
@@ -475,7 +475,7 @@ Multifield *CopyMultifield(
 /*   as ephemeral if they have not already been marker.   */
 /**********************************************************/
 void EphemerateMultifield(
-        Environment *theEnv,
+        const Environment&theEnv,
         Multifield *theSegment) {
     size_t length, i;
     CLIPSValue *contents;
@@ -493,7 +493,7 @@ void EphemerateMultifield(
 /* WriteMultifield: Prints out a multifield. */
 /*********************************************/
 void WriteMultifield(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *fileid,
         Multifield *segment) {
     PrintMultifieldDriver(theEnv, fileid, segment, 0, segment->length, true);
@@ -503,7 +503,7 @@ void WriteMultifield(
 /* PrintMultifieldDriver: Prints out a multifield. */
 /***************************************************/
 void PrintMultifieldDriver(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *fileid,
         Multifield *segment,
         size_t begin,
@@ -529,7 +529,7 @@ void PrintMultifieldDriver(
 /* StoreInMultifield: Append function for segments. */
 /****************************************************/
 void StoreInMultifield(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFValue *returnValue,
         Expression *expptr,
         bool garbageSegment) {
@@ -773,7 +773,7 @@ size_t HashMultifield(
 /* GetMultifieldList: */
 /**********************/
 Multifield *GetMultifieldList(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     return (UtilityData(theEnv)->CurrentGarbageFrame->ListOfMultifields);
 }
 
@@ -782,7 +782,7 @@ Multifield *GetMultifieldList(
 /*   for the implode$ function.        */
 /***************************************/
 CLIPSLexeme *ImplodeMultifield(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFValue *value) {
     size_t strsize = 0;
     size_t i, j;
@@ -899,7 +899,7 @@ CLIPSLexeme *ImplodeMultifield(
 /* CreateMultifieldBuilder: */
 /****************************/
 MultifieldBuilder *CreateMultifieldBuilder(
-        Environment *theEnv,
+        const Environment& theEnv,
         size_t theSize) {
     MultifieldBuilder *theMB;
 
@@ -922,7 +922,7 @@ MultifieldBuilder *CreateMultifieldBuilder(
 void MBAppendUDFValue(
         MultifieldBuilder *theMB,
         UDFValue *theValue) {
-    Environment *theEnv = theMB->mbEnv;
+    const Environment&theEnv = theMB->mbEnv;
     size_t i, neededSize, newSize;
     size_t j;
     CLIPSValue *newArray;
@@ -983,7 +983,7 @@ void MBAppendUDFValue(
 void MBAppend(
         MultifieldBuilder *theMB,
         CLIPSValue *theValue) {
-    Environment *theEnv = theMB->mbEnv;
+    const Environment&theEnv = theMB->mbEnv;
     size_t i, neededSize, newSize;
     size_t j;
     CLIPSValue *newArray;
@@ -1235,7 +1235,7 @@ void MBReset(
 /**************/
 void MBDispose(
         MultifieldBuilder *theMB) {
-    Environment *theEnv = theMB->mbEnv;
+    const Environment&theEnv = theMB->mbEnv;
     size_t i;
 
     for (i = 0; i < theMB->length; i++) { Release(theMB->mbEnv, theMB->contents[i].header); }

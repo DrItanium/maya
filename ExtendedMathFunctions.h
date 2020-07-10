@@ -52,45 +52,45 @@
 
 #define _H_emathfun
 
-void ExtendedMathFunctionDefinitions(Environment *);
+void ExtendedMathFunctionDefinitions(const Environment&);
 #if EXTENDED_MATH_FUNCTIONS
-void CosFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void SinFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void TanFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void SecFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void CscFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void CotFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void AcosFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void AsinFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void AtanFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void Atan2Function(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void AsecFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void AcscFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void AcotFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void CoshFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void SinhFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void TanhFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void SechFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void CschFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void CothFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void AcoshFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void AsinhFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void AtanhFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void AsechFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void AcschFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void AcothFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void RoundFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void ModFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void ExpFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void LogFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void Log10Function(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void SqrtFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void PiFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void DegRadFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void RadDegFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void DegGradFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void GradDegFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void PowFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
+void CosFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SinFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void TanFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SecFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void CscFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void CotFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void AcosFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void AsinFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void AtanFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void Atan2Function(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void AsecFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void AcscFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void AcotFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void CoshFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SinhFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void TanhFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SechFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void CschFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void CothFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void AcoshFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void AsinhFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void AtanhFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void AsechFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void AcschFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void AcothFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void RoundFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void ModFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void ExpFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void LogFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void Log10Function(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SqrtFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void PiFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void DegRadFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void RadDegFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void DegGradFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void GradDegFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void PowFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 #endif
 
 #endif /* _H_emathfun */

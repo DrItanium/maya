@@ -86,29 +86,29 @@ enum Verbosity {
     TERSE
 };
 
-bool GetBetaMemoryResizing(Environment *);
-bool SetBetaMemoryResizing(Environment *, bool);
-void GetBetaMemoryResizingCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void SetBetaMemoryResizingCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
+bool GetBetaMemoryResizing(const Environment&);
+bool SetBetaMemoryResizing(const Environment&, bool);
+void GetBetaMemoryResizingCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SetBetaMemoryResizingCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 void Matches(Defrule *, Verbosity, CLIPSValue *);
-void JoinActivity(Environment *, Defrule *, int, UDFValue *);
-void DefruleCommands(Environment *);
-void MatchesCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void JoinActivityCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void TimetagFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-unsigned short AlphaJoinCount(Environment *, Defrule *);
-unsigned short BetaJoinCount(Environment *, Defrule *);
-struct joinInformation *CreateJoinArray(Environment *, unsigned short);
-void FreeJoinArray(Environment *, struct joinInformation *, unsigned short);
-void AlphaJoins(Environment *, Defrule *, unsigned short, struct joinInformation *);
-void BetaJoins(Environment *, Defrule *, unsigned short, struct joinInformation *);
-void JoinActivityResetCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void GetFocusFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-Defmodule *GetFocus(Environment *);
+void JoinActivity(const Environment&, Defrule *, int, UDFValue *);
+void DefruleCommands(const Environment&);
+void MatchesCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void JoinActivityCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void TimetagFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+unsigned short AlphaJoinCount(const Environment&, Defrule *);
+unsigned short BetaJoinCount(const Environment&, Defrule *);
+struct joinInformation *CreateJoinArray(const Environment&, unsigned short);
+void FreeJoinArray(const Environment&, struct joinInformation *, unsigned short);
+void AlphaJoins(const Environment&, Defrule *, unsigned short, struct joinInformation *);
+void BetaJoins(const Environment&, Defrule *, unsigned short, struct joinInformation *);
+void JoinActivityResetCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void GetFocusFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+Defmodule *GetFocus(const Environment&);
 #if DEVELOPER
-void                           ShowJoinsCommand(Environment *,UDFContext *,UDFValue *);
-void                           RuleComplexityCommand(Environment *,UDFContext *,UDFValue *);
-void                           ShowAlphaHashTable(Environment *,UDFContext *,UDFValue *);
+void                           ShowJoinsCommand(const Environment&,UDFContext *,UDFValue *);
+void                           RuleComplexityCommand(const Environment&,UDFContext *,UDFValue *);
+void                           ShowAlphaHashTable(const Environment&,UDFContext *,UDFValue *);
 #endif
 
 #endif /* _H_rulecom */

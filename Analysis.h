@@ -64,7 +64,7 @@ public:
     void setNext(nandFrame* value) noexcept { next = value; }
 };
 
-bool VariableAnalysis(Environment *, struct lhsParseNode *);
+bool VariableAnalysis(const Environment&, struct lhsParseNode *);
 
 #endif
 

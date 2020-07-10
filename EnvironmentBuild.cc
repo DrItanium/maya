@@ -84,19 +84,19 @@
 /* GLOBAL EXTERNAL FUNCTION DEFINITIONS */
 /****************************************/
 
-extern void UserFunctions(Environment *);
+extern void UserFunctions(const Environment&);
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void RemoveEnvironmentCleanupFunctions(environmentData *);
-static Environment *CreateEnvironmentDriver(CLIPSLexeme **, CLIPSFloat **,
+static void RemoveEnvironmentCleanupFunctions(const Environment&);
+static Environment CreateEnvironmentDriver(CLIPSLexeme **, CLIPSFloat **,
                                             CLIPSInteger **, CLIPSBitMap **,
                                             CLIPSExternalAddress **,
                                             struct functionDefinition *);
-static void SystemFunctionDefinitions(Environment *);
-static void InitializeEnvironment(Environment *, CLIPSLexeme **, CLIPSFloat **,
+static void SystemFunctionDefinitions(const Environment&);
+static void InitializeEnvironment(const Environment&, CLIPSLexeme **, CLIPSFloat **,
                                   CLIPSInteger **, CLIPSBitMap **,
                                   CLIPSExternalAddress **,
                                   struct functionDefinition *);
@@ -105,7 +105,7 @@ static void InitializeEnvironment(Environment *, CLIPSLexeme **, CLIPSFloat **,
 /* CreateEnvironment: Creates an environment data structure */
 /*   and initializes its content to zero/nullptr.              */
 /************************************************************/
-Environment *CreateEnvironment() {
+Environment CreateEnvironment() {
     return CreateEnvironmentDriver(nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
 }
 
@@ -113,7 +113,7 @@ Environment *CreateEnvironment() {
 /* CreateRuntimeEnvironment: Creates an environment data  */
 /*   structure and initializes its content to zero/nullptr.  */
 /**********************************************************/
-Environment *CreateRuntimeEnvironment(
+Environment CreateRuntimeEnvironment(
         CLIPSLexeme **symbolTable,
         CLIPSFloat **floatTable,
         CLIPSInteger **integerTable,
@@ -126,17 +126,16 @@ Environment *CreateRuntimeEnvironment(
 /* CreateEnvironmentDriver: Creates an environment data  */
 /*   structure and initializes its content to zero/nullptr. */
 /*********************************************************/
-Environment *CreateEnvironmentDriver(
+Environment CreateEnvironmentDriver(
         CLIPSLexeme **symbolTable,
         CLIPSFloat **floatTable,
         CLIPSInteger **integerTable,
         CLIPSBitMap **bitmapTable,
         CLIPSExternalAddress **externalAddressTable,
         struct functionDefinition *functions) {
-    struct environmentData *theEnvironment;
     void *theData;
-
-    theEnvironment = (environmentData *) malloc(sizeof(environmentData));
+    auto theEnvironment = std::make_shared<environmentData>();
+    //theEnvironment = (environmentData *) malloc(sizeof(environmentData));
 
     if (theEnvironment == nullptr) {
         std::cout << "\n[ENVRNMNT5] Unable to create new environment.\n";
@@ -146,7 +145,7 @@ Environment *CreateEnvironmentDriver(
     theData = malloc(sizeof(void *) * MAXIMUM_ENVIRONMENT_POSITIONS);
 
     if (theData == nullptr) {
-        free(theEnvironment);
+     //   free(theEnvironment);
         std::cout << "\n[ENVRNMNT6] Unable to create environment data.\n";
         return nullptr;
     }
@@ -167,13 +166,13 @@ Environment *CreateEnvironmentDriver(
 
     if (theData == nullptr) {
         free(theEnvironment->theData);
-        free(theEnvironment);
+        //free(theEnvironment);
         std::cout << "\n[ENVRNMNT7] Unable to create environment data.\n";
         return nullptr;
     }
 
     memset(theData, 0, sizeof(void (*)(environmentData *)) * MAXIMUM_ENVIRONMENT_POSITIONS);
-    theEnvironment->cleanupFunctions = (void (**)(Environment *)) theData;
+    theEnvironment->cleanupFunctions = (void (**)(const Environment&)) theData;
 
     InitializeEnvironment(theEnvironment, symbolTable, floatTable, integerTable,
                           bitmapTable, externalAddressTable, functions);
@@ -188,7 +187,7 @@ Environment *CreateEnvironmentDriver(
 /*   environment returning all of its memory. */
 /**********************************************/
 bool DestroyEnvironment(
-        Environment *theEnvironment) {
+        const Environment&theEnvironment) {
     struct environmentCleanupFunction *cleanupPtr;
     int i;
     struct memoryData *theMemData;
@@ -232,7 +231,7 @@ bool DestroyEnvironment(
 
     free(theEnvironment->theData);
 
-    free(theEnvironment);
+    //free(theEnvironment);
 
     return rv;
 }
@@ -242,7 +241,7 @@ bool DestroyEnvironment(
 /*   list of environment cleanup functions.       */
 /**************************************************/
 static void RemoveEnvironmentCleanupFunctions(
-        struct environmentData *theEnv) {
+        const Environment& theEnv) {
     struct environmentCleanupFunction *nextPtr;
 
     while (theEnv->listOfCleanupEnvironmentFunctions != nullptr) {
@@ -257,7 +256,7 @@ static void RemoveEnvironmentCleanupFunctions(
 /*   of the KB environment.                       */
 /**************************************************/
 static void InitializeEnvironment(
-        Environment *theEnvironment,
+        const Environment&theEnvironment,
         CLIPSLexeme **symbolTable,
         CLIPSFloat **floatTable,
         CLIPSInteger **integerTable,
@@ -437,7 +436,7 @@ static void InitializeEnvironment(
 /*   of system defined functions.                 */
 /**************************************************/
 static void SystemFunctionDefinitions(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     ProceduralFunctionDefinitions(theEnv);
     MiscFunctionDefinitions(theEnv);
 

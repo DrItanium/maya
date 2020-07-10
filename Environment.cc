@@ -126,7 +126,7 @@
 /*    for the specified environment data record.       */
 /*******************************************************/
 bool AllocateEnvironmentData(
-        Environment *theEnvironment,
+        const Environment&theEnvironment,
         unsigned position,
         size_t size,
         EnvironmentCleanupFunction *cleanupFunction) {
@@ -178,7 +178,7 @@ bool AllocateEnvironmentData(
 /*   of the specified environment.            */
 /**********************************************/
 void *GetEnvironmentContext(
-        Environment *theEnvironment) {
+        const Environment&theEnvironment) {
     return theEnvironment->context;
 }
 
@@ -187,7 +187,7 @@ void *GetEnvironmentContext(
 /*   of the specified environment.         */
 /*******************************************/
 void *SetEnvironmentContext(
-        Environment *theEnvironment,
+        const Environment&theEnvironment,
         void *theContext) {
     void *oldContext;
 
@@ -203,7 +203,7 @@ void *SetEnvironmentContext(
 /*   to the ListOfCleanupEnvironmentFunctions.    */
 /**************************************************/
 bool AddEnvironmentCleanupFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name,
         EnvironmentCleanupFunction *functionPtr,
         int priority) {

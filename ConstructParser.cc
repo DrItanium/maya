@@ -92,7 +92,7 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static bool FindConstructBeginning(Environment *, const char *, struct token *, bool, bool *);
+static bool FindConstructBeginning(const Environment&, const char *, struct token *, bool, bool *);
 
 /**********************************************************/
 /* Load: C access routine for the load command. Returns   */
@@ -103,7 +103,7 @@ static bool FindConstructBeginning(Environment *, const char *, struct token *, 
 /*   loading.                                             */
 /**********************************************************/
 LoadError Load(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *fileName) {
     FILE *theFile;
     char *oldParsingFileName;
@@ -158,7 +158,7 @@ LoadError Load(
 /* LoadFromString: */
 /*******************/
 bool LoadFromString(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *theString,
         size_t theMax) {
     bool rv;
@@ -192,7 +192,7 @@ bool LoadFromString(
 /*   being parsed by the load/batch command.        */
 /****************************************************/
 void SetParsingFileName(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *fileName) {
     char *fileNameCopy = nullptr;
 
@@ -213,7 +213,7 @@ void SetParsingFileName(
 /*   being parsed by the load/batch command.           */
 /*******************************************************/
 char *GetParsingFileName(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     return ConstructData(theEnv)->ParsingFileName;
 }
 
@@ -222,7 +222,7 @@ char *GetParsingFileName(
 /*   associated with the last error detected. */
 /**********************************************/
 void SetErrorFileName(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *fileName) {
     char *fileNameCopy = nullptr;
 
@@ -243,7 +243,7 @@ void SetErrorFileName(
 /*   associated with the last error detected. */
 /**********************************************/
 char *GetErrorFileName(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     return ConstructData(theEnv)->ErrorFileName;
 }
 
@@ -252,7 +252,7 @@ char *GetErrorFileName(
 /*   associated with the last warning detected. */
 /************************************************/
 void SetWarningFileName(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *fileName) {
     char *fileNameCopy = nullptr;
 
@@ -273,7 +273,7 @@ void SetWarningFileName(
 /*   associated with the last warning detected. */
 /************************************************/
 char *GetWarningFileName(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     return ConstructData(theEnv)->WarningFileName;
 }
 
@@ -282,7 +282,7 @@ char *GetWarningFileName(
 /*   the current environment from a specified logical name.      */
 /*****************************************************************/
 bool LoadConstructsFromLogicalName(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *readSource) {
     BuildError constructFlag;
     struct token theToken;
@@ -444,7 +444,7 @@ bool LoadConstructsFromLogicalName(
 /*   beginning of a construct was found, otherwise false.           */
 /********************************************************************/
 static bool FindConstructBeginning(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *readSource,
         struct token *theToken,
         bool errorCorrection,
@@ -539,7 +539,7 @@ static bool FindConstructBeginning(
 /* QueryErrorCallback: Query routine for the error router. */
 /***********************************************************/
 static bool QueryErrorCallback(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         void *context) {
 #if MAC_XCD
@@ -555,7 +555,7 @@ static bool QueryErrorCallback(
 /* WriteErrorCallback: Write routine for the error router. */
 /***********************************************************/
 static void WriteErrorCallback(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         const char *str,
         void *context) {
@@ -581,7 +581,7 @@ static void WriteErrorCallback(
 /*   capture router if it doesn't exists.      */
 /***********************************************/
 void CreateErrorCaptureRouter(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     /*===========================================================*/
     /* Don't bother creating the error capture router if there's */
     /* no parser callback. The implication of this is that the   */
@@ -614,7 +614,7 @@ void CreateErrorCaptureRouter(
 /*   capture router if it exists.              */
 /***********************************************/
 void DeleteErrorCaptureRouter(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     /*===========================================================*/
     /* Don't bother deleting the error capture router if there's */
     /* no parser callback. The implication of this is that the   */
@@ -634,7 +634,7 @@ void DeleteErrorCaptureRouter(
 /*   for any existing warning/error messages.          */
 /*******************************************************/
 void FlushParsingMessages(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     /*===========================================================*/
     /* Don't bother flushing the error capture router if there's */
     /* no parser callback. The implication of this is that the   */
@@ -688,7 +688,7 @@ void FlushParsingMessages(
 /* ParseConstruct: Parses a construct. */
 /***************************************/
 BuildError ParseConstruct(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name,
         const char *logicalName) {
     Construct *currentPtr;
@@ -764,7 +764,7 @@ BuildError ParseConstruct(
 /*   when a construct is being defined.               */
 /******************************************************/
 void ImportExportConflictMessage(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *constructName,
         const char *itemName,
         const char *causedByConstruct,

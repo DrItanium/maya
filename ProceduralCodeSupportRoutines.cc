@@ -105,21 +105,21 @@ typedef struct {
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void EvaluateProcParameters(Environment *, Expression *, unsigned int, const char *, const char *);
-static bool RtnProcParam(Environment *, void *, UDFValue *);
-static bool GetProcBind(Environment *, void *, UDFValue *);
-static bool PutProcBind(Environment *, void *, UDFValue *);
-static bool RtnProcWild(Environment *, void *, UDFValue *);
-static void DeallocateProceduralPrimitiveData(Environment *);
-static void ReleaseProcParameters(Environment *);
+static void EvaluateProcParameters(const Environment&, Expression *, unsigned int, const char *, const char *);
+static bool RtnProcParam(const Environment&, void *, UDFValue *);
+static bool GetProcBind(const Environment&, void *, UDFValue *);
+static bool PutProcBind(const Environment&, void *, UDFValue *);
+static bool RtnProcWild(const Environment&, void *, UDFValue *);
+static void DeallocateProceduralPrimitiveData(const Environment&);
+static void ReleaseProcParameters(const Environment&);
 
 static unsigned int FindProcParameter(CLIPSLexeme *, Expression *, CLIPSLexeme *);
-static bool ReplaceProcBinds(Environment *, Expression *,
-                             int (*)(Environment *, Expression *, void *), void *);
-static Expression *CompactActions(Environment *, Expression *);
+static bool ReplaceProcBinds(const Environment&, Expression *,
+                             int (*)(const Environment&, Expression *, void *), void *);
+static Expression *CompactActions(const Environment&, Expression *);
 
 #if (!DEFFUNCTION_CONSTRUCT) || (!DEFGENERIC_CONSTRUCT)
-static bool                    EvaluateBadCall(Environment *,void *,UDFValue *);
+static bool                    EvaluateBadCall(const Environment&,void *,UDFValue *);
 #endif
 
 /* =========================================
@@ -141,7 +141,7 @@ static bool                    EvaluateBadCall(Environment *,void *,UDFValue *);
   NOTES        : None
  ****************************************************/
 void InstallProcedurePrimitives(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     EntityRecord procParameterInfo = {"PROC_PARAM", PROC_PARAM, 0, 1, 0, nullptr, nullptr, nullptr,
                                       (EntityEvaluationFunction *) RtnProcParam,
                                       nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr},
@@ -216,7 +216,7 @@ void InstallProcedurePrimitives(
 /*    data for the procedural primitives functionality.       */
 /**************************************************************/
 static void DeallocateProceduralPrimitiveData(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     ReturnMultifield(theEnv, ProceduralPrimitiveData(theEnv)->NoParamValue);
     ReleaseProcParameters(theEnv);
 }
@@ -247,7 +247,7 @@ static void DeallocateProceduralPrimitiveData(
   NOTES        : None
  ************************************************************/
 Expression *ParseProcParameters(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *readSource,
         struct token *tkn,
         Expression *parameterList,
@@ -255,7 +255,7 @@ Expression *ParseProcParameters(
         unsigned short *min,
         unsigned short *max,
         bool *error,
-        bool (*checkfunc)(Environment *, const char *)) {
+        bool (*checkfunc)(const Environment&, const char *)) {
     Expression *nextOne, *lastOne, *check;
     int paramprintp = 0;
 
@@ -361,14 +361,14 @@ SIDE EFFECTS : Variable references replaced with runtime calls
 NOTES        : None
 *************************************************************************/
 Expression *ParseProcActions(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *bodytype,
         const char *readSource,
         struct token *tkn,
         Expression *params,
         CLIPSLexeme *wildcard,
-        int (*altvarfunc)(Environment *, Expression *, void *),
-        int (*altbindfunc)(Environment *, Expression *, void *),
+        int (*altvarfunc)(const Environment&, Expression *, void *),
+        int (*altbindfunc)(const Environment&, Expression *, void *),
         unsigned short *lvarcnt,
         void *userBuffer) {
     Expression *actions, *pactions;
@@ -461,12 +461,12 @@ Expression *ParseProcActions(
                     in which variables are being replaced.
  *************************************************************************/
 int ReplaceProcVars(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *bodytype,
         Expression *actions,
         Expression *parameterList,
         CLIPSLexeme *wildcard,
-        int (*altvarfunc)(Environment *, Expression *, void *),
+        int (*altvarfunc)(const Environment&, Expression *, void *),
         void *specdata) {
     int altcode;
     unsigned position, boundPosn;
@@ -603,7 +603,7 @@ int ReplaceProcVars(
   NOTES        : None
  *****************************************************/
 Expression *GenProcWildcardReference(
-        Environment *theEnv,
+        const Environment&theEnv,
         int theIndex) {
     return (GenConstant(theEnv, PROC_WILD_PARAM, AddBitMap(theEnv, &theIndex, sizeof(int))));
 }
@@ -639,12 +639,12 @@ Expression *GenProcWildcardReference(
   NOTES        : EvaluationError set on errors
  *******************************************************************/
 void PushProcParameters(
-        Environment *theEnv,
+        const Environment&theEnv,
         Expression *parameterList,
         unsigned int numberOfParameters,
         const char *pname,
         const char *bodytype,
-        void (*UnboundErrFunc)(Environment *, const char *)) {
+        void (*UnboundErrFunc)(const Environment&, const char *)) {
     PROC_PARAM_STACK *ptmp;
 
     ptmp = get_struct(theEnv, ProcParamStack);
@@ -685,7 +685,7 @@ void PushProcParameters(
   NOTES        : Assumes pstack != nullptr
  ******************************************************************/
 void PopProcParameters(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     PROC_PARAM_STACK *ptmp;
 
     if (ProceduralPrimitiveData(theEnv)->ProcParamArray != nullptr)
@@ -727,7 +727,7 @@ void PopProcParameters(
   NOTES        : Assumes pstack != nullptr
  ******************************************************************/
 static void ReleaseProcParameters(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     PROC_PARAM_STACK *ptmp, *next;
 
     if (ProceduralPrimitiveData(theEnv)->ProcParamArray != nullptr)
@@ -787,7 +787,7 @@ static void ReleaseProcParameters(
   NOTES        : None
  ***********************************************************/
 Expression *GetProcParamExpressions(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     unsigned int i;
 
     if ((ProceduralPrimitiveData(theEnv)->ProcParamArray == nullptr) || (ProceduralPrimitiveData(theEnv)->ProcParamExpressions != nullptr))
@@ -831,12 +831,12 @@ Expression *GetProcParamExpressions(
   NOTES        : None
  ***********************************************************/
 void EvaluateProcActions(
-        Environment *theEnv,
+        const Environment&theEnv,
         Defmodule *theModule,
         Expression *actions,
         unsigned short lvarcnt,
         UDFValue *returnValue,
-        void (*crtproc)(Environment *, const char *)) {
+        void (*crtproc)(const Environment&, const char *)) {
     UDFValue *oldLocalVarArray;
     unsigned short i;
     Defmodule *oldModule;
@@ -910,7 +910,7 @@ void EvaluateProcActions(
   NOTES        : None
  ****************************************************/
 void PrintProcParamArray(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logName) {
     unsigned int i;
 
@@ -937,7 +937,7 @@ void PrintProcParamArray(
   NOTES        : Multi-field is NOT on list of ephemeral segments
  ****************************************************************/
 void GrabProcWildargs(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFValue *returnValue,
         unsigned int theIndex) {
     unsigned int i, j;
@@ -1016,7 +1016,7 @@ void GrabProcWildargs(
   NOTES        : EvaluationError set on errors
  *******************************************************************/
 static void EvaluateProcParameters(
-        Environment *theEnv,
+        const Environment&theEnv,
         Expression *parameterList,
         unsigned int numberOfParameters,
         const char *pname,
@@ -1075,7 +1075,7 @@ static void EvaluateProcParameters(
   NOTES        : None
  ***************************************************/
 static bool RtnProcParam(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *value,
         UDFValue *returnValue) {
     UDFValue *src;
@@ -1101,7 +1101,7 @@ static bool RtnProcParam(
   NOTES        : None
  **************************************************************/
 static bool GetProcBind(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *value,
         UDFValue *returnValue) {
     UDFValue *src;
@@ -1155,7 +1155,7 @@ static bool GetProcBind(
   NOTES        : None
  **************************************************************/
 static bool PutProcBind(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *value,
         UDFValue *returnValue) {
     UDFValue *dst;
@@ -1196,7 +1196,7 @@ static bool PutProcBind(
   NOTES        : Multi-field is NOT on list of ephemeral segments
  ****************************************************************/
 static bool RtnProcWild(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *value,
         UDFValue *returnValue) {
     GrabProcWildargs(theEnv, returnValue, *(unsigned *) ((CLIPSBitMap *) value)->contents);
@@ -1271,9 +1271,9 @@ static unsigned int FindProcParameter(
                   bind list)
  *************************************************************************/
 static bool ReplaceProcBinds(
-        Environment *theEnv,
+        const Environment&theEnv,
         Expression *actions,
-        int (*altbindfunc)(Environment *, Expression *, void *),
+        int (*altbindfunc)(const Environment&, Expression *, void *),
         void *userBuffer) {
     int bcode;
     CLIPSLexeme *bname;
@@ -1314,7 +1314,7 @@ static bool ReplaceProcBinds(
                  and actions->nextArg == nullptr
  *****************************************************/
 static Expression *CompactActions(
-        Environment *theEnv,
+        const Environment&theEnv,
         Expression *actions) {
     struct expr *tmp;
 
@@ -1347,7 +1347,7 @@ static Expression *CompactActions(
                  functions which cannot be used
  ******************************************************/
 static bool EvaluateBadCall(
-  Environment *theEnv,
+  const Environment&theEnv,
   void *value,
   UDFValue *returnValue)
   {

@@ -87,9 +87,9 @@ typedef struct bsaveConstraintRecord BSAVE_CONSTRAINT_RECORD;
 /***************************************/
 
 #if BLOAD_AND_BSAVE
-static void CopyToBsaveConstraintRecord(Environment *, CONSTRAINT_RECORD *, BSAVE_CONSTRAINT_RECORD *);
+static void CopyToBsaveConstraintRecord(const Environment&, CONSTRAINT_RECORD *, BSAVE_CONSTRAINT_RECORD *);
 #endif
-static void CopyFromBsaveConstraintRecord(Environment *, void *, unsigned long);
+static void CopyFromBsaveConstraintRecord(const Environment&, void *, unsigned long);
 
 #if BLOAD_AND_BSAVE
 
@@ -99,7 +99,7 @@ static void CopyFromBsaveConstraintRecord(Environment *, void *, unsigned long);
 /*   currently being saved.                       */
 /**************************************************/
 void WriteNeededConstraints(
-        Environment *theEnv,
+        const Environment&theEnv,
         FILE *fp) {
     int i;
     unsigned long theIndex = 0;
@@ -157,7 +157,7 @@ void WriteNeededConstraints(
 /*   constraints in a binary image.                 */
 /****************************************************/
 static void CopyToBsaveConstraintRecord(
-        Environment *theEnv,
+        const Environment&theEnv,
         CONSTRAINT_RECORD *constraints,
         BSAVE_CONSTRAINT_RECORD *bsaveConstraints) {
     bsaveConstraints->anyAllowed = constraints->getAnyAllowed();
@@ -194,7 +194,7 @@ static void CopyToBsaveConstraintRecord(
 /*   by the binary image currently being loaded.        */
 /********************************************************/
 void ReadNeededConstraints(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     GenReadBinary(theEnv, &ConstraintData(theEnv)->NumberOfConstraints, sizeof(unsigned long));
     if (ConstraintData(theEnv)->NumberOfConstraints == 0) return;
 
@@ -211,7 +211,7 @@ void ReadNeededConstraints(
 /*   for storing constraints in a binary image.      */
 /*****************************************************/
 static void CopyFromBsaveConstraintRecord(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *buf,
         unsigned long theIndex) {
     BSAVE_CONSTRAINT_RECORD *bsaveConstraints;
@@ -254,7 +254,7 @@ static void CopyFromBsaveConstraintRecord(
 /*   with constraints loaded from binary image          */
 /********************************************************/
 void ClearBloadedConstraints(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     if (ConstraintData(theEnv)->NumberOfConstraints != 0) {
         genfree(theEnv, ConstraintData(theEnv)->ConstraintArray,
                 (sizeof(CONSTRAINT_RECORD) * ConstraintData(theEnv)->NumberOfConstraints));

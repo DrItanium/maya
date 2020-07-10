@@ -53,8 +53,8 @@
 #include "Network.h"
 #include "Reorder.h"
 
-struct joinNode *ConstructJoins(Environment *, int, struct lhsParseNode *, int, struct joinNode *, bool, bool);
-void AttachTestCEsToPatternCEs(Environment *, struct lhsParseNode *);
+struct joinNode *ConstructJoins(const Environment&, int, struct lhsParseNode *, int, struct joinNode *, bool, bool);
+void AttachTestCEsToPatternCEs(const Environment&, struct lhsParseNode *);
 
 #endif /* _H_rulebld */
 

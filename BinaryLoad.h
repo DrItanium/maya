@@ -77,16 +77,16 @@ struct bloadData {
 
 #define FunctionPointer(i) ((((i) == ULONG_MAX) ? nullptr : BloadData(theEnv)->FunctionArray[i]))
 
-void InitializeBloadData(Environment *);
-void BloadCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-bool Bload(Environment *, const char *);
-void BloadandRefresh(Environment *, unsigned long, size_t, void (*)(Environment *, void *, unsigned long));
-bool Bloaded(Environment *);
-void AddBeforeBloadFunction(Environment *, const char *, VoidCallFunction *, int, void *context = nullptr);
-void AddAfterBloadFunction(Environment *, const char *, VoidCallFunction *, int, void *context = nullptr);
-void AddClearBloadReadyFunction(Environment *, const char *, BoolCallFunction *, int, void *context = nullptr);
-void AddAbortBloadFunction(Environment *, const char *, VoidCallFunction *, int, void *context = nullptr);
-void CannotLoadWithBloadMessage(Environment *, const char *);
+void InitializeBloadData(const Environment&);
+void BloadCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+bool Bload(const Environment&, const char *);
+void BloadandRefresh(const Environment&, unsigned long, size_t, void (*)(const Environment&, void *, unsigned long));
+bool Bloaded(const Environment&);
+void AddBeforeBloadFunction(const Environment&, const char *, VoidCallFunction *, int, void *context = nullptr);
+void AddAfterBloadFunction(const Environment&, const char *, VoidCallFunction *, int, void *context = nullptr);
+void AddClearBloadReadyFunction(const Environment&, const char *, BoolCallFunction *, int, void *context = nullptr);
+void AddAbortBloadFunction(const Environment&, const char *, VoidCallFunction *, int, void *context = nullptr);
+void CannotLoadWithBloadMessage(const Environment&, const char *);
 
 #endif
 

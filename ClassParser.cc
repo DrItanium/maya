@@ -103,16 +103,16 @@ constexpr auto INHERIT              = 1;
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static bool ValidClassName(Environment *, const char *, Defclass **);
-static bool ParseSimpleQualifier(Environment *, const char *, const char *, const char *, const char *, bool *, bool *);
-static bool ReadUntilClosingParen(Environment *, const char *, struct token *);
-static void AddClass(Environment *, Defclass *);
-static void BuildSubclassLinks(Environment *, Defclass *);
-static void FormInstanceTemplate(Environment *, Defclass *);
-static void FormSlotNameMap(Environment *, Defclass *);
-static TEMP_SLOT_LINK *MergeSlots(Environment *, TEMP_SLOT_LINK *, Defclass *, unsigned short *, unsigned short);
-static void PackSlots(Environment *, Defclass *, TEMP_SLOT_LINK *);
-static void CreatePublicSlotMessageHandlers(Environment *, Defclass *);
+static bool ValidClassName(const Environment&, const char *, Defclass **);
+static bool ParseSimpleQualifier(const Environment&, const char *, const char *, const char *, const char *, bool *, bool *);
+static bool ReadUntilClosingParen(const Environment&, const char *, struct token *);
+static void AddClass(const Environment&, Defclass *);
+static void BuildSubclassLinks(const Environment&, Defclass *);
+static void FormInstanceTemplate(const Environment&, Defclass *);
+static void FormSlotNameMap(const Environment&, Defclass *);
+static TEMP_SLOT_LINK *MergeSlots(const Environment&, TEMP_SLOT_LINK *, Defclass *, unsigned short *, unsigned short);
+static void PackSlots(const Environment&, Defclass *, TEMP_SLOT_LINK *);
+static void CreatePublicSlotMessageHandlers(const Environment&, Defclass *);
 
 
 /* =========================================
@@ -168,7 +168,7 @@ static void CreatePublicSlotMessageHandlers(Environment *, Defclass *);
                <default-expression> ::= ?NONE | ?VARIABLE | <expression>*
   ***************************************************************************************/
 bool ParseDefclass(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *readSource) {
     CLIPSLexeme *cname;
     Defclass *cls;
@@ -364,7 +364,7 @@ bool ParseDefclass(
                  another module
  ***********************************************************/
 static bool ValidClassName(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *theClassName,
         Defclass **theDefclass) {
     *theDefclass = FindDefclassInModule(theEnv, theClassName);
@@ -416,7 +416,7 @@ static bool ValidClassName(
   NOTES        : None
  ***************************************************************/
 static bool ParseSimpleQualifier(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *readSource,
         const char *classQualifier,
         const char *clearRelation,
@@ -464,7 +464,7 @@ static bool ParseSimpleQualifier(
                  paren has already been scanned
  ***************************************************/
 static bool ReadUntilClosingParen(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *readSource,
         struct token *inputToken) {
     int cnt = 1;
@@ -513,7 +513,7 @@ static bool ReadUntilClosingParen(
                  Assumes class is not busy!!!
  *****************************************************************************/
 static void AddClass(
-        Environment *theEnv,
+        const Environment&theEnv,
         Defclass *cls) {
     Defclass *ctmp;
 #if DEBUGGING_FUNCTIONS
@@ -592,7 +592,7 @@ static void AddClass(
   NOTES        : Assumes the superclass list is formed.
  *******************************************************/
 static void BuildSubclassLinks(
-        Environment *theEnv,
+        const Environment&theEnv,
         Defclass *cls) {
     unsigned long i;
 
@@ -612,7 +612,7 @@ static void BuildSubclassLinks(
   NOTES        : None
  **********************************************************/
 static void FormInstanceTemplate(
-        Environment *theEnv,
+        const Environment&theEnv,
         Defclass *cls) {
     TEMP_SLOT_LINK *islots = nullptr, *stmp;
     unsigned short scnt = 0;
@@ -671,7 +671,7 @@ static void FormInstanceTemplate(
                  been formed
  **********************************************************/
 static void FormSlotNameMap(
-        Environment *theEnv,
+        const Environment&theEnv,
         Defclass *cls) {
     unsigned i;
 
@@ -705,7 +705,7 @@ static void FormSlotNameMap(
   NOTES        : Lists are assumed to contain no duplicates
  *******************************************************************/
 static TEMP_SLOT_LINK *MergeSlots(
-        Environment *theEnv,
+        const Environment&theEnv,
         TEMP_SLOT_LINK *old,
         Defclass *cls,
         unsigned short *scnt,
@@ -758,7 +758,7 @@ static TEMP_SLOT_LINK *MergeSlots(
   NOTES        : Assumes class->slotCount == 0 && class->slots == nullptr
  ***********************************************************************/
 static void PackSlots(
-        Environment *theEnv,
+        const Environment&theEnv,
         Defclass *cls,
         TEMP_SLOT_LINK *slots) {
     TEMP_SLOT_LINK *stmp, *sprv;
@@ -810,7 +810,7 @@ static void PackSlots(
   NOTES        : None
  ******************************************************************************/
 static void CreatePublicSlotMessageHandlers(
-        Environment *theEnv,
+        const Environment&theEnv,
         Defclass *theDefclass) {
     long i;
     SlotDescriptor *sd;
@@ -838,7 +838,7 @@ static void CreatePublicSlotMessageHandlers(
   NOTES        : Uses FindImportedConstruct()
  ********************************************************/
 void *CreateClassScopeMap(
-        Environment *theEnv,
+        const Environment&theEnv,
         Defclass *theDefclass) {
     unsigned short scopeMapSize;
     char *scopeMap;

@@ -87,19 +87,19 @@ struct factgenData {
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void *FactGetVarJN1(Environment *, struct lhsParseNode *, int);
-static void *FactGetVarJN2(Environment *, struct lhsParseNode *, int);
-static void *FactGetVarJN3(Environment *, struct lhsParseNode *, int);
-static void *FactGetVarPN1(Environment *, struct lhsParseNode *);
-static void *FactGetVarPN2(Environment *, struct lhsParseNode *);
-static void *FactGetVarPN3(Environment *, struct lhsParseNode *);
+static void *FactGetVarJN1(const Environment&, struct lhsParseNode *, int);
+static void *FactGetVarJN2(const Environment&, struct lhsParseNode *, int);
+static void *FactGetVarJN3(const Environment&, struct lhsParseNode *, int);
+static void *FactGetVarPN1(const Environment&, struct lhsParseNode *);
+static void *FactGetVarPN2(const Environment&, struct lhsParseNode *);
+static void *FactGetVarPN3(const Environment&, struct lhsParseNode *);
 
 /*******************************************************************/
 /* InitializeFactReteFunctions: Installs the fact pattern matching */
 /*   and value access routines as primitive operations.            */
 /*******************************************************************/
 void InitializeFactReteFunctions(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     struct entityRecord factJNGV1Info = {"FACT_JN_VAR1", FACT_JN_VAR1, 0, 1, 0,
                                          PrintFactJNGetVar1,
                                          PrintFactJNGetVar1, nullptr,
@@ -220,7 +220,7 @@ void InitializeFactReteFunctions(
 /*   multifield slot against a constant.                          */
 /******************************************************************/
 struct expr *FactGenPNConstant(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct lhsParseNode *theField) {
     struct expr *top;
     ParseNodeType tempValue;
@@ -309,7 +309,7 @@ struct expr *FactGenPNConstant(
 /*   from a single or multifield slot.                 */
 /*******************************************************/
 struct expr *FactGenGetfield(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct lhsParseNode *theNode) {
     /*===================================================*/
     /* Generate call to retrieve single field slot value */
@@ -351,7 +351,7 @@ struct expr *FactGenGetfield(
 /*   from a single or multifield slot of a fact.  */
 /**************************************************/
 struct expr *FactGenGetvar(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct lhsParseNode *theNode,
         int side) {
     /*====================================================*/
@@ -395,7 +395,7 @@ struct expr *FactGenGetvar(
 /*   unless the foo slot contained at least 3 fields.         */
 /**************************************************************/
 struct expr *FactGenCheckLength(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct lhsParseNode *theNode) {
     struct factCheckLengthPNCall hack;
 
@@ -446,7 +446,7 @@ struct expr *FactGenCheckLength(
 /*   a multifield slot is a zero length multifield value.     */
 /**************************************************************/
 struct expr *FactGenCheckZeroLength(
-        Environment *theEnv,
+        const Environment&theEnv,
         unsigned short theSlot) {
     struct factCheckLengthPNCall hack;
 
@@ -465,7 +465,7 @@ struct expr *FactGenCheckZeroLength(
 /*   network variable access functions for facts.                    */
 /*********************************************************************/
 void FactReplaceGetvar(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct expr *theItem,
         struct lhsParseNode *theNode,
         int side) {
@@ -519,7 +519,7 @@ void FactReplaceGetvar(
 /*   network variable access functions for facts.                      */
 /***********************************************************************/
 void FactReplaceGetfield(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct expr *theItem,
         struct lhsParseNode *theNode) {
     /*====================================================*/
@@ -573,7 +573,7 @@ void FactReplaceGetfield(
 /*   rule.                                                   */
 /*************************************************************/
 static void *FactGetVarJN1(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct lhsParseNode *theNode,
         int side) {
     struct factGetVarJN1Call hack;
@@ -655,7 +655,7 @@ static void *FactGetVarJN1(
 /*   rule.                                                    */
 /**************************************************************/
 static void *FactGetVarJN2(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct lhsParseNode *theNode,
         int side) {
     struct factGetVarJN2Call hack;
@@ -705,7 +705,7 @@ static void *FactGetVarJN2(
 /*   rule.                                                   */
 /*************************************************************/
 static void *FactGetVarJN3(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct lhsParseNode *theNode,
         int side) {
     struct factGetVarJN3Call hack;
@@ -806,7 +806,7 @@ static void *FactGetVarJN3(
 /*   network.                                                 */
 /**************************************************************/
 static void *FactGetVarPN1(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct lhsParseNode *theNode) {
     struct factGetVarPN1Call hack;
 
@@ -871,7 +871,7 @@ static void *FactGetVarPN1(
 /*   only used by expressions in the pattern network.          */
 /***************************************************************/
 static void *FactGetVarPN2(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct lhsParseNode *theNode) {
     struct factGetVarPN2Call hack;
 
@@ -907,7 +907,7 @@ static void *FactGetVarPN2(
 /*   used by expressions in the pattern network.             */
 /*************************************************************/
 static void *FactGetVarPN3(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct lhsParseNode *theNode) {
     struct factGetVarPN3Call hack;
 
@@ -988,7 +988,7 @@ static void *FactGetVarPN3(
 /*   the same name found in the same pattern.                */
 /*************************************************************/
 struct expr *FactPNVariableComparison(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct lhsParseNode *selfNode,
         struct lhsParseNode *referringNode) {
     struct expr *top;
@@ -1049,7 +1049,7 @@ struct expr *FactPNVariableComparison(
 /*   the same name found in different patterns.          */
 /*********************************************************/
 struct expr *FactJNVariableComparison(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct lhsParseNode *selfNode,
         struct lhsParseNode *referringNode,
         bool nandJoin) {

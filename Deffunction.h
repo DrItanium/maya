@@ -107,34 +107,34 @@ struct deffunctionData {
 
 #define DeffunctionData(theEnv) ((deffunctionData *) GetEnvironmentData(theEnv,DEFFUNCTION_DATA))
 
-bool CheckDeffunctionCall(Environment *, Deffunction *, int);
+bool CheckDeffunctionCall(const Environment&, Deffunction *, int);
 void DeffunctionGetBind(UDFValue *);
 void DFRtnUnknown(UDFValue *);
 void DFWildargs(UDFValue *);
 const char *DeffunctionModule(Deffunction *);
-Deffunction *FindDeffunction(Environment *, const char *);
-Deffunction *FindDeffunctionInModule(Environment *, const char *);
-void GetDeffunctionList(Environment *, CLIPSValue *, Defmodule *);
+Deffunction *FindDeffunction(const Environment&, const char *);
+Deffunction *FindDeffunctionInModule(const Environment&, const char *);
+void GetDeffunctionList(const Environment&, CLIPSValue *, Defmodule *);
 const char *DeffunctionName(Deffunction *);
-CLIPSLexeme *GetDeffunctionNamePointer(Environment *, Deffunction *);
+CLIPSLexeme *GetDeffunctionNamePointer(const Environment&, Deffunction *);
 const char *DeffunctionPPForm(Deffunction *);
-Deffunction *GetNextDeffunction(Environment *, Deffunction *);
+Deffunction *GetNextDeffunction(const Environment&, Deffunction *);
 bool DeffunctionIsDeletable(Deffunction *);
-void SetDeffunctionPPForm(Environment *, Deffunction *, const char *);
-bool Undeffunction(Deffunction *, Environment *);
-void GetDeffunctionListFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void GetDeffunctionModuleCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-Deffunction *LookupDeffunctionByMdlOrScope(Environment *, const char *);
-Deffunction *LookupDeffunctionInScope(Environment *, const char *);
-void RemoveDeffunction(Environment *, Deffunction *);
-void SetupDeffunctions(Environment *);
-void UndeffunctionCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
+void SetDeffunctionPPForm(const Environment&, Deffunction *, const char *);
+bool Undeffunction(Deffunction *, const Environment&);
+void GetDeffunctionListFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void GetDeffunctionModuleCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+Deffunction *LookupDeffunctionByMdlOrScope(const Environment&, const char *);
+Deffunction *LookupDeffunctionInScope(const Environment&, const char *);
+void RemoveDeffunction(const Environment&, Deffunction *);
+void SetupDeffunctions(const Environment&);
+void UndeffunctionCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 #if DEBUGGING_FUNCTIONS
 bool DeffunctionGetWatch(Deffunction *);
-void ListDeffunctions(Environment *, const char *, Defmodule *);
+void ListDeffunctions(const Environment&, const char *, Defmodule *);
 void DeffunctionSetWatch(Deffunction *, bool);
-void ListDeffunctionsCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void PPDeffunctionCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
+void ListDeffunctionsCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void PPDeffunctionCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 #endif
 
 #endif /* _H_dffnxfun */

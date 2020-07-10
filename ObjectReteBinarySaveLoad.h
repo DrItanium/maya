@@ -65,7 +65,7 @@ struct objectReteBinaryData {
 
 #define ClassAlphaPointer(i)   ((i == ULONG_MAX) ? nullptr : (CLASS_ALPHA_LINK *) &ObjectReteBinaryData(theEnv)->AlphaLinkArray[i])
 
-void SetupObjectPatternsBload(Environment *);
+void SetupObjectPatternsBload(const Environment&);
 
 #endif /* _H_objrtbin */
 

@@ -74,12 +74,12 @@ struct successor {
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static PARTIAL_ORDER *InitializePartialOrderTable(Environment *, PARTIAL_ORDER *, PACKED_CLASS_LINKS *);
-static void RecordPartialOrders(Environment *, PARTIAL_ORDER *, Defclass *,
+static PARTIAL_ORDER *InitializePartialOrderTable(const Environment&, PARTIAL_ORDER *, PACKED_CLASS_LINKS *);
+static void RecordPartialOrders(const Environment&, PARTIAL_ORDER *, Defclass *,
                                 PACKED_CLASS_LINKS *, unsigned long);
 static PARTIAL_ORDER *FindPartialOrder(PARTIAL_ORDER *, Defclass *);
-static void PrintPartialOrderLoop(Environment *, PARTIAL_ORDER *);
-static void PrintClassLinks(Environment *, const char *, const char *, CLASS_LINK *);
+static void PrintPartialOrderLoop(const Environment&, PARTIAL_ORDER *);
+static void PrintClassLinks(const Environment&, const char *, const char *, CLASS_LINK *);
 
 /* =========================================
    *****************************************
@@ -121,7 +121,7 @@ static void PrintClassLinks(Environment *, const char *, const char *, CLASS_LIN
                  This routine allocates the space for the list
  ***************************************************************/
 PACKED_CLASS_LINKS *ParseSuperclasses(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *readSource,
         CLIPSLexeme *newClassName) {
     CLASS_LINK *clink = nullptr, *cbot = nullptr, *ctmp;
@@ -303,7 +303,7 @@ PACKED_CLASS_LINKS *ParseSuperclasses(
                  Donald Knuth.
  ***************************************************************************/
 PACKED_CLASS_LINKS *FindPrecedenceList(
-        Environment *theEnv,
+        const Environment&theEnv,
         Defclass *cls,
         PACKED_CLASS_LINKS *supers) {
     PARTIAL_ORDER *po_table = nullptr, *start, *pop, *poprv, *potmp;
@@ -483,7 +483,7 @@ PACKED_CLASS_LINKS *FindPrecedenceList(
   NOTES        : None
  ***************************************************/
 void PackClassLinks(
-        Environment *theEnv,
+        const Environment&theEnv,
         PACKED_CLASS_LINKS *plinks,
         CLASS_LINK *lptop) {
     unsigned count;
@@ -524,7 +524,7 @@ void PackClassLinks(
   NOTES        : None
  **************************************************************************/
 static PARTIAL_ORDER *InitializePartialOrderTable(
-        Environment *theEnv,
+        const Environment&theEnv,
         PARTIAL_ORDER *po_table,
         PACKED_CLASS_LINKS *supers) {
     PARTIAL_ORDER *pop, *poprv;
@@ -600,7 +600,7 @@ static PARTIAL_ORDER *InitializePartialOrderTable(
   NOTES        : None
  ***********************************************************************************/
 static void RecordPartialOrders(
-        Environment *theEnv,
+        const Environment&theEnv,
         PARTIAL_ORDER *po_table,
         Defclass *cls,
         PACKED_CLASS_LINKS *successors,
@@ -692,7 +692,7 @@ static PARTIAL_ORDER *FindPartialOrder(
                  (Fundamental Algorithms).
  **************************************************************************/
 static void PrintPartialOrderLoop(
-        Environment *theEnv,
+        const Environment&theEnv,
         PARTIAL_ORDER *po_table) {
     PARTIAL_ORDER *pop1, *pop2;
     SUCCESSOR *prc, *stmp;
@@ -783,7 +783,7 @@ static void PrintPartialOrderLoop(
   NOTES        : None
  ***************************************************/
 static void PrintClassLinks(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         const char *title,
         CLASS_LINK *clink) {

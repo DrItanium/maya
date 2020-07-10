@@ -45,10 +45,10 @@
 #define ConstraintPointer(i) (((i) == ULONG_MAX) ? nullptr : (CONSTRAINT_RECORD *) &ConstraintData(theEnv)->ConstraintArray[i])
 
 #if BLOAD_AND_BSAVE
-void WriteNeededConstraints(Environment *, FILE *);
+void WriteNeededConstraints(const Environment&, FILE *);
 #endif
-void ReadNeededConstraints(Environment *);
-void ClearBloadedConstraints(Environment *);
+void ReadNeededConstraints(const Environment&);
+void ClearBloadedConstraints(const Environment&);
 
 #endif /* _H_cstrnbin */
 

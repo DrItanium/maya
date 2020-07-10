@@ -68,26 +68,26 @@ typedef struct messageHandlerLink {
     struct messageHandlerLink *nxtInStack;
 } HANDLER_LINK;
 
-bool DirectMessage(Environment *, CLIPSLexeme *, Instance *,
+bool DirectMessage(const Environment&, CLIPSLexeme *, Instance *,
                    UDFValue *, Expression *);
-void Send(Environment *, CLIPSValue *, const char *, const char *, CLIPSValue *);
-void DestroyHandlerLinks(Environment *, HANDLER_LINK *);
-void SendCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-UDFValue *GetNthMessageArgument(Environment *, int);
+void Send(const Environment&, CLIPSValue *, const char *, const char *, CLIPSValue *);
+void DestroyHandlerLinks(const Environment&, HANDLER_LINK *);
+void SendCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+UDFValue *GetNthMessageArgument(const Environment&, int);
 
-bool NextHandlerAvailable(Environment *);
-void NextHandlerAvailableFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void CallNextHandler(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void FindApplicableOfName(Environment *, Defclass *, HANDLER_LINK *[],
+bool NextHandlerAvailable(const Environment&);
+void NextHandlerAvailableFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void CallNextHandler(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void FindApplicableOfName(const Environment&, Defclass *, HANDLER_LINK *[],
                           HANDLER_LINK *[], CLIPSLexeme *);
-HANDLER_LINK *JoinHandlerLinks(Environment *, HANDLER_LINK *[], HANDLER_LINK *[], CLIPSLexeme *);
+HANDLER_LINK *JoinHandlerLinks(const Environment&, HANDLER_LINK *[], HANDLER_LINK *[], CLIPSLexeme *);
 
-void PrintHandlerSlotGetFunction(Environment *, const char *, void *);
-bool HandlerSlotGetFunction(Environment *, void *, UDFValue *);
-void PrintHandlerSlotPutFunction(Environment *, const char *, void *);
-bool HandlerSlotPutFunction(Environment *, void *, UDFValue *);
-void DynamicHandlerGetSlot(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void DynamicHandlerPutSlot(Environment *theEnv, UDFContext *context, UDFValue *ret);
+void PrintHandlerSlotGetFunction(const Environment&, const char *, void *);
+bool HandlerSlotGetFunction(const Environment&, void *, UDFValue *);
+void PrintHandlerSlotPutFunction(const Environment&, const char *, void *);
+bool HandlerSlotPutFunction(const Environment&, void *, UDFValue *);
+void DynamicHandlerGetSlot(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void DynamicHandlerPutSlot(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 
 #endif /* _H_object */
 

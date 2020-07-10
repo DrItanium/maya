@@ -67,46 +67,46 @@ enum ClassDefaultsMode {
 const char *DefclassName(Defclass *);
 const char *DefclassPPForm(Defclass *);
 struct defmoduleItemHeader
-*GetDefclassModule(Environment *, Defclass *);
+*GetDefclassModule(const Environment&, Defclass *);
 const char *DefclassModule(Defclass *);
 CLIPSLexeme *GetDefclassNamePointer(Defclass *);
 void SetNextDefclass(Defclass *, Defclass *);
-void SetDefclassPPForm(Environment *, Defclass *, char *);
+void SetDefclassPPForm(const Environment&, Defclass *, char *);
 
-Defclass *FindDefclass(Environment *, const char *);
-Defclass *FindDefclassInModule(Environment *, const char *);
-Defclass *LookupDefclassByMdlOrScope(Environment *, const char *);
-Defclass *LookupDefclassInScope(Environment *, const char *);
-Defclass *LookupDefclassAnywhere(Environment *, Defmodule *, const char *);
-bool DefclassInScope(Environment *, Defclass *, Defmodule *);
-Defclass *GetNextDefclass(Environment *, Defclass *);
+Defclass *FindDefclass(const Environment&, const char *);
+Defclass *FindDefclassInModule(const Environment&, const char *);
+Defclass *LookupDefclassByMdlOrScope(const Environment&, const char *);
+Defclass *LookupDefclassInScope(const Environment&, const char *);
+Defclass *LookupDefclassAnywhere(const Environment&, Defmodule *, const char *);
+bool DefclassInScope(const Environment&, Defclass *, Defmodule *);
+Defclass *GetNextDefclass(const Environment&, Defclass *);
 bool DefclassIsDeletable(Defclass *);
 
-void UndefclassCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-ClassDefaultsMode SetClassDefaultsMode(Environment *, ClassDefaultsMode);
-ClassDefaultsMode GetClassDefaultsMode(Environment *);
-void GetClassDefaultsModeCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void SetClassDefaultsModeCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
+void UndefclassCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+ClassDefaultsMode SetClassDefaultsMode(const Environment&, ClassDefaultsMode);
+ClassDefaultsMode GetClassDefaultsMode(const Environment&);
+void GetClassDefaultsModeCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SetClassDefaultsModeCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 
 #if DEBUGGING_FUNCTIONS
-void PPDefclassCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void ListDefclassesCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void ListDefclasses(Environment *, const char *, Defmodule *);
+void PPDefclassCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void ListDefclassesCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void ListDefclasses(const Environment&, const char *, Defmodule *);
 bool DefclassGetWatchInstances(Defclass *);
 void DefclassSetWatchInstances(Defclass *, bool);
 bool DefclassGetWatchSlots(Defclass *);
 void DefclassSetWatchSlots(Defclass *, bool);
-bool DefclassWatchAccess(Environment *, int, bool, Expression *);
-bool DefclassWatchPrint(Environment *, const char *, int, Expression *);
+bool DefclassWatchAccess(const Environment&, int, bool, Expression *);
+bool DefclassWatchPrint(const Environment&, const char *, int, Expression *);
 #endif
 
-void GetDefclassListFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void GetDefclassList(Environment *, CLIPSValue *, Defmodule *);
-bool Undefclass(Defclass *, Environment *);
+void GetDefclassListFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void GetDefclassList(const Environment&, CLIPSValue *, Defmodule *);
+bool Undefclass(Defclass *, const Environment&);
 bool HasSuperclass(Defclass *, Defclass *);
 
 CLIPSLexeme *CheckClassAndSlot(UDFContext *, const char *, Defclass **);
 
-void SaveDefclasses(Environment *, Defmodule *, const char *, void * context = nullptr);
+void SaveDefclasses(const Environment&, Defmodule *, const char *, void * context = nullptr);
 
 #endif /* _H_classcom */

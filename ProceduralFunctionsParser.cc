@@ -89,23 +89,23 @@ struct procedureParserData {
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void DeallocateProceduralFunctionData(Environment *);
-static struct expr *WhileParse(Environment *, struct expr *, const char *);
-static struct expr *LoopForCountParse(Environment *, struct expr *, const char *);
-static void ReplaceLoopCountVars(Environment *, CLIPSLexeme *, Expression *, int);
-static struct expr *IfParse(Environment *, struct expr *, const char *);
-static struct expr *PrognParse(Environment *, struct expr *, const char *);
-static struct expr *BindParse(Environment *, struct expr *, const char *);
-static int AddBindName(Environment *, CLIPSLexeme *, CONSTRAINT_RECORD *);
-static struct expr *ReturnParse(Environment *, struct expr *, const char *);
-static struct expr *BreakParse(Environment *, struct expr *, const char *);
-static struct expr *SwitchParse(Environment *, struct expr *, const char *);
+static void DeallocateProceduralFunctionData(const Environment&);
+static struct expr *WhileParse(const Environment&, struct expr *, const char *);
+static struct expr *LoopForCountParse(const Environment&, struct expr *, const char *);
+static void ReplaceLoopCountVars(const Environment&, CLIPSLexeme *, Expression *, int);
+static struct expr *IfParse(const Environment&, struct expr *, const char *);
+static struct expr *PrognParse(const Environment&, struct expr *, const char *);
+static struct expr *BindParse(const Environment&, struct expr *, const char *);
+static int AddBindName(const Environment&, CLIPSLexeme *, CONSTRAINT_RECORD *);
+static struct expr *ReturnParse(const Environment&, struct expr *, const char *);
+static struct expr *BreakParse(const Environment&, struct expr *, const char *);
+static struct expr *SwitchParse(const Environment&, struct expr *, const char *);
 
 /*****************************/
 /* ProceduralFunctionParsers */
 /*****************************/
 void ProceduralFunctionParsers(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     AllocateEnvironmentData(theEnv, PRCDRPSR_DATA, sizeof(procedureParserData), DeallocateProceduralFunctionData);
 
     AddFunctionParser(theEnv, "bind", BindParse);
@@ -123,7 +123,7 @@ void ProceduralFunctionParsers(
 /*    data for procedural functions.                         */
 /*************************************************************/
 static void DeallocateProceduralFunctionData(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     struct BindInfo *temp_bind;
 
     while (ProcedureParserData(theEnv)->ListOfParsedBindNames != nullptr) {
@@ -137,7 +137,7 @@ static void DeallocateProceduralFunctionData(
 /* GetParsedBindNames: */
 /***********************/
 struct BindInfo *GetParsedBindNames(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     return (ProcedureParserData(theEnv)->ListOfParsedBindNames);
 }
 
@@ -145,7 +145,7 @@ struct BindInfo *GetParsedBindNames(
 /* SetParsedBindNames: */
 /***********************/
 void SetParsedBindNames(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct BindInfo *newValue) {
     ProcedureParserData(theEnv)->ListOfParsedBindNames = newValue;
 }
@@ -154,7 +154,7 @@ void SetParsedBindNames(
 /* ClearParsedBindNames: */
 /*************************/
 void ClearParsedBindNames(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     struct BindInfo *temp_bind;
 
     while (ProcedureParserData(theEnv)->ListOfParsedBindNames != nullptr) {
@@ -169,7 +169,7 @@ void ClearParsedBindNames(
 /* ParsedBindNamesEmpty: */
 /*************************/
 bool ParsedBindNamesEmpty(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     return ProcedureParserData(theEnv)->ListOfParsedBindNames == nullptr;
 
 }
@@ -180,7 +180,7 @@ bool ParsedBindNamesEmpty(
 /*   Syntax: (while <expression> do <action>+)           */
 /*********************************************************/
 static struct expr *WhileParse(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct expr *parse,
         const char *infile) {
     struct token theToken;
@@ -258,7 +258,7 @@ static struct expr *WhileParse(
 /*           <range> ::= (<sf-var> [<start-integer-expression>] <end-integer-expression>) */
 /******************************************************************************************/
 static struct expr *LoopForCountParse(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct expr *parse,
         const char *infile) {
     struct token theToken;
@@ -424,7 +424,7 @@ static struct expr *LoopForCountParse(
 /* ReplaceLoopCountVars: */
 /*************************/
 static void ReplaceLoopCountVars(
-        Environment *theEnv,
+        const Environment&theEnv,
         CLIPSLexeme *loopVar,
         Expression *theExp,
         int depth) {
@@ -452,7 +452,7 @@ static void ReplaceLoopCountVars(
 /*               [ else <action>+ ] )                    */
 /*********************************************************/
 static struct expr *IfParse(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct expr *top,
         const char *infile) {
     struct token theToken;
@@ -565,7 +565,7 @@ static struct expr *IfParse(
 /*   Syntax:  (progn <expression>*)                     */
 /********************************************************/
 static struct expr *PrognParse(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct expr *top,
         const char *infile) {
     struct token tkn;
@@ -590,7 +590,7 @@ static struct expr *PrognParse(
 /*   Syntax:  (bind ?var <expression>)                     */
 /***********************************************************/
 static struct expr *BindParse(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct expr *top,
         const char *infile) {
     struct token theToken;
@@ -666,7 +666,7 @@ static struct expr *BindParse(
 /* ReturnParse: Parses the return function. */
 /********************************************/
 static struct expr *ReturnParse(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct expr *top,
         const char *infile) {
     bool error_flag = false;
@@ -711,7 +711,7 @@ static struct expr *ReturnParse(
 /* BreakParse: */
 /***************/
 static struct expr *BreakParse(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct expr *top,
         const char *infile) {
     struct token theToken;
@@ -740,7 +740,7 @@ static struct expr *BreakParse(
 /* SwitchParse: */
 /****************/
 static struct expr *SwitchParse(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct expr *top,
         const char *infile) {
     struct token theToken;
@@ -831,7 +831,7 @@ static struct expr *SwitchParse(
 /* SearchParsedBindNames: */
 /**************************/
 unsigned short SearchParsedBindNames(
-        Environment *theEnv,
+        const Environment&theEnv,
         CLIPSLexeme *name_sought) {
     struct BindInfo *var_ptr;
     unsigned short theIndex = 1;
@@ -850,7 +850,7 @@ unsigned short SearchParsedBindNames(
 /* FindBindConstraints: */
 /************************/
 struct constraintRecord *FindBindConstraints(
-        Environment *theEnv,
+        const Environment&theEnv,
         CLIPSLexeme *nameSought) {
     struct BindInfo *theVariable;
 
@@ -869,7 +869,7 @@ struct constraintRecord *FindBindConstraints(
 /*   in the current context (e.g. the RHS of a rule).   */
 /********************************************************/
 unsigned short CountParsedBindNames(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     struct BindInfo *theVariable;
     unsigned short theIndex = 0;
 
@@ -888,7 +888,7 @@ unsigned short CountParsedBindNames(
 /*   within the current semantic context (e.g. RHS of a rule).  */
 /****************************************************************/
 static int AddBindName(
-        Environment *theEnv,
+        const Environment&theEnv,
         CLIPSLexeme *variableName,
         CONSTRAINT_RECORD *theConstraint) {
     CONSTRAINT_RECORD *tmpConstraint;
@@ -940,7 +940,7 @@ static int AddBindName(
 /* RemoveParsedBindName: */
 /*************************/
 void RemoveParsedBindName(
-        Environment *theEnv,
+        const Environment&theEnv,
         CLIPSLexeme *bname) {
     struct BindInfo *prv, *tmp;
 

@@ -73,17 +73,17 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void ExitFileCallback(Environment *, int, void *);
-static void WriteFileCallback(Environment *, const char *, const char *, void *);
-static int ReadFileCallback(Environment *, const char *, void *);
-static int UnreadFileCallback(Environment *, const char *, int, void *);
-static void DeallocateFileRouterData(Environment *);
+static void ExitFileCallback(const Environment&, int, void *);
+static void WriteFileCallback(const Environment&, const char *, const char *, void *);
+static int ReadFileCallback(const Environment&, const char *, void *);
+static int UnreadFileCallback(const Environment&, const char *, int, void *);
+static void DeallocateFileRouterData(const Environment&);
 
 /***************************************************************/
 /* InitializeFileRouter: Initializes file input/output router. */
 /***************************************************************/
 void InitializeFileRouter(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     AllocateEnvironmentData(theEnv, FILE_ROUTER_DATA, sizeof(fileRouterData), DeallocateFileRouterData);
 
     AddRouter(theEnv, "fileio", 0, FindFile,
@@ -96,7 +96,7 @@ void InitializeFileRouter(
 /*    environment data for file routers. */
 /*****************************************/
 static void DeallocateFileRouterData(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     struct fileRouter *tmpPtr, *nextPtr;
 
     tmpPtr = FileRouterData(theEnv)->ListOfFileRouters;
@@ -114,7 +114,7 @@ static void DeallocateFileRouterData(
 /*   stream for a given logical name.    */
 /*****************************************/
 FILE *FindFptr(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName) {
     struct fileRouter *fptr;
 
@@ -147,7 +147,7 @@ FILE *FindFptr(
 /*   file router). Otherwise, false is returned.     */
 /*****************************************************/
 bool FindFile(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         void *context) {
     return FindFptr(theEnv, logicalName) != nullptr;
@@ -158,7 +158,7 @@ bool FindFile(
 /* ExitFileCallback: Exit routine for file router. */
 /***************************************************/
 static void ExitFileCallback(
-        Environment *theEnv,
+        const Environment&theEnv,
         int num,
         void *context) {
 #if MAC_XCD
@@ -177,7 +177,7 @@ static void ExitFileCallback(
 /* WriteFileCallback: Write callback for file router. */
 /******************************************************/
 static void WriteFileCallback(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         const char *str,
         void *context) {
@@ -192,7 +192,7 @@ static void WriteFileCallback(
 /* ReadFileCallback: Read callback for file router. */
 /****************************************************/
 static int ReadFileCallback(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         void *context) {
     FILE *fptr;
@@ -217,7 +217,7 @@ static int ReadFileCallback(
 /* UnreadFileCallback: Unread callback for file router. */
 /********************************************************/
 static int UnreadFileCallback(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         int ch,
         void *context) {
@@ -236,7 +236,7 @@ static int UnreadFileCallback(
 /*   file was succesfully opened, otherwise false.       */
 /*********************************************************/
 bool OpenAFile(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *fileName,
         const char *accessMode,
         const char *logicalName) {
@@ -283,7 +283,7 @@ bool OpenAFile(
 /*   closed, otherwise false.                                */
 /*************************************************************/
 bool CloseFile(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *fid) {
     struct fileRouter *fptr, *prev;
 
@@ -312,7 +312,7 @@ bool CloseFile(
 /*   any file was closed, otherwise false.    */
 /**********************************************/
 bool CloseAllFiles(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     struct fileRouter *fptr, *prev;
 
     if (FileRouterData(theEnv)->ListOfFileRouters == nullptr) return false;
@@ -338,7 +338,7 @@ bool CloseAllFiles(
 /*   flushed, otherwise false.                               */
 /*************************************************************/
 bool FlushFile(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *fid) {
     struct fileRouter *fptr;
 
@@ -360,7 +360,7 @@ bool FlushFile(
 /*   any file was flushed, otherwise false.    */
 /***********************************************/
 bool FlushAllFiles(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     struct fileRouter *fptr;
 
     if (FileRouterData(theEnv)->ListOfFileRouters == nullptr) return false;
@@ -378,7 +378,7 @@ bool FlushAllFiles(
 /*   file was successfully rewound, otherwise false. */
 /*****************************************************/
 bool RewindFile(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *fid) {
     struct fileRouter *fptr;
 
@@ -399,7 +399,7 @@ bool RewindFile(
 /*   with the specified logical name.             */
 /**************************************************/
 long long TellFile(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *fid) {
     struct fileRouter *fptr;
 
@@ -417,7 +417,7 @@ long long TellFile(
 /*   with the specified logical name.          */
 /***********************************************/
 bool SeekFile(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *fid,
         long offset,
         int whereFrom) {

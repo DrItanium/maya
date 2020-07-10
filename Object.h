@@ -218,13 +218,13 @@ struct defmessageHandler {
 };
 
 struct instanceBuilder {
-    Environment *ibEnv;
+    Environment ibEnv;
     Defclass *ibDefclass;
     CLIPSValue *ibValueArray;
 };
 
 struct instanceModifier {
-    Environment *imEnv;
+    Environment imEnv;
     Instance *imOldInstance;
     CLIPSValue *imValueArray;
     char *changeMap;

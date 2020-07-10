@@ -63,7 +63,7 @@
 /* CheckArgumentAgainstRestriction: */
 /************************************/
 bool CheckArgumentAgainstRestriction(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct expr *theExpression,
         unsigned theRestriction) {
     CONSTRAINT_RECORD *cr1, *cr2, *cr3;
@@ -212,7 +212,7 @@ unsigned short CountArguments(
 /* CopyExpresssion: Copies an expression. */
 /******************************************/
 struct expr *CopyExpression(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct expr *original) {
     struct expr *topLevel, *next, *last;
 
@@ -281,7 +281,7 @@ unsigned long ExpressionSize(
 /*   value of type string, symbol, or number.   */
 /************************************************/
 struct expr *GenConstant(
-        Environment *theEnv,
+        const Environment&theEnv,
         unsigned short type,
         void *value) {
     struct expr *top;
@@ -299,7 +299,7 @@ struct expr *GenConstant(
 /* PrintExpression: Pretty prints an expression. */
 /*************************************************/
 void PrintExpression(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *fileid,
         struct expr *theExpression) {
     struct expr *oldExpression;
@@ -352,7 +352,7 @@ void PrintExpression(
 /*   expressions to the list of arguments for the other and expression). */
 /*************************************************************************/
 struct expr *CombineExpressions(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct expr *expr1,
         struct expr *expr2) {
     struct expr *tempPtr;
@@ -447,7 +447,7 @@ struct expr *CombineExpressions(
 /* NegateExpression: */
 /*********************/
 struct expr *NegateExpression(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct expr *theExpression) {
     struct expr *tempPtr;
 

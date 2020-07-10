@@ -83,37 +83,37 @@
 #include "Symbol.h"
 #include "Deftemplate.h"
 
-bool UpdateModifyDuplicate(Environment *, struct expr *, const char *, void *);
-struct expr *ModifyParse(Environment *, struct expr *, const char *);
-struct expr *DuplicateParse(Environment *, struct expr *, const char *);
-void DeftemplateFunctions(Environment *);
-void ModifyCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void DuplicateCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void DeftemplateSlotNamesFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
+bool UpdateModifyDuplicate(const Environment&, struct expr *, const char *, void *);
+struct expr *ModifyParse(const Environment&, struct expr *, const char *);
+struct expr *DuplicateParse(const Environment&, struct expr *, const char *);
+void DeftemplateFunctions(const Environment&);
+void ModifyCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void DuplicateCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void DeftemplateSlotNamesFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 void DeftemplateSlotNames(Deftemplate *, CLIPSValue *);
-void DeftemplateSlotDefaultValueFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
+void DeftemplateSlotDefaultValueFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 bool DeftemplateSlotDefaultValue(Deftemplate *, const char *, CLIPSValue *);
-void DeftemplateSlotCardinalityFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
+void DeftemplateSlotCardinalityFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 bool DeftemplateSlotCardinality(Deftemplate *, const char *, CLIPSValue *);
-void DeftemplateSlotAllowedValuesFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
+void DeftemplateSlotAllowedValuesFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 bool DeftemplateSlotAllowedValues(Deftemplate *, const char *, CLIPSValue *);
-void DeftemplateSlotRangeFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
+void DeftemplateSlotRangeFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 bool DeftemplateSlotRange(Deftemplate *, const char *, CLIPSValue *);
-void DeftemplateSlotTypesFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
+void DeftemplateSlotTypesFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 bool DeftemplateSlotTypes(Deftemplate *, const char *, CLIPSValue *);
-void DeftemplateSlotMultiPFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
+void DeftemplateSlotMultiPFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 bool DeftemplateSlotMultiP(Deftemplate *, const char *);
-void DeftemplateSlotSinglePFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
+void DeftemplateSlotSinglePFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 bool DeftemplateSlotSingleP(Deftemplate *, const char *);
-void DeftemplateSlotExistPFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
+void DeftemplateSlotExistPFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 bool DeftemplateSlotExistP(Deftemplate *, const char *);
-void DeftemplateSlotDefaultPFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
+void DeftemplateSlotDefaultPFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 DefaultType DeftemplateSlotDefaultP(Deftemplate *, const char *);
-void DeftemplateSlotFacetExistPFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-bool DeftemplateSlotFacetExistP(Environment *, Deftemplate *, const char *, const char *);
-void DeftemplateSlotFacetValueFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-bool DeftemplateSlotFacetValue(Environment *, Deftemplate *, const char *, const char *, UDFValue *);
-Fact *ReplaceFact(Environment *, Fact *, CLIPSValue *, char *);
+void DeftemplateSlotFacetExistPFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+bool DeftemplateSlotFacetExistP(const Environment&, Deftemplate *, const char *, const char *);
+void DeftemplateSlotFacetValueFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+bool DeftemplateSlotFacetValue(const Environment&, Deftemplate *, const char *, const char *, UDFValue *);
+Fact *ReplaceFact(const Environment&, Fact *, CLIPSValue *, char *);
 
 #endif /* _H_tmpltfun */
 

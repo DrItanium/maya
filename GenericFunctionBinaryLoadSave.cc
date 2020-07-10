@@ -98,29 +98,29 @@ typedef struct bsaveGenericModule {
 
 #if BLOAD_AND_BSAVE
 
-static void BsaveGenericsFind(Environment *);
-static void MarkDefgenericItems(Environment *, ConstructHeader *, void *);
-static void BsaveGenericsExpressions(Environment *, FILE *);
-static void BsaveMethodExpressions(Environment *, ConstructHeader *, void *);
-static void BsaveRestrictionExpressions(Environment *, ConstructHeader *, void *);
-static void BsaveGenerics(Environment *, FILE *);
-static void BsaveDefgenericHeader(Environment *, ConstructHeader *, void *);
-static void BsaveMethods(Environment *, ConstructHeader *, void *);
-static void BsaveMethodRestrictions(Environment *, ConstructHeader *, void *);
-static void BsaveRestrictionTypes(Environment *, ConstructHeader *, void *);
-static void BsaveStorageGenerics(Environment *, FILE *);
+static void BsaveGenericsFind(const Environment&);
+static void MarkDefgenericItems(const Environment&, ConstructHeader *, void *);
+static void BsaveGenericsExpressions(const Environment&, FILE *);
+static void BsaveMethodExpressions(const Environment&, ConstructHeader *, void *);
+static void BsaveRestrictionExpressions(const Environment&, ConstructHeader *, void *);
+static void BsaveGenerics(const Environment&, FILE *);
+static void BsaveDefgenericHeader(const Environment&, ConstructHeader *, void *);
+static void BsaveMethods(const Environment&, ConstructHeader *, void *);
+static void BsaveMethodRestrictions(const Environment&, ConstructHeader *, void *);
+static void BsaveRestrictionTypes(const Environment&, ConstructHeader *, void *);
+static void BsaveStorageGenerics(const Environment&, FILE *);
 
 #endif
 
-static void BloadStorageGenerics(Environment *);
-static void BloadGenerics(Environment *);
-static void UpdateGenericModule(Environment *, void *, unsigned long);
-static void UpdateGeneric(Environment *, void *, unsigned long);
-static void UpdateMethod(Environment *, void *, unsigned long);
-static void UpdateRestriction(Environment *, void *, unsigned long);
-static void UpdateType(Environment *, void *, unsigned long);
-static void ClearBloadGenerics(Environment *);
-static void DeallocateDefgenericBinaryData(Environment *);
+static void BloadStorageGenerics(const Environment&);
+static void BloadGenerics(const Environment&);
+static void UpdateGenericModule(const Environment&, void *, unsigned long);
+static void UpdateGeneric(const Environment&, void *, unsigned long);
+static void UpdateMethod(const Environment&, void *, unsigned long);
+static void UpdateRestriction(const Environment&, void *, unsigned long);
+static void UpdateType(const Environment&, void *, unsigned long);
+static void ClearBloadGenerics(const Environment&);
+static void DeallocateDefgenericBinaryData(const Environment&);
 
 /* =========================================
    *****************************************
@@ -139,7 +139,7 @@ static void DeallocateDefgenericBinaryData(Environment *);
   NOTES        : None
  ***********************************************************/
 void SetupGenericsBload(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     AllocateEnvironmentData(theEnv, GENRCBIN_DATA, sizeof(defgenericBinaryData), DeallocateDefgenericBinaryData);
 #if BLOAD_AND_BSAVE
     AddBinaryItem(theEnv, "generic functions", 0, BsaveGenericsFind, BsaveGenericsExpressions,
@@ -154,7 +154,7 @@ void SetupGenericsBload(
 /*    data for the defgeneric binary functionality.        */
 /***********************************************************/
 static void DeallocateDefgenericBinaryData(
-        Environment *theEnv) {
+        const Environment&theEnv) {
 #if (BLOAD_AND_BSAVE)
     size_t space;
 
@@ -185,7 +185,7 @@ static void DeallocateDefgenericBinaryData(
   NOTES        : None
  ***************************************************/
 void *BloadDefgenericModuleReference(
-        Environment *theEnv,
+        const Environment&theEnv,
         unsigned long theIndex) {
     return ((void *) &DefgenericBinaryData(theEnv)->ModuleArray[theIndex]);
 }
@@ -216,7 +216,7 @@ void *BloadDefgenericModuleReference(
                    generic functions will be bsaved in order of binary list)
  ***************************************************************************/
 static void BsaveGenericsFind(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     SaveBloadCount(theEnv, DefgenericBinaryData(theEnv)->ModuleCount);
     SaveBloadCount(theEnv, DefgenericBinaryData(theEnv)->GenericCount);
     SaveBloadCount(theEnv, DefgenericBinaryData(theEnv)->MethodCount);
@@ -246,7 +246,7 @@ static void BsaveGenericsFind(
   NOTES        : None
  ***************************************************/
 static void MarkDefgenericItems(
-        Environment *theEnv,
+        const Environment&theEnv,
         ConstructHeader *theDefgeneric,
         void *userBuffer) {
 #if MAC_XCD
@@ -283,7 +283,7 @@ static void MarkDefgenericItems(
   NOTES        : None
  ***************************************************/
 static void BsaveGenericsExpressions(
-        Environment *theEnv,
+        const Environment&theEnv,
         FILE *fp) {
     /*===================================================================*/
     /* Important to save all expressions for methods before any          */
@@ -308,7 +308,7 @@ static void BsaveGenericsExpressions(
   NOTES        : None
  ***************************************************/
 static void BsaveMethodExpressions(
-        Environment *theEnv,
+        const Environment&theEnv,
         ConstructHeader *theDefgeneric,
         void *userBuffer) {
     Defgeneric *gfunc = (Defgeneric *) theDefgeneric;
@@ -331,7 +331,7 @@ static void BsaveMethodExpressions(
   NOTES        : None
  ***************************************************/
 static void BsaveRestrictionExpressions(
-        Environment *theEnv,
+        const Environment&theEnv,
         ConstructHeader *theDefgeneric,
         void *userBuffer) {
     Defgeneric *gfunc = (Defgeneric *) theDefgeneric;
@@ -356,7 +356,7 @@ static void BsaveRestrictionExpressions(
   NOTES        : None
  ***********************************************************/
 static void BsaveStorageGenerics(
-        Environment *theEnv,
+        const Environment&theEnv,
         FILE *fp) {
     size_t space;
 
@@ -384,7 +384,7 @@ static void BsaveStorageGenerics(
   NOTES        : None
  ****************************************************************************************/
 static void BsaveGenerics(
-        Environment *theEnv,
+        const Environment&theEnv,
         FILE *fp) {
     Defmodule *theModule;
     DEFGENERIC_MODULE *theModuleItem;
@@ -466,7 +466,7 @@ static void BsaveGenerics(
   NOTES        : None
  ***************************************************/
 static void BsaveDefgenericHeader(
-        Environment *theEnv,
+        const Environment&theEnv,
         ConstructHeader *theDefgeneric,
         void *userBuffer) {
     Defgeneric *gfunc = (Defgeneric *) theDefgeneric;
@@ -492,7 +492,7 @@ static void BsaveDefgenericHeader(
   NOTES        : None
  ***************************************************/
 static void BsaveMethods(
-        Environment *theEnv,
+        const Environment&theEnv,
         ConstructHeader *theDefgeneric,
         void *userBuffer) {
     Defgeneric *gfunc = (Defgeneric *) theDefgeneric;
@@ -535,7 +535,7 @@ static void BsaveMethods(
   NOTES        : None
  ******************************************************/
 static void BsaveMethodRestrictions(
-        Environment *theEnv,
+        const Environment&theEnv,
         ConstructHeader *theDefgeneric,
         void *userBuffer) {
     Defgeneric *gfunc = (Defgeneric *) theDefgeneric;
@@ -573,7 +573,7 @@ static void BsaveMethodRestrictions(
   NOTES        : None
  *************************************************************/
 static void BsaveRestrictionTypes(
-        Environment *theEnv,
+        const Environment&theEnv,
         ConstructHeader *theDefgeneric,
         void *userBuffer) {
     Defgeneric *gfunc = (Defgeneric *) theDefgeneric;
@@ -608,7 +608,7 @@ static void BsaveRestrictionTypes(
                    within the structures
  ***********************************************************************/
 static void BloadStorageGenerics(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     size_t space;
     unsigned long counts[5];
 
@@ -664,7 +664,7 @@ static void BloadStorageGenerics(
   NOTES        : Assumes all loading is finished
  ********************************************************************/
 static void BloadGenerics(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     size_t space;
 
     GenReadBinary(theEnv, &space, sizeof(size_t));
@@ -683,7 +683,7 @@ static void BloadGenerics(
   Bload update routines for generic structures
  *********************************************/
 static void UpdateGenericModule(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *buf,
         unsigned long obji) {
     BSAVE_DEFGENERIC_MODULE *bdptr;
@@ -694,7 +694,7 @@ static void UpdateGenericModule(
 }
 
 static void UpdateGeneric(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *buf,
         unsigned long obji) {
     BSAVE_GENERIC *bgp;
@@ -716,7 +716,7 @@ static void UpdateGeneric(
 }
 
 static void UpdateMethod(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *buf,
         unsigned long obji) {
     BSAVE_METHOD *bmth;
@@ -741,7 +741,7 @@ static void UpdateMethod(
 }
 
 static void UpdateRestriction(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *buf,
         unsigned long obji) {
     BSAVE_RESTRICTION *brp;
@@ -753,7 +753,7 @@ static void UpdateRestriction(
 }
 
 static void UpdateType(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *buf,
         unsigned long obji) {
     DefgenericBinaryData(theEnv)->TypeArray[obji] = DefclassPointer(*(unsigned long *) buf);
@@ -770,7 +770,7 @@ static void UpdateType(
   NOTES        : Generic function name symbol counts decremented
  ***************************************************************/
 static void ClearBloadGenerics(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     unsigned long i;
     size_t space;
 

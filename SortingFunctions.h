@@ -44,10 +44,10 @@
 
 #define _H_sortfun
 
-void SortFunctionDefinitions(Environment *);
-void MergeSort(Environment *, size_t, UDFValue *,
-               bool (*)(Environment *, UDFValue *, UDFValue *));
-void SortFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
+void SortFunctionDefinitions(const Environment&);
+void MergeSort(const Environment&, size_t, UDFValue *,
+               bool (*)(const Environment&, UDFValue *, UDFValue *));
+void SortFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 
 #endif /* _H_sortfun */
 

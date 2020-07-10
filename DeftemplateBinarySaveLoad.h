@@ -91,8 +91,8 @@ struct deftemplateBinaryData {
 #include "tmpltdef.h"
 #endif
 
-void DeftemplateBinarySetup(Environment *);
-void *BloadDeftemplateModuleReference(Environment *, unsigned long);
+void DeftemplateBinarySetup(const Environment&);
+void *BloadDeftemplateModuleReference(const Environment&, unsigned long);
 
 #endif /* _H_tmpltbin */
 

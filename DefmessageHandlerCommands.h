@@ -92,7 +92,7 @@ struct messageHandlerData {
 #define PRINT_STRING  "print"
 #define CREATE_STRING "create"
 
-void SetupMessageHandlers(Environment *);
+void SetupMessageHandlers(const Environment&);
 const char *DefmessageHandlerName(Defclass *, unsigned);
 const char *DefmessageHandlerType(Defclass *, unsigned);
 unsigned GetNextDefmessageHandler(Defclass *, unsigned);
@@ -104,16 +104,16 @@ void DefmessageHandlerSetWatch(Defclass *, unsigned, bool);
 #endif
 unsigned FindDefmessageHandler(Defclass *, const char *, const char *);
 bool DefmessageHandlerIsDeletable(Defclass *, unsigned);
-void UndefmessageHandlerCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-bool UndefmessageHandler(Defclass *, unsigned, Environment *);
+void UndefmessageHandlerCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+bool UndefmessageHandler(Defclass *, unsigned, const Environment&);
 #if DEBUGGING_FUNCTIONS
-void PPDefmessageHandlerCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void ListDefmessageHandlersCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void PreviewSendCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
+void PPDefmessageHandlerCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void ListDefmessageHandlersCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void PreviewSendCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 const char *DefmessageHandlerPPForm(Defclass *, unsigned);
-void ListDefmessageHandlers(Environment *, Defclass *, const char *, bool);
+void ListDefmessageHandlers(const Environment&, Defclass *, const char *, bool);
 void PreviewSend(Defclass *, const char *, const char *);
-unsigned long DisplayHandlersInLinks(Environment *, const char *, PACKED_CLASS_LINKS *, unsigned int);
+unsigned long DisplayHandlersInLinks(const Environment&, const char *, PACKED_CLASS_LINKS *, unsigned int);
 #endif
 
 #endif /* _H_msgcom */

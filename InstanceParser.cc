@@ -93,7 +93,7 @@ constexpr auto DUPLICATE_TYPE  = 3;
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static bool ReplaceClassNameWithReference(Environment *, Expression *);
+static bool ReplaceClassNameWithReference(const Environment&, Expression *);
 
 /* =========================================
    *****************************************
@@ -177,7 +177,7 @@ static bool ReplaceClassNameWithReference(Environment *, Expression *);
 
  *************************************************************************************/
 Expression *ParseInitializeInstance(
-        Environment *theEnv,
+        const Environment&theEnv,
         Expression *top,
         const char *readSource) {
     bool error;
@@ -326,7 +326,7 @@ Expression *ParseInitializeInstance(
                  Assumes first token has already been scanned
  ********************************************************************************/
 Expression *ParseSlotOverrides(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *readSource,
         bool *error) {
     Expression *top = nullptr, *bot = nullptr, *theExp;
@@ -401,7 +401,7 @@ Expression *ParseSlotOverrides(
 
  ****************************************************************************/
 Expression *ParseSimpleInstance(
-        Environment *theEnv,
+        const Environment&theEnv,
         Expression *top,
         const char *readSource) {
     Expression *theExp, *vals = nullptr, *vbot, *tval;
@@ -513,7 +513,7 @@ Expression *ParseSimpleInstance(
                  is specified.
  ***************************************************/
 static bool ReplaceClassNameWithReference(
-        Environment *theEnv,
+        const Environment&theEnv,
         Expression *theExp) {
     const char *theClassName;
     Defclass *theDefclass;

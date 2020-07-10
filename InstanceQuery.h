@@ -90,15 +90,15 @@ struct instanceQueryData {
 
 #define QUERY_DELIMITER_STRING     "(QDS)"
 
-void SetupQuery(Environment *);
-void GetQueryInstance(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void GetQueryInstanceSlot(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void AnyInstances(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void QueryFindInstance(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void QueryFindAllInstances(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void QueryDoForInstance(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void QueryDoForAllInstances(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void DelayedQueryDoForAllInstances(Environment *theEnv, UDFContext *context, UDFValue *ret);
+void SetupQuery(const Environment&);
+void GetQueryInstance(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void GetQueryInstanceSlot(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void AnyInstances(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void QueryFindInstance(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void QueryFindAllInstances(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void QueryDoForInstance(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void QueryDoForAllInstances(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void DelayedQueryDoForAllInstances(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 
 #endif /* INSTANCE_SET_QUERIES */
 

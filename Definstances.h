@@ -86,25 +86,25 @@ struct definstancesData {
 #define DefinstancesData(theEnv) ((definstancesData *) GetEnvironmentData(theEnv,DEFINSTANCES_DATA))
 
 const char *DefinstancesModule(Definstances *);
-const char *DefinstancesModuleName(Environment *, Definstances *);
-Definstances *FindDefinstances(Environment *, const char *);
-Definstances *FindDefinstancesInModule(Environment *, const char *);
-void GetDefinstancesList(Environment *, CLIPSValue *, Defmodule *);
+const char *DefinstancesModuleName(const Environment&, Definstances *);
+Definstances *FindDefinstances(const Environment&, const char *);
+Definstances *FindDefinstancesInModule(const Environment&, const char *);
+void GetDefinstancesList(const Environment&, CLIPSValue *, Defmodule *);
 const char *DefinstancesName(Definstances *);
-CLIPSLexeme *GetDefinstancesNamePointer(Environment *, Definstances *);
+CLIPSLexeme *GetDefinstancesNamePointer(const Environment&, Definstances *);
 const char *DefinstancesPPForm(Definstances *);
-Definstances *GetNextDefinstances(Environment *, Definstances *);
+Definstances *GetNextDefinstances(const Environment&, Definstances *);
 bool DefinstancesIsDeletable(Definstances *);
-void SetDefinstancesPPForm(Environment *, Definstances *, const char *);
-bool Undefinstances(Definstances *, Environment *);
-void GetDefinstancesListFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void GetDefinstancesModuleCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void SetupDefinstances(Environment *);
-void UndefinstancesCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
+void SetDefinstancesPPForm(const Environment&, Definstances *, const char *);
+bool Undefinstances(Definstances *, const Environment&);
+void GetDefinstancesListFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void GetDefinstancesModuleCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SetupDefinstances(const Environment&);
+void UndefinstancesCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 #if DEBUGGING_FUNCTIONS
-void PPDefinstancesCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void ListDefinstancesCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void ListDefinstances(Environment *, const char *, Defmodule *);
+void PPDefinstancesCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void ListDefinstancesCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void ListDefinstances(const Environment&, const char *, Defmodule *);
 #endif
 
 #endif /* DEFINSTANCES_CONSTRUCT */

@@ -89,15 +89,15 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void ResetDeffacts(Environment *, void *);
-static void SaveDeffacts(Environment *, Defmodule *, const char *, void *);
-static void ResetDeffactsAction(Environment *, ConstructHeader *, void *);
+static void ResetDeffacts(const Environment&, void *);
+static void SaveDeffacts(const Environment&, Defmodule *, const char *, void *);
+static void ResetDeffactsAction(const Environment&, ConstructHeader *, void *);
 
 /***************************************************************/
 /* DeffactsBasicCommands: Initializes basic deffacts commands. */
 /***************************************************************/
 void DeffactsBasicCommands(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     AddResetFunction(theEnv, "deffacts", ResetDeffacts, 0, nullptr);
     AddSaveFunction(theEnv, "deffacts", SaveDeffacts, 10, nullptr);
 
@@ -122,7 +122,7 @@ void DeffactsBasicCommands(
 /*   deffacts constructs.                                 */
 /**********************************************************/
 static void ResetDeffacts(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *context) {
     DoForAllConstructs(theEnv,
                        ResetDeffactsAction,
@@ -135,7 +135,7 @@ static void ResetDeffacts(
 /*   deffacts construct during a reset command.      */
 /*****************************************************/
 static void ResetDeffactsAction(
-        Environment *theEnv,
+        const Environment&theEnv,
         ConstructHeader *theConstruct,
         void *buffer) {
 #if MAC_XCD
@@ -156,7 +156,7 @@ static void ResetDeffactsAction(
 /*   for use with the save command.    */
 /***************************************/
 static void SaveDeffacts(
-        Environment *theEnv,
+        const Environment&theEnv,
         Defmodule *theModule,
         const char *logicalName,
         void *context) {
@@ -168,7 +168,7 @@ static void SaveDeffacts(
 /*   for the undeffacts command.           */
 /*******************************************/
 void UndeffactsCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UndefconstructCommand(context, "undeffacts", DeffactsData(theEnv)->DeffactsConstruct);
@@ -180,8 +180,8 @@ void UndeffactsCommand(
 /*********************************/
 bool Undeffacts(
         Deffacts *theDeffacts,
-        Environment *allEnv) {
-    Environment *theEnv;
+        const Environment&allEnv) {
+    Environment theEnv;
 
     if (theDeffacts == nullptr) {
         theEnv = allEnv;
@@ -197,7 +197,7 @@ bool Undeffacts(
 /*   for the get-deffacts-list function.         */
 /*************************************************/
 void GetDeffactsListFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     GetConstructListFunction(context, returnValue, DeffactsData(theEnv)->DeffactsConstruct);
@@ -208,7 +208,7 @@ void GetDeffactsListFunction(
 /*   for the get-deffacts-list function. */
 /*****************************************/
 void GetDeffactsList(
-        Environment *theEnv,
+        const Environment&theEnv,
         CLIPSValue *returnValue,
         Defmodule *theModule) {
     UDFValue result;
@@ -223,7 +223,7 @@ void GetDeffactsList(
 /*   for the deffacts-module function.          */
 /************************************************/
 void DeffactsModuleFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     returnValue->value = GetConstructModuleCommand(context, "deffacts-module", DeffactsData(theEnv)->DeffactsConstruct);
@@ -236,7 +236,7 @@ void DeffactsModuleFunction(
 /*   for the ppdeffacts command.           */
 /*******************************************/
 void PPDeffactsCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     PPConstructCommand(context, "ppdeffacts", DeffactsData(theEnv)->DeffactsConstruct, returnValue);
@@ -247,7 +247,7 @@ void PPDeffactsCommand(
 /*   the ppdeffacts command.        */
 /************************************/
 bool PPDeffacts(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *deffactsName,
         const char *logicalName) {
     return (PPConstruct(theEnv, deffactsName, logicalName, DeffactsData(theEnv)->DeffactsConstruct));
@@ -258,7 +258,7 @@ bool PPDeffacts(
 /*   for the list-deffacts command.          */
 /*********************************************/
 void ListDeffactsCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     ListConstructCommand(context, DeffactsData(theEnv)->DeffactsConstruct);
@@ -269,7 +269,7 @@ void ListDeffactsCommand(
 /*   for the list-deffacts command. */
 /************************************/
 void ListDeffacts(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         Defmodule *theModule) {
     ListConstruct(theEnv, DeffactsData(theEnv)->DeffactsConstruct, logicalName, theModule);

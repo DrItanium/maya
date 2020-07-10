@@ -38,8 +38,8 @@
 #include "Evaluation.h"
 #include "Constraint.h"
 
-struct constraintRecord *IntersectConstraints(Environment *, struct constraintRecord *, struct constraintRecord *);
-struct constraintRecord *UnionConstraints(Environment *, struct constraintRecord *, struct constraintRecord *);
-void RemoveConstantFromConstraint(Environment *, int, void *, CONSTRAINT_RECORD *);
+struct constraintRecord *IntersectConstraints(const Environment&, struct constraintRecord *, struct constraintRecord *);
+struct constraintRecord *UnionConstraints(const Environment&, struct constraintRecord *, struct constraintRecord *);
+void RemoveConstantFromConstraint(const Environment&, int, void *, CONSTRAINT_RECORD *);
 
 #endif /* _H_cstrnops */

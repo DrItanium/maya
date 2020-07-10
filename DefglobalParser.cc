@@ -79,15 +79,15 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static bool GetVariableDefinition(Environment *, const char *, bool *, bool, struct token *);
-static void AddDefglobal(Environment *, CLIPSLexeme *, UDFValue *, struct expr *);
+static bool GetVariableDefinition(const Environment&, const char *, bool *, bool, struct token *);
+static void AddDefglobal(const Environment&, CLIPSLexeme *, UDFValue *, struct expr *);
 
 /*********************************************************************/
 /* ParseDefglobal: Coordinates all actions necessary for the parsing */
 /*   and creation of a defglobal into the current environment.       */
 /*********************************************************************/
 bool ParseDefglobal(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *readSource) {
     bool defglobalError = false;
 
@@ -198,7 +198,7 @@ bool ParseDefglobal(
 /*   flag is also set if an error occurs.                      */
 /***************************************************************/
 static bool GetVariableDefinition(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *readSource,
         bool *defglobalError,
         bool tokenRead,
@@ -315,7 +315,7 @@ static bool GetVariableDefinition(
 /* AddDefglobal: Adds a defglobal to the current module. */
 /*********************************************************/
 static void AddDefglobal(
-        Environment *theEnv,
+        const Environment&theEnv,
         CLIPSLexeme *name,
         UDFValue *vPtr,
         struct expr *ePtr) {
@@ -418,7 +418,7 @@ static void AddDefglobal(
 /*   can later be used to retrieve the global variable's value.  */
 /*****************************************************************/
 bool ReplaceGlobalVariable(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct expr *ePtr) {
     Defglobal *theGlobal;
     unsigned int count;
@@ -468,7 +468,7 @@ bool ReplaceGlobalVariable(
 /*   symbolic reference to a global variable cannot be resolved. */
 /*****************************************************************/
 void GlobalReferenceErrorMessage(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *variableName) {
     PrintErrorID(theEnv, "GLOBLPSR", 1, true);
     WriteString(theEnv, STDERR, "\nGlobal variable ?*");

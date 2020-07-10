@@ -65,8 +65,8 @@ typedef struct moduleItem ModuleItem;
 typedef struct constructHeader ConstructHeader;
 typedef struct moduleStackItem ModuleStackItem;
 
-typedef void *AllocateModuleFunction(Environment *);
-typedef void FreeModuleFunction(Environment *, void *);
+typedef void *AllocateModuleFunction(const Environment&);
+typedef void FreeModuleFunction(const Environment&, void *);
 
 enum ConstructType {
     DEFMODULE,
@@ -95,7 +95,7 @@ struct constructHeader {
     unsigned long bsaveID;
     ConstructHeader *next;
     struct userData *usrData;
-    Environment *env;
+    Environment env;
 };
 
 struct defmoduleItemHeader {
@@ -104,11 +104,11 @@ struct defmoduleItemHeader {
     ConstructHeader *lastItem;
 };
 
-typedef ConstructHeader *FindConstructFunction(Environment *, const char *);
-typedef ConstructHeader *GetNextConstructFunction(Environment *, ConstructHeader *);
+typedef ConstructHeader *FindConstructFunction(const Environment&, const char *);
+typedef ConstructHeader *GetNextConstructFunction(const Environment&, ConstructHeader *);
 typedef bool IsConstructDeletableFunction(ConstructHeader *);
-typedef bool DeleteConstructFunction(ConstructHeader *, Environment *);
-typedef void FreeConstructFunction(Environment *, ConstructHeader *);
+typedef bool DeleteConstructFunction(ConstructHeader *, const Environment&);
+typedef void FreeConstructFunction(const Environment&, ConstructHeader *);
 
 /**********************************************************************/
 /* defmodule                                                          */
@@ -183,7 +183,7 @@ struct moduleItem {
     unsigned moduleIndex;
     AllocateModuleFunction* allocateFunction;
     FreeModuleFunction* freeFunction;
-    void *(*bloadModuleReference)(Environment *, unsigned long);
+    void *(*bloadModuleReference)(const Environment&, unsigned long);
     FindConstructFunction *findFunction;
     ModuleItem *next;
 };
@@ -221,36 +221,36 @@ struct defmoduleData {
 
 #define DefmoduleData(theEnv) ((defmoduleData *) GetEnvironmentData(theEnv,DEFMODULE_DATA))
 
-void InitializeDefmodules(Environment *);
-Defmodule *FindDefmodule(Environment *, const char *);
+void InitializeDefmodules(const Environment&);
+Defmodule *FindDefmodule(const Environment&, const char *);
 const char *DefmoduleName(Defmodule *);
 const char *DefmodulePPForm(Defmodule *);
-Defmodule *GetNextDefmodule(Environment *, Defmodule *);
-void RemoveAllDefmodules(Environment *, void *);
+Defmodule *GetNextDefmodule(const Environment&, Defmodule *);
+void RemoveAllDefmodules(const Environment&, void *);
 int AllocateModuleStorage();
-unsigned RegisterModuleItem(Environment *theEnv,
+unsigned RegisterModuleItem(const Environment&theEnv,
                             const char *theItem,
                             AllocateModuleFunction *allocateFunction,
                             FreeModuleFunction *freeFunction,
-                            void *(*bloadModuleReference)(Environment *, unsigned long),
+                            void *(*bloadModuleReference)(const Environment&, unsigned long),
                             FindConstructFunction *findFunction);
-void *GetModuleItem(Environment *, Defmodule *, unsigned);
-void SetModuleItem(Environment *, Defmodule *, unsigned, void *);
-Defmodule *GetCurrentModule(Environment *);
-Defmodule *SetCurrentModule(Environment *, Defmodule *);
-void GetCurrentModuleCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void SetCurrentModuleCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-unsigned GetNumberOfModuleItems(Environment *);
-void CreateMainModule(Environment *, void *);
-void SetListOfDefmodules(Environment *, Defmodule *);
-struct moduleItem *GetListOfModuleItems(Environment *);
-struct moduleItem *FindModuleItem(Environment *, const char *);
-void SaveCurrentModule(Environment *);
-void RestoreCurrentModule(Environment *);
-void AddAfterModuleChangeFunction(Environment *, const char *, VoidCallFunction *, int, void *);
-void IllegalModuleSpecifierMessage(Environment *);
-void AllocateDefmoduleGlobals(Environment *);
-unsigned short GetNumberOfDefmodules(Environment *);
+void *GetModuleItem(const Environment&, Defmodule *, unsigned);
+void SetModuleItem(const Environment&, Defmodule *, unsigned, void *);
+Defmodule *GetCurrentModule(const Environment&);
+Defmodule *SetCurrentModule(const Environment&, Defmodule *);
+void GetCurrentModuleCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SetCurrentModuleCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+unsigned GetNumberOfModuleItems(const Environment&);
+void CreateMainModule(const Environment&, void *);
+void SetListOfDefmodules(const Environment&, Defmodule *);
+struct moduleItem *GetListOfModuleItems(const Environment&);
+struct moduleItem *FindModuleItem(const Environment&, const char *);
+void SaveCurrentModule(const Environment&);
+void RestoreCurrentModule(const Environment&);
+void AddAfterModuleChangeFunction(const Environment&, const char *, VoidCallFunction *, int, void *);
+void IllegalModuleSpecifierMessage(const Environment&);
+void AllocateDefmoduleGlobals(const Environment&);
+unsigned short GetNumberOfDefmodules(const Environment&);
 
 #endif /* _H_moduldef */
 

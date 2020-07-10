@@ -63,17 +63,17 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static CLIPSLexeme *ScanSymbol(Environment *, const char *, int, TokenType *);
-static CLIPSLexeme *ScanString(Environment *, const char *);
-static void ScanNumber(Environment *, const char *, struct token *);
-static void DeallocateScannerData(Environment *);
+static CLIPSLexeme *ScanSymbol(const Environment&, const char *, int, TokenType *);
+static CLIPSLexeme *ScanString(const Environment&, const char *);
+static void ScanNumber(const Environment&, const char *, struct token *);
+static void DeallocateScannerData(const Environment&);
 
 /************************************************/
 /* InitializeScannerData: Allocates environment */
 /*    data for scanner routines.                */
 /************************************************/
 void InitializeScannerData(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     AllocateEnvironmentData(theEnv, SCANNER_DATA, sizeof(scannerData), DeallocateScannerData);
 }
 
@@ -82,7 +82,7 @@ void InitializeScannerData(
 /*    data for scanner routines.                  */
 /**************************************************/
 static void DeallocateScannerData(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     if (ScannerData(theEnv)->GlobalMax != 0) { genfree(theEnv, ScannerData(theEnv)->GlobalString, ScannerData(theEnv)->GlobalMax); }
 }
 
@@ -95,7 +95,7 @@ static void DeallocateScannerData(
 /*   and the pretty print representation.                              */
 /***********************************************************************/
 void GetToken(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         struct token *theToken) {
     int inchar;
@@ -362,7 +362,7 @@ void GetToken(
 /* ScanSymbol: Scans a symbol token. */
 /*************************************/
 static CLIPSLexeme *ScanSymbol(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         int count,
         TokenType *type) {
@@ -427,7 +427,7 @@ static CLIPSLexeme *ScanSymbol(
 /* ScanString: Scans a string token. */
 /*************************************/
 static CLIPSLexeme *ScanString(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName) {
     int inchar;
     size_t pos = 0;
@@ -471,7 +471,7 @@ static CLIPSLexeme *ScanString(
 /* ScanNumber: Scans a numeric token. */
 /**************************************/
 static void ScanNumber(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         struct token *theToken) {
     int count = 0;
@@ -707,7 +707,7 @@ void CopyToken(
 /*   line count to zero.                */
 /****************************************/
 void ResetLineCount(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     ScannerData(theEnv)->LineCount = 0;
 }
 
@@ -715,7 +715,7 @@ void ResetLineCount(
 /* GetLineCount: Returns the scanner's line count. */
 /***************************************************/
 long GetLineCount(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     return (ScannerData(theEnv)->LineCount);
 }
 
@@ -724,7 +724,7 @@ long GetLineCount(
 /*   and returns the previous value.           */
 /***********************************************/
 long SetLineCount(
-        Environment *theEnv,
+        const Environment&theEnv,
         long value) {
     long oldValue;
 
@@ -740,7 +740,7 @@ long SetLineCount(
 /*   the scanner's line count.    */
 /**********************************/
 void IncrementLineCount(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     ScannerData(theEnv)->LineCount++;
 }
 
@@ -749,7 +749,7 @@ void IncrementLineCount(
 /*   the scanner's line count.    */
 /**********************************/
 void DecrementLineCount(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     ScannerData(theEnv)->LineCount--;
 }
 

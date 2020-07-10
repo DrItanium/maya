@@ -107,7 +107,7 @@
 /*   none of the function has been parsed yet.     */
 /***************************************************/
 struct expr *Function0Parse(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName) {
     struct token theToken;
     struct expr *top;
@@ -136,7 +136,7 @@ struct expr *Function0Parse(
 /*   opening left parenthesis has already been parsed. */
 /*******************************************************/
 struct expr *Function1Parse(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName) {
     struct token theToken;
     struct expr *top;
@@ -166,7 +166,7 @@ struct expr *Function1Parse(
 /*   have already been parsed.                      */
 /****************************************************/
 struct expr *Function2Parse(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         const char *name) {
     struct functionDefinition *theFunction;
@@ -348,7 +348,7 @@ struct expr *Function2Parse(
                    being treated as a special expansion operator)
  **********************************************************************/
 bool ReplaceSequenceExpansionOps(
-        Environment *theEnv,
+        const Environment&theEnv,
         Expression *actions,
         Expression *fcallexp,
         void *expcall,
@@ -409,7 +409,7 @@ bool ReplaceSequenceExpansionOps(
 /*   for the break/return functions.             */
 /*************************************************/
 void PushRtnBrkContexts(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     SavedContexts *svtmp;
 
     svtmp = get_struct(theEnv, savedContexts);
@@ -424,7 +424,7 @@ void PushRtnBrkContexts(
 /*   for the break/return functions.               */
 /***************************************************/
 void PopRtnBrkContexts(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     SavedContexts *svtmp;
 
     ExpressionData(theEnv)->ReturnContext = ExpressionData(theEnv)->svContexts->rtn;
@@ -465,7 +465,7 @@ bool RestrictionExists(
 /*   true is returned, otherwise false is returned.              */
 /*****************************************************************/
 FunctionArgumentsError CheckExpressionAgainstRestrictions(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct expr *theExpression,
         struct functionDefinition *theFunction,
         const char *functionName) {
@@ -553,7 +553,7 @@ FunctionArgumentsError CheckExpressionAgainstRestrictions(
 /*   the arguments for a function call expression.     */
 /*******************************************************/
 struct expr *CollectArguments(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct expr *top,
         const char *logicalName) {
     bool errorFlag;
@@ -595,7 +595,7 @@ struct expr *CollectArguments(
 /*   a function call expression.            */
 /********************************************/
 struct expr *ArgumentParse(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         bool *errorFlag) {
     struct expr *top;
@@ -650,7 +650,7 @@ struct expr *ArgumentParse(
 /*   or variable (local or global).                         */
 /************************************************************/
 struct expr *ParseAtomOrExpression(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         struct token *useToken) {
     struct token theToken, *thisToken;
@@ -688,7 +688,7 @@ struct expr *ParseAtomOrExpression(
 /*   for example to parse the RHS of a rule. */
 /*********************************************/
 struct expr *GroupActions(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         struct token *theToken,
         bool readFirstToken,
@@ -798,7 +798,7 @@ struct expr *GroupActions(
 /* PopulateRestriction: */
 /************************/
 void PopulateRestriction(
-        Environment *theEnv,
+        const Environment&theEnv,
         unsigned *restriction,
         unsigned defaultRestriction,
         const char *restrictionString,
@@ -910,7 +910,7 @@ void PopulateRestriction(
 /*    into a set of constant expressions.  */
 /*******************************************/
 Expression *ParseConstantArguments(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *argstr,
         bool *error) {
     Expression *top = nullptr, *bot = nullptr, *tmp;
@@ -980,7 +980,7 @@ Expression *ParseConstantArguments(
 /* RemoveUnneededProgn: */
 /************************/
 struct expr *RemoveUnneededProgn(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct expr *theExpression) {
     struct functionDefinition *fptr;
     struct expr *temp;

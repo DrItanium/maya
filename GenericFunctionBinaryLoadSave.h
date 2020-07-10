@@ -58,8 +58,8 @@ struct defgenericBinaryData {
 
 #define GenericPointer(i) (((i) == ULONG_MAX) ? nullptr : &DefgenericBinaryData(theEnv)->DefgenericArray[i])
 
-void SetupGenericsBload(Environment *);
-void *BloadDefgenericModuleReference(Environment *, unsigned long);
+void SetupGenericsBload(const Environment&);
+void *BloadDefgenericModuleReference(const Environment&, unsigned long);
 
 #endif /* _H_genrcbin */
 

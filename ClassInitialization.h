@@ -56,8 +56,8 @@
 #include "Object.h"
 
 
-void SetupObjectSystem(Environment *);
-void CreateSystemClasses(Environment *, void *);
+void SetupObjectSystem(const Environment&);
+void CreateSystemClasses(const Environment&, void *);
 
 #endif /* _H_classini */
 

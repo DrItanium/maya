@@ -71,21 +71,21 @@
 /***************************************/
 
 #if BLOAD_AND_BSAVE
-static void FindNeededItems(Environment *);
-static void InitializeFunctionNeededFlags(Environment *);
-static void WriteNeededFunctions(Environment *, FILE *);
-static size_t FunctionBinarySize(Environment *);
-static void WriteBinaryHeader(Environment *, FILE *);
-static void WriteBinaryFooter(Environment *, FILE *);
+static void FindNeededItems(const Environment&);
+static void InitializeFunctionNeededFlags(const Environment&);
+static void WriteNeededFunctions(const Environment&, FILE *);
+static size_t FunctionBinarySize(const Environment&);
+static void WriteBinaryHeader(const Environment&, FILE *);
+static void WriteBinaryFooter(const Environment&, FILE *);
 #endif
-static void DeallocateBsaveData(Environment *);
+static void DeallocateBsaveData(const Environment&);
 
 /**********************************************/
 /* InitializeBsaveData: Allocates environment */
 /*    data for the bsave command.             */
 /**********************************************/
 void InitializeBsaveData(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     AllocateEnvironmentData(theEnv, BSAVE_DATA, sizeof(bsaveData), DeallocateBsaveData);
 }
 
@@ -94,7 +94,7 @@ void InitializeBsaveData(
 /*    data for the bsave command.               */
 /************************************************/
 static void DeallocateBsaveData(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     struct BinaryItem *tmpPtr, *nextPtr;
 
     tmpPtr = BsaveData(theEnv)->ListOfBinaryItems;
@@ -110,7 +110,7 @@ static void DeallocateBsaveData(
 /*   for the bsave command.           */
 /**************************************/
 void BsaveCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
 #if BLOAD_AND_BSAVE
@@ -138,7 +138,7 @@ void BsaveCommand(
 /*   for the bsave command. */
 /****************************/
 bool Bsave(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *fileName) {
     FILE *fp;
     struct BinaryItem *biPtr;
@@ -299,7 +299,7 @@ bool Bsave(
 /*   being unneeded by this binary image.    */
 /*********************************************/
 static void InitializeFunctionNeededFlags(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     struct functionDefinition *functionList;
 
     for (functionList = GetFunctionList(theEnv);
@@ -314,7 +314,7 @@ static void InitializeFunctionNeededFlags(
 /*   number of expressions in use (through a global).     */
 /**********************************************************/
 static void FindNeededItems(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     struct BinaryItem *biPtr;
 
     for (biPtr = BsaveData(theEnv)->ListOfBinaryItems;
@@ -327,7 +327,7 @@ static void FindNeededItems(
 /*   functions to the binary save file.             */
 /****************************************************/
 static void WriteNeededFunctions(
-        Environment *theEnv,
+        const Environment&theEnv,
         FILE *fp) {
     unsigned long count = 0;
     size_t space, length;
@@ -382,7 +382,7 @@ static void WriteNeededFunctions(
 /*   function names in the binary save file. */
 /*********************************************/
 static size_t FunctionBinarySize(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     size_t size = 0;
     struct functionDefinition *functionList;
 
@@ -401,7 +401,7 @@ static size_t FunctionBinarySize(
 /*   issued when a binary image is loaded.         */
 /***************************************************/
 void SaveBloadCount(
-        Environment *theEnv,
+        const Environment&theEnv,
         unsigned long cnt) {
     BLOADCNTSV *tmp, *prv;
 
@@ -423,7 +423,7 @@ void SaveBloadCount(
 /*   completed when a binary image is loaded.     */
 /**************************************************/
 void RestoreBloadCount(
-        Environment *theEnv,
+        const Environment&theEnv,
         unsigned long *cnt) {
     BLOADCNTSV *tmp;
 
@@ -439,7 +439,7 @@ void RestoreBloadCount(
 /*   an expression as part of a binary image. */
 /**********************************************/
 void MarkNeededItems(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct expr *testPtr) {
     while (testPtr != nullptr) {
         switch (testPtr->type) {
@@ -484,7 +484,7 @@ void MarkNeededItems(
 /*   verification when a binary image is loaded.      */
 /******************************************************/
 static void WriteBinaryHeader(
-        Environment *theEnv,
+        const Environment&theEnv,
         FILE *fp) {
     GenWrite((void *) BloadData(theEnv)->BinaryPrefixID, strlen(BloadData(theEnv)->BinaryPrefixID) + 1, fp);
     GenWrite((void *) BloadData(theEnv)->BinaryVersionID, strlen(BloadData(theEnv)->BinaryVersionID) + 1, fp);
@@ -496,7 +496,7 @@ static void WriteBinaryHeader(
 /*   verification when a binary image is loaded.      */
 /******************************************************/
 static void WriteBinaryFooter(
-        Environment *theEnv,
+        const Environment&theEnv,
         FILE *fp) {
     char footerBuffer[CONSTRUCT_HEADER_SIZE];
 
@@ -515,16 +515,16 @@ static void WriteBinaryFooter(
 /*   binary file.                                         */
 /**********************************************************/
 bool AddBinaryItem(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name,
         int priority,
-        void (*findFunction)(Environment *),
-        void (*expressionFunction)(Environment *, FILE *),
-        void (*bsaveStorageFunction)(Environment *, FILE *),
-        void (*bsaveFunction)(Environment *, FILE *),
-        void (*bloadStorageFunction)(Environment *),
-        void (*bloadFunction)(Environment *),
-        void (*clearFunction)(Environment *)) {
+        void (*findFunction)(const Environment&),
+        void (*expressionFunction)(const Environment&, FILE *),
+        void (*bsaveStorageFunction)(const Environment&, FILE *),
+        void (*bsaveFunction)(const Environment&, FILE *),
+        void (*bloadStorageFunction)(const Environment&),
+        void (*bloadFunction)(const Environment&),
+        void (*clearFunction)(const Environment&)) {
     struct BinaryItem *newPtr, *currentPtr, *lastPtr = nullptr;
 
     /*========================================*/

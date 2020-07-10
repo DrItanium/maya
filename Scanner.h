@@ -91,14 +91,14 @@ struct scannerData {
 
 #define ScannerData(theEnv) ((scannerData *) GetEnvironmentData(theEnv,SCANNER_DATA))
 
-void InitializeScannerData(Environment *);
-void GetToken(Environment *, const char *, struct token *);
+void InitializeScannerData(const Environment&);
+void GetToken(const Environment&, const char *, struct token *);
 void CopyToken(token *, struct token *);
-void ResetLineCount(Environment *);
-long GetLineCount(Environment *);
-long SetLineCount(Environment *, long);
-void IncrementLineCount(Environment *);
-void DecrementLineCount(Environment *);
+void ResetLineCount(const Environment&);
+long GetLineCount(const Environment&);
+long SetLineCount(const Environment&, long);
+void IncrementLineCount(const Environment&);
+void DecrementLineCount(const Environment&);
 unsigned short TokenTypeToType(TokenType);
 
 #endif /* _H_scanner */

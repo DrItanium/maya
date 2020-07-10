@@ -64,7 +64,7 @@ static void CatchCtrlC(int);
 /* LOCAL INTERNAL VARIABLE DEFINITIONS */
 /***************************************/
 
-static Environment *mainEnv;
+static Environment mainEnv;
 
 /****************************************/
 /* main: Starts execution of the expert */

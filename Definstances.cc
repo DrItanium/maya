@@ -116,20 +116,20 @@
    =========================================
    ***************************************** */
 
-static bool ParseDefinstances(Environment *, const char *);
-static CLIPSLexeme *ParseDefinstancesName(Environment *, const char *, bool *);
-static void RemoveDefinstances(Environment *, Definstances *);
-static void SaveDefinstances(Environment *, Defmodule *, const char *, void *);
+static bool ParseDefinstances(const Environment&, const char *);
+static CLIPSLexeme *ParseDefinstancesName(const Environment&, const char *, bool *);
+static void RemoveDefinstances(const Environment&, Definstances *);
+static void SaveDefinstances(const Environment&, Defmodule *, const char *, void *);
 
-static void *AllocateModule(Environment *);
-static void ReturnModule(Environment *, void *);
-static bool ClearDefinstancesReady(Environment *, void *);
-static void CheckDefinstancesBusy(Environment *, ConstructHeader *, void *);
-static void DestroyDefinstancesAction(Environment *, ConstructHeader *, void *);
+static void *AllocateModule(const Environment&);
+static void ReturnModule(const Environment&, void *);
+static bool ClearDefinstancesReady(const Environment&, void *);
+static void CheckDefinstancesBusy(const Environment&, ConstructHeader *, void *);
+static void DestroyDefinstancesAction(const Environment&, ConstructHeader *, void *);
 
-static void ResetDefinstances(Environment *, void *);
-static void ResetDefinstancesAction(Environment *, ConstructHeader *, void *);
-static void DeallocateDefinstancesData(Environment *);
+static void ResetDefinstances(const Environment&, void *);
+static void ResetDefinstancesAction(const Environment&, ConstructHeader *, void *);
+static void DeallocateDefinstancesData(const Environment&);
 
 /* =========================================
    *****************************************
@@ -147,7 +147,7 @@ static void DeallocateDefinstancesData(Environment *);
   NOTES        : None
  ***************************************************/
 void SetupDefinstances(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     AllocateEnvironmentData(theEnv, DEFINSTANCES_DATA, sizeof(definstancesData), DeallocateDefinstancesData);
 
     DefinstancesData(theEnv)->DefinstancesModuleIndex =
@@ -200,7 +200,7 @@ void SetupDefinstances(
 /*    data for the definstances construct.             */
 /*******************************************************/
 static void DeallocateDefinstancesData(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     struct definstancesModule *theModuleItem;
     Defmodule *theModule;
 
@@ -225,7 +225,7 @@ static void DeallocateDefinstancesData(
 /*   definstances as a result of DestroyEnvironment. */
 /*****************************************************/
 static void DestroyDefinstancesAction(
-        Environment *theEnv,
+        const Environment&theEnv,
         ConstructHeader *theConstruct,
         void *buffer) {
 #if MAC_XCD
@@ -253,7 +253,7 @@ static void DestroyDefinstancesAction(
                     is returned.
  ***********************************************************/
 Definstances *GetNextDefinstances(
-        Environment *theEnv,
+        const Environment&theEnv,
         Definstances *theDefinstances) {
     return (Definstances *) GetNextConstructItem(theEnv, &theDefinstances->header,
                                                  DefinstancesData(theEnv)->DefinstancesModuleIndex);
@@ -270,7 +270,7 @@ Definstances *GetNextDefinstances(
   NOTES        : None
  ***************************************************/
 Definstances *FindDefinstances(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name) {
     return (Definstances *) FindNamedConstructInModuleOrImports(theEnv, name, DefinstancesData(theEnv)->DefinstancesConstruct);
 }
@@ -286,7 +286,7 @@ Definstances *FindDefinstances(
   NOTES        : None
  ***************************************************/
 Definstances *FindDefinstancesInModule(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name) {
     return (Definstances *) FindNamedConstructInModule(theEnv, name, DefinstancesData(theEnv)->DefinstancesConstruct);
 }
@@ -302,7 +302,7 @@ Definstances *FindDefinstancesInModule(
  ***************************************************/
 bool DefinstancesIsDeletable(
         Definstances *theDefinstances) {
-    Environment *theEnv = theDefinstances->header.env;
+    const Environment&theEnv = theDefinstances->header.env;
 
     if (!ConstructsDeletable(theEnv)) { return false; }
 
@@ -318,7 +318,7 @@ bool DefinstancesIsDeletable(
   NOTES        : H/L Syntax : (undefinstances <name> | *)
  ***********************************************************/
 void UndefinstancesCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UndefconstructCommand(context, "undefinstances", DefinstancesData(theEnv)->DefinstancesConstruct);
@@ -333,7 +333,7 @@ void UndefinstancesCommand(
   NOTES        : H/L Syntax: (definstances-module <defins-name>)
  *****************************************************************/
 void GetDefinstancesModuleCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     returnValue->value = GetConstructModuleCommand(context, "definstances-module", DefinstancesData(theEnv)->DefinstancesConstruct);
@@ -350,8 +350,8 @@ void GetDefinstancesModuleCommand(
  ***********************************************************/
 bool Undefinstances(
         Definstances *theDefinstances,
-        Environment *allEnv) {
-    Environment *theEnv;
+        const Environment&allEnv) {
+    Environment theEnv;
 
     if (theDefinstances == nullptr) {
         theEnv = allEnv;
@@ -373,7 +373,7 @@ bool Undefinstances(
   NOTES        : H/L Syntax : (ppdefinstances <name>)
  ***************************************************************/
 void PPDefinstancesCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     PPConstructCommand(context, "ppdefinstances", DefinstancesData(theEnv)->DefinstancesConstruct, returnValue);
@@ -388,7 +388,7 @@ void PPDefinstancesCommand(
   NOTES        : H/L Interface
  ***************************************************/
 void ListDefinstancesCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     ListConstructCommand(context, DefinstancesData(theEnv)->DefinstancesConstruct);
@@ -404,7 +404,7 @@ void ListDefinstancesCommand(
   NOTES        : C Interface
  ***************************************************/
 void ListDefinstances(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         Defmodule *theModule) {
     ListConstruct(theEnv, DefinstancesData(theEnv)->DefinstancesConstruct, logicalName, theModule);
@@ -423,7 +423,7 @@ void ListDefinstances(
   NOTES        : H/L Syntax: (get-definstances-list [<module>])
  ****************************************************************/
 void GetDefinstancesListFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     GetConstructListFunction(context, returnValue, DefinstancesData(theEnv)->DefinstancesConstruct);
@@ -441,7 +441,7 @@ void GetDefinstancesListFunction(
   NOTES        : External C access
  ***************************************************************/
 void GetDefinstancesList(
-        Environment *theEnv,
+        const Environment&theEnv,
         CLIPSValue *returnValue,
         Defmodule *theModule) {
     UDFValue result;
@@ -474,7 +474,7 @@ void GetDefinstancesList(
                  <slot-override> ::= (<slot-name> <value-expression>*)
  *********************************************************************/
 static bool ParseDefinstances(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *readSource) {
     CLIPSLexeme *dname;
     struct functionDefinition *mkinsfcall;
@@ -577,7 +577,7 @@ static bool ParseDefinstances(
                    been scanned.
  *************************************************************/
 static CLIPSLexeme *ParseDefinstancesName(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *readSource,
         bool *active) {
     CLIPSLexeme *dname;
@@ -620,7 +620,7 @@ static CLIPSLexeme *ParseDefinstancesName(
   NOTES        : Assumes busy count of definstance is 0
  **************************************************************/
 static void RemoveDefinstances(
-        Environment *theEnv,
+        const Environment&theEnv,
         Definstances *theDefinstances) {
     ReleaseLexeme(theEnv, theDefinstances->header.name);
     ExpressionDeinstall(theEnv, theDefinstances->mkinstance);
@@ -640,7 +640,7 @@ static void RemoveDefinstances(
   NOTES        : None
  ***************************************************/
 static void SaveDefinstances(
-        Environment *theEnv,
+        const Environment&theEnv,
         Defmodule *theModule,
         const char *logName,
         void *context) {
@@ -657,7 +657,7 @@ static void SaveDefinstances(
   NOTES        : None
  *****************************************************/
 static void *AllocateModule(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     return (void *) get_struct(theEnv, definstancesModule);
 }
 
@@ -671,7 +671,7 @@ static void *AllocateModule(
   NOTES        : None
  ***************************************************/
 static void ReturnModule(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *theItem) {
     FreeConstructHeaderModule(theEnv, (defmoduleItemHeader *) theItem, DefinstancesData(theEnv)->DefinstancesConstruct);
     rtn_struct(theEnv, definstancesModule, theItem);
@@ -690,7 +690,7 @@ static void ReturnModule(
   NOTES        : Used by (clear) and (bload)
  ***************************************************/
 static bool ClearDefinstancesReady(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *context) {
     bool flagBuffer = true;
 
@@ -714,7 +714,7 @@ static bool ClearDefinstancesReady(
                  (assumed to be initialized to 1)
  ***************************************************/
 static void CheckDefinstancesBusy(
-        Environment *theEnv,
+        const Environment&theEnv,
         ConstructHeader *theDefinstances,
         void *userBuffer) {
 #if MAC_XCD
@@ -739,7 +739,7 @@ static void CheckDefinstancesBusy(
   NOTES        : None
  ***************************************************/
 static void ResetDefinstances(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *context) {
     DoForAllConstructs(theEnv, ResetDefinstancesAction, DefinstancesData(theEnv)->DefinstancesModuleIndex, true, nullptr);
 }
@@ -755,7 +755,7 @@ static void ResetDefinstances(
   NOTES        : None
  ***************************************************/
 static void ResetDefinstancesAction(
-        Environment *theEnv,
+        const Environment&theEnv,
         ConstructHeader *vDefinstances,
         void *userBuffer) {
 #if MAC_XCD
@@ -798,7 +798,7 @@ const char *DefinstancesPPForm(
 }
 
 void SetDefinstancesPPForm(
-        Environment *theEnv,
+        const Environment&theEnv,
         Definstances *theDefinstances,
         const char *thePPForm) {
     SetConstructPPForm(theEnv, &theDefinstances->header, thePPForm);
@@ -810,13 +810,13 @@ const char *DefinstancesModule(
 }
 
 CLIPSLexeme *GetDefinstancesNamePointer(
-        Environment *theEnv,
+        const Environment&theEnv,
         Definstances *theDefinstances) {
     return GetConstructNamePointer(&theDefinstances->header);
 }
 
 const char *DefinstancesModuleName(
-        Environment *theEnv,
+        const Environment&theEnv,
         Definstances *theDefinstances) {
     return GetConstructModuleName(&theDefinstances->header);
 }

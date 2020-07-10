@@ -75,10 +75,10 @@
    =========================================
    ***************************************** */
 
-static void FormMethodsFromRestrictions(Environment *, Defgeneric *, struct functionDefinition *, Expression *);
-static RESTRICTION *ParseRestrictionType(Environment *, unsigned);
-static Expression *GenTypeExpression(Environment *, Expression *, int, int, const char *);
-static Expression *ParseRestrictionCreateTypes(Environment *, CONSTRAINT_RECORD *);
+static void FormMethodsFromRestrictions(const Environment&, Defgeneric *, struct functionDefinition *, Expression *);
+static RESTRICTION *ParseRestrictionType(const Environment&, unsigned);
+static Expression *GenTypeExpression(const Environment&, Expression *, int, int, const char *);
+static Expression *ParseRestrictionCreateTypes(const Environment&, CONSTRAINT_RECORD *);
 
 /* =========================================
    *****************************************
@@ -97,7 +97,7 @@ static Expression *ParseRestrictionCreateTypes(Environment *, CONSTRAINT_RECORD 
                  Assumes no other methods already present
  ********************************************************/
 void AddImplicitMethods(
-        Environment *theEnv,
+        const Environment&theEnv,
         Defgeneric *gfunc) {
     struct functionDefinition *sysfunc;
     Expression action;
@@ -131,7 +131,7 @@ void AddImplicitMethods(
   NOTES        : None
  **********************************************************************/
 static void FormMethodsFromRestrictions(
-        Environment *theEnv,
+        const Environment&theEnv,
         Defgeneric *gfunc,
         struct functionDefinition *sysfunc,
         Expression *actions) {
@@ -283,7 +283,7 @@ static void FormMethodsFromRestrictions(
 /* ParseRestrictionCreateTypes */
 /*******************************/
 static Expression *ParseRestrictionCreateTypes(
-        Environment *theEnv,
+        const Environment&theEnv,
         CONSTRAINT_RECORD *rv) {
     Expression *types = nullptr;
 
@@ -339,7 +339,7 @@ static Expression *ParseRestrictionCreateTypes(
   NOTES        : None
  *******************************************************************/
 static RESTRICTION *ParseRestrictionType(
-        Environment *theEnv,
+        const Environment&theEnv,
         unsigned code) {
     RESTRICTION *rptr;
     CONSTRAINT_RECORD *rv;
@@ -377,7 +377,7 @@ static RESTRICTION *ParseRestrictionType(
                  to classes
  ***************************************************/
 static Expression *GenTypeExpression(
-        Environment *theEnv,
+        const Environment&theEnv,
         Expression *top,
         int nonCOOLCode,
         int primitiveCode,

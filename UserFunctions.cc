@@ -51,7 +51,7 @@
 #include "clips.h"
 #include "MayaExtensions.h"
 
-void UserFunctions(Environment *);
+void UserFunctions(const Environment&);
 
 /*********************************************************/
 /* UserFunctions: Informs the expert system environment  */
@@ -62,6 +62,6 @@ void UserFunctions(Environment *);
 /*   this function can be deleted from this file and     */
 /*   included in another file.                           */
 /*********************************************************/
-void UserFunctions(Environment *theEnv) {
+void UserFunctions(const Environment&theEnv) {
     InstallMayaExtensions(theEnv);
 }

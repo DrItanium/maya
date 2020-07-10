@@ -61,15 +61,15 @@ struct BindInfo {
     struct BindInfo *next;
 };
 
-void ProceduralFunctionParsers(Environment *);
-struct BindInfo *GetParsedBindNames(Environment *);
-void SetParsedBindNames(Environment *, struct BindInfo *);
-void ClearParsedBindNames(Environment *);
-bool ParsedBindNamesEmpty(Environment *);
-unsigned short SearchParsedBindNames(Environment *, CLIPSLexeme *);
-unsigned short CountParsedBindNames(Environment *);
-void RemoveParsedBindName(Environment *, CLIPSLexeme *);
-struct constraintRecord *FindBindConstraints(Environment *, CLIPSLexeme *);
+void ProceduralFunctionParsers(const Environment&);
+struct BindInfo *GetParsedBindNames(const Environment&);
+void SetParsedBindNames(const Environment&, struct BindInfo *);
+void ClearParsedBindNames(const Environment&);
+bool ParsedBindNamesEmpty(const Environment&);
+unsigned short SearchParsedBindNames(const Environment&, CLIPSLexeme *);
+unsigned short CountParsedBindNames(const Environment&);
+void RemoveParsedBindName(const Environment&, CLIPSLexeme *);
+struct constraintRecord *FindBindConstraints(const Environment&, CLIPSLexeme *);
 
 #endif /* _H_prcdrpsr */
 

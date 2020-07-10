@@ -71,11 +71,11 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void InstallConstraintRecord(Environment *, CONSTRAINT_RECORD *);
+static void InstallConstraintRecord(const Environment&, CONSTRAINT_RECORD *);
 static bool ConstraintCompare(constraintRecord *, struct constraintRecord *);
-static void ReturnConstraintRecord(Environment *, CONSTRAINT_RECORD *);
-static void DeinstallConstraintRecord(Environment *, CONSTRAINT_RECORD *);
-static void DeallocateConstraintData(Environment *);
+static void ReturnConstraintRecord(const Environment&, CONSTRAINT_RECORD *);
+static void DeinstallConstraintRecord(const Environment&, CONSTRAINT_RECORD *);
+static void DeallocateConstraintData(const Environment&);
 
 /*****************************************************/
 /* InitializeConstraints: Initializes the constraint */
@@ -83,7 +83,7 @@ static void DeallocateConstraintData(Environment *);
 /*   dynamic constraint access functions.            */
 /*****************************************************/
 void InitializeConstraints(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     int i;
 
     AllocateEnvironmentData(theEnv, CONSTRAINT_DATA, sizeof(constraintData), DeallocateConstraintData);
@@ -105,7 +105,7 @@ void InitializeConstraints(
 /*    data for constraints.                          */
 /*****************************************************/
 static void DeallocateConstraintData(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     struct constraintRecord *tmpPtr, *nextPtr;
     int i;
 
@@ -135,7 +135,7 @@ static void DeallocateConstraintData(
 /*   is false, then the constraint record is also freed.     */
 /*************************************************************/
 static void ReturnConstraintRecord(
-        Environment *theEnv,
+        const Environment&theEnv,
         CONSTRAINT_RECORD *constraints) {
     if (constraints == nullptr) return;
 
@@ -159,7 +159,7 @@ static void ReturnConstraintRecord(
 /*   types found in a constraint record.           */
 /***************************************************/
 static void DeinstallConstraintRecord(
-        Environment *theEnv,
+        const Environment&theEnv,
         CONSTRAINT_RECORD *constraints) {
     if (constraints->installed) {
         RemoveHashedExpression(theEnv, constraints->getClassList());
@@ -185,7 +185,7 @@ static void DeinstallConstraintRecord(
 /*   from the constraint hash table.      */
 /******************************************/
 void RemoveConstraint(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct constraintRecord *theConstraint) {
     struct constraintRecord *tmpPtr, *prevPtr = nullptr;
 
@@ -378,7 +378,7 @@ static bool ConstraintCompare(
 /*   to the constraint hash table.  */
 /************************************/
 struct constraintRecord *AddConstraint(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct constraintRecord *theConstraint) {
     struct constraintRecord *tmpPtr;
     unsigned long hashValue;
@@ -412,7 +412,7 @@ struct constraintRecord *AddConstraint(
 /*   types found in a constraint record.         */
 /*************************************************/
 static void InstallConstraintRecord(
-        Environment *theEnv,
+        const Environment&theEnv,
         CONSTRAINT_RECORD *constraints) {
     struct expr *tempExpr;
 
@@ -449,7 +449,7 @@ static void InstallConstraintRecord(
 /*   set-dynamic-constraint-checking command. */
 /**********************************************/
 void SDCCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -466,7 +466,7 @@ void SDCCommand(
 /*   get-dynamic-constraint-checking command. */
 /**********************************************/
 void GDCCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     returnValue->lexemeValue = CreateBoolean(theEnv, GetDynamicConstraintChecking(theEnv));
@@ -477,7 +477,7 @@ void GDCCommand(
 /*   for the set-dynamic-constraint-checking command. */
 /******************************************************/
 bool SetDynamicConstraintChecking(
-        Environment *theEnv,
+        const Environment&theEnv,
         bool value) {
     bool ov;
     ov = ConstraintData(theEnv)->DynamicConstraintChecking;
@@ -490,7 +490,7 @@ bool SetDynamicConstraintChecking(
 /*   for the get-dynamic-constraint-checking command. */
 /******************************************************/
 bool GetDynamicConstraintChecking(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     return (ConstraintData(theEnv)->DynamicConstraintChecking);
 }
 

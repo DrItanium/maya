@@ -48,13 +48,13 @@
 
 #include "Evaluation.h"
 
-void SetupInstanceMultifieldCommands(Environment *);
-void MVSlotReplaceCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void MVSlotInsertCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void MVSlotDeleteCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void DirectMVReplaceCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void DirectMVInsertCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void DirectMVDeleteCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
+void SetupInstanceMultifieldCommands(const Environment&);
+void MVSlotReplaceCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void MVSlotInsertCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void MVSlotDeleteCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void DirectMVReplaceCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void DirectMVInsertCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void DirectMVDeleteCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 
 #endif /* _H_insmult */
 

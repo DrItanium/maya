@@ -24,5 +24,5 @@
 #define __MAYA_H__
 #include "clips.h"
 // header for maya includes and such
-void InstallMayaExtensions(Environment *theEnv);
+void InstallMayaExtensions(const Environment&theEnv);
 #endif // end __MAYA_H__

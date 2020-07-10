@@ -73,13 +73,13 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void AddHashFunction(Environment *, struct functionDefinition *);
-static void InitializeFunctionHashTable(Environment *);
-static void DeallocateExternalFunctionData(Environment *);
-static bool RemoveHashFunction(Environment *, struct functionDefinition *);
-static AddUDFError DefineFunction(Environment *, const char *, unsigned, void (*)(Environment *theEnv, UDFContext *context, UDFValue *ret),
+static void AddHashFunction(const Environment&, struct functionDefinition *);
+static void InitializeFunctionHashTable(const Environment&);
+static void DeallocateExternalFunctionData(const Environment&);
+static bool RemoveHashFunction(const Environment&, struct functionDefinition *);
+static AddUDFError DefineFunction(const Environment&, const char *, unsigned, void (*)(const Environment&theEnv, UDFContext *context, UDFValue *ret),
                                   unsigned short, unsigned short, const char *, void *);
-static void PrintType(Environment *, const char *, int, int *, const char *);
+static void PrintType(const Environment&, const char *, int, int *, const char *);
 static void AssignErrorValue(UDFContext *);
 
 /*********************************************************/
@@ -87,7 +87,7 @@ static void AssignErrorValue(UDFContext *);
 /*    data for external functions.                       */
 /*********************************************************/
 void InitializeExternalFunctionData(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     AllocateEnvironmentData(theEnv, EXTERNAL_FUNCTION_DATA, sizeof(externalFunctionData), DeallocateExternalFunctionData);
 }
 
@@ -96,7 +96,7 @@ void InitializeExternalFunctionData(
 /*    data for external functions.                         */
 /***********************************************************/
 static void DeallocateExternalFunctionData(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     struct FunctionHash *fhPtr, *nextFHPtr;
     int i;
 
@@ -129,7 +129,7 @@ static void DeallocateExternalFunctionData(
 /* AddUDF: Used to define a system or user external */
 /*   function so that the KB can access it.         */
 /****************************************************/
-AddUDFError AddUDF(Environment *theEnv, const char *name, const char *returnTypes, unsigned short minArgs, unsigned short maxArgs,
+AddUDFError AddUDF(const Environment&theEnv, const char *name, const char *returnTypes, unsigned short minArgs, unsigned short maxArgs,
                    const char *argumentTypes, UserDefinedFunction *cFunctionPointer, void *context) {
     unsigned returnTypeBits;
     size_t i;
@@ -161,10 +161,10 @@ AddUDFError AddUDF(Environment *theEnv, const char *name, const char *returnType
 /*   restrictions to be attached to the function.            */
 /*************************************************************/
 static AddUDFError DefineFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name,
         unsigned returnTypeBits,
-        void (*pointer)(Environment *theEnv, UDFContext *context, UDFValue *ret),
+        void (*pointer)(const Environment&theEnv, UDFContext *context, UDFValue *ret),
         unsigned short minArgs,
         unsigned short maxArgs,
         const char *restrictions,
@@ -207,7 +207,7 @@ static AddUDFError DefineFunction(
 /*   definition from the list of functions. */
 /********************************************/
 bool RemoveUDF(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *functionName) {
     CLIPSLexeme *findValue;
     struct functionDefinition *fPtr, *lastPtr = nullptr;
@@ -241,7 +241,7 @@ bool RemoveUDF(
 /*   from the function hash table.        */
 /******************************************/
 static bool RemoveHashFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct functionDefinition *fdPtr) {
     struct FunctionHash *fhPtr, *lastPtr = nullptr;
     size_t hashValue;
@@ -276,9 +276,9 @@ static bool RemoveHashFunction(
 /*   parsing routines.                                                     */
 /***************************************************************************/
 bool AddFunctionParser(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *functionName,
-        struct expr *(*fpPtr)(Environment *, struct expr *, const char *)) {
+        struct expr *(*fpPtr)(const Environment&, struct expr *, const char *)) {
     struct functionDefinition *fdPtr;
 
     fdPtr = FindFunction(theEnv, functionName);
@@ -299,7 +299,7 @@ bool AddFunctionParser(
 /*   function (if it exists) from the function entry for a function. */
 /*********************************************************************/
 bool RemoveFunctionParser(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *functionName) {
     struct functionDefinition *fdPtr;
 
@@ -319,7 +319,7 @@ bool RemoveFunctionParser(
 /* i.e. can the function be a method for a generic function.     */
 /*****************************************************************/
 bool FuncSeqOvlFlags(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *functionName,
         bool seqp,
         bool ovlp) {
@@ -343,7 +343,7 @@ bool FuncSeqOvlFlags(
 /*   type for the nth parameter of a function. */
 /***********************************************/
 unsigned GetNthRestriction(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct functionDefinition *theFunction,
         unsigned int position) {
     unsigned rv, df;
@@ -364,7 +364,7 @@ unsigned GetNthRestriction(
 /* GetFunctionList: Returns the ListOfFunctions. */
 /*************************************************/
 struct functionDefinition *GetFunctionList(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     return (ExternalFunctionData(theEnv)->ListOfFunctions);
 }
 
@@ -373,7 +373,7 @@ struct functionDefinition *GetFunctionList(
 /*   the function entries to the FunctionHashTable.           */
 /**************************************************************/
 void InstallFunctionList(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct functionDefinition *value) {
     int i;
     struct FunctionHash *fhPtr, *nextPtr;
@@ -404,7 +404,7 @@ void InstallFunctionList(
 /*   in the function list, otherwise returns nullptr.      */
 /********************************************************/
 struct functionDefinition *FindFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *functionName) {
     struct FunctionHash *fhPtr;
     size_t hashValue;
@@ -429,7 +429,7 @@ struct functionDefinition *FindFunction(
 /* GetUDFContext: Returns the context associated a UDF. */
 /********************************************************/
 void *GetUDFContext(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *functionName) {
     struct FunctionHash *fhPtr;
     size_t hashValue;
@@ -455,7 +455,7 @@ void *GetUDFContext(
 /*   the function hash table to nullptr.                    */
 /*********************************************************/
 static void InitializeFunctionHashTable(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     int i;
 
     ExternalFunctionData(theEnv)->FunctionHashtable = (FunctionHash **)
@@ -469,7 +469,7 @@ static void InitializeFunctionHashTable(
 /* AddHashFunction: Adds a function to the function hash table. */
 /****************************************************************/
 static void AddHashFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct functionDefinition *fdPtr) {
     struct FunctionHash *newhash, *temp;
     size_t hashValue;
@@ -568,7 +568,7 @@ bool UDFNextArgument(
         UDFValue *returnValue) {
     struct expr *argPtr = context->lastArg;
     unsigned int argumentPosition = context->lastPosition;
-    Environment *theEnv = context->environment;
+    const Environment&theEnv = context->environment;
 
     if (argPtr == nullptr) {
         SetHaltExecution(theEnv, true);
@@ -788,7 +788,7 @@ void UDFInvalidArgumentMessage(
 /******************/
 void UDFThrowError(
         UDFContext *context) {
-    Environment *theEnv = context->environment;
+    const Environment&theEnv = context->environment;
 
     SetHaltExecution(theEnv, true);
     SetEvaluationError(theEnv, true);
@@ -806,7 +806,7 @@ const char *UDFContextFunctionName(
 /* PrintType: */
 /**************/
 static void PrintType(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         int typeCount,
         int *typesPrinted,
@@ -829,7 +829,7 @@ static void PrintType(
 /* PrintTypesString */
 /********************/
 void PrintTypesString(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         unsigned expectedType,
         bool printCRLF) {

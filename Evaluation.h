@@ -76,7 +76,7 @@
 typedef struct functionCallBuilder FunctionCallBuilder;
 
 struct functionCallBuilder {
-    Environment *fcbEnv;
+    Environment fcbEnv;
     CLIPSValue *contents;
     size_t bufferReset;
     size_t length;
@@ -99,9 +99,9 @@ constexpr auto PARAMETERS_UNBOUNDED = USHRT_MAX;
 
 struct externalAddressType {
     const char *name;
-    void (*shortPrintFunction)(Environment *, const char *, void *);
-    void (*longPrintFunction)(Environment *, const char *, void *);
-    bool (*discardFunction)(Environment *, void *);
+    void (*shortPrintFunction)(const Environment&, const char *, void *);
+    void (*longPrintFunction)(const Environment&, const char *, void *);
+    bool (*discardFunction)(const Environment&, void *);
     void (*newFunction)(UDFContext *, UDFValue *);
     bool (*callFunction)(UDFContext *, UDFValue *, UDFValue *);
 };
@@ -146,36 +146,36 @@ struct evaluationData {
 
 #define EvaluationData(theEnv) ((evaluationData *) GetEnvironmentData(theEnv,EVALUATION_DATA))
 
-void InitializeEvaluationData(Environment *);
-bool EvaluateExpression(Environment *, struct expr *, UDFValue *);
-void SetEvaluationError(Environment *, bool);
-bool GetEvaluationError(Environment *);
-void SetHaltExecution(Environment *, bool);
-bool GetHaltExecution(Environment *);
-void ReturnValues(Environment *, UDFValue *, bool);
-void WriteUDFValue(Environment *, const char *, UDFValue *);
-void WriteCLIPSValue(Environment *, const char *, CLIPSValue *);
-void SetMultifieldErrorValue(Environment *, UDFValue *);
-void CopyDataObject(Environment *, UDFValue *, UDFValue *, int);
-void AtomInstall(Environment *, unsigned short, void *);
-void AtomDeinstall(Environment *, unsigned short, void *);
-void Retain(Environment *, TypeHeader *);
-void Release(Environment *, TypeHeader *);
-void RetainCV(Environment *, CLIPSValue *);
-void ReleaseCV(Environment *, CLIPSValue *);
-void RetainUDFV(Environment *, UDFValue *);
-void ReleaseUDFV(Environment *, UDFValue *);
-struct expr *ConvertValueToExpression(Environment *, UDFValue *);
+void InitializeEvaluationData(const Environment&);
+bool EvaluateExpression(const Environment&, struct expr *, UDFValue *);
+void SetEvaluationError(const Environment&, bool);
+bool GetEvaluationError(const Environment&);
+void SetHaltExecution(const Environment&, bool);
+bool GetHaltExecution(const Environment&);
+void ReturnValues(const Environment&, UDFValue *, bool);
+void WriteUDFValue(const Environment&, const char *, UDFValue *);
+void WriteCLIPSValue(const Environment&, const char *, CLIPSValue *);
+void SetMultifieldErrorValue(const Environment&, UDFValue *);
+void CopyDataObject(const Environment&, UDFValue *, UDFValue *, int);
+void AtomInstall(const Environment&, unsigned short, void *);
+void AtomDeinstall(const Environment&, unsigned short, void *);
+void Retain(const Environment&, TypeHeader *);
+void Release(const Environment&, TypeHeader *);
+void RetainCV(const Environment&, CLIPSValue *);
+void ReleaseCV(const Environment&, CLIPSValue *);
+void RetainUDFV(const Environment&, UDFValue *);
+void ReleaseUDFV(const Environment&, UDFValue *);
+struct expr *ConvertValueToExpression(const Environment&, UDFValue *);
 unsigned long GetAtomicHashValue(unsigned short, void *, unsigned short);
-void InstallPrimitive(Environment *, struct entityRecord *, int);
-int InstallExternalAddressType(Environment *, struct externalAddressType *);
+void InstallPrimitive(const Environment&, struct entityRecord *, int);
+int InstallExternalAddressType(const Environment&, struct externalAddressType *);
 void TransferDataObjectValues(UDFValue *, UDFValue *);
-struct expr *FunctionReferenceExpression(Environment *, const char *);
-bool GetFunctionReference(Environment *, const char *, Expression *);
+struct expr *FunctionReferenceExpression(const Environment&, const char *);
+bool GetFunctionReference(const Environment&, const char *, Expression *);
 bool DOsEqual(UDFValue *, UDFValue *);
-bool EvaluateAndStoreInDataObject(Environment *, bool, Expression *, UDFValue *, bool);
-void ResetErrorFlags(Environment *);
-FunctionCallBuilder *CreateFunctionCallBuilder(Environment *, size_t);
+bool EvaluateAndStoreInDataObject(const Environment&, bool, Expression *, UDFValue *, bool);
+void ResetErrorFlags(const Environment&);
+FunctionCallBuilder *CreateFunctionCallBuilder(const Environment&, size_t);
 void FCBAppendUDFValue(FunctionCallBuilder *, UDFValue *);
 void FCBAppend(FunctionCallBuilder *, CLIPSValue *);
 void FCBAppendCLIPSInteger(FunctionCallBuilder *, CLIPSInteger *);

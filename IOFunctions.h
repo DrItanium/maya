@@ -82,29 +82,29 @@
 
 #define _H_iofun
 
-void IOFunctionDefinitions(Environment *);
+void IOFunctionDefinitions(const Environment&);
 #if IO_FUNCTIONS
-bool SetFullCRLF(Environment *, bool);
-void PrintoutFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void PrintFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void PrintlnFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void ReadFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void OpenFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void CloseFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void FlushFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void RewindFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void TellFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void SeekFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void GetCharFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void UngetCharFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void PutCharFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void ReadlineFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void FormatFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void RemoveFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void ChdirFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void RenameFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void SetLocaleFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void ReadNumberFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
+bool SetFullCRLF(const Environment&, bool);
+void PrintoutFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void PrintFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void PrintlnFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void ReadFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void OpenFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void CloseFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void FlushFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void RewindFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void TellFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SeekFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void GetCharFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void UngetCharFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void PutCharFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void ReadlineFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void FormatFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void RemoveFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void ChdirFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void RenameFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SetLocaleFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void ReadNumberFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 #endif
 
 #endif /* _H_iofun */

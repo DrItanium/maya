@@ -96,7 +96,7 @@
    ***************************************** */
 
 #if DEBUGGING_FUNCTIONS
-static void DisplayGenericCore(Environment *, Defgeneric *);
+static void DisplayGenericCore(const Environment&, Defgeneric *);
 #endif
 
 /* =========================================
@@ -121,7 +121,7 @@ static void DisplayGenericCore(Environment *, Defgeneric *);
   NOTES        : Used by (clear) and (bload)
  ***************************************************/
 bool ClearDefgenericsReady(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *context) {
     return DefgenericData(theEnv)->CurrentGeneric == nullptr;
 }
@@ -136,7 +136,7 @@ bool ClearDefgenericsReady(
   NOTES        : None
  *****************************************************/
 void *AllocateDefgenericModule(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     return (void *) get_struct(theEnv, defgenericModule);
 }
 
@@ -150,7 +150,7 @@ void *AllocateDefgenericModule(
   NOTES        : None
  ***************************************************/
 void FreeDefgenericModule(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *theItem) {
     FreeConstructHeaderModule(theEnv, (defmoduleItemHeader *) theItem, DefgenericData(theEnv)->DefgenericConstruct);
     rtn_struct(theEnv, defgenericModule, theItem);
@@ -177,7 +177,7 @@ void FreeDefgenericModule(
                    to be cleared
  ************************************************************/
 bool ClearDefmethods(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     Defgeneric *gfunc;
     bool success = true;
 
@@ -205,7 +205,7 @@ bool ClearDefmethods(
   NOTES        : None
  *****************************************************************/
 bool RemoveAllExplicitMethods(
-        Environment *theEnv,
+        const Environment&theEnv,
         Defgeneric *gfunc) {
     unsigned short i, j;
     unsigned short systemMethodCount = 0;
@@ -253,7 +253,7 @@ bool RemoveAllExplicitMethods(
   NOTES        : Assumes generic is not in use!!!
  **************************************************/
 void RemoveDefgeneric(
-        Environment *theEnv,
+        const Environment&theEnv,
         Defgeneric *theDefgeneric) {
     long i;
 
@@ -277,7 +277,7 @@ void RemoveDefgeneric(
   NOTES        : None
  ****************************************************************/
 bool ClearDefgenerics(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     Defgeneric *gfunc, *gtmp;
     bool success = true;
 
@@ -312,7 +312,7 @@ bool ClearDefgenerics(
   NOTES        : None
  ********************************************************/
 void MethodAlterError(
-        Environment *theEnv,
+        const Environment&theEnv,
         Defgeneric *gfunc) {
     PrintErrorID(theEnv, "GENRCFUN", 1, false);
     WriteString(theEnv, STDERR, "Defgeneric '");
@@ -332,7 +332,7 @@ void MethodAlterError(
   NOTES        : None
  ***************************************************/
 void DeleteMethodInfo(
-        Environment *theEnv,
+        const Environment&theEnv,
         Defgeneric *gfunc,
         Defmethod *meth) {
     short j, k;
@@ -373,7 +373,7 @@ void DeleteMethodInfo(
   NOTES        : None
  ***************************************************/
 void DestroyMethodInfo(
-        Environment *theEnv,
+        const Environment&theEnv,
         Defgeneric *gfunc,
         Defmethod *meth) {
     int j;
@@ -458,7 +458,7 @@ unsigned short FindMethodByIndex(
   NOTES        : A terminating newline is NOT included
  ******************************************************************/
 void PrintMethod(
-        Environment *theEnv,
+        const Environment&theEnv,
         Defmethod *meth,
         StringBuilder *theSB) {
 #if MAC_XCD
@@ -517,7 +517,7 @@ void PrintMethod(
   NOTES        : H/L Syntax: (preview-generic <func> <args>)
  *************************************************************/
 void PreviewGeneric(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Defgeneric *gfunc;
@@ -576,7 +576,7 @@ void PreviewGeneric(
   NOTES        : None
  ***************************************************/
 Defgeneric *CheckGenericExists(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *fname,
         const char *gname) {
     Defgeneric *gfunc;
@@ -607,7 +607,7 @@ Defgeneric *CheckGenericExists(
   NOTES        : None
  ***************************************************/
 unsigned short CheckMethodExists(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *fname,
         Defgeneric *gfunc,
         unsigned short mi) {
@@ -640,7 +640,7 @@ unsigned short CheckMethodExists(
   NOTES        : None
  ******************************************************/
 void PrintGenericName(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logName,
         Defgeneric *gfunc) {
     if (gfunc->header.whichModule->theModule != GetCurrentModule(theEnv)) {
@@ -669,7 +669,7 @@ void PrintGenericName(
   NOTES        : None
  *********************************************************/
 static void DisplayGenericCore(
-        Environment *theEnv,
+        const Environment&theEnv,
         Defgeneric *gfunc) {
     long i;
     bool rtn = false;

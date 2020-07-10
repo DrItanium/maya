@@ -49,9 +49,9 @@
 
 #include "Expression.h"
 
-bool ParseDefglobal(Environment *, const char *);
-bool ReplaceGlobalVariable(Environment *, struct expr *);
-void GlobalReferenceErrorMessage(Environment *, const char *);
+bool ParseDefglobal(const Environment&, const char *);
+bool ReplaceGlobalVariable(const Environment&, struct expr *);
+void GlobalReferenceErrorMessage(const Environment&, const char *);
 
 #endif /* _H_globlpsr */
 

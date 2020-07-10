@@ -84,36 +84,36 @@ struct printUtilityData {
 
 #define PrintUtilityData(theEnv) ((printUtilityData *) GetEnvironmentData(theEnv,PRINT_UTILITY_DATA))
 
-void InitializePrintUtilityData(Environment *);
-void WriteFloat(Environment *, const char *, double);
-void WriteInteger(Environment *, const char *, long long);
-void PrintUnsignedInteger(Environment *, const char *, unsigned long long);
-void PrintAtom(Environment *, const char *, unsigned short, void *);
-void PrintTally(Environment *, const char *, unsigned long long, const char *, const char *);
-const char *FloatToString(Environment *, double);
-const char *LongIntegerToString(Environment *, long long);
-const char *DataObjectToString(Environment *, UDFValue *);
-void SyntaxErrorMessage(Environment *, const char *);
-void SystemError(Environment *, const char *, int);
-void PrintErrorID(Environment *, const char *, int, bool);
-void PrintWarningID(Environment *, const char *, int, bool);
-void CantFindItemErrorMessage(Environment *, const char *, const char *, bool);
-void CantDeleteItemErrorMessage(Environment *, const char *, const char *);
-void AlreadyParsedErrorMessage(Environment *, const char *, const char *);
-void LocalVariableErrorMessage(Environment *, const char *);
-void DivideByZeroErrorMessage(Environment *, const char *);
-void SalienceInformationError(Environment *, const char *, const char *);
-void SalienceRangeError(Environment *, int, int);
-void SalienceNonIntegerError(Environment *);
-void CantFindItemInFunctionErrorMessage(Environment *, const char *, const char *, const char *, bool);
-void SlotExistError(Environment *, const char *, const char *);
-void FactRetractedErrorMessage(Environment *, Fact *);
-void FactVarSlotErrorMessage1(Environment *, Fact *, const char *);
-void FactVarSlotErrorMessage2(Environment *, Fact *, const char *);
-void InvalidVarSlotErrorMessage(Environment *, const char *);
-void InstanceVarSlotErrorMessage1(Environment *, Instance *, const char *);
-void InstanceVarSlotErrorMessage2(Environment *, Instance *, const char *);
-void ArgumentOverUnderflowErrorMessage(Environment *, const char *, bool);
+void InitializePrintUtilityData(const Environment&);
+void WriteFloat(const Environment&, const char *, double);
+void WriteInteger(const Environment&, const char *, long long);
+void PrintUnsignedInteger(const Environment&, const char *, unsigned long long);
+void PrintAtom(const Environment&, const char *, unsigned short, void *);
+void PrintTally(const Environment&, const char *, unsigned long long, const char *, const char *);
+const char *FloatToString(const Environment&, double);
+const char *LongIntegerToString(const Environment&, long long);
+const char *DataObjectToString(const Environment&, UDFValue *);
+void SyntaxErrorMessage(const Environment&, const char *);
+void SystemError(const Environment&, const char *, int);
+void PrintErrorID(const Environment&, const char *, int, bool);
+void PrintWarningID(const Environment&, const char *, int, bool);
+void CantFindItemErrorMessage(const Environment&, const char *, const char *, bool);
+void CantDeleteItemErrorMessage(const Environment&, const char *, const char *);
+void AlreadyParsedErrorMessage(const Environment&, const char *, const char *);
+void LocalVariableErrorMessage(const Environment&, const char *);
+void DivideByZeroErrorMessage(const Environment&, const char *);
+void SalienceInformationError(const Environment&, const char *, const char *);
+void SalienceRangeError(const Environment&, int, int);
+void SalienceNonIntegerError(const Environment&);
+void CantFindItemInFunctionErrorMessage(const Environment&, const char *, const char *, const char *, bool);
+void SlotExistError(const Environment&, const char *, const char *);
+void FactRetractedErrorMessage(const Environment&, Fact *);
+void FactVarSlotErrorMessage1(const Environment&, Fact *, const char *);
+void FactVarSlotErrorMessage2(const Environment&, Fact *, const char *);
+void InvalidVarSlotErrorMessage(const Environment&, const char *);
+void InstanceVarSlotErrorMessage1(const Environment&, Instance *, const char *);
+void InstanceVarSlotErrorMessage2(const Environment&, Instance *, const char *);
+void ArgumentOverUnderflowErrorMessage(const Environment&, const char *, bool);
 
 #endif /* _H_prntutil */
 

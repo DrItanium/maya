@@ -43,23 +43,23 @@ using boost::filesystem::is_regular_file;
 using boost::filesystem::is_directory;
 using boost::starts_with;
 using boost::ends_with;
-void HasPrefix(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void HasSuffix(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void TrimString(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void TrimStringFront(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void TrimStringBack(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void NewUUID(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void gcdFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void lcmFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void FileExists(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void IsDirectory(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void IsRegularFile(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void ClampValue(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void GetDirectoryContents(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void GetFileExtension(Environment *theEnv, UDFContext *context, UDFValue *ret);
+void HasPrefix(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void HasSuffix(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void TrimString(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void TrimStringFront(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void TrimStringBack(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void NewUUID(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void gcdFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void lcmFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void FileExists(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void IsDirectory(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void IsRegularFile(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void ClampValue(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void GetDirectoryContents(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void GetFileExtension(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 #endif
 
-void InstallBoostExtensions(Environment *theEnv) {
+void InstallBoostExtensions(const Environment&theEnv) {
 #if BOOST_EXTENSIONS
     AddUDF(theEnv, "has-prefix", "b", 2, 2, "sy;sy;sy", HasPrefix);
     AddUDF(theEnv, "has-suffix", "b", 2, 2, "sy;sy;sy", HasSuffix);
@@ -79,7 +79,7 @@ void InstallBoostExtensions(Environment *theEnv) {
 }
 
 #if BOOST_EXTENSIONS
-void GetFileExtension(Environment *theEnv, UDFContext *context, UDFValue *ret) {
+void GetFileExtension(const Environment&theEnv, UDFContext *context, UDFValue *ret) {
     if (UDFValue path; !UDFFirstArgument(context, LEXEME_BITS, &path)) {
         ret->lexemeValue = CreateString(theEnv, "");
     } else {
@@ -90,7 +90,7 @@ void GetFileExtension(Environment *theEnv, UDFContext *context, UDFValue *ret) {
         }
     }
 }
-void GetDirectoryContents(Environment *theEnv, UDFContext *context, UDFValue *ret) {
+void GetDirectoryContents(const Environment&theEnv, UDFContext *context, UDFValue *ret) {
     if (UDFValue path; !UDFFirstArgument(context, LEXEME_BITS, &path)) {
         ret->multifieldValue = EmptyMultifield(theEnv);
     } else {
@@ -113,7 +113,7 @@ void GetDirectoryContents(Environment *theEnv, UDFContext *context, UDFValue *re
         }
     }
 }
-void ClampValue(Environment *theEnv, UDFContext *context, UDFValue *ret) {
+void ClampValue(const Environment&theEnv, UDFContext *context, UDFValue *ret) {
     UDFValue v, lo, hi;
     if (!UDFFirstArgument(context, INTEGER_BIT, &v)) {
         ret->lexemeValue = FalseSymbol(theEnv);
@@ -127,7 +127,7 @@ void ClampValue(Environment *theEnv, UDFContext *context, UDFValue *ret) {
     }
 }
 
-void FileExists(Environment *theEnv, UDFContext *context, UDFValue *ret) {
+void FileExists(const Environment&theEnv, UDFContext *context, UDFValue *ret) {
     UDFValue path;
     if (!UDFFirstArgument(context, LEXEME_BITS, &path)) {
         ret->lexemeValue = FalseSymbol(theEnv);
@@ -137,7 +137,7 @@ void FileExists(Environment *theEnv, UDFContext *context, UDFValue *ret) {
     }
 }
 
-void IsDirectory(Environment *theEnv, UDFContext *context, UDFValue *ret) {
+void IsDirectory(const Environment&theEnv, UDFContext *context, UDFValue *ret) {
     UDFValue path;
     if (!UDFFirstArgument(context, LEXEME_BITS, &path)) {
         ret->lexemeValue = FalseSymbol(theEnv);
@@ -147,7 +147,7 @@ void IsDirectory(Environment *theEnv, UDFContext *context, UDFValue *ret) {
     }
 }
 
-void IsRegularFile(Environment *theEnv, UDFContext *context, UDFValue *ret) {
+void IsRegularFile(const Environment&theEnv, UDFContext *context, UDFValue *ret) {
     UDFValue path;
     if (!UDFFirstArgument(context, LEXEME_BITS, &path)) {
         ret->lexemeValue = FalseSymbol(theEnv);
@@ -157,7 +157,7 @@ void IsRegularFile(Environment *theEnv, UDFContext *context, UDFValue *ret) {
     }
 }
 
-void gcdFunction(Environment *theEnv, UDFContext *context, UDFValue *ret) {
+void gcdFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret) {
     UDFValue first, second;
     if (!UDFFirstArgument(context, INTEGER_BIT, &first)) {
         ret->lexemeValue = FalseSymbol(theEnv);
@@ -167,7 +167,7 @@ void gcdFunction(Environment *theEnv, UDFContext *context, UDFValue *ret) {
         ret->integerValue = CreateInteger(theEnv, boost::math::gcd(CVCoerceToInteger(&first), CVCoerceToInteger(&second)));
     }
 }
-void lcmFunction(Environment *theEnv, UDFContext *context, UDFValue *ret) {
+void lcmFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret) {
     UDFValue first, second;
     if (!UDFFirstArgument(context, INTEGER_BIT, &first)) {
         ret->lexemeValue = FalseSymbol(theEnv);
@@ -177,13 +177,13 @@ void lcmFunction(Environment *theEnv, UDFContext *context, UDFValue *ret) {
         ret->integerValue = CreateInteger(theEnv, boost::math::lcm(CVCoerceToInteger(&first), CVCoerceToInteger(&second)));
     }
 }
-void NewUUID(Environment *theEnv, UDFContext *context, UDFValue *ret) {
+void NewUUID(const Environment&theEnv, UDFContext *context, UDFValue *ret) {
     boost::uuids::random_generator rgen;
     boost::uuids::uuid theUUID(rgen());
     const std::string tmp = boost::lexical_cast<std::string>(theUUID);
     ret->value = CreateSymbol(theEnv, tmp.c_str());
 }
-void HasPrefix(Environment *theEnv, UDFContext *context, UDFValue *ret) {
+void HasPrefix(const Environment&theEnv, UDFContext *context, UDFValue *ret) {
     UDFValue data, prefix;
     if (!UDFFirstArgument(context, LEXEME_BITS, &data)) {
         ret->lexemeValue = FalseSymbol(theEnv);
@@ -197,7 +197,7 @@ void HasPrefix(Environment *theEnv, UDFContext *context, UDFValue *ret) {
     ret->lexemeValue = CreateBoolean(theEnv, starts_with(dataStr, prefixStr));
 }
 
-void HasSuffix(Environment *theEnv, UDFContext *context, UDFValue *ret) {
+void HasSuffix(const Environment&theEnv, UDFContext *context, UDFValue *ret) {
     UDFValue data, suffix;
     if (!UDFFirstArgument(context, LEXEME_BITS, &data)) {
         ret->lexemeValue = FalseSymbol(theEnv);
@@ -210,7 +210,7 @@ void HasSuffix(Environment *theEnv, UDFContext *context, UDFValue *ret) {
     std::string suffixStr(suffix.lexemeValue->contents);
     ret->lexemeValue = CreateBoolean(theEnv, ends_with(dataStr, suffixStr));
 }
-void TrimString(Environment *theEnv, UDFContext *context, UDFValue *ret) {
+void TrimString(const Environment&theEnv, UDFContext *context, UDFValue *ret) {
     UDFValue str;
     if (!UDFFirstArgument(context, STRING_BIT, &str)) {
         ret->lexemeValue = FalseSymbol(theEnv);
@@ -220,7 +220,7 @@ void TrimString(Environment *theEnv, UDFContext *context, UDFValue *ret) {
         ret->value = CreateString(theEnv, tmp.c_str());
     }
 }
-void TrimStringFront(Environment *theEnv, UDFContext *context, UDFValue *ret) {
+void TrimStringFront(const Environment&theEnv, UDFContext *context, UDFValue *ret) {
     UDFValue str;
     if (!UDFFirstArgument(context, STRING_BIT, &str)) {
         ret->lexemeValue = FalseSymbol(theEnv);
@@ -230,7 +230,7 @@ void TrimStringFront(Environment *theEnv, UDFContext *context, UDFValue *ret) {
         ret->value = CreateString(theEnv, tmp.c_str());
     }
 }
-void TrimStringBack(Environment *theEnv, UDFContext *context, UDFValue *ret) {
+void TrimStringBack(const Environment&theEnv, UDFContext *context, UDFValue *ret) {
     UDFValue str;
     if (!UDFFirstArgument(context, STRING_BIT, &str)) {
         ret->lexemeValue = FalseSymbol(theEnv);

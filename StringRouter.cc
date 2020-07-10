@@ -59,22 +59,22 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static bool QueryStringCallback(Environment *, const char *, void *);
-static void WriteStringCallback(Environment *, const char *, const char *, void *);
-static int ReadStringCallback(Environment *, const char *, void *);
-static int UnreadStringCallback(Environment *, const char *, int, void *);
-static StringRouter *FindStringRouter(Environment *, const char *);
-static bool CreateReadStringSource(Environment *, const char *, const char *, size_t, size_t);
-static void DeallocateStringRouterData(Environment *);
-static StringBuilderRouter *FindStringBuilderRouter(Environment *, const char *);
-static bool QueryStringBuilderCallback(Environment *, const char *, void *);
-static void WriteStringBuilderCallback(Environment *, const char *, const char *, void *);
+static bool QueryStringCallback(const Environment&, const char *, void *);
+static void WriteStringCallback(const Environment&, const char *, const char *, void *);
+static int ReadStringCallback(const Environment&, const char *, void *);
+static int UnreadStringCallback(const Environment&, const char *, int, void *);
+static StringRouter *FindStringRouter(const Environment&, const char *);
+static bool CreateReadStringSource(const Environment&, const char *, const char *, size_t, size_t);
+static void DeallocateStringRouterData(const Environment&);
+static StringBuilderRouter *FindStringBuilderRouter(const Environment&, const char *);
+static bool QueryStringBuilderCallback(const Environment&, const char *, void *);
+static void WriteStringBuilderCallback(const Environment&, const char *, const char *, void *);
 
 /**********************************************************/
 /* InitializeStringRouter: Initializes string I/O router. */
 /**********************************************************/
 void InitializeStringRouter(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     AllocateEnvironmentData(theEnv, STRING_ROUTER_DATA, sizeof(stringRouterData), DeallocateStringRouterData);
 
     AddRouter(theEnv, "string", 0, QueryStringCallback, WriteStringCallback, ReadStringCallback, UnreadStringCallback, nullptr, nullptr);
@@ -86,7 +86,7 @@ void InitializeStringRouter(
 /*    environment data for string routers. */
 /*******************************************/
 static void DeallocateStringRouterData(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     StringRouter *tmpPtr, *nextPtr;
     StringBuilderRouter *tmpSBPtr, *nextSBPtr;
 
@@ -111,7 +111,7 @@ static void DeallocateStringRouterData(
 /* QueryStringCallback: Find routine for string router logical names. */
 /*********************************************************************/
 static bool QueryStringCallback(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         void *context) {
     struct stringRouter *head;
@@ -129,7 +129,7 @@ static bool QueryStringCallback(
 /* WriteStringCallback: Print routine for string routers. */
 /**********************************************************/
 static void WriteStringCallback(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         const char *str,
         void *context) {
@@ -158,7 +158,7 @@ static void WriteStringCallback(
 /* ReadStringCallback: Getc routine for string routers. */
 /********************************************************/
 static int ReadStringCallback(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         void *context) {
     struct stringRouter *head;
@@ -186,7 +186,7 @@ static int ReadStringCallback(
 /* UnreadStringCallback: Ungetc routine for string routers. */
 /************************************************************/
 static int UnreadStringCallback(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         int ch,
         void *context) {
@@ -212,7 +212,7 @@ static int UnreadStringCallback(
 /* OpenStringSource: Opens a new string router. */
 /************************************************/
 bool OpenStringSource(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name,
         const char *str,
         size_t currentPosition) {
@@ -231,7 +231,7 @@ bool OpenStringSource(
 /*   (which is not nullptr terminated).                  */
 /******************************************************/
 bool OpenTextSource(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name,
         const char *str,
         size_t currentPosition,
@@ -248,7 +248,7 @@ bool OpenTextSource(
 /* CreateReadStringSource: Creates a new string router for input. */
 /******************************************************************/
 static bool CreateReadStringSource(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name,
         const char *str,
         size_t currentPosition,
@@ -277,7 +277,7 @@ static bool CreateReadStringSource(
 /* CloseStringSource: Closes a string router. */
 /**********************************************/
 bool CloseStringSource(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name) {
     struct stringRouter *head, *last;
 
@@ -308,7 +308,7 @@ bool CloseStringSource(
 /* OpenStringDestination: Opens a new string router for printing. */
 /******************************************************************/
 bool OpenStringDestination(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name,
         char *str,
         size_t maximumPosition) {
@@ -336,7 +336,7 @@ bool OpenStringDestination(
 /* CloseStringDestination: Closes a string router. */
 /***************************************************/
 bool CloseStringDestination(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name) {
     return CloseStringSource(theEnv, name);
 }
@@ -345,7 +345,7 @@ bool CloseStringDestination(
 /* FindStringRouter: Returns a pointer to the named string router. */
 /*******************************************************************/
 static struct stringRouter *FindStringRouter(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name) {
     struct stringRouter *head;
 
@@ -363,7 +363,7 @@ static struct stringRouter *FindStringRouter(
 /*   StringBuilder router for printing.      */
 /*********************************************/
 bool OpenStringBuilderDestination(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name,
         StringBuilder *theSB) {
     StringBuilderRouter *newStringRouter;
@@ -387,7 +387,7 @@ bool OpenStringBuilderDestination(
 /*   a StringBuilder router.             */
 /*****************************************/
 bool CloseStringBuilderDestination(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name) {
     StringBuilderRouter *head, *last;
 
@@ -419,7 +419,7 @@ bool CloseStringBuilderDestination(
 /*   to the named StringBuilder router.       */
 /**********************************************/
 static struct stringBuilderRouter *FindStringBuilderRouter(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name) {
     StringBuilderRouter *head;
 
@@ -437,7 +437,7 @@ static struct stringBuilderRouter *FindStringBuilderRouter(
 /*   for stringBuilder router logical names. */
 /*********************************************/
 static bool QueryStringBuilderCallback(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         void *context) {
     StringBuilderRouter *head;
@@ -456,7 +456,7 @@ static bool QueryStringBuilderCallback(
 /*    for stringBuilder routers.             */
 /*********************************************/
 static void WriteStringBuilderCallback(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         const char *str,
         void *context) {

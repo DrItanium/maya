@@ -91,18 +91,18 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void PushQueryCore(Environment *);
-static void PopQueryCore(Environment *);
-static QUERY_CORE *FindQueryCore(Environment *, long long);
-static QUERY_CLASS *DetermineQueryClasses(Environment *, Expression *, const char *, unsigned *);
-static QUERY_CLASS *FormChain(Environment *, const char *, Defclass *, UDFValue *);
-static void DeleteQueryClasses(Environment *, QUERY_CLASS *);
-static bool TestForFirstInChain(Environment *, QUERY_CLASS *, unsigned);
-static bool TestForFirstInstanceInClass(Environment *, Defmodule *, int, Defclass *, QUERY_CLASS *, unsigned);
-static void TestEntireChain(Environment *, QUERY_CLASS *, unsigned);
-static void TestEntireClass(Environment *, Defmodule *, int, Defclass *, QUERY_CLASS *, unsigned);
-static void AddSolution(Environment *);
-static void PopQuerySoln(Environment *);
+static void PushQueryCore(const Environment&);
+static void PopQueryCore(const Environment&);
+static QUERY_CORE *FindQueryCore(const Environment&, long long);
+static QUERY_CLASS *DetermineQueryClasses(const Environment&, Expression *, const char *, unsigned *);
+static QUERY_CLASS *FormChain(const Environment&, const char *, Defclass *, UDFValue *);
+static void DeleteQueryClasses(const Environment&, QUERY_CLASS *);
+static bool TestForFirstInChain(const Environment&, QUERY_CLASS *, unsigned);
+static bool TestForFirstInstanceInClass(const Environment&, Defmodule *, int, Defclass *, QUERY_CLASS *, unsigned);
+static void TestEntireChain(const Environment&, QUERY_CLASS *, unsigned);
+static void TestEntireClass(const Environment&, Defmodule *, int, Defclass *, QUERY_CLASS *, unsigned);
+static void AddSolution(const Environment&);
+static void PopQuerySoln(const Environment&);
 
 /****************************************************
   NAME         : SetupQuery
@@ -114,7 +114,7 @@ static void PopQuerySoln(Environment *);
   NOTES        : None
  ****************************************************/
 void SetupQuery(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     AllocateEnvironmentData(theEnv, INSTANCE_QUERY_DATA, sizeof(instanceQueryData));
 
     InstanceQueryData(theEnv)->QUERY_DELIMITER_SYMBOL = CreateSymbol(theEnv, QUERY_DELIMITER_STRING);
@@ -154,7 +154,7 @@ void SetupQuery(
   NOTES        : H/L Syntax : ((query-instance) <index>)
  *************************************************************/
 void GetQueryInstance(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     QUERY_CORE *core;
@@ -173,7 +173,7 @@ void GetQueryInstance(
   NOTES        : H/L Syntax : ((query-instance-slot) <index> <slot-name>)
  **************************************************************************/
 void GetQueryInstanceSlot(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Instance *ins;
@@ -283,7 +283,7 @@ void GetQueryInstanceSlot(
   NOTES        : H/L Syntax : See ParseQueryNoAction()
  ******************************************************************************/
 void AnyInstances(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     QUERY_CLASS *qclasses;
@@ -324,7 +324,7 @@ void AnyInstances(
   NOTES        : H/L Syntax : See ParseQueryNoAction()
  ******************************************************************************/
 void QueryFindInstance(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     QUERY_CLASS *qclasses;
@@ -378,7 +378,7 @@ void QueryFindInstance(
   NOTES        : H/L Syntax : See ParseQueryNoAction()
  ******************************************************************************/
 void QueryFindAllInstances(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     QUERY_CLASS *qclasses;
@@ -433,7 +433,7 @@ void QueryFindAllInstances(
   NOTES        : H/L Syntax : See ParseQueryAction()
  ******************************************************************************/
 void QueryDoForInstance(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     QUERY_CLASS *qclasses;
@@ -480,7 +480,7 @@ void QueryDoForInstance(
   NOTES        : H/L Syntax : See ParseQueryAction()
  ******************************************************************************/
 void QueryDoForAllInstances(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     QUERY_CLASS *qclasses;
@@ -528,7 +528,7 @@ void QueryDoForAllInstances(
   NOTES        : H/L Syntax : See ParseQueryNoAction()
  ******************************************************************************/
 void DelayedQueryDoForAllInstances(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     QUERY_CLASS *qclasses;
@@ -632,7 +632,7 @@ void DelayedQueryDoForAllInstances(
   NOTES        : None
  *******************************************************/
 static void PushQueryCore(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     QUERY_STACK *qptr;
 
     qptr = get_struct(theEnv, query_stack);
@@ -652,7 +652,7 @@ static void PushQueryCore(
   NOTES        : Assumes stack is not empty
  ******************************************************/
 static void PopQueryCore(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     QUERY_STACK *qptr;
 
     InstanceQueryData(theEnv)->QueryCore = InstanceQueryData(theEnv)->QueryCoreStack->core;
@@ -672,7 +672,7 @@ static void PopQueryCore(
   NOTES        : None
  ***************************************************/
 static QUERY_CORE *FindQueryCore(
-        Environment *theEnv,
+        const Environment&theEnv,
         long long depth) {
     QUERY_STACK *qptr;
 
@@ -707,7 +707,7 @@ static QUERY_CORE *FindQueryCore(
                    the QUERY_DELIMITER_SYMBOL "(QDS)"
  **********************************************************/
 static QUERY_CLASS *DetermineQueryClasses(
-        Environment *theEnv,
+        const Environment&theEnv,
         Expression *classExp,
         const char *func,
         unsigned *rcnt) {
@@ -767,7 +767,7 @@ static QUERY_CLASS *DetermineQueryClasses(
   NOTES        : None
  *************************************************************/
 static QUERY_CLASS *FormChain(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *func,
         Defclass *theClass,
         UDFValue *val) {
@@ -860,7 +860,7 @@ static QUERY_CLASS *FormChain(
   NOTES        : None
  ******************************************************/
 static void DeleteQueryClasses(
-        Environment *theEnv,
+        const Environment&theEnv,
         QUERY_CLASS *qlist) {
     QUERY_CLASS *tmp;
 
@@ -891,7 +891,7 @@ static void DeleteQueryClasses(
   NOTES        : None
  ************************************************************/
 static bool TestForFirstInChain(
-        Environment *theEnv,
+        const Environment&theEnv,
         QUERY_CLASS *qchain,
         unsigned indx) {
     QUERY_CLASS *qptr;
@@ -928,7 +928,7 @@ static bool TestForFirstInChain(
   NOTES        : None
  *****************************************************************/
 static bool TestForFirstInstanceInClass(
-        Environment *theEnv,
+        const Environment&theEnv,
         Defmodule *theModule,
         int id,
         Defclass *cls,
@@ -1016,7 +1016,7 @@ static bool TestForFirstInstanceInClass(
   NOTES        : None
  ************************************************************/
 static void TestEntireChain(
-        Environment *theEnv,
+        const Environment&theEnv,
         QUERY_CLASS *qchain,
         unsigned indx) {
     QUERY_CLASS *qptr;
@@ -1050,7 +1050,7 @@ static void TestEntireChain(
   NOTES        : None
  *****************************************************************/
 static void TestEntireClass(
-        Environment *theEnv,
+        const Environment&theEnv,
         Defmodule *theModule,
         int id,
         Defclass *cls,
@@ -1143,7 +1143,7 @@ static void TestEntireClass(
   NOTES        : Solutions are stored as sequential arrays of Instance *
  ***************************************************************************/
 static void AddSolution(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     QUERY_SOLN *new_soln;
     unsigned i;
 
@@ -1171,7 +1171,7 @@ static void AddSolution(
   NOTES        : Assumes QueryCore->soln_set != 0
  ***************************************************/
 static void PopQuerySoln(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     InstanceQueryData(theEnv)->QueryCore->soln_bottom = InstanceQueryData(theEnv)->QueryCore->soln_set;
     InstanceQueryData(theEnv)->QueryCore->soln_set = InstanceQueryData(theEnv)->QueryCore->soln_set->nxt;
     rm(theEnv, InstanceQueryData(theEnv)->QueryCore->soln_bottom->soln,

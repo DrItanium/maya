@@ -54,7 +54,7 @@
 
 #define _H_objrtbld
 
-void SetupObjectPatternStuff(Environment *);
+void SetupObjectPatternStuff(const Environment&);
 
 #endif /* _H_objrtbld */
 

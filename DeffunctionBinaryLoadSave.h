@@ -41,8 +41,8 @@
 
 #include "Deffunction.h"
 
-void SetupDeffunctionsBload(Environment *);
-void *BloadDeffunctionModuleReference(Environment *, unsigned long);
+void SetupDeffunctionsBload(const Environment&);
+void *BloadDeffunctionModuleReference(const Environment&, unsigned long);
 
 constexpr auto DFFNXBIN_DATA = 24;
 

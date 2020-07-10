@@ -91,35 +91,35 @@ constexpr auto INSTANCE_TABLE_HASH_SIZE = 8191;
 
 void RetainInstance(Instance *);
 void ReleaseInstance(Instance *);
-void IncrementInstanceCallback(Environment *, Instance *);
-void DecrementInstanceCallback(Environment *, Instance *);
-void InitializeInstanceTable(Environment *);
-void CleanupInstances(Environment *, void *);
+void IncrementInstanceCallback(const Environment&, Instance *);
+void DecrementInstanceCallback(const Environment&, Instance *);
+void InitializeInstanceTable(const Environment&);
+void CleanupInstances(const Environment&, void *);
 unsigned HashInstance(CLIPSLexeme *);
-void DestroyAllInstances(Environment *, void *);
-void RemoveInstanceData(Environment *, Instance *);
-Instance *FindInstanceBySymbol(Environment *, CLIPSLexeme *);
-Instance *FindInstanceInModule(Environment *, CLIPSLexeme *, Defmodule *,
+void DestroyAllInstances(const Environment&, void *);
+void RemoveInstanceData(const Environment&, Instance *);
+Instance *FindInstanceBySymbol(const Environment&, CLIPSLexeme *);
+Instance *FindInstanceInModule(const Environment&, CLIPSLexeme *, Defmodule *,
                                Defmodule *, bool);
-InstanceSlot *FindInstanceSlot(Environment *, Instance *, CLIPSLexeme *);
-int FindInstanceTemplateSlot(Environment *, Defclass *, CLIPSLexeme *);
-PutSlotError PutSlotValue(Environment *, Instance *, InstanceSlot *, UDFValue *, UDFValue *, const char *);
-PutSlotError DirectPutSlotValue(Environment *, Instance *, InstanceSlot *, UDFValue *, UDFValue *);
-PutSlotError ValidSlotValue(Environment *, UDFValue *, SlotDescriptor *, Instance *, const char *);
+InstanceSlot *FindInstanceSlot(const Environment&, Instance *, CLIPSLexeme *);
+int FindInstanceTemplateSlot(const Environment&, Defclass *, CLIPSLexeme *);
+PutSlotError PutSlotValue(const Environment&, Instance *, InstanceSlot *, UDFValue *, UDFValue *, const char *);
+PutSlotError DirectPutSlotValue(const Environment&, Instance *, InstanceSlot *, UDFValue *, UDFValue *);
+PutSlotError ValidSlotValue(const Environment&, UDFValue *, SlotDescriptor *, Instance *, const char *);
 Instance *CheckInstance(UDFContext *);
-void NoInstanceError(Environment *, const char *, const char *);
-void StaleInstanceAddress(Environment *, const char *, int);
-bool GetInstancesChanged(Environment *);
-void SetInstancesChanged(Environment *, bool);
-void PrintSlot(Environment *, const char *, SlotDescriptor *, Instance *, const char *);
-void PrintInstanceNameAndClass(Environment *, const char *, Instance *, bool);
-void PrintInstanceName(Environment *, const char *, Instance *);
-void PrintInstanceLongForm(Environment *, const char *, Instance *);
-void DecrementObjectBasisCount(Environment *, Instance *);
-void IncrementObjectBasisCount(Environment *, Instance *);
-void MatchObjectFunction(Environment *, Instance *);
-bool NetworkSynchronized(Environment *, Instance *);
-bool InstanceIsDeleted(Environment *, Instance *);
+void NoInstanceError(const Environment&, const char *, const char *);
+void StaleInstanceAddress(const Environment&, const char *, int);
+bool GetInstancesChanged(const Environment&);
+void SetInstancesChanged(const Environment&, bool);
+void PrintSlot(const Environment&, const char *, SlotDescriptor *, Instance *, const char *);
+void PrintInstanceNameAndClass(const Environment&, const char *, Instance *, bool);
+void PrintInstanceName(const Environment&, const char *, Instance *);
+void PrintInstanceLongForm(const Environment&, const char *, Instance *);
+void DecrementObjectBasisCount(const Environment&, Instance *);
+void IncrementObjectBasisCount(const Environment&, Instance *);
+void MatchObjectFunction(const Environment&, Instance *);
+bool NetworkSynchronized(const Environment&, Instance *);
+bool InstanceIsDeleted(const Environment&, Instance *);
 
 #endif /* _H_insfun */
 

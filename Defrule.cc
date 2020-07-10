@@ -95,17 +95,17 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void *AllocateModule(Environment *);
-static void ReturnModule(Environment *, void *);
-static void InitializeDefruleModules(Environment *);
-static void DeallocateDefruleData(Environment *);
-static void DestroyDefruleAction(Environment *, ConstructHeader *, void *);
+static void *AllocateModule(const Environment&);
+static void ReturnModule(const Environment&, void *);
+static void InitializeDefruleModules(const Environment&);
+static void DeallocateDefruleData(const Environment&);
+static void DestroyDefruleAction(const Environment&, ConstructHeader *, void *);
 
 /**********************************************************/
 /* InitializeDefrules: Initializes the defrule construct. */
 /**********************************************************/
 void InitializeDefrules(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     unsigned long i;
     AllocateEnvironmentData(theEnv, DEFRULE_DATA, sizeof(defruleData), DeallocateDefruleData);
 
@@ -154,7 +154,7 @@ void InitializeDefrules(
 /*    data for the defrule construct.             */
 /**************************************************/
 static void DeallocateDefruleData(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     struct defruleModule *theModuleItem;
     Defmodule *theModule;
     Activation *theActivation, *tmpActivation;
@@ -203,7 +203,7 @@ static void DeallocateDefruleData(
 /*   as a result of DestroyEnvironment.                 */
 /********************************************************/
 static void DestroyDefruleAction(
-        Environment *theEnv,
+        const Environment&theEnv,
         ConstructHeader *theConstruct,
         void *buffer) {
 #if MAC_XCD
@@ -219,7 +219,7 @@ static void DestroyDefruleAction(
 /*   construct for use with the defmodule construct. */
 /*****************************************************/
 static void InitializeDefruleModules(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     DefruleData(theEnv)->DefruleModuleIndex = RegisterModuleItem(theEnv, "defrule",
                                                                  AllocateModule,
                                                                  ReturnModule,
@@ -235,7 +235,7 @@ static void InitializeDefruleModules(
 /* AllocateModule: Allocates a defrule module. */
 /***********************************************/
 static void *AllocateModule(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     struct defruleModule *theItem;
 
     theItem = get_struct(theEnv, defruleModule);
@@ -248,7 +248,7 @@ static void *AllocateModule(
 /* ReturnModule: Deallocates a defrule module. */
 /***********************************************/
 static void ReturnModule(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *theItem) {
     FreeConstructHeaderModule(theEnv, (defmoduleItemHeader *) theItem, DefruleData(theEnv)->DefruleConstruct);
     rtn_struct(theEnv, defruleModule, theItem);
@@ -259,7 +259,7 @@ static void ReturnModule(
 /*  item for the specified defrule or defmodule.            */
 /************************************************************/
 struct defruleModule *GetDefruleModuleItem(
-        Environment *theEnv,
+        const Environment&theEnv,
         Defmodule *theModule) {
     return ((defruleModule *) GetConstructModuleItemByIndex(theEnv, theModule, DefruleData(theEnv)->DefruleModuleIndex));
 }
@@ -269,7 +269,7 @@ struct defruleModule *GetDefruleModuleItem(
 /*   Returns a pointer to the defrule if found, otherwise nullptr. */
 /****************************************************************/
 Defrule *FindDefrule(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *defruleName) {
     return (Defrule *) FindNamedConstructInModuleOrImports(theEnv, defruleName, DefruleData(theEnv)->DefruleConstruct);
 }
@@ -279,7 +279,7 @@ Defrule *FindDefrule(
 /*   Returns a pointer to the defrule if found, otherwise nullptr.         */
 /************************************************************************/
 Defrule *FindDefruleInModule(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *defruleName) {
     return (Defrule *) FindNamedConstructInModule(theEnv, defruleName, DefruleData(theEnv)->DefruleConstruct);
 }
@@ -291,7 +291,7 @@ Defrule *FindDefruleInModule(
 /*   argument.                                              */
 /************************************************************/
 Defrule *GetNextDefrule(
-        Environment *theEnv,
+        const Environment&theEnv,
         Defrule *defrulePtr) {
     return (Defrule *) GetNextConstructItem(theEnv, &defrulePtr->header, DefruleData(theEnv)->DefruleModuleIndex);
 }
@@ -302,7 +302,7 @@ Defrule *GetNextDefrule(
 /******************************************************/
 bool DefruleIsDeletable(
         Defrule *theDefrule) {
-    Environment *theEnv = theDefrule->header.env;
+    const Environment&theEnv = theDefrule->header.env;
 
     if (!ConstructsDeletable(theEnv)) { return false; }
 
@@ -319,7 +319,7 @@ bool DefruleIsDeletable(
 /*   a rule (permutations caused by the use of or CEs). */
 /********************************************************/
 long GetDisjunctCount(
-        Environment *theEnv,
+        const Environment&theEnv,
         Defrule *theDefrule) {
     long count = 0;
 
@@ -336,7 +336,7 @@ long GetDisjunctCount(
 /*   0 to N - 1.                                       */
 /*******************************************************/
 Defrule *GetNthDisjunct(
-        Environment *theEnv,
+        const Environment&theEnv,
         Defrule *theDefrule,
         long index) {
     long count = 0;
@@ -357,7 +357,7 @@ Defrule *GetNthDisjunct(
 /* AddBetaMemoriesToJoin: */
 /**************************/
 void AddBetaMemoriesToJoin(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct joinNode *theNode) {
     if ((theNode->leftMemory != nullptr) || (theNode->rightMemory != nullptr)) { return; }
 

@@ -55,10 +55,10 @@
 #define _H_classpsr
 
 
-bool ParseDefclass(Environment *, const char *);
+bool ParseDefclass(const Environment&, const char *);
 
 #if DEFMODULE_CONSTRUCT
-void *CreateClassScopeMap(Environment *, Defclass *);
+void *CreateClassScopeMap(const Environment&, Defclass *);
 #endif
 
 #endif /* _H_classpsr */

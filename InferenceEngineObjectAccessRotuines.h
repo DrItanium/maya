@@ -192,8 +192,8 @@ struct objectReteData {
 
 #define ObjectReteData(theEnv) ((objectReteData *) GetEnvironmentData(theEnv,OBJECT_RETE_DATA))
 
-void InstallObjectPrimitives(Environment *);
-bool ObjectCmpConstantFunction(Environment *, void *, UDFValue *);
+void InstallObjectPrimitives(const Environment&);
+bool ObjectCmpConstantFunction(const Environment&, void *, UDFValue *);
 
 #endif /* _H_objrtfnx */
 

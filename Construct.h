@@ -83,11 +83,11 @@ typedef struct construct Construct;
 #include "Utility.h"
 #include "StringFunctions.h"
 
-typedef void SaveCallFunction(Environment *, Defmodule *, const char *, void *);
+typedef void SaveCallFunction(const Environment&, Defmodule *, const char *, void *);
 typedef struct saveCallFunctionItem SaveCallFunctionItem;
 
-typedef void ParserErrorFunction(Environment *, const char *, const char *, const char *, long, void *);
-typedef bool BeforeResetFunction(Environment *);
+typedef void ParserErrorFunction(const Environment&, const char *, const char *, const char *, long, void *);
+typedef bool BeforeResetFunction(const Environment&);
 
 #define CHS (ConstructHeader *)
 
@@ -98,7 +98,7 @@ struct saveCallFunctionItem {
     SaveCallFunctionItem *next;
     void *context;
 };
-typedef bool ConstructParseFunction(Environment*, const char*);
+typedef bool ConstructParseFunction(const Environment&, const char*);
 typedef CLIPSLexeme* ConstructGetConstructNameFunction(ConstructHeader*);
 typedef const char* ConstructGetPPFormFunction(ConstructHeader*);
 typedef struct defmoduleItemHeader* ConstructGetModuleItemFunction(ConstructHeader*);
@@ -158,20 +158,20 @@ struct constructData {
 
 #define ConstructData(theEnv) ((constructData *) GetEnvironmentData(theEnv,CONSTRUCT_DATA))
 
-bool Clear(Environment *);
-void Reset(Environment *);
-bool Save(Environment *, const char *);
+bool Clear(const Environment&);
+void Reset(const Environment&);
+bool Save(const Environment&, const char *);
 
-void InitializeConstructData(Environment *);
-bool AddResetFunction(Environment *, const char *, VoidCallFunction *, int, void *context = nullptr);
-bool RemoveResetFunction(Environment *, const char *);
-bool AddClearReadyFunction(Environment *, const char *, BoolCallFunction *, int, void *context = nullptr);
-bool RemoveClearReadyFunction(Environment *, const char *);
-bool AddClearFunction(Environment *, const char *, VoidCallFunction *, int, void *context = nullptr);
-bool RemoveClearFunction(Environment *, const char *);
-void IncrementClearReadyLocks(Environment *);
-void DecrementClearReadyLocks(Environment *);
-Construct *AddConstruct(Environment *, const char *, const char *,
+void InitializeConstructData(const Environment&);
+bool AddResetFunction(const Environment&, const char *, VoidCallFunction *, int, void *context = nullptr);
+bool RemoveResetFunction(const Environment&, const char *);
+bool AddClearReadyFunction(const Environment&, const char *, BoolCallFunction *, int, void *context = nullptr);
+bool RemoveClearReadyFunction(const Environment&, const char *);
+bool AddClearFunction(const Environment&, const char *, VoidCallFunction *, int, void *context = nullptr);
+bool RemoveClearFunction(const Environment&, const char *);
+void IncrementClearReadyLocks(const Environment&);
+void DecrementClearReadyLocks(const Environment&);
+Construct *AddConstruct(const Environment&, const char *, const char *,
                         ConstructParseFunction*,
                         FindConstructFunction *,
                         ConstructGetConstructNameFunction*,
@@ -182,32 +182,32 @@ Construct *AddConstruct(Environment *, const char *, const char *,
                         IsConstructDeletableFunction *,
                         DeleteConstructFunction *,
                         FreeConstructFunction *);
-bool RemoveConstruct(Environment *, const char *);
-void SetCompilationsWatch(Environment *, bool);
-bool GetCompilationsWatch(Environment *);
-void SetPrintWhileLoading(Environment *, bool);
-bool GetPrintWhileLoading(Environment *);
-void SetLoadInProgress(Environment *, bool);
-bool GetLoadInProgress(Environment *);
-bool ExecutingConstruct(Environment *);
-void SetExecutingConstruct(Environment *, bool);
-void InitializeConstructs(Environment *);
-BeforeResetFunction *SetBeforeResetFunction(Environment *, BeforeResetFunction *);
-void ResetCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void ClearCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-bool ClearReady(Environment *);
-Construct *FindConstruct(Environment *, const char *);
-void DeinstallConstructHeader(Environment *, ConstructHeader *);
-void DestroyConstructHeader(Environment *, ConstructHeader *);
-ParserErrorFunction *SetParserErrorCallback(Environment *, ParserErrorFunction *, void *context = nullptr);
+bool RemoveConstruct(const Environment&, const char *);
+void SetCompilationsWatch(const Environment&, bool);
+bool GetCompilationsWatch(const Environment&);
+void SetPrintWhileLoading(const Environment&, bool);
+bool GetPrintWhileLoading(const Environment&);
+void SetLoadInProgress(const Environment&, bool);
+bool GetLoadInProgress(const Environment&);
+bool ExecutingConstruct(const Environment&);
+void SetExecutingConstruct(const Environment&, bool);
+void InitializeConstructs(const Environment&);
+BeforeResetFunction *SetBeforeResetFunction(const Environment&, BeforeResetFunction *);
+void ResetCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void ClearCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+bool ClearReady(const Environment&);
+Construct *FindConstruct(const Environment&, const char *);
+void DeinstallConstructHeader(const Environment&, ConstructHeader *);
+void DestroyConstructHeader(const Environment&, ConstructHeader *);
+ParserErrorFunction *SetParserErrorCallback(const Environment&, ParserErrorFunction *, void *context = nullptr);
 
-bool AddSaveFunction(Environment *, const char *, SaveCallFunction *, int, void *context = nullptr);
-bool RemoveSaveFunction(Environment *, const char *);
-SaveCallFunctionItem *AddSaveFunctionToCallList(Environment *, const char *, int,
+bool AddSaveFunction(const Environment&, const char *, SaveCallFunction *, int, void *context = nullptr);
+bool RemoveSaveFunction(const Environment&, const char *);
+SaveCallFunctionItem *AddSaveFunctionToCallList(const Environment&, const char *, int,
                                                 SaveCallFunction *, SaveCallFunctionItem *, void *context = nullptr);
-SaveCallFunctionItem *RemoveSaveFunctionFromCallList(Environment *, const char *,
+SaveCallFunctionItem *RemoveSaveFunctionFromCallList(const Environment&, const char *,
                                                      SaveCallFunctionItem *, bool *);
-void DeallocateSaveCallList(Environment *, SaveCallFunctionItem *);
+void DeallocateSaveCallList(const Environment&, SaveCallFunctionItem *);
 
 #if BLOAD_AND_BSAVE
 
@@ -221,9 +221,9 @@ void MarkConstructHeaderNeededItems(ConstructHeader *, unsigned long);
 void AssignBsaveConstructHeaderVals(bsaveConstructHeader *,
                                     ConstructHeader *);
 
-void UpdateConstructHeader(Environment *, struct bsaveConstructHeader *,
+void UpdateConstructHeader(const Environment&, struct bsaveConstructHeader *,
                            ConstructHeader *, ConstructType, size_t, void *, size_t, void *);
-void UnmarkConstructHeader(Environment *, ConstructHeader *);
+void UnmarkConstructHeader(const Environment&, ConstructHeader *);
 
 #endif
 enum LoadError {
@@ -232,75 +232,75 @@ enum LoadError {
     LE_PARSING_ERROR,
 };
 
-LoadError Load(Environment *, const char *);
-bool LoadConstructsFromLogicalName(Environment *, const char *);
-bool LoadFromString(Environment *, const char *, size_t);
-BuildError ParseConstruct(Environment *, const char *, const char *);
-void ImportExportConflictMessage(Environment *, const char *, const char *,
+LoadError Load(const Environment&, const char *);
+bool LoadConstructsFromLogicalName(const Environment&, const char *);
+bool LoadFromString(const Environment&, const char *, size_t);
+BuildError ParseConstruct(const Environment&, const char *, const char *);
+void ImportExportConflictMessage(const Environment&, const char *, const char *,
                                  const char *, const char *);
-void FlushParsingMessages(Environment *);
-char *GetParsingFileName(Environment *);
-void SetParsingFileName(Environment *, const char *);
-char *GetErrorFileName(Environment *);
-void SetErrorFileName(Environment *, const char *);
-char *GetWarningFileName(Environment *);
-void SetWarningFileName(Environment *, const char *);
-void CreateErrorCaptureRouter(Environment *);
-void DeleteErrorCaptureRouter(Environment *);
+void FlushParsingMessages(const Environment&);
+char *GetParsingFileName(const Environment&);
+void SetParsingFileName(const Environment&, const char *);
+char *GetErrorFileName(const Environment&);
+void SetErrorFileName(const Environment&, const char *);
+char *GetWarningFileName(const Environment&);
+void SetWarningFileName(const Environment&, const char *);
+void CreateErrorCaptureRouter(const Environment&);
+void DeleteErrorCaptureRouter(const Environment&);
 
 typedef bool ConstructGetWatchFunction(void *);
 typedef void ConstructSetWatchFunction(void *, bool);
-typedef void ConstructActionFunction(Environment *, ConstructHeader *, void *);
+typedef void ConstructActionFunction(const Environment&, ConstructHeader *, void *);
 
 void AddConstructToModule(ConstructHeader *);
-bool DeleteNamedConstruct(Environment *, const char *, Construct *);
-ConstructHeader *FindNamedConstructInModule(Environment *, const char *, Construct *);
-ConstructHeader *FindNamedConstructInModuleOrImports(Environment *, const char *, Construct *);
+bool DeleteNamedConstruct(const Environment&, const char *, Construct *);
+ConstructHeader *FindNamedConstructInModule(const Environment&, const char *, Construct *);
+ConstructHeader *FindNamedConstructInModuleOrImports(const Environment&, const char *, Construct *);
 void UndefconstructCommand(UDFContext *, const char *, Construct *);
-bool PPConstruct(Environment *, const char *, const char *, Construct *);
-const char *PPConstructNil(Environment *, const char *, Construct *);
+bool PPConstruct(const Environment&, const char *, const char *, Construct *);
+const char *PPConstructNil(const Environment&, const char *, Construct *);
 CLIPSLexeme *GetConstructModuleCommand(UDFContext *, const char *, Construct *);
-Defmodule *GetConstructModule(Environment *, const char *, Construct *);
-bool Undefconstruct(Environment *, ConstructHeader *, Construct *);
-bool UndefconstructAll(Environment *, Construct *);
-void SaveConstruct(Environment *, Defmodule *, const char *, Construct *);
+Defmodule *GetConstructModule(const Environment&, const char *, Construct *);
+bool Undefconstruct(const Environment&, ConstructHeader *, Construct *);
+bool UndefconstructAll(const Environment&, Construct *);
+void SaveConstruct(const Environment&, Defmodule *, const char *, Construct *);
 const char *GetConstructNameString(ConstructHeader *);
 const char *GetConstructModuleName(ConstructHeader *);
 CLIPSLexeme *GetConstructNamePointer(ConstructHeader *);
 void GetConstructListFunction(UDFContext *, UDFValue *, Construct *);
-void GetConstructList(Environment *, UDFValue *, Construct *,
+void GetConstructList(const Environment&, UDFValue *, Construct *,
                       Defmodule *);
 void ListConstructCommand(UDFContext *, Construct *);
-void ListConstruct(Environment *, Construct *, const char *, Defmodule *);
+void ListConstruct(const Environment&, Construct *, const char *, Defmodule *);
 void SetNextConstruct(ConstructHeader *, ConstructHeader *);
 struct defmoduleItemHeader *GetConstructModuleItem(ConstructHeader *);
 const char *GetConstructPPForm(ConstructHeader *);
 void PPConstructCommand(UDFContext *, const char *, Construct *, UDFValue *);
-ConstructHeader *GetNextConstructItem(Environment *, ConstructHeader *, unsigned);
-struct defmoduleItemHeader *GetConstructModuleItemByIndex(Environment *, Defmodule *, unsigned);
-void FreeConstructHeaderModule(Environment *, struct defmoduleItemHeader *,
+ConstructHeader *GetNextConstructItem(const Environment&, ConstructHeader *, unsigned);
+struct defmoduleItemHeader *GetConstructModuleItemByIndex(const Environment&, Defmodule *, unsigned);
+void FreeConstructHeaderModule(const Environment&, struct defmoduleItemHeader *,
                                Construct *);
-void DoForAllConstructs(Environment *,
+void DoForAllConstructs(const Environment&,
                         ConstructActionFunction *,
                         unsigned, bool, void *);
-void DoForAllConstructsInModule(Environment *, Defmodule *,
+void DoForAllConstructsInModule(const Environment&, Defmodule *,
                                 ConstructActionFunction *,
                                 unsigned, bool, void *);
-void InitializeConstructHeader(Environment *, const char *, ConstructType,
+void InitializeConstructHeader(const Environment&, const char *, ConstructType,
                                ConstructHeader *, CLIPSLexeme *);
-void SetConstructPPForm(Environment *, ConstructHeader *, const char *);
-ConstructHeader *LookupConstruct(Environment *, Construct *, const char *, bool);
+void SetConstructPPForm(const Environment&, ConstructHeader *, const char *);
+ConstructHeader *LookupConstruct(const Environment&, Construct *, const char *, bool);
 #if DEBUGGING_FUNCTIONS
-bool ConstructPrintWatchAccess(Environment *, Construct *, const char *,
+bool ConstructPrintWatchAccess(const Environment&, Construct *, const char *,
                                Expression *,
                                ConstructGetWatchFunction *,
                                ConstructSetWatchFunction *);
-bool ConstructSetWatchAccess(Environment *, Construct *, bool,
+bool ConstructSetWatchAccess(const Environment&, Construct *, bool,
                              Expression *,
                              ConstructGetWatchFunction *,
                              ConstructSetWatchFunction *);
 #endif
-bool ConstructsDeletable(Environment *);
+bool ConstructsDeletable(const Environment&);
 
 #endif /* _H_constrct */
 

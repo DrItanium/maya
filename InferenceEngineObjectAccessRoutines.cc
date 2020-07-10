@@ -89,38 +89,38 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void PrintObjectGetVarJN1(Environment *, const char *, void *);
-static bool ObjectGetVarJNFunction1(Environment *, void *, UDFValue *);
-static void PrintObjectGetVarJN2(Environment *, const char *, void *);
-static bool ObjectGetVarJNFunction2(Environment *, void *, UDFValue *);
-static void PrintObjectGetVarPN1(Environment *, const char *, void *);
-static bool ObjectGetVarPNFunction1(Environment *, void *, UDFValue *);
-static void PrintObjectGetVarPN2(Environment *, const char *, void *);
-static bool ObjectGetVarPNFunction2(Environment *, void *, UDFValue *);
-static void PrintObjectCmpConstant(Environment *, const char *, void *);
-static void PrintSlotLengthTest(Environment *, const char *, void *);
-static bool SlotLengthTestFunction(Environment *, void *, UDFValue *);
-static void PrintPNSimpleCompareFunction1(Environment *, const char *, void *);
-static bool PNSimpleCompareFunction1(Environment *, void *, UDFValue *);
-static void PrintPNSimpleCompareFunction2(Environment *, const char *, void *);
-static bool PNSimpleCompareFunction2(Environment *, void *, UDFValue *);
-static void PrintPNSimpleCompareFunction3(Environment *, const char *, void *);
-static bool PNSimpleCompareFunction3(Environment *, void *, UDFValue *);
-static void PrintJNSimpleCompareFunction1(Environment *, const char *, void *);
-static bool JNSimpleCompareFunction1(Environment *, void *, UDFValue *);
-static void PrintJNSimpleCompareFunction2(Environment *, const char *, void *);
-static bool JNSimpleCompareFunction2(Environment *, void *, UDFValue *);
-static void PrintJNSimpleCompareFunction3(Environment *, const char *, void *);
-static bool JNSimpleCompareFunction3(Environment *, void *, UDFValue *);
-static void GetPatternObjectAndMarks(Environment *, unsigned short, bool, bool, Instance **, struct multifieldMarker **);
-static void GetObjectValueGeneral(Environment *, UDFValue *, Instance *,
+static void PrintObjectGetVarJN1(const Environment&, const char *, void *);
+static bool ObjectGetVarJNFunction1(const Environment&, void *, UDFValue *);
+static void PrintObjectGetVarJN2(const Environment&, const char *, void *);
+static bool ObjectGetVarJNFunction2(const Environment&, void *, UDFValue *);
+static void PrintObjectGetVarPN1(const Environment&, const char *, void *);
+static bool ObjectGetVarPNFunction1(const Environment&, void *, UDFValue *);
+static void PrintObjectGetVarPN2(const Environment&, const char *, void *);
+static bool ObjectGetVarPNFunction2(const Environment&, void *, UDFValue *);
+static void PrintObjectCmpConstant(const Environment&, const char *, void *);
+static void PrintSlotLengthTest(const Environment&, const char *, void *);
+static bool SlotLengthTestFunction(const Environment&, void *, UDFValue *);
+static void PrintPNSimpleCompareFunction1(const Environment&, const char *, void *);
+static bool PNSimpleCompareFunction1(const Environment&, void *, UDFValue *);
+static void PrintPNSimpleCompareFunction2(const Environment&, const char *, void *);
+static bool PNSimpleCompareFunction2(const Environment&, void *, UDFValue *);
+static void PrintPNSimpleCompareFunction3(const Environment&, const char *, void *);
+static bool PNSimpleCompareFunction3(const Environment&, void *, UDFValue *);
+static void PrintJNSimpleCompareFunction1(const Environment&, const char *, void *);
+static bool JNSimpleCompareFunction1(const Environment&, void *, UDFValue *);
+static void PrintJNSimpleCompareFunction2(const Environment&, const char *, void *);
+static bool JNSimpleCompareFunction2(const Environment&, void *, UDFValue *);
+static void PrintJNSimpleCompareFunction3(const Environment&, const char *, void *);
+static bool JNSimpleCompareFunction3(const Environment&, void *, UDFValue *);
+static void GetPatternObjectAndMarks(const Environment&, unsigned short, bool, bool, Instance **, struct multifieldMarker **);
+static void GetObjectValueGeneral(const Environment&, UDFValue *, Instance *,
                                   struct multifieldMarker *, struct ObjectMatchVar1 *);
-static void GetObjectValueSimple(Environment *, UDFValue *, Instance *, struct ObjectMatchVar2 *);
+static void GetObjectValueSimple(const Environment&, UDFValue *, Instance *, struct ObjectMatchVar2 *);
 static size_t CalculateSlotField(multifieldMarker *, InstanceSlot *, size_t, size_t *);
 static void GetInsMultiSlotField(CLIPSValue *, Instance *, unsigned, unsigned, unsigned);
-static void DeallocateObjectReteData(Environment *);
-static void DestroyObjectPatternNetwork(Environment *, OBJECT_PATTERN_NODE *);
-static void DestroyObjectAlphaNodes(Environment *, OBJECT_ALPHA_NODE *);
+static void DeallocateObjectReteData(const Environment&);
+static void DestroyObjectPatternNetwork(const Environment&, OBJECT_PATTERN_NODE *);
+static void DestroyObjectAlphaNodes(const Environment&, OBJECT_ALPHA_NODE *);
 
 /* =========================================
    *****************************************
@@ -139,7 +139,7 @@ static void DestroyObjectAlphaNodes(Environment *, OBJECT_ALPHA_NODE *);
   NOTES        : None
  ***************************************************/
 void InstallObjectPrimitives(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     struct entityRecord objectGVInfo1 = {"OBJ_GET_SLOT_JNVAR1", OBJ_GET_SLOT_JNVAR1, 0, 1, 0,
                                          PrintObjectGetVarJN1,
                                          PrintObjectGetVarJN1, nullptr,
@@ -247,7 +247,7 @@ void InstallObjectPrimitives(
 /*    data for the object rete network.              */
 /*****************************************************/
 static void DeallocateObjectReteData(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     OBJECT_PATTERN_NODE *theNetwork;
 
 #if BLOAD_AND_BSAVE
@@ -263,7 +263,7 @@ static void DeallocateObjectReteData(
 /*   associated with the object pattern network.                */
 /****************************************************************/
 static void DestroyObjectPatternNetwork(
-        Environment *theEnv,
+        const Environment&theEnv,
         OBJECT_PATTERN_NODE *thePattern) {
     OBJECT_PATTERN_NODE *patternPtr;
 
@@ -284,7 +284,7 @@ static void DestroyObjectPatternNetwork(
 /*   associated with the object alpha nodes.                */
 /************************************************************/
 static void DestroyObjectAlphaNodes(
-        Environment *theEnv,
+        const Environment&theEnv,
         OBJECT_ALPHA_NODE *theNode) {
     OBJECT_ALPHA_NODE *nodePtr;
 
@@ -315,7 +315,7 @@ static void DestroyObjectAlphaNodes(
                    EvaluatePatternExpression()
  *****************************************************/
 bool ObjectCmpConstantFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *theValue,
         UDFValue *theResult) {
     struct ObjectCmpPNConstant *hack;
@@ -359,7 +359,7 @@ bool ObjectCmpConstantFunction(
    ***************************************** */
 
 static void PrintObjectGetVarJN1(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         void *theValue) {
 #if DEVELOPER
@@ -399,7 +399,7 @@ static void PrintObjectGetVarJN1(
 }
 
 static bool ObjectGetVarJNFunction1(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *theValue,
         UDFValue *theResult) {
     struct ObjectMatchVar1 *hack;
@@ -413,7 +413,7 @@ static bool ObjectGetVarJNFunction1(
 }
 
 static void PrintObjectGetVarJN2(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         void *theValue) {
 #if DEVELOPER
@@ -445,7 +445,7 @@ static void PrintObjectGetVarJN2(
 }
 
 static bool ObjectGetVarJNFunction2(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *theValue,
         UDFValue *theResult) {
     struct ObjectMatchVar2 *hack;
@@ -459,7 +459,7 @@ static bool ObjectGetVarJNFunction2(
 }
 
 static void PrintObjectGetVarPN1(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         void *theValue) {
 #if DEVELOPER
@@ -492,7 +492,7 @@ static void PrintObjectGetVarPN1(
 }
 
 static bool ObjectGetVarPNFunction1(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *theValue,
         UDFValue *theResult) {
     struct ObjectMatchVar1 *hack;
@@ -504,7 +504,7 @@ static bool ObjectGetVarPNFunction1(
 }
 
 static void PrintObjectGetVarPN2(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         void *theValue) {
 #if DEVELOPER
@@ -534,7 +534,7 @@ static void PrintObjectGetVarPN2(
 }
 
 static bool ObjectGetVarPNFunction2(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *theValue,
         UDFValue *theResult) {
     struct ObjectMatchVar2 *hack;
@@ -545,7 +545,7 @@ static bool ObjectGetVarPNFunction2(
 }
 
 static void PrintObjectCmpConstant(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         void *theValue) {
 #if DEVELOPER
@@ -575,7 +575,7 @@ static void PrintObjectCmpConstant(
 }
 
 static void PrintSlotLengthTest(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         void *theValue) {
 #if DEVELOPER
@@ -600,7 +600,7 @@ static void PrintSlotLengthTest(
 }
 
 static bool SlotLengthTestFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *theValue,
         UDFValue *theResult) {
     struct ObjectMatchLength *hack;
@@ -616,7 +616,7 @@ static bool SlotLengthTestFunction(
 }
 
 static void PrintPNSimpleCompareFunction1(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         void *theValue) {
 #if DEVELOPER
@@ -640,7 +640,7 @@ static void PrintPNSimpleCompareFunction1(
 }
 
 static bool PNSimpleCompareFunction1(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *theValue,
         UDFValue *theResult) {
     struct ObjectCmpPNSingleSlotVars1 *hack;
@@ -661,7 +661,7 @@ static bool PNSimpleCompareFunction1(
 }
 
 static void PrintPNSimpleCompareFunction2(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         void *theValue) {
 #if DEVELOPER
@@ -687,7 +687,7 @@ static void PrintPNSimpleCompareFunction2(
 }
 
 static bool PNSimpleCompareFunction2(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *theValue,
         UDFValue *theResult) {
     struct ObjectCmpPNSingleSlotVars2 *hack;
@@ -708,7 +708,7 @@ static bool PNSimpleCompareFunction2(
 }
 
 static void PrintPNSimpleCompareFunction3(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         void *theValue) {
 #if DEVELOPER
@@ -736,7 +736,7 @@ static void PrintPNSimpleCompareFunction3(
 }
 
 static bool PNSimpleCompareFunction3(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *theValue,
         UDFValue *theResult) {
     struct ObjectCmpPNSingleSlotVars3 *hack;
@@ -757,7 +757,7 @@ static bool PNSimpleCompareFunction3(
 }
 
 static void PrintJNSimpleCompareFunction1(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         void *theValue) {
 #if DEVELOPER
@@ -785,7 +785,7 @@ static void PrintJNSimpleCompareFunction1(
 }
 
 static bool JNSimpleCompareFunction1(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *theValue,
         UDFValue *theResult) {
     Instance *ins1, *ins2;
@@ -810,7 +810,7 @@ static bool JNSimpleCompareFunction1(
 }
 
 static void PrintJNSimpleCompareFunction2(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         void *theValue) {
 #if DEVELOPER
@@ -840,7 +840,7 @@ static void PrintJNSimpleCompareFunction2(
 }
 
 static bool JNSimpleCompareFunction2(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *theValue,
         UDFValue *theResult) {
     Instance *ins1, *ins2;
@@ -865,7 +865,7 @@ static bool JNSimpleCompareFunction2(
 }
 
 static void PrintJNSimpleCompareFunction3(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         void *theValue) {
 #if DEVELOPER
@@ -897,7 +897,7 @@ static void PrintJNSimpleCompareFunction3(
 }
 
 static bool JNSimpleCompareFunction3(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *theValue,
         UDFValue *theResult) {
     Instance *ins1, *ins2;
@@ -938,7 +938,7 @@ static bool JNSimpleCompareFunction3(
   NOTES        : None
  ****************************************************/
 static void GetPatternObjectAndMarks(
-        Environment *theEnv,
+        const Environment&theEnv,
         unsigned short pattern,
         bool lhs,
         bool rhs,
@@ -987,7 +987,7 @@ static void GetPatternObjectAndMarks(
   NOTES        : None
  ***************************************************/
 static void GetObjectValueGeneral(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFValue *returnValue,
         Instance *theInstance,
         struct multifieldMarker *theMarks,
@@ -1074,7 +1074,7 @@ static void GetObjectValueGeneral(
   NOTES        : None
  ***************************************************/
 static void GetObjectValueSimple(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFValue *returnValue,
         Instance *theInstance,
         struct ObjectMatchVar2 *matchVar) {

@@ -157,12 +157,12 @@ struct IOFunctionData {
 /****************************************/
 
 #if IO_FUNCTIONS
-static void ReadTokenFromStdin(Environment *, struct token *);
+static void ReadTokenFromStdin(const Environment&, struct token *);
 static const char *ControlStringCheck(UDFContext *, unsigned int);
 static char FindFormatFlag(const char *, size_t *, char *, size_t);
 static const char *PrintFormatFlag(UDFContext *, const char *, unsigned int, int);
-static char *FillBuffer(Environment *, const char *, size_t *, size_t *);
-static void ReadNumber(Environment *, const char *, struct token *, bool);
+static char *FillBuffer(const Environment&, const char *, size_t *, size_t *);
+static void ReadNumber(const Environment&, const char *, struct token *, bool);
 static void PrintDriver(UDFContext *, const char *, bool);
 #endif
 
@@ -171,7 +171,7 @@ static void PrintDriver(UDFContext *, const char *, bool);
 /*   the I/O functions.               */
 /**************************************/
 void IOFunctionDefinitions(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     AllocateEnvironmentData(theEnv, IO_FUNCTION_DATA, sizeof(IOFunctionData));
 
 #if IO_FUNCTIONS
@@ -211,7 +211,7 @@ void IOFunctionDefinitions(
 /*   for the printout function.           */
 /******************************************/
 void PrintoutFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *logicalName;
@@ -250,7 +250,7 @@ void PrintoutFunction(
 /*   for the print function.         */
 /*************************************/
 void PrintFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     PrintDriver(context, STDOUT, false);
@@ -261,7 +261,7 @@ void PrintFunction(
 /*   for the println function.         */
 /*************************************/
 void PrintlnFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     PrintDriver(context, STDOUT, true);
@@ -276,7 +276,7 @@ static void PrintDriver(
         const char *logicalName,
         bool endCRLF) {
     UDFValue theArg;
-    Environment *theEnv = context->environment;
+    const Environment&theEnv = context->environment;
 
     /*==============================*/
     /* Print each of the arguments. */
@@ -319,7 +319,7 @@ static void PrintDriver(
 /*   crlf is treated just as '\n' or '\r\n'.         */
 /*****************************************************/
 bool SetFullCRLF(
-        Environment *theEnv,
+        const Environment&theEnv,
         bool value) {
     bool oldValue = IOFunctionData(theEnv)->useFullCRLF;
 
@@ -332,7 +332,7 @@ bool SetFullCRLF(
 /* ReadFunction: H/L access routine for the read function.   */
 /*************************************************************/
 void ReadFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     struct token theToken;
@@ -399,7 +399,7 @@ void ReadFunction(
 /*   function to read a token from standard input.      */
 /********************************************************/
 static void ReadTokenFromStdin(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct token *theToken) {
     char *inputString;
     size_t inputStringSize;
@@ -493,7 +493,7 @@ static void ReadTokenFromStdin(
 /* OpenFunction: H/L access routine for the open function.   */
 /*************************************************************/
 void OpenFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *fileName, *logicalName, *accessMode = nullptr;
@@ -587,7 +587,7 @@ void OpenFunction(
 /* CloseFunction: H/L access routine for the close function. */
 /*************************************************************/
 void CloseFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *logicalName;
@@ -629,7 +629,7 @@ void CloseFunction(
 /* FlushFunction: H/L access routine for the flush function. */
 /*************************************************************/
 void FlushFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *logicalName;
@@ -671,7 +671,7 @@ void FlushFunction(
 /* RewindFunction: H/L access routine for the rewind function. */
 /***************************************************************/
 void RewindFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *logicalName;
@@ -714,7 +714,7 @@ void RewindFunction(
 /* TellFunction: H/L access routine for the tell function. */
 /***********************************************************/
 void TellFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *logicalName;
@@ -759,7 +759,7 @@ void TellFunction(
 /* SeekFunction: H/L access routine for the seek function. */
 /***********************************************************/
 void SeekFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *logicalName;
@@ -833,7 +833,7 @@ void SeekFunction(
 /*   for the get-char function.        */
 /***************************************/
 void GetCharFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *logicalName;
@@ -895,7 +895,7 @@ void GetCharFunction(
 /*   for the unget-char function.        */
 /*****************************************/
 void UngetCharFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     unsigned int numberOfArguments;
@@ -955,7 +955,7 @@ void UngetCharFunction(
 /*   for the put-char function.        */
 /***************************************/
 void PutCharFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     unsigned int numberOfArguments;
@@ -1012,7 +1012,7 @@ void PutCharFunction(
 /*   for the remove function.           */
 /****************************************/
 void RemoveFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *theFileName;
@@ -1039,7 +1039,7 @@ void RemoveFunction(
 /*   for the rename function.           */
 /****************************************/
 void RenameFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *oldFileName, *newFileName;
@@ -1071,7 +1071,7 @@ void RenameFunction(
 /*   for the chdir function.         */
 /*************************************/
 void ChdirFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *theFileName;
@@ -1129,7 +1129,7 @@ void ChdirFunction(
 /*   for the format function.           */
 /****************************************/
 void FormatFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     unsigned int argCount;
@@ -1247,7 +1247,7 @@ static const char *ControlStringCheck(
     size_t i;
     unsigned int per_count;
     char formatFlag;
-    Environment *theEnv = context->environment;
+    const Environment&theEnv = context->environment;
 
     if (!UDFNthArgument(context, 2, STRING_BIT, &t_ptr)) { return nullptr; }
 
@@ -1393,7 +1393,7 @@ static const char *PrintFormatFlag(
     char *printBuffer;
     size_t theLength;
     CLIPSLexeme *oldLocale;
-    Environment *theEnv = context->environment;
+    const Environment&theEnv = context->environment;
 
     /*=================*/
     /* String argument */
@@ -1475,7 +1475,7 @@ static const char *PrintFormatFlag(
 /*   for the readline function.           */
 /******************************************/
 void ReadlineFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     char *buffer;
@@ -1540,7 +1540,7 @@ void ReadlineFunction(
 /*   or end-of-file character is read.                       */
 /*************************************************************/
 static char *FillBuffer(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         size_t *currentPosition,
         size_t *maximumSize) {
@@ -1578,7 +1578,7 @@ static char *FillBuffer(
 /*   for the set-locale function.        */
 /*****************************************/
 void SetLocaleFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -1619,7 +1619,7 @@ void SetLocaleFunction(
 /*   for the read-number function.        */
 /******************************************/
 void ReadNumberFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     struct token theToken;
@@ -1689,7 +1689,7 @@ void ReadNumberFunction(
 /*   read-number function to read a number. */
 /********************************************/
 static void ReadNumber(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         struct token *theToken,
         bool isStdin) {

@@ -58,8 +58,8 @@ struct deffactsBinaryData {
 
 #define DeffactsBinaryData(theEnv) ((deffactsBinaryData *) GetEnvironmentData(theEnv,DFFCTBIN_DATA))
 
-void DeffactsBinarySetup(Environment *);
-void *BloadDeffactsModuleReference(Environment *, unsigned long);
+void DeffactsBinarySetup(const Environment&);
+void *BloadDeffactsModuleReference(const Environment&, unsigned long);
 
 #endif /* _H_dffctbin */
 

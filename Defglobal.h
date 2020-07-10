@@ -103,18 +103,18 @@ struct defglobalModule {
 
 #define DefglobalData(theEnv) ((defglobalData *) GetEnvironmentData(theEnv,DEFGLOBAL_DATA))
 
-void InitializeDefglobals(Environment *);
-Defglobal *FindDefglobal(Environment *, const char *);
-Defglobal *FindDefglobalInModule(Environment *, const char *);
-Defglobal *GetNextDefglobal(Environment *, Defglobal *);
+void InitializeDefglobals(const Environment&);
+Defglobal *FindDefglobal(const Environment&, const char *);
+Defglobal *FindDefglobalInModule(const Environment&, const char *);
+Defglobal *GetNextDefglobal(const Environment&, Defglobal *);
 void CreateInitialFactDefglobal();
 bool DefglobalIsDeletable(Defglobal *);
-struct defglobalModule *GetDefglobalModuleItem(Environment *, Defmodule *);
-void QSetDefglobalValue(Environment *, Defglobal *, UDFValue *, bool);
-Defglobal *QFindDefglobal(Environment *, CLIPSLexeme *);
+struct defglobalModule *GetDefglobalModuleItem(const Environment&, Defmodule *);
+void QSetDefglobalValue(const Environment&, Defglobal *, UDFValue *, bool);
+Defglobal *QFindDefglobal(const Environment&, CLIPSLexeme *);
 void DefglobalValueForm(Defglobal *, StringBuilder *);
-bool GetGlobalsChanged(Environment *);
-void SetGlobalsChanged(Environment *, bool);
+bool GetGlobalsChanged(const Environment&);
+void SetGlobalsChanged(const Environment&, bool);
 void DefglobalGetValue(Defglobal *, CLIPSValue *);
 void DefglobalSetValue(Defglobal *, CLIPSValue *);
 void DefglobalSetInteger(Defglobal *, long long);
@@ -129,9 +129,9 @@ void DefglobalSetFact(Defglobal *, Fact *);
 void DefglobalSetInstance(Defglobal *, Instance *);
 void DefglobalSetMultifield(Defglobal *, Multifield *);
 void DefglobalSetCLIPSExternalAddress(Defglobal *, CLIPSExternalAddress *);
-void UpdateDefglobalScope(Environment *);
-Defglobal *GetNextDefglobalInScope(Environment *, Defglobal *);
-bool QGetDefglobalUDFValue(Environment *, Defglobal *, UDFValue *);
+void UpdateDefglobalScope(const Environment&);
+Defglobal *GetNextDefglobalInScope(const Environment&, Defglobal *);
+bool QGetDefglobalUDFValue(const Environment&, Defglobal *, UDFValue *);
 const char *DefglobalModule(Defglobal *);
 const char *DefglobalName(Defglobal *);
 const char *DefglobalPPForm(Defglobal *);

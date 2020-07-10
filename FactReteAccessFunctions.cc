@@ -62,7 +62,7 @@
 /*   a variable's value. This is the most generalized routine. */
 /***************************************************************/
 bool FactPNGetVar1(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *theValue,
         UDFValue *returnValue) {
     size_t adjustedField;
@@ -165,7 +165,7 @@ bool FactPNGetVar1(
 /*   extracted is from a single field slot.       */
 /**************************************************/
 bool FactPNGetVar2(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *theValue,
         UDFValue *returnValue) {
     Fact *factPtr;
@@ -201,7 +201,7 @@ bool FactPNGetVar2(
 /*   slot that contains at most one multifield variable.         */
 /*****************************************************************/
 bool FactPNGetVar3(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *theValue,
         UDFValue *returnValue) {
     Fact *factPtr;
@@ -257,7 +257,7 @@ bool FactPNGetVar3(
 /*   to a constant for either equality or inequality. */
 /******************************************************/
 bool FactPNConstant1(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *theValue,
         UDFValue *returnValue) {
 #if MAC_XCD
@@ -299,7 +299,7 @@ bool FactPNConstant1(
 /*   relative to the beginning).                                */
 /****************************************************************/
 bool FactPNConstant2(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *theValue,
         UDFValue *returnValue) {
 #if MAC_XCD
@@ -352,7 +352,7 @@ bool FactPNConstant2(
 /*   variable's value. This is the most generalized routine.  */
 /**************************************************************/
 bool FactJNGetVar1(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *theValue,
         UDFValue *returnValue) {
     size_t adjustedField;
@@ -479,7 +479,7 @@ bool FactJNGetVar1(
 /*   extracted is from a single field slot.      */
 /*************************************************/
 bool FactJNGetVar2(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *theValue,
         UDFValue *returnValue) {
     Fact *factPtr;
@@ -523,7 +523,7 @@ bool FactJNGetVar2(
 /*   slot that contains at most one multifield variable.        */
 /****************************************************************/
 bool FactJNGetVar3(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *theValue,
         UDFValue *returnValue) {
     Fact *factPtr;
@@ -586,7 +586,7 @@ bool FactJNGetVar3(
 /*  multifield slot falls within a specified range. */
 /****************************************************/
 bool FactSlotLength(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *theValue,
         UDFValue *returnValue) {
     struct factCheckLengthPNCall *hack;
@@ -620,7 +620,7 @@ bool FactSlotLength(
 /*   the values of two single field slots.                  */
 /************************************************************/
 bool FactJNCompVars1(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *theValue,
         UDFValue *theResult) {
 #if MAC_XCD
@@ -669,7 +669,7 @@ bool FactJNCompVars1(
 /*   implied deftemplates will be faster.                        */
 /*****************************************************************/
 bool FactJNCompVars2(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *theValue,
         UDFValue *theResult) {
 #if MAC_XCD
@@ -735,7 +735,7 @@ bool FactJNCompVars2(
 /*   comparing the values of two single field slots. */
 /*****************************************************/
 bool FactPNCompVars1(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *theValue,
         UDFValue *theResult) {
     bool rv;
@@ -780,7 +780,7 @@ bool FactPNCompVars1(
 /*   to 3 fields.                                                        */
 /*************************************************************************/
 size_t AdjustFieldPosition(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct multifieldMarker *markList,
         unsigned short whichField,
         unsigned short whichSlot,
@@ -841,7 +841,7 @@ size_t AdjustFieldPosition(
 /*   series of valuesinto a single multifield value. */
 /*****************************************************/
 bool FactStoreMultifield(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *theValue,
         UDFValue *theResult) {
 #if MAC_XCD

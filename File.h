@@ -100,7 +100,7 @@ struct fileCommandData {
     char *DribbleBuffer;
     size_t DribbleCurrentPosition;
     size_t DribbleMaximumPosition;
-    int (*DribbleStatusFunction)(Environment *, bool);
+    int (*DribbleStatusFunction)(const Environment&, bool);
 #endif
     int BatchType;
     FILE *BatchFileSource;
@@ -115,14 +115,14 @@ struct fileCommandData {
 
 #define FileCommandData(theEnv) ((fileCommandData *) GetEnvironmentData(theEnv,FILECOM_DATA))
 
-void FileCommandDefinitions(Environment *);
-void BatchCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void BatchStarCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void LoadCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void LoadStarCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void SaveCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void DribbleOnCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void DribbleOffCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
+void FileCommandDefinitions(const Environment&);
+void BatchCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void BatchStarCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void LoadCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void LoadStarCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SaveCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void DribbleOnCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void DribbleOffCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 
 constexpr auto FILE_ROUTER_DATA = 47;
 
@@ -138,30 +138,30 @@ struct fileRouterData {
 
 #define FileRouterData(theEnv) ((fileRouterData *) GetEnvironmentData(theEnv,FILE_ROUTER_DATA))
 
-void InitializeFileRouter(Environment *);
-FILE *FindFptr(Environment *, const char *);
-bool OpenAFile(Environment *, const char *, const char *, const char *);
-bool CloseAllFiles(Environment *);
-bool CloseFile(Environment *, const char *);
-bool FindFile(Environment *, const char *, void *context = nullptr);
-bool FlushAllFiles(Environment *);
-bool FlushFile(Environment *, const char *);
-bool RewindFile(Environment *, const char *);
-long long TellFile(Environment *, const char *);
-bool SeekFile(Environment *, const char *, long, int);
+void InitializeFileRouter(const Environment&);
+FILE *FindFptr(const Environment&, const char *);
+bool OpenAFile(const Environment&, const char *, const char *, const char *);
+bool CloseAllFiles(const Environment&);
+bool CloseFile(const Environment&, const char *);
+bool FindFile(const Environment&, const char *, void *context = nullptr);
+bool FlushAllFiles(const Environment&);
+bool FlushFile(const Environment&, const char *);
+bool RewindFile(const Environment&, const char *);
+long long TellFile(const Environment&, const char *);
+bool SeekFile(const Environment&, const char *, long, int);
 
-bool DribbleOn(Environment *, const char *);
-bool DribbleActive(Environment *);
-bool DribbleOff(Environment *);
-void AppendDribble(Environment *, const char *);
-int LLGetcBatch(Environment *, const char *, bool);
-bool Batch(Environment *, const char *);
-bool OpenBatch(Environment *, const char *, bool);
-bool OpenStringBatch(Environment *, const char *, const char *, bool);
-bool RemoveBatch(Environment *);
-bool BatchActive(Environment *);
-void CloseAllBatchSources(Environment *);
-bool BatchStar(Environment *, const char *);
+bool DribbleOn(const Environment&, const char *);
+bool DribbleActive(const Environment&);
+bool DribbleOff(const Environment&);
+void AppendDribble(const Environment&, const char *);
+int LLGetcBatch(const Environment&, const char *, bool);
+bool Batch(const Environment&, const char *);
+bool OpenBatch(const Environment&, const char *, bool);
+bool OpenStringBatch(const Environment&, const char *, const char *, bool);
+bool RemoveBatch(const Environment&);
+bool BatchActive(const Environment&);
+void CloseAllBatchSources(const Environment&);
+bool BatchStar(const Environment&, const char *);
 #endif /* _H_filecom */
 
 

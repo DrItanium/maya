@@ -105,14 +105,14 @@ constexpr auto MAX_BLOCK_SIZE = 10240;
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void DeallocateUtilityData(Environment *);
+static void DeallocateUtilityData(const Environment&);
 
 /************************************************/
 /* InitializeUtilityData: Allocates environment */
 /*    data for utility routines.                */
 /************************************************/
 void InitializeUtilityData(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     AllocateEnvironmentData(theEnv, UTILITY_DATA, sizeof(utilityData), DeallocateUtilityData);
 
     UtilityData(theEnv)->CurrentGarbageFrame = &UtilityData(theEnv)->MasterGarbageFrame;
@@ -126,7 +126,7 @@ void InitializeUtilityData(
 /*    data for utility routines.                  */
 /**************************************************/
 static void DeallocateUtilityData(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     struct trackedMemory *tmpTM, *nextTM;
     struct garbageFrame *theGarbageFrame;
     struct ephemeron *edPtr, *nextEDPtr;
@@ -218,7 +218,7 @@ static void DeallocateUtilityData(
 /* CleanCurrentGarbageFrame: */
 /*****************************/
 void CleanCurrentGarbageFrame(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFValue *returnValue) {
     struct garbageFrame *currentGarbageFrame;
 
@@ -246,7 +246,7 @@ void CleanCurrentGarbageFrame(
 /* RestorePriorGarbageFrame: */
 /*****************************/
 void RestorePriorGarbageFrame(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct garbageFrame *newGarbageFrame,
         struct garbageFrame *oldGarbageFrame,
         UDFValue *returnValue) {
@@ -278,7 +278,7 @@ void RestorePriorGarbageFrame(
 /* GCBlockStart: */
 /*****************/
 void GCBlockStart(
-        Environment *theEnv,
+        const Environment&theEnv,
         GCBlock *theBlock) {
     theBlock->oldGarbageFrame = UtilityData(theEnv)->CurrentGarbageFrame;
     memset(&theBlock->newGarbageFrame, 0, sizeof(garbageFrame));
@@ -290,7 +290,7 @@ void GCBlockStart(
 /* GCBlockEnd: */
 /***************/
 void GCBlockEnd(
-        Environment *theEnv,
+        const Environment&theEnv,
         GCBlock *theBlock) {
     RestorePriorGarbageFrame(theEnv, &theBlock->newGarbageFrame, theBlock->oldGarbageFrame, nullptr);
 }
@@ -299,7 +299,7 @@ void GCBlockEnd(
 /* GCBlockEndUDF: */
 /******************/
 void GCBlockEndUDF(
-        Environment *theEnv,
+        const Environment&theEnv,
         GCBlock *theBlock,
         UDFValue *rv) {
     RestorePriorGarbageFrame(theEnv, &theBlock->newGarbageFrame, theBlock->oldGarbageFrame, rv);
@@ -309,7 +309,7 @@ void GCBlockEndUDF(
 /* CurrentGarbageFrameIsDirty: */
 /*******************************/
 bool CurrentGarbageFrameIsDirty(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     struct garbageFrame *cgf;
 
     cgf = UtilityData(theEnv)->CurrentGarbageFrame;
@@ -321,7 +321,7 @@ bool CurrentGarbageFrameIsDirty(
 /* CallCleanupFunctions: */
 /*************************/
 void CallCleanupFunctions(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     struct voidCallFunctionItem *cleanupPtr;
 
     for (cleanupPtr = UtilityData(theEnv)->ListOfCleanupFunctions;
@@ -334,7 +334,7 @@ void CallCleanupFunctions(
 /*   for handling periodic tasks.                 */
 /**************************************************/
 void CallPeriodicTasks(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     struct voidCallFunctionItem *periodPtr;
 
     if (UtilityData(theEnv)->PeriodicFunctionsEnabled) {
@@ -350,7 +350,7 @@ void CallPeriodicTasks(
 /*   as returning free memory to the memory pool.  */
 /***************************************************/
 bool AddCleanupFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name,
         VoidCallFunction *theFunction,
         int priority,
@@ -366,7 +366,7 @@ bool AddCleanupFunction(
 /*   of functions called to handle periodic tasks.  */
 /****************************************************/
 bool AddPeriodicFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name,
         VoidCallFunction *theFunction,
         int priority,
@@ -382,7 +382,7 @@ bool AddPeriodicFunction(
 /*   associated with a periodic function.          */
 /***************************************************/
 void *GetPeriodicFunctionContext(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name) {
     struct voidCallFunctionItem *theItem;
 
@@ -400,7 +400,7 @@ void *GetPeriodicFunctionContext(
 /*   as returning free memory to the memory pool.      */
 /*******************************************************/
 bool RemoveCleanupFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name) {
     bool found;
 
@@ -415,7 +415,7 @@ bool RemoveCleanupFunction(
 /*   list of functions called to handle periodic tasks. */
 /********************************************************/
 bool RemovePeriodicFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name) {
     bool found;
 
@@ -430,7 +430,7 @@ bool RemovePeriodicFunction(
 /*   of a string. Replaces / with // and " with /".  */
 /*****************************************************/
 const char *StringPrintForm(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *str) {
     int i = 0;
     size_t pos = 0;
@@ -459,7 +459,7 @@ const char *StringPrintForm(
 /* CopyString: Copies a string using CLIPS memory management. */
 /**************************************************************/
 char *CopyString(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *theString) {
     char *stringCopy = nullptr;
 
@@ -475,7 +475,7 @@ char *CopyString(
 /* DeleteString: Deletes a string using CLIPS memory management. */
 /*****************************************************************/
 void DeleteString(
-        Environment *theEnv,
+        const Environment&theEnv,
         char *theString) {
     if (theString != nullptr) { genfree(theEnv, theString, strlen(theString) + 1); }
 }
@@ -486,7 +486,7 @@ void DeleteString(
 /*   necessary to deallocate the string returned.          */
 /***********************************************************/
 const char *AppendStrings(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *str1,
         const char *str2) {
     size_t pos = 0;
@@ -507,7 +507,7 @@ const char *AppendStrings(
 /*   (expanding the other string if necessary).       */
 /******************************************************/
 char *AppendToString(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *appendStr,
         char *oldStr,
         size_t *oldPos,
@@ -546,7 +546,7 @@ char *AppendToString(
 /*   (expanding the other string if necessary).           */
 /**********************************************************/
 char *InsertInString(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *insertStr,
         size_t position,
         char *oldStr,
@@ -592,7 +592,7 @@ char *InsertInString(
 /* EnlargeString: Enlarges a string by the specified amount.       */
 /*******************************************************************/
 char *EnlargeString(
-        Environment *theEnv,
+        const Environment&theEnv,
         size_t length,
         char *oldStr,
         size_t *oldPos,
@@ -629,7 +629,7 @@ char *EnlargeString(
 /*   the string.                                       */
 /*******************************************************/
 char *AppendNToString(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *appendStr,
         char *oldStr,
         size_t length,
@@ -689,7 +689,7 @@ char *AppendNToString(
 /*   the string.                                       */
 /*******************************************************/
 char *ExpandStringWithChar(
-        Environment *theEnv,
+        const Environment&theEnv,
         int inchar,
         char *str,
         size_t *pos,
@@ -729,7 +729,7 @@ char *ExpandStringWithChar(
 /*   operations (e.g. clear, reset, and bload functions). */
 /**********************************************************/
 struct voidCallFunctionItem *AddVoidFunctionToCallList(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name,
         int priority,
         VoidCallFunction *func,
@@ -776,7 +776,7 @@ struct voidCallFunctionItem *AddVoidFunctionToCallList(
 /*   operations (e.g. clear, reset, and bload functions). */
 /**********************************************************/
 BoolCallFunctionItem *AddBoolFunctionToCallList(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name,
         int priority,
         BoolCallFunction *func,
@@ -823,7 +823,7 @@ BoolCallFunctionItem *AddBoolFunctionToCallList(
 /*   (e.g. clear, reset, and bload functions).                  */
 /****************************************************************/
 struct voidCallFunctionItem *GetVoidFunctionFromCallList(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name,
         struct voidCallFunctionItem *head) {
     struct voidCallFunctionItem *currentPtr;
@@ -841,7 +841,7 @@ struct voidCallFunctionItem *GetVoidFunctionFromCallList(
 /*   (e.g. clear, reset, and bload functions).                  */
 /****************************************************************/
 struct boolCallFunctionItem *GetBoolFunctionFromCallList(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name,
         struct boolCallFunctionItem *head) {
     struct boolCallFunctionItem *currentPtr;
@@ -859,7 +859,7 @@ struct boolCallFunctionItem *GetBoolFunctionFromCallList(
 /*   (e.g. clear, reset, and bload functions).                    */
 /******************************************************************/
 struct voidCallFunctionItem *RemoveVoidFunctionFromCallList(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name,
         struct voidCallFunctionItem *head,
         bool *found) {
@@ -893,7 +893,7 @@ struct voidCallFunctionItem *RemoveVoidFunctionFromCallList(
 /*   (e.g. clear, reset, and bload functions).                    */
 /******************************************************************/
 struct boolCallFunctionItem *RemoveBoolFunctionFromCallList(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name,
         struct boolCallFunctionItem *head,
         bool *found) {
@@ -927,7 +927,7 @@ struct boolCallFunctionItem *RemoveBoolFunctionFromCallList(
 /*   operations (e.g. clear, reset, and bload functions).    */
 /*************************************************************/
 void DeallocateVoidCallList(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct voidCallFunctionItem *theList) {
     struct voidCallFunctionItem *tmpPtr, *nextPtr;
 
@@ -946,7 +946,7 @@ void DeallocateVoidCallList(
 /*   operations (e.g. clear, reset, and bload functions).    */
 /*************************************************************/
 void DeallocateBoolCallList(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct boolCallFunctionItem *theList) {
     struct boolCallFunctionItem *tmpPtr, *nextPtr;
 
@@ -965,7 +965,7 @@ void DeallocateBoolCallList(
 /*   operations (e.g. clear, reset, and bload functions).  */
 /***********************************************************/
 struct callFunctionItemWithArg *AddFunctionToCallListWithArg(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name,
         int priority,
         VoidCallFunctionWithArg *func,
@@ -1008,7 +1008,7 @@ struct callFunctionItemWithArg *AddFunctionToCallListWithArg(
 /*   operations (e.g. clear, reset, and bload functions).     */
 /**************************************************************/
 struct callFunctionItemWithArg *RemoveFunctionFromCallListWithArg(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name,
         struct callFunctionItemWithArg *head,
         bool *found) {
@@ -1041,7 +1041,7 @@ struct callFunctionItemWithArg *RemoveFunctionFromCallListWithArg(
 /*   operations (e.g. clear, reset, and bload functions).       */
 /****************************************************************/
 void DeallocateCallListWithArg(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct callFunctionItemWithArg *theList) {
     struct callFunctionItemWithArg *tmpPtr, *nextPtr;
 
@@ -1058,7 +1058,7 @@ void DeallocateCallListWithArg(
 /*   for the specified value.            */
 /*****************************************/
 size_t ItemHashValue(
-        Environment *theEnv,
+        const Environment&theEnv,
         unsigned short theType,
         void *theValue,
         size_t theRange) {
@@ -1107,7 +1107,7 @@ size_t ItemHashValue(
 /*   is running in the background.          */
 /********************************************/
 void YieldTime(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     if ((UtilityData(theEnv)->YieldTimeFunction != nullptr) && UtilityData(theEnv)->YieldFunctionEnabled) {
         (*UtilityData(theEnv)->YieldTimeFunction)();
     }
@@ -1117,7 +1117,7 @@ void YieldTime(
 /* EnablePeriodicFunctions: */
 /****************************/
 bool EnablePeriodicFunctions(
-        Environment *theEnv,
+        const Environment&theEnv,
         bool value) {
     bool oldValue;
 
@@ -1132,7 +1132,7 @@ bool EnablePeriodicFunctions(
 /* EnableYieldFunction: */
 /************************/
 bool EnableYieldFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         bool value) {
     bool oldValue;
 
@@ -1152,7 +1152,7 @@ bool EnableYieldFunction(
 /*   would normally deallocate the memory would be bypassed.             */
 /*************************************************************************/
 struct trackedMemory *AddTrackedMemory(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *theMemory,
         size_t theSize) {
     struct trackedMemory *newPtr;
@@ -1172,7 +1172,7 @@ struct trackedMemory *AddTrackedMemory(
 /* RemoveTrackedMemory: */
 /************************/
 void RemoveTrackedMemory(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct trackedMemory *theTracker) {
     if (theTracker->prev == nullptr) { UtilityData(theEnv)->trackList = theTracker->next; }
     else { theTracker->prev->next = theTracker->next; }
@@ -1257,7 +1257,7 @@ size_t UTF8CharNum(
 /* CreateStringBuilder: */
 /************************/
 StringBuilder *CreateStringBuilder(
-        Environment *theEnv,
+        const Environment&theEnv,
         size_t theSize) {
     StringBuilder *theSB;
 
@@ -1357,7 +1357,7 @@ char *SBCopy(
 /**************/
 void SBDispose(
         StringBuilder *theSB) {
-    Environment *theEnv = theSB->sbEnv;
+    const Environment&theEnv = theSB->sbEnv;
     rm(theEnv, theSB->contents, theSB->bufferMaximum);
     rtn_struct(theEnv, stringBuilder, theSB);
 }
@@ -1374,7 +1374,7 @@ void SBDispose(
   NOTES        : None
  ***************************************************/
 void BufferedRead(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *buf,
         size_t bufsz) {
     size_t i, amountLeftToRead;
@@ -1427,7 +1427,7 @@ void BufferedRead(
   NOTES        : None
  *****************************************************/
 void FreeReadBuffer(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     if (UtilityData(theEnv)->CurrentReadBufferSize != 0L) {
         genfree(theEnv, UtilityData(theEnv)->CurrentReadBuffer, UtilityData(theEnv)->CurrentReadBufferSize);
         UtilityData(theEnv)->CurrentReadBuffer = nullptr;

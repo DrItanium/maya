@@ -105,15 +105,15 @@ constexpr auto NUMBER_OF_LONGS_FOR_HASH = 25;
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void RemoveHashNode(Environment *, GENERIC_HN *, GENERIC_HN **, int, int);
-static void AddEphemeralHashNode(Environment *, GENERIC_HN *, struct ephemeron **,
+static void RemoveHashNode(const Environment&, GENERIC_HN *, GENERIC_HN **, int, int);
+static void AddEphemeralHashNode(const Environment&, GENERIC_HN *, struct ephemeron **,
                                  int, int, bool);
-static void RemoveEphemeralHashNodes(Environment *, struct ephemeron **,
+static void RemoveEphemeralHashNodes(const Environment&, struct ephemeron **,
                                      GENERIC_HN **,
                                      int, int, int);
 static const char *StringWithinString(const char *, const char *);
 static size_t CommonPrefixLength(const char *, const char *);
-static void DeallocateSymbolData(Environment *);
+static void DeallocateSymbolData(const Environment&);
 
 /*******************************************************/
 /* InitializeAtomTables: Initializes the SymbolTable,  */
@@ -121,7 +121,7 @@ static void DeallocateSymbolData(Environment *);
 /*   the TrueSymbol and FalseSymbol.                   */
 /*******************************************************/
 void InitializeAtomTables(
-        Environment *theEnv,
+        const Environment&theEnv,
         CLIPSLexeme **symbolTable,
         CLIPSFloat **floatTable,
         CLIPSInteger **integerTable,
@@ -189,7 +189,7 @@ void InitializeAtomTables(
 /*    data for symbols.                          */
 /*************************************************/
 static void DeallocateSymbolData(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     CLIPSLexeme *shPtr, *nextSHPtr;
     CLIPSInteger *ihPtr, *nextIHPtr;
     CLIPSFloat *fhPtr, *nextFHPtr;
@@ -296,7 +296,7 @@ static void DeallocateSymbolData(
 /* CreateBoolean */
 /*****************/
 CLIPSLexeme *CreateBoolean(
-        Environment *theEnv,
+        const Environment&theEnv,
         bool theValue) {
     if (theValue) { return TrueSymbol(theEnv); }
     else { return FalseSymbol(theEnv); }
@@ -306,7 +306,7 @@ CLIPSLexeme *CreateBoolean(
 /* CreateSymbol */
 /****************/
 CLIPSLexeme *CreateSymbol(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *str) {
     return AddSymbol(theEnv, str, SYMBOL_TYPE);
 }
@@ -315,7 +315,7 @@ CLIPSLexeme *CreateSymbol(
 /* CreateString */
 /****************/
 CLIPSLexeme *CreateString(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *str) {
     return AddSymbol(theEnv, str, STRING_TYPE);
 }
@@ -324,7 +324,7 @@ CLIPSLexeme *CreateString(
 /* CreateInstanceName */
 /**********************/
 CLIPSLexeme *CreateInstanceName(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *str) {
     return AddSymbol(theEnv, str, INSTANCE_NAME_TYPE);
 }
@@ -337,7 +337,7 @@ CLIPSLexeme *CreateInstanceName(
 /*   of the string's location in the symbol table is returned.      */
 /********************************************************************/
 CLIPSLexeme *AddSymbol(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *str,
         unsigned short theType) {
     size_t tally;
@@ -410,7 +410,7 @@ CLIPSLexeme *AddSymbol(
 /*   returns a pointer to it if found, otherwise returns nullptr.   */
 /*****************************************************************/
 CLIPSLexeme *FindSymbolHN(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *str,
         unsigned short expectedType) {
     size_t tally;
@@ -435,7 +435,7 @@ CLIPSLexeme *FindSymbolHN(
 /*   table and the address of the double is also returned.        */
 /******************************************************************/
 CLIPSFloat *CreateFloat(
-        Environment *theEnv,
+        const Environment&theEnv,
         double number) {
     size_t tally;
     CLIPSFloat *past = nullptr, *peek;
@@ -498,7 +498,7 @@ CLIPSFloat *CreateFloat(
 /*   the table and the address of the long is also returned.    */
 /****************************************************************/
 CLIPSInteger *CreateInteger(
-        Environment *theEnv,
+        const Environment&theEnv,
         long long number) {
     size_t tally;
     CLIPSInteger *past = nullptr, *peek;
@@ -558,7 +558,7 @@ CLIPSInteger *CreateInteger(
 /*   returns a pointer to it if found, otherwise returns nullptr.   */
 /*****************************************************************/
 CLIPSInteger *FindLongHN(
-        Environment *theEnv,
+        const Environment&theEnv,
         long long theLong) {
     size_t tally;
     CLIPSInteger *peek;
@@ -579,7 +579,7 @@ CLIPSInteger *FindLongHN(
 /*   table and the address of the bitmap is also returned.        */
 /******************************************************************/
 void *AddBitMap(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *vTheBitMap,
         unsigned short size) {
     char *theBitMap = (char *) vTheBitMap;
@@ -656,7 +656,7 @@ void *AddBitMap(
 /*    address for a C pointer.                 */
 /***********************************************/
 CLIPSExternalAddress *CreateCExternalAddress(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *theExternalAddress) {
     return CreateExternalAddress(theEnv, theExternalAddress, C_POINTER_EXTERNAL_ADDRESS);
 }
@@ -669,7 +669,7 @@ CLIPSExternalAddress *CreateCExternalAddress(
 /*   the address of the external address is also returned.         */
 /*******************************************************************/
 CLIPSExternalAddress *CreateExternalAddress(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *theExternalAddress,
         unsigned short theType) {
     size_t tally;
@@ -856,7 +856,7 @@ size_t HashBitMap(
 /*   EphemeralSymbolList if the count becomes zero. */
 /****************************************************/
 void RetainLexeme(
-        Environment *theEnv,
+        const Environment&theEnv,
         CLIPSLexeme *theValue) {
     theValue->count++;
 }
@@ -867,7 +867,7 @@ void RetainLexeme(
 /*   EphemeralSymbolList if the count becomes zero. */
 /****************************************************/
 void ReleaseLexeme(
-        Environment *theEnv,
+        const Environment&theEnv,
         CLIPSLexeme *theValue) {
     if (theValue->count < 0) {
         SystemError(theEnv, "SYMBOL", 3);
@@ -898,7 +898,7 @@ void ReleaseLexeme(
 /*   EphemeralFloatList if the count becomes zero. */
 /***************************************************/
 void RetainFloat(
-        Environment *theEnv,
+        const Environment&theEnv,
         CLIPSFloat *theValue) {
     theValue->count++;
 }
@@ -909,7 +909,7 @@ void RetainFloat(
 /*   EphemeralFloatList if the count becomes zero. */
 /***************************************************/
 void ReleaseFloat(
-        Environment *theEnv,
+        const Environment&theEnv,
         CLIPSFloat *theValue) {
     if (theValue->count <= 0) {
         SystemError(theEnv, "SYMBOL", 5);
@@ -935,7 +935,7 @@ void ReleaseFloat(
 /*   EphemeralIntegerList if the count becomes zero. */
 /*****************************************************/
 void RetainInteger(
-        Environment *theEnv,
+        const Environment&theEnv,
         CLIPSInteger *theValue) {
     theValue->count++;
 }
@@ -946,7 +946,7 @@ void RetainInteger(
 /*   EphemeralIntegerList if the count becomes zero. */
 /*****************************************************/
 void ReleaseInteger(
-        Environment *theEnv,
+        const Environment&theEnv,
         CLIPSInteger *theValue) {
     if (theValue->count <= 0) {
         SystemError(theEnv, "SYMBOL", 6);
@@ -972,7 +972,7 @@ void ReleaseInteger(
 /*   EphemeralBitMapList if the count becomes zero.           */
 /**************************************************************/
 void IncrementBitMapReferenceCount(
-        Environment *theEnv,
+        const Environment&theEnv,
         CLIPSBitMap *theValue) {
     theValue->count++;
 }
@@ -983,7 +983,7 @@ void IncrementBitMapReferenceCount(
 /*   EphemeralBitMapList if the count becomes zero.           */
 /**************************************************************/
 void DecrementBitMapReferenceCount(
-        Environment *theEnv,
+        const Environment&theEnv,
         CLIPSBitMap *theValue) {
     if (theValue->count < 0) {
         SystemError(theEnv, "SYMBOL", 7);
@@ -1014,7 +1014,7 @@ void DecrementBitMapReferenceCount(
 /*   EphemeralExternalAddressList if the count becomes zero. */
 /*************************************************************/
 void RetainExternalAddress(
-        Environment *theEnv,
+        const Environment&theEnv,
         CLIPSExternalAddress *theValue) {
     theValue->count++;
 }
@@ -1025,7 +1025,7 @@ void RetainExternalAddress(
 /*   EphemeralExternalAddressList if the count becomes zero. */
 /*************************************************************/
 void ReleaseExternalAddress(
-        Environment *theEnv,
+        const Environment&theEnv,
         CLIPSExternalAddress *theValue) {
     if (theValue->count < 0) {
         SystemError(theEnv, "SYMBOL", 9);
@@ -1056,7 +1056,7 @@ void ReleaseExternalAddress(
 /*   BitMapTable, or ExternalAddressTable.      */
 /************************************************/
 static void RemoveHashNode(
-        Environment *theEnv,
+        const Environment&theEnv,
         GENERIC_HN *theValue,
         GENERIC_HN **theTable,
         int size,
@@ -1124,7 +1124,7 @@ static void RemoveHashNode(
 /*   that no structure is using the data value.            */
 /***********************************************************/
 static void AddEphemeralHashNode(
-        Environment *theEnv,
+        const Environment&theEnv,
         GENERIC_HN *theHashNode,
         struct ephemeron **theEphemeralList,
         int hashNodeSize,
@@ -1166,7 +1166,7 @@ static void AddEphemeralHashNode(
 /*   from their respective storage tables.         */
 /***************************************************/
 void RemoveEphemeralAtoms(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     struct garbageFrame *theGarbageFrame;
 
     theGarbageFrame = UtilityData(theEnv)->CurrentGarbageFrame;
@@ -1190,7 +1190,7 @@ void RemoveEphemeralAtoms(
 /*   if it is not already marked.              */
 /***********************************************/
 void EphemerateValue(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *theValue) {
     CLIPSLexeme *theSymbol;
     CLIPSFloat *theFloat;
@@ -1255,7 +1255,7 @@ void EphemerateValue(
 /*   current evaluation depth.                                  */
 /****************************************************************/
 static void RemoveEphemeralHashNodes(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct ephemeron **theEphemeralList,
         GENERIC_HN **theTable,
         int hashNodeSize,
@@ -1315,7 +1315,7 @@ static void RemoveEphemeralHashNodes(
 /* GetSymbolTable: Returns a pointer to the SymbolTable. */
 /*********************************************************/
 CLIPSLexeme **GetSymbolTable(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     return (SymbolData(theEnv)->SymbolTable);
 }
 
@@ -1323,7 +1323,7 @@ CLIPSLexeme **GetSymbolTable(
 /* SetSymbolTable: Sets the value of the SymbolTable. */
 /******************************************************/
 void SetSymbolTable(
-        Environment *theEnv,
+        const Environment&theEnv,
         CLIPSLexeme **value) {
     SymbolData(theEnv)->SymbolTable = value;
 }
@@ -1332,7 +1332,7 @@ void SetSymbolTable(
 /* GetFloatTable: Returns a pointer to the FloatTable. */
 /*******************************************************/
 CLIPSFloat **GetFloatTable(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     return (SymbolData(theEnv)->FloatTable);
 }
 
@@ -1340,7 +1340,7 @@ CLIPSFloat **GetFloatTable(
 /* SetFloatTable: Sets the value of the FloatTable. */
 /****************************************************/
 void SetFloatTable(
-        Environment *theEnv,
+        const Environment&theEnv,
         CLIPSFloat **value) {
     SymbolData(theEnv)->FloatTable = value;
 }
@@ -1349,7 +1349,7 @@ void SetFloatTable(
 /* GetIntegerTable: Returns a pointer to the IntegerTable. */
 /***********************************************************/
 CLIPSInteger **GetIntegerTable(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     return (SymbolData(theEnv)->IntegerTable);
 }
 
@@ -1357,7 +1357,7 @@ CLIPSInteger **GetIntegerTable(
 /* SetIntegerTable: Sets the value of the IntegerTable. */
 /********************************************************/
 void SetIntegerTable(
-        Environment *theEnv,
+        const Environment&theEnv,
         CLIPSInteger **value) {
     SymbolData(theEnv)->IntegerTable = value;
 }
@@ -1366,7 +1366,7 @@ void SetIntegerTable(
 /* GetBitMapTable: Returns a pointer to the BitMapTable. */
 /*********************************************************/
 CLIPSBitMap **GetBitMapTable(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     return (SymbolData(theEnv)->BitMapTable);
 }
 
@@ -1374,7 +1374,7 @@ CLIPSBitMap **GetBitMapTable(
 /* SetBitMapTable: Sets the value of the BitMapTable. */
 /******************************************************/
 void SetBitMapTable(
-        Environment *theEnv,
+        const Environment&theEnv,
         CLIPSBitMap **value) {
     SymbolData(theEnv)->BitMapTable = value;
 }
@@ -1383,7 +1383,7 @@ void SetBitMapTable(
 /* GetExternalAddressTable: Returns a pointer to the ExternalAddressTable. */
 /***************************************************************************/
 CLIPSExternalAddress **GetExternalAddressTable(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     return (SymbolData(theEnv)->ExternalAddressTable);
 }
 
@@ -1391,7 +1391,7 @@ CLIPSExternalAddress **GetExternalAddressTable(
 /* SetExternalAddressTable: Sets the value of the ExternalAddressTable. */
 /************************************************************************/
 void SetExternalAddressTable(
-        Environment *theEnv,
+        const Environment&theEnv,
         CLIPSExternalAddress **value) {
     SymbolData(theEnv)->ExternalAddressTable = value;
 }
@@ -1402,7 +1402,7 @@ void SetExternalAddressTable(
 /*   and NegativeInfinity symbols.                    */
 /******************************************************/
 void RefreshSpecialSymbols(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     SymbolData(theEnv)->PositiveInfinity = FindSymbolHN(theEnv, POSITIVE_INFINITY_STRING, SYMBOL_BIT);
     SymbolData(theEnv)->NegativeInfinity = FindSymbolHN(theEnv, NEGATIVE_INFINITY_STRING, SYMBOL_BIT);
     SymbolData(theEnv)->Zero = FindLongHN(theEnv, 0L);
@@ -1415,7 +1415,7 @@ void RefreshSpecialSymbols(
 /*   found in some of the machine specific interfaces.     */
 /***********************************************************/
 struct symbolMatch *FindSymbolMatches(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *searchString,
         unsigned *numberOfMatches,
         size_t *commonPrefixLength) {
@@ -1442,7 +1442,7 @@ struct symbolMatch *FindSymbolMatches(
 /* ReturnSymbolMatches: Returns a set of symbol matches. */
 /*********************************************************/
 void ReturnSymbolMatches(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct symbolMatch *listOfMatches) {
     struct symbolMatch *temp;
 
@@ -1487,7 +1487,7 @@ bool BitStringHasBitsSet(
 /*   of the machine specific interfaces.                         */
 /*****************************************************************/
 CLIPSLexeme *GetNextSymbolMatch(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *searchString,
         size_t searchLength,
         CLIPSLexeme *prevSymbol,
@@ -1646,7 +1646,7 @@ static size_t CommonPrefixLength(
 /*   fifth entry in the  hash table.                            */
 /****************************************************************/
 void SetAtomicValueIndices(
-        Environment *theEnv,
+        const Environment&theEnv,
         bool setAll) {
     unsigned int count;
     unsigned int i;
@@ -1722,7 +1722,7 @@ void SetAtomicValueIndices(
 /*   effects of a call to the SetAtomicValueIndices function.          */
 /***********************************************************************/
 void RestoreAtomicValueBuckets(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     unsigned int i;
     CLIPSLexeme *symbolPtr, **symbolArray;
     CLIPSFloat *floatPtr, **floatArray;

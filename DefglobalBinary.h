@@ -59,8 +59,8 @@ struct defglobalBinaryData {
 
 #define DefglobalPointer(i) (&DefglobalBinaryData(theEnv)->DefglobalArray[i])
 
-void DefglobalBinarySetup(Environment *);
-void *BloadDefglobalModuleReference(Environment *, unsigned long);
+void DefglobalBinarySetup(const Environment&);
+void *BloadDefglobalModuleReference(const Environment&, unsigned long);
 
 #endif /* _H_globlbin */
 

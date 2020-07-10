@@ -58,14 +58,14 @@ struct rdriveinfo {
     struct rdriveinfo *next;
 };
 
-void NetworkRetract(Environment *, struct patternMatch *);
-void ReturnPartialMatch(Environment *, struct partialMatch *);
-void DestroyPartialMatch(Environment *, struct partialMatch *);
-void FlushGarbagePartialMatches(Environment *);
-void DeletePartialMatches(Environment *, struct partialMatch *);
-void PosEntryRetractBeta(Environment *, struct partialMatch *, struct partialMatch *, int);
-void PosEntryRetractAlpha(Environment *, struct partialMatch *, int);
-bool PartialMatchWillBeDeleted(Environment *, struct partialMatch *);
+void NetworkRetract(const Environment&, struct patternMatch *);
+void ReturnPartialMatch(const Environment&, struct partialMatch *);
+void DestroyPartialMatch(const Environment&, struct partialMatch *);
+void FlushGarbagePartialMatches(const Environment&);
+void DeletePartialMatches(const Environment&, struct partialMatch *);
+void PosEntryRetractBeta(const Environment&, struct partialMatch *, struct partialMatch *, int);
+void PosEntryRetractAlpha(const Environment&, struct partialMatch *, int);
+bool PartialMatchWillBeDeleted(const Environment&, struct partialMatch *);
 
 #endif /* _H_retract */
 

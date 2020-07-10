@@ -124,67 +124,67 @@ struct expressionData {
 /* Global Functions */
 /********************/
 
-void ReturnExpression(Environment *, Expression *);
-void ExpressionInstall(Environment *, Expression *);
-void ExpressionDeinstall(Environment *, Expression *);
-Expression *PackExpression(Environment *, Expression *);
-void ReturnPackedExpression(Environment *, Expression *);
-void InitExpressionData(Environment *);
-void InitExpressionPointers(Environment *);
-bool SetSequenceOperatorRecognition(Environment *, bool);
-bool GetSequenceOperatorRecognition(Environment *);
-Expression *AddHashedExpression(Environment *, Expression *);
-void RemoveHashedExpression(Environment *, Expression *);
+void ReturnExpression(const Environment&, Expression *);
+void ExpressionInstall(const Environment&, Expression *);
+void ExpressionDeinstall(const Environment&, Expression *);
+Expression *PackExpression(const Environment&, Expression *);
+void ReturnPackedExpression(const Environment&, Expression *);
+void InitExpressionData(const Environment&);
+void InitExpressionPointers(const Environment&);
+bool SetSequenceOperatorRecognition(const Environment&, bool);
+bool GetSequenceOperatorRecognition(const Environment&);
+Expression *AddHashedExpression(const Environment&, Expression *);
+void RemoveHashedExpression(const Environment&, Expression *);
 #if BLOAD_AND_BSAVE
-unsigned long HashedExpressionIndex(Environment *, Expression *);
+unsigned long HashedExpressionIndex(const Environment&, Expression *);
 #endif
 #define ExpressionPointer(i) ((expr *) (((i) == ULONG_MAX) ? nullptr : &ExpressionData(theEnv)->ExpressionArray[i]))
 #define HashedExpressionPointer(i) ExpressionPointer(i)
 
-void AllocateExpressions(Environment *);
-void RefreshExpressions(Environment *);
-void ClearBloadedExpressions(Environment *);
-void FindHashedExpressions(Environment *);
-void BsaveHashedExpressions(Environment *, FILE *);
-void BsaveConstructExpressions(Environment *, FILE *);
-void BsaveExpression(Environment *, struct expr *, FILE *);
+void AllocateExpressions(const Environment&);
+void RefreshExpressions(const Environment&);
+void ClearBloadedExpressions(const Environment&);
+void FindHashedExpressions(const Environment&);
+void BsaveHashedExpressions(const Environment&, FILE *);
+void BsaveConstructExpressions(const Environment&, FILE *);
+void BsaveExpression(const Environment&, struct expr *, FILE *);
 
 bool ConstantExpression(expr *);
-void PrintExpression(Environment *, const char *, struct expr *);
+void PrintExpression(const Environment&, const char *, struct expr *);
 unsigned long ExpressionSize(expr *);
 unsigned short CountArguments(expr *);
-struct expr *CopyExpression(Environment *, struct expr *);
+struct expr *CopyExpression(const Environment&, struct expr *);
 bool ExpressionContainsVariables(expr *, bool);
 bool IdenticalExpression(expr *, struct expr *);
-struct expr *GenConstant(Environment *, unsigned short, void *);
-bool CheckArgumentAgainstRestriction(Environment *, struct expr *, unsigned);
+struct expr *GenConstant(const Environment&, unsigned short, void *);
+bool CheckArgumentAgainstRestriction(const Environment&, struct expr *, unsigned);
 bool ConstantType(int);
-struct expr *CombineExpressions(Environment *, struct expr *, struct expr *);
+struct expr *CombineExpressions(const Environment&, struct expr *, struct expr *);
 struct expr *AppendExpressions(expr *, struct expr *);
-struct expr *NegateExpression(Environment *, struct expr *);
+struct expr *NegateExpression(const Environment&, struct expr *);
 enum FunctionArgumentsError{
     FAE_NO_ERROR = 0,
     FAE_COUNT_ERROR,
     FAE_TYPE_ERROR
 };
 
-struct expr *Function0Parse(Environment *, const char *);
-struct expr *Function1Parse(Environment *, const char *);
-struct expr *Function2Parse(Environment *, const char *, const char *);
-void PushRtnBrkContexts(Environment *);
-void PopRtnBrkContexts(Environment *);
-bool ReplaceSequenceExpansionOps(Environment *, struct expr *, struct expr *,
+struct expr *Function0Parse(const Environment&, const char *);
+struct expr *Function1Parse(const Environment&, const char *);
+struct expr *Function2Parse(const Environment&, const char *, const char *);
+void PushRtnBrkContexts(const Environment&);
+void PopRtnBrkContexts(const Environment&);
+bool ReplaceSequenceExpansionOps(const Environment&, struct expr *, struct expr *,
                                  void *, void *);
-struct expr *CollectArguments(Environment *, struct expr *, const char *);
-struct expr *ArgumentParse(Environment *, const char *, bool *);
-struct expr *ParseAtomOrExpression(Environment *, const char *, struct token *);
-Expression *ParseConstantArguments(Environment *, const char *, bool *);
-struct expr *GroupActions(Environment *, const char *, struct token *,
+struct expr *CollectArguments(const Environment&, struct expr *, const char *);
+struct expr *ArgumentParse(const Environment&, const char *, bool *);
+struct expr *ParseAtomOrExpression(const Environment&, const char *, struct token *);
+Expression *ParseConstantArguments(const Environment&, const char *, bool *);
+struct expr *GroupActions(const Environment&, const char *, struct token *,
                           bool, const char *, bool);
-struct expr *RemoveUnneededProgn(Environment *, struct expr *);
-void PopulateRestriction(Environment *, unsigned *, unsigned, const char *, unsigned int);
+struct expr *RemoveUnneededProgn(const Environment&, struct expr *);
+void PopulateRestriction(const Environment&, unsigned *, unsigned, const char *, unsigned int);
 
-FunctionArgumentsError CheckExpressionAgainstRestrictions(Environment *, struct expr *,
+FunctionArgumentsError CheckExpressionAgainstRestrictions(const Environment&, struct expr *,
                                                           struct functionDefinition *, const char *);
 
 bool RestrictionExists(const char *, int);

@@ -72,44 +72,44 @@ constexpr auto NAME_ID = 1;
 
 constexpr auto SLOT_NAME_NOT_FOUND = USHRT_MAX;
 
-void IncrementDefclassBusyCount(Environment *, Defclass *);
-void DecrementDefclassBusyCount(Environment *, Defclass *);
-bool InstancesPurge(Environment *, void *context = nullptr);
+void IncrementDefclassBusyCount(const Environment&, Defclass *);
+void DecrementDefclassBusyCount(const Environment&, Defclass *);
+bool InstancesPurge(const Environment&, void *context = nullptr);
 
-void InitializeClasses(Environment *);
+void InitializeClasses(const Environment&);
 SlotDescriptor *FindClassSlot(Defclass *, CLIPSLexeme *);
-void ClassExistError(Environment *, const char *, const char *);
-void DeleteClassLinks(Environment *, CLASS_LINK *);
-void PrintClassName(Environment *, const char *, Defclass *, bool, bool);
+void ClassExistError(const Environment&, const char *, const char *);
+void DeleteClassLinks(const Environment&, CLASS_LINK *);
+void PrintClassName(const Environment&, const char *, Defclass *, bool, bool);
 
 #if DEBUGGING_FUNCTIONS
-void PrintPackedClassLinks(Environment *, const char *, const char *, PACKED_CLASS_LINKS *);
+void PrintPackedClassLinks(const Environment&, const char *, const char *, PACKED_CLASS_LINKS *);
 #endif
 
-void PutClassInTable(Environment *, Defclass *);
-void RemoveClassFromTable(Environment *, Defclass *);
-void AddClassLink(Environment *, PACKED_CLASS_LINKS *, Defclass *, bool, unsigned int);
-void DeleteSubclassLink(Environment *, Defclass *, Defclass *);
-void DeleteSuperclassLink(Environment *, Defclass *, Defclass *);
-Defclass *NewClass(Environment *, CLIPSLexeme *);
-void DeletePackedClassLinks(Environment *, PACKED_CLASS_LINKS *, bool);
-void AssignClassID(Environment *, Defclass *);
-SLOT_NAME *AddSlotName(Environment *, CLIPSLexeme *, unsigned short, bool);
-void DeleteSlotName(Environment *, SLOT_NAME *);
-void RemoveDefclass(Environment *, Defclass *);
-void InstallClass(Environment *, Defclass *, bool);
-void DestroyDefclass(Environment *, Defclass *);
+void PutClassInTable(const Environment&, Defclass *);
+void RemoveClassFromTable(const Environment&, Defclass *);
+void AddClassLink(const Environment&, PACKED_CLASS_LINKS *, Defclass *, bool, unsigned int);
+void DeleteSubclassLink(const Environment&, Defclass *, Defclass *);
+void DeleteSuperclassLink(const Environment&, Defclass *, Defclass *);
+Defclass *NewClass(const Environment&, CLIPSLexeme *);
+void DeletePackedClassLinks(const Environment&, PACKED_CLASS_LINKS *, bool);
+void AssignClassID(const Environment&, Defclass *);
+SLOT_NAME *AddSlotName(const Environment&, CLIPSLexeme *, unsigned short, bool);
+void DeleteSlotName(const Environment&, SLOT_NAME *);
+void RemoveDefclass(const Environment&, Defclass *);
+void InstallClass(const Environment&, Defclass *, bool);
+void DestroyDefclass(const Environment&, Defclass *);
 
 bool IsClassBeingUsed(Defclass *);
-bool RemoveAllUserClasses(Environment *);
-bool DeleteClassUAG(Environment *, Defclass *);
+bool RemoveAllUserClasses(const Environment&);
+bool DeleteClassUAG(const Environment&, Defclass *);
 void MarkBitMapSubclasses(char *, Defclass *, int);
 
-unsigned short FindSlotNameID(Environment *, CLIPSLexeme *);
-CLIPSLexeme *FindIDSlotName(Environment *, unsigned short);
-SLOT_NAME *FindIDSlotNameHash(Environment *, unsigned short);
-int GetTraversalID(Environment *);
-void ReleaseTraversalID(Environment *);
+unsigned short FindSlotNameID(const Environment&, CLIPSLexeme *);
+CLIPSLexeme *FindIDSlotName(const Environment&, unsigned short);
+SLOT_NAME *FindIDSlotNameHash(const Environment&, unsigned short);
+int GetTraversalID(const Environment&);
+void ReleaseTraversalID(const Environment&);
 unsigned int HashClass(CLIPSLexeme *);
 
 constexpr auto DEFCLASS_DATA = 21;

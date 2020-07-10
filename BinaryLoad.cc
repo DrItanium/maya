@@ -72,20 +72,20 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static struct functionDefinition **ReadNeededFunctions(Environment *, unsigned long *, bool *);
-static struct functionDefinition *FastFindFunction(Environment *, const char *, struct functionDefinition *);
-static bool ClearBload(Environment *);
-static void ClearBloadCallback(Environment *, void *);
-static void AbortBload(Environment *);
-static bool BloadOutOfMemoryFunction(Environment *, size_t);
-static void DeallocateBloadData(Environment *);
+static struct functionDefinition **ReadNeededFunctions(const Environment&, unsigned long *, bool *);
+static struct functionDefinition *FastFindFunction(const Environment&, const char *, struct functionDefinition *);
+static bool ClearBload(const Environment&);
+static void ClearBloadCallback(const Environment&, void *);
+static void AbortBload(const Environment&);
+static bool BloadOutOfMemoryFunction(const Environment&, size_t);
+static void DeallocateBloadData(const Environment&);
 
 /**********************************************/
 /* InitializeBloadData: Allocates environment */
 /*    data for the bload command.             */
 /**********************************************/
 void InitializeBloadData(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     char sizeBuffer[20];
     sprintf(sizeBuffer, "%2zu%2zu%2zu%2zu%2zu", sizeof(void *), sizeof(double),
             sizeof(int), sizeof(long), sizeof(long long));
@@ -105,7 +105,7 @@ void InitializeBloadData(
 /*    data for the bload command.               */
 /************************************************/
 static void DeallocateBloadData(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     DeallocateVoidCallList(theEnv, BloadData(theEnv)->BeforeBloadFunctions);
     DeallocateVoidCallList(theEnv, BloadData(theEnv)->AfterBloadFunctions);
     DeallocateBoolCallList(theEnv, BloadData(theEnv)->ClearBloadReadyFunctions);
@@ -118,7 +118,7 @@ static void DeallocateBloadData(
 /*   for the bload command. */
 /****************************/
 bool Bload(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *fileName) {
     unsigned long numberOfFunctions;
     unsigned long space;
@@ -405,10 +405,10 @@ bool Bload(
                  for bloads of the objects
  ************************************************************/
 void BloadandRefresh(
-        Environment *theEnv,
+        const Environment&theEnv,
         unsigned long objcnt,
         size_t objsz,
-        void (*objupdate)(Environment *, void *, unsigned long)) {
+        void (*objupdate)(const Environment&, void *, unsigned long)) {
     unsigned long i, bi;
     char *buf;
     unsigned long objsmaxread, objsread;
@@ -450,7 +450,7 @@ void BloadandRefresh(
 /*   functions needed by the binary image.    */
 /**********************************************/
 static struct functionDefinition **ReadNeededFunctions(
-        Environment *theEnv,
+        const Environment&theEnv,
         unsigned long *numberOfFunctions,
         bool *error) {
     char *functionNames, *namePtr;
@@ -535,7 +535,7 @@ static struct functionDefinition **ReadNeededFunctions(
 /*   list for a specific function.       */
 /*****************************************/
 static struct functionDefinition *FastFindFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *functionName,
         struct functionDefinition *lastFunction) {
     struct functionDefinition *theList, *theFunction;
@@ -580,7 +580,7 @@ static struct functionDefinition *FastFindFunction(
 /*   command, otherwise returns false.    */
 /******************************************/
 bool Bloaded(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     return BloadData(theEnv)->BloadActive;
 }
 
@@ -589,7 +589,7 @@ bool Bloaded(
 /*   image from the KB environment.    */
 /***************************************/
 static void ClearBloadCallback(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *context) {
     ClearBload(theEnv);
 }
@@ -599,7 +599,7 @@ static void ClearBloadCallback(
 /*   from the KB environment.        */
 /*************************************/
 static bool ClearBload(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     struct BinaryItem *biPtr;
     struct boolCallFunctionItem *bfPtr;
     bool ready, error;
@@ -684,7 +684,7 @@ static bool ClearBload(
 /*   functions in event of failure.              */
 /*************************************************/
 static void AbortBload(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     struct voidCallFunctionItem *bfPtr;
 
     for (bfPtr = BloadData(theEnv)->AbortBloadFunctions;
@@ -698,7 +698,7 @@ static void AbortBload(
 /*   a binary load occurs.                  */
 /********************************************/
 void AddBeforeBloadFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name,
         VoidCallFunction *func,
         int priority,
@@ -713,7 +713,7 @@ void AddBeforeBloadFunction(
 /*   a binary load occurs.                 */
 /*******************************************/
 void AddAfterBloadFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name,
         VoidCallFunction *func,
         int priority,
@@ -728,7 +728,7 @@ void AddAfterBloadFunction(
 /*   a binary image can be cleared.               */
 /**************************************************/
 void AddClearBloadReadyFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name,
         BoolCallFunction *func,
         int priority,
@@ -744,7 +744,7 @@ void AddClearBloadReadyFunction(
 /*   has to be aborted.                      */
 /*********************************************/
 void AddAbortBloadFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name,
         VoidCallFunction *func,
         int priority,
@@ -767,7 +767,7 @@ void AddAbortBloadFunction(
   NOTES        : None
  *******************************************************/
 static bool BloadOutOfMemoryFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         size_t size) {
 #if MAC_XCD
 #pragma unused(size,theEnv)
@@ -781,7 +781,7 @@ static bool BloadOutOfMemoryFunction(
 /*   when a binary image is active.                  */
 /*****************************************************/
 void CannotLoadWithBloadMessage(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *constructName) {
     PrintErrorID(theEnv, "BLOAD", 1, true);
     WriteString(theEnv, STDERR, "Cannot load ");
@@ -796,7 +796,7 @@ void CannotLoadWithBloadMessage(
 /*   for the bload command.           */
 /**************************************/
 void BloadCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
 #if (BLOAD_AND_BSAVE)

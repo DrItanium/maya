@@ -48,8 +48,8 @@
 #include "Constraint.h"
 #include "Evaluation.h"
 
-void DeriveDefaultFromConstraints(Environment *, CONSTRAINT_RECORD *, UDFValue *, bool, bool);
-struct expr *ParseDefault(Environment *, const char *, bool, bool, bool, bool *, bool *, bool *);
+void DeriveDefaultFromConstraints(const Environment&, CONSTRAINT_RECORD *, UDFValue *, bool, bool);
+struct expr *ParseDefault(const Environment&, const char *, bool, bool, bool, bool *, bool *, bool *);
 
 #endif /* _H_default */
 

@@ -67,6 +67,7 @@ typedef struct activation Activation;
 #include "Defrule.h"
 #include "Symbol.h"
 #include "Match.h"
+#include "Environment.h"
 
 enum SalienceEvaluationType {
     WHEN_DEFINED,
@@ -163,38 +164,37 @@ public:
     void setStrategy(StrategyType value) noexcept { Strategy = value; }
 };
 
-#define AgendaData(theEnv) ((AgendaData *) GetEnvironmentData(theEnv,AGENDA_DATA))
-
+#define AgendaData(theEnv) (static_cast<AgendaData*>(getEnvironmentData(theEnv, AGENDA_DATA)))
 /****************************************/
 /* GLOBAL EXTERNAL FUNCTION DEFINITIONS */
 /****************************************/
 
-void AddActivation(Environment *, Defrule *, PartialMatch *);
-void ClearRuleFromAgenda(Environment *, Defrule *);
-Activation *GetNextActivation(Environment *, Activation *);
+void AddActivation(const Environment&, Defrule *, PartialMatch *);
+void ClearRuleFromAgenda(const Environment&, Defrule *);
+Activation *GetNextActivation(const Environment&, Activation *);
 const char *ActivationRuleName(Activation *);
-void GetActivationBasisPPForm(Environment *, char *, size_t, Activation *);
-bool MoveActivationToTop(Environment *, Activation *);
+void GetActivationBasisPPForm(const Environment&, char *, size_t, Activation *);
+bool MoveActivationToTop(const Environment&, Activation *);
 void DeleteActivation(Activation *);
-bool DetachActivation(Environment *, Activation *);
+bool DetachActivation(const Environment&, Activation *);
 void DeleteAllActivations(Defmodule *);
-void Agenda(Environment *, const char *, Defmodule *);
-void RemoveActivation(Environment *, Activation *, bool, bool);
-void RemoveAllActivations(Environment *);
-SalienceEvaluationType GetSalienceEvaluation(Environment *);
-SalienceEvaluationType SetSalienceEvaluation(Environment *, SalienceEvaluationType);
+void Agenda(const Environment&, const char *, Defmodule *);
+void RemoveActivation(const Environment&, Activation *, bool, bool);
+void RemoveAllActivations(const Environment&);
+SalienceEvaluationType GetSalienceEvaluation(const Environment&);
+SalienceEvaluationType SetSalienceEvaluation(const Environment&, SalienceEvaluationType);
 void RefreshAgenda(Defmodule *);
-void RefreshAllAgendas(Environment *);
+void RefreshAllAgendas(const Environment&);
 void ReorderAgenda(Defmodule *);
-void ReorderAllAgendas(Environment *);
-void InitializeAgenda(Environment *);
-void SetSalienceEvaluationCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void GetSalienceEvaluationCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void RefreshAgendaCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void RefreshCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
+void ReorderAllAgendas(const Environment&);
+void InitializeAgenda(const Environment&);
+void SetSalienceEvaluationCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void GetSalienceEvaluationCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void RefreshAgendaCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void RefreshCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 void Refresh(Defrule *);
 #if DEBUGGING_FUNCTIONS
-void AgendaCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
+void AgendaCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 #endif
 
 #endif

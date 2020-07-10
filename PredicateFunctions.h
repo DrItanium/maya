@@ -48,28 +48,28 @@
 
 #define _H_prdctfun
 
-void PredicateFunctionDefinitions(Environment *);
-void EqFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void NeqFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void StringpFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void SymbolpFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void LexemepFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void NumberpFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void FloatpFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void IntegerpFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void MultifieldpFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void ExternalAddresspFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void NotFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void AndFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void OrFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void LessThanOrEqualFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void GreaterThanOrEqualFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void LessThanFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void GreaterThanFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void NumericEqualFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void NumericNotEqualFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void OddpFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void EvenpFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
+void PredicateFunctionDefinitions(const Environment&);
+void EqFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void NeqFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void StringpFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SymbolpFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void LexemepFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void NumberpFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void FloatpFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void IntegerpFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void MultifieldpFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void ExternalAddresspFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void NotFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void AndFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void OrFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void LessThanOrEqualFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void GreaterThanOrEqualFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void LessThanFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void GreaterThanFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void NumericEqualFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void NumericNotEqualFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void OddpFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void EvenpFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 
 #endif /* _H_prdctfun */
 

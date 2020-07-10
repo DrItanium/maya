@@ -56,21 +56,21 @@ struct prettyPrintData {
 
 #define PrettyPrintData(theEnv) ((prettyPrintData *) GetEnvironmentData(theEnv,PRETTY_PRINT_DATA))
 
-void InitializePrettyPrintData(Environment *);
-void FlushPPBuffer(Environment *);
-void DestroyPPBuffer(Environment *);
-void SavePPBuffer(Environment *, const char *);
-void PPBackup(Environment *);
-char *CopyPPBuffer(Environment *);
-char *GetPPBuffer(Environment *);
-void PPCRAndIndent(Environment *);
-void IncrementIndentDepth(Environment *, size_t);
-void DecrementIndentDepth(Environment *, size_t);
-void SetIndentDepth(Environment *, size_t);
-void SetPPBufferStatus(Environment *, bool);
-bool GetPPBufferStatus(Environment *);
-bool SetPPBufferEnabled(Environment *, bool);
-bool GetPPBufferEnabled(Environment *);
+void InitializePrettyPrintData(const Environment&);
+void FlushPPBuffer(const Environment&);
+void DestroyPPBuffer(const Environment&);
+void SavePPBuffer(const Environment&, const char *);
+void PPBackup(const Environment&);
+char *CopyPPBuffer(const Environment&);
+char *GetPPBuffer(const Environment&);
+void PPCRAndIndent(const Environment&);
+void IncrementIndentDepth(const Environment&, size_t);
+void DecrementIndentDepth(const Environment&, size_t);
+void SetIndentDepth(const Environment&, size_t);
+void SetPPBufferStatus(const Environment&, bool);
+bool GetPPBufferStatus(const Environment&);
+bool SetPPBufferEnabled(const Environment&, bool);
+bool GetPPBufferEnabled(const Environment&);
 
 #endif
 

@@ -121,17 +121,17 @@ struct deftemplateData {
 
 #define DeftemplateData(theEnv) ((deftemplateData *) GetEnvironmentData(theEnv,DEFTEMPLATE_DATA))
 
-void InitializeDeftemplates(Environment *);
-Deftemplate *FindDeftemplate(Environment *, const char *);
-Deftemplate *FindDeftemplateInModule(Environment *, const char *);
-Deftemplate *GetNextDeftemplate(Environment *, Deftemplate *);
+void InitializeDeftemplates(const Environment&);
+Deftemplate *FindDeftemplate(const Environment&, const char *);
+Deftemplate *FindDeftemplateInModule(const Environment&, const char *);
+Deftemplate *GetNextDeftemplate(const Environment&, Deftemplate *);
 bool DeftemplateIsDeletable(Deftemplate *);
 Fact *GetNextFactInTemplate(Deftemplate *, Fact *);
-struct deftemplateModule *GetDeftemplateModuleItem(Environment *, Defmodule *);
-void ReturnSlots(Environment *, struct templateSlot *);
-void IncrementDeftemplateBusyCount(Environment *, Deftemplate *);
-void DecrementDeftemplateBusyCount(Environment *, Deftemplate *);
-void *CreateDeftemplateScopeMap(Environment *, Deftemplate *);
+struct deftemplateModule *GetDeftemplateModuleItem(const Environment&, Defmodule *);
+void ReturnSlots(const Environment&, struct templateSlot *);
+void IncrementDeftemplateBusyCount(const Environment&, Deftemplate *);
+void DecrementDeftemplateBusyCount(const Environment&, Deftemplate *);
+void *CreateDeftemplateScopeMap(const Environment&, Deftemplate *);
 const char *DeftemplateModule(Deftemplate *);
 const char *DeftemplateName(Deftemplate *);
 const char *DeftemplatePPForm(Deftemplate *);

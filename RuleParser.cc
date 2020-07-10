@@ -98,14 +98,14 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static struct expr *ParseRuleRHS(Environment *, const char *);
-static int ReplaceRHSVariable(Environment *, struct expr *, void *);
-static Defrule *ProcessRuleLHS(Environment *, struct lhsParseNode *, struct expr *, CLIPSLexeme *, bool *);
-static Defrule *CreateNewDisjunct(Environment *, CLIPSLexeme *, unsigned short, struct expr *,
+static struct expr *ParseRuleRHS(const Environment&, const char *);
+static int ReplaceRHSVariable(const Environment&, struct expr *, void *);
+static Defrule *ProcessRuleLHS(const Environment&, struct lhsParseNode *, struct expr *, CLIPSLexeme *, bool *);
+static Defrule *CreateNewDisjunct(const Environment&, CLIPSLexeme *, unsigned short, struct expr *,
                                   unsigned int, unsigned, struct joinNode *);
-static unsigned short RuleComplexity(Environment *, struct lhsParseNode *);
-static unsigned short ExpressionComplexity(Environment *, struct expr *);
-static int LogicalAnalysis(Environment *, struct lhsParseNode *);
+static unsigned short RuleComplexity(const Environment&, struct lhsParseNode *);
+static unsigned short ExpressionComplexity(const Environment&, struct expr *);
+static int LogicalAnalysis(const Environment&, struct lhsParseNode *);
 static void AddToDefruleList(Defrule *);
 
 /****************************************************/
@@ -114,7 +114,7 @@ static void AddToDefruleList(Defrule *);
 /*   the current environment.                       */
 /****************************************************/
 bool ParseDefrule(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *readSource) {
     CLIPSLexeme *ruleName;
     struct lhsParseNode *theLHS;
@@ -273,7 +273,7 @@ bool ParseDefrule(
 /* ProcessRuleLHS: Processes each of the disjuncts of a rule. */
 /**************************************************************/
 static Defrule *ProcessRuleLHS(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct lhsParseNode *theLHS,
         struct expr *actions,
         CLIPSLexeme *ruleName,
@@ -462,7 +462,7 @@ static Defrule *ProcessRuleLHS(
 /* CreateNewDisjunct: Creates and initializes a defrule data structure. */
 /************************************************************************/
 static Defrule *CreateNewDisjunct(
-        Environment *theEnv,
+        const Environment&theEnv,
         CLIPSLexeme *ruleName,
         unsigned short localVarCnt,
         struct expr *theActions,
@@ -541,7 +541,7 @@ static Defrule *CreateNewDisjunct(
 /*   duplicate commands.                                        */
 /****************************************************************/
 static int ReplaceRHSVariable(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct expr *list,
         void *VtheLHS) {
     struct lhsParseNode *theVariable;
@@ -592,7 +592,7 @@ static int ReplaceRHSVariable(
 /*   for parsing the RHS of a rule.                    */
 /*******************************************************/
 static struct expr *ParseRuleRHS(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *readSource) {
     struct expr *actions;
     struct token theToken;
@@ -638,7 +638,7 @@ static struct expr *ParseRuleRHS(
 /*   by the LEX and MEA conflict resolution strategies.     */
 /************************************************************/
 static unsigned short RuleComplexity(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct lhsParseNode *theLHS) {
     struct lhsParseNode *thePattern, *tempPattern;
     unsigned short complexity = 0;
@@ -667,7 +667,7 @@ static unsigned short RuleComplexity(
 /* ExpressionComplexity: Determines the complexity of a expression. */
 /********************************************************************/
 static unsigned short ExpressionComplexity(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct expr *exprPtr) {
     unsigned short complexity = 0;
 
@@ -702,7 +702,7 @@ static unsigned short ExpressionComplexity(
 /*   logical CE within the LHS of a rule.   */
 /********************************************/
 static int LogicalAnalysis(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct lhsParseNode *patternList) {
     bool firstLogical, logicalsFound = false;
     int logicalJoin = 1;
@@ -905,7 +905,7 @@ static void AddToDefruleList(
 /*   expressions generated from the analysis of the rule.   */
 /************************************************************/
 void DumpRuleAnalysis(
-  Environment *theEnv,
+  const Environment&theEnv,
   struct lhsParseNode *tempNode)
   {
    struct lhsParseNode *traceNode;

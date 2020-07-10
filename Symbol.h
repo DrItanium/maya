@@ -183,55 +183,55 @@ struct symbolData {
 
 #define SymbolData(theEnv) ((symbolData *) GetEnvironmentData(theEnv,SYMBOL_DATA))
 
-void InitializeAtomTables(Environment *, CLIPSLexeme **, CLIPSFloat **,
+void InitializeAtomTables(const Environment&, CLIPSLexeme **, CLIPSFloat **,
                           CLIPSInteger **, CLIPSBitMap **,
                           CLIPSExternalAddress **);
-CLIPSLexeme *AddSymbol(Environment *, const char *, unsigned short);
-CLIPSLexeme *FindSymbolHN(Environment *, const char *, unsigned short);
-CLIPSFloat *CreateFloat(Environment *, double);
-CLIPSInteger *CreateInteger(Environment *, long long);
-void *AddBitMap(Environment *, void *, unsigned short);
-CLIPSExternalAddress *CreateExternalAddress(Environment *, void *, unsigned short);
-CLIPSExternalAddress *CreateCExternalAddress(Environment *, void *);
-CLIPSInteger *FindLongHN(Environment *, long long);
+CLIPSLexeme *AddSymbol(const Environment&, const char *, unsigned short);
+CLIPSLexeme *FindSymbolHN(const Environment&, const char *, unsigned short);
+CLIPSFloat *CreateFloat(const Environment&, double);
+CLIPSInteger *CreateInteger(const Environment&, long long);
+void *AddBitMap(const Environment&, void *, unsigned short);
+CLIPSExternalAddress *CreateExternalAddress(const Environment&, void *, unsigned short);
+CLIPSExternalAddress *CreateCExternalAddress(const Environment&, void *);
+CLIPSInteger *FindLongHN(const Environment&, long long);
 size_t HashSymbol(const char *, size_t);
 size_t HashFloat(double, size_t);
 size_t HashInteger(long long, size_t);
 size_t HashBitMap(const char *, size_t, unsigned);
 size_t HashExternalAddress(void *, size_t);
-void RetainLexeme(Environment *, CLIPSLexeme *);
-void RetainFloat(Environment *, CLIPSFloat *);
-void RetainInteger(Environment *, CLIPSInteger *);
-void IncrementBitMapReferenceCount(Environment *, CLIPSBitMap *);
-void RetainExternalAddress(Environment *, CLIPSExternalAddress *);
-void ReleaseLexeme(Environment *, CLIPSLexeme *);
-void ReleaseFloat(Environment *, CLIPSFloat *);
-void ReleaseInteger(Environment *, CLIPSInteger *);
-void DecrementBitMapReferenceCount(Environment *, CLIPSBitMap *);
-void ReleaseExternalAddress(Environment *, CLIPSExternalAddress *);
-void RemoveEphemeralAtoms(Environment *);
-CLIPSLexeme **GetSymbolTable(Environment *);
-void SetSymbolTable(Environment *, CLIPSLexeme **);
-CLIPSFloat **GetFloatTable(Environment *);
-void SetFloatTable(Environment *, CLIPSFloat **);
-CLIPSInteger **GetIntegerTable(Environment *);
-void SetIntegerTable(Environment *, CLIPSInteger **);
-CLIPSBitMap **GetBitMapTable(Environment *);
-void SetBitMapTable(Environment *, CLIPSBitMap **);
-CLIPSExternalAddress **GetExternalAddressTable(Environment *);
-void SetExternalAddressTable(Environment *, CLIPSExternalAddress **);
-void RefreshSpecialSymbols(Environment *);
-struct symbolMatch *FindSymbolMatches(Environment *, const char *, unsigned *, size_t *);
-void ReturnSymbolMatches(Environment *, struct symbolMatch *);
-CLIPSLexeme *GetNextSymbolMatch(Environment *, const char *, size_t, CLIPSLexeme *, bool, size_t *);
+void RetainLexeme(const Environment&, CLIPSLexeme *);
+void RetainFloat(const Environment&, CLIPSFloat *);
+void RetainInteger(const Environment&, CLIPSInteger *);
+void IncrementBitMapReferenceCount(const Environment&, CLIPSBitMap *);
+void RetainExternalAddress(const Environment&, CLIPSExternalAddress *);
+void ReleaseLexeme(const Environment&, CLIPSLexeme *);
+void ReleaseFloat(const Environment&, CLIPSFloat *);
+void ReleaseInteger(const Environment&, CLIPSInteger *);
+void DecrementBitMapReferenceCount(const Environment&, CLIPSBitMap *);
+void ReleaseExternalAddress(const Environment&, CLIPSExternalAddress *);
+void RemoveEphemeralAtoms(const Environment&);
+CLIPSLexeme **GetSymbolTable(const Environment&);
+void SetSymbolTable(const Environment&, CLIPSLexeme **);
+CLIPSFloat **GetFloatTable(const Environment&);
+void SetFloatTable(const Environment&, CLIPSFloat **);
+CLIPSInteger **GetIntegerTable(const Environment&);
+void SetIntegerTable(const Environment&, CLIPSInteger **);
+CLIPSBitMap **GetBitMapTable(const Environment&);
+void SetBitMapTable(const Environment&, CLIPSBitMap **);
+CLIPSExternalAddress **GetExternalAddressTable(const Environment&);
+void SetExternalAddressTable(const Environment&, CLIPSExternalAddress **);
+void RefreshSpecialSymbols(const Environment&);
+struct symbolMatch *FindSymbolMatches(const Environment&, const char *, unsigned *, size_t *);
+void ReturnSymbolMatches(const Environment&, struct symbolMatch *);
+CLIPSLexeme *GetNextSymbolMatch(const Environment&, const char *, size_t, CLIPSLexeme *, bool, size_t *);
 void ClearBitString(void *, size_t);
-void SetAtomicValueIndices(Environment *, bool);
-void RestoreAtomicValueBuckets(Environment *);
-void EphemerateValue(Environment *, void *);
-CLIPSLexeme *CreateSymbol(Environment *, const char *);
-CLIPSLexeme *CreateString(Environment *, const char *);
-CLIPSLexeme *CreateInstanceName(Environment *, const char *);
-CLIPSLexeme *CreateBoolean(Environment *, bool);
+void SetAtomicValueIndices(const Environment&, bool);
+void RestoreAtomicValueBuckets(const Environment&);
+void EphemerateValue(const Environment&, void *);
+CLIPSLexeme *CreateSymbol(const Environment&, const char *);
+CLIPSLexeme *CreateString(const Environment&, const char *);
+CLIPSLexeme *CreateInstanceName(const Environment&, const char *);
+CLIPSLexeme *CreateBoolean(const Environment&, bool);
 bool BitStringHasBitsSet(void *, unsigned);
 
 #define BitMapPointer(i) ((CLIPSBitMap *) (SymbolData(theEnv)->BitMapArray[i]))
@@ -240,16 +240,16 @@ bool BitStringHasBitsSet(void *, unsigned);
 #define IntegerPointer(i) ((CLIPSInteger *) (SymbolData(theEnv)->IntegerArray[i]))
 
 void MarkNeededAtomicValues(Environment);
-void WriteNeededAtomicValues(Environment *, FILE *);
-void ReadNeededAtomicValues(Environment *);
-void InitAtomicValueNeededFlags(Environment *);
-void FreeAtomicValueStorage(Environment *);
-void WriteNeededSymbols(Environment *, FILE *);
-void WriteNeededFloats(Environment *, FILE *);
-void WriteNeededIntegers(Environment *, FILE *);
-void ReadNeededSymbols(Environment *);
-void ReadNeededFloats(Environment *);
-void ReadNeededIntegers(Environment *);
+void WriteNeededAtomicValues(const Environment&, FILE *);
+void ReadNeededAtomicValues(const Environment&);
+void InitAtomicValueNeededFlags(const Environment&);
+void FreeAtomicValueStorage(const Environment&);
+void WriteNeededSymbols(const Environment&, FILE *);
+void WriteNeededFloats(const Environment&, FILE *);
+void WriteNeededIntegers(const Environment&, FILE *);
+void ReadNeededSymbols(const Environment&);
+void ReadNeededFloats(const Environment&);
+void ReadNeededIntegers(const Environment&);
 #endif /* _H_symbol */
 
 

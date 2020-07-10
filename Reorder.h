@@ -147,16 +147,16 @@ struct lhsParseNode {
     struct lhsParseNode *bottom;
 };
 
-struct lhsParseNode *ReorderPatterns(Environment *, struct lhsParseNode *, bool *);
-struct lhsParseNode *CopyLHSParseNodes(Environment *, struct lhsParseNode *);
-void CopyLHSParseNode(Environment *, struct lhsParseNode *, struct lhsParseNode *, bool);
-struct lhsParseNode *GetLHSParseNode(Environment *);
-void ReturnLHSParseNodes(Environment *, struct lhsParseNode *);
-struct lhsParseNode *ExpressionToLHSParseNodes(Environment *, struct expr *);
-struct expr *LHSParseNodesToExpression(Environment *, struct lhsParseNode *);
-void AddInitialPatterns(Environment *, struct lhsParseNode *);
+struct lhsParseNode *ReorderPatterns(const Environment&, struct lhsParseNode *, bool *);
+struct lhsParseNode *CopyLHSParseNodes(const Environment&, struct lhsParseNode *);
+void CopyLHSParseNode(const Environment&, struct lhsParseNode *, struct lhsParseNode *, bool);
+struct lhsParseNode *GetLHSParseNode(const Environment&);
+void ReturnLHSParseNodes(const Environment&, struct lhsParseNode *);
+struct lhsParseNode *ExpressionToLHSParseNodes(const Environment&, struct expr *);
+struct expr *LHSParseNodesToExpression(const Environment&, struct lhsParseNode *);
+void AddInitialPatterns(const Environment&, struct lhsParseNode *);
 bool IsExistsSubjoin(lhsParseNode *, int);
-struct lhsParseNode *CombineLHSParseNodes(Environment *, struct lhsParseNode *, struct lhsParseNode *);
+struct lhsParseNode *CombineLHSParseNodes(const Environment&, struct lhsParseNode *, struct lhsParseNode *);
 bool ConstantNode(lhsParseNode *);
 unsigned short NodeTypeToType(lhsParseNode *);
 ParseNodeType TypeToNodeType(unsigned short);

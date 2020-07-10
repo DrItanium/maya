@@ -77,19 +77,19 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void MarkNetworkForIncrementalReset(Environment *, Defrule *, bool);
-static void MarkJoinsForIncrementalReset(Environment *, struct joinNode *, bool);
-static void CheckForPrimableJoins(Environment *, Defrule *, struct joinNode *);
-static void PrimeJoinFromLeftMemory(Environment *, struct joinNode *);
-static void PrimeJoinFromRightMemory(Environment *, struct joinNode *);
-static void MarkPatternForIncrementalReset(Environment *, unsigned short,
+static void MarkNetworkForIncrementalReset(const Environment&, Defrule *, bool);
+static void MarkJoinsForIncrementalReset(const Environment&, struct joinNode *, bool);
+static void CheckForPrimableJoins(const Environment&, Defrule *, struct joinNode *);
+static void PrimeJoinFromLeftMemory(const Environment&, struct joinNode *);
+static void PrimeJoinFromRightMemory(const Environment&, struct joinNode *);
+static void MarkPatternForIncrementalReset(const Environment&, unsigned short,
                                            struct patternNodeHeader *, bool);
 
 /**************************************************************/
 /* IncrementalReset: Incrementally resets the specified rule. */
 /**************************************************************/
 void IncrementalReset(
-        Environment *theEnv,
+        const Environment&theEnv,
         Defrule *tempRule) {
     Defrule *tempPtr;
     struct patternParser *theParser;
@@ -148,7 +148,7 @@ void IncrementalReset(
 /*   incremental reset.                                               */
 /**********************************************************************/
 static void MarkNetworkForIncrementalReset(
-        Environment *theEnv,
+        const Environment&theEnv,
         Defrule *tempRule,
         bool value) {
     /*============================================*/
@@ -166,7 +166,7 @@ static void MarkNetworkForIncrementalReset(
 /*   incremental reset.                                               */
 /**********************************************************************/
 static void MarkJoinsForIncrementalReset(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct joinNode *joinPtr,
         bool value) {
     struct patternNodeHeader *patternPtr;
@@ -208,7 +208,7 @@ static void MarkJoinsForIncrementalReset(
 /*   PrimeJoin is used to update joins which meet these criteria.              */
 /*******************************************************************************/
 static void CheckForPrimableJoins(
-        Environment *theEnv,
+        const Environment&theEnv,
         Defrule *tempRule,
         struct joinNode *joinPtr) {
     /*========================================*/
@@ -259,7 +259,7 @@ static void CheckForPrimableJoins(
 /*   entry pattern node has not been marked for initialization.             */
 /****************************************************************************/
 static void PrimeJoinFromLeftMemory(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct joinNode *joinPtr) {
     struct partialMatch *theList, *linker;
     struct alphaMemoryHash *listOfHashNodes;
@@ -356,7 +356,7 @@ static void PrimeJoinFromLeftMemory(
 /*   entry pattern node has not been marked for initialization.             */
 /****************************************************************************/
 static void PrimeJoinFromRightMemory(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct joinNode *joinPtr) {
     struct partialMatch *theList, *linker;
     unsigned long b;
@@ -442,7 +442,7 @@ static void PrimeJoinFromRightMemory(
 /*   nodes both before and after an incremental reset.               */
 /*********************************************************************/
 static void MarkPatternForIncrementalReset(
-        Environment *theEnv,
+        const Environment&theEnv,
         unsigned short rhsType,
         struct patternNodeHeader *theHeader,
         bool value) {

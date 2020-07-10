@@ -83,10 +83,10 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static UDFValue *EvaluateSlotOverrides(Environment *, Expression *, unsigned short *, bool *);
-static void DeleteSlotOverrideEvaluations(Environment *, UDFValue *, unsigned short);
-static void ModifyMsgHandlerSupport(Environment *, UDFValue *, bool);
-static void DuplicateMsgHandlerSupport(Environment *, UDFValue *, bool);
+static UDFValue *EvaluateSlotOverrides(const Environment&, Expression *, unsigned short *, bool *);
+static void DeleteSlotOverrideEvaluations(const Environment&, UDFValue *, unsigned short);
+static void ModifyMsgHandlerSupport(const Environment&, UDFValue *, bool);
+static void DuplicateMsgHandlerSupport(const Environment&, UDFValue *, bool);
 
 /* =========================================
    *****************************************
@@ -105,7 +105,7 @@ static void DuplicateMsgHandlerSupport(Environment *, UDFValue *, bool);
   NOTES        : None
  ***************************************************/
 void SetupInstanceModDupCommands(
-        Environment *theEnv) {
+        const Environment&theEnv) {
 
     AddUDF(theEnv, "modify-instance", "*", 0, UNBOUNDED, nullptr, InactiveModifyInstance);
     AddUDF(theEnv, "active-modify-instance", "*", 0, UNBOUNDED, nullptr, ModifyInstance);
@@ -149,7 +149,7 @@ void SetupInstanceModDupCommands(
                  (modify-instance <instance> <slot-override>*)
  *************************************************************/
 void ModifyInstance(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Instance *ins;
@@ -216,7 +216,7 @@ void ModifyInstance(
                     <slot-override>*)
  *************************************************************/
 void MsgModifyInstance(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Instance *ins;
@@ -282,7 +282,7 @@ void MsgModifyInstance(
                    [to <instance-name>] <slot-override>*)
  *************************************************************/
 void DuplicateInstance(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Instance *ins;
@@ -358,7 +358,7 @@ void DuplicateInstance(
                    [to <instance-name>] <slot-override>*)
  *************************************************************/
 void MsgDuplicateInstance(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Instance *ins;
@@ -435,7 +435,7 @@ void MsgDuplicateInstance(
                    <slot-override>*)
  **************************************************************/
 void InactiveModifyInstance(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     bool ov;
@@ -458,7 +458,7 @@ void InactiveModifyInstance(
                    <slot-override>*)
  **************************************************************/
 void InactiveMsgModifyInstance(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     bool ov;
@@ -481,7 +481,7 @@ void InactiveMsgModifyInstance(
                    <slot-override>*)
  *******************************************************************/
 void InactiveDuplicateInstance(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     bool ov;
@@ -505,7 +505,7 @@ void InactiveDuplicateInstance(
                    <slot-override>*)
  **************************************************************/
 void InactiveMsgDuplicateInstance(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     bool ov;
@@ -531,7 +531,7 @@ void InactiveMsgDuplicateInstance(
   NOTES        : None
  *****************************************************/
 void DirectDuplicateMsgHandler(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     DuplicateMsgHandlerSupport(theEnv, returnValue, false);
@@ -551,7 +551,7 @@ void DirectDuplicateMsgHandler(
   NOTES        : None
  *****************************************************/
 void MsgDuplicateMsgHandler(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     DuplicateMsgHandlerSupport(theEnv, returnValue, true);
@@ -572,7 +572,7 @@ void MsgDuplicateMsgHandler(
   NOTES        : None
  ***************************************************/
 void DirectModifyMsgHandler(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     ModifyMsgHandlerSupport(theEnv, returnValue, false);
@@ -592,7 +592,7 @@ void DirectModifyMsgHandler(
   NOTES        : None
  ***************************************************/
 void MsgModifyMsgHandler(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     ModifyMsgHandlerSupport(theEnv, returnValue, true);
@@ -627,7 +627,7 @@ void MsgModifyMsgHandler(
                  references to an outer frame
  ***********************************************************/
 static UDFValue *EvaluateSlotOverrides(
-        Environment *theEnv,
+        const Environment&theEnv,
         Expression *ovExprs,
         unsigned short *ovCnt,
         bool *error) {
@@ -695,7 +695,7 @@ static UDFValue *EvaluateSlotOverrides(
   NOTES        : None
  **********************************************************/
 static void DeleteSlotOverrideEvaluations(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFValue *ovEvals,
         unsigned short ovCnt) {
     if (ovEvals != nullptr)
@@ -717,7 +717,7 @@ static void DeleteSlotOverrideEvaluations(
   NOTES        : None
  **********************************************************/
 static void ModifyMsgHandlerSupport(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFValue *returnValue,
         bool msgpass) {
     UDFValue *slotOverrides, *newval, temp, junk;
@@ -804,7 +804,7 @@ static void ModifyMsgHandlerSupport(
   NOTES        : None
  *************************************************************/
 static void DuplicateMsgHandlerSupport(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFValue *returnValue,
         bool msgpass) {
     Instance *srcins, *dstins;

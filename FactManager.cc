@@ -146,11 +146,11 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void ResetFacts(Environment *, void *);
-static bool ClearFactsReady(Environment *, void *);
-static void RemoveGarbageFacts(Environment *, void *);
-static void DeallocateFactData(Environment *);
-static bool RetractCallback(Fact *, Environment *);
+static void ResetFacts(const Environment&, void *);
+static bool ClearFactsReady(const Environment&, void *);
+static void RemoveGarbageFacts(const Environment&, void *);
+static void DeallocateFactData(const Environment&);
+static bool RetractCallback(Fact *, const Environment&);
 
 /**************************************************************/
 /* InitializeFacts: Initializes the fact data representation. */
@@ -158,23 +158,23 @@ static bool RetractCallback(Fact *, Environment *);
 /*   deftemplate constructs are available.                    */
 /**************************************************************/
 void InitializeFacts(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     struct patternEntityRecord factInfo =
             {{"FACT_ADDRESS_TYPE", FACT_ADDRESS_TYPE, 1, 0, 0,
               (EntityPrintFunction *) PrintFactIdentifier,
               (EntityPrintFunction *) PrintFactIdentifierInLongForm,
-              (bool (*)(void *, Environment *)) RetractCallback,
+              (bool (*)(void *, const Environment&)) RetractCallback,
               nullptr,
               (void *(*)(void *, void *)) GetNextFact,
               (EntityBusyCountFunction *) DecrementFactCallback,
               (EntityBusyCountFunction *) IncrementFactCallback,
               nullptr, nullptr, nullptr, nullptr, nullptr
              },
-             (void (*)(Environment *, void *)) DecrementFactBasisCount,
-             (void (*)(Environment *, void *)) IncrementFactBasisCount,
-             (void (*)(Environment *, void *)) MatchFactFunction,
+             (void (*)(const Environment&, void *)) DecrementFactBasisCount,
+             (void (*)(const Environment&, void *)) IncrementFactBasisCount,
+             (void (*)(const Environment&, void *)) MatchFactFunction,
              nullptr,
-             (bool (*)(Environment *, void *)) FactIsDeleted
+             (bool (*)(const Environment&, void *)) FactIsDeleted
             };
 
     Fact dummyFact = {{{{FACT_ADDRESS_TYPE}, nullptr, nullptr, 0, 0L}},
@@ -259,7 +259,7 @@ void InitializeFacts(
 /*   environment data for facts.   */
 /***********************************/
 static void DeallocateFactData(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     struct factHashEntry *tmpFHEPtr, *nextFHEPtr;
     Fact *tmpFactPtr, *nextFactPtr;
     unsigned long i;
@@ -312,7 +312,7 @@ static void DeallocateFactData(
 /*   fact preceded by its fact identifier.    */
 /**********************************************/
 void PrintFactWithIdentifier(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         Fact *factPtr,
         const char *changeMap) {
@@ -327,7 +327,7 @@ void PrintFactWithIdentifier(
 /* PrintFactIdentifier: Displays a fact identifier. */
 /****************************************************/
 void PrintFactIdentifier(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         Fact *factPtr) {
     char printSpace[20];
@@ -341,7 +341,7 @@ void PrintFactIdentifier(
 /*   fact identifier in a longer format.    */
 /********************************************/
 void PrintFactIdentifierInLongForm(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         Fact *factPtr) {
     if (PrintUtilityData(theEnv)->AddressesToStrings) WriteString(theEnv, logicalName, "\"");
@@ -359,7 +359,7 @@ void PrintFactIdentifierInLongForm(
 /*   partial match busy count of a fact    */
 /*******************************************/
 void DecrementFactBasisCount(
-        Environment *theEnv,
+        const Environment&theEnv,
         Fact *factPtr) {
     Multifield *theSegment;
     size_t i;
@@ -384,7 +384,7 @@ void DecrementFactBasisCount(
 /*   partial match busy count of a fact.   */
 /*******************************************/
 void IncrementFactBasisCount(
-        Environment *theEnv,
+        const Environment&theEnv,
         Fact *factPtr) {
     Multifield *theSegment;
     size_t i;
@@ -412,7 +412,7 @@ void IncrementFactBasisCount(
 /* FactIsDeleted: */
 /******************/
 bool FactIsDeleted(
-        Environment *theEnv,
+        const Environment&theEnv,
         Fact *theFact) {
 #if MAC_XCD
 #pragma unused(theEnv)
@@ -427,7 +427,7 @@ bool FactIsDeleted(
 /*   all of the fact's slots or fields.           */
 /**************************************************/
 void PrintFact(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         Fact *factPtr,
         bool separateLines,
@@ -468,7 +468,7 @@ void PrintFact(
 /*   the appropriate fact pattern network.   */
 /*********************************************/
 void MatchFactFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         Fact *theFact) {
     FactPatternMatch(theEnv, theFact, theFact->whichDeftemplate->patternNetwork, 0, 0, nullptr, nullptr);
 }
@@ -477,7 +477,7 @@ void MatchFactFunction(
 /* RetractDriver: Driver routine for Retract. */
 /**********************************************/
 RetractError RetractDriver(
-        Environment *theEnv,
+        const Environment&theEnv,
         Fact *theFact,
         bool modifyOperation,
         char *changeMap) {
@@ -667,7 +667,7 @@ RetractError RetractDriver(
 /*******************/
 static bool RetractCallback(
         Fact *theFact,
-        Environment *theEnv) {
+        const Environment&theEnv) {
     return (RetractDriver(theEnv, theFact, false, nullptr) == RE_NO_ERROR);
 }
 
@@ -678,13 +678,11 @@ RetractError Retract(
         Fact *theFact) {
     GCBlock gcb;
     RetractError rv;
-    Environment *theEnv;
-
     if (theFact == nullptr) { return RE_nullptr_POINTER_ERROR; }
 
     if (theFact->garbage) { return RE_NO_ERROR; }
 
-    theEnv = theFact->whichDeftemplate->header.env;
+    auto theEnv = theFact->whichDeftemplate->header.env;
 
     /*=====================================*/
     /* If embedded, clear the error flags. */
@@ -707,7 +705,7 @@ RetractError Retract(
 /*   and the facts may be in use in other data structures.         */
 /*******************************************************************/
 static void RemoveGarbageFacts(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *context) {
     Fact *factPtr, *nextPtr, *lastPtr = nullptr;
 
@@ -748,7 +746,7 @@ Fact *AssertDriver(
     CLIPSValue *theField;
     Fact *duplicate;
     struct callFunctionItemWithArg *theAssertFunction;
-    Environment *theEnv = theFact->whichDeftemplate->header.env;
+    const Environment&theEnv = theFact->whichDeftemplate->header.env;
 
     FactData(theEnv)->assertError = AE_NO_ERROR;
 
@@ -973,7 +971,7 @@ Fact *Assert(
 /* GetAssertStringError: */
 /*************************/
 AssertStringError GetAssertStringError(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     return FactData(theEnv)->assertStringError;
 }
 
@@ -982,7 +980,7 @@ AssertStringError GetAssertStringError(
 /*   fact-list and removes each fact. */
 /**************************************/
 RetractError RetractAllFacts(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     RetractError rv;
 
     while (FactData(theEnv)->FactList != nullptr) {
@@ -1000,7 +998,7 @@ Fact *CreateFact(
         Deftemplate *theDeftemplate) {
     Fact *newFact;
     unsigned short i;
-    Environment *theEnv = theDeftemplate->header.env;
+    const Environment&theEnv = theDeftemplate->header.env;
 
     /*=================================*/
     /* A deftemplate must be specified */
@@ -1048,7 +1046,7 @@ GetSlotError GetFactSlot(
         CLIPSValue *theValue) {
     Deftemplate *theDeftemplate;
     unsigned short whichSlot;
-    Environment *theEnv = theFact->whichDeftemplate->header.env;
+    const Environment&theEnv = theFact->whichDeftemplate->header.env;
 
     if (theFact == nullptr) {
         return GSE_nullptr_POINTER_ERROR;
@@ -1108,7 +1106,7 @@ bool PutFactSlot(
     Deftemplate *theDeftemplate;
     struct templateSlot *theSlot;
     unsigned short whichSlot;
-    Environment *theEnv = theFact->whichDeftemplate->header.env;
+    const Environment&theEnv = theFact->whichDeftemplate->header.env;
 
     /*========================================*/
     /* This function cannot be used on a fact */
@@ -1190,7 +1188,7 @@ bool AssignFactSlotDefaults(
     struct templateSlot *slotPtr;
     unsigned short i;
     UDFValue theResult;
-    Environment *theEnv = theFact->whichDeftemplate->header.env;
+    const Environment&theEnv = theFact->whichDeftemplate->header.env;
 
     /*========================================*/
     /* This function cannot be used on a fact */
@@ -1249,7 +1247,7 @@ bool AssignFactSlotDefaults(
 /*   for the specified slot of a deftemplate.           */
 /********************************************************/
 bool DeftemplateSlotDefault(
-        Environment *theEnv,
+        const Environment&theEnv,
         Deftemplate *theDeftemplate,
         struct templateSlot *slotPtr,
         UDFValue *theResult,
@@ -1318,7 +1316,7 @@ bool DeftemplateSlotDefault(
 /*   another. Both facts must have the same relation name.     */
 /***************************************************************/
 bool CopyFactSlotValues(
-        Environment *theEnv,
+        const Environment&theEnv,
         Fact *theDestFact,
         Fact *theSourceFact) {
     Deftemplate *theDeftemplate;
@@ -1362,7 +1360,7 @@ bool CopyFactSlotValues(
 /*   structure based on the number of slots. */
 /*********************************************/
 Fact *CreateFactBySize(
-        Environment *theEnv,
+        const Environment&theEnv,
         size_t size) {
     Fact *theFact;
     size_t newSize;
@@ -1397,7 +1395,7 @@ Fact *CreateFactBySize(
 /*   to the pool of free memory.             */
 /*********************************************/
 void ReturnFact(
-        Environment *theEnv,
+        const Environment&theEnv,
         Fact *theFact) {
     Multifield *theSegment, *subSegment;
     size_t newSize, i;
@@ -1425,7 +1423,7 @@ void ReturnFact(
 /*   data value busy counts associated with the fact.        */
 /*************************************************************/
 void FactInstall(
-        Environment *theEnv,
+        const Environment&theEnv,
         Fact *newFact) {
     FactData(theEnv)->NumberOfFacts++;
     newFact->whichDeftemplate->busyCount++;
@@ -1437,7 +1435,7 @@ void FactInstall(
 /*   data value busy counts associated with the fact.          */
 /***************************************************************/
 void FactDeinstall(
-        Environment *theEnv,
+        const Environment&theEnv,
         Fact *newFact) {
     FactData(theEnv)->NumberOfFacts--;
     newFact->whichDeftemplate->busyCount--;
@@ -1449,7 +1447,7 @@ void FactDeinstall(
 /*   number of references to a specified fact. */
 /***********************************************/
 void IncrementFactCallback(
-        Environment *theEnv,
+        const Environment&theEnv,
         Fact *factPtr) {
 #if MAC_XCD
 #pragma unused(theEnv)
@@ -1464,7 +1462,7 @@ void IncrementFactCallback(
 /*   number of references to a specified fact. */
 /***********************************************/
 void DecrementFactCallback(
-        Environment *theEnv,
+        const Environment&theEnv,
         Fact *factPtr) {
 #if MAC_XCD
 #pragma unused(theEnv)
@@ -1502,7 +1500,7 @@ void ReleaseFact(
 /*   next fact following the fact passed as an argument. */
 /*********************************************************/
 Fact *GetNextFact(
-        Environment *theEnv,
+        const Environment&theEnv,
         Fact *factPtr) {
     if (factPtr == nullptr) { return FactData(theEnv)->FactList; }
 
@@ -1518,7 +1516,7 @@ Fact *GetNextFact(
 /*   facts that are out of scope.                 */
 /**************************************************/
 Fact *GetNextFactInScope(
-        Environment *theEnv,
+        const Environment&theEnv,
         Fact *theFact) {
     /*=======================================================*/
     /* If fact passed as an argument is a nullptr pointer, then */
@@ -1576,7 +1574,7 @@ void FactPPForm(
         Fact *theFact,
         StringBuilder *theSB,
         bool ignoreDefaults) {
-    Environment *theEnv = theFact->whichDeftemplate->header.env;
+    const Environment&theEnv = theFact->whichDeftemplate->header.env;
 
     OpenStringBuilderDestination(theEnv, "FactPPForm", theSB);
     PrintFact(theEnv, "FactPPForm", theFact, true, ignoreDefaults, nullptr);
@@ -1597,7 +1595,7 @@ long long FactIndex(
 /*   for the assert-string function. */
 /*************************************/
 Fact *AssertString(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *theString) {
     Fact *theFact, *rv;
     GCBlock gcb;
@@ -1657,7 +1655,7 @@ Fact *AssertString(
 /*   whether a change to the fact-list has been made. */
 /******************************************************/
 bool GetFactListChanged(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     return (FactData(theEnv)->ChangeToFactList);
 }
 
@@ -1666,7 +1664,7 @@ bool GetFactListChanged(
 /*   a change to the fact-list has been made.           */
 /********************************************************/
 void SetFactListChanged(
-        Environment *theEnv,
+        const Environment&theEnv,
         bool value) {
     FactData(theEnv)->ChangeToFactList = value;
 }
@@ -1676,7 +1674,7 @@ void SetFactListChanged(
 /* of facts in the fact-list.           */
 /****************************************/
 unsigned long GetNumberOfFacts(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     return (FactData(theEnv)->NumberOfFacts);
 }
 
@@ -1685,7 +1683,7 @@ unsigned long GetNumberOfFacts(
 /*   fact index to zero and removes all facts.             */
 /***********************************************************/
 static void ResetFacts(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *context) {
     /*====================================*/
     /* Initialize the fact index to zero. */
@@ -1706,7 +1704,7 @@ static void ResetFacts(
 /*   command can continue, otherwise false.                 */
 /************************************************************/
 static bool ClearFactsReady(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *context) {
     /*======================================*/
     /* Facts can not be deleted when a join */
@@ -1746,7 +1744,7 @@ static bool ClearFactsReady(
 /*   the fact list with the specified fact index.  */
 /***************************************************/
 Fact *FindIndexedFact(
-        Environment *theEnv,
+        const Environment&theEnv,
         long long factIndexSought) {
     Fact *theFact;
 
@@ -1764,7 +1762,7 @@ Fact *FindIndexedFact(
 /*   to the ListOfAssertFunctions.    */
 /**************************************/
 bool AddAssertFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name,
         VoidCallFunctionWithArg *functionPtr,
         int priority,
@@ -1780,7 +1778,7 @@ bool AddAssertFunction(
 /*   from the ListOfAssertFunctions.        */
 /********************************************/
 bool RemoveAssertFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name) {
     bool found;
 
@@ -1796,7 +1794,7 @@ bool RemoveAssertFunction(
 /*   to the ListOfRetractFunctions.    */
 /***************************************/
 bool AddRetractFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name,
         VoidCallFunctionWithArg *functionPtr,
         int priority,
@@ -1812,7 +1810,7 @@ bool AddRetractFunction(
 /*   from the ListOfRetractFunctions.        */
 /*********************************************/
 bool RemoveRetractFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name) {
     bool found;
 
@@ -1828,7 +1826,7 @@ bool RemoveRetractFunction(
 /*   to the ListOfModifyFunctions.    */
 /**************************************/
 bool AddModifyFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name,
         ModifyCallFunction *functionPtr,
         int priority,
@@ -1845,7 +1843,7 @@ bool AddModifyFunction(
 /*   from the ListOfModifyFunctions.        */
 /********************************************/
 bool RemoveModifyFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name) {
     bool found;
 
@@ -1862,7 +1860,7 @@ bool RemoveModifyFunction(
 /*   operations (e.g. clear, reset, and bload functions). */
 /**********************************************************/
 ModifyCallFunctionItem *AddModifyFunctionToCallList(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name,
         int priority,
         ModifyCallFunction *func,
@@ -1909,7 +1907,7 @@ ModifyCallFunctionItem *AddModifyFunctionToCallList(
 /*   (e.g. clear, reset, and bload functions).                      */
 /********************************************************************/
 ModifyCallFunctionItem *RemoveModifyFunctionFromCallList(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name,
         ModifyCallFunctionItem *head,
         bool *found) {
@@ -1944,7 +1942,7 @@ ModifyCallFunctionItem *RemoveModifyFunctionFromCallList(
 /*   operations (e.g. clear, reset, and bload functions).      */
 /***************************************************************/
 void DeallocateModifyCallList(
-        Environment *theEnv,
+        const Environment&theEnv,
         ModifyCallFunctionItem *theList) {
     ModifyCallFunctionItem *tmpPtr, *nextPtr;
 
@@ -1961,7 +1959,7 @@ void DeallocateModifyCallList(
 /* CreateFactBuilder: */
 /**********************/
 FactBuilder *CreateFactBuilder(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *deftemplateName) {
     FactBuilder *theFB;
     Deftemplate *theDeftemplate;
@@ -2170,7 +2168,7 @@ PutSlotError FBPutSlot(
         FactBuilder *theFB,
         const char *slotName,
         CLIPSValue *slotValue) {
-    Environment *theEnv;
+    Environment theEnv;
     struct templateSlot *theSlot;
     unsigned short whichSlot;
     CLIPSValue oldValue;
@@ -2273,7 +2271,7 @@ PutSlotError FBPutSlot(
 /*************/
 Fact *FBAssert(
         FactBuilder *theFB) {
-    Environment *theEnv;
+    Environment theEnv;
     int i;
     Fact *theFact;
 
@@ -2327,7 +2325,7 @@ Fact *FBAssert(
 /**************/
 void FBDispose(
         FactBuilder *theFB) {
-    Environment *theEnv;
+    Environment theEnv;
 
     if (theFB == nullptr) return;
 
@@ -2345,7 +2343,7 @@ void FBDispose(
 /************/
 void FBAbort(
         FactBuilder *theFB) {
-    Environment *theEnv;
+    Environment theEnv;
     GCBlock gcb;
     int i;
 
@@ -2375,7 +2373,7 @@ FactBuilderError FBSetDeftemplate(
         FactBuilder *theFB,
         const char *deftemplateName) {
     Deftemplate *theDeftemplate;
-    Environment *theEnv;
+    Environment theEnv;
     int i;
 
     if (theFB == nullptr) { return FBE_nullptr_POINTER_ERROR; }
@@ -2416,7 +2414,7 @@ FactBuilderError FBSetDeftemplate(
 /* FBError: */
 /************/
 FactBuilderError FBError(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     return FactData(theEnv)->factBuilderError;
 }
 
@@ -2424,7 +2422,7 @@ FactBuilderError FBError(
 /* CreateFactModifier: */
 /***********************/
 FactModifier *CreateFactModifier(
-        Environment *theEnv,
+        const Environment&theEnv,
         Fact *oldFact) {
     FactModifier *theFM;
     int i;
@@ -2638,7 +2636,7 @@ PutSlotError FMPutSlot(
         FactModifier *theFM,
         const char *slotName,
         CLIPSValue *slotValue) {
-    Environment *theEnv;
+    Environment theEnv;
     struct templateSlot *theSlot;
     unsigned short whichSlot;
     CLIPSValue oldValue;
@@ -2772,7 +2770,7 @@ PutSlotError FMPutSlot(
 /*************/
 Fact *FMModify(
         FactModifier *theFM) {
-    Environment *theEnv;
+    Environment theEnv;
     Fact *rv;
 
     if (theFM == nullptr) { return nullptr; }
@@ -2820,7 +2818,7 @@ Fact *FMModify(
 void FMDispose(
         FactModifier *theFM) {
     GCBlock gcb;
-    Environment *theEnv = theFM->fmEnv;
+    const Environment&theEnv = theFM->fmEnv;
     int i;
 
     GCBlockStart(theEnv, &gcb);
@@ -2868,7 +2866,7 @@ void FMDispose(
 void FMAbort(
         FactModifier *theFM) {
     GCBlock gcb;
-    Environment *theEnv;
+    Environment theEnv;
     unsigned int i;
 
     if (theFM == nullptr) return;
@@ -2900,7 +2898,7 @@ void FMAbort(
 FactModifierError FMSetFact(
         FactModifier *theFM,
         Fact *oldFact) {
-    Environment *theEnv;
+    Environment theEnv;
     unsigned short currentSlotCount, newSlotCount;
     unsigned int i;
 
@@ -2991,7 +2989,7 @@ FactModifierError FMSetFact(
 /* FMError: */
 /************/
 FactModifierError FMError(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     return FactData(theEnv)->factModifierError;
 }
 

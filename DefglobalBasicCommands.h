@@ -62,21 +62,21 @@
 #include "Evaluation.h"
 #include "Defglobal.h"
 
-void DefglobalBasicCommands(Environment *);
-void UndefglobalCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-bool Undefglobal(Defglobal *, Environment *);
-void GetDefglobalListFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void GetDefglobalList(Environment *, CLIPSValue *, Defmodule *);
-void DefglobalModuleFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void PPDefglobalCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-bool PPDefglobal(Environment *, const char *, const char *);
-void ListDefglobalsCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
+void DefglobalBasicCommands(const Environment&);
+void UndefglobalCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+bool Undefglobal(Defglobal *, const Environment&);
+void GetDefglobalListFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void GetDefglobalList(const Environment&, CLIPSValue *, Defmodule *);
+void DefglobalModuleFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void PPDefglobalCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+bool PPDefglobal(const Environment&, const char *, const char *);
+void ListDefglobalsCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 #if DEBUGGING_FUNCTIONS
 bool DefglobalGetWatch(Defglobal *);
-void ListDefglobals(Environment *, const char *, Defmodule *);
+void ListDefglobals(const Environment&, const char *, Defmodule *);
 void DefglobalSetWatch(Defglobal *, bool);
 #endif
-void ResetDefglobals(Environment *, void *);
+void ResetDefglobals(const Environment&, void *);
 
 #endif /* _H_globlbsc */
 

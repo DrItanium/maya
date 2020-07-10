@@ -20,11 +20,11 @@ namespace maya {
             ExternalAddressTracker(const ExternalAddressTracker&) = delete;
             ExternalAddressTracker& operator=(const ExternalAddressTracker&) = delete;
             ExternalAddressTracker& operator=(ExternalAddressTracker&&) = delete;
-            static int getExternalAddressId(Environment* env) {
-                return getExternalAddressId_Internal(env);
+            static int getExternalAddressId(const Environment& env) {
+                return getExternalAddressId_Internal(env.get());
             }
-            static void registerExternalAddressId(Environment* env, int result) {
-                registerExternalAddressId_Internal(env, result);
+            static void registerExternalAddressId(const Environment& env, int result) {
+                registerExternalAddressId_Internal(env.get(), result);
             }
             private:
             static int getExternalAddressId_Internal(void* env) {

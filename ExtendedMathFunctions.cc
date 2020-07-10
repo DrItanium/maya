@@ -109,7 +109,7 @@ static double genacoth(double);
 /*   the extended math functions.               */
 /************************************************/
 void ExtendedMathFunctionDefinitions(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     AddUDF(theEnv, "cos", "d", 1, 1, "ld", CosFunction);
     AddUDF(theEnv, "sin", "d", 1, 1, "ld", SinFunction);
     AddUDF(theEnv, "tan", "d", 1, 1, "ld", TanFunction);
@@ -188,7 +188,7 @@ static bool TestProximity(
 static void DomainErrorMessage(
         UDFContext *context,
         UDFValue *returnValue) {
-    Environment *theEnv = context->environment;
+    const Environment&theEnv = context->environment;
 
     SetErrorValue(theEnv, &CreateSymbol(theEnv, "DOMAIN_ERROR")->header);
     PrintErrorID(theEnv, "EMATHFUN", 1, false);
@@ -208,7 +208,7 @@ static void DomainErrorMessage(
 static void ArgumentOverflowErrorMessage(
         UDFContext *context,
         UDFValue *returnValue) {
-    Environment *theEnv = context->environment;
+    const Environment&theEnv = context->environment;
 
     SetErrorValue(theEnv, &CreateSymbol(theEnv, "ARGUMENT_OVERFLOW")->header);
     PrintErrorID(theEnv, "EMATHFUN", 2, false);
@@ -228,7 +228,7 @@ static void ArgumentOverflowErrorMessage(
 static void SingularityErrorMessage(
         UDFContext *context,
         UDFValue *returnValue) {
-    Environment *theEnv = context->environment;
+    const Environment&theEnv = context->environment;
 
     SetErrorValue(theEnv, &CreateSymbol(theEnv, "SINGULARITY_AT_ASYMPTOTE")->header);
     PrintErrorID(theEnv, "EMATHFUN", 3, false);
@@ -245,7 +245,7 @@ static void SingularityErrorMessage(
 /*   for the cos function.           */
 /*************************************/
 void CosFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     if (!SingleNumberCheck(context, returnValue)) { return; }
@@ -258,7 +258,7 @@ void CosFunction(
 /*   for the sin function.           */
 /*************************************/
 void SinFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     if (!SingleNumberCheck(context, returnValue)) { return; }
@@ -271,7 +271,7 @@ void SinFunction(
 /*   for the tan function.           */
 /*************************************/
 void TanFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     double tv;
@@ -294,7 +294,7 @@ void TanFunction(
 /*   for the sec function.           */
 /*************************************/
 void SecFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     double tv;
@@ -317,7 +317,7 @@ void SecFunction(
 /*   for the csc function.           */
 /*************************************/
 void CscFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     double tv;
@@ -340,7 +340,7 @@ void CscFunction(
 /*   for the cot function.           */
 /*************************************/
 void CotFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     double tv;
@@ -363,7 +363,7 @@ void CotFunction(
 /*   for the acos function.           */
 /**************************************/
 void AcosFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     double num;
@@ -387,7 +387,7 @@ void AcosFunction(
 /*   for the asin function.           */
 /**************************************/
 void AsinFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     double num;
@@ -410,7 +410,7 @@ void AsinFunction(
 /*   for the atan function.           */
 /**************************************/
 void AtanFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     if (!SingleNumberCheck(context, returnValue)) { return; }
@@ -423,7 +423,7 @@ void AtanFunction(
 /*   for the atan function.            */
 /***************************************/
 void Atan2Function(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue value1, value2;
@@ -459,7 +459,7 @@ void Atan2Function(
 /*   for the asec function.           */
 /**************************************/
 void AsecFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     double num;
@@ -483,7 +483,7 @@ void AsecFunction(
 /*   for the acsc function.           */
 /**************************************/
 void AcscFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     double num;
@@ -507,7 +507,7 @@ void AcscFunction(
 /*   for the acot function.           */
 /**************************************/
 void AcotFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     double num;
@@ -529,7 +529,7 @@ void AcotFunction(
 /*   for the cosh function.           */
 /**************************************/
 void CoshFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     if (!SingleNumberCheck(context, returnValue)) { return; }
@@ -542,7 +542,7 @@ void CoshFunction(
 /*   for the sinh function.           */
 /**************************************/
 void SinhFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     if (!SingleNumberCheck(context, returnValue)) { return; }
@@ -555,7 +555,7 @@ void SinhFunction(
 /*   for the tanh function.           */
 /**************************************/
 void TanhFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     if (!SingleNumberCheck(context, returnValue)) { return; }
@@ -568,7 +568,7 @@ void TanhFunction(
 /*   for the sech function.           */
 /**************************************/
 void SechFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     if (!SingleNumberCheck(context, returnValue)) { return; }
@@ -581,7 +581,7 @@ void SechFunction(
 /*   for the csch function.           */
 /**************************************/
 void CschFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     double num;
@@ -607,7 +607,7 @@ void CschFunction(
 /*   for the coth function.           */
 /**************************************/
 void CothFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     double num;
@@ -633,7 +633,7 @@ void CothFunction(
 /*   for the acosh function.           */
 /***************************************/
 void AcoshFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     double num;
@@ -656,7 +656,7 @@ void AcoshFunction(
 /*   for the asinh function.           */
 /***************************************/
 void AsinhFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     if (!SingleNumberCheck(context, returnValue)) { return; }
@@ -669,7 +669,7 @@ void AsinhFunction(
 /*   for the atanh function.           */
 /***************************************/
 void AtanhFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     double num;
@@ -692,7 +692,7 @@ void AtanhFunction(
 /*   for the asech function.           */
 /***************************************/
 void AsechFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     double num;
@@ -715,7 +715,7 @@ void AsechFunction(
 /*   for the acsch function.           */
 /***************************************/
 void AcschFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     double num;
@@ -738,7 +738,7 @@ void AcschFunction(
 /*   for the acoth function.           */
 /***************************************/
 void AcothFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     double num;
@@ -761,7 +761,7 @@ void AcothFunction(
 /*   for the exp function.           */
 /*************************************/
 void ExpFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     if (!SingleNumberCheck(context, returnValue)) { return; }
@@ -774,7 +774,7 @@ void ExpFunction(
 /*   for the log function.           */
 /*************************************/
 void LogFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     double num;
@@ -800,7 +800,7 @@ void LogFunction(
 /*   for the log10 function.           */
 /***************************************/
 void Log10Function(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     double num;
@@ -826,7 +826,7 @@ void Log10Function(
 /*   for the sqrt function.           */
 /**************************************/
 void SqrtFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     double num;
@@ -849,7 +849,7 @@ void SqrtFunction(
 /*   for the pow function.           */
 /*************************************/
 void PowFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue value1, value2;
@@ -890,7 +890,7 @@ void PowFunction(
 /*   for the mod function.           */
 /*************************************/
 void ModFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue item1, item2;
@@ -945,7 +945,7 @@ void ModFunction(
 /*   for the pi function.           */
 /************************************/
 void PiFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     returnValue->floatValue = CreateFloat(theEnv, acos(-1.0));
@@ -956,7 +956,7 @@ void PiFunction(
 /*   for the deg-rad function.          */
 /****************************************/
 void DegRadFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     if (!SingleNumberCheck(context, returnValue)) { return; }
@@ -969,7 +969,7 @@ void DegRadFunction(
 /*   for the rad-deg function.          */
 /****************************************/
 void RadDegFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     if (!SingleNumberCheck(context, returnValue)) { return; }
@@ -982,7 +982,7 @@ void RadDegFunction(
 /*   for the deg-grad function.          */
 /*****************************************/
 void DegGradFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     if (!SingleNumberCheck(context, returnValue)) { return; }
@@ -995,7 +995,7 @@ void DegGradFunction(
 /*   for the grad-deg function.          */
 /*****************************************/
 void GradDegFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     if (!SingleNumberCheck(context, returnValue)) { return; }
@@ -1008,7 +1008,7 @@ void GradDegFunction(
 /*   for the round function.           */
 /***************************************/
 void RoundFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     /*======================================*/

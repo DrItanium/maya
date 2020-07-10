@@ -46,7 +46,7 @@
 #include "Scanner.h"
 #include "Deftemplate.h"
 
-struct expr *ParseAssertTemplate(Environment *, const char *, struct token *, bool *,
+struct expr *ParseAssertTemplate(const Environment&, const char *, struct token *, bool *,
                                  TokenType, bool, Deftemplate *);
 
 #endif /* _H_tmpltrhs */

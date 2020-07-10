@@ -109,7 +109,7 @@ constexpr auto UNSPECIFIED = -1L;
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static struct expr *AssertParse(Environment *, struct expr *, const char *);
+static struct expr *AssertParse(const Environment&, struct expr *, const char *);
 #if DEBUGGING_FUNCTIONS
 static long long GetFactsArgument(UDFContext *);
 #endif
@@ -119,7 +119,7 @@ static long long GetFactsArgument(UDFContext *);
 /*   fact commands and functions.      */
 /***************************************/
 void FactCommandDefinitions(
-        Environment *theEnv) {
+        const Environment&theEnv) {
 #if DEBUGGING_FUNCTIONS
     AddUDF(theEnv, "facts", "v", 0, 4, "l;*", FactsCommand);
 #endif
@@ -143,7 +143,7 @@ void FactCommandDefinitions(
 /*   for the assert function.          */
 /***************************************/
 void AssertCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Deftemplate *theDeftemplate;
@@ -258,7 +258,7 @@ void AssertCommand(
 /*   for the retract command.           */
 /****************************************/
 void RetractCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     long long factIndex;
@@ -347,7 +347,7 @@ void RetractCommand(
 /*   for the set-fact-duplication command.         */
 /***************************************************/
 void SetFactDuplicationCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -377,7 +377,7 @@ void SetFactDuplicationCommand(
 /*   for the get-fact-duplication command.         */
 /***************************************************/
 void GetFactDuplicationCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     returnValue->lexemeValue = CreateBoolean(theEnv, GetFactDuplication(theEnv));
@@ -388,7 +388,7 @@ void GetFactDuplicationCommand(
 /*   for the fact-index function.          */
 /*******************************************/
 void FactIndexFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -421,7 +421,7 @@ void FactIndexFunction(
 /*   for the facts command.           */
 /**************************************/
 void FactsCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     long long start = UNSPECIFIED, end = UNSPECIFIED, max = UNSPECIFIED;
@@ -510,7 +510,7 @@ void FactsCommand(
 /* Facts: C access routine for the facts command. */
 /**************************************************/
 void Facts(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         Defmodule *theModule,
         long long start,
@@ -646,7 +646,7 @@ static long long GetFactsArgument(
 /*   for the assert-string function.          */
 /**********************************************/
 void AssertStringFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -672,7 +672,7 @@ void AssertStringFunction(
 /* AssertParse: Driver routine for parsing the assert function. */
 /****************************************************************/
 static struct expr *AssertParse(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct expr *top,
         const char *logicalName) {
     bool error;

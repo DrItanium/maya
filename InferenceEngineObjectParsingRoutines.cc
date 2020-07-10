@@ -60,9 +60,9 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void GenObjectGetVar(Environment *, bool, Expression *, struct lhsParseNode *, int);
+static void GenObjectGetVar(const Environment&, bool, Expression *, struct lhsParseNode *, int);
 static bool IsSimpleSlotVariable(lhsParseNode *);
-static Expression *GenerateSlotComparisonTest(Environment *, bool, bool, struct lhsParseNode *, struct lhsParseNode *);
+static Expression *GenerateSlotComparisonTest(const Environment&, bool, bool, struct lhsParseNode *, struct lhsParseNode *);
 
 /* =========================================
    *****************************************
@@ -75,7 +75,7 @@ static Expression *GenerateSlotComparisonTest(Environment *, bool, bool, struct 
   provide object access to the join nertwork
  **********************************************/
 void ReplaceGetJNObjectValue(
-        Environment *theEnv,
+        const Environment&theEnv,
         Expression *theItem,
         struct lhsParseNode *theNode,
         int side) {
@@ -83,7 +83,7 @@ void ReplaceGetJNObjectValue(
 }
 
 Expression *GenGetJNObjectValue(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct lhsParseNode *theNode,
         int side) {
     Expression *theItem;
@@ -94,7 +94,7 @@ Expression *GenGetJNObjectValue(
 }
 
 Expression *ObjectJNVariableComparison(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct lhsParseNode *selfNode,
         struct lhsParseNode *referringNode,
         bool isNand) {
@@ -106,7 +106,7 @@ Expression *ObjectJNVariableComparison(
   provide object access to the pattern network
  **********************************************/
 Expression *GenObjectPNConstantCompare(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct lhsParseNode *theNode) {
     struct ObjectCmpPNConstant hack;
     Expression *theExp;
@@ -159,14 +159,14 @@ Expression *GenObjectPNConstantCompare(
 }
 
 void ReplaceGetPNObjectValue(
-        Environment *theEnv,
+        const Environment&theEnv,
         Expression *theItem,
         struct lhsParseNode *theNode) {
     GenObjectGetVar(theEnv, false, theItem, theNode, -1);
 }
 
 Expression *GenGetPNObjectValue(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct lhsParseNode *theNode) {
     Expression *theItem;
 
@@ -176,7 +176,7 @@ Expression *GenGetPNObjectValue(
 }
 
 Expression *ObjectPNVariableComparison(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct lhsParseNode *selfNode,
         struct lhsParseNode *referringNode) {
     return (GenerateSlotComparisonTest(theEnv, false, false, selfNode, referringNode));
@@ -194,7 +194,7 @@ Expression *ObjectPNVariableComparison(
   NOTES        : None
  ****************************************************/
 void GenObjectLengthTest(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct lhsParseNode *theNode) {
     struct ObjectMatchLength hack;
     Expression *theTest;
@@ -238,7 +238,7 @@ void GenObjectLengthTest(
   NOTES        : None
  ****************************************************/
 void GenObjectZeroLengthTest(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct lhsParseNode *theNode) {
     struct ObjectMatchLength hack;
     Expression *theTest;
@@ -277,7 +277,7 @@ void GenObjectZeroLengthTest(
   NOTES        : None
  ***************************************************/
 static void GenObjectGetVar(
-        Environment *theEnv,
+        const Environment&theEnv,
         bool joinReference,
         Expression *theItem,
         struct lhsParseNode *theNode,
@@ -440,7 +440,7 @@ static bool IsSimpleSlotVariable(
                  Example: (foo $? ?x $?) and (bar ?x)
  ***************************************************************/
 static Expression *GenerateSlotComparisonTest(
-        Environment *theEnv,
+        const Environment&theEnv,
         bool joinTest,
         bool isNand,
         struct lhsParseNode *selfNode,

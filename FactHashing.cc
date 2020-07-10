@@ -71,10 +71,10 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static Fact *FactExists(Environment *, Fact *, size_t);
-static struct factHashEntry **CreateFactHashTable(Environment *, size_t);
-static void ResizeFactHashTable(Environment *);
-static void ResetFactHashTable(Environment *);
+static Fact *FactExists(const Environment&, Fact *, size_t);
+static struct factHashEntry **CreateFactHashTable(const Environment&, size_t);
+static void ResizeFactHashTable(const Environment&);
+static void ResetFactHashTable(const Environment&);
 
 /************************************************/
 /* HashFact: Returns the hash value for a fact. */
@@ -114,7 +114,7 @@ size_t HashFact(
 /*   already exists in the fact hash table.   */
 /**********************************************/
 static Fact *FactExists(
-        Environment *theEnv,
+        const Environment&theEnv,
         Fact *theFact,
         size_t hashValue) {
     struct factHashEntry *theFactHash;
@@ -138,7 +138,7 @@ static Fact *FactExists(
 /* AddHashedFact: Adds a fact entry to the fact hash table. */
 /************************************************************/
 void AddHashedFact(
-        Environment *theEnv,
+        const Environment&theEnv,
         Fact *theFact,
         size_t hashValue) {
     struct factHashEntry *newhash, *temp;
@@ -160,7 +160,7 @@ void AddHashedFact(
 /*   from the fact hash table.            */
 /******************************************/
 bool RemoveHashedFact(
-        Environment *theEnv,
+        const Environment&theEnv,
         Fact *theFact) {
     size_t hashValue;
     struct factHashEntry *hptr, *prev;
@@ -195,7 +195,7 @@ bool RemoveHashedFact(
 /*   asserted based on the duplication settings.    */
 /****************************************************/
 bool FactWillBeAsserted(
-        Environment *theEnv,
+        const Environment&theEnv,
         Fact *theFact) {
     Fact *tempPtr;
     size_t hashValue;
@@ -216,7 +216,7 @@ bool FactWillBeAsserted(
 /*   setting of the fact-duplication flag.           */
 /*****************************************************/
 size_t HandleFactDuplication(
-        Environment *theEnv,
+        const Environment&theEnv,
         Fact *theFact,
         Fact **duplicate,
         long long reuseIndex) {
@@ -248,7 +248,7 @@ size_t HandleFactDuplication(
 /*   for the get-fact-duplication command. */
 /*******************************************/
 bool GetFactDuplication(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     return FactData(theEnv)->FactDuplication;
 }
 
@@ -257,7 +257,7 @@ bool GetFactDuplication(
 /*   for the set-fact-duplication command. */
 /*******************************************/
 bool SetFactDuplication(
-        Environment *theEnv,
+        const Environment&theEnv,
         bool value) {
     bool ov;
 
@@ -271,7 +271,7 @@ bool SetFactDuplication(
 /*   entries in the fact hash table to nullptr.      */
 /**************************************************/
 void InitializeFactHashTable(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     FactData(theEnv)->FactHashTable = CreateFactHashTable(theEnv, SIZE_FACT_HASH);
     FactData(theEnv)->FactHashTableSize = SIZE_FACT_HASH;
 }
@@ -280,7 +280,7 @@ void InitializeFactHashTable(
 /* CreateFactHashTable: Creates and initializes a fact hash table. */
 /*******************************************************************/
 static struct factHashEntry **CreateFactHashTable(
-        Environment *theEnv,
+        const Environment&theEnv,
         size_t tableSize) {
     unsigned long i;
     struct factHashEntry **theTable;
@@ -299,7 +299,7 @@ static struct factHashEntry **CreateFactHashTable(
 /* ResizeFactHashTable: */
 /************************/
 static void ResizeFactHashTable(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     unsigned long i, newSize, newLocation;
     struct factHashEntry **theTable, **newTable;
     struct factHashEntry *theEntry, *nextEntry;
@@ -339,7 +339,7 @@ static void ResizeFactHashTable(
 /* ResetFactHashTable: */
 /***********************/
 static void ResetFactHashTable(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     struct factHashEntry **newTable;
 
     /*=============================================*/
@@ -371,7 +371,7 @@ static void ResetFactHashTable(
 /*   entries in each slot of the fact hash table.   */
 /****************************************************/
 void ShowFactHashTableCommand(
-  Environment *theEnv,
+  const Environment&theEnv,
   UDFContext *context,
   UDFValue *returnValue)
   {

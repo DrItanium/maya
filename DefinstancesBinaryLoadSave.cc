@@ -77,21 +77,21 @@ typedef struct bsaveDefinstances {
    ***************************************** */
 
 #if BLOAD_AND_BSAVE
-static void BsaveDefinstancesFind(Environment *);
-static void MarkDefinstancesItems(Environment *, ConstructHeader *, void *);
-static void BsaveDefinstancesExpressions(Environment *, FILE *);
-static void BsaveDefinstancesExpression(Environment *, ConstructHeader *, void *);
-static void BsaveStorageDefinstances(Environment *, FILE *);
-static void BsaveDefinstancesDriver(Environment *, FILE *);
-static void BsaveDefinstances(Environment *, ConstructHeader *, void *);
+static void BsaveDefinstancesFind(const Environment&);
+static void MarkDefinstancesItems(const Environment&, ConstructHeader *, void *);
+static void BsaveDefinstancesExpressions(const Environment&, FILE *);
+static void BsaveDefinstancesExpression(const Environment&, ConstructHeader *, void *);
+static void BsaveStorageDefinstances(const Environment&, FILE *);
+static void BsaveDefinstancesDriver(const Environment&, FILE *);
+static void BsaveDefinstances(const Environment&, ConstructHeader *, void *);
 #endif
 
-static void BloadStorageDefinstances(Environment *);
-static void BloadDefinstances(Environment *);
-static void UpdateDefinstancesModule(Environment *, void *, unsigned long);
-static void UpdateDefinstances(Environment *, void *, unsigned long);
-static void ClearDefinstancesBload(Environment *);
-static void DeallocateDefinstancesBinaryData(Environment *);
+static void BloadStorageDefinstances(const Environment&);
+static void BloadDefinstances(const Environment&);
+static void UpdateDefinstancesModule(const Environment&, void *, unsigned long);
+static void UpdateDefinstances(const Environment&, void *, unsigned long);
+static void ClearDefinstancesBload(const Environment&);
+static void DeallocateDefinstancesBinaryData(const Environment&);
 
 /* =========================================
    *****************************************
@@ -109,7 +109,7 @@ static void DeallocateDefinstancesBinaryData(Environment *);
   NOTES        : None
  ***********************************************************/
 void SetupDefinstancesBload(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     AllocateEnvironmentData(theEnv, DFINSBIN_DATA, sizeof(definstancesBinaryData), DeallocateDefinstancesBinaryData);
 #if BLOAD_AND_BSAVE
     AddBinaryItem(theEnv, "definstances", 0, BsaveDefinstancesFind, BsaveDefinstancesExpressions,
@@ -128,7 +128,7 @@ void SetupDefinstancesBload(
 /*    data for the definstances binary functionality.        */
 /*************************************************************/
 static void DeallocateDefinstancesBinaryData(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     size_t space;
 
 #if (BLOAD_AND_BSAVE)
@@ -150,7 +150,7 @@ static void DeallocateDefinstancesBinaryData(
   NOTES        : None
  ***************************************************/
 void *BloadDefinstancesModuleRef(
-        Environment *theEnv,
+        const Environment&theEnv,
         unsigned long theIndex) {
     return ((void *) &DefinstancesBinaryData(theEnv)->ModuleArray[theIndex]);
 }
@@ -179,7 +179,7 @@ void *BloadDefinstancesModuleRef(
                    definstances will be bsaved in order of binary list)
  ***************************************************************************/
 static void BsaveDefinstancesFind(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     SaveBloadCount(theEnv, DefinstancesBinaryData(theEnv)->ModuleCount);
     SaveBloadCount(theEnv, DefinstancesBinaryData(theEnv)->DefinstancesCount);
     DefinstancesBinaryData(theEnv)->DefinstancesCount = 0L;
@@ -202,7 +202,7 @@ static void BsaveDefinstancesFind(
   NOTES        : None
  ***************************************************/
 static void MarkDefinstancesItems(
-        Environment *theEnv,
+        const Environment&theEnv,
         ConstructHeader *theDefinstances,
         void *userBuffer) {
 #if MAC_XCD
@@ -224,7 +224,7 @@ static void MarkDefinstancesItems(
   NOTES        : None
  ***************************************************/
 static void BsaveDefinstancesExpressions(
-        Environment *theEnv,
+        const Environment&theEnv,
         FILE *fp) {
     DoForAllConstructs(theEnv, BsaveDefinstancesExpression, DefinstancesData(theEnv)->DefinstancesModuleIndex,
                        false, fp);
@@ -241,7 +241,7 @@ static void BsaveDefinstancesExpressions(
   NOTES        : None
  ***************************************************/
 static void BsaveDefinstancesExpression(
-        Environment *theEnv,
+        const Environment&theEnv,
         ConstructHeader *theDefinstances,
         void *userBuffer) {
     BsaveExpression(theEnv, ((Definstances *) theDefinstances)->mkinstance, (FILE *) userBuffer);
@@ -258,7 +258,7 @@ static void BsaveDefinstancesExpression(
   NOTES        : None
  ***********************************************************/
 static void BsaveStorageDefinstances(
-        Environment *theEnv,
+        const Environment&theEnv,
         FILE *fp) {
     size_t space;
 
@@ -279,7 +279,7 @@ static void BsaveStorageDefinstances(
   NOTES        : None
  *************************************************************************************/
 static void BsaveDefinstancesDriver(
-        Environment *theEnv,
+        const Environment&theEnv,
         FILE *fp) {
     size_t space;
     Defmodule *theModule;
@@ -324,7 +324,7 @@ static void BsaveDefinstancesDriver(
   NOTES        : None
  ***************************************************/
 static void BsaveDefinstances(
-        Environment *theEnv,
+        const Environment&theEnv,
         ConstructHeader *theDefinstances,
         void *userBuffer) {
     Definstances *dptr = (Definstances *) theDefinstances;
@@ -352,7 +352,7 @@ static void BsaveDefinstances(
                    within the structures
  ***********************************************************************/
 static void BloadStorageDefinstances(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     size_t space;
 
     GenReadBinary(theEnv, &space, sizeof(size_t));
@@ -390,7 +390,7 @@ static void BloadStorageDefinstances(
   NOTES        : Assumes all loading is finished
  ********************************************************************/
 static void BloadDefinstances(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     size_t space;
 
     GenReadBinary(theEnv, &space, sizeof(size_t));
@@ -411,7 +411,7 @@ static void BloadDefinstances(
   NOTES        : None
  *******************************************************/
 static void UpdateDefinstancesModule(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *buf,
         unsigned long obji) {
     BSAVE_DEFINSTANCES_MODULE *bdptr;
@@ -434,7 +434,7 @@ static void UpdateDefinstancesModule(
   NOTES        : None
  ***************************************************/
 static void UpdateDefinstances(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *buf,
         unsigned long obji) {
     BSAVE_DEFINSTANCES *bdptr;
@@ -461,7 +461,7 @@ static void UpdateDefinstances(
   NOTES        : Definstances name symbol counts decremented
  ***************************************************************/
 static void ClearDefinstancesBload(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     unsigned long i;
     size_t space;
 

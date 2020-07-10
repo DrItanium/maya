@@ -47,24 +47,24 @@
 /***************************************/
 
 #if BLOAD_AND_BSAVE
-static void BsaveFind(Environment *);
-static void BsaveExpressions(Environment *, FILE *);
-static void BsaveStorage(Environment *, FILE *);
-static void BsaveBinaryItem(Environment *, FILE *);
+static void BsaveFind(const Environment&);
+static void BsaveExpressions(const Environment&, FILE *);
+static void BsaveStorage(const Environment&, FILE *);
+static void BsaveBinaryItem(const Environment&, FILE *);
 #endif
-static void BloadStorage(Environment *);
-static void BloadBinaryItem(Environment *);
-static void UpdateDeffactsModule(Environment *, void *, unsigned long);
-static void UpdateDeffacts(Environment *, void *, unsigned long);
-static void ClearBload(Environment *);
-static void DeallocateDeffactsBloadData(Environment *);
+static void BloadStorage(const Environment&);
+static void BloadBinaryItem(const Environment&);
+static void UpdateDeffactsModule(const Environment&, void *, unsigned long);
+static void UpdateDeffacts(const Environment&, void *, unsigned long);
+static void ClearBload(const Environment&);
+static void DeallocateDeffactsBloadData(const Environment&);
 
 /********************************************/
 /* DeffactsBinarySetup: Installs the binary */
 /*   save/load feature for deffacts.        */
 /********************************************/
 void DeffactsBinarySetup(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     AllocateEnvironmentData(theEnv, DFFCTBIN_DATA, sizeof(deffactsBinaryData), DeallocateDeffactsBloadData);
 #if BLOAD_AND_BSAVE
     AddBinaryItem(theEnv, "deffacts", 0, BsaveFind, BsaveExpressions,
@@ -80,7 +80,7 @@ void DeffactsBinarySetup(
 /*    data for the deffacts bsave functionality.        */
 /********************************************************/
 static void DeallocateDeffactsBloadData(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     size_t space;
 
     space = DeffactsBinaryData(theEnv)->NumberOfDeffacts * sizeof(Deffacts);
@@ -98,7 +98,7 @@ static void DeallocateDeffactsBloadData(
 /*   in the current environment.                         */
 /*********************************************************/
 static void BsaveFind(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     Deffacts *theDeffacts;
     Defmodule *theModule;
 
@@ -165,7 +165,7 @@ static void BsaveFind(
 /*   by deffacts to the binary save file.       */
 /************************************************/
 static void BsaveExpressions(
-        Environment *theEnv,
+        const Environment&theEnv,
         FILE *fp) {
     Deffacts *theDeffacts;
     Defmodule *theModule;
@@ -199,7 +199,7 @@ static void BsaveExpressions(
 /*    for all deffacts structures to the binary file. */
 /******************************************************/
 static void BsaveStorage(
-        Environment *theEnv,
+        const Environment&theEnv,
         FILE *fp) {
     size_t space;
 
@@ -221,7 +221,7 @@ static void BsaveStorage(
 /*   structures to the binary file.         */
 /********************************************/
 static void BsaveBinaryItem(
-        Environment *theEnv,
+        const Environment&theEnv,
         FILE *fp) {
     size_t space;
     Deffacts *theDeffacts;
@@ -294,7 +294,7 @@ static void BsaveBinaryItem(
 /*   the deffacts used by this binary image.        */
 /****************************************************/
 static void BloadStorage(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     size_t space;
 
     /*=====================================================*/
@@ -339,7 +339,7 @@ static void BloadStorage(
 /*   constructs used by this binary image.           */
 /*****************************************************/
 static void BloadBinaryItem(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     size_t space;
 
     /*======================================================*/
@@ -372,7 +372,7 @@ static void BloadBinaryItem(
 /*   deffacts module data structures.              */
 /***************************************************/
 static void UpdateDeffactsModule(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *buf,
         unsigned long obji) {
     struct bsaveDeffactsModule *bdmPtr;
@@ -387,7 +387,7 @@ static void UpdateDeffactsModule(
 /*   deffacts data structures.               */
 /*********************************************/
 static void UpdateDeffacts(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *buf,
         unsigned long obji) {
     struct bsaveDeffacts *bdp;
@@ -404,7 +404,7 @@ static void UpdateDeffacts(
 /*   when a binary load is in effect. */
 /**************************************/
 static void ClearBload(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     unsigned long i;
     size_t space;
 
@@ -440,7 +440,7 @@ static void ClearBload(
 /*   module pointer for use with the bload function.  */
 /******************************************************/
 void *BloadDeffactsModuleReference(
-        Environment *theEnv,
+        const Environment&theEnv,
         unsigned long theIndex) {
     return (void *) &DeffactsBinaryData(theEnv)->ModuleArray[theIndex];
 }

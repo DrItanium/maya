@@ -65,21 +65,21 @@
 #include "Evaluation.h"
 #include "Deftemplate.h"
 
-void DeftemplateBasicCommands(Environment *);
-void UndeftemplateCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-bool Undeftemplate(Deftemplate *, Environment *);
-void GetDeftemplateListFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void GetDeftemplateList(Environment *, CLIPSValue *, Defmodule *);
-void DeftemplateModuleFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
+void DeftemplateBasicCommands(const Environment&);
+void UndeftemplateCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+bool Undeftemplate(Deftemplate *, const Environment&);
+void GetDeftemplateListFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void GetDeftemplateList(const Environment&, CLIPSValue *, Defmodule *);
+void DeftemplateModuleFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 #if DEBUGGING_FUNCTIONS
-void PPDeftemplateCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-bool PPDeftemplate(Environment *, const char *, const char *);
-void ListDeftemplatesCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void ListDeftemplates(Environment *, const char *, Defmodule *);
+void PPDeftemplateCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+bool PPDeftemplate(const Environment&, const char *, const char *);
+void ListDeftemplatesCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void ListDeftemplates(const Environment&, const char *, Defmodule *);
 bool DeftemplateGetWatch(Deftemplate *);
 void DeftemplateSetWatch(Deftemplate *, bool);
-bool DeftemplateWatchAccess(Environment *, int, bool, struct expr *);
-bool DeftemplateWatchPrint(Environment *, const char *, int, struct expr *);
+bool DeftemplateWatchAccess(const Environment&, int, bool, struct expr *);
+bool DeftemplateWatchPrint(const Environment&, const char *, int, struct expr *);
 #endif
 
 #endif /* _H_tmpltbsc */

@@ -65,10 +65,12 @@
 
 #include <stdbool.h>
 #include <cstdlib>
+#include <memory>
 
-typedef struct environmentData Environment;
+//typedef struct environmentData Environment;
 
-typedef void EnvironmentCleanupFunction(Environment *);
+using Environment = std::shared_ptr<struct environmentData>;
+typedef void EnvironmentCleanupFunction(const Environment&);
 
 #include "Entities.h"
 #include "ExternalFunctions.h"
@@ -78,7 +80,7 @@ constexpr auto MAXIMUM_ENVIRONMENT_POSITIONS = 100;
 
 struct environmentCleanupFunction {
     const char *name;
-    void (*func)(Environment *);
+    void (*func)(const Environment&);
     int priority;
     struct environmentCleanupFunction *next;
 };
@@ -90,28 +92,35 @@ struct environmentData {
     CLIPSLexeme *FalseSymbol;
     CLIPSVoid *VoidConstant;
     void **theData;
-    void (**cleanupFunctions)(Environment *);
+    void (**cleanupFunctions)(const Environment&);
     environmentCleanupFunction *listOfCleanupEnvironmentFunctions;
     environmentData *next;
 };
 
-inline auto VoidConstant(Environment* theEnv) noexcept { return theEnv->VoidConstant; }
-inline auto FalseSymbol(Environment* theEnv) noexcept { return theEnv->FalseSymbol; }
-inline auto TrueSymbol(Environment* theEnv) noexcept { return theEnv->TrueSymbol; }
 
-#define GetEnvironmentData(theEnv, position) (((environmentData *) theEnv)->theData[position])
-#define SetEnvironmentData(theEnv, position, value) (((environmentData *) theEnv)->theData[position] = value)
+inline auto VoidConstant(const Environment& theEnv) noexcept { return theEnv->VoidConstant; }
+inline auto FalseSymbol(const Environment& theEnv) noexcept { return theEnv->FalseSymbol; }
+inline auto TrueSymbol(const Environment& theEnv) noexcept { return theEnv->TrueSymbol; }
 
-bool AllocateEnvironmentData(Environment *, unsigned, size_t, EnvironmentCleanupFunction * = nullptr);
-bool AddEnvironmentCleanupFunction(Environment *, const char *, EnvironmentCleanupFunction *, int);
-void *GetEnvironmentContext(Environment *);
-void *SetEnvironmentContext(Environment *, void *);
+inline void* getEnvironmentData(const Environment& theEnv, size_t position) noexcept {
+    return theEnv->theData[position];
+}
+inline void setEnvironmentData(const Environment& theEnv, size_t position, void* value) noexcept {
+    theEnv->theData[position] = value;
+}
+#define GetEnvironmentData(theEnv, position) (getEnvironmentData(theEnv, position))
+#define SetEnvironmentData(theEnv, position, value) (setEnvironmentData(theEnv, position, value))
 
-Environment *CreateEnvironment();
-Environment *CreateRuntimeEnvironment(CLIPSLexeme **, CLIPSFloat **,
+bool AllocateEnvironmentData(const Environment&, unsigned, size_t, EnvironmentCleanupFunction * = nullptr);
+bool AddEnvironmentCleanupFunction(const Environment&, const char *, EnvironmentCleanupFunction *, int);
+void *GetEnvironmentContext(const Environment&);
+void *SetEnvironmentContext(const Environment&, void *);
+
+Environment CreateEnvironment();
+Environment CreateRuntimeEnvironment(CLIPSLexeme **, CLIPSFloat **,
                                       CLIPSInteger **, CLIPSBitMap **,
                                       struct functionDefinition *);
-bool DestroyEnvironment(Environment *);
+bool DestroyEnvironment(const Environment&);
 
 #endif /* _H_envrnmnt */
 

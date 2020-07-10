@@ -63,7 +63,7 @@
 /*   math and predicate functions.                */
 /**************************************************/
 void PredicateFunctionDefinitions(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     AddUDF(theEnv, "not", "b", 1, 1, nullptr, NotFunction);
     AddUDF(theEnv, "and", "b", 2, UNBOUNDED, nullptr, AndFunction);
     AddUDF(theEnv, "or", "b", 2, UNBOUNDED, nullptr, OrFunction);
@@ -97,7 +97,7 @@ void PredicateFunctionDefinitions(
 /*   for the eq function.           */
 /************************************/
 void EqFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue item, nextItem;
@@ -162,7 +162,7 @@ void EqFunction(
 /*   for the neq function.           */
 /*************************************/
 void NeqFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue item, nextItem;
@@ -221,7 +221,7 @@ void NeqFunction(
 /*   for the stringp function.           */
 /*****************************************/
 void StringpFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue item;
@@ -237,7 +237,7 @@ void StringpFunction(
 /*   for the symbolp function.           */
 /*****************************************/
 void SymbolpFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue item;
@@ -253,7 +253,7 @@ void SymbolpFunction(
 /*   for the lexemep function.           */
 /*****************************************/
 void LexemepFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue item;
@@ -269,7 +269,7 @@ void LexemepFunction(
 /*   for the numberp function.           */
 /*****************************************/
 void NumberpFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue item;
@@ -285,7 +285,7 @@ void NumberpFunction(
 /*   for the floatp function.           */
 /****************************************/
 void FloatpFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue item;
@@ -301,7 +301,7 @@ void FloatpFunction(
 /*   for the integerp function.           */
 /******************************************/
 void IntegerpFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue item;
@@ -317,7 +317,7 @@ void IntegerpFunction(
 /*   for the multifieldp function.           */
 /*********************************************/
 void MultifieldpFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue item;
@@ -333,7 +333,7 @@ void MultifieldpFunction(
 /*   for the external-addressp function.        */
 /************************************************/
 void ExternalAddresspFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue item;
@@ -349,7 +349,7 @@ void ExternalAddresspFunction(
 /*   for the not function.         */
 /***********************************/
 void NotFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -365,7 +365,7 @@ void NotFunction(
 /*   for the and function.           */
 /*************************************/
 void AndFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -387,7 +387,7 @@ void AndFunction(
 /*   for the or function.           */
 /************************************/
 void OrFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -409,7 +409,7 @@ void OrFunction(
 /*   routine for the <= function.        */
 /*****************************************/
 void LessThanOrEqualFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue rv1, rv2;
@@ -456,7 +456,7 @@ void LessThanOrEqualFunction(
 /*   routine for the >= function.           */
 /********************************************/
 void GreaterThanOrEqualFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue rv1, rv2;
@@ -503,7 +503,7 @@ void GreaterThanOrEqualFunction(
 /*   routine for the < function.  */
 /**********************************/
 void LessThanFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue rv1, rv2;
@@ -551,7 +551,7 @@ void LessThanFunction(
 /*   routine for the > function.     */
 /*************************************/
 void GreaterThanFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue rv1, rv2;
@@ -599,7 +599,7 @@ void GreaterThanFunction(
 /*   routine for the = function.      */
 /**************************************/
 void NumericEqualFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue rv1, rv2;
@@ -644,7 +644,7 @@ void NumericEqualFunction(
 /*   routine for the <> function.        */
 /*****************************************/
 void NumericNotEqualFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue rv1, rv2;
@@ -689,7 +689,7 @@ void NumericNotEqualFunction(
 /*   for the oddp function.           */
 /**************************************/
 void OddpFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue item;
@@ -717,7 +717,7 @@ void OddpFunction(
 /*   for the evenp function.           */
 /***************************************/
 void EvenpFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue item;

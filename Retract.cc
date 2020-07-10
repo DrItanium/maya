@@ -71,13 +71,13 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void ReturnMarkers(Environment *, struct multifieldMarker *);
-static bool FindNextConflictingMatch(Environment *, struct partialMatch *,
+static void ReturnMarkers(const Environment&, struct multifieldMarker *);
+static bool FindNextConflictingMatch(const Environment&, struct partialMatch *,
                                      struct partialMatch *,
                                      struct joinNode *, struct partialMatch *, int);
-static bool PartialMatchDefunct(Environment *, struct partialMatch *);
-static void NegEntryRetractAlpha(Environment *, struct partialMatch *, int);
-static void NegEntryRetractBeta(Environment *, struct joinNode *, struct partialMatch *,
+static bool PartialMatchDefunct(const Environment&, struct partialMatch *);
+static void NegEntryRetractAlpha(const Environment&, struct partialMatch *, int);
+static void NegEntryRetractBeta(const Environment&, struct joinNode *, struct partialMatch *,
                                 struct partialMatch *, int);
 
 /************************************************************/
@@ -87,7 +87,7 @@ static void NegEntryRetractBeta(Environment *, struct joinNode *, struct partial
 /*   entity matched.                                        */
 /************************************************************/
 void NetworkRetract(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct patternMatch *listOfMatchedPatterns) {
     struct patternMatch *tempMatch, *nextMatch;
 
@@ -119,7 +119,7 @@ void NetworkRetract(
 /* PosEntryRetractAlpha: */
 /*************************/
 void PosEntryRetractAlpha(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct partialMatch *alphaMatch,
         int operation) {
     struct partialMatch *betaMatch, *tempMatch;
@@ -153,7 +153,7 @@ void PosEntryRetractAlpha(
 /* NegEntryRetractAlpha: */
 /*************************/
 static void NegEntryRetractAlpha(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct partialMatch *alphaMatch,
         int operation) {
     struct partialMatch *betaMatch;
@@ -180,7 +180,7 @@ static void NegEntryRetractAlpha(
 /* NegEntryRetractBeta: */
 /************************/
 static void NegEntryRetractBeta(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct joinNode *joinPtr,
         struct partialMatch *alphaMatch,
         struct partialMatch *betaMatch,
@@ -230,7 +230,7 @@ static void NegEntryRetractBeta(
 /* PosEntryRetractBeta: */
 /************************/
 void PosEntryRetractBeta(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct partialMatch *parentMatch,
         struct partialMatch *betaMatch,
         int operation) {
@@ -269,7 +269,7 @@ void PosEntryRetractBeta(
 /*    match in the beta memory of the join from being satisfied.  */
 /******************************************************************/
 static bool FindNextConflictingMatch(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct partialMatch *theBind,
         struct partialMatch *possibleConflicts,
         struct joinNode *theJoin,
@@ -401,7 +401,7 @@ static bool FindNextConflictingMatch(
 /*   false.                                                */
 /***********************************************************/
 static bool PartialMatchDefunct(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct partialMatch *thePM) {
     unsigned short i;
     struct patternEntity *thePE;
@@ -427,7 +427,7 @@ static bool PartialMatchDefunct(
 /*   deleted and so should not be considered as valid.           */
 /*****************************************************************/
 bool PartialMatchWillBeDeleted(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct partialMatch *thePM) {
     unsigned short i;
     struct patternEntity *thePE;
@@ -452,7 +452,7 @@ bool PartialMatchWillBeDeleted(
 /*   matches to the pool of free memory.           */
 /***************************************************/
 void DeletePartialMatches(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct partialMatch *listOfPMs) {
     struct partialMatch *nextPM;
 
@@ -499,7 +499,7 @@ void DeletePartialMatches(
 /*   with a partial match to the pool of free memory.         */
 /**************************************************************/
 void ReturnPartialMatch(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct partialMatch *waste) {
     /*==============================================*/
     /* If the partial match is in use, then put it  */
@@ -547,7 +547,7 @@ void ReturnPartialMatch(
 /*   with a partial match to the pool of free memory.          */
 /***************************************************************/
 void DestroyPartialMatch(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct partialMatch *waste) {
     /*======================================================*/
     /* If we're dealing with an alpha memory partial match, */
@@ -584,7 +584,7 @@ void DestroyPartialMatch(
 /*   pattern to the pool of free memory.              */
 /******************************************************/
 static void ReturnMarkers(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct multifieldMarker *waste) {
     struct multifieldMarker *temp;
 
@@ -604,7 +604,7 @@ static void ReturnMarkers(
 /*   data structures through the alpha memory bindings.      */
 /*************************************************************/
 void FlushGarbagePartialMatches(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     struct partialMatch *pmPtr;
     struct alphaMatch *amPtr;
 

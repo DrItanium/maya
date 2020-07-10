@@ -87,18 +87,18 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void PushQueryCore(Environment *);
-static void PopQueryCore(Environment *);
-static QUERY_CORE *FindQueryCore(Environment *, long long);
-static QUERY_TEMPLATE *DetermineQueryTemplates(Environment *, Expression *, const char *, unsigned *);
-static QUERY_TEMPLATE *FormChain(Environment *, const char *, Deftemplate *, UDFValue *);
-static void DeleteQueryTemplates(Environment *, QUERY_TEMPLATE *);
-static bool TestForFirstInChain(Environment *, QUERY_TEMPLATE *, unsigned);
-static bool TestForFirstFactInTemplate(Environment *, Deftemplate *, QUERY_TEMPLATE *, unsigned);
-static void TestEntireChain(Environment *, QUERY_TEMPLATE *, unsigned);
-static void TestEntireTemplate(Environment *, Deftemplate *, QUERY_TEMPLATE *, unsigned);
-static void AddSolution(Environment *);
-static void PopQuerySoln(Environment *);
+static void PushQueryCore(const Environment&);
+static void PopQueryCore(const Environment&);
+static QUERY_CORE *FindQueryCore(const Environment&, long long);
+static QUERY_TEMPLATE *DetermineQueryTemplates(const Environment&, Expression *, const char *, unsigned *);
+static QUERY_TEMPLATE *FormChain(const Environment&, const char *, Deftemplate *, UDFValue *);
+static void DeleteQueryTemplates(const Environment&, QUERY_TEMPLATE *);
+static bool TestForFirstInChain(const Environment&, QUERY_TEMPLATE *, unsigned);
+static bool TestForFirstFactInTemplate(const Environment&, Deftemplate *, QUERY_TEMPLATE *, unsigned);
+static void TestEntireChain(const Environment&, QUERY_TEMPLATE *, unsigned);
+static void TestEntireTemplate(const Environment&, Deftemplate *, QUERY_TEMPLATE *, unsigned);
+static void AddSolution(const Environment&);
+static void PopQuerySoln(const Environment&);
 
 /****************************************************
   NAME         : SetupFactQuery
@@ -110,7 +110,7 @@ static void PopQuerySoln(Environment *);
   NOTES        : None
  ****************************************************/
 void SetupFactQuery(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     AllocateEnvironmentData(theEnv, FACT_QUERY_DATA, sizeof(factQueryData));
 
     FactQueryData(theEnv)->QUERY_DELIMITER_SYMBOL = CreateSymbol(theEnv, QUERY_DELIMITER_STRING);
@@ -150,7 +150,7 @@ void SetupFactQuery(
   NOTES        : H/L Syntax : ((query-fact) <index>)
  *************************************************************/
 void GetQueryFact(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     QUERY_CORE *core;
@@ -170,7 +170,7 @@ void GetQueryFact(
   NOTES        : H/L Syntax : ((query-fact-slot) <index> <slot-name>)
  **************************************************************************/
 void GetQueryFactSlot(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Fact *theFact;
@@ -293,7 +293,7 @@ void GetQueryFactSlot(
   NOTES        : H/L Syntax : See FactParseQueryNoAction()
  ******************************************************************************/
 void AnyFacts(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     QUERY_TEMPLATE *qtemplates;
@@ -333,7 +333,7 @@ void AnyFacts(
   NOTES        : H/L Syntax : See ParseQueryNoAction()
  ******************************************************************************/
 void QueryFindFact(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     QUERY_TEMPLATE *qtemplates;
@@ -386,7 +386,7 @@ void QueryFindFact(
   NOTES        : H/L Syntax : See ParseQueryNoAction()
  ******************************************************************************/
 void QueryFindAllFacts(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     QUERY_TEMPLATE *qtemplates;
@@ -440,7 +440,7 @@ void QueryFindAllFacts(
   NOTES        : H/L Syntax : See ParseQueryAction()
  ******************************************************************************/
 void QueryDoForFact(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     QUERY_TEMPLATE *qtemplates;
@@ -487,7 +487,7 @@ void QueryDoForFact(
   NOTES        : H/L Syntax : See FactParseQueryAction()
  ******************************************************************************/
 void QueryDoForAllFacts(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     QUERY_TEMPLATE *qtemplates;
@@ -536,7 +536,7 @@ void QueryDoForAllFacts(
   NOTES        : H/L Syntax : See FactParseQueryNoAction()
  ******************************************************************************/
 void DelayedQueryDoForAllFacts(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     QUERY_TEMPLATE *qtemplates;
@@ -640,7 +640,7 @@ void DelayedQueryDoForAllFacts(
   NOTES        : None
  *******************************************************/
 static void PushQueryCore(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     QUERY_STACK *qptr;
 
     qptr = get_struct(theEnv, query_stack);
@@ -660,7 +660,7 @@ static void PushQueryCore(
   NOTES        : Assumes stack is not empty
  ******************************************************/
 static void PopQueryCore(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     QUERY_STACK *qptr;
 
     FactQueryData(theEnv)->QueryCore = FactQueryData(theEnv)->QueryCoreStack->core;
@@ -680,7 +680,7 @@ static void PopQueryCore(
   NOTES        : None
  ***************************************************/
 static QUERY_CORE *FindQueryCore(
-        Environment *theEnv,
+        const Environment&theEnv,
         long long depth) {
     QUERY_STACK *qptr;
 
@@ -717,7 +717,7 @@ static QUERY_CORE *FindQueryCore(
                    the QUERY_DELIMITER_SYMBOL "(QDS)"
  **********************************************************/
 static QUERY_TEMPLATE *DetermineQueryTemplates(
-        Environment *theEnv,
+        const Environment&theEnv,
         Expression *templateExp,
         const char *func,
         unsigned *rcnt) {
@@ -776,7 +776,7 @@ static QUERY_TEMPLATE *DetermineQueryTemplates(
   NOTES        : None
  *************************************************************/
 static QUERY_TEMPLATE *FormChain(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *func,
         Deftemplate *theDeftemplate,
         UDFValue *val) {
@@ -871,7 +871,7 @@ static QUERY_TEMPLATE *FormChain(
   NOTES        : None
  ******************************************************/
 static void DeleteQueryTemplates(
-        Environment *theEnv,
+        const Environment&theEnv,
         QUERY_TEMPLATE *qlist) {
     QUERY_TEMPLATE *tmp;
 
@@ -902,7 +902,7 @@ static void DeleteQueryTemplates(
   NOTES        : None
  ************************************************************/
 static bool TestForFirstInChain(
-        Environment *theEnv,
+        const Environment&theEnv,
         QUERY_TEMPLATE *qchain,
         unsigned indx) {
     QUERY_TEMPLATE *qptr;
@@ -931,7 +931,7 @@ static bool TestForFirstInChain(
   NOTES        : None
  *****************************************************************/
 static bool TestForFirstFactInTemplate(
-        Environment *theEnv,
+        const Environment&theEnv,
         Deftemplate *templatePtr,
         QUERY_TEMPLATE *qchain,
         unsigned indx) {
@@ -1009,7 +1009,7 @@ static bool TestForFirstFactInTemplate(
   NOTES        : None
  ************************************************************/
 static void TestEntireChain(
-        Environment *theEnv,
+        const Environment&theEnv,
         QUERY_TEMPLATE *qchain,
         unsigned indx) {
     QUERY_TEMPLATE *qptr;
@@ -1039,7 +1039,7 @@ static void TestEntireChain(
   NOTES        : None
  *****************************************************************/
 static void TestEntireTemplate(
-        Environment *theEnv,
+        const Environment&theEnv,
         Deftemplate *templatePtr,
         QUERY_TEMPLATE *qchain,
         unsigned indx) {
@@ -1113,7 +1113,7 @@ static void TestEntireTemplate(
   NOTES        : Solutions are stored as sequential arrays of Fact *
  ***************************************************************************/
 static void AddSolution(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     QUERY_SOLN *new_soln;
     unsigned i;
 
@@ -1141,7 +1141,7 @@ static void AddSolution(
   NOTES        : Assumes QueryCore->soln_set != 0
  ***************************************************/
 static void PopQuerySoln(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     FactQueryData(theEnv)->QueryCore->soln_bottom = FactQueryData(theEnv)->QueryCore->soln_set;
     FactQueryData(theEnv)->QueryCore->soln_set = FactQueryData(theEnv)->QueryCore->soln_set->nxt;
     rm(theEnv, FactQueryData(theEnv)->QueryCore->soln_bottom->soln,

@@ -82,7 +82,7 @@
 /***************************************/
 
 #if BLOAD_AND_BSAVE
-static void NoSuchTemplateError(Environment *, const char *);
+static void NoSuchTemplateError(const Environment&, const char *);
 #endif
 
 /**********************************************************************/
@@ -93,7 +93,7 @@ static void NoSuchTemplateError(Environment *, const char *);
 /*   wrapped around all of the assert commands.                       */
 /**********************************************************************/
 struct expr *BuildRHSAssert(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         struct token *theToken,
         bool *error,
@@ -200,7 +200,7 @@ struct expr *BuildRHSAssert(
 /*   occurs, then the error flag passed as an argument is set. */
 /***************************************************************/
 struct expr *GetRHSPattern(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *readSource,
         struct token *tempToken,
         bool *error,
@@ -397,7 +397,7 @@ struct expr *GetRHSPattern(
 /*   passed as an argument is set.                                  */
 /********************************************************************/
 struct expr *GetAssertArgument(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         struct token *theToken,
         bool *error,
@@ -492,7 +492,7 @@ struct expr *GetAssertArgument(
 /*   of a fact to a fact data structure.            */
 /****************************************************/
 Fact *StringToFact(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *str) {
     struct token theToken;
     Fact *factPtr;
@@ -580,7 +580,7 @@ Fact *StringToFact(
 /* an assert                                             */
 /*********************************************************/
 static void NoSuchTemplateError(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *templateName) {
     PrintErrorID(theEnv, "FACTRHS", 1, false);
     WriteString(theEnv, STDERR, "Implied deftemplate '");

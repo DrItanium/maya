@@ -85,18 +85,18 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void TraceErrorToRuleDriver(Environment *, struct joinNode *, const char *, int, bool);
-static struct alphaMemoryHash *FindAlphaMemory(Environment *, struct patternNodeHeader *, unsigned long);
+static void TraceErrorToRuleDriver(const Environment&, struct joinNode *, const char *, int, bool);
+static struct alphaMemoryHash *FindAlphaMemory(const Environment&, struct patternNodeHeader *, unsigned long);
 static unsigned long AlphaMemoryHashValue(patternNodeHeader *, unsigned long);
-static void UnlinkAlphaMemory(Environment *, struct patternNodeHeader *, struct alphaMemoryHash *);
-static void UnlinkAlphaMemoryBucketSiblings(Environment *, struct alphaMemoryHash *);
+static void UnlinkAlphaMemory(const Environment&, struct patternNodeHeader *, struct alphaMemoryHash *);
+static void UnlinkAlphaMemoryBucketSiblings(const Environment&, struct alphaMemoryHash *);
 static void InitializePMLinks(partialMatch *);
 static void UnlinkBetaPartialMatchfromAlphaAndBetaLineage(partialMatch *);
 static int CountPriorPatterns(joinNode *);
-static void ResizeBetaMemory(Environment *, struct betaMemory *);
-static void ResetBetaMemory(Environment *, struct betaMemory *);
+static void ResizeBetaMemory(const Environment&, struct betaMemory *);
+static void ResetBetaMemory(const Environment&, struct betaMemory *);
 #if (BLOAD_AND_BSAVE)
-static void TagNetworkTraverseJoins(Environment *, unsigned long *, unsigned long *, struct joinNode *);
+static void TagNetworkTraverseJoins(const Environment&, unsigned long *, unsigned long *, struct joinNode *);
 #endif
 
 /***********************************************************/
@@ -105,7 +105,7 @@ static void TagNetworkTraverseJoins(Environment *, unsigned long *, unsigned lon
 /*   or rule instantiation.                                */
 /***********************************************************/
 void PrintPartialMatch(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         struct partialMatch *list) {
     struct patternEntity *matchingItem;
@@ -126,7 +126,7 @@ void PrintPartialMatch(
 /* CopyPartialMatch:  Copies a partial match. */
 /**********************************************/
 struct partialMatch *CopyPartialMatch(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct partialMatch *list) {
     struct partialMatch *linker;
     unsigned short i;
@@ -151,7 +151,7 @@ struct partialMatch *CopyPartialMatch(
 /* CreateEmptyPartialMatch: */
 /****************************/
 struct partialMatch *CreateEmptyPartialMatch(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     struct partialMatch *linker;
 
     linker = get_struct(theEnv, partialMatch);
@@ -193,7 +193,7 @@ static void InitializePMLinks(
 /* UpdateBetaPMLinks: */
 /**********************/
 void UpdateBetaPMLinks(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct partialMatch *thePM,
         struct partialMatch *lhsBinds,
         struct partialMatch *rhsBinds,
@@ -309,7 +309,7 @@ void RemoveBlockedLink(
 /* UnlinkBetaPMFromNodeAndLineage: */
 /***********************************/
 void UnlinkBetaPMFromNodeAndLineage(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct joinNode *join,
         struct partialMatch *thePM,
         int side) {
@@ -354,7 +354,7 @@ void UnlinkBetaPMFromNodeAndLineage(
 /* UnlinkNonLeftLineage: */
 /*************************/
 void UnlinkNonLeftLineage(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct joinNode *join,
         struct partialMatch *thePM,
         int side) {
@@ -495,7 +495,7 @@ static void UnlinkBetaPartialMatchfromAlphaAndBetaLineage(
 /*   negated CE) or contain a single match.             */
 /********************************************************/
 struct partialMatch *MergePartialMatches(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct partialMatch *lhsBind,
         struct partialMatch *rhsBind) {
     struct partialMatch *linker;
@@ -537,7 +537,7 @@ struct partialMatch *MergePartialMatches(
 /*   (used by the fact and instance pattern matchers).             */
 /*******************************************************************/
 void InitializePatternHeader(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct patternNodeHeader *theHeader) {
 #if MAC_XCD
 #pragma unused(theEnv)
@@ -565,7 +565,7 @@ void InitializePatternHeader(
 /*   is still responsible for freeing these data structures).     */
 /******************************************************************/
 struct partialMatch *CreateAlphaMatch(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *theEntity,
         struct multifieldMarker *markers,
         struct patternNodeHeader *theHeader,
@@ -659,7 +659,7 @@ struct partialMatch *CreateAlphaMatch(
 /*   multifieldMarker data structures.     */
 /*******************************************/
 struct multifieldMarker *CopyMultifieldMarkers(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct multifieldMarker *theMarkers) {
     struct multifieldMarker *head = nullptr, *lastMark = nullptr, *newMark;
 
@@ -689,7 +689,7 @@ struct multifieldMarker *CopyMultifieldMarkers(
 /*   list of GarbagePartialMatches.                            */
 /***************************************************************/
 void FlushAlphaBetaMemory(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct partialMatch *pfl) {
     struct partialMatch *pfltemp;
 
@@ -708,7 +708,7 @@ void FlushAlphaBetaMemory(
 /*   of partial matches directly to the pool of free memory.     */
 /*****************************************************************/
 void DestroyAlphaBetaMemory(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct partialMatch *pfl) {
     struct partialMatch *pfltemp;
 
@@ -762,7 +762,7 @@ int GetPatternNumberFromJoin(
 /*   indicate which rule caused the problem.                            */
 /************************************************************************/
 void TraceErrorToRule(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct joinNode *joinPtr,
         const char *indentSpaces) {
     int patternCount;
@@ -781,7 +781,7 @@ void TraceErrorToRule(
 /*   rule caused a pattern or join network error.             */
 /**************************************************************/
 static void TraceErrorToRuleDriver(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct joinNode *joinPtr,
         const char *indentSpaces,
         int priorRightJoinPatterns,
@@ -839,7 +839,7 @@ static int CountPriorPatterns(
 /*   joins in the join network to the specified value.  */
 /********************************************************/
 void MarkRuleNetwork(
-        Environment *theEnv,
+        const Environment&theEnv,
         bool value) {
     Defrule *rulePtr, *disjunctPtr;
     struct joinNode *joinPtr;
@@ -902,7 +902,7 @@ void MarkRuleJoins(
 /*   matches from an alpha memory.       */
 /*****************************************/
 struct partialMatch *GetAlphaMemory(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct patternNodeHeader *theHeader,
         unsigned long hashOffset) {
     struct alphaMemoryHash *theAlphaMemory;
@@ -949,7 +949,7 @@ struct partialMatch *GetRightBetaMemory(
 /*   of a beta memory to nullptr.         */
 /***************************************/
 void ReturnLeftMemory(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct joinNode *theJoin) {
     if (theJoin->leftMemory == nullptr) return;
     genfree(theEnv, theJoin->leftMemory->beta, sizeof(partialMatch *) * theJoin->leftMemory->size);
@@ -962,7 +962,7 @@ void ReturnLeftMemory(
 /*   of a beta memory to nullptr.         */
 /***************************************/
 void ReturnRightMemory(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct joinNode *theJoin) {
     if (theJoin->rightMemory == nullptr) return;
     genfree(theEnv, theJoin->rightMemory->beta, sizeof(partialMatch *) * theJoin->rightMemory->size);
@@ -980,7 +980,7 @@ void ReturnRightMemory(
 /*   deleted).                                                  */
 /****************************************************************/
 void DestroyBetaMemory(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct joinNode *theJoin,
         int side) {
     unsigned long i;
@@ -1004,7 +1004,7 @@ void DestroyBetaMemory(
 /*   remain active.                                          */
 /*************************************************************/
 void FlushBetaMemory(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct joinNode *theJoin,
         int side) {
     unsigned long i;
@@ -1041,7 +1041,7 @@ bool BetaMemoryNotEmpty(
 /*   from an alpha memory.                   */
 /*********************************************/
 void RemoveAlphaMemoryMatches(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct patternNodeHeader *theHeader,
         struct partialMatch *theMatch,
         struct alphaMatch *theAlphaMatch) {
@@ -1073,7 +1073,7 @@ void RemoveAlphaMemoryMatches(
 /* DestroyAlphaMemory: */
 /***********************/
 void DestroyAlphaMemory(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct patternNodeHeader *theHeader,
         bool unlink) {
     struct alphaMemoryHash *theAlphaMemory, *tempMemory;
@@ -1096,7 +1096,7 @@ void DestroyAlphaMemory(
 /* FlushAlphaMemory: */
 /*********************/
 void FlushAlphaMemory(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct patternNodeHeader *theHeader) {
     struct alphaMemoryHash *theAlphaMemory, *tempMemory;
 
@@ -1118,7 +1118,7 @@ void FlushAlphaMemory(
 /* FindAlphaMemory: */
 /********************/
 static struct alphaMemoryHash *FindAlphaMemory(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct patternNodeHeader *theHeader,
         unsigned long hashValue) {
     struct alphaMemoryHash *theAlphaMemory;
@@ -1157,7 +1157,7 @@ static unsigned long AlphaMemoryHashValue(
 /* UnlinkAlphaMemory: */
 /**********************/
 static void UnlinkAlphaMemory(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct patternNodeHeader *theHeader,
         struct alphaMemoryHash *theAlphaMemory) {
     /*======================*/
@@ -1189,7 +1189,7 @@ static void UnlinkAlphaMemory(
 /* UnlinkAlphaMemoryBucketSiblings: */
 /************************************/
 static void UnlinkAlphaMemoryBucketSiblings(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct alphaMemoryHash *theAlphaMemory) {
     if (theAlphaMemory->prev == nullptr) { DefruleData(theEnv)->AlphaMemoryTable[theAlphaMemory->bucket] = theAlphaMemory->next; }
     else { theAlphaMemory->prev->next = theAlphaMemory->next; }
@@ -1201,7 +1201,7 @@ static void UnlinkAlphaMemoryBucketSiblings(
 /* ComputeRightHashValue: */
 /**************************/
 unsigned long ComputeRightHashValue(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct patternNodeHeader *theHeader) {
     struct expr *tempExpr;
     unsigned long hashValue = 0;
@@ -1261,7 +1261,7 @@ unsigned long ComputeRightHashValue(
 /* ResizeBetaMemory: */
 /*********************/
 void ResizeBetaMemory(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct betaMemory *theMemory) {
     struct partialMatch **oldArray, **lastAdd, *thePM, *nextPM;
     unsigned long i, oldSize, betaLocation;
@@ -1307,7 +1307,7 @@ void ResizeBetaMemory(
 /* ResetBetaMemory: */
 /********************/
 static void ResetBetaMemory(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct betaMemory *theMemory) {
     struct partialMatch **oldArray, **lastAdd;
     unsigned long oldSize;
@@ -1335,7 +1335,7 @@ static void ResetBetaMemory(
 /* PrintBetaMemory: */
 /********************/
 unsigned long PrintBetaMemory(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logName,
         struct betaMemory *theMemory,
         bool indentFirst,
@@ -1399,7 +1399,7 @@ unsigned long PrintBetaMemory(
 /*   structures currently in use.                            */
 /*************************************************************/
 void TagRuleNetwork(
-        Environment *theEnv,
+        const Environment&theEnv,
         unsigned long *moduleCount,
         unsigned long *ruleCount,
         unsigned long *joinCount,
@@ -1465,7 +1465,7 @@ void TagRuleNetwork(
 /* TagNetworkTraverseJoins: Traverses the join network for a rule. */
 /*******************************************************************/
 static void TagNetworkTraverseJoins(
-        Environment *theEnv,
+        const Environment&theEnv,
         unsigned long *joinCount,
         unsigned long *linkCount,
         struct joinNode *joinPtr) {

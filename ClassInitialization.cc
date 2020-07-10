@@ -122,16 +122,16 @@
    =========================================
    ***************************************** */
 
-static void SetupDefclasses(Environment *);
-static void DeallocateDefclassData(Environment *);
+static void SetupDefclasses(const Environment&);
+static void DeallocateDefclassData(const Environment&);
 
-static void DestroyDefclassAction(Environment *, ConstructHeader *, void *);
-static Defclass *AddSystemClass(Environment *, const char *, Defclass *);
-static void *AllocateModule(Environment *);
-static void ReturnModule(Environment *, void *);
+static void DestroyDefclassAction(const Environment&, ConstructHeader *, void *);
+static Defclass *AddSystemClass(const Environment&, const char *, Defclass *);
+static void *AllocateModule(const Environment&);
+static void ReturnModule(const Environment&, void *);
 
 #if DEFMODULE_CONSTRUCT
-static void UpdateDefclassesScope(Environment *, void *);
+static void UpdateDefclassesScope(const Environment&, void *);
 #endif
 
 /* =========================================
@@ -150,7 +150,7 @@ static void UpdateDefclassesScope(Environment *, void *);
   NOTES        : Order of setup calls is important
  **********************************************************/
 void SetupObjectSystem(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     EntityRecord defclassEntityRecord = {"DEFCLASS_PTR", DEFCLASS_PTR, 1, 0, 0,
                                          nullptr, nullptr, nullptr, nullptr, nullptr,
                                          (EntityBusyCountFunction *) DecrementDefclassBusyCount,
@@ -194,7 +194,7 @@ void SetupObjectSystem(
 /*    data for the defclass construct.             */
 /***************************************************/
 static void DeallocateDefclassData(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     SLOT_NAME *tmpSNPPtr, *nextSNPPtr;
     int i;
     struct defclassModule *theModuleItem;
@@ -262,7 +262,7 @@ static void DeallocateDefclassData(
 /*   as a result of DestroyEnvironment.                  */
 /*********************************************************/
 static void DestroyDefclassAction(
-        Environment *theEnv,
+        const Environment&theEnv,
         ConstructHeader *theConstruct,
         void *buffer) {
 #if MAC_XCD
@@ -293,7 +293,7 @@ static void DestroyDefclassAction(
                 WARNING!!: Assumes no classes exist yet!
  ***************************************************************/
 void CreateSystemClasses(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *context) {
     Defclass *user, *any, *primitive, *number, *lexeme, *address, *instance;
 
@@ -385,7 +385,7 @@ void CreateSystemClasses(
   NOTES        : None
  *********************************************************/
 static void SetupDefclasses(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     InstallPrimitive(theEnv, &DefclassData(theEnv)->DefclassEntityRecord, DEFCLASS_PTR);
 
     DefclassData(theEnv)->DefclassModuleIndex =
@@ -483,7 +483,7 @@ static void SetupDefclasses(
                   of caller)
  *********************************************************/
 static Defclass *AddSystemClass(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name,
         Defclass *parent) {
     Defclass *sys;
@@ -533,7 +533,7 @@ static Defclass *AddSystemClass(
   NOTES        : None
  *****************************************************/
 static void *AllocateModule(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     return (void *) get_struct(theEnv, defclassModule);
 }
 
@@ -547,7 +547,7 @@ static void *AllocateModule(
   NOTES        : None
  ***************************************************/
 static void ReturnModule(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *theItem) {
     FreeConstructHeaderModule(theEnv, (defmoduleItemHeader *) theItem, DefclassData(theEnv)->DefclassConstruct);
     DeleteSlotName(theEnv, FindIDSlotNameHash(theEnv, ISA_ID));
@@ -568,7 +568,7 @@ static void ReturnModule(
   NOTES        : None
  ***************************************************/
 static void UpdateDefclassesScope(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *context) {
     unsigned i;
     Defclass *theDefclass;

@@ -86,17 +86,17 @@ struct parseFunctionData {
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static bool QueryErrorCaptureCallback(Environment *, const char *, void *);
-static void WriteErrorCaptureCallback(Environment *, const char *, const char *, void *);
-static void DeactivateErrorCapture(Environment *);
-static void SetErrorCaptureValues(Environment *, UDFValue *);
+static bool QueryErrorCaptureCallback(const Environment&, const char *, void *);
+static void WriteErrorCaptureCallback(const Environment&, const char *, const char *, void *);
+static void DeactivateErrorCapture(const Environment&);
+static void SetErrorCaptureValues(const Environment&, UDFValue *);
 
 /*****************************************/
 /* ParseFunctionDefinitions: Initializes */
 /*   the parsing related functions.      */
 /*****************************************/
 void ParseFunctionDefinitions(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     AllocateEnvironmentData(theEnv, PARSEFUN_DATA, sizeof(parseFunctionData));
 
     AddUDF(theEnv, "check-syntax", "ym", 1, 1, "s", CheckSyntaxFunction);
@@ -107,7 +107,7 @@ void ParseFunctionDefinitions(
 /*   for the check-syntax function.        */
 /*******************************************/
 void CheckSyntaxFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -130,7 +130,7 @@ void CheckSyntaxFunction(
 /*   for the build function.     */
 /*********************************/
 bool CheckSyntax(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *theString,
         UDFValue *returnValue) {
     struct token theToken;
@@ -259,7 +259,7 @@ bool CheckSyntax(
 /*   the captured information.                    */
 /**************************************************/
 static void DeactivateErrorCapture(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     if (ParseFunctionData(theEnv)->ErrorString != nullptr) {
         rm(theEnv, ParseFunctionData(theEnv)->ErrorString, ParseFunctionData(theEnv)->ErrorMaximumPosition);
         ParseFunctionData(theEnv)->ErrorString = nullptr;
@@ -287,7 +287,7 @@ static void DeactivateErrorCapture(
 /*   either position if no output was sent to those logical names. */
 /*******************************************************************/
 static void SetErrorCaptureValues(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFValue *returnValue) {
     Multifield *theMultifield;
 
@@ -313,7 +313,7 @@ static void SetErrorCaptureValues(
 /*   for the check-syntax router.            */
 /*********************************************/
 static bool QueryErrorCaptureCallback(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         void *context) {
 #if MAC_XCD
@@ -330,7 +330,7 @@ static bool QueryErrorCaptureCallback(
 /*   for the check-syntax router.            */
 /*********************************************/
 static void WriteErrorCaptureCallback(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         const char *str,
         void *context) {

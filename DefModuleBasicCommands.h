@@ -54,14 +54,14 @@
 
 #include "Evaluation.h"
 
-void DefmoduleBasicCommands(Environment *);
-void GetDefmoduleListFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void GetDefmoduleList(Environment *, CLIPSValue *);
-void PPDefmoduleCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-bool PPDefmodule(Environment *, const char *, const char *);
-const char *PPDefmoduleNil(Environment *, const char *);
-void ListDefmodulesCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void ListDefmodules(Environment *, const char *);
+void DefmoduleBasicCommands(const Environment&);
+void GetDefmoduleListFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void GetDefmoduleList(const Environment&, CLIPSValue *);
+void PPDefmoduleCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+bool PPDefmodule(const Environment&, const char *, const char *);
+const char *PPDefmoduleNil(const Environment&, const char *);
+void ListDefmodulesCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void ListDefmodules(const Environment&, const char *);
 
 #endif /* _H_modulbsc */
 

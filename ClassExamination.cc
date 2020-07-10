@@ -96,18 +96,18 @@
 
 static bool CheckTwoClasses(UDFContext *, const char *, Defclass **, Defclass **);
 static SlotDescriptor *CheckSlotExists(UDFContext *, const char *, Defclass **, bool, bool);
-static SlotDescriptor *LookupSlot(Environment *, Defclass *, const char *, bool);
+static SlotDescriptor *LookupSlot(const Environment&, Defclass *, const char *, bool);
 
 #if DEBUGGING_FUNCTIONS
-static Defclass *CheckClass(Environment *, const char *, const char *);
+static Defclass *CheckClass(const Environment&, const char *, const char *);
 static const char *GetClassNameArgument(UDFContext *);
-static void PrintClassBrowse(Environment *, const char *, Defclass *, unsigned long);
-static void DisplaySeparator(Environment *, const char *, char *, int, int);
-static void DisplaySlotBasicInfo(Environment *, const char *, const char *, const char *,
+static void PrintClassBrowse(const Environment&, const char *, Defclass *, unsigned long);
+static void DisplaySeparator(const Environment&, const char *, char *, int, int);
+static void DisplaySlotBasicInfo(const Environment&, const char *, const char *, const char *,
                                  char *, Defclass *);
-static bool PrintSlotSources(Environment *, const char *, CLIPSLexeme *, PACKED_CLASS_LINKS *,
+static bool PrintSlotSources(const Environment&, const char *, CLIPSLexeme *, PACKED_CLASS_LINKS *,
                              unsigned long, bool);
-static void DisplaySlotConstraintInfo(Environment *, const char *, const char *, char *, unsigned, Defclass *);
+static void DisplaySlotConstraintInfo(const Environment&, const char *, const char *, char *, unsigned, Defclass *);
 static const char *ConstraintCode(CONSTRAINT_RECORD *, unsigned, unsigned);
 #endif
 
@@ -128,7 +128,7 @@ static const char *ConstraintCode(CONSTRAINT_RECORD *, unsigned, unsigned);
   NOTES        : Syntax : (browse-classes [<class>])
  ****************************************************************/
 void BrowseClassesCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Defclass *cls;
@@ -164,7 +164,7 @@ void BrowseClassesCommand(
 void BrowseClasses(
         Defclass *theDefclass,
         const char *logicalName) {
-    Environment *theEnv = theDefclass->header.env;
+    const Environment&theEnv = theDefclass->header.env;
 
     PrintClassBrowse(theEnv, logicalName, theDefclass, 0);
 }
@@ -180,7 +180,7 @@ void BrowseClasses(
   NOTES        : Syntax : (describe-class <class-name>)
  ****************************************************************/
 void DescribeClassCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *className;
@@ -218,7 +218,7 @@ void DescribeClass(
     unsigned long i;
     size_t slotNameLength, maxSlotNameLength;
     size_t overrideMessageLength, maxOverrideMessageLength;
-    Environment *theEnv = theDefclass->header.env;
+    const Environment&theEnv = theDefclass->header.env;
 
     DisplaySeparator(theEnv, logicalName, buf, 82, '=');
     DisplaySeparator(theEnv, logicalName, buf, 82, '*');
@@ -327,7 +327,7 @@ const char *GetCreateAccessorString(
   NOTES        : H/L Syntax: (defclass-module <class-name>)
  ************************************************************/
 void GetDefclassModuleCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     returnValue->value = GetConstructModuleCommand(context, "defclass-module", DefclassData(theEnv)->DefclassConstruct);
@@ -342,7 +342,7 @@ void GetDefclassModuleCommand(
   NOTES        : H/L Syntax : (superclassp <class-1> <class-2>)
  *********************************************************************/
 void SuperclassPCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Defclass *c1, *c2;
@@ -382,7 +382,7 @@ bool SuperclassP(
   NOTES        : H/L Syntax : (subclassp <class-1> <class-2>)
  *********************************************************************/
 void SubclassPCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Defclass *c1, *c2;
@@ -422,7 +422,7 @@ bool SubclassP(
   NOTES        : H/L Syntax : (slot-existp <class> <slot> [inherit])
  *********************************************************************/
 void SlotExistPCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Defclass *cls;
@@ -467,7 +467,7 @@ bool SlotExistP(
         Defclass *theDefclass,
         const char *slotName,
         bool inheritFlag) {
-    Environment *theEnv = theDefclass->header.env;
+    const Environment&theEnv = theDefclass->header.env;
 
     return LookupSlot(theEnv, theDefclass, slotName, inheritFlag) != nullptr;
 }
@@ -481,7 +481,7 @@ bool SlotExistP(
   NOTES        : H/L Syntax : (message-handler-existp <class> <hnd> [<type>])
  ************************************************************************************/
 void MessageHandlerExistPCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Defclass *cls;
@@ -524,7 +524,7 @@ void MessageHandlerExistPCommand(
   NOTES        : H/L Syntax : (slot-writablep <class> <slot>)
  **********************************************************************/
 void SlotWritablePCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Defclass *theDefclass;
@@ -549,7 +549,7 @@ bool SlotWritableP(
         Defclass *theDefclass,
         const char *slotName) {
     SlotDescriptor *sd;
-    Environment *theEnv = theDefclass->header.env;
+    const Environment&theEnv = theDefclass->header.env;
 
     if ((sd = LookupSlot(theEnv, theDefclass, slotName, true)) == nullptr)
         return false;
@@ -566,7 +566,7 @@ bool SlotWritableP(
   NOTES        : H/L Syntax : (slot-initablep <class> <slot>)
  **********************************************************************/
 void SlotInitablePCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Defclass *theDefclass;
@@ -591,7 +591,7 @@ bool SlotInitableP(
         Defclass *theDefclass,
         const char *slotName) {
     SlotDescriptor *sd;
-    Environment *theEnv = theDefclass->header.env;
+    const Environment&theEnv = theDefclass->header.env;
 
     if ((sd = LookupSlot(theEnv, theDefclass, slotName, true)) == nullptr)
         return false;
@@ -608,7 +608,7 @@ bool SlotInitableP(
   NOTES        : H/L Syntax : (slot-publicp <class> <slot>)
  **********************************************************************/
 void SlotPublicPCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Defclass *theDefclass;
@@ -633,7 +633,7 @@ bool SlotPublicP(
         Defclass *theDefclass,
         const char *slotName) {
     SlotDescriptor *sd;
-    Environment *theEnv = theDefclass->header.env;
+    const Environment&theEnv = theDefclass->header.env;
 
     if ((sd = LookupSlot(theEnv, theDefclass, slotName, false)) == nullptr)
         return false;
@@ -651,7 +651,7 @@ bool SlotPublicP(
   NOTES        : None
  ***************************************************/
 int SlotDefaultP(
-        Environment *theEnv,
+        const Environment&theEnv,
         Defclass *theDefclass,
         const char *slotName) {
     SlotDescriptor *sd;
@@ -677,7 +677,7 @@ int SlotDefaultP(
   NOTES        : H/L Syntax : (slot-direct-accessp <class> <slot>)
  **********************************************************************/
 void SlotDirectAccessPCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Defclass *theDefclass;
@@ -704,7 +704,7 @@ bool SlotDirectAccessP(
         Defclass *theDefclass,
         const char *slotName) {
     SlotDescriptor *sd;
-    Environment *theEnv = theDefclass->header.env;
+    const Environment&theEnv = theDefclass->header.env;
 
     if ((sd = LookupSlot(theEnv, theDefclass, slotName, true)) == nullptr)
         return false;
@@ -721,7 +721,7 @@ bool SlotDirectAccessP(
   NOTES        : H/L Syntax : (slot-default-value <class> <slot>)
  **********************************************************************/
 void SlotDefaultValueCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Defclass *theDefclass;
@@ -766,7 +766,7 @@ bool SlotDefaultValue(
     bool rv;
     UDFValue result;
     UDFValue *tmpPtr;
-    Environment *theEnv = theDefclass->header.env;
+    const Environment&theEnv = theDefclass->header.env;
 
     theValue->value = FalseSymbol(theEnv);
     if ((sd = LookupSlot(theEnv, theDefclass, slotName, true)) == nullptr) { return false; }
@@ -799,7 +799,7 @@ bool SlotDefaultValue(
   NOTES        : H/L Syntax : (class-existp <arg>)
  ********************************************************/
 void ClassExistPCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -833,7 +833,7 @@ static bool CheckTwoClasses(
         Defclass **c1,
         Defclass **c2) {
     UDFValue theArg;
-    Environment *theEnv = context->environment;
+    const Environment&theEnv = context->environment;
 
     if (!UDFFirstArgument(context, SYMBOL_BIT, &theArg)) { return false; }
 
@@ -881,7 +881,7 @@ static SlotDescriptor *CheckSlotExists(
     CLIPSLexeme *ssym;
     int slotIndex;
     SlotDescriptor *sd;
-    Environment *theEnv = context->environment;
+    const Environment&theEnv = context->environment;
 
     ssym = CheckClassAndSlot(context, func, classBuffer);
     if (ssym == nullptr)
@@ -924,7 +924,7 @@ static SlotDescriptor *CheckSlotExists(
   NOTES        : None
  ***************************************************/
 static SlotDescriptor *LookupSlot(
-        Environment *theEnv,
+        const Environment&theEnv,
         Defclass *theDefclass,
         const char *slotName,
         bool inheritFlag) {
@@ -959,7 +959,7 @@ static SlotDescriptor *LookupSlot(
   NOTES        : None
  ******************************************************/
 static Defclass *CheckClass(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *func,
         const char *cname) {
     Defclass *cls;
@@ -998,7 +998,7 @@ static const char *GetClassNameArgument(
   NOTES        : None
  ****************************************************************/
 static void PrintClassBrowse(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         Defclass *cls,
         unsigned long depth) {
@@ -1026,7 +1026,7 @@ static void PrintClassBrowse(
   NOTES        : None
  *********************************************************/
 static void DisplaySeparator(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         char *buf,
         int maxlen,
@@ -1070,7 +1070,7 @@ static void DisplaySeparator(
   NOTES        : None
  *************************************************************/
 static void DisplaySlotBasicInfo(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         const char *slotNamePrintFormat,
         const char *overrideMessagePrintFormat,
@@ -1142,7 +1142,7 @@ static void DisplaySlotBasicInfo(
   NOTES        : None
  ***************************************************/
 static bool PrintSlotSources(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         CLIPSLexeme *sname,
         PACKED_CLASS_LINKS *sprec,
@@ -1190,7 +1190,7 @@ static bool PrintSlotSources(
   NOTES        : None
  *********************************************************/
 static void DisplaySlotConstraintInfo(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         const char *slotNamePrintFormat,
         char *buf,

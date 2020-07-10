@@ -60,22 +60,22 @@
 
 #include "Evaluation.h"
 
-void SetupInstanceModDupCommands(Environment *);
+void SetupInstanceModDupCommands(const Environment&);
 
-void ModifyInstance(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void MsgModifyInstance(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void DuplicateInstance(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void MsgDuplicateInstance(Environment *theEnv, UDFContext *context, UDFValue *ret);
+void ModifyInstance(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void MsgModifyInstance(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void DuplicateInstance(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void MsgDuplicateInstance(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 
-void InactiveModifyInstance(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void InactiveMsgModifyInstance(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void InactiveDuplicateInstance(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void InactiveMsgDuplicateInstance(Environment *theEnv, UDFContext *context, UDFValue *ret);
+void InactiveModifyInstance(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void InactiveMsgModifyInstance(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void InactiveDuplicateInstance(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void InactiveMsgDuplicateInstance(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 
-void DirectModifyMsgHandler(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void MsgModifyMsgHandler(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void DirectDuplicateMsgHandler(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void MsgDuplicateMsgHandler(Environment *theEnv, UDFContext *context, UDFValue *ret);
+void DirectModifyMsgHandler(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void MsgModifyMsgHandler(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void DirectDuplicateMsgHandler(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void MsgDuplicateMsgHandler(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 
 #endif /* _H_insmoddp */
 

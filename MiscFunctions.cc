@@ -150,16 +150,16 @@ struct miscFunctionData {
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void ExpandFuncMultifield(Environment *, UDFValue *, Expression *,
+static void ExpandFuncMultifield(const Environment&, UDFValue *, Expression *,
                                  Expression **, void *);
-static int FindLanguageType(Environment *, const char *);
-static void ConvertTime(Environment *, UDFValue *, struct tm *);
+static int FindLanguageType(const Environment&, const char *);
+static void ConvertTime(const Environment&, UDFValue *, struct tm *);
 
 /*****************************************************************/
 /* MiscFunctionDefinitions: Initializes miscellaneous functions. */
 /*****************************************************************/
 void MiscFunctionDefinitions(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     AllocateEnvironmentData(theEnv, MISCFUN_DATA, sizeof(miscFunctionData));
     MiscFunctionData(theEnv)->GensymNumber = 1;
     MiscFunctionData(theEnv)->errorCode.lexemeValue = FalseSymbol(theEnv);
@@ -215,7 +215,7 @@ void MiscFunctionDefinitions(
 /* ExitCommand: H/L command for exiting the program. */
 /*****************************************************/
 void ExitCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     unsigned int argCnt;
@@ -240,7 +240,7 @@ void ExitCommand(
 /* CreateFunction: H/L access routine for the create$ function.   */
 /******************************************************************/
 void CreateFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     StoreInMultifield(theEnv, returnValue, GetFirstArgument(), true);
@@ -250,7 +250,7 @@ void CreateFunction(
 /* SetgenFunction: H/L access routine for the setgen function.   */
 /*****************************************************************/
 void SetgenFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     long long theLong;
@@ -285,7 +285,7 @@ void SetgenFunction(
 /*   for the gensym function.           */
 /****************************************/
 void GensymFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     char genstring[128];
@@ -310,7 +310,7 @@ void GensymFunction(
 /*   the gensym* function.                      */
 /************************************************/
 void GensymStarFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     /*====================*/
@@ -325,7 +325,7 @@ void GensymStarFunction(
 /*   the gensym* function.          */
 /************************************/
 void GensymStar(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFValue *returnValue) {
     char genstring[128];
 
@@ -353,7 +353,7 @@ void GensymStar(
 /*   the random function.                   */
 /********************************************/
 void RandomFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     unsigned int argCount;
@@ -404,7 +404,7 @@ void RandomFunction(
 /*   the seed function.                   */
 /******************************************/
 void SeedFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theValue;
@@ -427,7 +427,7 @@ void SeedFunction(
 /*   the length$ function.                  */
 /********************************************/
 void LengthFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -450,7 +450,7 @@ void LengthFunction(
 /*   for the release-mem function.         */
 /*******************************************/
 void ReleaseMemCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     /*========================================*/
@@ -466,7 +466,7 @@ void ReleaseMemCommand(
 /*   for the conserve-mem command.        */
 /******************************************/
 void ConserveMemCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *argument;
@@ -517,7 +517,7 @@ void ConserveMemCommand(
 /*   for the mem-used command.          */
 /****************************************/
 void MemUsedCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     /*============================================*/
@@ -533,7 +533,7 @@ void MemUsedCommand(
 /*   for the mem-requests command.          */
 /********************************************/
 void MemRequestsCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     /*==================================*/
@@ -551,7 +551,7 @@ void MemRequestsCommand(
 /*   for the apropos command.           */
 /****************************************/
 void AproposCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *argument;
@@ -595,7 +595,7 @@ void AproposCommand(
 /*   for the options command.           */
 /****************************************/
 void OptionsCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     /*=======================*/
@@ -697,7 +697,7 @@ void OptionsCommand(
 /*   for the operating system function.        */
 /***********************************************/
 void OperatingSystemFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
 #if GENERIC
@@ -735,7 +735,7 @@ void OperatingSystemFunction(
   NOTES        : None
  *******************************************************************/
 void ExpandFuncCall(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Expression *newargexp, *fcallexp;
@@ -798,7 +798,7 @@ void ExpandFuncCall(
   NOTES        : None
  **********************************************************************/
 void DummyExpandFuncMultifield(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     returnValue->lexemeValue = FalseSymbol(theEnv);
@@ -827,7 +827,7 @@ void DummyExpandFuncMultifield(
                  SURE THAT THE Expression PASSED IS SAFE TO CHANGE!!
  **********************************************************************/
 static void ExpandFuncMultifield(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFValue *returnValue,
         Expression *theExp,
         Expression **sto,
@@ -893,7 +893,7 @@ static void ExpandFuncMultifield(
   NOTES        : None
  ****************************************************************/
 void CauseEvaluationError(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     SetEvaluationError(theEnv, true);
@@ -905,7 +905,7 @@ void CauseEvaluationError(
 /*   get-sequence-operator-recognition command. */
 /************************************************/
 void GetSORCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     returnValue->lexemeValue = CreateBoolean(theEnv, GetSequenceOperatorRecognition(theEnv));
@@ -916,7 +916,7 @@ void GetSORCommand(
 /*   set-sequence-operator-recognition command. */
 /************************************************/
 void SetSORCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -935,7 +935,7 @@ void SetSORCommand(
   NOTES        : None
  ********************************************************************/
 void GetFunctionRestrictions(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -994,7 +994,7 @@ void GetFunctionRestrictions(
 /*   for the get-function-list function.         */
 /*************************************************/
 void GetFunctionListFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     struct functionDefinition *theFunction;
@@ -1022,7 +1022,7 @@ void GetFunctionListFunction(
 /*   for the funcall function.         */
 /***************************************/
 void FuncallFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     size_t j;
@@ -1161,7 +1161,7 @@ void FuncallFunction(
 /*   for the new function.         */
 /***********************************/
 void NewFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     int theType;
@@ -1208,7 +1208,7 @@ void NewFunction(
 /*   for the new function.          */
 /************************************/
 void CallFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     int theType;
@@ -1281,7 +1281,7 @@ void CallFunction(
 /* FindLanguageType: */
 /*********************/
 static int FindLanguageType(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *languageName) {
     int theType;
 
@@ -1297,7 +1297,7 @@ static int FindLanguageType(
 /*   for the time function.         */
 /************************************/
 void TimeFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     /*==================*/
@@ -1312,7 +1312,7 @@ void TimeFunction(
 /*   time for local-time and gm-time.   */
 /****************************************/
 static void ConvertTime(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFValue *returnValue,
         struct tm *info) {
     returnValue->begin = 0;
@@ -1368,7 +1368,7 @@ static void ConvertTime(
 /*   for the local-time function.        */
 /*****************************************/
 void LocalTimeFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     time_t rawtime;
@@ -1389,7 +1389,7 @@ void LocalTimeFunction(
 /*   for the gm-time function.        */
 /**************************************/
 void GMTimeFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     time_t rawtime;
@@ -1410,7 +1410,7 @@ void GMTimeFunction(
 /*   for the timer function.           */
 /***************************************/
 void TimerFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     double startTime;
@@ -1429,7 +1429,7 @@ void TimerFunction(
 /*   for the system function.          */
 /***************************************/
 void SystemCommand(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     char *commandBuffer = nullptr;
@@ -1472,7 +1472,7 @@ void SystemCommand(
 /*   for the geterror function.         */
 /****************************************/
 void GetErrorFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     CLIPSToUDFValue(&MiscFunctionData(theEnv)->errorCode, returnValue);
@@ -1482,7 +1482,7 @@ void GetErrorFunction(
 /* SetErrorValue */
 /*****************/
 void SetErrorValue(
-        Environment *theEnv,
+        const Environment&theEnv,
         TypeHeader *theValue) {
     Release(theEnv, MiscFunctionData(theEnv)->errorCode.header);
 
@@ -1496,7 +1496,7 @@ void SetErrorValue(
 /* ClearErrorValue */
 /*******************/
 void ClearErrorValue(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     Release(theEnv, MiscFunctionData(theEnv)->errorCode.header);
     MiscFunctionData(theEnv)->errorCode.lexemeValue = FalseSymbol(theEnv);
     Retain(theEnv, MiscFunctionData(theEnv)->errorCode.header);
@@ -1507,7 +1507,7 @@ void ClearErrorValue(
 /*   for the clear-error function.        */
 /******************************************/
 void ClearErrorFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     CLIPSToUDFValue(&MiscFunctionData(theEnv)->errorCode, returnValue);
@@ -1519,7 +1519,7 @@ void ClearErrorFunction(
 /*   for the set-error function.        */
 /****************************************/
 void SetErrorFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     CLIPSValue cv;
@@ -1537,7 +1537,7 @@ void SetErrorFunction(
 /*   for the void function.         */
 /************************************/
 void VoidFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     returnValue->voidValue = VoidConstant(theEnv);

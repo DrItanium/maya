@@ -65,14 +65,14 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static bool ParseRangeCardinalityAttribute(Environment *,
+static bool ParseRangeCardinalityAttribute(const Environment&,
                                            const char *, CONSTRAINT_RECORD *,
                                            CONSTRAINT_PARSE_RECORD *,
                                            const char *, bool);
-static bool ParseTypeAttribute(Environment *, const char *, CONSTRAINT_RECORD *);
-static void AddToRestrictionList(Environment *, int, CONSTRAINT_RECORD *,
+static bool ParseTypeAttribute(const Environment&, const char *, CONSTRAINT_RECORD *);
+static void AddToRestrictionList(const Environment&, int, CONSTRAINT_RECORD *,
                                  CONSTRAINT_RECORD *);
-static bool ParseAllowedValuesAttribute(Environment *, const char *, const char *,
+static bool ParseAllowedValuesAttribute(const Environment&, const char *, const char *,
                                         CONSTRAINT_RECORD *,
                                         CONSTRAINT_PARSE_RECORD *);
 static int GetConstraintTypeFromAllowedName(const char *);
@@ -80,7 +80,7 @@ static int GetConstraintTypeFromTypeName(const char *);
 static bool GetAttributeParseValue(const char *, CONSTRAINT_PARSE_RECORD *);
 static void SetRestrictionFlag(int, CONSTRAINT_RECORD *, bool);
 static void SetParseFlag(CONSTRAINT_PARSE_RECORD *, const char *);
-static void NoConjunctiveUseError(Environment *, const char *, const char *);
+static void NoConjunctiveUseError(const Environment&, const char *, const char *);
 
 /********************************************************************/
 /* CheckConstraintParseConflicts: Determines if a constraint record */
@@ -88,7 +88,7 @@ static void NoConjunctiveUseError(Environment *, const char *, const char *);
 /*   true if no conflicts were detected, otherwise false.           */
 /********************************************************************/
 bool CheckConstraintParseConflicts(
-        Environment *theEnv,
+        const Environment&theEnv,
         CONSTRAINT_RECORD *constraints) {
     /*===================================================*/
     /* Check to see if any of the allowed-... attributes */
@@ -185,7 +185,7 @@ bool CheckConstraintParseConflicts(
 /*   for a constraint attribute conflict.               */
 /********************************************************/
 void AttributeConflictErrorMessage(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *attribute1,
         const char *attribute2) {
     PrintErrorID(theEnv, "CSTRNPSR", 1, true);
@@ -244,7 +244,7 @@ bool StandardConstraint(
 /*   if the constraint was successfully parsed, otherwise false.       */
 /***********************************************************************/
 bool ParseStandardConstraint(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *readSource,
         const char *constraintName,
         CONSTRAINT_RECORD *constraints,
@@ -319,7 +319,7 @@ bool ParseStandardConstraint(
 /* record.                                                 */
 /***********************************************************/
 void OverlayConstraint(
-        Environment *theEnv,
+        const Environment&theEnv,
         CONSTRAINT_PARSE_RECORD *pc,
         CONSTRAINT_RECORD *cdst,
         CONSTRAINT_RECORD *csrc) {
@@ -435,7 +435,7 @@ void OverlayConstraintParseRecord(
 /* type from the source restriction list to the destination */
 /************************************************************/
 static void AddToRestrictionList(
-        Environment *theEnv,
+        const Environment&theEnv,
         int type,
         CONSTRAINT_RECORD *cdst,
         CONSTRAINT_RECORD *csrc) {
@@ -454,7 +454,7 @@ static void AddToRestrictionList(
 /* ParseAllowedValuesAttribute: Parses the allowed-... attributes. */
 /*******************************************************************/
 static bool ParseAllowedValuesAttribute(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *readSource,
         const char *constraintName,
         CONSTRAINT_RECORD *constraints,
@@ -793,7 +793,7 @@ static bool ParseAllowedValuesAttribute(
 /*   that two attributes can't be used in conjunction.     */
 /***********************************************************/
 static void NoConjunctiveUseError(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *attribute1,
         const char *attribute2) {
     PrintErrorID(theEnv, "CSTRNPSR", 3, true);
@@ -809,7 +809,7 @@ static void NoConjunctiveUseError(
 /* ParseTypeAttribute: Parses the type attribute. */
 /**************************************************/
 static bool ParseTypeAttribute(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *readSource,
         CONSTRAINT_RECORD *constraints) {
     bool typeParsed = false;
@@ -944,7 +944,7 @@ static bool ParseTypeAttribute(
 /* ParseRangeCardinalityAttribute: Parses the range/cardinality attribute. */
 /***************************************************************************/
 static bool ParseRangeCardinalityAttribute(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *readSource,
         CONSTRAINT_RECORD *constraints,
         CONSTRAINT_PARSE_RECORD *parsedConstraints,

@@ -62,18 +62,18 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static struct expr *ParseAssertSlotValues(Environment *, const char *, struct token *, struct templateSlot *, bool *, bool);
-static struct expr *ReorderAssertSlotValues(Environment *, struct templateSlot *, struct expr *, bool *);
-static struct expr *GetSlotAssertValues(Environment *, struct templateSlot *, struct expr *, bool *);
+static struct expr *ParseAssertSlotValues(const Environment&, const char *, struct token *, struct templateSlot *, bool *, bool);
+static struct expr *ReorderAssertSlotValues(const Environment&, struct templateSlot *, struct expr *, bool *);
+static struct expr *GetSlotAssertValues(const Environment&, struct templateSlot *, struct expr *, bool *);
 static struct expr *FindAssertSlotItem(templateSlot *, struct expr *);
-static struct templateSlot *ParseSlotLabel(Environment *, const char *, struct token *, Deftemplate *, bool *, TokenType);
+static struct templateSlot *ParseSlotLabel(const Environment&, const char *, struct token *, Deftemplate *, bool *, TokenType);
 
 /******************************************************************/
 /* ParseAssertTemplate: Parses and builds the list of values that */
 /*   are used for an assert of a fact with a deftemplate.         */
 /******************************************************************/
 struct expr *ParseAssertTemplate(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *readSource,
         struct token *theToken,
         bool *error,
@@ -169,7 +169,7 @@ struct expr *ParseAssertTemplate(
 /*   Checks for opening left parenthesis and a valid slot name. */
 /****************************************************************/
 static struct templateSlot *ParseSlotLabel(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *inputSource,
         struct token *tempToken,
         Deftemplate *theDeftemplate,
@@ -243,7 +243,7 @@ static struct templateSlot *ParseSlotLabel(
 /* ParseAssertSlotValues: Gets a single assert slot value for a template. */
 /**************************************************************************/
 static struct expr *ParseAssertSlotValues(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *inputSource,
         struct token *tempToken,
         struct templateSlot *slotPtr,
@@ -386,7 +386,7 @@ static struct expr *ParseAssertSlotValues(
 /*   to the order of the values described by the deftemplate.            */
 /*************************************************************************/
 static struct expr *ReorderAssertSlotValues(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct templateSlot *slotPtr,
         struct expr *firstSlot,
         bool *error) {
@@ -441,7 +441,7 @@ static struct expr *ReorderAssertSlotValues(
 /*   default value will be used.                               */
 /***************************************************************/
 static struct expr *GetSlotAssertValues(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct templateSlot *slotPtr,
         struct expr *firstSlot,
         bool *error) {

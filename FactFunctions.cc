@@ -120,7 +120,7 @@
 /* FactFunctionDefinitions: Defines fact functions. */
 /****************************************************/
 void FactFunctionDefinitions(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     AddUDF(theEnv, "fact-existp", "b", 1, 1, "lf", FactExistpFunction);
     AddUDF(theEnv, "fact-relation", "y", 1, 1, "lf", FactRelationFunction);
     AddUDF(theEnv, "fact-slot-value", "*", 2, 2, ";lf;y", FactSlotValueFunction);
@@ -135,7 +135,7 @@ void FactFunctionDefinitions(
 /*   for the fact-relation function.          */
 /**********************************************/
 void FactRelationFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Fact *theFact;
@@ -173,7 +173,7 @@ Deftemplate *FactDeftemplate(
 /*   for the fact-existp function.          */
 /********************************************/
 void FactExistpFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Fact *theFact;
@@ -202,7 +202,7 @@ bool FactExistp(
 /*   for the fact-addressp function.        */
 /********************************************/
 void FactAddresspFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue item;
@@ -218,7 +218,7 @@ void FactAddresspFunction(
 /*   for the fact-slot-value function.         */
 /***********************************************/
 void FactSlotValueFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Fact *theFact;
@@ -254,7 +254,7 @@ void FactSlotValueFunction(
 /*   the fact-slot-value function.     */
 /***************************************/
 void FactSlotValue(
-        Environment *theEnv,
+        const Environment&theEnv,
         Fact *theFact,
         const char *theSlotName,
         CLIPSValue *returnValue) {
@@ -292,7 +292,7 @@ void FactSlotValue(
 /*   for the fact-slot-names function.         */
 /***********************************************/
 void FactSlotNamesFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Fact *theFact;
@@ -326,7 +326,7 @@ void FactSlotNames(
     Multifield *theList;
     struct templateSlot *theSlot;
     unsigned long count;
-    Environment *theEnv = theFact->whichDeftemplate->header.env;
+    const Environment&theEnv = theFact->whichDeftemplate->header.env;
 
     /*===============================================*/
     /* If we're dealing with an implied deftemplate, */
@@ -371,7 +371,7 @@ void FactSlotNames(
 /*   for the get-fact-list function.         */
 /*********************************************/
 void GetFactListFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Defmodule *theModule;
@@ -409,7 +409,7 @@ void GetFactListFunction(
 /*   for the get-fact-list function. */
 /*************************************/
 void GetFactList(
-        Environment *theEnv,
+        const Environment&theEnv,
         CLIPSValue *returnValue,
         Defmodule *theModule) {
     Fact *theFact;
@@ -476,7 +476,7 @@ void GetFactList(
 /*   for the ppfact function.         */
 /**************************************/
 void PPFactFunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Fact *theFact;
@@ -543,7 +543,7 @@ void PPFact(
         Fact *theFact,
         const char *logicalName,
         bool ignoreDefaults) {
-    Environment *theEnv = theFact->whichDeftemplate->header.env;
+    const Environment&theEnv = theFact->whichDeftemplate->header.env;
 
     if (theFact == nullptr) return;
 
@@ -564,7 +564,7 @@ Fact *GetFactAddressOrIndexArgument(
     UDFValue theArg;
     long long factIndex;
     Fact *theFact;
-    Environment *theEnv = context->environment;
+    const Environment&theEnv = context->environment;
     char tempBuffer[20];
 
     if (!UDFNextArgument(context, ANY_TYPE_BITS, &theArg)) { return nullptr; }

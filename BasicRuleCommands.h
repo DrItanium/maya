@@ -67,23 +67,23 @@
 
 #include "Evaluation.h"
 
-void DefruleBasicCommands(Environment *);
-void UndefruleCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-bool Undefrule(Defrule *, Environment *);
-void GetDefruleListFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void GetDefruleList(Environment *, CLIPSValue *, Defmodule *);
-void DefruleModuleFunction(Environment *theEnv, UDFContext *context, UDFValue *ret);
+void DefruleBasicCommands(const Environment&);
+void UndefruleCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+bool Undefrule(Defrule *, const Environment&);
+void GetDefruleListFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void GetDefruleList(const Environment&, CLIPSValue *, Defmodule *);
+void DefruleModuleFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 #if DEBUGGING_FUNCTIONS
-void PPDefruleCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-bool PPDefrule(Environment *, const char *, const char *);
-void ListDefrulesCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void ListDefrules(Environment *, const char *, Defmodule *);
+void PPDefruleCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+bool PPDefrule(const Environment&, const char *, const char *);
+void ListDefrulesCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void ListDefrules(const Environment&, const char *, Defmodule *);
 bool DefruleGetWatchFirings(Defrule *);
 bool DefruleGetWatchActivations(Defrule *);
 void DefruleSetWatchFirings(Defrule *, bool);
 void DefruleSetWatchActivations(Defrule *, bool);
-bool DefruleWatchAccess(Environment *, int, bool, struct expr *);
-bool DefruleWatchPrint(Environment *, const char *, int, struct expr *);
+bool DefruleWatchAccess(const Environment&, int, bool, struct expr *);
+bool DefruleWatchPrint(const Environment&, const char *, int, struct expr *);
 #endif
 
 #endif /* _H_rulebsc */

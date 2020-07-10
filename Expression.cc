@@ -68,9 +68,9 @@ constexpr auto PRIME_THREE = 269;
 /****************************************/
 
 static unsigned long ListToPacked(expr *, struct expr *, unsigned long);
-static EXPRESSION_HN *FindHashedExpression(Environment *, Expression *, unsigned *, EXPRESSION_HN **);
+static EXPRESSION_HN *FindHashedExpression(const Environment&, Expression *, unsigned *, EXPRESSION_HN **);
 static unsigned HashExpression(Expression *);
-static void DeallocateExpressionData(Environment *);
+static void DeallocateExpressionData(const Environment&);
 
 /**************************************************/
 /* InitExpressionData: Initializes the function   */
@@ -78,7 +78,7 @@ static void DeallocateExpressionData(Environment *);
 /*   and the expression hash table.               */
 /**************************************************/
 void InitExpressionData(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     unsigned i;
 
     AllocateEnvironmentData(theEnv, EXPRESSION_DATA, sizeof(expressionData), DeallocateExpressionData);
@@ -96,7 +96,7 @@ void InitExpressionData(
 /*    environment data for expressions.  */
 /*****************************************/
 static void DeallocateExpressionData(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     int i;
     EXPRESSION_HN *tmpPtr, *nextPtr;
 
@@ -131,7 +131,7 @@ static void DeallocateExpressionData(
 /*   pointers used in generating some expressions.  */
 /****************************************************/
 void InitExpressionPointers(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     ExpressionData(theEnv)->PTR_AND = FindFunction(theEnv, "and");
     ExpressionData(theEnv)->PTR_OR = FindFunction(theEnv, "or");
     ExpressionData(theEnv)->PTR_EQ = FindFunction(theEnv, "eq");
@@ -151,7 +151,7 @@ void InitExpressionPointers(
 /*   atomic data values found in an expression.    */
 /***************************************************/
 void ExpressionInstall(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct expr *expression) {
     if (expression == nullptr) return;
 
@@ -167,7 +167,7 @@ void ExpressionInstall(
 /*   atomic data values found in an expression.      */
 /*****************************************************/
 void ExpressionDeinstall(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct expr *expression) {
     if (expression == nullptr) return;
 
@@ -187,7 +187,7 @@ void ExpressionDeinstall(
 /*   the overhead required for multiple memory allocations.            */
 /***********************************************************************/
 struct expr *PackExpression(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct expr *original) {
     struct expr *packPtr;
 
@@ -242,7 +242,7 @@ static unsigned long ListToPacked(
 /*   using PackExpression to the memory manager.               */
 /***************************************************************/
 void ReturnPackedExpression(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct expr *packPtr) {
     if (packPtr != nullptr) {
         rm(theEnv, packPtr, sizeof(expr) * ExpressionSize(packPtr));
@@ -254,7 +254,7 @@ void ReturnPackedExpression(
 /*   list of expr data structures.             */
 /***********************************************/
 void ReturnExpression(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct expr *waste) {
     struct expr *tmp;
 
@@ -281,7 +281,7 @@ void ReturnExpression(
   NOTES        : None
  ***************************************************/
 static EXPRESSION_HN *FindHashedExpression(
-        Environment *theEnv,
+        const Environment&theEnv,
         Expression *theExp,
         unsigned *hashval,
         EXPRESSION_HN **prv) {
@@ -345,7 +345,7 @@ static unsigned HashExpression(
                  merely decremented
  ***************************************************/
 void RemoveHashedExpression(
-        Environment *theEnv,
+        const Environment&theEnv,
         Expression *theExp) {
     EXPRESSION_HN *exphash, *prv;
     unsigned hashval;
@@ -379,7 +379,7 @@ void RemoveHashedExpression(
                  the given expression
  *****************************************************/
 Expression *AddHashedExpression(
-        Environment *theEnv,
+        const Environment&theEnv,
         Expression *theExp) {
     EXPRESSION_HN *prv, *exphash;
     unsigned hashval;
@@ -413,7 +413,7 @@ Expression *AddHashedExpression(
   NOTES        : None
  ***************************************************/
 unsigned long HashedExpressionIndex(
-        Environment *theEnv,
+        const Environment&theEnv,
         Expression *theExp) {
     EXPRESSION_HN *exphash, *prv;
     unsigned hashval;
@@ -431,7 +431,7 @@ unsigned long HashedExpressionIndex(
 /*   for the set-sequence-operator-recognition function */
 /********************************************************/
 bool SetSequenceOperatorRecognition(
-        Environment *theEnv,
+        const Environment&theEnv,
         bool value) {
     bool ov;
 
@@ -445,7 +445,7 @@ bool SetSequenceOperatorRecognition(
 /*   for the Get-sequence-operator-recognition function */
 /********************************************************/
 bool GetSequenceOperatorRecognition(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     return ExpressionData(theEnv)->SequenceOpMode;
 }
 

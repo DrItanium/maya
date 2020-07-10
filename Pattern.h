@@ -68,23 +68,23 @@ struct patternParser {
     patternEntityRecord *entityType;
     unsigned short positionInArray;
     bool (*recognizeFunction)(CLIPSLexeme *);
-    lhsParseNode *(*parseFunction)(Environment *, const char *, token *);
-    bool (*postAnalysisFunction)(Environment *, lhsParseNode *);
-    patternNodeHeader *(*addPatternFunction)(Environment *, lhsParseNode *);
-    void (*removePatternFunction)(Environment *, patternNodeHeader *);
+    lhsParseNode *(*parseFunction)(const Environment&, const char *, token *);
+    bool (*postAnalysisFunction)(const Environment&, lhsParseNode *);
+    patternNodeHeader *(*addPatternFunction)(const Environment&, lhsParseNode *);
+    void (*removePatternFunction)(const Environment&, patternNodeHeader *);
     expr *(*genJNConstantFunction)(void *, lhsParseNode *, int);
-    void (*replaceGetJNValueFunction)(Environment *, expr *, lhsParseNode *, int);
-    expr *(*genGetJNValueFunction)(Environment *, lhsParseNode *, int);
-    expr *(*genCompareJNValuesFunction)(Environment *, lhsParseNode *, lhsParseNode *, bool);
-    expr *(*genPNConstantFunction)(Environment *, lhsParseNode *);
-    void (*replaceGetPNValueFunction)(Environment *, expr *, lhsParseNode *);
-    expr *(*genGetPNValueFunction)(Environment *, lhsParseNode *);
-    expr *(*genComparePNValuesFunction)(Environment *, lhsParseNode *, lhsParseNode *);
-    void (*returnUserDataFunction)(Environment *, void *);
-    void *(*copyUserDataFunction)(Environment *, void *);
-    void (*markIRPatternFunction)(Environment *, patternNodeHeader *, bool);
-    void (*incrementalResetFunction)(Environment *);
-    void (*codeReferenceFunction)(Environment *, void *, FILE *, unsigned int, unsigned int);
+    void (*replaceGetJNValueFunction)(const Environment&, expr *, lhsParseNode *, int);
+    expr *(*genGetJNValueFunction)(const Environment&, lhsParseNode *, int);
+    expr *(*genCompareJNValuesFunction)(const Environment&, lhsParseNode *, lhsParseNode *, bool);
+    expr *(*genPNConstantFunction)(const Environment&, lhsParseNode *);
+    void (*replaceGetPNValueFunction)(const Environment&, expr *, lhsParseNode *);
+    expr *(*genGetPNValueFunction)(const Environment&, lhsParseNode *);
+    expr *(*genComparePNValuesFunction)(const Environment&, lhsParseNode *, lhsParseNode *);
+    void (*returnUserDataFunction)(const Environment&, void *);
+    void *(*copyUserDataFunction)(const Environment&, void *);
+    void (*markIRPatternFunction)(const Environment&, patternNodeHeader *, bool);
+    void (*incrementalResetFunction)(const Environment&);
+    void (*codeReferenceFunction)(const Environment&, void *, FILE *, unsigned int, unsigned int);
     int priority;
     patternParser *next;
 };
@@ -113,26 +113,26 @@ struct patternData {
 
 #define PatternData(theEnv) ((patternData *) GetEnvironmentData(theEnv,PATTERN_DATA))
 
-void InitializePatterns(Environment *);
-bool AddPatternParser(Environment *, struct patternParser *);
-struct patternParser *FindPatternParser(Environment *, const char *);
-void DetachPattern(Environment *, unsigned short, struct patternNodeHeader *);
-void GetNextPatternEntity(Environment *,
+void InitializePatterns(const Environment&);
+bool AddPatternParser(const Environment&, struct patternParser *);
+struct patternParser *FindPatternParser(const Environment&, const char *);
+void DetachPattern(const Environment&, unsigned short, struct patternNodeHeader *);
+void GetNextPatternEntity(const Environment&,
                           struct patternParser **,
                           struct patternEntity **);
-struct patternParser *GetPatternParser(Environment *, unsigned short);
-struct lhsParseNode *RestrictionParse(Environment *, const char *, struct token *, bool,
+struct patternParser *GetPatternParser(const Environment&, unsigned short);
+struct lhsParseNode *RestrictionParse(const Environment&, const char *, struct token *, bool,
                                       CLIPSLexeme *, unsigned short,
                                       struct constraintRecord *, unsigned short);
-bool PostPatternAnalysis(Environment *, struct lhsParseNode *);
-void PatternNodeHeaderToCode(Environment *, FILE *, struct patternNodeHeader *,
+bool PostPatternAnalysis(const Environment&, struct lhsParseNode *);
+void PatternNodeHeaderToCode(const Environment&, FILE *, struct patternNodeHeader *,
                              unsigned int, unsigned int);
-void AddReservedPatternSymbol(Environment *, const char *, const char *);
-bool ReservedPatternSymbol(Environment *, const char *, const char *);
-void ReservedPatternSymbolErrorMsg(Environment *, const char *, const char *);
-void AddHashedPatternNode(Environment *, void *, void *, unsigned short, void *);
-bool RemoveHashedPatternNode(Environment *, void *, void *, unsigned short, void *);
-void *FindHashedPatternNode(Environment *, void *, unsigned short, void *);
+void AddReservedPatternSymbol(const Environment&, const char *, const char *);
+bool ReservedPatternSymbol(const Environment&, const char *, const char *);
+void ReservedPatternSymbolErrorMsg(const Environment&, const char *, const char *);
+void AddHashedPatternNode(const Environment&, void *, void *, unsigned short, void *);
+bool RemoveHashedPatternNode(const Environment&, void *, void *, unsigned short, void *);
+void *FindHashedPatternNode(const Environment&, void *, unsigned short, void *);
 
 #endif /* _H_pattern */
 

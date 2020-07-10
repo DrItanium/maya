@@ -92,23 +92,23 @@ struct profileFunctionData {
 
 #define ProfileFunctionData(theEnv) ((profileFunctionData *) GetEnvironmentData(theEnv,PROFLFUN_DATA))
 
-void ConstructProfilingFunctionDefinitions(Environment *);
-void ProfileCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void ProfileInfoCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void StartProfile(Environment *, struct profileFrameInfo *,
+void ConstructProfilingFunctionDefinitions(const Environment&);
+void ProfileCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void ProfileInfoCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void StartProfile(const Environment&, struct profileFrameInfo *,
                   struct userData **, bool);
-void EndProfile(Environment *, struct profileFrameInfo *);
-void ProfileResetCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
+void EndProfile(const Environment&, struct profileFrameInfo *);
+void ProfileResetCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 void ResetProfileInfo(constructProfileInfo *);
 
-void SetProfilePercentThresholdCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-double SetProfilePercentThreshold(Environment *, double);
-void GetProfilePercentThresholdCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-double GetProfilePercentThreshold(Environment *);
-bool Profile(Environment *, const char *);
-void DeleteProfileData(Environment *, void *);
-void *CreateProfileData(Environment *);
-const char *SetProfileOutputString(Environment *, const char *);
+void SetProfilePercentThresholdCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+double SetProfilePercentThreshold(const Environment&, double);
+void GetProfilePercentThresholdCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+double GetProfilePercentThreshold(const Environment&);
+bool Profile(const Environment&, const char *);
+void DeleteProfileData(const Environment&, void *);
+void *CreateProfileData(const Environment&);
+const char *SetProfileOutputString(const Environment&, const char *);
 
 #endif /* _H_proflfun */
 

@@ -39,15 +39,15 @@
 
 #include "Constraint.h"
 
-struct constraintRecord *GetConstraintRecord(Environment *);
-int CompareNumbers(Environment *, int, void *, int, void *);
-struct constraintRecord *CopyConstraintRecord(Environment *, CONSTRAINT_RECORD *);
+struct constraintRecord *GetConstraintRecord(const Environment&);
+int CompareNumbers(const Environment&, int, void *, int, void *);
+struct constraintRecord *CopyConstraintRecord(const Environment&, CONSTRAINT_RECORD *);
 bool SetConstraintType(int, CONSTRAINT_RECORD *);
 void SetAnyAllowedFlags(CONSTRAINT_RECORD *, bool);
 void SetAnyRestrictionFlags(CONSTRAINT_RECORD *, bool);
-CONSTRAINT_RECORD *FunctionCallToConstraintRecord(Environment *, void *);
-CONSTRAINT_RECORD *ExpressionToConstraintRecord(Environment *, struct expr *);
-CONSTRAINT_RECORD *ArgumentTypeToConstraintRecord(Environment *, unsigned);
+CONSTRAINT_RECORD *FunctionCallToConstraintRecord(const Environment&, void *);
+CONSTRAINT_RECORD *ExpressionToConstraintRecord(const Environment&, struct expr *);
+CONSTRAINT_RECORD *ArgumentTypeToConstraintRecord(const Environment&, unsigned);
 
 #endif /* _H_cstrnutl */
 

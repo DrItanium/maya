@@ -79,21 +79,21 @@ typedef struct bsaveDeffunctionStruct {
 /****************************************/
 
 #if BLOAD_AND_BSAVE
-static void BsaveDeffunctionFind(Environment *);
-static void MarkDeffunctionItems(Environment *, ConstructHeader *, void *);
-static void BsaveDeffunctionExpressions(Environment *, FILE *);
-static void BsaveDeffunctionExpression(Environment *, ConstructHeader *, void *);
-static void BsaveStorageDeffunctions(Environment *, FILE *);
-static void BsaveDeffunctions(Environment *, FILE *);
-static void BsaveDeffunction(Environment *, ConstructHeader *, void *);
+static void BsaveDeffunctionFind(const Environment&);
+static void MarkDeffunctionItems(const Environment&, ConstructHeader *, void *);
+static void BsaveDeffunctionExpressions(const Environment&, FILE *);
+static void BsaveDeffunctionExpression(const Environment&, ConstructHeader *, void *);
+static void BsaveStorageDeffunctions(const Environment&, FILE *);
+static void BsaveDeffunctions(const Environment&, FILE *);
+static void BsaveDeffunction(const Environment&, ConstructHeader *, void *);
 #endif
 
-static void BloadStorageDeffunctions(Environment *);
-static void BloadDeffunctions(Environment *);
-static void UpdateDeffunctionModule(Environment *, void *, unsigned long);
-static void UpdateDeffunction(Environment *, void *, unsigned long);
-static void ClearDeffunctionBload(Environment *);
-static void DeallocateDeffunctionBloadData(Environment *);
+static void BloadStorageDeffunctions(const Environment&);
+static void BloadDeffunctions(const Environment&);
+static void UpdateDeffunctionModule(const Environment&, void *, unsigned long);
+static void UpdateDeffunction(const Environment&, void *, unsigned long);
+static void ClearDeffunctionBload(const Environment&);
+static void DeallocateDeffunctionBloadData(const Environment&);
 
 /* =========================================
    *****************************************
@@ -111,7 +111,7 @@ static void DeallocateDeffunctionBloadData(Environment *);
   NOTES        : None
  ***********************************************************/
 void SetupDeffunctionsBload(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     AllocateEnvironmentData(theEnv, DFFNXBIN_DATA, sizeof(deffunctionBinaryData), DeallocateDeffunctionBloadData);
 #if BLOAD_AND_BSAVE
     AddBinaryItem(theEnv, "deffunctions", 0, BsaveDeffunctionFind, BsaveDeffunctionExpressions,
@@ -130,7 +130,7 @@ void SetupDeffunctionsBload(
 /*    data for the deffunction bsave functionality.        */
 /***********************************************************/
 static void DeallocateDeffunctionBloadData(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     size_t space;
 
 #if (BLOAD_AND_BSAVE)
@@ -152,7 +152,7 @@ static void DeallocateDeffunctionBloadData(
   NOTES        : None
  ***************************************************/
 void *BloadDeffunctionModuleReference(
-        Environment *theEnv,
+        const Environment&theEnv,
         unsigned long theIndex) {
     return (void *) &DeffunctionBinaryData(theEnv)->ModuleArray[theIndex];
 }
@@ -181,7 +181,7 @@ void *BloadDeffunctionModuleReference(
                    deffunctions will be bsaved in order of binary list)
  ***************************************************************************/
 static void BsaveDeffunctionFind(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     SaveBloadCount(theEnv, DeffunctionBinaryData(theEnv)->ModuleCount);
     SaveBloadCount(theEnv, DeffunctionBinaryData(theEnv)->DeffunctionCount);
     DeffunctionBinaryData(theEnv)->DeffunctionCount = 0L;
@@ -204,7 +204,7 @@ static void BsaveDeffunctionFind(
   NOTES        : None
  ***************************************************/
 static void MarkDeffunctionItems(
-        Environment *theEnv,
+        const Environment&theEnv,
         ConstructHeader *theDeffunction,
         void *userBuffer) {
 #if MAC_XCD
@@ -226,7 +226,7 @@ static void MarkDeffunctionItems(
   NOTES        : None
  ***************************************************/
 static void BsaveDeffunctionExpressions(
-        Environment *theEnv,
+        const Environment&theEnv,
         FILE *fp) {
     DoForAllConstructs(theEnv, BsaveDeffunctionExpression, DeffunctionData(theEnv)->DeffunctionModuleIndex,
                        false, fp);
@@ -243,7 +243,7 @@ static void BsaveDeffunctionExpressions(
   NOTES        : None
  ***************************************************/
 static void BsaveDeffunctionExpression(
-        Environment *theEnv,
+        const Environment&theEnv,
         ConstructHeader *theDeffunction,
         void *userBuffer) {
     BsaveExpression(theEnv, ((Deffunction *) theDeffunction)->code, (FILE *) userBuffer);
@@ -260,7 +260,7 @@ static void BsaveDeffunctionExpression(
   NOTES        : None
  ***********************************************************/
 static void BsaveStorageDeffunctions(
-        Environment *theEnv,
+        const Environment&theEnv,
         FILE *fp) {
     size_t space;
 
@@ -281,7 +281,7 @@ static void BsaveStorageDeffunctions(
   NOTES        : None
  *************************************************************************************/
 static void BsaveDeffunctions(
-        Environment *theEnv,
+        const Environment&theEnv,
         FILE *fp) {
     size_t space;
     Defmodule *theModule;
@@ -325,7 +325,7 @@ static void BsaveDeffunctions(
   NOTES        : None
  ***************************************************/
 static void BsaveDeffunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         ConstructHeader *theDeffunction,
         void *userBuffer) {
     Deffunction *dptr = (Deffunction *) theDeffunction;
@@ -356,7 +356,7 @@ static void BsaveDeffunction(
                    within the structures
  ***********************************************************************/
 static void BloadStorageDeffunctions(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     size_t space;
 
     GenReadBinary(theEnv, &space, sizeof(size_t));
@@ -394,7 +394,7 @@ static void BloadStorageDeffunctions(
   NOTES        : Assumes all loading is finished
  ********************************************************************/
 static void BloadDeffunctions(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     size_t space;
 
     GenReadBinary(theEnv, &space, sizeof(size_t));
@@ -415,7 +415,7 @@ static void BloadDeffunctions(
   NOTES        : None
  *******************************************************/
 static void UpdateDeffunctionModule(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *buf,
         unsigned long obji) {
     BSAVE_DEFFUNCTION_MODULE *bdptr;
@@ -438,7 +438,7 @@ static void UpdateDeffunctionModule(
   NOTES        : None
  ***************************************************/
 static void UpdateDeffunction(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *buf,
         unsigned long obji) {
     BSAVE_DEFFUNCTION *bdptr;
@@ -473,7 +473,7 @@ static void UpdateDeffunction(
   NOTES        : Deffunction name symbol counts decremented
  ***************************************************************/
 static void ClearDeffunctionBload(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     unsigned long i;
     size_t space;
 

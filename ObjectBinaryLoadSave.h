@@ -69,8 +69,8 @@ struct objectBinaryData {
 #define DefclassPointer(i) (((i) == ULONG_MAX) ? nullptr : &ObjectBinaryData(theEnv)->DefclassArray[i])
 #define DefclassIndex(cls) (((cls) == nullptr) ? ULONG_MAX : ((ConstructHeader *) cls)->bsaveID)
 
-void SetupObjectsBload(Environment *);
-void *BloadDefclassModuleReference(Environment *, unsigned long);
+void SetupObjectsBload(const Environment&);
+void *BloadDefclassModuleReference(const Environment&, unsigned long);
 
 #endif /* _H_objbin */
 

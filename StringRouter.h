@@ -80,14 +80,14 @@ struct stringRouterData {
 /* I/O ROUTER DEFINITIONS */
 /**************************/
 
-void InitializeStringRouter(Environment *);
-bool OpenStringSource(Environment *, const char *, const char *, size_t);
-bool OpenTextSource(Environment *, const char *, const char *, size_t, size_t);
-bool CloseStringSource(Environment *, const char *);
-bool OpenStringDestination(Environment *, const char *, char *, size_t);
-bool CloseStringDestination(Environment *, const char *);
-bool OpenStringBuilderDestination(Environment *, const char *, StringBuilder *);
-bool CloseStringBuilderDestination(Environment *, const char *);
+void InitializeStringRouter(const Environment&);
+bool OpenStringSource(const Environment&, const char *, const char *, size_t);
+bool OpenTextSource(const Environment&, const char *, const char *, size_t, size_t);
+bool CloseStringSource(const Environment&, const char *);
+bool OpenStringDestination(const Environment&, const char *, char *, size_t);
+bool CloseStringDestination(const Environment&, const char *);
+bool OpenStringBuilderDestination(const Environment&, const char *, StringBuilder *);
+bool CloseStringBuilderDestination(const Environment&, const char *);
 
 #endif /* _H_strngrtr */
 

@@ -48,16 +48,16 @@ typedef struct udfContext UDFContext;
 
 typedef struct entityRecord EntityRecord;
 
-typedef void EntityPrintFunction(Environment *, const char *, void *);
-typedef bool EntityEvaluationFunction(Environment *, void *, UDFValue *);
-typedef void EntityBusyCountFunction(Environment *, void *);
+typedef void EntityPrintFunction(const Environment&, const char *, void *);
+typedef bool EntityEvaluationFunction(const Environment&, void *, UDFValue *);
+typedef void EntityBusyCountFunction(const Environment&, void *);
 
 typedef struct patternEntityRecord PatternEntityRecord;
 typedef struct patternEntity PatternEntity;
 
-typedef bool BoolCallFunction(Environment *, void *);
-typedef void VoidCallFunction(Environment *, void *);
-typedef void VoidCallFunctionWithArg(Environment *, void *, void *);
+typedef bool BoolCallFunction(const Environment&, void *);
+typedef void VoidCallFunction(const Environment&, void *);
+typedef void VoidCallFunctionWithArg(const Environment&, void *, void *);
 
 /**************/
 /* typeHeader */
@@ -201,7 +201,7 @@ struct udfValue {
 /* udfContext */
 /**************/
 struct udfContext {
-    Environment *environment;
+    Environment environment;
     void *context;
     FunctionDefinition *theFunction;
     unsigned int lastPosition;
@@ -213,7 +213,7 @@ typedef void EntityRecordPropagateDepthFunction(void*, void*);
 typedef void EntityRecordMarkNeededFunction(void*, void*);
 typedef void EntityRecordInstallFunction(void*, void*);
 typedef void EntityRecordDeinstallFunction(void*, void*);
-typedef bool EntityRecordDeleteFunction(void*, Environment*);
+typedef bool EntityRecordDeleteFunction(void*, const Environment&);
 typedef void* EntityRecordGetNextFunction(void*, void*);
 /****************/
 /* entityRecord */
@@ -238,11 +238,11 @@ struct entityRecord {
     struct userData *usrData;
 };
 
-typedef void PatternEntityRecordDecrementBasisCountFunction(Environment*, void*);
-typedef void PatternEntityRecordIncrementBasisCountFunction(Environment*, void*);
-typedef void PatternEntityRecordMatchFunction(Environment*, void*);
-typedef bool PatternEntityRecordSynchronizedFunction(Environment*, void*);
-typedef bool PatternEntityRecordIsDeletedFunction(Environment*, void*);
+typedef void PatternEntityRecordDecrementBasisCountFunction(const Environment&, void*);
+typedef void PatternEntityRecordIncrementBasisCountFunction(const Environment&, void*);
+typedef void PatternEntityRecordMatchFunction(const Environment&, void*);
+typedef bool PatternEntityRecordSynchronizedFunction(const Environment&, void*);
+typedef bool PatternEntityRecordIsDeletedFunction(const Environment&, void*);
 /***********************/
 /* patternEntityRecord */
 /***********************/

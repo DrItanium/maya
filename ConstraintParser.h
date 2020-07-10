@@ -66,15 +66,15 @@ struct constraintParseRecord {
 
 typedef struct constraintParseRecord CONSTRAINT_PARSE_RECORD;
 
-bool CheckConstraintParseConflicts(Environment *, CONSTRAINT_RECORD *);
-void AttributeConflictErrorMessage(Environment *, const char *, const char *);
+bool CheckConstraintParseConflicts(const Environment&, CONSTRAINT_RECORD *);
+void AttributeConflictErrorMessage(const Environment&, const char *, const char *);
 void InitializeConstraintParseRecord(CONSTRAINT_PARSE_RECORD *);
 bool StandardConstraint(const char *);
-bool ParseStandardConstraint(Environment *, const char *, const char *,
+bool ParseStandardConstraint(const Environment&, const char *, const char *,
                              CONSTRAINT_RECORD *,
                              CONSTRAINT_PARSE_RECORD *,
                              bool);
-void OverlayConstraint(Environment *, CONSTRAINT_PARSE_RECORD *,
+void OverlayConstraint(const Environment&, CONSTRAINT_PARSE_RECORD *,
                        CONSTRAINT_RECORD *, CONSTRAINT_RECORD *);
 void OverlayConstraintParseRecord(CONSTRAINT_PARSE_RECORD *,
                                   CONSTRAINT_PARSE_RECORD *);

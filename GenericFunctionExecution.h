@@ -52,17 +52,17 @@
 #include "Expression.h"
 #include "GenericFunction.h"
 
-void GenericDispatch(Environment *, Defgeneric *, Defmethod *, Defmethod *, Expression *, UDFValue *);
-void UnboundMethodErr(Environment *, const char *);
-bool IsMethodApplicable(Environment *, Defmethod *);
+void GenericDispatch(const Environment&, Defgeneric *, Defmethod *, Defmethod *, Expression *, UDFValue *);
+void UnboundMethodErr(const Environment&, const char *);
+bool IsMethodApplicable(const Environment&, Defmethod *);
 
-bool NextMethodP(Environment *);
-void NextMethodPCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void CallNextMethod(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void CallSpecificMethod(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void OverrideNextMethod(Environment *theEnv, UDFContext *context, UDFValue *ret);
+bool NextMethodP(const Environment&);
+void NextMethodPCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void CallNextMethod(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void CallSpecificMethod(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void OverrideNextMethod(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 
-void GetGenericCurrentArgument(Environment *theEnv, UDFContext *context, UDFValue *ret);
+void GetGenericCurrentArgument(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 
 #endif /* DEFGENERIC_CONSTRUCT */
 

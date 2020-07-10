@@ -109,8 +109,8 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void DeallocateEvaluationData(Environment *);
-static void PrintCAddress(Environment *, const char *, void *);
+static void DeallocateEvaluationData(const Environment&);
+static void PrintCAddress(const Environment&, const char *, void *);
 static void NewCAddress(UDFContext *, UDFValue *);
 /*
 static bool                    DiscardCAddress(void *,void *);
@@ -121,7 +121,7 @@ static bool                    DiscardCAddress(void *,void *);
 /*    data for expression evaluation.             */
 /**************************************************/
 void InitializeEvaluationData(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     struct externalAddressType cPointer = {"C", PrintCAddress, PrintCAddress, nullptr, NewCAddress, nullptr};
 
     AllocateEnvironmentData(theEnv, EVALUATION_DATA, sizeof(evaluationData), DeallocateEvaluationData);
@@ -134,7 +134,7 @@ void InitializeEvaluationData(
 /*    data for evaluation data.                      */
 /*****************************************************/
 static void DeallocateEvaluationData(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     int i;
 
     for (i = 0; i < EvaluationData(theEnv)->numberOfAddressTypes; i++) {
@@ -147,7 +147,7 @@ static void DeallocateEvaluationData(
 /*   if no errors occurred during evaluation, otherwise true. */
 /**************************************************************/
 bool EvaluateExpression(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct expr *problem,
         UDFValue *returnValue) {
     struct expr *oldArgument;
@@ -271,7 +271,7 @@ bool EvaluateExpression(
 /*   data type in the primitives array.   */
 /******************************************/
 void InstallPrimitive(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct entityRecord *thePrimitive,
         int whichPosition) {
     if (EvaluationData(theEnv)->PrimitivesArray[whichPosition] != nullptr) {
@@ -287,7 +287,7 @@ void InstallPrimitive(
 /*   address type in the external address type array. */
 /******************************************************/
 int InstallExternalAddressType(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct externalAddressType *theAddressType) {
     struct externalAddressType *copyEAT;
 
@@ -309,7 +309,7 @@ int InstallExternalAddressType(
 /* ResetErrorFlags */
 /*******************/
 void ResetErrorFlags(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     EvaluationData(theEnv)->EvaluationError = false;
     EvaluationData(theEnv)->HaltExecution = false;
 }
@@ -318,7 +318,7 @@ void ResetErrorFlags(
 /* SetEvaluationError: Sets the EvaluationError flag. */
 /******************************************************/
 void SetEvaluationError(
-        Environment *theEnv,
+        const Environment&theEnv,
         bool value) {
     EvaluationData(theEnv)->EvaluationError = value;
     if (value) { EvaluationData(theEnv)->HaltExecution = true; }
@@ -328,7 +328,7 @@ void SetEvaluationError(
 /* GetEvaluationError: Returns the EvaluationError flag. */
 /*********************************************************/
 bool GetEvaluationError(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     return (EvaluationData(theEnv)->EvaluationError);
 }
 
@@ -336,7 +336,7 @@ bool GetEvaluationError(
 /* SetHaltExecution: Sets the HaltExecution flag. */
 /**************************************************/
 void SetHaltExecution(
-        Environment *theEnv,
+        const Environment&theEnv,
         bool value) {
     EvaluationData(theEnv)->HaltExecution = value;
 }
@@ -345,7 +345,7 @@ void SetHaltExecution(
 /* GetHaltExecution: Returns the HaltExecution flag. */
 /*****************************************************/
 bool GetHaltExecution(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     return (EvaluationData(theEnv)->HaltExecution);
 }
 
@@ -354,7 +354,7 @@ bool GetHaltExecution(
 /*   structures to the pool of free memory.          */
 /*****************************************************/
 void ReturnValues(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFValue *garbagePtr,
         bool decrementSupplementalInfo) {
     UDFValue *nextPtr;
@@ -375,7 +375,7 @@ void ReturnValues(
 /*   to the specified logical name.               */
 /**************************************************/
 void WriteCLIPSValue(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *fileid,
         CLIPSValue *argPtr) {
     switch (argPtr->header->type) {
@@ -411,7 +411,7 @@ void WriteCLIPSValue(
 /*   to the specified logical name.           */
 /**********************************************/
 void WriteUDFValue(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *fileid,
         UDFValue *argPtr) {
     switch (argPtr->header->type) {
@@ -447,7 +447,7 @@ void WriteUDFValue(
 /*   value of length zero for error returns.     */
 /*************************************************/
 void SetMultifieldErrorValue(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFValue *returnValue) {
     returnValue->value = CreateMultifield(theEnv, 0L);
     returnValue->begin = 0;
@@ -459,7 +459,7 @@ void SetMultifieldErrorValue(
 /*   (in use) values for a UDFValue structure. */
 /***********************************************/
 void RetainUDFV(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFValue *vPtr) {
     if (vPtr->header->type == MULTIFIELD_TYPE) { IncrementCLIPSValueMultifieldReferenceCount(theEnv, vPtr->multifieldValue); }
     else { Retain(theEnv, vPtr->header); }
@@ -470,7 +470,7 @@ void RetainUDFV(
 /*   (in use) values for a UDFValue structure. */
 /***********************************************/
 void ReleaseUDFV(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFValue *vPtr) {
     if (vPtr->header->type == MULTIFIELD_TYPE) { DecrementCLIPSValueMultifieldReferenceCount(theEnv, vPtr->multifieldValue); }
     else { Release(theEnv, vPtr->header); }
@@ -481,7 +481,7 @@ void ReleaseUDFV(
 /*   (in use) values for a CLIPSValue structure. */
 /*************************************************/
 void RetainCV(
-        Environment *theEnv,
+        const Environment&theEnv,
         CLIPSValue *vPtr) {
     if (vPtr->header->type == MULTIFIELD_TYPE) { IncrementCLIPSValueMultifieldReferenceCount(theEnv, vPtr->multifieldValue); }
     else { Retain(theEnv, vPtr->header); }
@@ -492,7 +492,7 @@ void RetainCV(
 /*   (in use) values for a CLIPSValue structure. */
 /*************************************************/
 void ReleaseCV(
-        Environment *theEnv,
+        const Environment&theEnv,
         CLIPSValue *vPtr) {
     if (vPtr->header->type == MULTIFIELD_TYPE) { DecrementCLIPSValueMultifieldReferenceCount(theEnv, vPtr->multifieldValue); }
     else { Release(theEnv, vPtr->header); }
@@ -503,7 +503,7 @@ void ReleaseCV(
 /*   of an atomic data type.              */
 /******************************************/
 void Retain(
-        Environment *theEnv,
+        const Environment&theEnv,
         TypeHeader *th) {
     switch (th->type) {
         case SYMBOL_TYPE:
@@ -553,7 +553,7 @@ void Retain(
 /*   count of an atomic data type.   */
 /*************************************/
 void Release(
-        Environment *theEnv,
+        const Environment&theEnv,
         TypeHeader *th) {
     switch (th->type) {
         case SYMBOL_TYPE:
@@ -603,7 +603,7 @@ void Release(
 /*   count of an atomic data type.       */
 /*****************************************/
 void AtomInstall(
-        Environment *theEnv,
+        const Environment&theEnv,
         unsigned short type,
         void *vPtr) {
     switch (type) {
@@ -650,7 +650,7 @@ void AtomInstall(
 /*   count of an atomic data type.         */
 /*******************************************/
 void AtomDeinstall(
-        Environment *theEnv,
+        const Environment&theEnv,
         unsigned short type,
         void *vPtr) {
     switch (type) {
@@ -696,7 +696,7 @@ void AtomDeinstall(
 /*   UDFValue to a destination UDFValue.           */
 /***************************************************/
 void CopyDataObject(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFValue *dst,
         UDFValue *src,
         int garbageMultifield) {
@@ -730,7 +730,7 @@ void TransferDataObjectValues(
 /*   single field value, a single expression is created.                */
 /************************************************************************/
 struct expr *ConvertValueToExpression(
-        Environment *theEnv,
+        const Environment&theEnv,
         UDFValue *theValue) {
     size_t i;
     struct expr *head = nullptr, *last = nullptr, *newItem;
@@ -810,7 +810,7 @@ unsigned long GetAtomicHashValue(
 /*   or user/system defined function.                      */
 /***********************************************************/
 struct expr *FunctionReferenceExpression(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name) {
 #if DEFGENERIC_CONSTRUCT
     Defgeneric *gfunc;
@@ -858,7 +858,7 @@ struct expr *FunctionReferenceExpression(
 /*   function.                                                    */
 /******************************************************************/
 bool GetFunctionReference(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *name,
         Expression *theReference) {
 #if DEFGENERIC_CONSTRUCT
@@ -983,7 +983,7 @@ bool DOsEqual(
   NOTES        : None
  ***********************************************************/
 bool EvaluateAndStoreInDataObject(
-        Environment *theEnv,
+        const Environment&theEnv,
         bool mfp,
         Expression *theExp,
         UDFValue *val,
@@ -1010,7 +1010,7 @@ bool EvaluateAndStoreInDataObject(
 /* PrintCAddress: */
 /******************/
 static void PrintCAddress(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         void *theValue) {
     char buffer[20];
@@ -1029,7 +1029,7 @@ static void NewCAddress(
         UDFContext *context,
         UDFValue *rv) {
     unsigned int numberOfArguments;
-    Environment *theEnv = context->environment;
+    const Environment&theEnv = context->environment;
 
     numberOfArguments = UDFArgumentCount(context);
 
@@ -1047,7 +1047,7 @@ static void NewCAddress(
 /* CreateFunctionCallBuilder: */
 /******************************/
 FunctionCallBuilder *CreateFunctionCallBuilder(
-        Environment *theEnv,
+        const Environment&theEnv,
         size_t theSize) {
     FunctionCallBuilder *theFC;
 
@@ -1072,7 +1072,7 @@ FunctionCallBuilder *CreateFunctionCallBuilder(
 void FCBAppendUDFValue(
         FunctionCallBuilder *theFCB,
         UDFValue *theValue) {
-    Environment *theEnv = theFCB->fcbEnv;
+    const Environment&theEnv = theFCB->fcbEnv;
     size_t i, neededSize, newSize;
     CLIPSValue *newArray;
 
@@ -1126,7 +1126,7 @@ void FCBAppendUDFValue(
 void FCBAppend(
         FunctionCallBuilder *theFCB,
         CLIPSValue *theValue) {
-    Environment *theEnv = theFCB->fcbEnv;
+    const Environment&theEnv = theFCB->fcbEnv;
     size_t i, neededSize, newSize;
     CLIPSValue *newArray;
 
@@ -1324,7 +1324,7 @@ FunctionCallBuilderError FCBCall(
         FunctionCallBuilder *theFCB,
         const char *functionName,
         CLIPSValue *returnValue) {
-    Environment *theEnv;
+    Environment theEnv;
     Expression theReference, *lastAdd = nullptr, *nextAdd, *multiAdd;
     struct functionDefinition *theFunction = nullptr;
     size_t i, j;
@@ -1514,7 +1514,7 @@ void FCBReset(
 /***************/
 void FCBDispose(
         FunctionCallBuilder *theFCB) {
-    Environment *theEnv = theFCB->fcbEnv;
+    const Environment&theEnv = theFCB->fcbEnv;
     size_t i;
 
     for (i = 0; i < theFCB->length; i++) { Release(theFCB->fcbEnv, theFCB->contents[i].header); }
@@ -1529,7 +1529,7 @@ void FCBDispose(
 /*******************************/
 /*
 static bool DiscardCAddress(
-  Environment *theEnv,
+  const Environment&theEnv,
   void *theValue)
   {
    WriteString(theEnv,STDOUT,"Discarding C Address\n");

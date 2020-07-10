@@ -88,7 +88,7 @@
 const char *GetLogicalName(
         UDFContext *context,
         const char *defaultLogicalName) {
-    Environment *theEnv = context->environment;
+    const Environment&theEnv = context->environment;
     const char *logicalName = nullptr;
     UDFValue theArg;
 
@@ -126,7 +126,7 @@ const char *GetFileName(
 /* OpenErrorMessage: Generalized error message for opening files. */
 /******************************************************************/
 void OpenErrorMessage(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *functionName,
         const char *fileName) {
     PrintErrorID(theEnv, "ARGACCES", 3, false);
@@ -150,7 +150,7 @@ Defmodule *GetModuleName(
         bool *error) {
     UDFValue returnValue;
     Defmodule *theModule;
-    Environment *theEnv = context->environment;
+    const Environment&theEnv = context->environment;
     const char *functionName = UDFContextFunctionName(context);
 
     *error = false;
@@ -213,7 +213,7 @@ const char *GetConstructName(
 /*   incorrect number of arguments passed to a function. */
 /*********************************************************/
 void ExpectedCountError(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *functionName,
         int countRelation,
         unsigned int expectedNumber) {
@@ -248,7 +248,7 @@ void ExpectedCountError(
 /*                 expansion operator in their argument list */
 /*************************************************************/
 bool CheckFunctionArgCount(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct functionDefinition *func,
         int argumentCount) {
     unsigned short minArguments, maxArguments;
@@ -326,7 +326,7 @@ bool CheckFunctionArgCount(
 /*   of argument passed to a user or system defined function.      */
 /*******************************************************************/
 void ExpectedTypeError0(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *functionName,
         unsigned int whichArg) {
     PrintErrorID(theEnv, "ARGACCES", 2, false);
@@ -343,7 +343,7 @@ void ExpectedTypeError0(
 /*   expected type is passed as a string to this function.         */
 /*******************************************************************/
 void ExpectedTypeError1(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *functionName,
         unsigned int whichArg,
         const char *expectedType) {
@@ -359,7 +359,7 @@ void ExpectedTypeError1(
 /*   function's argument restriction list.                    */
 /**************************************************************/
 void ExpectedTypeError2(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *functionName,
         unsigned int whichArg) {
     unsigned theRestriction;
@@ -382,7 +382,7 @@ void *GetFactOrInstanceArgument(
         UDFContext *context,
         unsigned int thePosition,
         UDFValue *item) {
-    Environment *theEnv = context->environment;
+    const Environment&theEnv = context->environment;
     void *ptr;
 
     /*==============================*/
@@ -457,7 +457,7 @@ void *GetFactOrInstanceArgument(
 /*   for illegal logical names.                     */
 /****************************************************/
 void IllegalLogicalNameMessage(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *theFunction) {
     PrintErrorID(theEnv, "IOFUN", 1, false);
     WriteString(theEnv, STDERR, "Illegal logical name used for '");

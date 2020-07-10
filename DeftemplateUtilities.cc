@@ -87,8 +87,8 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void PrintTemplateSlot(Environment *, const char *, struct templateSlot *, CLIPSValue *);
-static struct templateSlot *GetNextTemplateSlotToPrint(Environment *, struct fact *, struct templateSlot *, int *, int, const char *);
+static void PrintTemplateSlot(const Environment&, const char *, struct templateSlot *, CLIPSValue *);
+static struct templateSlot *GetNextTemplateSlotToPrint(const Environment&, struct fact *, struct templateSlot *, int *, int, const char *);
 
 /********************************************************/
 /* InvalidDeftemplateSlotMessage: Generic error message */
@@ -96,7 +96,7 @@ static struct templateSlot *GetNextTemplateSlotToPrint(Environment *, struct fac
 /*   in its corresponding deftemplate.                  */
 /********************************************************/
 void InvalidDeftemplateSlotMessage(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *slotName,
         const char *deftemplateName,
         bool printCR) {
@@ -114,7 +114,7 @@ void InvalidDeftemplateSlotMessage(
 /*   value into a single field slot.                      */
 /**********************************************************/
 void SingleFieldSlotCardinalityError(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *slotName) {
     PrintErrorID(theEnv, "TMPLTDEF", 2, true);
     WriteString(theEnv, STDERR, "The single field slot '");
@@ -127,7 +127,7 @@ void SingleFieldSlotCardinalityError(
 /*   being placed into a single field slot of a deftemplate fact.     */
 /**********************************************************************/
 void MultiIntoSingleFieldSlotError(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct templateSlot *theSlot,
         Deftemplate *theDeftemplate) {
     PrintErrorID(theEnv, "TMPLTFUN", 1, true);
@@ -154,7 +154,7 @@ void MultiIntoSingleFieldSlotError(
 /*   deftemplate type, allowed-..., or range specifications.  */
 /**************************************************************/
 void CheckTemplateFact(
-        Environment *theEnv,
+        const Environment&theEnv,
         Fact *theFact) {
     CLIPSValue *sublist;
     int i;
@@ -229,7 +229,7 @@ void CheckTemplateFact(
 /*   is performed statically (i.e. when the command is being parsed).  */
 /***********************************************************************/
 bool CheckRHSSlotTypes(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct expr *rhsSlots,
         struct templateSlot *slotPtr,
         const char *thePlace) {
@@ -291,7 +291,7 @@ int FindSlotPosition(
 /* PrintTemplateSlot: */
 /**********************/
 static void PrintTemplateSlot(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         struct templateSlot *slotPtr,
         CLIPSValue *slotValue) {
@@ -332,7 +332,7 @@ static void PrintTemplateSlot(
 /* GetNextTemplateSloteToPrint: */
 /********************************/
 static struct templateSlot *GetNextTemplateSlotToPrint(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct fact *theFact,
         struct templateSlot *slotPtr,
         int *position,
@@ -384,7 +384,7 @@ static struct templateSlot *GetNextTemplateSlotToPrint(
 /*   this format, otherwise false.                        */
 /**********************************************************/
 void PrintTemplateFact(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *logicalName,
         Fact *theFact,
         bool separateLines,
@@ -460,7 +460,7 @@ void PrintTemplateFact(
 /* UpdateDeftemplateScope: Updates the scope flag of all the deftemplates. */
 /***************************************************************************/
 void UpdateDeftemplateScope(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     Deftemplate *theDeftemplate;
     unsigned int moduleCount;
     Defmodule *theModule;
@@ -521,7 +521,7 @@ struct templateSlot *FindSlot(
 /*   and adds it to the list of deftemplates.               */
 /************************************************************/
 Deftemplate *CreateImpliedDeftemplate(
-        Environment *theEnv,
+        const Environment&theEnv,
         CLIPSLexeme *deftemplateName,
         bool setFlag) {
     Deftemplate *newDeftemplate;

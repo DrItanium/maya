@@ -53,17 +53,17 @@ struct dependency {
 #include "Entities.h"
 #include "Match.h"
 
-bool AddLogicalDependencies(Environment *, PatternEntity *, bool);
-void RemoveEntityDependencies(Environment *, PatternEntity *);
-void RemovePMDependencies(Environment *, PartialMatch *);
-void DestroyPMDependencies(Environment *, PartialMatch *);
-void RemoveLogicalSupport(Environment *, PartialMatch *);
-void ForceLogicalRetractions(Environment *);
-void Dependencies(Environment *, PatternEntity *);
-void Dependents(Environment *, PatternEntity *);
-void DependenciesCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void DependentsCommand(Environment *theEnv, UDFContext *context, UDFValue *ret);
-void ReturnEntityDependencies(Environment *, PatternEntity *);
+bool AddLogicalDependencies(const Environment&, PatternEntity *, bool);
+void RemoveEntityDependencies(const Environment&, PatternEntity *);
+void RemovePMDependencies(const Environment&, PartialMatch *);
+void DestroyPMDependencies(const Environment&, PartialMatch *);
+void RemoveLogicalSupport(const Environment&, PartialMatch *);
+void ForceLogicalRetractions(const Environment&);
+void Dependencies(const Environment&, PatternEntity *);
+void Dependents(const Environment&, PatternEntity *);
+void DependenciesCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void DependentsCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void ReturnEntityDependencies(const Environment&, PatternEntity *);
 PartialMatch *FindLogicalBind(joinNode *, PartialMatch *);
 
 #endif /* _H_lgcldpnd */

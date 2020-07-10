@@ -98,11 +98,11 @@ constexpr auto SELF_SLOT_REF = ':';
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static bool IsParameterSlotReference(Environment *, const char *);
-static int SlotReferenceVar(Environment *, Expression *, void *);
-static int BindSlotReference(Environment *, Expression *, void *);
-static SlotDescriptor *CheckSlotReference(Environment *, Defclass *, int, void *, bool, Expression *);
-static void GenHandlerSlotReference(Environment *, Expression *, unsigned short, SlotDescriptor *);
+static bool IsParameterSlotReference(const Environment&, const char *);
+static int SlotReferenceVar(const Environment&, Expression *, void *);
+static int BindSlotReference(const Environment&, Expression *, void *);
+static SlotDescriptor *CheckSlotReference(const Environment&, Defclass *, int, void *, bool, Expression *);
+static void GenHandlerSlotReference(const Environment&, Expression *, unsigned short, SlotDescriptor *);
 
 /* =========================================
    *****************************************
@@ -125,7 +125,7 @@ static void GenHandlerSlotReference(Environment *, Expression *, unsigned short,
                  <params> ::= <var>* | <var>* $?<name>
  ***********************************************************************/
 bool ParseDefmessageHandler(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *readSource) {
     Defclass *cls;
     CLIPSLexeme *cname, *mname, *wildcard;
@@ -318,7 +318,7 @@ bool ParseDefmessageHandler(
   NOTES        : A put handler is not created for read-only slots
  *******************************************************************************/
 void CreateGetAndPutHandlers(
-        Environment *theEnv,
+        const Environment&theEnv,
         SlotDescriptor *sd) {
     const char *className, *slotName;
     size_t bufsz;
@@ -419,7 +419,7 @@ void CreateGetAndPutHandlers(
   NOTES        : None
  *****************************************************************/
 static bool IsParameterSlotReference(
-        Environment *theEnv,
+        const Environment&theEnv,
         const char *pname) {
     if ((strncmp(pname, SELF_STRING, SELF_LEN) == 0) ?
         (pname[SELF_LEN] == SELF_SLOT_REF) : false) {
@@ -451,7 +451,7 @@ static bool IsParameterSlotReference(
                  violate the encapsulation principle of OOP.
  ****************************************************************************/
 static int SlotReferenceVar(
-        Environment *theEnv,
+        const Environment&theEnv,
         Expression *varexp,
         void *userBuffer) {
     struct token itkn;
@@ -499,7 +499,7 @@ static int SlotReferenceVar(
                  violate the encapsulation principle of OOP.
  ****************************************************************************/
 static int BindSlotReference(
-        Environment *theEnv,
+        const Environment&theEnv,
         Expression *bindExp,
         void *userBuffer) {
     const char *bindName;
@@ -565,7 +565,7 @@ static int BindSlotReference(
                  which the private slot is defined.
  *********************************************************/
 static SlotDescriptor *CheckSlotReference(
-        Environment *theEnv,
+        const Environment&theEnv,
         Defclass *theDefclass,
         int theType,
         void *theValue,
@@ -638,7 +638,7 @@ static SlotDescriptor *CheckSlotReference(
   NOTES        : None
  ***************************************************/
 static void GenHandlerSlotReference(
-        Environment *theEnv,
+        const Environment&theEnv,
         Expression *theExp,
         unsigned short theType,
         SlotDescriptor *sd) {

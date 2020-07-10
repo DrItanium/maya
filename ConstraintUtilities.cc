@@ -56,7 +56,7 @@
 /*   the values of a constraint record.         */
 /************************************************/
 struct constraintRecord *GetConstraintRecord(
-        Environment *theEnv) {
+        const Environment&theEnv) {
     CONSTRAINT_RECORD *constraints;
     unsigned i;
 
@@ -127,7 +127,7 @@ void SetAnyAllowedFlags(
 /* CopyConstraintRecord: Copies a constraint record. */
 /*****************************************************/
 struct constraintRecord *CopyConstraintRecord(
-        Environment *theEnv,
+        const Environment&theEnv,
         CONSTRAINT_RECORD *sourceConstraint) {
     CONSTRAINT_RECORD *theConstraint;
 
@@ -296,7 +296,7 @@ bool SetConstraintType(
 /*   than, less than or equal).                              */
 /*************************************************************/
 int CompareNumbers(
-        Environment *theEnv,
+        const Environment&theEnv,
         int type1,
         void *vptr1,
         int type2,
@@ -380,7 +380,7 @@ int CompareNumbers(
 /*   allowed types SYMBOL_TYPE and allow-values BLUE.                */
 /****************************************************************/
 CONSTRAINT_RECORD *ExpressionToConstraintRecord(
-        Environment *theEnv,
+        const Environment&theEnv,
         struct expr *theExpression) {
     CONSTRAINT_RECORD *rv;
 
@@ -470,7 +470,7 @@ CONSTRAINT_RECORD *ExpressionToConstraintRecord(
 /*   record with allowed types INTEGER_TYPE and FLOAT_TYPE.      */
 /*******************************************************/
 CONSTRAINT_RECORD *FunctionCallToConstraintRecord(
-        Environment *theEnv,
+        const Environment&theEnv,
         void *theFunction) {
     return ArgumentTypeToConstraintRecord(theEnv, UnknownFunctionType(theFunction));
 }
@@ -480,7 +480,7 @@ CONSTRAINT_RECORD *FunctionCallToConstraintRecord(
 /*   new argument type codes for 6.4.        */
 /*********************************************/
 CONSTRAINT_RECORD *ArgumentTypeToConstraintRecord(
-        Environment *theEnv,
+        const Environment&theEnv,
         unsigned bitTypes) {
     CONSTRAINT_RECORD *rv;
 
