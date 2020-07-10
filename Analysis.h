@@ -55,6 +55,7 @@ private:
     lhsParseNode *nandCE;
     nandFrame *next;
 public:
+    nandFrame(int d, lhsParseNode* nce, nandFrame* nxt = nullptr);
     constexpr auto getDepth() const noexcept { return depth; }
     void setDepth(int value) noexcept { depth = value; }
     auto getNandCE() const noexcept { return nandCE; }

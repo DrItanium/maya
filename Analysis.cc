@@ -1037,3 +1037,4 @@ static void VariableMixingErrorMessage(
     WriteString(theEnv, STDERR, " is used as both a single and multifield variable in the LHS.\n");
 }
 
+nandFrame::nandFrame(int d, lhsParseNode *nce, nandFrame *nxt) : depth(d), nandCE(nce), next(nxt) { }
