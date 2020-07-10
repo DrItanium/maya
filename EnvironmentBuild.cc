@@ -186,8 +186,7 @@ Environment CreateEnvironmentDriver(
 /* DestroyEnvironment: Destroys the specified */
 /*   environment returning all of its memory. */
 /**********************************************/
-bool DestroyEnvironment(
-        const Environment&theEnvironment) {
+bool DestroyEnvironment(Environment& theEnvironment) {
     struct environmentCleanupFunction *cleanupPtr;
     int i;
     struct memoryData *theMemData;
@@ -231,6 +230,7 @@ bool DestroyEnvironment(
 
     free(theEnvironment->theData);
 
+    theEnvironment.reset();
     //free(theEnvironment);
 
     return rv;

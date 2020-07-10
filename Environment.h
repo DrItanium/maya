@@ -120,7 +120,7 @@ Environment CreateEnvironment();
 Environment CreateRuntimeEnvironment(CLIPSLexeme **, CLIPSFloat **,
                                       CLIPSInteger **, CLIPSBitMap **,
                                       struct functionDefinition *);
-bool DestroyEnvironment(const Environment&);
+bool DestroyEnvironment(Environment&);
 
 #endif /* _H_envrnmnt */
 

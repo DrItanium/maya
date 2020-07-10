@@ -341,7 +341,7 @@ Defclass *GetNextDefclass(
  ***************************************************/
 bool DefclassIsDeletable(
         Defclass *theDefclass) {
-    const Environment&theEnv = theDefclass->header.env;
+    Environment theEnv = theDefclass->header.env;
 
     if (!ConstructsDeletable(theEnv)) { return false; }
 
