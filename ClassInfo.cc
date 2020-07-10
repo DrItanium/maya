@@ -933,7 +933,7 @@ bool SlotCardinality(
 
     returnValue->value = CreateMultifield(theEnv, 2L);
     if (sp->constraint != nullptr) {
-        returnValue->multifieldValue->contents[0].value = sp->constraint->minFields->value;
+        returnValue->multifieldValue->contents[0].value = sp->constraint->getMinFields()->value;
         returnValue->multifieldValue->contents[1].value = sp->constraint->getMaxFields()->value;
     } else {
         returnValue->multifieldValue->contents[0].value = SymbolData(theEnv)->Zero;

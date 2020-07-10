@@ -172,9 +172,9 @@ bool CheckCardinalityConstraint(
     /* than the minimum cardinality.    */
     /*==================================*/
 
-    if (constraints->minFields != nullptr) {
-        if (constraints->minFields->value != SymbolData(theEnv)->NegativeInfinity) {
-            if (number < (size_t) constraints->minFields->integerValue->contents) { return false; }
+    if (constraints->getMinFields() != nullptr) {
+        if (constraints->getMinFields()->value != SymbolData(theEnv)->NegativeInfinity) {
+            if (number < (size_t) constraints->getMinFields()->integerValue->contents) { return false; }
         }
     }
 
@@ -236,9 +236,9 @@ static bool CheckRangeAgainstCardinalityConstraint(
     /* the maximum possible value of the range is positive infinity. */
     /*===============================================================*/
 
-    if ((constraints->minFields != nullptr) && (max != -1)) {
-        if (constraints->minFields->value != SymbolData(theEnv)->NegativeInfinity) {
-            if (max < constraints->minFields->integerValue->contents) { return false; }
+    if ((constraints->getMinFields() != nullptr) && (max != -1)) {
+        if (constraints->getMinFields()->value != SymbolData(theEnv)->NegativeInfinity) {
+            if (max < constraints->getMinFields()->integerValue->contents) { return false; }
         }
     }
 

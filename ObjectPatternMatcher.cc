@@ -527,12 +527,12 @@ static bool ReorderAndAnalyzeObjectPattern(
                             (subNode->pnType == MF_VARIABLE_NODE)) { theConstraint = subNode->constraints->getMultifield(); }
                         else { theConstraint = subNode->constraints; }
 
-                        tmpmin = theConstraint->minFields;
-                        theConstraint->minFields = sd->constraint->minFields;
+                        tmpmin = theConstraint->getMinFields();
+                        theConstraint->setMinFields(sd->constraint->getMinFields());
                         tmpmax = theConstraint->getMaxFields();
                         theConstraint->setMaxFields(sd->constraint->getMaxFields());
                         crossConstraints = IntersectConstraints(theEnv, theConstraint, sd->constraint);
-                        theConstraint->minFields = tmpmin;
+                        theConstraint->setMinFields(tmpmin);
                         theConstraint->setMaxFields(tmpmax);
 
                         incompatibleConstraint = UnmatchableConstraint(crossConstraints);

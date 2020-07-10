@@ -719,7 +719,7 @@ static void UnionNumericExpressions(
         tmpmin = constraint1->minValue;
         tmpmax = constraint1->maxValue;
     } else {
-        tmpmin = constraint1->minFields;
+        tmpmin = constraint1->getMinFields();
         tmpmax = constraint1->getMaxFields();
     }
 
@@ -743,7 +743,7 @@ static void UnionNumericExpressions(
         tmpmin = constraint2->minValue;
         tmpmax = constraint2->maxValue;
     } else {
-        tmpmin = constraint2->minFields;
+        tmpmin = constraint2->getMinFields();
         tmpmax = constraint2->getMaxFields();
     }
 
@@ -771,9 +771,9 @@ static void UnionNumericExpressions(
             newConstraint->minValue = theMinList;
             newConstraint->maxValue = theMaxList;
         } else {
-            ReturnExpression(theEnv, newConstraint->minFields);
+            ReturnExpression(theEnv, newConstraint->getMinFields());
             ReturnExpression(theEnv, newConstraint->getMaxFields());
-            newConstraint->minFields = theMinList;
+            newConstraint->setMinFields(theMinList);
             newConstraint->setMaxFields(theMaxList);
         }
     }

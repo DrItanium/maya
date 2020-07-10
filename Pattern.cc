@@ -627,9 +627,9 @@ struct lhsParseNode *RestrictionParse(
         /* record for this single constraint.       */
         /*==========================================*/
 
-        ReturnExpression(theEnv, nextNode->constraints->minFields);
+        ReturnExpression(theEnv, nextNode->constraints->getMinFields());
         ReturnExpression(theEnv, nextNode->constraints->getMaxFields());
-        nextNode->constraints->minFields = GenConstant(theEnv, SYMBOL_TYPE, SymbolData(theEnv)->NegativeInfinity);
+        nextNode->constraints->setMinFields(GenConstant(theEnv, SYMBOL_TYPE, SymbolData(theEnv)->NegativeInfinity));
         nextNode->constraints->setMaxFields(GenConstant(theEnv, SYMBOL_TYPE, SymbolData(theEnv)->PositiveInfinity));
         nextNode->derivedConstraints = true;
 
@@ -666,11 +666,11 @@ struct lhsParseNode *RestrictionParse(
                                                                                          numberOfSingleFields)));
         }
 
-        if ((numberOfMultifields == 1) && (theConstraints->minFields->value != SymbolData(theEnv)->NegativeInfinity)) {
-            ReturnExpression(theEnv, tempConstraints->minFields);
-            tempConstraints->minFields = GenConstant(theEnv, INTEGER_TYPE, CreateInteger(theEnv,
-                                                                                         theConstraints->minFields->integerValue->contents -
-                                                                                         numberOfSingleFields));
+        if ((numberOfMultifields == 1) && (theConstraints->getMinFields()->value != SymbolData(theEnv)->NegativeInfinity)) {
+            ReturnExpression(theEnv, tempConstraints->getMinFields());
+            tempConstraints->setMinFields(GenConstant(theEnv, INTEGER_TYPE, CreateInteger(theEnv,
+                                                                                          theConstraints->getMinFields()->integerValue->contents -
+                                                                                          numberOfSingleFields)));
         }
     }
 

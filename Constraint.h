@@ -96,8 +96,8 @@ public:
     expr *restrictionList;
     expr *minValue;
     expr *maxValue;
-    expr *minFields;
 private:
+    expr *minFields;
     expr *maxFields;
     constraintRecord *multifield;
     constraintRecord *next;

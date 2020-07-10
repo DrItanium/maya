@@ -352,7 +352,7 @@ static bool ConstraintCompare(
     }
     if (tmpPtr1 != tmpPtr2) return false;
 
-    for (tmpPtr1 = constraint1->minFields, tmpPtr2 = constraint2->minFields;
+    for (tmpPtr1 = constraint1->getMinFields(), tmpPtr2 = constraint2->getMinFields();
          (tmpPtr1 != nullptr) && (tmpPtr2 != nullptr);
          tmpPtr1 = tmpPtr1->nextArg, tmpPtr2 = tmpPtr2->nextArg) {
         if ((tmpPtr1->type != tmpPtr2->type) || (tmpPtr1->value != tmpPtr2->value)) { return false; }
@@ -432,9 +432,9 @@ static void InstallConstraintRecord(
     ReturnExpression(theEnv, constraints->minValue);
     constraints->minValue = tempExpr;
 
-    tempExpr = AddHashedExpression(theEnv, constraints->minFields);
-    ReturnExpression(theEnv, constraints->minFields);
-    constraints->minFields = tempExpr;
+    tempExpr = AddHashedExpression(theEnv, constraints->getMinFields());
+    ReturnExpression(theEnv, constraints->getMinFields());
+    constraints->setMinFields(tempExpr);
 
     tempExpr = AddHashedExpression(theEnv, constraints->getMaxFields());
     ReturnExpression(theEnv, constraints->getMaxFields());

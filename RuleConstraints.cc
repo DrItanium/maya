@@ -224,9 +224,9 @@ static bool MultifieldCardinalityViolation(
 
     if (theNode->constraints == nullptr) tempConstraint = GetConstraintRecord(theEnv);
     else tempConstraint = CopyConstraintRecord(theEnv, theNode->constraints);
-    ReturnExpression(theEnv, tempConstraint->minFields);
+    ReturnExpression(theEnv, tempConstraint->getMinFields());
     ReturnExpression(theEnv, tempConstraint->getMaxFields());
-    tempConstraint->minFields = GenConstant(theEnv, INTEGER_TYPE, CreateInteger(theEnv, minFields));
+    tempConstraint->setMinFields(GenConstant(theEnv, INTEGER_TYPE, CreateInteger(theEnv, minFields)));
     if (posInfinity) tempConstraint->setMaxFields(GenConstant(theEnv, SYMBOL_TYPE, SymbolData(theEnv)->PositiveInfinity));
     else tempConstraint->setMaxFields(GenConstant(theEnv, INTEGER_TYPE, CreateInteger(theEnv, maxFields)));
 

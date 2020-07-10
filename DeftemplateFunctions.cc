@@ -1132,7 +1132,7 @@ bool DeftemplateSlotCardinality(
     returnValue->value = CreateMultifield(theEnv, 2L);
 
     if (theSlot->constraints != nullptr) {
-        returnValue->multifieldValue->contents[0].value = theSlot->constraints->minFields->value;
+        returnValue->multifieldValue->contents[0].value = theSlot->constraints->getMinFields()->value;
         returnValue->multifieldValue->contents[1].value = theSlot->constraints->getMaxFields()->value;
     } else {
         returnValue->multifieldValue->contents[0].integerValue = SymbolData(theEnv)->Zero;

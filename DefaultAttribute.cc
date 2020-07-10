@@ -128,9 +128,9 @@ void DeriveDefaultFromConstraints(
     /*=========================================================*/
 
     if (multifield) {
-        if (constraints->minFields == nullptr) minFields = 0;
-        else if (constraints->minFields->value == SymbolData(theEnv)->NegativeInfinity) minFields = 0;
-        else minFields = (unsigned long) constraints->minFields->integerValue->contents;
+        if (constraints->getMinFields() == nullptr) minFields = 0;
+        else if (constraints->getMinFields()->value == SymbolData(theEnv)->NegativeInfinity) minFields = 0;
+        else minFields = (unsigned long) constraints->getMinFields()->integerValue->contents;
 
         theDefault->begin = 0;
         theDefault->range = minFields;

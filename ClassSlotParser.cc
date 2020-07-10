@@ -728,9 +728,9 @@ static bool CheckForFacetConflicts(
             WriteString(theEnv, STDERR, "The 'cardinality' facet can only be used with multifield slots.\n");
             return false;
         } else {
-            ReturnExpression(theEnv, sd->constraint->minFields);
+            ReturnExpression(theEnv, sd->constraint->getMinFields());
             ReturnExpression(theEnv, sd->constraint->getMaxFields());
-            sd->constraint->minFields = GenConstant(theEnv, INTEGER_TYPE, CreateInteger(theEnv, 1LL));
+            sd->constraint->setMinFields(GenConstant(theEnv, INTEGER_TYPE, CreateInteger(theEnv, 1LL)));
             sd->constraint->setMaxFields(GenConstant(theEnv, INTEGER_TYPE, CreateInteger(theEnv, 1LL)));
         }
     }

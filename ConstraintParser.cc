@@ -1015,9 +1015,9 @@ static bool ParseRangeCardinalityAttribute(
                 return false;
             }
 
-            ReturnExpression(theEnv, constraints->minFields);
-            if (inputToken.tknType == INTEGER_TOKEN) { constraints->minFields = GenConstant(theEnv, INTEGER_TYPE, inputToken.value); }
-            else { constraints->minFields = GenConstant(theEnv, FLOAT_TYPE, inputToken.value); }
+            ReturnExpression(theEnv, constraints->getMinFields());
+            if (inputToken.tknType == INTEGER_TOKEN) { constraints->setMinFields(GenConstant(theEnv, INTEGER_TYPE, inputToken.value)); }
+            else { constraints->setMinFields( GenConstant(theEnv, FLOAT_TYPE, inputToken.value)); }
         }
     } else if ((inputToken.tknType == SF_VARIABLE_TOKEN) && (strcmp(inputToken.printForm, "?VARIABLE") == 0)) { /* Do nothing. */ }
     else {
@@ -1076,8 +1076,8 @@ static bool ParseRangeCardinalityAttribute(
             return false;
         }
     } else {
-        if (CompareNumbers(theEnv, constraints->minFields->type,
-                           constraints->minFields->value,
+        if (CompareNumbers(theEnv, constraints->getMinFields()->type,
+                           constraints->getMinFields()->value,
                            constraints->getMaxFields()->type,
                            constraints->getMaxFields()->value) == GREATER_THAN) {
             PrintErrorID(theEnv, "CSTRNPSR", 2, true);
