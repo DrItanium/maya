@@ -923,8 +923,8 @@ static void UnionRangeMinMaxValueWithList(
                 tmpmax->nextArg = nextmax->nextArg;
                 tmpmin->nextArg = nextmin->nextArg;
 
-                rtn_struct(theEnv, expr, nextmin);
-                rtn_struct(theEnv, expr, nextmax);
+                rtn_struct(theEnv, Expression, nextmin);
+                rtn_struct(theEnv, Expression, nextmax);
             } else {
                 tmpmin = tmpmin->nextArg;
                 tmpmax = tmpmax->nextArg;

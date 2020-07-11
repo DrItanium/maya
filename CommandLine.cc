@@ -863,7 +863,7 @@ bool RouteCommand(
         CloseStringSource(theEnv, "command");
         top = GenConstant(theEnv, TokenTypeToType(theToken.tknType), theToken.value);
         EvaluateExpression(theEnv, top, &returnValue);
-        rtn_struct(theEnv, expr, top);
+        rtn_struct(theEnv, Expression, top);
         if (printResult) {
             WriteUDFValue(theEnv, STDOUT, &returnValue);
             WriteString(theEnv, STDOUT, "\n");

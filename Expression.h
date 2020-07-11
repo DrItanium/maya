@@ -138,7 +138,7 @@ void RemoveHashedExpression(const Environment&, Expression *);
 #if BLOAD_AND_BSAVE
 unsigned long HashedExpressionIndex(const Environment&, Expression *);
 #endif
-#define ExpressionPointer(i) ((expr *) (((i) == ULONG_MAX) ? nullptr : &ExpressionData(theEnv)->ExpressionArray[i]))
+#define ExpressionPointer(i) ((Expression*) (((i) == ULONG_MAX) ? nullptr : &ExpressionData(theEnv)->ExpressionArray[i]))
 #define HashedExpressionPointer(i) ExpressionPointer(i)
 
 void AllocateExpressions(const Environment&);

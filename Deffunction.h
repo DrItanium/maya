@@ -104,8 +104,8 @@ struct deffunctionData {
     struct CodeGeneratorItem *DeffunctionCodeItem;
     Deffunction *ExecutingDeffunction;
 };
-
-#define DeffunctionData(theEnv) ((deffunctionData *) GetEnvironmentData(theEnv,DEFFUNCTION_DATA))
+RegisterEnvironmentModule(deffunctionData, DEFFUNCTION_DATA);
+#define DeffunctionData(theEnv) (GetEnvironmentData(theEnv,DEFFUNCTION_DATA))
 
 bool CheckDeffunctionCall(const Environment&, Deffunction *, int);
 void DeffunctionGetBind(UDFValue *);

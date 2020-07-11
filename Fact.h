@@ -134,7 +134,7 @@ struct factsData {
     FactBuilderError factBuilderError;
 };
 RegisterEnvironmentModule(factsData, FACTS_DATA);
-#define FactData(theEnv) ((factsData *) GetEnvironmentData(theEnv,FACTS_DATA))
+#define FactData(theEnv) (GetEnvironmentData(theEnv,FACTS_DATA))
 
 Fact *Assert(Fact *);
 AssertStringError GetAssertStringError(const Environment&);

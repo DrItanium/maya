@@ -82,8 +82,8 @@ struct definstancesData {
     Construct *DefinstancesConstruct;
     unsigned DefinstancesModuleIndex;
 };
-
-#define DefinstancesData(theEnv) ((definstancesData *) GetEnvironmentData(theEnv,DEFINSTANCES_DATA))
+RegisterEnvironmentModule(definstancesData, DEFINSTANCES_DATA);
+#define DefinstancesData(theEnv) (GetEnvironmentData(theEnv,DEFINSTANCES_DATA))
 
 const char *DefinstancesModule(Definstances *);
 const char *DefinstancesModuleName(const Environment&, Definstances *);

@@ -143,8 +143,8 @@ struct engineData {
     long unneededMarkerCompare;
 #endif
 };
-
-#define EngineData(theEnv) ((engineData *) GetEnvironmentData(theEnv,ENGINE_DATA))
+RegisterEnvironmentModule(engineData, ENGINE_DATA);
+#define EngineData(theEnv) (GetEnvironmentData(theEnv,ENGINE_DATA))
 
 constexpr auto MAX_PATTERNS_CHECKED = 64;
 long long Run(const Environment&, long long);

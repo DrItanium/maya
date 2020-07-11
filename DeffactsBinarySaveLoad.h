@@ -55,8 +55,8 @@ struct deffactsBinaryData {
     struct deffactsModule *ModuleArray;
     unsigned long NumberOfDeffactsModules;
 };
-
-#define DeffactsBinaryData(theEnv) ((deffactsBinaryData *) GetEnvironmentData(theEnv,DFFCTBIN_DATA))
+RegisterEnvironmentModule(deffactsBinaryData, DFFCTBIN_DATA);
+#define DeffactsBinaryData(theEnv) (GetEnvironmentData(theEnv,DFFCTBIN_DATA))
 
 void DeffactsBinarySetup(const Environment&);
 void *BloadDeffactsModuleReference(const Environment&, unsigned long);

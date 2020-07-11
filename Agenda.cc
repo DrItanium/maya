@@ -790,7 +790,7 @@ void RefreshCommand(
 void Refresh(
         Defrule *theRule) {
     Defrule *rulePtr;
-    struct partialMatch *listOfMatches;
+    PartialMatch *listOfMatches;
     unsigned long b;
     const Environment&theEnv = theRule->header.env;
 

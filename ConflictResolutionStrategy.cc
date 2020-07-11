@@ -665,7 +665,7 @@ static Activation *PlaceRandomActivation(
 /*********************************************************/
 static unsigned long long *SortPartialMatch(
         const Environment&theEnv,
-        struct partialMatch *binds) {
+        PartialMatch *binds) {
     unsigned long long *nbinds;
     unsigned long long temp;
     bool flag;
