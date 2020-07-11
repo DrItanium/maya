@@ -303,17 +303,7 @@ add_library(maya_extensions
 		InstanceExtensions.h
 		ExternalAddressTracker.h
 		Problem.h
-		DefruleView.cc
-		DefruleView.h
-		FactView.cc
-		FactView.h
-		DeftemplateView.cc
-		DeftemplateView.h
-		GenericView.h
-		NandFrameView.h
-		NandFrameView.cc
-		DefclassView.cc
-		DefclassView.h)
+		)
 # TODO express the configurable dependencies in setup.h using CMAKE instead
 add_executable(maya cmd/repl/main.cc)
 target_link_libraries(maya PUBLIC

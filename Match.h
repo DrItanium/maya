@@ -46,6 +46,7 @@ typedef struct multifieldMarker MultifieldMarker;
 #include "Network.h"
 
 struct PartialMatch;
+struct PatternNodeHeader;
 /****************/
 /* patternMatch */
 /****************/

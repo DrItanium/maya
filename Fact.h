@@ -335,17 +335,17 @@ void FactBinarySetup(const Environment&);
 #define BsaveFactPatternIndex(patPtr) ((patPtr == nullptr) ? ULONG_MAX : ((factPatternNode *) patPtr)->bsaveID)
 #define BloadFactPatternPointer(i) ((factPatternNode *) ((i == ULONG_MAX) ? nullptr : &FactBinaryData(theEnv)->FactPatternArray[i]))
 
-struct factPatternNode {
-    struct patternNodeHeader header;
+struct FactPatternNode {
+    PatternNodeHeader header;
     unsigned long bsaveID;
     unsigned short whichField; // TBD seems to be 1 based rather than 0 based
     unsigned short whichSlot;
     unsigned short leaveFields;
-    struct expr *networkTest;
-    struct factPatternNode *nextLevel;
-    struct factPatternNode *lastLevel;
-    struct factPatternNode *leftNode;
-    struct factPatternNode *rightNode;
+    expr *networkTest;
+    FactPatternNode *nextLevel;
+    FactPatternNode *lastLevel;
+    FactPatternNode *leftNode;
+    FactPatternNode *rightNode;
 };
 
 void InitializeFactPatterns(const Environment&);

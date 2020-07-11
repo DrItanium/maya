@@ -116,7 +116,7 @@ typedef struct objectPatternNode {
 } OBJECT_PATTERN_NODE;
 
 struct objectAlphaNode {
-    patternNodeHeader header;
+    PatternNodeHeader header;
     unsigned long long matchTimeTag;
     CLIPSBitMap *classbmp, *slotbmp;
     OBJECT_PATTERN_NODE *patternNode;

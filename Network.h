@@ -36,11 +36,11 @@ struct betaMemory;
 struct joinLink;
 struct joinNode;
 struct patternNodeHashEntry;
-typedef struct patternNodeHeader PatternNodeHeader;
 
 #include "Entities.h"
+#include "Match.h"
 
-struct patternNodeHeader {
+struct PatternNodeHeader {
     struct alphaMemoryHash *firstHash;
     struct alphaMemoryHash *lastHash;
     struct joinNode *entryJoin;
@@ -55,7 +55,6 @@ struct patternNodeHeader {
     bool selector: 1;
 };
 
-#include "Match.h"
 
 struct patternNodeHashEntry {
     void *parent;
@@ -66,7 +65,7 @@ struct patternNodeHashEntry {
 };
 
 constexpr auto SIZE_PATTERN_HASH = 16231;
-
+struct PartialMatch;
 struct alphaMemoryHash {
     unsigned long bucket;
     struct patternNodeHeader *owner;
