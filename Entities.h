@@ -235,7 +235,7 @@ struct PatternEntityRecord {
 };
 
 /*****************/
-/* patternEntity */
+/* PatternEntity */
 /*****************/
 struct PatternEntity {
     TypeHeader header;

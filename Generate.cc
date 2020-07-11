@@ -427,10 +427,10 @@ static void ExtractFieldTest(
 /*  a constant value against a specified slot/field in   */
 /*  the data entity for equality or inequality.          */
 /*********************************************************/
-static expr *GenPNConstant(
+static Expression *GenPNConstant(
         const Environment&theEnv,
         lhsParseNode *theField) {
-    expr *top;
+    Expression *top;
 
     /*===============================================*/
     /* If the pattern parser is capable of creating  */
@@ -462,11 +462,11 @@ static expr *GenPNConstant(
 /*  a constant value against a specified slot/field in the  */
 /*  data entity for equality or inequality.                 */
 /************************************************************/
-static expr *GenJNConstant(
+static Expression *GenJNConstant(
         const Environment& theEnv,
         lhsParseNode *theField,
         bool isNand) {
-    expr *top;
+    Expression *top;
 
     /*===============================================*/
     /* If the pattern parser is capable of creating  */
@@ -503,12 +503,12 @@ static expr *GenJNConstant(
 /*  join network. The expression generated is for a   */
 /*  predicate field constraint (the : constraint).    */
 /******************************************************/
-static expr *GenJNColon(
+static Expression *GenJNColon(
         const Environment&theEnv,
         lhsParseNode *theField,
         bool isNand,
         nandFrame *theNandFrames) {
-    expr *top, *conversion;
+    Expression *top, *conversion;
 
     /*==================================================*/
     /* Replace variables with function calls to extract */
@@ -537,10 +537,10 @@ static expr *GenJNColon(
 /*  pattern network. The expression generated is for  */
 /*  a predicate field constraint (the : constraint).  */
 /******************************************************/
-static expr *GenPNColon(
+static Expression *GenPNColon(
         const Environment&theEnv,
         lhsParseNode *theField) {
-    expr *top, *conversion;
+    Expression *top, *conversion;
 
     /*==================================================*/
     /* Replace variables with function calls to extract */
@@ -569,12 +569,12 @@ static expr *GenPNColon(
 /*  join network. The expression generated is for a   */
 /*  return value field constraint (the = constraint). */
 /******************************************************/
-static expr *GenJNEq(
+static Expression *GenJNEq(
         const Environment&theEnv,
         lhsParseNode *theField,
         bool isNand,
         nandFrame *theNandFrames) {
-    expr *top, *conversion;
+    Expression *top, *conversion;
 
     /*==================================================*/
     /* Replace variables with function calls to extract */
@@ -606,10 +606,10 @@ static expr *GenJNEq(
 /*  pattern network. The expression generated is for a */
 /*  return value field constraint (the = constraint).  */
 /*******************************************************/
-static expr *GenPNEq(
+static Expression *GenPNEq(
         const Environment&theEnv,
         lhsParseNode *theField) {
-    expr *top, *conversion;
+    Expression *top, *conversion;
 
     /*==================================================*/
     /* Replace variables with function calls to extract */
@@ -694,7 +694,7 @@ expr *GetvarReplace(
         lhsParseNode *nodeList,
         bool isNand,
         nandFrame *theNandFrames) {
-    expr *newList;
+    Expression *newList;
 
     /*====================================*/
     /* Return nullptr for a nullptr pointer     */
@@ -709,7 +709,7 @@ expr *GetvarReplace(
     /* argument links.                                     */
     /*=====================================================*/
 
-    newList = get_struct(theEnv, expr);
+    newList = get_struct(theEnv, Expression);
     newList->type = NodeTypeToType(nodeList);
     newList->value = nodeList->value;
     newList->nextArg = GetvarReplace(theEnv, nodeList->right, isNand, theNandFrames);
@@ -765,10 +765,10 @@ expr *GetvarReplace(
 /*   given a pointer to the data entity that contains the value (i.e. */
 /*   from information stored in the pattern network).                 */
 /**********************************************************************/
-static expr *GetfieldReplace(
+static Expression *GetfieldReplace(
         const Environment&theEnv,
         lhsParseNode *nodeList) {
-    expr *newList;
+    Expression *newList;
 
     /*====================================*/
     /* Return nullptr for a nullptr pointer     */
@@ -783,7 +783,7 @@ static expr *GetfieldReplace(
     /* argument links.                                     */
     /*=====================================================*/
 
-    newList = get_struct(theEnv, expr);
+    newList = get_struct(theEnv, Expression);
     newList->type = NodeTypeToType(nodeList);
     newList->value = nodeList->value;
     newList->nextArg = GetfieldReplace(theEnv, nodeList->right);
@@ -814,12 +814,12 @@ static expr *GetfieldReplace(
 /* GenJNVariableComparison: Generates a join network test for */
 /*   comparing two variables found in different patterns.     */
 /**************************************************************/
-static expr *GenJNVariableComparison(
+static Expression *GenJNVariableComparison(
         const Environment&theEnv,
         lhsParseNode *selfNode,
         lhsParseNode *referringNode,
         bool isNand) {
-    expr *top;
+    Expression *top;
 
     /*========================================================*/
     /* If either pattern is missing a function for generating */
@@ -860,7 +860,7 @@ static expr *GenJNVariableComparison(
 /* GenPNVariableComparison: Generates a pattern network test */
 /*   for comparing two variables found in the same pattern.  */
 /*************************************************************/
-static expr *GenPNVariableComparison(
+static Expression *GenPNVariableComparison(
         const Environment&theEnv,
         lhsParseNode *selfNode,
         lhsParseNode *referringNode) {

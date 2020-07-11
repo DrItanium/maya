@@ -71,7 +71,7 @@ void PrintPartialMatch(const Environment&, const char *, PartialMatch *);
 PartialMatch *CopyPartialMatch(const Environment&, PartialMatch *);
 PartialMatch *MergePartialMatches(const Environment&, PartialMatch *, PartialMatch *);
 long IncrementPseudoFactIndex();
-PartialMatch *GetAlphaMemory(const Environment&, struct patternNodeHeader *, unsigned long);
+PartialMatch *GetAlphaMemory(const Environment&, PatternNodeHeader *, unsigned long);
 PartialMatch *GetLeftBetaMemory(joinNode *, unsigned long);
 PartialMatch *GetRightBetaMemory(joinNode *, unsigned long);
 void ReturnLeftMemory(const Environment&, struct joinNode *);
@@ -79,22 +79,22 @@ void ReturnRightMemory(const Environment&, struct joinNode *);
 void DestroyBetaMemory(const Environment&, struct joinNode *, int);
 void FlushBetaMemory(const Environment&, struct joinNode *, int);
 bool BetaMemoryNotEmpty(joinNode *);
-void RemoveAlphaMemoryMatches(const Environment&, struct patternNodeHeader *, PartialMatch *,
+void RemoveAlphaMemoryMatches(const Environment&, PatternNodeHeader *, PartialMatch *,
                               struct alphaMatch *);
-void DestroyAlphaMemory(const Environment&, struct patternNodeHeader *, bool);
-void FlushAlphaMemory(const Environment&, struct patternNodeHeader *);
+void DestroyAlphaMemory(const Environment&, PatternNodeHeader *, bool);
+void FlushAlphaMemory(const Environment&, PatternNodeHeader *);
 void FlushAlphaBetaMemory(const Environment&, PartialMatch *);
 void DestroyAlphaBetaMemory(const Environment&, PartialMatch *);
 int GetPatternNumberFromJoin(joinNode *);
 struct multifieldMarker *CopyMultifieldMarkers(const Environment&, struct multifieldMarker *);
 PartialMatch *CreateAlphaMatch(const Environment&, void *, struct multifieldMarker *,
-                                      struct patternNodeHeader *, unsigned long);
+                                      PatternNodeHeader *, unsigned long);
 void TraceErrorToRule(const Environment&, struct joinNode *, const char *);
-void InitializePatternHeader(const Environment&, struct patternNodeHeader *);
+void InitializePatternHeader(const Environment&, PatternNodeHeader *);
 void MarkRuleNetwork(const Environment&, bool);
 void TagRuleNetwork(const Environment&, unsigned long *, unsigned long *, unsigned long *, unsigned long *);
 bool FindEntityInPartialMatch(PatternEntity *, PartialMatch *);
-unsigned long ComputeRightHashValue(const Environment&, struct patternNodeHeader *);
+unsigned long ComputeRightHashValue(const Environment&, PatternNodeHeader *);
 void UpdateBetaPMLinks(const Environment&, PartialMatch *, PartialMatch *, PartialMatch *,
                        struct joinNode *, unsigned long, int);
 void UnlinkBetaPMFromNodeAndLineage(const Environment&, struct joinNode *, PartialMatch *, int);

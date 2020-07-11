@@ -105,7 +105,7 @@ static void DeallocateExternalFunctionData(
     tmpPtr = ExternalFunctionData(theEnv)->ListOfFunctions;
     while (tmpPtr != nullptr) {
         nextPtr = tmpPtr->next;
-        rtn_struct(theEnv, functionDefinition, tmpPtr);
+        rtn_struct(theEnv, FunctionDefinition, tmpPtr);
         tmpPtr = nextPtr;
     }
 
@@ -174,7 +174,7 @@ static AddUDFError DefineFunction(
     newFunction = FindFunction(theEnv, name);
     if (newFunction != nullptr) { return AUE_FUNCTION_NAME_IN_USE_ERROR; }
 
-    newFunction = get_struct(theEnv, functionDefinition);
+    newFunction = get_struct(theEnv, FunctionDefinition);
     newFunction->callFunctionName = CreateSymbol(theEnv, name);
     IncrementLexemeCount(newFunction->callFunctionName);
     newFunction->next = GetFunctionList(theEnv);
@@ -226,7 +226,7 @@ bool RemoveUDF(
 
             if (fPtr->restrictions != nullptr) { ReleaseLexeme(theEnv, fPtr->restrictions); }
             ClearUserDataList(theEnv, fPtr->usrData);
-            rtn_struct(theEnv, functionDefinition, fPtr);
+            rtn_struct(theEnv, FunctionDefinition, fPtr);
             return true;
         }
 

@@ -83,7 +83,7 @@ static void CheckForPrimableJoins(const Environment&, Defrule *, struct joinNode
 static void PrimeJoinFromLeftMemory(const Environment&, struct joinNode *);
 static void PrimeJoinFromRightMemory(const Environment&, struct joinNode *);
 static void MarkPatternForIncrementalReset(const Environment&, unsigned short,
-                                           struct patternNodeHeader *, bool);
+                                           PatternNodeHeader *, bool);
 
 /**************************************************************/
 /* IncrementalReset: Incrementally resets the specified rule. */
@@ -169,7 +169,7 @@ static void MarkJoinsForIncrementalReset(
         const Environment&theEnv,
         struct joinNode *joinPtr,
         bool value) {
-    struct patternNodeHeader *patternPtr;
+    PatternNodeHeader *patternPtr;
 
     for (;
             joinPtr != nullptr;
@@ -192,7 +192,7 @@ static void MarkJoinsForIncrementalReset(
         if (joinPtr->initialize) {
             joinPtr->initialize = value;
             if (joinPtr->joinFromTheRight == false) {
-                patternPtr = (patternNodeHeader *) GetPatternForJoin(joinPtr);
+                patternPtr = (PatternNodeHeader *) GetPatternForJoin(joinPtr);
                 if (patternPtr != nullptr) { MarkPatternForIncrementalReset(theEnv, joinPtr->rhsType, patternPtr, value); }
             }
         }
@@ -227,7 +227,7 @@ static void CheckForPrimableJoins(
                 if (joinPtr->joinFromTheRight == false) {
                     if ((joinPtr->rightSideEntryStructure == nullptr) ||
                         (joinPtr->patternIsNegated) ||
-                        (((patternNodeHeader *) joinPtr->rightSideEntryStructure)->initialize == false)) {
+                        (((PatternNodeHeader *) joinPtr->rightSideEntryStructure)->initialize == false)) {
                         PrimeJoinFromLeftMemory(theEnv, joinPtr);
                         joinPtr->marked = true;
                     }
@@ -285,7 +285,7 @@ static void PrimeJoinFromLeftMemory(
                 if (!EvaluateSecondaryNetworkTest(theEnv, notParent, joinPtr)) { return; }
             }
 
-            for (listOfHashNodes = ((patternNodeHeader *) joinPtr->rightSideEntryStructure)->firstHash;
+            for (listOfHashNodes = ((PatternNodeHeader *) joinPtr->rightSideEntryStructure)->firstHash;
                  listOfHashNodes != nullptr;
                  listOfHashNodes = listOfHashNodes->nextHash) {
                 if (listOfHashNodes->alphaMemory != nullptr) {
@@ -296,7 +296,7 @@ static void PrimeJoinFromLeftMemory(
 
             EPMDrive(theEnv, notParent, joinPtr, NETWORK_ASSERT);
         } else {
-            for (listOfHashNodes = ((patternNodeHeader *) joinPtr->rightSideEntryStructure)->firstHash;
+            for (listOfHashNodes = ((PatternNodeHeader *) joinPtr->rightSideEntryStructure)->firstHash;
                  listOfHashNodes != nullptr;
                  listOfHashNodes = listOfHashNodes->nextHash) {
                 for (theList = listOfHashNodes->alphaMemory;
@@ -444,7 +444,7 @@ static void PrimeJoinFromRightMemory(
 static void MarkPatternForIncrementalReset(
         const Environment&theEnv,
         unsigned short rhsType,
-        struct patternNodeHeader *theHeader,
+        PatternNodeHeader *theHeader,
         bool value) {
     struct patternParser *tempParser;
 

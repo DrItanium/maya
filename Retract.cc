@@ -404,7 +404,7 @@ static bool PartialMatchDefunct(
         const Environment&theEnv,
         PartialMatch *thePM) {
     unsigned short i;
-    struct patternEntity *thePE;
+    PatternEntity *thePE;
 
     if (thePM->deleting) return true;
 
@@ -430,7 +430,7 @@ bool PartialMatchWillBeDeleted(
         const Environment&theEnv,
         PartialMatch *thePM) {
     unsigned short i;
-    struct patternEntity *thePE;
+    PatternEntity *thePE;
 
     if (thePM == nullptr) return false;
 

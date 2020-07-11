@@ -507,7 +507,7 @@ static void ProcessFactAlphaMatch(
     /* Create the partial match for the pattern. */
     /*===========================================*/
 
-    theMatch = CreateAlphaMatch(theEnv, theFact, theMarks, (patternNodeHeader *) &thePattern->header, hashValue);
+    theMatch = CreateAlphaMatch(theEnv, theFact, theMarks, (PatternNodeHeader *) &thePattern->header, hashValue);
     theMatch->owner = &thePattern->header;
 
     /*=======================================================*/
@@ -517,7 +517,7 @@ static void ProcessFactAlphaMatch(
     listOfMatches = (patternMatch *) theFact->list;
     theFact->list = get_struct(theEnv, patternMatch);
     ((patternMatch *) theFact->list)->next = listOfMatches;
-    ((patternMatch *) theFact->list)->matchingPattern = (patternNodeHeader *) thePattern;
+    ((patternMatch *) theFact->list)->matchingPattern = (PatternNodeHeader *) thePattern;
     ((patternMatch *) theFact->list)->theMatch = theMatch;
 
     /*================================================================*/
@@ -746,7 +746,7 @@ static bool SkipFactPatternNode(
 /***************************************************************/
 void MarkFactPatternForIncrementalReset(
         const Environment&theEnv,
-        struct patternNodeHeader *thePattern,
+        PatternNodeHeader *thePattern,
         bool value) {
     FactPatternNode *patternPtr = (factPatternNode *) thePattern;
     struct joinNode *theJoin;

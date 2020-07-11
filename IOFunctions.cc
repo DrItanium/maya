@@ -149,8 +149,8 @@ struct IOFunctionData {
     CLIPSLexeme *locale;
     bool useFullCRLF;
 };
-
-#define IOFunctionData(theEnv) ((IOFunctionData *) GetEnvironmentData(theEnv,IO_FUNCTION_DATA))
+RegisterEnvironmentModule(IOFunctionData, IO_FUNCTION_DATA);
+#define IOFunctionData(theEnv) (GetEnvironmentData(theEnv,IO_FUNCTION_DATA))
 
 /****************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS  */

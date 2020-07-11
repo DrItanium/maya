@@ -70,8 +70,8 @@ struct patternParser {
     bool (*recognizeFunction)(CLIPSLexeme *);
     lhsParseNode *(*parseFunction)(const Environment&, const char *, token *);
     bool (*postAnalysisFunction)(const Environment&, lhsParseNode *);
-    patternNodeHeader *(*addPatternFunction)(const Environment&, lhsParseNode *);
-    void (*removePatternFunction)(const Environment&, patternNodeHeader *);
+    PatternNodeHeader *(*addPatternFunction)(const Environment&, lhsParseNode *);
+    void (*removePatternFunction)(const Environment&, PatternNodeHeader *);
     Expression *(*genJNConstantFunction)(void *, lhsParseNode *, int);
     void (*replaceGetJNValueFunction)(const Environment&, Expression *, lhsParseNode *, int);
     Expression *(*genGetJNValueFunction)(const Environment&, lhsParseNode *, int);
@@ -82,7 +82,7 @@ struct patternParser {
     Expression *(*genComparePNValuesFunction)(const Environment&, lhsParseNode *, lhsParseNode *);
     void (*returnUserDataFunction)(const Environment&, void *);
     void *(*copyUserDataFunction)(const Environment&, void *);
-    void (*markIRPatternFunction)(const Environment&, patternNodeHeader *, bool);
+    void (*markIRPatternFunction)(const Environment&, PatternNodeHeader *, bool);
     void (*incrementalResetFunction)(const Environment&);
     void (*codeReferenceFunction)(const Environment&, void *, FILE *, unsigned int, unsigned int);
     int priority;
@@ -110,22 +110,22 @@ struct patternData {
     patternNodeHashEntry **PatternHashTable;
     unsigned long PatternHashTableSize;
 };
-
-#define PatternData(theEnv) ((patternData *) GetEnvironmentData(theEnv,PATTERN_DATA))
+RegisterEnvironmentModule(patternData, PATTERN_DATA);
+#define PatternData(theEnv) (GetEnvironmentData(theEnv,PATTERN_DATA))
 
 void InitializePatterns(const Environment&);
 bool AddPatternParser(const Environment&, struct patternParser *);
 struct patternParser *FindPatternParser(const Environment&, const char *);
-void DetachPattern(const Environment&, unsigned short, struct patternNodeHeader *);
+void DetachPattern(const Environment&, unsigned short, PatternNodeHeader *);
 void GetNextPatternEntity(const Environment&,
                           struct patternParser **,
-                          struct patternEntity **);
+                          PatternEntity **);
 struct patternParser *GetPatternParser(const Environment&, unsigned short);
 struct lhsParseNode *RestrictionParse(const Environment&, const char *, struct token *, bool,
                                       CLIPSLexeme *, unsigned short,
                                       struct constraintRecord *, unsigned short);
 bool PostPatternAnalysis(const Environment&, struct lhsParseNode *);
-void PatternNodeHeaderToCode(const Environment&, FILE *, struct patternNodeHeader *,
+void PatternNodeHeaderToCode(const Environment&, FILE *, PatternNodeHeader *,
                              unsigned int, unsigned int);
 void AddReservedPatternSymbol(const Environment&, const char *, const char *);
 bool ReservedPatternSymbol(const Environment&, const char *, const char *);

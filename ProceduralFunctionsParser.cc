@@ -641,7 +641,7 @@ static Expression *BindParse(
     }
 #endif
 
-    texp = get_struct(theEnv, expr);
+    texp = get_struct(theEnv, Expression);
     texp->argList = texp->nextArg = nullptr;
     if (CollectArguments(theEnv, texp, infile) == nullptr) {
         ReturnExpression(theEnv, top);

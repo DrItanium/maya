@@ -1053,7 +1053,7 @@ static void CreateObjectAlphaMatch(
             ObjectReteData(theEnv)->CurrentPatternObject->busy++;
             theMatch = CreateAlphaMatch(theEnv, ObjectReteData(theEnv)->CurrentPatternObject,
                                         ObjectReteData(theEnv)->CurrentPatternObjectMarks,
-                                        (patternNodeHeader *) alphaPtr, hashValue);
+                                        (PatternNodeHeader *) alphaPtr, hashValue);
             theMatch->owner = alphaPtr;
 
             /* ======================================
@@ -1062,7 +1062,7 @@ static void CreateObjectAlphaMatch(
                ====================================== */
             newMatch = get_struct(theEnv, patternMatch);
             newMatch->next = (patternMatch *) ObjectReteData(theEnv)->CurrentPatternObject->partialMatchList;
-            newMatch->matchingPattern = (patternNodeHeader *) alphaPtr;
+            newMatch->matchingPattern = (PatternNodeHeader *) alphaPtr;
             newMatch->theMatch = theMatch;
             ObjectReteData(theEnv)->CurrentPatternObject->partialMatchList = (void *) newMatch;
 

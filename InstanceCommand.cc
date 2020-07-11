@@ -253,7 +253,7 @@ static void DeallocateInstanceData(
             theMatch = tmpMatch;
         }
 
-        ReturnEntityDependencies(theEnv, (patternEntity *) tmpIPtr);
+        ReturnEntityDependencies(theEnv, (PatternEntity *) tmpIPtr);
 
         for (i = 0; i < tmpIPtr->cls->instanceSlotCount; i++) {
             sp = tmpIPtr->slotAddresses[i];

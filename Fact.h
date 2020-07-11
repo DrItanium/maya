@@ -317,7 +317,7 @@ void FactPatternMatch(const Environment&, Fact *,
                       FactPatternNode *, size_t, size_t,
                       struct multifieldMarker *,
                       struct multifieldMarker *);
-void MarkFactPatternForIncrementalReset(const Environment&, struct patternNodeHeader *, bool);
+void MarkFactPatternForIncrementalReset(const Environment&, PatternNodeHeader *, bool);
 void FactsIncrementalReset(const Environment&);
 
 constexpr auto FACTBIN_DATA = 62;
@@ -331,8 +331,8 @@ RegisterEnvironmentModule(factBinaryData, FACTBIN_DATA);
 
 void FactBinarySetup(const Environment&);
 
-#define BsaveFactPatternIndex(patPtr) ((patPtr == nullptr) ? ULONG_MAX : ((factPatternNode *) patPtr)->bsaveID)
-#define BloadFactPatternPointer(i) ((factPatternNode *) ((i == ULONG_MAX) ? nullptr : &FactBinaryData(theEnv)->FactPatternArray[i]))
+#define BsaveFactPatternIndex(patPtr) ((patPtr == nullptr) ? ULONG_MAX : ((FactPatternNode *) patPtr)->bsaveID)
+#define BloadFactPatternPointer(i) ((FactPatternNode *) ((i == ULONG_MAX) ? nullptr : &FactBinaryData(theEnv)->FactPatternArray[i]))
 
 struct FactPatternNode {
     PatternNodeHeader header;

@@ -91,7 +91,7 @@ struct joinNode *ConstructJoins(
         struct joinNode *lastJoin,
         bool tryToReuse,
         bool firstJoin) {
-    struct patternNodeHeader *lastPattern;
+    PatternNodeHeader *lastPattern;
     struct joinNode *listOfJoins = nullptr;
     struct joinNode *oldJoin;
     int joinNumber = 1;
@@ -1189,8 +1189,8 @@ static struct joinNode *CreateNewJoin(
         ((joinNode *) rhsEntryStruct)->nextLinks = theLink;
         newJoin->rightMatchNode = nullptr;
     } else {
-        newJoin->rightMatchNode = ((patternNodeHeader *) rhsEntryStruct)->entryJoin;
-        ((patternNodeHeader *) rhsEntryStruct)->entryJoin = newJoin;
+        newJoin->rightMatchNode = ((PatternNodeHeader *) rhsEntryStruct)->entryJoin;
+        ((PatternNodeHeader *) rhsEntryStruct)->entryJoin = newJoin;
     }
 
     /*================================*/

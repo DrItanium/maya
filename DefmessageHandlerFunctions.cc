@@ -257,7 +257,7 @@ void NewSystemHandler(
     hnd->system = 1;
     hnd->minParams = hnd->maxParams = extraargs + 1;
     hnd->localVarCount = 0;
-    hnd->actions = get_struct(theEnv, expr);
+    hnd->actions = get_struct(theEnv, Expression);
     hnd->actions->argList = nullptr;
     hnd->actions->type = FCALL;
     hnd->actions->value = FindFunction(theEnv, fname);

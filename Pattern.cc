@@ -298,7 +298,7 @@ void ReservedPatternSymbolErrorMsg(
 void GetNextPatternEntity(
         const Environment&theEnv,
         struct patternParser **theParser,
-        struct patternEntity **theEntity) {
+        PatternEntity **theEntity) {
 
     /*=============================================================*/
     /* If the current parser is nullptr, then we want to retrieve the */
@@ -322,7 +322,7 @@ void GetNextPatternEntity(
         /*================================================================*/
 
     else if (theEntity != nullptr) {
-        *theEntity = (patternEntity *)
+        *theEntity = (PatternEntity *)
                 (*(*theParser)->entityType->base.getNextFunction)(&const_cast<Environment&>(theEnv), *theEntity);
 
         if ((*theEntity) != nullptr) return;
@@ -347,7 +347,7 @@ void GetNextPatternEntity(
     /*================================================*/
 
     while ((*theEntity == nullptr) && (*theParser != nullptr)) {
-        *theEntity = (patternEntity *)
+        *theEntity = (PatternEntity *)
                 (*(*theParser)->entityType->base.getNextFunction)(&const_cast<Environment&>(theEnv), *theEntity);
 
         if (*theEntity != nullptr) return;
@@ -366,7 +366,7 @@ void GetNextPatternEntity(
 void DetachPattern(
         const Environment&theEnv,
         unsigned short rhsType,
-        struct patternNodeHeader *theHeader) {
+        PatternNodeHeader *theHeader) {
     if (rhsType == 0) return;
 
     if (PatternData(theEnv)->PatternParserArray[rhsType - 1] != nullptr) {

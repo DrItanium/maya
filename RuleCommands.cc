@@ -659,7 +659,7 @@ static long long ListAlphaMatches(
         return (alphaCount);
     }
 
-    listOfHashNodes = ((patternNodeHeader *) theJoin->rightSideEntryStructure)->firstHash;
+    listOfHashNodes = ((PatternNodeHeader *) theJoin->rightSideEntryStructure)->firstHash;
 
     for (count = 0;
          listOfHashNodes != nullptr;
@@ -1164,7 +1164,7 @@ void TimetagFunction(
         return;
     }
 
-    returnValue->integerValue = CreateInteger(theEnv, (long long) ((patternEntity *) ptr)->timeTag);
+    returnValue->integerValue = CreateInteger(theEnv, (long long) ((PatternEntity *) ptr)->timeTag);
 }
 
 #endif /* DEBUGGING_FUNCTIONS */

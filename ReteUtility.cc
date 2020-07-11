@@ -86,9 +86,9 @@
 /***************************************/
 
 static void TraceErrorToRuleDriver(const Environment&, struct joinNode *, const char *, int, bool);
-static struct alphaMemoryHash *FindAlphaMemory(const Environment&, struct patternNodeHeader *, unsigned long);
-static unsigned long AlphaMemoryHashValue(patternNodeHeader *, unsigned long);
-static void UnlinkAlphaMemory(const Environment&, struct patternNodeHeader *, struct alphaMemoryHash *);
+static struct alphaMemoryHash *FindAlphaMemory(const Environment&, PatternNodeHeader *, unsigned long);
+static unsigned long AlphaMemoryHashValue(PatternNodeHeader *, unsigned long);
+static void UnlinkAlphaMemory(const Environment&, PatternNodeHeader *, struct alphaMemoryHash *);
 static void UnlinkAlphaMemoryBucketSiblings(const Environment&, struct alphaMemoryHash *);
 static void InitializePMLinks(partialMatch *);
 static void UnlinkBetaPartialMatchfromAlphaAndBetaLineage(partialMatch *);
@@ -108,7 +108,7 @@ void PrintPartialMatch(
         const Environment&theEnv,
         const char *logicalName,
         PartialMatch *list) {
-    struct patternEntity *matchingItem;
+    PatternEntity *matchingItem;
     unsigned short i;
 
     for (i = 0; i < list->bcount;) {
@@ -538,7 +538,7 @@ PartialMatch *MergePartialMatches(
 /*******************************************************************/
 void InitializePatternHeader(
         const Environment&theEnv,
-        struct patternNodeHeader *theHeader) {
+        PatternNodeHeader *theHeader) {
 #if MAC_XCD
 #pragma unused(theEnv)
 #endif
@@ -568,7 +568,7 @@ PartialMatch *CreateAlphaMatch(
         const Environment&theEnv,
         void *theEntity,
         struct multifieldMarker *markers,
-        struct patternNodeHeader *theHeader,
+        PatternNodeHeader *theHeader,
         unsigned long hashOffset) {
     PartialMatch *theMatch;
     struct alphaMatch *afbtemp;
@@ -589,7 +589,7 @@ PartialMatch *CreateAlphaMatch(
 
     afbtemp = get_struct(theEnv, alphaMatch);
     afbtemp->next = nullptr;
-    afbtemp->matchingItem = (patternEntity *) theEntity;
+    afbtemp->matchingItem = (PatternEntity *) theEntity;
 
     if (markers != nullptr) { afbtemp->markers = CopyMultifieldMarkers(theEnv, markers); }
     else { afbtemp->markers = nullptr; }
@@ -724,7 +724,7 @@ void DestroyAlphaBetaMemory(
 /*   data entity in a partial match.                  */
 /******************************************************/
 bool FindEntityInPartialMatch(
-        struct patternEntity *theEntity,
+        PatternEntity *theEntity,
         PartialMatch *thePartialMatch) {
     unsigned short i;
 
@@ -903,7 +903,7 @@ void MarkRuleJoins(
 /*****************************************/
 PartialMatch *GetAlphaMemory(
         const Environment&theEnv,
-        struct patternNodeHeader *theHeader,
+        PatternNodeHeader *theHeader,
         unsigned long hashOffset) {
     struct alphaMemoryHash *theAlphaMemory;
     unsigned long hashValue;
@@ -1042,7 +1042,7 @@ bool BetaMemoryNotEmpty(
 /*********************************************/
 void RemoveAlphaMemoryMatches(
         const Environment&theEnv,
-        struct patternNodeHeader *theHeader,
+        PatternNodeHeader *theHeader,
         PartialMatch *theMatch,
         struct alphaMatch *theAlphaMatch) {
     struct alphaMemoryHash *theAlphaMemory = nullptr;
@@ -1074,7 +1074,7 @@ void RemoveAlphaMemoryMatches(
 /***********************/
 void DestroyAlphaMemory(
         const Environment&theEnv,
-        struct patternNodeHeader *theHeader,
+        PatternNodeHeader *theHeader,
         bool unlink) {
     struct alphaMemoryHash *theAlphaMemory, *tempMemory;
 
@@ -1097,7 +1097,7 @@ void DestroyAlphaMemory(
 /*********************/
 void FlushAlphaMemory(
         const Environment&theEnv,
-        struct patternNodeHeader *theHeader) {
+        PatternNodeHeader *theHeader) {
     struct alphaMemoryHash *theAlphaMemory, *tempMemory;
 
     theAlphaMemory = theHeader->firstHash;
@@ -1119,7 +1119,7 @@ void FlushAlphaMemory(
 /********************/
 static struct alphaMemoryHash *FindAlphaMemory(
         const Environment&theEnv,
-        struct patternNodeHeader *theHeader,
+        PatternNodeHeader *theHeader,
         unsigned long hashValue) {
     struct alphaMemoryHash *theAlphaMemory;
 
@@ -1136,7 +1136,7 @@ static struct alphaMemoryHash *FindAlphaMemory(
 /* AlphaMemoryHashValue: */
 /*************************/
 static unsigned long AlphaMemoryHashValue(
-        struct patternNodeHeader *theHeader,
+        PatternNodeHeader *theHeader,
         unsigned long hashOffset) {
     unsigned long hashValue;
     union {
@@ -1158,7 +1158,7 @@ static unsigned long AlphaMemoryHashValue(
 /**********************/
 static void UnlinkAlphaMemory(
         const Environment&theEnv,
-        struct patternNodeHeader *theHeader,
+        PatternNodeHeader *theHeader,
         struct alphaMemoryHash *theAlphaMemory) {
     /*======================*/
     /* Unlink the siblings. */
@@ -1202,7 +1202,7 @@ static void UnlinkAlphaMemoryBucketSiblings(
 /**************************/
 unsigned long ComputeRightHashValue(
         const Environment&theEnv,
-        struct patternNodeHeader *theHeader) {
+        PatternNodeHeader *theHeader) {
     Expression *tempExpr;
     unsigned long hashValue = 0;
     unsigned long multiplier = 1;

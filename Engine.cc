@@ -176,7 +176,7 @@ long long Run(
     unsigned long tempValue;
 #endif
     unsigned short i;
-    struct patternEntity *theMatchingItem;
+    PatternEntity *theMatchingItem;
     PartialMatch *theBasis = nullptr;
     Activation *theActivation;
     const char *ruleFiring;

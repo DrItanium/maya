@@ -755,7 +755,7 @@ void ExpandFuncCall(
        Build the new function call expression with the expanded arguments.
        Check the number of arguments, if necessary, and call the thing.
        =================================================================== */
-    fcallexp = get_struct(theEnv, expr);
+    fcallexp = get_struct(theEnv, Expression);
     fcallexp->type = GetFirstArgument()->type;
     fcallexp->value = GetFirstArgument()->value;
     fcallexp->nextArg = nullptr;
@@ -852,7 +852,7 @@ static void ExpandFuncMultifield(
             }
             top = bot = nullptr;
             for (i = returnValue->begin; i < (returnValue->begin + returnValue->range); i++) {
-                newexp = get_struct(theEnv, expr);
+                newexp = get_struct(theEnv, Expression);
                 newexp->type = returnValue->multifieldValue->contents[i].header->type;
                 newexp->value = returnValue->multifieldValue->contents[i].value;
                 newexp->argList = nullptr;

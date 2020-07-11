@@ -130,15 +130,15 @@
 static bool PatternParserFind(CLIPSLexeme *);
 static struct lhsParseNode *ObjectLHSParse(const Environment&, const char *, struct token *);
 static bool ReorderAndAnalyzeObjectPattern(const Environment&, struct lhsParseNode *);
-static struct patternNodeHeader
+static PatternNodeHeader
 *PlaceObjectPattern(const Environment&, struct lhsParseNode *);
 static OBJECT_PATTERN_NODE *FindObjectPatternNode(OBJECT_PATTERN_NODE *, struct lhsParseNode *,
                                                   OBJECT_PATTERN_NODE **, bool, bool);
 static OBJECT_PATTERN_NODE *CreateNewObjectPatternNode(const Environment&, struct lhsParseNode *, OBJECT_PATTERN_NODE *,
                                                        OBJECT_PATTERN_NODE *, bool, bool);
-static void DetachObjectPattern(const Environment&, struct patternNodeHeader *);
+static void DetachObjectPattern(const Environment&, PatternNodeHeader *);
 static void ClearObjectPatternMatches(const Environment&, OBJECT_ALPHA_NODE *);
-static void RemoveObjectPartialMatches(const Environment&, Instance *, struct patternNodeHeader *);
+static void RemoveObjectPartialMatches(const Environment&, Instance *, PatternNodeHeader *);
 static bool CheckDuplicateSlots(const Environment&, struct lhsParseNode *, CLIPSLexeme *);
 static struct lhsParseNode *ParseClassRestriction(const Environment&, const char *, struct token *);
 static struct lhsParseNode *ParseNameRestriction(const Environment&, const char *, struct token *);
@@ -161,7 +161,7 @@ static struct lhsParseNode *FilterObjectPattern(const Environment&, struct patte
                                                 struct lhsParseNode **, struct lhsParseNode **);
 static CLIPSBitMap *FormSlotBitMap(const Environment&, struct lhsParseNode *);
 static struct lhsParseNode *RemoveSlotExistenceTests(const Environment&, struct lhsParseNode *, CLIPSBitMap **);
-static void MarkObjectPtnIncrementalReset(const Environment&, struct patternNodeHeader *, bool);
+static void MarkObjectPtnIncrementalReset(const Environment&, PatternNodeHeader *, bool);
 static void ObjectIncrementalReset(const Environment&);
 
 static Expression *ObjectMatchDelayParse(const Environment&, Expression *, const char *);
@@ -581,7 +581,7 @@ static bool ReorderAndAnalyzeObjectPattern(
   SIDE EFFECTS : Object pattern network updated
   NOTES        : None
  *****************************************************/
-static struct patternNodeHeader *PlaceObjectPattern(
+static PatternNodeHeader *PlaceObjectPattern(
         const Environment&theEnv,
         struct lhsParseNode *thePattern) {
     OBJECT_PATTERN_NODE *currentLevel, *lastLevel;
@@ -682,7 +682,7 @@ static struct patternNodeHeader *PlaceObjectPattern(
         if ((newClassBitMap == newAlphaNode->classbmp) &&
             (newSlotBitMap == newAlphaNode->slotbmp) &&
             IdenticalExpression(newAlphaNode->header.rightHash, rightHash))
-            return ((patternNodeHeader *) newAlphaNode);
+            return ((PatternNodeHeader *) newAlphaNode);
         newAlphaNode = newAlphaNode->nxtInGroup;
     }
 
@@ -719,7 +719,7 @@ static struct patternNodeHeader *PlaceObjectPattern(
         }
     }
 
-    return ((patternNodeHeader *) newAlphaNode);
+    return ((PatternNodeHeader *) newAlphaNode);
 }
 
 /************************************************************************
@@ -956,7 +956,7 @@ static OBJECT_PATTERN_NODE *CreateNewObjectPatternNode(
  ********************************************************/
 static void DetachObjectPattern(
         const Environment&theEnv,
-        struct patternNodeHeader *thePattern) {
+        PatternNodeHeader *thePattern) {
     OBJECT_ALPHA_NODE *alphaPtr, *prv, *terminalPtr;
     OBJECT_PATTERN_NODE *patternPtr, *upperLevel;
 
@@ -1150,7 +1150,7 @@ static void ClearObjectPatternMatches(
        ============================================= */
     ins = InstanceData(theEnv)->InstanceList;
     while (ins != nullptr) {
-        RemoveObjectPartialMatches(theEnv, ins, (patternNodeHeader *) alphaPtr);
+        RemoveObjectPartialMatches(theEnv, ins, (PatternNodeHeader *) alphaPtr);
         ins = ins->nxtList;
     }
 
@@ -1159,7 +1159,7 @@ static void ClearObjectPatternMatches(
        ============================ */
     igrb = InstanceData(theEnv)->InstanceGarbageList;
     while (igrb != nullptr) {
-        RemoveObjectPartialMatches(theEnv, igrb->ins, (patternNodeHeader *) alphaPtr);
+        RemoveObjectPartialMatches(theEnv, igrb->ins, (PatternNodeHeader *) alphaPtr);
         igrb = igrb->nxt;
     }
 }
@@ -1179,7 +1179,7 @@ static void ClearObjectPatternMatches(
 static void RemoveObjectPartialMatches(
         const Environment&theEnv,
         Instance *ins,
-        struct patternNodeHeader *phead) {
+        PatternNodeHeader *phead) {
     struct patternMatch *match_before, *match_ptr;
 
     match_before = nullptr;
@@ -2138,7 +2138,7 @@ static Expression *ObjectMatchDelayParse(
  ***************************************************/
 static void MarkObjectPtnIncrementalReset(
         const Environment&theEnv,
-        struct patternNodeHeader *thePattern,
+        PatternNodeHeader *thePattern,
         bool value) {
 #if MAC_XCD
 #pragma unused(theEnv)

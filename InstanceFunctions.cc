@@ -234,7 +234,7 @@ void CleanupInstances(
             && (gtmp->ins->patternHeader.busyCount == 0))
         {
             ReleaseLexeme(theEnv, gtmp->ins->name);
-            rtn_struct(theEnv, instance, gtmp->ins);
+            rtn_struct(theEnv, Instance, gtmp->ins);
             if (gprv == nullptr)
                 InstanceData(theEnv)->InstanceGarbageList = gtmp->nxt;
             else

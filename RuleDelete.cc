@@ -455,7 +455,7 @@ static void DetachJoins(
 static void RemoveIntranetworkLink(
         const Environment&theEnv,
         struct joinNode *join) {
-    struct patternNodeHeader *patternPtr;
+    PatternNodeHeader *patternPtr;
     struct joinNode *joinPtr, *lastJoin;
 
     /*================================================*/
@@ -464,7 +464,7 @@ static void RemoveIntranetworkLink(
     /* enters from the right.                         */
     /*================================================*/
 
-    patternPtr = (patternNodeHeader *) join->rightSideEntryStructure;
+    patternPtr = (PatternNodeHeader *) join->rightSideEntryStructure;
     joinPtr = patternPtr->entryJoin;
     lastJoin = nullptr;
 

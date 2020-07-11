@@ -166,7 +166,7 @@ static void FormMethodsFromRestrictions(
     for (i = 0; i < min; i++) {
         PopulateRestriction(theEnv, &argRestriction2, defaultc2, rstring, i + 1);
         rptr = ParseRestrictionType(theEnv, argRestriction2);
-        tmp = get_struct(theEnv, expr);
+        tmp = get_struct(theEnv, Expression);
         tmp->argList = (Expression *) rptr;
         tmp->nextArg = nullptr;
         if (plist == nullptr)
@@ -202,7 +202,7 @@ static void FormMethodsFromRestrictions(
         PopulateRestriction(theEnv, &argRestriction2, defaultc2, rstring, min + i + 1);
         rptr = ParseRestrictionType(theEnv, argRestriction2);
 
-        tmp = get_struct(theEnv, expr);
+        tmp = get_struct(theEnv, Expression);
         tmp->argList = (Expression *) rptr;
         tmp->nextArg = nullptr;
         if (plist == nullptr)
@@ -244,7 +244,7 @@ static void FormMethodsFromRestrictions(
             rptr->query->argList->nextArg =
                     GenConstant(theEnv, INTEGER_TYPE, CreateInteger(theEnv, (long long) (max - min - i)));
         }
-        tmp = get_struct(theEnv, expr);
+        tmp = get_struct(theEnv, Expression);
         tmp->argList = (Expression *) rptr;
         tmp->nextArg = nullptr;
         if (plist == nullptr)

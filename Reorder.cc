@@ -1246,7 +1246,7 @@ Expression *LHSParseNodesToExpression(
 
     if (nodeList == nullptr) { return nullptr; }
 
-    newList = get_struct(theEnv, expr);
+    newList = get_struct(theEnv, Expression);
     newList->type = NodeTypeToType(nodeList);
     newList->value = nodeList->value;
     newList->nextArg = LHSParseNodesToExpression(theEnv, nodeList->right);

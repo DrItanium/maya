@@ -81,8 +81,8 @@ struct printUtilityData {
     bool AddressesToStrings;
     bool InstanceAddressesToNames;
 };
-
-#define PrintUtilityData(theEnv) ((printUtilityData *) GetEnvironmentData(theEnv,PRINT_UTILITY_DATA))
+RegisterEnvironmentModule(printUtilityData, PRINT_UTILITY_DATA);
+#define PrintUtilityData(theEnv) (GetEnvironmentData(theEnv,PRINT_UTILITY_DATA))
 
 void InitializePrintUtilityData(const Environment&);
 void WriteFloat(const Environment&, const char *, double);

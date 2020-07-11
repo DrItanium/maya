@@ -68,7 +68,7 @@ constexpr auto SIZE_PATTERN_HASH = 16231;
 struct PartialMatch;
 struct alphaMemoryHash {
     unsigned long bucket;
-    struct patternNodeHeader *owner;
+    PatternNodeHeader *owner;
     PartialMatch *alphaMemory;
     PartialMatch *endOfQueue;
     struct alphaMemoryHash *nextHash;

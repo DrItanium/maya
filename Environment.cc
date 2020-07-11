@@ -209,6 +209,8 @@ bool AddEnvironmentCleanupFunction(
         const char *name,
         EnvironmentCleanupFunctionBody functionPtr,
         int priority) {
+    /// @todo fix this
+#if 0
     EnvironmentCleanupFunction *newPtr, *currentPtr, *lastPtr = nullptr;
 
     newPtr = (EnvironmentCleanupFunction *) malloc(sizeof(EnvironmentCleanupFunction));
@@ -220,8 +222,6 @@ bool AddEnvironmentCleanupFunction(
     if (theEnv->listOfCleanupEnvironmentFunctions.empty()) {
         theEnv->listOfCleanupEnvironmentFunctions.emplace_back(newPtr);
     }
-    /// @todo fix this
-#if 0
     currentPtr = theEnv->listOfCleanupEnvironmentFunctions;
     while ((currentPtr != nullptr) ? (priority < currentPtr->priority) : false) {
         lastPtr = currentPtr;

@@ -289,7 +289,7 @@ static void DeallocateFactData(
             theMatch = tmpMatch;
         }
 
-        ReturnEntityDependencies(theEnv, (patternEntity *) tmpFactPtr);
+        ReturnEntityDependencies(theEnv, (PatternEntity *) tmpFactPtr);
 
         ReturnFact(theEnv, tmpFactPtr);
         tmpFactPtr = nextFactPtr;
@@ -560,7 +560,7 @@ RetractError RetractDriver(
     /* used to keep track of logical dependencies.   */
     /*===============================================*/
 
-    RemoveEntityDependencies(theEnv, (patternEntity *) theFact);
+    RemoveEntityDependencies(theEnv, (PatternEntity *) theFact);
 
     /*===========================================*/
     /* Remove the fact from the fact hash table. */
@@ -801,7 +801,7 @@ Fact *AssertDriver(
     /* fact and the partial match which is its logical support. */
     /*==========================================================*/
 
-    if (!AddLogicalDependencies(theEnv, (patternEntity *) theFact, false)) {
+    if (!AddLogicalDependencies(theEnv, (PatternEntity *) theFact, false)) {
         if (reuseIndex == 0) { ReturnFact(theEnv, theFact); }
         else {
             theFact->nextFact = FactData(theEnv)->GarbageFacts;

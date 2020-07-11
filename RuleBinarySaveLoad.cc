@@ -689,7 +689,7 @@ static void BsaveLink(
 void AssignBsavePatternHeaderValues(
         const Environment&theEnv,
         struct bsavePatternNodeHeader *theBsaveHeader,
-        struct patternNodeHeader *theHeader) {
+        PatternNodeHeader *theHeader) {
     theBsaveHeader->multifieldNode = theHeader->multifieldNode;
     theBsaveHeader->entryJoin = BsaveJoinIndex(theHeader->entryJoin);
     theBsaveHeader->rightHash = HashedExpressionIndex(theEnv, theHeader->rightHash);
@@ -935,7 +935,7 @@ static void UpdateLink(
 /************************************************************/
 void UpdatePatternNodeHeader(
         const Environment&theEnv,
-        struct patternNodeHeader *theHeader,
+        PatternNodeHeader *theHeader,
         struct bsavePatternNodeHeader *theBsaveHeader) {
     struct joinNode *theJoin;
 
@@ -969,7 +969,7 @@ static void ClearBload(
     size_t space;
     unsigned long i;
     struct patternParser *theParser = nullptr;
-    struct patternEntity *theEntity = nullptr;
+    PatternEntity *theEntity = nullptr;
     Defmodule *theModule;
 
     /*===========================================*/

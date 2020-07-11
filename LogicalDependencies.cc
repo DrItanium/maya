@@ -80,7 +80,7 @@ static struct dependency *DetachAssociatedDependencies(const Environment&, struc
 /***********************************************************************/
 bool AddLogicalDependencies(
         const Environment&theEnv,
-        struct patternEntity *theEntity,
+        PatternEntity *theEntity,
         bool existingEntity) {
     PartialMatch *theBinds;
     struct dependency *newDependency;
@@ -173,7 +173,7 @@ PartialMatch *FindLogicalBind(
 /*********************************************************************/
 void RemoveEntityDependencies(
         const Environment&theEnv,
-        struct patternEntity *theEntity) {
+        PatternEntity *theEntity) {
     struct dependency *fdPtr, *nextPtr, *theList;
     PartialMatch *theBinds;
 
@@ -230,7 +230,7 @@ void RemoveEntityDependencies(
 /********************************************************************/
 void ReturnEntityDependencies(
         const Environment&theEnv,
-        struct patternEntity *theEntity) {
+        PatternEntity *theEntity) {
     struct dependency *fdPtr, *nextPtr;
 
     fdPtr = (dependency *) theEntity->dependents;
@@ -284,14 +284,14 @@ void RemovePMDependencies(
         const Environment&theEnv,
         PartialMatch *theBinds) {
     struct dependency *fdPtr, *nextPtr, *theList;
-    struct patternEntity *theEntity;
+    PatternEntity *theEntity;
 
     fdPtr = (dependency *) theBinds->dependents;
 
     while (fdPtr != nullptr) {
         nextPtr = fdPtr->next;
 
-        theEntity = (patternEntity *) fdPtr->dPtr;
+        theEntity = (PatternEntity *) fdPtr->dPtr;
 
         theList = (dependency *) theEntity->dependents;
         theList = DetachAssociatedDependencies(theEnv, theList, theBinds);
@@ -339,7 +339,7 @@ void RemoveLogicalSupport(
         const Environment&theEnv,
         PartialMatch *theBinds) {
     struct dependency *dlPtr, *tempPtr, *theList;
-    struct patternEntity *theEntity;
+    PatternEntity *theEntity;
 
     /*========================================*/
     /* If the partial match has no associated */
@@ -368,7 +368,7 @@ void RemoveLogicalSupport(
         /* partial match.                                           */
         /*==========================================================*/
 
-        theEntity = (patternEntity *) dlPtr->dPtr;
+        theEntity = (PatternEntity *) dlPtr->dPtr;
 
         theList = (dependency *) theEntity->dependents;
         theList = DetachAssociatedDependencies(theEnv, theList, theBinds);
@@ -413,7 +413,7 @@ void RemoveLogicalSupport(
 void ForceLogicalRetractions(
         const Environment&theEnv) {
     struct dependency *tempPtr;
-    struct patternEntity *theEntity;
+    PatternEntity *theEntity;
 
     /*===================================================*/
     /* Don't reenter this function once it's called. Any */
@@ -437,7 +437,7 @@ void ForceLogicalRetractions(
         /* Determine the data entity to be deleted. */
         /*==========================================*/
 
-        theEntity = (patternEntity *) EngineData(theEnv)->UnsupportedDataEntities->dPtr;
+        theEntity = (PatternEntity *) EngineData(theEnv)->UnsupportedDataEntities->dPtr;
 
         /*================================================*/
         /* Remove the dependency structure from the list. */
@@ -467,7 +467,7 @@ void ForceLogicalRetractions(
 /****************************************************************/
 void Dependencies(
         const Environment&theEnv,
-        struct patternEntity *theEntity) {
+        PatternEntity *theEntity) {
     struct dependency *fdPtr;
 
     /*=========================================*/
@@ -499,8 +499,8 @@ void Dependencies(
 /************************************************************/
 void Dependents(
         const Environment&theEnv,
-        struct patternEntity *theEntity) {
-    struct patternEntity *entityPtr = nullptr;
+        PatternEntity *theEntity) {
+    PatternEntity *entityPtr = nullptr;
     struct patternParser *theParser = nullptr;
     struct dependency *fdPtr;
     PartialMatch *theBinds;
@@ -571,7 +571,7 @@ void DependenciesCommand(
 
     if (ptr == nullptr) return;
 
-    Dependencies(theEnv, (patternEntity *) ptr);
+    Dependencies(theEnv, (PatternEntity *) ptr);
 }
 
 /*******************************************/
@@ -589,7 +589,7 @@ void DependentsCommand(
 
     if (ptr == nullptr) return;
 
-    Dependents(theEnv, (patternEntity *) ptr);
+    Dependents(theEnv, (PatternEntity *) ptr);
 }
 
 #endif /* DEBUGGING_FUNCTIONS */

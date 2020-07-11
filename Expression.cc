@@ -250,7 +250,7 @@ void ReturnPackedExpression(
 
 /***********************************************/
 /* ReturnExpression: Returns a multiply linked */
-/*   list of expr data structures.             */
+/*   list of Expression data structures.             */
 /***********************************************/
 void ReturnExpression(
         const Environment&theEnv,
@@ -261,7 +261,7 @@ void ReturnExpression(
         if (waste->argList != nullptr) ReturnExpression(theEnv, waste->argList);
         tmp = waste;
         waste = waste->nextArg;
-        rtn_struct(theEnv, expr, tmp);
+        rtn_struct(theEnv, Expression, tmp);
     }
 }
 
@@ -360,7 +360,7 @@ void RemoveHashedExpression(
         prv->next = exphash->next;
     ExpressionDeinstall(theEnv, exphash->exp);
     ReturnPackedExpression(theEnv, exphash->exp);
-    rtn_struct(theEnv, exprHashNode, exphash);
+    rtn_struct(theEnv, ExpressionHashNode, exphash);
 }
 
 /*****************************************************
@@ -389,7 +389,7 @@ Expression *AddHashedExpression(
         exphash->count++;
         return (exphash->exp);
     }
-    exphash = get_struct(theEnv, exprHashNode);
+    exphash = get_struct(theEnv, ExpressionHashNode);
     exphash->hashval = hashval;
     exphash->count = 1;
     exphash->exp = PackExpression(theEnv, theExp);

@@ -63,8 +63,8 @@ static FactPatternNode *FindPatternNode(FactPatternNode *, struct lhsParseNode *
 static FactPatternNode *CreateNewPatternNode(const Environment&, struct lhsParseNode *, FactPatternNode *,
                                                     FactPatternNode *, bool, bool);
 static void ClearPatternMatches(const Environment&, FactPatternNode *);
-static void DetachFactPattern(const Environment&, struct patternNodeHeader *);
-static struct patternNodeHeader *PlaceFactPattern(const Environment&, struct lhsParseNode *);
+static void DetachFactPattern(const Environment&, PatternNodeHeader *);
+static PatternNodeHeader *PlaceFactPattern(const Environment&, struct lhsParseNode *);
 static struct lhsParseNode *RemoveUnneededSlots(const Environment&, struct lhsParseNode *);
 static void FindAndSetDeftemplatePatternNetwork(const Environment&, FactPatternNode *, FactPatternNode *);
 
@@ -113,7 +113,7 @@ void InitializeFactPatterns(
 /******************************************************************************/
 /* PlaceFactPattern: Integrates a fact pattern into the fact pattern network. */
 /******************************************************************************/
-static struct patternNodeHeader *PlaceFactPattern(
+static PatternNodeHeader *PlaceFactPattern(
         const Environment&theEnv,
         struct lhsParseNode *thePattern) {
     struct lhsParseNode *tempPattern;
@@ -279,7 +279,7 @@ static struct patternNodeHeader *PlaceFactPattern(
     /* Return the leaf node of the newly added pattern. */
     /*==================================================*/
 
-    return ((patternNodeHeader *) newNode);
+    return ((PatternNodeHeader *) newNode);
 }
 
 /*************************************************************/
@@ -538,7 +538,7 @@ static FactPatternNode *CreateNewPatternNode(
     newNode->rightNode = nullptr;
     newNode->leftNode = nullptr;
     newNode->leaveFields = thePattern->singleFieldsAfter;
-    InitializePatternHeader(theEnv, (patternNodeHeader *) &newNode->header);
+    InitializePatternHeader(theEnv, (PatternNodeHeader *) &newNode->header);
 
     if (thePattern->index > 0) { newNode->whichField = thePattern->index; }
     else newNode->whichField = 0;
@@ -650,7 +650,7 @@ static FactPatternNode *CreateNewPatternNode(
 /*************************************************************/
 static void DetachFactPattern(
         const Environment&theEnv,
-        struct patternNodeHeader *thePattern) {
+        PatternNodeHeader *thePattern) {
     FactPatternNode *patternPtr;
     FactPatternNode *upperLevel;
 
@@ -886,7 +886,7 @@ static void ClearPatternMatches(
             /* then remove the match.                         */
             /*================================================*/
 
-            if (theMatch->matchingPattern == (patternNodeHeader *) patternPtr) {
+            if (theMatch->matchingPattern == (PatternNodeHeader *) patternPtr) {
                 if (lastMatch == nullptr) {
                     /*=====================================*/
                     /* Remove the first match of the fact. */

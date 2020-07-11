@@ -129,10 +129,10 @@ struct defruleBinaryData {
 #define BloadJoinLinkPointer(i) ((joinLink *) ((i == ULONG_MAX) ? nullptr : &DefruleBinaryData(theEnv)->LinkArray[i]))
 
 void DefruleBinarySetup(const Environment&);
-void UpdatePatternNodeHeader(const Environment&, struct patternNodeHeader *,
+void UpdatePatternNodeHeader(const Environment&, PatternNodeHeader *,
                              struct bsavePatternNodeHeader *);
 void AssignBsavePatternHeaderValues(const Environment&, struct bsavePatternNodeHeader *,
-                                    struct patternNodeHeader *);
+                                    PatternNodeHeader *);
 void *BloadDefruleModuleReference(const Environment&, unsigned long);
 
 #endif /* _H_rulebin */

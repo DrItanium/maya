@@ -114,7 +114,7 @@ static void DeallocateFactBloadData(
         DestroyAlphaMemory(theEnv, &FactBinaryData(theEnv)->FactPatternArray[i].header, false);
     }
 
-    space = FactBinaryData(theEnv)->NumberOfPatterns * sizeof(factPatternNode);
+    space = FactBinaryData(theEnv)->NumberOfPatterns * sizeof(FactPatternNode);
     if (space != 0) genfree(theEnv, FactBinaryData(theEnv)->FactPatternArray, space);
 }
 
