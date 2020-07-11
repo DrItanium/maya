@@ -72,22 +72,24 @@
 constexpr auto COMMANDLINE_DATA = 40;
 
 #include <cstdlib>
+#include <string>
+#include "Environment.h"
 struct Expression;
 typedef void AfterPromptFunction(const Environment&);
 typedef bool BeforeCommandExecutionFunction(const Environment&);
 typedef void EventFunction(const Environment&);
 
-struct commandLineData {
-    bool EvaluatingTopLevelCommand;
-    bool HaltCommandLoopBatch;
-    Expression *CurrentCommand;
-    char *CommandString;
-    size_t MaximumCharacters;
-    bool ParsingTopLevelCommand;
-    const char *BannerString;
-    EventFunction *EventCallback;
-    AfterPromptFunction *AfterPromptCallback;
-    BeforeCommandExecutionFunction *BeforeCommandExecutionCallback;
+struct commandLineData : public EnvironmentModule {
+    bool EvaluatingTopLevelCommand = false;
+    bool HaltCommandLoopBatch = false;
+    Expression *CurrentCommand = nullptr;
+    char *CommandString = nullptr;
+    size_t MaximumCharacters = 0;
+    bool ParsingTopLevelCommand = false;
+    const char *BannerString = nullptr;
+    EventFunction *EventCallback = nullptr;
+    AfterPromptFunction *AfterPromptCallback = nullptr;
+    BeforeCommandExecutionFunction *BeforeCommandExecutionCallback = nullptr;
 };
 RegisterEnvironmentModule(commandLineData, COMMANDLINE_DATA);
 #define CommandLineData(theEnv) (GetEnvironmentData(theEnv,COMMANDLINE_DATA))

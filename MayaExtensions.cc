@@ -44,7 +44,7 @@ static void LastFunction(const Environment&, UDFContext *context, UDFValue *ret)
 
 void InstallMayaExtensions(const Environment&theEnv) {
     AddUDF(theEnv, "empty$", "b", 1, 1, "m", EmptyFunction);
-    AddUDF(theEnv, "functionp", "b", 1, 1, "y", Functionp);
+//    AddUDF(theEnv, "functionp", "b", 1, 1, "y", Functionp);
     AddUDF(theEnv, "quit", "v", 0, 1, "l", ExitCommand);
     AddUDF(theEnv, "bye", "v", 0, 1, "l", ExitCommand);
     AddUDF(theEnv, "last$", "m", 1, 1, "m", LastFunction);

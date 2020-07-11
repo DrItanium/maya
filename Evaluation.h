@@ -72,6 +72,7 @@
 
 #include "Constants.h"
 #include "Entities.h"
+#include "Environment.h"
 
 typedef struct functionCallBuilder FunctionCallBuilder;
 

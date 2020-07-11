@@ -101,21 +101,23 @@ constexpr auto EXPRESSION_HASH_SIZE = 503;
 constexpr auto EXPRESSION_DATA = 45;
 
 struct ExpressionData : public EnvironmentModule {
-    FunctionDefinition *PTR_AND;
-    FunctionDefinition *PTR_OR;
-    FunctionDefinition *PTR_EQ;
-    FunctionDefinition *PTR_NEQ;
-    FunctionDefinition *PTR_NOT;
-    ExpressionHashNode **ExpressionHashTable;
+    /// @todo use std::shared_ptr where it makes perfect sense
+    FunctionDefinition *PTR_AND = nullptr;
+    FunctionDefinition *PTR_OR = nullptr;
+    FunctionDefinition *PTR_EQ = nullptr;
+    FunctionDefinition *PTR_NEQ = nullptr;
+    FunctionDefinition *PTR_NOT = nullptr;
+    /// @todo replace this with an actual hash table
+    ExpressionHashNode **ExpressionHashTable = nullptr;
 #if (BLOAD_AND_BSAVE)
-    unsigned long NumberOfExpressions;
-    Expression *ExpressionArray;
-    unsigned long ExpressionCount;
+    unsigned long NumberOfExpressions = 0;
+    Expression *ExpressionArray = nullptr;
+    unsigned long ExpressionCount = 0;
 #endif
-    SavedContexts *svContexts;
-    bool ReturnContext;
-    bool BreakContext;
-    bool SequenceOpMode;
+    SavedContexts *svContexts = nullptr;
+    bool ReturnContext = false;
+    bool BreakContext = false;
+    bool SequenceOpMode = false;
 };
 RegisterEnvironmentModule(ExpressionData, EXPRESSION_DATA);
 #define ExpressionData(theEnv) (GetEnvironmentData(theEnv,EXPRESSION_DATA))

@@ -123,9 +123,10 @@ static bool                    DiscardCAddress(void *,void *);
 void InitializeEvaluationData(
         const Environment&theEnv) {
     struct externalAddressType cPointer = {"C", PrintCAddress, PrintCAddress, nullptr, NewCAddress, nullptr};
-
-    AllocateEnvironmentData(theEnv, EVALUATION_DATA, sizeof(evaluationData), DeallocateEvaluationData);
-
+    /// @todo move deallocate evaluation data into the dtor of evaluationData
+    //AllocateEnvironmentData(theEnv, EVALUATION_DATA, sizeof(evaluationData), DeallocateEvaluationData);
+    auto ptr = std::make_unique<evaluationData>();
+    theEnv->installEnvironmentModule(std::move(ptr));
     InstallExternalAddressType(theEnv, &cPointer);
 }
 

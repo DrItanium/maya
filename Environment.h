@@ -142,6 +142,8 @@ using type = actual_type ; \
 struct CLIPSLexeme;
 struct CLIPSVoid;
 struct environmentData {
+    environmentData() = default;
+    ~environmentData() = default;
     bool initialized = false;
     void *context = nullptr;
     CLIPSLexeme *TrueSymbol = nullptr;

@@ -80,8 +80,10 @@ static void DeallocateExpressionData(const Environment&);
 void InitExpressionData(
         const Environment&theEnv) {
     unsigned i;
-    AllocateEnvironmentData(theEnv, EXPRESSION_DATA, sizeof(ExpressionData), DeallocateExpressionData);
-
+    /// @todo ExpressionData's dtor needs to contain DeallocateExpressionData's contents
+    //AllocateEnvironmentData(theEnv, EXPRESSION_DATA, sizeof(ExpressionData), DeallocateExpressionData);
+    auto ptr = std::make_unique<ExpressionData>();
+    theEnv->installEnvironmentModule(std::move(ptr));
     InitExpressionPointers(theEnv);
 
     ExpressionData(theEnv)->ExpressionHashTable = (ExpressionHashNode **)

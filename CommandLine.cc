@@ -141,10 +141,13 @@ static void DeallocateCommandLineData(const Environment&);
 /****************************************************/
 void InitializeCommandLineData(
         const Environment&theEnv) {
-    AllocateEnvironmentData(theEnv, COMMANDLINE_DATA, sizeof(commandLineData), DeallocateCommandLineData);
+    auto cmdlineData = std::make_unique<commandLineData>();
+    /// @todo migrate DeallocateCommandLineData to the destructor of cmdlineData
+    //AllocateEnvironmentData(theEnv, COMMANDLINE_DATA, sizeof(commandLineData), DeallocateCommandLineData);
 
-    CommandLineData(theEnv)->BannerString = BANNER_STRING;
-    CommandLineData(theEnv)->EventCallback = DefaultGetNextEvent;
+    cmdlineData->BannerString = BANNER_STRING;
+    cmdlineData->EventCallback = DefaultGetNextEvent;
+    theEnv->installEnvironmentModule(std::move(cmdlineData));
 }
 
 /*******************************************************/
