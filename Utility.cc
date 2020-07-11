@@ -1261,12 +1261,8 @@ stringBuilder::stringBuilder(const Environment& theEnv) : _env (theEnv) { }
 std::string
 stringBuilder::contents() const noexcept {
     // inefficient but fine for now
-   auto str = _internal.str();
-   if (str.empty()) {
-       return "" + EOS;
-   } else {
-       return str;
-   }
+    auto str = _internal.str();
+    return str + EOS;
 }
 StringBuilder *CreateStringBuilder(const Environment&theEnv, size_t) {
     return new StringBuilder(theEnv);
