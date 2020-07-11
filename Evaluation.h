@@ -140,7 +140,7 @@ struct evaluationData {
     bool HaltExecution;
     int CurrentEvaluationDepth;
     int numberOfAddressTypes;
-    struct entityRecord *PrimitivesArray[MAXIMUM_PRIMITIVES];
+    EntityRecord *PrimitivesArray[MAXIMUM_PRIMITIVES];
     struct externalAddressType *ExternalAddressTypes[MAXIMUM_EXTERNAL_ADDRESS_TYPES];
 };
 
@@ -167,7 +167,7 @@ void RetainUDFV(const Environment&, UDFValue *);
 void ReleaseUDFV(const Environment&, UDFValue *);
 struct expr *ConvertValueToExpression(const Environment&, UDFValue *);
 unsigned long GetAtomicHashValue(unsigned short, void *, unsigned short);
-void InstallPrimitive(const Environment&, struct entityRecord *, int);
+void InstallPrimitive(const Environment&, EntityRecord *, int);
 int InstallExternalAddressType(const Environment&, struct externalAddressType *);
 void TransferDataObjectValues(UDFValue *, UDFValue *);
 struct expr *FunctionReferenceExpression(const Environment&, const char *);

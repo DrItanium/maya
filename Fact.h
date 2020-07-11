@@ -72,9 +72,9 @@ struct modifyCallFunctionItem {
     void *context;
 };
 
-struct fact {
+struct Fact {
     union {
-        struct patternEntity patternHeader;
+        PatternEntity patternHeader;
         TypeHeader header;
     };
     Deftemplate *whichDeftemplate;
@@ -119,7 +119,7 @@ struct factsData {
     struct callFunctionItemWithArg *ListOfAssertFunctions;
     struct callFunctionItemWithArg *ListOfRetractFunctions;
     ModifyCallFunctionItem *ListOfModifyFunctions;
-    struct patternEntityRecord FactInfo;
+    PatternEntityRecord FactInfo;
     Deftemplate *CurrentDeftemplate;
     struct factHashEntry **FactHashTable;
     unsigned long FactHashTableSize;

@@ -180,9 +180,9 @@ struct slotDescriptor {
     InstanceSlot sharedValue;
 };
 
-struct instance {
+struct Instance {
     union {
-        struct patternEntity patternHeader;
+        PatternEntity patternHeader;
         TypeHeader header;
     };
     void *partialMatchList;

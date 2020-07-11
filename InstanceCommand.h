@@ -109,7 +109,7 @@ struct instanceData {
     bool MkInsMsgPass;
     bool ChangesToInstances;
     IGARBAGE *InstanceGarbageList;
-    struct patternEntityRecord InstanceInfo;
+    PatternEntityRecord InstanceInfo;
     Instance *InstanceList;
     unsigned long GlobalNumberOfInstances;
     Instance *CurrentInstance;

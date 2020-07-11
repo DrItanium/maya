@@ -64,10 +64,10 @@
 
 typedef struct activation Activation;
 
+#include "Environment.h"
 #include "Defrule.h"
 #include "Symbol.h"
 #include "Match.h"
-#include "Environment.h"
 
 enum SalienceEvaluationType {
     WHEN_DEFINED,
@@ -131,20 +131,22 @@ public:
 
 #include "ConflictResolutionStrategy.h"
 
-constexpr auto AGENDA_DATA = 17;
+constexpr size_t AGENDA_DATA = 17;
 
-struct AgendaData {
+struct AgendaModule : public EnvironmentModule{
 #if DEBUGGING_FUNCTIONS
-    bool WatchActivations;
+    bool WatchActivations = false;
     constexpr auto shouldWatchActivations() const noexcept { return WatchActivations; }
 #endif
 private:
     unsigned long NumberOfActivations;
     unsigned long long CurrentTimetag;
     bool AgendaChanged;
-    SalienceEvaluationType SalienceEvaluation;
-    StrategyType Strategy;
+    SalienceEvaluationType SalienceEvaluation = SalienceEvaluationType::WHEN_DEFINED;
+    StrategyType Strategy = StrategyType::DEPTH_STRATEGY;
 public:
+    AgendaModule() = default;
+    ~AgendaModule() override = default;
     constexpr auto getNumberOfActivations() const noexcept { return NumberOfActivations; }
     void setNumberOfActivations(unsigned long value) noexcept { NumberOfActivations = value; }
     void incrementActivationCount() noexcept { ++NumberOfActivations; }
@@ -163,8 +165,11 @@ public:
     constexpr auto getStrategy() const noexcept { return Strategy; }
     void setStrategy(StrategyType value) noexcept { Strategy = value; }
 };
+RegisterEnvironmentModule(AgendaModule, AGENDA_DATA);
 
-#define AgendaData(theEnv) (static_cast<AgendaData*>(getEnvironmentData(theEnv, AGENDA_DATA)))
+inline const auto& AgendaData(const Environment& theEnv)  {
+    return theEnv->getEnvironmentModule<AGENDA_DATA>();
+}
 /****************************************/
 /* GLOBAL EXTERNAL FUNCTION DEFINITIONS */
 /****************************************/

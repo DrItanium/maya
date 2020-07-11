@@ -65,7 +65,7 @@ constexpr auto MAXIMUM_NUMBER_OF_PATTERNS = 128;
 
 struct patternParser {
     const char *name;
-    patternEntityRecord *entityType;
+    PatternEntityRecord *entityType;
     unsigned short positionInArray;
     bool (*recognizeFunction)(CLIPSLexeme *);
     lhsParseNode *(*parseFunction)(const Environment&, const char *, token *);

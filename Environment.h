@@ -73,14 +73,9 @@
 #include <tuple>
 #include <iostream>
 
-//typedef struct environmentData Environment;
-
 using Environment = std::shared_ptr<struct environmentData>;
 //typedef void EnvironmentCleanupFunction(const Environment&);
 using EnvironmentCleanupFunction = std::function<void(const Environment&)>;
-
-#include "Entities.h"
-#include "ExternalFunctions.h"
 
 constexpr auto USER_ENVIRONMENT_DATA = 70;
 constexpr auto MAXIMUM_ENVIRONMENT_POSITIONS = 100;
@@ -93,8 +88,10 @@ struct environmentCleanupFunction {
 };
 class EnvironmentModule {
 public:
+    EnvironmentModule() = default;
     virtual ~EnvironmentModule() = default;
 };
+
 template<typename T>
 class EnvironmentModuleTypeToIndex final {
     EnvironmentModuleTypeToIndex() = delete;
@@ -139,9 +136,10 @@ EnvironmentModuleIndexToType< pos >& operator=(const EnvironmentModuleIndexToTyp
 EnvironmentModuleIndexToType< pos >& operator=(EnvironmentModuleIndexToType< pos >&&) = delete; \
 public: \
 using type = actual_type ; \
-} \
+}
 
-
+struct CLIPSLexeme;
+struct CLIPSVoid;
 struct environmentData {
     bool initialized = false;
     void *context = nullptr;
@@ -167,12 +165,13 @@ struct environmentData {
         return true;
     }
     template<size_t position>
-    const std::unique_ptr<EnvironmentModuleType<position>>& getEnvironmentModule() noexcept {
+    const std::unique_ptr<EnvironmentModuleType<position>>& getEnvironmentModule() {
         if (position >= MAXIMUM_ENVIRONMENT_POSITIONS) {
             std::cout << "\n[ENVRNMNT2] Environment data position " << position << " exceeds the maximum allowed.\n";
-            return false;
+            throw 44;
         } else {
-            return static_cast<std::shared_ptr<EnvironmentModuleType<position>>>(environmentModules[position]);
+            auto& thing = environmentModules[position];
+            return dynamic_cast<std::unique_ptr<EnvironmentModuleIndexToType<position>>&>(thing);
         }
     }
 
@@ -191,6 +190,9 @@ void *GetEnvironmentContext(const Environment&);
 void *SetEnvironmentContext(const Environment&, void *);
 
 Environment CreateEnvironment();
+struct CLIPSFloat;
+struct CLIPSInteger;
+struct CLIPSBitMap;
 Environment CreateRuntimeEnvironment(CLIPSLexeme **, CLIPSFloat **,
                                       CLIPSInteger **, CLIPSBitMap **,
                                       struct functionDefinition *);

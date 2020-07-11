@@ -15,4 +15,5 @@ inline void zeroMemory(T* container) noexcept {
         tmpBuf[i] = 0;
     }
 }
+
 #endif

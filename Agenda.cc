@@ -83,6 +83,7 @@
 #include "Watch.h"
 
 #include "Agenda.h"
+#include <memory>
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
@@ -103,11 +104,7 @@ static void RemoveActivationFromGroup(const Environment&, Activation *, struct d
 /*************************************************/
 void InitializeAgenda(
         const Environment&theEnv) {
-    AllocateEnvironmentData(theEnv, AGENDA_DATA, sizeof(AgendaData));
-
-    AgendaData(theEnv)->setSalienceEvaluation(WHEN_DEFINED);
-
-    AgendaData(theEnv)->setStrategy(DEFAULT_STRATEGY);
+    auto agendaData = std::make_unique<AgendaModule>();
 
     AddClearFunction(theEnv, "agenda", AgendaClearFunction, 0, nullptr);
 #if DEBUGGING_FUNCTIONS
@@ -121,6 +118,7 @@ void InitializeAgenda(
 #if DEBUGGING_FUNCTIONS
     AddUDF(theEnv, "agenda", "v", 0, 1, "y", AgendaCommand);
 #endif
+    theEnv->installEnvironmentModule(std::move(agendaData));
 }
 
 /*****************************************************************/
