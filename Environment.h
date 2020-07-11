@@ -75,24 +75,16 @@
 #include <list>
 
 using Environment = std::shared_ptr<struct environmentData>;
-//typedef void EnvironmentCleanupFunction(const Environment&);
-using EnvironmentCleanupFunctionBody = std::function<void(const Environment&)>;
 
 constexpr auto USER_ENVIRONMENT_DATA = 70;
 constexpr auto MAXIMUM_ENVIRONMENT_POSITIONS = 100;
 
-struct EnvironmentCleanupFunction {
-    const char *name;
-    EnvironmentCleanupFunctionBody func;
-    int priority;
-    EnvironmentCleanupFunction *next;
-};
 class EnvironmentModule {
 public:
     EnvironmentModule() = default;
     virtual ~EnvironmentModule() = default;
     // called when the (clear) function is invoked
-    virtual void clear() noexcept;
+    virtual void onClear() noexcept;
 };
 
 template<typename T>
@@ -149,7 +141,6 @@ struct environmentData {
     CLIPSLexeme *FalseSymbol = nullptr;
     CLIPSVoid *VoidConstant = nullptr;
     std::array<std::unique_ptr<EnvironmentModule>, MAXIMUM_ENVIRONMENT_POSITIONS> environmentModules;
-    environmentData *next = nullptr;
     template<typename T>
     bool installEnvironmentModule(std::unique_ptr<T>&& module) noexcept {
         constexpr auto position = EnvironmentModuleIndex<T>;
