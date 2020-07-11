@@ -145,7 +145,6 @@ private:
     SalienceEvaluationType SalienceEvaluation = SalienceEvaluationType::WHEN_DEFINED;
     StrategyType Strategy = StrategyType::DEPTH_STRATEGY;
 public:
-    AgendaModule() = default;
     ~AgendaModule() override = default;
     constexpr auto getNumberOfActivations() const noexcept { return NumberOfActivations; }
     void setNumberOfActivations(unsigned long value) noexcept { NumberOfActivations = value; }

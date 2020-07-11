@@ -119,7 +119,7 @@ static void DeallocateConstructData(const Environment&);
 /**************************************************/
 void InitializeConstructData(
         const Environment&theEnv) {
-    AllocateEnvironmentData(theEnv, CONSTRUCT_DATA, sizeof(constructData), DeallocateConstructData);
+    AllocateEnvironmentData(theEnv, CONSTRUCT_DATA, sizeof(ConstructModule), DeallocateConstructData);
 }
 
 /****************************************************/

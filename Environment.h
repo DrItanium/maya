@@ -171,7 +171,7 @@ struct environmentData {
             throw 44;
         } else {
             auto& thing = environmentModules[position];
-            return dynamic_cast<std::unique_ptr<EnvironmentModuleIndexToType<position>>&>(thing);
+            return (std::unique_ptr<EnvironmentModuleType<position>>&)thing;
         }
     }
 

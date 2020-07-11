@@ -121,7 +121,7 @@ struct defruleModule {
 
 constexpr auto DEFRULE_DATA = 16;
 
-struct defruleData {
+struct defruleData : public EnvironmentModule {
     Construct *DefruleConstruct;
     unsigned DefruleModuleIndex;
     unsigned long long CurrentEntityTimeTag;
@@ -138,8 +138,9 @@ struct defruleData {
     bool WatchRuleAnalysis;
 #endif
 };
+RegisterEnvironmentModule(defruleData, DEFRULE_DATA);
 
-#define DefruleData(theEnv) ((defruleData *) GetEnvironmentData(theEnv,DEFRULE_DATA))
+#define DefruleData(theEnv) (GetEnvironmentData(theEnv,DEFRULE_DATA))
 
 #define GetPreviousJoin(theJoin) \
    (((theJoin)->joinFromTheRight) ? \

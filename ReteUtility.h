@@ -101,8 +101,8 @@ void UnlinkBetaPMFromNodeAndLineage(const Environment&, struct joinNode *, Parti
 void UnlinkNonLeftLineage(const Environment&, struct joinNode *, PartialMatch *, int);
 PartialMatch *CreateEmptyPartialMatch(const Environment&);
 void MarkRuleJoins(joinNode *, bool);
-void AddBlockedLink(partialMatch *, PartialMatch *);
-void RemoveBlockedLink(partialMatch *);
+void AddBlockedLink(PartialMatch *, PartialMatch *);
+void RemoveBlockedLink(PartialMatch *);
 unsigned long PrintBetaMemory(const Environment&, const char *, struct betaMemory *, bool, const char *, Verbosity);
 
 #endif /* _H_reteutil */

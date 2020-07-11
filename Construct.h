@@ -121,7 +121,7 @@ struct construct {
 
 constexpr auto CONSTRUCT_DATA = 42;
 
-struct constructData {
+struct ConstructModule : public EnvironmentModule {
     bool ClearReadyInProgress;
     bool ClearInProgress;
     bool ResetReadyInProgress;
@@ -155,8 +155,8 @@ struct constructData {
     bool Executing;
     BeforeResetFunction *BeforeResetCallback;
 };
-
-#define ConstructData(theEnv) ((constructData *) GetEnvironmentData(theEnv,CONSTRUCT_DATA))
+RegisterEnvironmentModule(ConstructModule, CONSTRUCT_DATA);
+#define ConstructData(theEnv) (GetEnvironmentData(theEnv,CONSTRUCT_DATA))
 
 bool Clear(const Environment&);
 void Reset(const Environment&);
