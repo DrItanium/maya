@@ -104,8 +104,7 @@ static void RemoveActivationFromGroup(const Environment&, Activation *, struct d
 /*************************************************/
 void InitializeAgenda(
         const Environment&theEnv) {
-    auto agendaData = std::make_unique<AgendaModule>();
-
+    theEnv->allocateEnvironmentModule<AgendaModule>();
     AddClearFunction(theEnv, "agenda", AgendaClearFunction, 0, nullptr);
 #if DEBUGGING_FUNCTIONS
     AddWatchItem(theEnv, "activations", 1, &AgendaData(theEnv)->WatchActivations, 40, DefruleWatchAccess, DefruleWatchPrint);
@@ -118,7 +117,6 @@ void InitializeAgenda(
 #if DEBUGGING_FUNCTIONS
     AddUDF(theEnv, "agenda", "v", 0, 1, "y", AgendaCommand);
 #endif
-    theEnv->installEnvironmentModule(std::move(agendaData));
 }
 
 /*****************************************************************/

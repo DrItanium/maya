@@ -87,7 +87,7 @@ void InitializeConstraints(
     int i;
 
     //AllocateEnvironmentData(theEnv, CONSTRAINT_DATA, sizeof(constraintData), DeallocateConstraintData);
-
+    theEnv->allocateEnvironmentModule<constraintData>();
     ConstraintData(theEnv)->ConstraintHashtable = (constraintRecord **)
             gm2(theEnv, sizeof(constraintRecord *) *
                         SIZE_CONSTRAINT_HASH);

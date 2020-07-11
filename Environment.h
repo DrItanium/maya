@@ -144,15 +144,12 @@ using type = actual_type ; \
 struct CLIPSLexeme;
 struct CLIPSVoid;
 struct environmentData {
-    environmentData() = default;
-    ~environmentData() = default;
     bool initialized = false;
     void *context = nullptr;
     CLIPSLexeme *TrueSymbol = nullptr;
     CLIPSLexeme *FalseSymbol = nullptr;
     CLIPSVoid *VoidConstant = nullptr;
     std::array<std::unique_ptr<EnvironmentModule>, MAXIMUM_ENVIRONMENT_POSITIONS> environmentModules;
-    std::list<EnvironmentCleanupFunction> listOfCleanupEnvironmentFunctions;
     environmentData *next = nullptr;
     template<typename T>
     bool installEnvironmentModule(std::unique_ptr<T>&& module) noexcept {
