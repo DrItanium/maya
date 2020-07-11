@@ -102,7 +102,8 @@ static void DeallocateRouterData(const Environment&);
 /*********************************************************/
 void InitializeDefaultRouters(
         const Environment&theEnv) {
-    AllocateEnvironmentData(theEnv, ROUTER_DATA, sizeof(routerData), DeallocateRouterData);
+    //AllocateEnvironmentData(theEnv, ROUTER_DATA, sizeof(routerData), DeallocateRouterData);
+    theEnv->allocateEnvironmentModule<routerData>();
 
     RouterData(theEnv)->CommandBufferInputCount = 0;
     RouterData(theEnv)->InputUngets = 0;

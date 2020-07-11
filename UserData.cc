@@ -36,7 +36,8 @@
 /*************************************************/
 void InitializeUserDataData(
         const Environment&theEnv) {
-    AllocateEnvironmentData(theEnv, USER_DATA_DATA, sizeof(userDataData));
+    //AllocateEnvironmentData(theEnv, USER_DATA_DATA, sizeof(userDataData));
+    theEnv->allocateEnvironmentModule<userDataData>();
 }
 
 /******************************************************/

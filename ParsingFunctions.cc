@@ -71,7 +71,7 @@
 
 constexpr auto PARSEFUN_DATA = 11;
 
-struct parseFunctionData {
+struct parseFunctionData : public EnvironmentModule {
     char *ErrorString;
     size_t ErrorCurrentPosition;
     size_t ErrorMaximumPosition;

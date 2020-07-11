@@ -44,7 +44,7 @@
 
 constexpr auto OBJECTBIN_DATA = 33;
 
-struct objectBinaryData {
+struct objectBinaryData : public EnvironmentModule {
     Defclass *DefclassArray;
     unsigned long ModuleCount;
     unsigned long ClassCount;

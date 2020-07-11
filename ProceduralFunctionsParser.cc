@@ -79,8 +79,8 @@
 
 constexpr auto PRCDRPSR_DATA = 12;
 
-struct procedureParserData {
-    struct BindInfo *ListOfParsedBindNames;
+struct procedureParserData : public EnvironmentModule {
+    BindInfo *ListOfParsedBindNames = nullptr;
 };
 RegisterEnvironmentModule(procedureParserData, PRCDRPSR_DATA);
 #define ProcedureParserData(theEnv) (GetEnvironmentData(theEnv,PRCDRPSR_DATA))

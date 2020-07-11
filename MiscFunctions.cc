@@ -139,8 +139,8 @@
 
 constexpr auto MISCFUN_DATA = 9;
 
-struct miscFunctionData {
-    long long GensymNumber;
+struct miscFunctionData : public EnvironmentModule {
+    long long GensymNumber = 0;
     CLIPSValue errorCode;
 };
 RegisterEnvironmentModule(miscFunctionData, MISCFUN_DATA);

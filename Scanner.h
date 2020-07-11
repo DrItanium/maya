@@ -81,7 +81,7 @@ struct token {
 
 constexpr auto SCANNER_DATA = 57;
 
-struct scannerData {
+struct scannerData : public EnvironmentModule {
     char *GlobalString;
     size_t GlobalMax;
     size_t GlobalPos;

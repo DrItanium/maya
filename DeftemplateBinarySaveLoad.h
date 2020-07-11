@@ -74,13 +74,13 @@ constexpr auto TMPLTBIN_DATA = 61;
 
 #include "Deftemplate.h"
 
-struct deftemplateBinaryData {
-    Deftemplate *DeftemplateArray;
+struct deftemplateBinaryData : public EnvironmentModule {
+    Deftemplate *DeftemplateArray = nullptr;
     unsigned long NumberOfDeftemplates;
     unsigned long NumberOfTemplateSlots;
     unsigned long NumberOfTemplateModules;
-    struct templateSlot *SlotArray;
-    struct deftemplateModule *ModuleArray;
+    struct templateSlot *SlotArray = nullptr;
+    struct deftemplateModule *ModuleArray = nullptr;
 };
 RegisterEnvironmentModule(deftemplateBinaryData, TMPLTBIN_DATA);
 #define DeftemplateBinaryData(theEnv) (GetEnvironmentData(theEnv,TMPLTBIN_DATA))

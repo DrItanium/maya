@@ -76,7 +76,7 @@
 
 constexpr auto PRINT_UTILITY_DATA = 53;
 
-struct printUtilityData {
+struct printUtilityData : public EnvironmentModule {
     bool PreserveEscapedCharacters;
     bool AddressesToStrings;
     bool InstanceAddressesToNames;

@@ -60,7 +60,7 @@ typedef struct loopCounterStack {
 
 constexpr auto PRCDRFUN_DATA = 13;
 
-struct procedureFunctionData {
+struct procedureFunctionData : public EnvironmentModule {
     bool ReturnFlag;
     bool BreakFlag;
     LOOP_COUNTER_STACK *LoopCounterStack;

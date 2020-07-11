@@ -240,3 +240,8 @@ bool AddEnvironmentCleanupFunction(
 #endif
     return false;
 }
+
+void
+EnvironmentModule::clear() noexcept {
+   // by default do nothing
+}

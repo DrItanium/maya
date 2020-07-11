@@ -66,7 +66,7 @@
 
 constexpr auto MESSAGE_HANDLER_DATA = 32;
 
-struct messageHandlerData {
+struct messageHandlerData : public EnvironmentModule {
     EntityRecord HandlerGetInfo;
     EntityRecord HandlerPutInfo;
     CLIPSLexeme *INIT_SYMBOL;

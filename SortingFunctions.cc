@@ -51,7 +51,7 @@
 
 constexpr auto SORTFUN_DATA = 7;
 
-struct sortFunctionData {
+struct sortFunctionData : public EnvironmentModule {
     Expression *SortComparisonFunction;
 };
 RegisterEnvironmentModule(sortFunctionData,SORTFUN_DATA);
@@ -73,7 +73,8 @@ static void DeallocateSortFunctionData(const Environment&);
 /****************************************/
 void SortFunctionDefinitions(
         const Environment&theEnv) {
-    AllocateEnvironmentData(theEnv, SORTFUN_DATA, sizeof(sortFunctionData), DeallocateSortFunctionData);
+    //AllocateEnvironmentData(theEnv, SORTFUN_DATA, sizeof(sortFunctionData), DeallocateSortFunctionData);
+    theEnv->allocateEnvironmentModule<sortFunctionData>();
     AddUDF(theEnv, "sort", "bm", 1, UNBOUNDED, "*;y", SortFunction);
 }
 

@@ -145,7 +145,7 @@ constexpr auto FLAG_MAX    = 80;
 
 constexpr auto IO_FUNCTION_DATA = 64;
 
-struct IOFunctionData {
+struct IOFunctionData : public EnvironmentModule {
     CLIPSLexeme *locale;
     bool useFullCRLF;
 };

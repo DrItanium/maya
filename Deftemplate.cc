@@ -112,7 +112,8 @@ void InitializeDeftemplates(
              (EntityBusyCountFunction *) DecrementDeftemplateBusyCount,
              (EntityBusyCountFunction *) IncrementDeftemplateBusyCount,
              nullptr, nullptr, nullptr, nullptr, nullptr};
-    AllocateEnvironmentData(theEnv, DEFTEMPLATE_DATA, sizeof(deftemplateData), DeallocateDeftemplateData);
+    //AllocateEnvironmentData(theEnv, DEFTEMPLATE_DATA, sizeof(deftemplateData), DeallocateDeftemplateData);
+    theEnv->allocateEnvironmentModule<deftemplateData>();
 
     memcpy(&DeftemplateData(theEnv)->DeftemplatePtrRecord, &deftemplatePtrRecord, sizeof(EntityRecord));
 

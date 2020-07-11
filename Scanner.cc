@@ -74,7 +74,8 @@ static void DeallocateScannerData(const Environment&);
 /************************************************/
 void InitializeScannerData(
         const Environment&theEnv) {
-    AllocateEnvironmentData(theEnv, SCANNER_DATA, sizeof(scannerData), DeallocateScannerData);
+    //AllocateEnvironmentData(theEnv, SCANNER_DATA, sizeof(scannerData), DeallocateScannerData);
+    theEnv->allocateEnvironmentModule<scannerData>();
 }
 
 /**************************************************/

@@ -149,15 +149,15 @@ struct stringBuilder {
 
 constexpr auto UTILITY_DATA = 55;
 typedef void YieldTimeFunctionType();
-struct utilityData {
-    struct voidCallFunctionItem *ListOfCleanupFunctions;
-    struct voidCallFunctionItem *ListOfPeriodicFunctions;
+struct utilityData : public EnvironmentModule {
+    voidCallFunctionItem *ListOfCleanupFunctions;
+    voidCallFunctionItem *ListOfPeriodicFunctions;
     bool PeriodicFunctionsEnabled;
     bool YieldFunctionEnabled;
     YieldTimeFunctionType* YieldTimeFunction;
-    struct trackedMemory *trackList;
-    struct garbageFrame MasterGarbageFrame;
-    struct garbageFrame *CurrentGarbageFrame;
+    trackedMemory *trackList;
+    garbageFrame MasterGarbageFrame;
+    garbageFrame *CurrentGarbageFrame;
     size_t BinaryFileSize;
     size_t BinaryFileOffset;
     char *CurrentReadBuffer;

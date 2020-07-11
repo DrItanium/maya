@@ -88,7 +88,8 @@ static void DeallocateProceduralFunctionData(const Environment&);
 /**********************************************/
 void ProceduralFunctionDefinitions(
         const Environment&theEnv) {
-    AllocateEnvironmentData(theEnv, PRCDRFUN_DATA, sizeof(procedureFunctionData), DeallocateProceduralFunctionData);
+    //AllocateEnvironmentData(theEnv, PRCDRFUN_DATA, sizeof(procedureFunctionData), DeallocateProceduralFunctionData);
+    theEnv->allocateEnvironmentModule<procedureFunctionData>();
 
     AddUDF(theEnv, "if", "*", 0, UNBOUNDED, nullptr, IfFunction);
     AddUDF(theEnv, "while", "*", 0, UNBOUNDED, nullptr, WhileFunction);

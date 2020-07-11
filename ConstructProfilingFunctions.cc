@@ -93,7 +93,8 @@ void ConstructProfilingFunctionDefinitions(
         const Environment&theEnv) {
     struct userDataRecord profileDataInfo = {0, CreateProfileData, DeleteProfileData};
 
-    AllocateEnvironmentData(theEnv, PROFLFUN_DATA, sizeof(profileFunctionData));
+    //AllocateEnvironmentData(theEnv, PROFLFUN_DATA, sizeof(profileFunctionData));
+    theEnv->allocateEnvironmentModule<profileFunctionData>();
 
     memcpy(&ProfileFunctionData(theEnv)->ProfileDataInfo, &profileDataInfo, sizeof(userDataRecord));
 

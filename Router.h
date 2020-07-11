@@ -100,7 +100,7 @@ struct router {
     Router *next;
 };
 
-struct routerData {
+struct routerData : public EnvironmentModule {
     size_t CommandBufferInputCount;
     size_t InputUngets;
     bool AwaitingInput;

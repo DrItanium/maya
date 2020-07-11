@@ -102,7 +102,7 @@ enum InstanceModifierError {
 
 constexpr auto INSTANCE_DATA = 29;
 
-struct instanceData {
+struct instanceData : public EnvironmentModule {
     Instance DummyInstance;
     Instance **InstanceTable;
     bool MaintainGarbageInstances;

@@ -113,7 +113,8 @@ static void DeallocateUtilityData(const Environment&);
 /************************************************/
 void InitializeUtilityData(
         const Environment&theEnv) {
-    AllocateEnvironmentData(theEnv, UTILITY_DATA, sizeof(utilityData), DeallocateUtilityData);
+    //AllocateEnvironmentData(theEnv, UTILITY_DATA, sizeof(utilityData), DeallocateUtilityData);
+    theEnv->allocateEnvironmentModule<utilityData>();
 
     UtilityData(theEnv)->CurrentGarbageFrame = &UtilityData(theEnv)->MasterGarbageFrame;
 

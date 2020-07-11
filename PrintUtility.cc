@@ -99,7 +99,7 @@
 /*****************************************************/
 void InitializePrintUtilityData(
         const Environment&theEnv) {
-    AllocateEnvironmentData(theEnv, PRINT_UTILITY_DATA, sizeof(printUtilityData));
+    theEnv->allocateEnvironmentModule<printUtilityData>();
 }
 
 /************************************************************/

@@ -52,7 +52,7 @@ constexpr auto OBJECTRETEBIN_DATA = 34;
 
 #include "ObjectReteMatch.h"
 
-struct objectReteBinaryData {
+struct objectReteBinaryData : public EnvironmentModule {
     unsigned long AlphaNodeCount;
     unsigned long PatternNodeCount;
     unsigned long AlphaLinkCount;

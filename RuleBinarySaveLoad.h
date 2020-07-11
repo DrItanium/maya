@@ -107,7 +107,7 @@ struct bsaveJoinNode {
 
 constexpr auto RULEBIN_DATA = 20;
 
-struct defruleBinaryData {
+struct defruleBinaryData : public EnvironmentModule {
     unsigned long NumberOfDefruleModules;
     unsigned long NumberOfDefrules;
     unsigned long NumberOfJoins;

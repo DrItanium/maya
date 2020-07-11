@@ -91,6 +91,8 @@ class EnvironmentModule {
 public:
     EnvironmentModule() = default;
     virtual ~EnvironmentModule() = default;
+    // called when the (clear) function is invoked
+    virtual void clear() noexcept;
 };
 
 template<typename T>

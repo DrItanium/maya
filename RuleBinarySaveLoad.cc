@@ -93,7 +93,8 @@ static void DeallocateDefruleBloadData(const Environment&);
 /*****************************************************/
 void DefruleBinarySetup(
         const Environment&theEnv) {
-    AllocateEnvironmentData(theEnv, RULEBIN_DATA, sizeof(defruleBinaryData), DeallocateDefruleBloadData);
+    //AllocateEnvironmentData(theEnv, RULEBIN_DATA, sizeof(defruleBinaryData), DeallocateDefruleBloadData);
+    theEnv->allocateEnvironmentModule<defruleBinaryData>();
 
 #if BLOAD_AND_BSAVE
     AddBinaryItem(theEnv, "defrule", 20, BsaveFind, BsaveExpressions,

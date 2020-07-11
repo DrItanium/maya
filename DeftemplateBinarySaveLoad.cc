@@ -77,7 +77,8 @@ static void DeallocateDeftemplateBloadData(const Environment&);
 /***********************************************/
 void DeftemplateBinarySetup(
         const Environment&theEnv) {
-    AllocateEnvironmentData(theEnv, TMPLTBIN_DATA, sizeof(deftemplateBinaryData), DeallocateDeftemplateBloadData);
+    //AllocateEnvironmentData(theEnv, TMPLTBIN_DATA, sizeof(deftemplateBinaryData), DeallocateDeftemplateBloadData);
+    theEnv->allocateEnvironmentModule<deftemplateBinaryData>();
 #if BLOAD_AND_BSAVE
     AddBinaryItem(theEnv, "deftemplate", 0, BsaveFind, nullptr,
                   BsaveStorage, BsaveBinaryItem,

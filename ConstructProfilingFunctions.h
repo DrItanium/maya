@@ -76,7 +76,7 @@ struct profileFrameInfo {
 
 constexpr auto PROFLFUN_DATA = 15;
 
-struct profileFunctionData {
+struct profileFunctionData : public EnvironmentModule {
     double ProfileStartTime;
     double ProfileEndTime;
     double ProfileTotalTime;

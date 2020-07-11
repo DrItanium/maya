@@ -60,7 +60,7 @@
 constexpr auto INSTANCE_FILE_DATA = 30;
 
 #if BLOAD_INSTANCES || BSAVE_INSTANCES
-struct instanceFileData {
+struct instanceFileData : public EnvironmentModule {
     const char *InstanceBinaryPrefixID;
     const char *InstanceBinaryVersionID;
 };

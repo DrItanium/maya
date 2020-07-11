@@ -159,7 +159,7 @@
 
 constexpr auto SYSTEM_DEPENDENT_DATA = 58;
 
-struct systemDependentData {
+struct systemDependentData : public EnvironmentModule {
 #if WIN_MVC
     int BinaryFileHandle;
     unsigned char getcBuffer[7];
@@ -182,7 +182,8 @@ RegisterEnvironmentModule(systemDependentData, SYSTEM_DEPENDENT_DATA);
 /********************************************************/
 void InitializeSystemDependentData(
         const Environment&theEnv) {
-    AllocateEnvironmentData(theEnv, SYSTEM_DEPENDENT_DATA, sizeof(systemDependentData));
+    //AllocateEnvironmentData(theEnv, SYSTEM_DEPENDENT_DATA, sizeof(systemDependentData));
+    theEnv->allocateEnvironmentModule<systemDependentData>();
 }
 
 /*********************************************************/

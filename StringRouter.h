@@ -69,7 +69,7 @@ struct stringBuilderRouter {
     StringBuilderRouter *next;
 };
 
-struct stringRouterData {
+struct stringRouterData : public EnvironmentModule {
     StringRouter *ListOfStringRouters;
     StringBuilderRouter *ListOfStringBuilderRouters;
 };

@@ -128,8 +128,8 @@ static void MVRangeErrorSizet(const Environment&, size_t, size_t, size_t, const 
 
 constexpr auto MULTIFUN_DATA = 10;
 
-struct multiFunctionData {
-    FIELD_VAR_STACK *FieldVarStack;
+struct multiFunctionData : public EnvironmentModule {
+    FIELD_VAR_STACK *FieldVarStack = nullptr;
 };
 RegisterEnvironmentModule(multiFunctionData, MULTIFUN_DATA);
 #define MultiFunctionData(theEnv) ( GetEnvironmentData(theEnv,MULTIFUN_DATA))

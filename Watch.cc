@@ -84,7 +84,8 @@ static void DeallocateWatchData(const Environment&);
 /**********************************************/
 void InitializeWatchData(
         const Environment&theEnv) {
-    AllocateEnvironmentData(theEnv, WATCH_DATA, sizeof(watchData), DeallocateWatchData);
+    //AllocateEnvironmentData(theEnv, WATCH_DATA, sizeof(watchData), DeallocateWatchData);
+    theEnv->allocateEnvironmentModule<watchData>();
 }
 
 /************************************************/

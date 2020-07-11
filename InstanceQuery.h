@@ -79,7 +79,7 @@ typedef struct query_stack {
 
 constexpr auto INSTANCE_QUERY_DATA = 31;
 
-struct instanceQueryData {
+struct instanceQueryData : public EnvironmentModule {
     CLIPSLexeme *QUERY_DELIMITER_SYMBOL;
     QUERY_CORE *QueryCore;
     QUERY_STACK *QueryCoreStack;

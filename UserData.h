@@ -51,7 +51,7 @@ typedef userDataRecord *USER_DATA_RECORD_PTR;
 constexpr auto MAXIMUM_USER_DATA_RECORDS = 100;
 constexpr auto USER_DATA_DATA = 56;
 
-struct userDataData {
+struct userDataData : public EnvironmentModule{
     userDataRecord *UserDataRecordArray[MAXIMUM_USER_DATA_RECORDS];
     unsigned char UserDataRecordCount;
 };

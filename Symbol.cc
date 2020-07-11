@@ -135,7 +135,8 @@ void InitializeAtomTables(
 #pragma unused(externalAddressTable)
 #endif
 
-    AllocateEnvironmentData(theEnv, SYMBOL_DATA, sizeof(symbolData), DeallocateSymbolData);
+    //AllocateEnvironmentData(theEnv, SYMBOL_DATA, sizeof(symbolData), DeallocateSymbolData);
+    theEnv->allocateEnvironmentModule<symbolData>();
 
     /*=========================*/
     /* Create the hash tables. */

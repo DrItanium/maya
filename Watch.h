@@ -90,8 +90,8 @@ struct watchItemRecord {
     WatchItemRecord *next;
 };
 
-struct watchData {
-    WatchItemRecord *ListOfWatchItems;
+struct watchData : public EnvironmentModule {
+    WatchItemRecord *ListOfWatchItems = nullptr;
 };
 RegisterEnvironmentModule(watchData, WATCH_DATA);
 #define WatchData(theEnv) (GetEnvironmentData(theEnv,WATCH_DATA))

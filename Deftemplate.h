@@ -109,7 +109,7 @@ struct templateSlot {
 
 constexpr auto DEFTEMPLATE_DATA = 5;
 
-struct deftemplateData {
+struct deftemplateData : public EnvironmentModule {
     Construct *DeftemplateConstruct;
     unsigned int DeftemplateModuleIndex;
     EntityRecord DeftemplatePtrRecord;

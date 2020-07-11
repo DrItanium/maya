@@ -107,7 +107,8 @@ static void DestroyDefruleAction(const Environment&, ConstructHeader *, void *);
 void InitializeDefrules(
         const Environment&theEnv) {
     unsigned long i;
-    AllocateEnvironmentData(theEnv, DEFRULE_DATA, sizeof(defruleData), DeallocateDefruleData);
+    //AllocateEnvironmentData(theEnv, DEFRULE_DATA, sizeof(defruleData), DeallocateDefruleData);
+    theEnv->allocateEnvironmentModule<defruleData>();
 
     InitializeEngine(theEnv);
     InitializeAgenda(theEnv);

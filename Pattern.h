@@ -98,7 +98,7 @@ struct reservedSymbol {
 constexpr auto MAX_POSITIONS = 8;
 constexpr auto PATTERN_DATA = 19;
 
-struct patternData {
+struct patternData : public EnvironmentModule {
     patternParser *ListOfPatternParsers;
     patternParser *PatternParserArray[MAX_POSITIONS];
     unsigned short NextPosition;

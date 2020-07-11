@@ -165,7 +165,7 @@ struct ObjectCmpJoinSingleSlotVars3 {
 
 constexpr auto OBJECT_RETE_DATA = 35;
 
-struct objectReteData {
+struct objectReteData : public EnvironmentModule {
     Instance *CurrentPatternObject;
     InstanceSlot *CurrentPatternObjectSlot;
     size_t CurrentObjectSlotLength;
