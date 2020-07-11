@@ -54,8 +54,8 @@ constexpr auto SORTFUN_DATA = 7;
 struct sortFunctionData {
     Expression *SortComparisonFunction;
 };
-
-#define SortFunctionData(theEnv) ((sortFunctionData *) GetEnvironmentData(theEnv,SORTFUN_DATA))
+RegisterEnvironmentModule(sortFunctionData,SORTFUN_DATA);
+#define SortFunctionData(theEnv) (GetEnvironmentData(theEnv,SORTFUN_DATA))
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */

@@ -82,7 +82,7 @@ struct deftemplateBinaryData {
     struct templateSlot *SlotArray;
     struct deftemplateModule *ModuleArray;
 };
-
+RegisterEnvironmentModule(deftemplateBinaryData, TMPLTBIN_DATA);
 #define DeftemplateBinaryData(theEnv) ((deftemplateBinaryData *) GetEnvironmentData(theEnv,TMPLTBIN_DATA))
 
 #define DeftemplatePointer(i) ((Deftemplate *) (&DeftemplateBinaryData(theEnv)->DeftemplateArray[i]))

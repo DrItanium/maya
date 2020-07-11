@@ -173,8 +173,8 @@ struct systemDependentData {
     int (*AfterOpenFunction)(const Environment&);
     jmp_buf *jmpBuffer;
 };
-
-#define SystemDependentData(theEnv) ((systemDependentData *) GetEnvironmentData(theEnv,SYSTEM_DEPENDENT_DATA))
+RegisterEnvironmentModule(systemDependentData, SYSTEM_DEPENDENT_DATA);
+#define SystemDependentData(theEnv) (GetEnvironmentData(theEnv,SYSTEM_DEPENDENT_DATA))
 
 /********************************************************/
 /* InitializeSystemDependentData: Allocates environment */

@@ -209,7 +209,7 @@ static void BsaveDriver(
 
 /*********************************************************/
 /* BsaveStorage: Writes out storage requirements for all */
-/*   factPatternNode data structures to the binary file  */
+/*   FactPatternNode data structures to the binary file  */
 /*********************************************************/
 static void BsaveStorage(
         const Environment&theEnv,
@@ -222,7 +222,7 @@ static void BsaveStorage(
 }
 
 /*****************************************************/
-/* BsaveFactPatterns: Writes out all factPatternNode */
+/* BsaveFactPatterns: Writes out all FactPatternNode */
 /*    data structures to the binary file.            */
 /*****************************************************/
 static void BsaveFactPatterns(
@@ -234,7 +234,7 @@ static void BsaveFactPatterns(
 
     /*========================================*/
     /* Write out the amount of space taken up */
-    /* by the factPatternNode data structures */
+    /* by the FactPatternNode data structures */
     /* in the binary image.                   */
     /*========================================*/
 
@@ -264,7 +264,7 @@ static void BsaveFactPatterns(
     /*=============================================================*/
     /* If a binary image was already loaded when the bsave command */
     /* was issued, then restore the counts indicating the number   */
-    /* of factPatternNode data structures in the binary image      */
+    /* of FactPatternNode data structures in the binary image      */
     /* (these were overwritten by the binary save).                */
     /*=============================================================*/
 
@@ -299,14 +299,14 @@ static void BsavePatternNode(
 
 /*****************************************************/
 /* BloadStorage: Allocates storage requirements for  */
-/*   the factPatternNodes used by this binary image. */
+/*   the FactPatternNodes used by this binary image. */
 /*****************************************************/
 static void BloadStorage(
         const Environment&theEnv) {
     size_t space;
 
     /*=========================================*/
-    /* Determine the number of factPatternNode */
+    /* Determine the number of FactPatternNode */
     /* data structures to be read.             */
     /*=========================================*/
 
@@ -315,7 +315,7 @@ static void BloadStorage(
 
     /*===================================*/
     /* Allocate the space needed for the */
-    /* factPatternNode data structures.  */
+    /* FactPatternNode data structures.  */
     /*===================================*/
 
     if (FactBinaryData(theEnv)->NumberOfPatterns == 0) {
@@ -323,12 +323,12 @@ static void BloadStorage(
         return;
     }
 
-    space = FactBinaryData(theEnv)->NumberOfPatterns * sizeof(factPatternNode);
-    FactBinaryData(theEnv)->FactPatternArray = (factPatternNode *) genalloc(theEnv, space);
+    space = FactBinaryData(theEnv)->NumberOfPatterns * sizeof(FactPatternNode);
+    FactBinaryData(theEnv)->FactPatternArray = (FactPatternNode *) genalloc(theEnv, space);
 }
 
 /************************************************************/
-/* BloadBinaryItem: Loads and refreshes the factPatternNode */
+/* BloadBinaryItem: Loads and refreshes the FactPatternNode */
 /*   data structures used by this binary image.             */
 /************************************************************/
 static void BloadBinaryItem(
@@ -345,7 +345,7 @@ static void BloadBinaryItem(
     GenReadBinary(theEnv, &space, sizeof(size_t));
 
     /*=============================================*/
-    /* Read in the factPatternNode data structures */
+    /* Read in the FactPatternNode data structures */
     /* and refresh the pointers.                   */
     /*=============================================*/
 
@@ -365,7 +365,7 @@ static void BloadBinaryItem(
 
 /*************************************************/
 /* UpdateFactPatterns: Bload refresh routine for */
-/*   the factPatternNode structure.              */
+/*   the FactPatternNode structure.              */
 /*************************************************/
 static void UpdateFactPatterns(
         const Environment&theEnv,
@@ -408,7 +408,7 @@ static void ClearBload(
         }
     }
 
-    space = FactBinaryData(theEnv)->NumberOfPatterns * sizeof(factPatternNode);
+    space = FactBinaryData(theEnv)->NumberOfPatterns * sizeof(FactPatternNode);
     if (space != 0) genfree(theEnv, FactBinaryData(theEnv)->FactPatternArray, space);
     FactBinaryData(theEnv)->NumberOfPatterns = 0;
 }

@@ -181,7 +181,7 @@ void FactPatternMatch(
                 if (EvaluatePatternExpression(theEnv, patternPtr, patternPtr->networkTest->nextArg)) {
                     EvaluateExpression(theEnv, patternPtr->networkTest, &theResult);
 
-                    tempPtr = (factPatternNode *) FindHashedPatternNode(theEnv, patternPtr, theResult.header->type, theResult.value);
+                    tempPtr = (FactPatternNode *) FindHashedPatternNode(theEnv, patternPtr, theResult.header->type, theResult.value);
                 } else { tempPtr = nullptr; }
 
                 if (tempPtr != nullptr) {
@@ -324,7 +324,7 @@ static void ProcessMultifieldNode(
             if (EvaluatePatternExpression(theEnv, thePattern, thePattern->networkTest->nextArg)) {
                 EvaluateExpression(theEnv, thePattern->networkTest, &theResult);
 
-                thePattern = (factPatternNode *) FindHashedPatternNode(theEnv, thePattern, theResult.header->type, theResult.value);
+                thePattern = (FactPatternNode *) FindHashedPatternNode(theEnv, thePattern, theResult.header->type, theResult.value);
                 success = thePattern != nullptr;
             } else { success = false; }
         } else if ((thePattern->networkTest == nullptr) ?
@@ -390,7 +390,7 @@ static void ProcessMultifieldNode(
             if (EvaluatePatternExpression(theEnv, thePattern, thePattern->networkTest->nextArg)) {
                 EvaluateExpression(theEnv, thePattern->networkTest, &theResult);
 
-                tempPtr = (factPatternNode *) FindHashedPatternNode(theEnv, thePattern, theResult.header->type, theResult.value);
+                tempPtr = (FactPatternNode *) FindHashedPatternNode(theEnv, thePattern, theResult.header->type, theResult.value);
                 if (tempPtr != nullptr) {
                     FactPatternMatch(theEnv, FactData(theEnv)->CurrentPatternFact,
                                      tempPtr->nextLevel, offset + repeatCount, multifieldsProcessed + 1,
@@ -748,7 +748,7 @@ void MarkFactPatternForIncrementalReset(
         const Environment&theEnv,
         PatternNodeHeader *thePattern,
         bool value) {
-    FactPatternNode *patternPtr = (factPatternNode *) thePattern;
+    FactPatternNode *patternPtr = (FactPatternNode *) thePattern;
     struct joinNode *theJoin;
 #if MAC_XCD
 #pragma unused(theEnv)

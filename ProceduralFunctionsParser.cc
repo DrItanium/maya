@@ -82,8 +82,8 @@ constexpr auto PRCDRPSR_DATA = 12;
 struct procedureParserData {
     struct BindInfo *ListOfParsedBindNames;
 };
-
-#define ProcedureParserData(theEnv) ((procedureParserData *) GetEnvironmentData(theEnv,PRCDRPSR_DATA))
+RegisterEnvironmentModule(procedureParserData, PRCDRPSR_DATA);
+#define ProcedureParserData(theEnv) (GetEnvironmentData(theEnv,PRCDRPSR_DATA))
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */

@@ -189,8 +189,8 @@ struct objectReteData {
     unsigned long long CurrentObjectMatchTimeTag;
     unsigned long long UseEntityTimeTag;
 };
-
-#define ObjectReteData(theEnv) ((objectReteData *) GetEnvironmentData(theEnv,OBJECT_RETE_DATA))
+RegisterEnvironmentModule(objectReteData, OBJECT_RETE_DATA);
+#define ObjectReteData(theEnv) (GetEnvironmentData(theEnv,OBJECT_RETE_DATA))
 
 void InstallObjectPrimitives(const Environment&);
 bool ObjectCmpConstantFunction(const Environment&, void *, UDFValue *);

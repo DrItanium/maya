@@ -143,8 +143,8 @@ struct miscFunctionData {
     long long GensymNumber;
     CLIPSValue errorCode;
 };
-
-#define MiscFunctionData(theEnv) ((miscFunctionData *) GetEnvironmentData(theEnv,MISCFUN_DATA))
+RegisterEnvironmentModule(miscFunctionData, MISCFUN_DATA);
+#define MiscFunctionData(theEnv) (GetEnvironmentData(theEnv,MISCFUN_DATA))
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */

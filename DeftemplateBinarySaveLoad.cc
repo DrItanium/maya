@@ -466,7 +466,7 @@ static void UpdateDeftemplate(
     } else { theDeftemplate->slotList = nullptr; }
 
     if (bdtPtr->patternNetwork != ULONG_MAX) {
-        theDeftemplate->patternNetwork = (factPatternNode *) BloadFactPatternPointer(bdtPtr->patternNetwork);
+        theDeftemplate->patternNetwork = (FactPatternNode *) BloadFactPatternPointer(bdtPtr->patternNetwork);
     } else { theDeftemplate->patternNetwork = nullptr; }
 
     theDeftemplate->implied = bdtPtr->implied;

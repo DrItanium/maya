@@ -131,8 +131,8 @@ constexpr auto MULTIFUN_DATA = 10;
 struct multiFunctionData {
     FIELD_VAR_STACK *FieldVarStack;
 };
-
-#define MultiFunctionData(theEnv) ((multiFunctionData *) GetEnvironmentData(theEnv,MULTIFUN_DATA))
+RegisterEnvironmentModule(multiFunctionData, MULTIFUN_DATA);
+#define MultiFunctionData(theEnv) ( GetEnvironmentData(theEnv,MULTIFUN_DATA))
 
 /**********************************************/
 /* MultifieldFunctionDefinitions: Initializes */

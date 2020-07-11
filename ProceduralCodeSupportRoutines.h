@@ -104,8 +104,8 @@ struct proceduralPrimitiveData {
 #endif
     unsigned int Oldindex;
 };
-
-#define ProceduralPrimitiveData(theEnv) ((proceduralPrimitiveData *) GetEnvironmentData(theEnv,PROCEDURAL_PRIMITIVE_DATA))
+RegisterEnvironmentModule(proceduralPrimitiveData, PROCEDURAL_PRIMITIVE_DATA);
+#define ProceduralPrimitiveData(theEnv) (GetEnvironmentData(theEnv,PROCEDURAL_PRIMITIVE_DATA))
 
 void InstallProcedurePrimitives(const Environment&);
 

@@ -658,7 +658,7 @@ static void DetachFactPattern(
     /* Get rid of any matches stored in the alpha memory.  */
     /*=====================================================*/
 
-    patternPtr = (factPatternNode *) thePattern;
+    patternPtr = (FactPatternNode *) thePattern;
     ClearPatternMatches(theEnv, patternPtr);
 
     /*=======================================================*/
@@ -701,7 +701,7 @@ static void DetachFactPattern(
 
             RemoveHashedExpression(theEnv, patternPtr->networkTest);
             RemoveHashedExpression(theEnv, patternPtr->header.rightHash);
-            rtn_struct(theEnv, factPatternNode, patternPtr);
+            rtn_struct(theEnv, FactPatternNode, patternPtr);
         } else if (upperLevel->leftNode != nullptr) {
             /*====================================================*/
             /* Pattern node has another pattern node which must   */
@@ -722,7 +722,7 @@ static void DetachFactPattern(
 
             RemoveHashedExpression(theEnv, patternPtr->networkTest);
             RemoveHashedExpression(theEnv, patternPtr->header.rightHash);
-            rtn_struct(theEnv, factPatternNode, patternPtr);
+            rtn_struct(theEnv, FactPatternNode, patternPtr);
             upperLevel = nullptr;
         } else {
             /*====================================================*/
@@ -745,7 +745,7 @@ static void DetachFactPattern(
 
             RemoveHashedExpression(theEnv, patternPtr->networkTest);
             RemoveHashedExpression(theEnv, patternPtr->header.rightHash);
-            rtn_struct(theEnv, factPatternNode, patternPtr);
+            rtn_struct(theEnv, FactPatternNode, patternPtr);
             upperLevel = nullptr;
         }
     }
@@ -776,7 +776,7 @@ void DestroyFactPatternNetwork(
                                     thePattern->networkTest->value);
         }
 
-        rtn_struct(theEnv, factPatternNode, thePattern);
+        rtn_struct(theEnv, FactPatternNode, thePattern);
 
         thePattern = patternPtr;
     }

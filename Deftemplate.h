@@ -118,8 +118,8 @@ struct deftemplateData {
 #endif
     bool DeftemplateError;
 };
-
-#define DeftemplateData(theEnv) ((deftemplateData *) GetEnvironmentData(theEnv,DEFTEMPLATE_DATA))
+RegisterEnvironmentModule(deftemplateData, DEFTEMPLATE_DATA);
+#define DeftemplateData(theEnv) (GetEnvironmentData(theEnv,DEFTEMPLATE_DATA))
 
 void InitializeDeftemplates(const Environment&);
 Deftemplate *FindDeftemplate(const Environment&, const char *);
