@@ -111,7 +111,7 @@ struct engineData {
     Defrule *ExecutingRule;
     bool HaltRules;
     struct joinNode *TheLogicalJoin;
-    struct partialMatch *TheLogicalBind;
+    PartialMatch *TheLogicalBind;
     struct dependency *UnsupportedDataEntities;
     bool alreadyEntered;
     RuleFiredFunctionItem *ListOfAfterRuleFiresFunctions;
@@ -124,10 +124,10 @@ struct engineData {
 #endif
     bool IncrementalResetInProgress;
     bool JoinOperationInProgress;
-    struct partialMatch *GlobalLHSBinds;
-    struct partialMatch *GlobalRHSBinds;
+    PartialMatch *GlobalLHSBinds;
+    PartialMatch *GlobalRHSBinds;
     struct joinNode *GlobalJoin;
-    struct partialMatch *GarbagePartialMatches;
+    PartialMatch *GarbagePartialMatches;
     struct alphaMatch *GarbageAlphaMatches;
     bool AlreadyRunning;
 #if DEVELOPER

@@ -87,8 +87,8 @@ constexpr auto INITIAL_BETA_HASH_SIZE = 17;
 struct betaMemory {
     unsigned long size;
     unsigned long count;
-    struct partialMatch **beta;
-    struct partialMatch **last;
+    PartialMatch **beta;
+    PartialMatch **last;
 };
 
 struct joinLink {

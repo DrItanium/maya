@@ -39,13 +39,13 @@
 
 typedef struct genericMatch GenericMatch;
 typedef struct patternMatch PatternMatch;
-typedef struct partialMatch PartialMatch;
 typedef struct alphaMatch AlphaMatch;
 typedef struct multifieldMarker MultifieldMarker;
 
 #include "Entities.h"
 #include "Network.h"
 
+struct PartialMatch;
 /****************/
 /* patternMatch */
 /****************/
@@ -68,7 +68,7 @@ struct genericMatch {
 /****************/
 /* partialMatch */
 /****************/
-struct partialMatch {
+struct PartialMatch {
     bool betaMemory: 1;
     bool busy: 1;
     bool rhsMemory: 1;

@@ -67,41 +67,41 @@
 constexpr auto NETWORK_ASSERT  = 0;
 constexpr auto NETWORK_RETRACT = 1;
 
-void PrintPartialMatch(const Environment&, const char *, struct partialMatch *);
-struct partialMatch *CopyPartialMatch(const Environment&, struct partialMatch *);
-struct partialMatch *MergePartialMatches(const Environment&, struct partialMatch *, struct partialMatch *);
+void PrintPartialMatch(const Environment&, const char *, PartialMatch *);
+PartialMatch *CopyPartialMatch(const Environment&, PartialMatch *);
+PartialMatch *MergePartialMatches(const Environment&, PartialMatch *, PartialMatch *);
 long IncrementPseudoFactIndex();
-struct partialMatch *GetAlphaMemory(const Environment&, struct patternNodeHeader *, unsigned long);
-struct partialMatch *GetLeftBetaMemory(joinNode *, unsigned long);
-struct partialMatch *GetRightBetaMemory(joinNode *, unsigned long);
+PartialMatch *GetAlphaMemory(const Environment&, struct patternNodeHeader *, unsigned long);
+PartialMatch *GetLeftBetaMemory(joinNode *, unsigned long);
+PartialMatch *GetRightBetaMemory(joinNode *, unsigned long);
 void ReturnLeftMemory(const Environment&, struct joinNode *);
 void ReturnRightMemory(const Environment&, struct joinNode *);
 void DestroyBetaMemory(const Environment&, struct joinNode *, int);
 void FlushBetaMemory(const Environment&, struct joinNode *, int);
 bool BetaMemoryNotEmpty(joinNode *);
-void RemoveAlphaMemoryMatches(const Environment&, struct patternNodeHeader *, struct partialMatch *,
+void RemoveAlphaMemoryMatches(const Environment&, struct patternNodeHeader *, PartialMatch *,
                               struct alphaMatch *);
 void DestroyAlphaMemory(const Environment&, struct patternNodeHeader *, bool);
 void FlushAlphaMemory(const Environment&, struct patternNodeHeader *);
-void FlushAlphaBetaMemory(const Environment&, struct partialMatch *);
-void DestroyAlphaBetaMemory(const Environment&, struct partialMatch *);
+void FlushAlphaBetaMemory(const Environment&, PartialMatch *);
+void DestroyAlphaBetaMemory(const Environment&, PartialMatch *);
 int GetPatternNumberFromJoin(joinNode *);
 struct multifieldMarker *CopyMultifieldMarkers(const Environment&, struct multifieldMarker *);
-struct partialMatch *CreateAlphaMatch(const Environment&, void *, struct multifieldMarker *,
+PartialMatch *CreateAlphaMatch(const Environment&, void *, struct multifieldMarker *,
                                       struct patternNodeHeader *, unsigned long);
 void TraceErrorToRule(const Environment&, struct joinNode *, const char *);
 void InitializePatternHeader(const Environment&, struct patternNodeHeader *);
 void MarkRuleNetwork(const Environment&, bool);
 void TagRuleNetwork(const Environment&, unsigned long *, unsigned long *, unsigned long *, unsigned long *);
-bool FindEntityInPartialMatch(patternEntity *, struct partialMatch *);
+bool FindEntityInPartialMatch(PatternEntity *, PartialMatch *);
 unsigned long ComputeRightHashValue(const Environment&, struct patternNodeHeader *);
-void UpdateBetaPMLinks(const Environment&, struct partialMatch *, struct partialMatch *, struct partialMatch *,
+void UpdateBetaPMLinks(const Environment&, PartialMatch *, PartialMatch *, PartialMatch *,
                        struct joinNode *, unsigned long, int);
-void UnlinkBetaPMFromNodeAndLineage(const Environment&, struct joinNode *, struct partialMatch *, int);
-void UnlinkNonLeftLineage(const Environment&, struct joinNode *, struct partialMatch *, int);
-struct partialMatch *CreateEmptyPartialMatch(const Environment&);
+void UnlinkBetaPMFromNodeAndLineage(const Environment&, struct joinNode *, PartialMatch *, int);
+void UnlinkNonLeftLineage(const Environment&, struct joinNode *, PartialMatch *, int);
+PartialMatch *CreateEmptyPartialMatch(const Environment&);
 void MarkRuleJoins(joinNode *, bool);
-void AddBlockedLink(partialMatch *, struct partialMatch *);
+void AddBlockedLink(partialMatch *, PartialMatch *);
 void RemoveBlockedLink(partialMatch *);
 unsigned long PrintBetaMemory(const Environment&, const char *, struct betaMemory *, bool, const char *, Verbosity);
 

@@ -82,8 +82,8 @@ struct defglobalData {
     bool WatchGlobals;
 #endif
     bool ResetGlobals;
-    struct entityRecord GlobalInfo;
-    struct entityRecord DefglobalPtrRecord;
+    EntityRecord GlobalInfo;
+    EntityRecord DefglobalPtrRecord;
     long LastModuleIndex;
     Defmodule *TheDefmodule;
 };

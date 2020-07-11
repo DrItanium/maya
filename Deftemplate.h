@@ -112,7 +112,7 @@ constexpr auto DEFTEMPLATE_DATA = 5;
 struct deftemplateData {
     Construct *DeftemplateConstruct;
     unsigned int DeftemplateModuleIndex;
-    struct entityRecord DeftemplatePtrRecord;
+    EntityRecord DeftemplatePtrRecord;
 #if DEBUGGING_FUNCTIONS
     int DeletedTemplateDebugFlags;
 #endif

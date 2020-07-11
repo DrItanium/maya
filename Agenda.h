@@ -85,7 +85,7 @@ constexpr auto MIN_DEFRULE_SALIENCE = -10000;
 struct activation {
 private:
     Defrule *theRule;
-    struct partialMatch *basis;
+    PartialMatch *basis;
     int salience;
     unsigned long long timetag;
     int randomID;
@@ -95,7 +95,7 @@ public:
     auto getRule() const noexcept { return theRule; }
     void setRule(Defrule* value) noexcept { theRule = value; }
     auto getBasis() const noexcept { return basis; }
-    void setBasis(partialMatch* value) noexcept { basis = value; }
+    void setBasis(PartialMatch* value) noexcept { basis = value; }
     constexpr auto getSalience() const noexcept { return salience; }
     void setSalience(int value) noexcept { salience = value; }
     constexpr auto getTimetag() const noexcept { return timetag; }

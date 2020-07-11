@@ -53,19 +53,19 @@
 #include "Network.h"
 
 struct rdriveinfo {
-    struct partialMatch *link;
+    PartialMatch *link;
     struct joinNode *jlist;
     struct rdriveinfo *next;
 };
 
 void NetworkRetract(const Environment&, struct patternMatch *);
-void ReturnPartialMatch(const Environment&, struct partialMatch *);
-void DestroyPartialMatch(const Environment&, struct partialMatch *);
+void ReturnPartialMatch(const Environment&, PartialMatch *);
+void DestroyPartialMatch(const Environment&, PartialMatch *);
 void FlushGarbagePartialMatches(const Environment&);
-void DeletePartialMatches(const Environment&, struct partialMatch *);
-void PosEntryRetractBeta(const Environment&, struct partialMatch *, struct partialMatch *, int);
-void PosEntryRetractAlpha(const Environment&, struct partialMatch *, int);
-bool PartialMatchWillBeDeleted(const Environment&, struct partialMatch *);
+void DeletePartialMatches(const Environment&, PartialMatch *);
+void PosEntryRetractBeta(const Environment&, PartialMatch *, PartialMatch *, int);
+void PosEntryRetractAlpha(const Environment&, PartialMatch *, int);
+bool PartialMatchWillBeDeleted(const Environment&, PartialMatch *);
 
 #endif /* _H_retract */
 
