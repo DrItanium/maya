@@ -144,7 +144,8 @@ static void DeallocateObjectReteBinaryData(const Environment&);
  ***********************************************************/
 void SetupObjectPatternsBload(
         const Environment&theEnv) {
-    AllocateEnvironmentData(theEnv, OBJECTRETEBIN_DATA, sizeof(objectReteBinaryData), DeallocateObjectReteBinaryData);
+    //AllocateEnvironmentData(theEnv, OBJECTRETEBIN_DATA, sizeof(objectReteBinaryData), DeallocateObjectReteBinaryData);
+    theEnv->allocateEnvironmentModule<objectReteBinaryData>();
 
 #if BLOAD_AND_BSAVE
     AddBinaryItem(theEnv, "object patterns", 0, BsaveObjectPatternsFind, nullptr,

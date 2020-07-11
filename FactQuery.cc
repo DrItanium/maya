@@ -111,7 +111,9 @@ static void PopQuerySoln(const Environment&);
  ****************************************************/
 void SetupFactQuery(
         const Environment&theEnv) {
-    AllocateEnvironmentData(theEnv, FACT_QUERY_DATA, sizeof(factQueryData));
+    auto fdat = std::make_unique<factQueryData>();
+    theEnv->installEnvironmentModule(std::move(fdat));
+    //AllocateEnvironmentData(theEnv, FACT_QUERY_DATA, sizeof(factQueryData));
 
     FactQueryData(theEnv)->QUERY_DELIMITER_SYMBOL = CreateSymbol(theEnv, QUERY_DELIMITER_STRING);
     IncrementLexemeCount(FactQueryData(theEnv)->QUERY_DELIMITER_SYMBOL);

@@ -107,7 +107,7 @@ struct ruleFiredFunctionItem {
 
 constexpr auto ENGINE_DATA = 18;
 
-struct engineData {
+struct engineData : public EnvironmentModule {
     Defrule *ExecutingRule;
     bool HaltRules;
     struct joinNode *TheLogicalJoin;

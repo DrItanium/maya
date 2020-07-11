@@ -105,7 +105,8 @@ static void DeallocateFileCommandData(const Environment&);
 /***************************************/
 void FileCommandDefinitions(
         const Environment&theEnv) {
-    AllocateEnvironmentData(theEnv, FILECOM_DATA, sizeof(fileCommandData), DeallocateFileCommandData);
+    theEnv->allocateEnvironmentModule<fileCommandData>();
+    //AllocateEnvironmentData(theEnv, FILECOM_DATA, sizeof(fileCommandData), DeallocateFileCommandData);
 
 #if DEBUGGING_FUNCTIONS
     AddUDF(theEnv, "batch", "b", 1, 1, "sy", BatchCommand);

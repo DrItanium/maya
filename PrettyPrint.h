@@ -43,7 +43,7 @@
 
 constexpr auto PRETTY_PRINT_DATA = 52;
 
-struct prettyPrintData {
+struct prettyPrintData : public EnvironmentModule {
     bool PPBufferStatus;
     bool PPBufferEnabled;
     size_t IndentationDepth;

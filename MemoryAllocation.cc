@@ -78,8 +78,7 @@ constexpr auto STRICT_ALIGN_SIZE = sizeof(double);
 /********************************************/
 void InitializeMemory(
         const Environment&theEnv) {
-    AllocateEnvironmentData(theEnv, MEMORY_DATA, sizeof(memoryData));
-
+    theEnv->allocateEnvironmentModule<memoryData>();
     MemoryData(theEnv)->OutOfMemoryCallback = DefaultOutOfMemoryFunction;
 
 #if (MEM_TABLE_SIZE > 0)

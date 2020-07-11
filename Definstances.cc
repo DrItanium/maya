@@ -148,7 +148,8 @@ static void DeallocateDefinstancesData(const Environment&);
  ***************************************************/
 void SetupDefinstances(
         const Environment&theEnv) {
-    AllocateEnvironmentData(theEnv, DEFINSTANCES_DATA, sizeof(definstancesData), DeallocateDefinstancesData);
+    theEnv->allocateEnvironmentModule<definstancesData>();
+    //AllocateEnvironmentData(theEnv, DEFINSTANCES_DATA, sizeof(definstancesData), DeallocateDefinstancesData);
 
     DefinstancesData(theEnv)->DefinstancesModuleIndex =
             RegisterModuleItem(theEnv, "definstances",

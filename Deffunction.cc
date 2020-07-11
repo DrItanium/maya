@@ -163,7 +163,9 @@ void SetupDeffunctions(
              (EntityBusyCountFunction *) IncrementDeffunctionBusyCount,
              nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    AllocateEnvironmentData(theEnv, DEFFUNCTION_DATA, sizeof(deffunctionData), DeallocateDeffunctionData);
+    theEnv->allocateEnvironmentModule<deffunctionData>();
+    /// @todo DeallocateDeffunctionData is the dtor
+    //AllocateEnvironmentData(theEnv, DEFFUNCTION_DATA, sizeof(deffunctionData), DeallocateDeffunctionData);
     memcpy(&DeffunctionData(theEnv)->DeffunctionEntityRecord, &deffunctionEntityRecord, sizeof(EntityRecord));
 
     InstallPrimitive(theEnv, &DeffunctionData(theEnv)->DeffunctionEntityRecord, PCALL);

@@ -170,8 +170,8 @@ void InstallProcedurePrimitives(
                         nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr };
 #endif
 
-    AllocateEnvironmentData(theEnv, PROCEDURAL_PRIMITIVE_DATA, sizeof(proceduralPrimitiveData), DeallocateProceduralPrimitiveData);
-
+    //AllocateEnvironmentData(theEnv, PROCEDURAL_PRIMITIVE_DATA, sizeof(proceduralPrimitiveData), DeallocateProceduralPrimitiveData);
+    theEnv->allocateEnvironmentModule<proceduralPrimitiveData>();
     memcpy(&ProceduralPrimitiveData(theEnv)->ProcParameterInfo, &procParameterInfo, sizeof(EntityRecord));
     memcpy(&ProceduralPrimitiveData(theEnv)->ProcWildInfo, &procWildInfo, sizeof(EntityRecord));
     memcpy(&ProceduralPrimitiveData(theEnv)->ProcGetInfo, &procGetInfo, sizeof(EntityRecord));

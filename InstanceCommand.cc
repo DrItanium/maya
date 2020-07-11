@@ -166,7 +166,8 @@ void SetupInstances(
                               nullptr, 0, 0, nullptr, nullptr, nullptr, nullptr,
                               nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    AllocateEnvironmentData(theEnv, INSTANCE_DATA, sizeof(instanceData), DeallocateInstanceData);
+    theEnv->allocateEnvironmentModule<instanceData>();
+    //AllocateEnvironmentData(theEnv, INSTANCE_DATA, sizeof(instanceData), DeallocateInstanceData);
 
     InstanceData(theEnv)->MkInsMsgPass = true;
     memcpy(&InstanceData(theEnv)->InstanceInfo, &instanceInfo, sizeof(PatternEntityRecord));

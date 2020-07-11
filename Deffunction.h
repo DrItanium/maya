@@ -94,7 +94,7 @@ struct deffunction {
 
 constexpr auto DEFFUNCTION_DATA = 23;
 
-struct deffunctionData {
+struct deffunctionData : public EnvironmentModule {
     Construct *DeffunctionConstruct;
     unsigned DeffunctionModuleIndex;
     EntityRecord DeffunctionEntityRecord;

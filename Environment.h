@@ -177,6 +177,11 @@ struct environmentData {
             return (std::unique_ptr<EnvironmentModuleType<position>>&)thing;
         }
     }
+    template<typename T>
+    bool allocateEnvironmentModule() noexcept {
+        auto ptr = std::make_unique<T>();
+        return installEnvironmentModule(std::move(ptr));
+    }
 
 };
 
@@ -187,7 +192,7 @@ inline auto TrueSymbol(const Environment& theEnv) noexcept { return theEnv->True
 
 #define GetEnvironmentData(theEnv, position) (theEnv->getEnvironmentModule<position>())
 
-bool AllocateEnvironmentData(const Environment&, unsigned, size_t, EnvironmentCleanupFunctionBody = nullptr);
+//bool AllocateEnvironmentData(const Environment&, unsigned, size_t, EnvironmentCleanupFunctionBody = nullptr);
 bool AddEnvironmentCleanupFunction(const Environment&, const char *, EnvironmentCleanupFunctionBody, int);
 void *GetEnvironmentContext(const Environment&);
 void *SetEnvironmentContext(const Environment&, void *);

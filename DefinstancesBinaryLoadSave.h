@@ -45,7 +45,7 @@
 
 constexpr auto DFINSBIN_DATA = 25;
 
-struct definstancesBinaryData {
+struct definstancesBinaryData : public EnvironmentModule {
     Definstances *DefinstancesArray;
     unsigned long DefinstancesCount;
     unsigned long ModuleCount;

@@ -84,7 +84,8 @@ static void DeallocateFileRouterData(const Environment&);
 /***************************************************************/
 void InitializeFileRouter(
         const Environment&theEnv) {
-    AllocateEnvironmentData(theEnv, FILE_ROUTER_DATA, sizeof(fileRouterData), DeallocateFileRouterData);
+    theEnv->allocateEnvironmentModule<fileRouterData>();
+    //AllocateEnvironmentData(theEnv, FILE_ROUTER_DATA, sizeof(fileRouterData), DeallocateFileRouterData);
 
     AddRouter(theEnv, "fileio", 0, FindFile,
               WriteFileCallback, ReadFileCallback,

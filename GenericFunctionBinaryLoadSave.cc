@@ -140,7 +140,8 @@ static void DeallocateDefgenericBinaryData(const Environment&);
  ***********************************************************/
 void SetupGenericsBload(
         const Environment&theEnv) {
-    AllocateEnvironmentData(theEnv, GENRCBIN_DATA, sizeof(defgenericBinaryData), DeallocateDefgenericBinaryData);
+    theEnv->allocateEnvironmentModule<defgenericBinaryData>();
+    //AllocateEnvironmentData(theEnv, GENRCBIN_DATA, sizeof(defgenericBinaryData), DeallocateDefgenericBinaryData);
 #if BLOAD_AND_BSAVE
     AddBinaryItem(theEnv, "generic functions", 0, BsaveGenericsFind, BsaveGenericsExpressions,
                   BsaveStorageGenerics, BsaveGenerics,

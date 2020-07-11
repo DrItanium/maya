@@ -128,7 +128,8 @@ static void DeallocateEngineData(const Environment&);
 /*****************************************************************************/
 void InitializeEngine(
         const Environment&theEnv) {
-    AllocateEnvironmentData(theEnv, ENGINE_DATA, sizeof(engineData), DeallocateEngineData);
+    theEnv->allocateEnvironmentModule<engineData>();
+    //AllocateEnvironmentData(theEnv, ENGINE_DATA, sizeof(engineData), DeallocateEngineData);
 
 #if DEBUGGING_FUNCTIONS
     AddWatchItem(theEnv, "statistics", 0, &EngineData(theEnv)->WatchStatistics, 20, nullptr, nullptr);

@@ -119,7 +119,9 @@ static void DeallocateConstructData(const Environment&);
 /**************************************************/
 void InitializeConstructData(
         const Environment&theEnv) {
-    AllocateEnvironmentData(theEnv, CONSTRUCT_DATA, sizeof(ConstructModule), DeallocateConstructData);
+    theEnv->allocateEnvironmentModule<ConstructModule>();
+    /// @todo DeallocateConstructData is ConstructModule's dtor
+    //AllocateEnvironmentData(theEnv, CONSTRUCT_DATA, sizeof(ConstructModule), DeallocateConstructData);
 }
 
 /****************************************************/

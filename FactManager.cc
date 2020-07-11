@@ -182,7 +182,10 @@ void InitializeFacts(
                       nullptr, nullptr, nullptr, nullptr, nullptr,
                       {{MULTIFIELD_TYPE}, 1, 0UL, nullptr, {{{nullptr}}}}};
 
-    AllocateEnvironmentData(theEnv, FACTS_DATA, sizeof(factsData), DeallocateFactData);
+    auto fdata = std::make_unique<factsData>();
+    /// @todo DeallocateFactData needs to become the dtor of factsData
+    //AllocateEnvironmentData(theEnv, FACTS_DATA, sizeof(factsData), DeallocateFactData);
+    theEnv->installEnvironmentModule(std::move(fdata));
 
     memcpy(&FactData(theEnv)->FactInfo, &factInfo, sizeof(PatternEntityRecord));
     dummyFact.patternHeader.theInfo = &FactData(theEnv)->FactInfo;

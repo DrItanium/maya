@@ -174,7 +174,8 @@ void SetupGenericFunctions(
              (EntityBusyCountFunction *) IncrementGenericBusyCount,
              nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    AllocateEnvironmentData(theEnv, DEFGENERIC_DATA, sizeof(defgenericData), DeallocateDefgenericData);
+    theEnv->allocateEnvironmentModule<defgenericData>();
+    //AllocateEnvironmentData(theEnv, DEFGENERIC_DATA, sizeof(defgenericData), DeallocateDefgenericData);
     memcpy(&DefgenericData(theEnv)->GenericEntityRecord, &genericEntityRecord, sizeof(EntityRecord));
 
     InstallPrimitive(theEnv, &DefgenericData(theEnv)->GenericEntityRecord, GCALL);

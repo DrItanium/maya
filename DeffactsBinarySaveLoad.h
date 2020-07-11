@@ -49,7 +49,7 @@ struct bsaveDeffactsModule {
 
 constexpr auto DFFCTBIN_DATA = 26;
 
-struct deffactsBinaryData {
+struct deffactsBinaryData : public EnvironmentModule {
     Deffacts *DeffactsArray;
     unsigned long NumberOfDeffacts;
     struct deffactsModule *ModuleArray;

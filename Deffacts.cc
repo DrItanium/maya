@@ -82,7 +82,8 @@ static void DestroyDeffactsAction(const Environment&, ConstructHeader *, void *)
 /***********************************************************/
 void InitializeDeffacts(
         const Environment&theEnv) {
-    AllocateEnvironmentData(theEnv, DEFFACTS_DATA, sizeof(deffactsData), DeallocateDeffactsData);
+    theEnv->allocateEnvironmentModule<deffactsData>();
+    //AllocateEnvironmentData(theEnv, DEFFACTS_DATA, sizeof(deffactsData), DeallocateDeffactsData);
 
     InitializeDeffactsModules(theEnv);
 

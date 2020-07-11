@@ -68,7 +68,8 @@ static void DeallocateDefglobalBloadData(const Environment&);
 /*********************************************/
 void DefglobalBinarySetup(
         const Environment&theEnv) {
-    AllocateEnvironmentData(theEnv, GLOBLBIN_DATA, sizeof(defglobalBinaryData), DeallocateDefglobalBloadData);
+    theEnv->allocateEnvironmentModule<defglobalBinaryData>();
+    //AllocateEnvironmentData(theEnv, GLOBLBIN_DATA, sizeof(defglobalBinaryData), DeallocateDefglobalBloadData);
 #if (BLOAD_AND_BSAVE)
     AddAfterBloadFunction(theEnv, "defglobal", ResetDefglobals, 50, nullptr);
 #endif

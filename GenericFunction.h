@@ -113,7 +113,7 @@ struct defgeneric {
 
 constexpr auto DEFGENERIC_DATA = 27;
 
-struct defgenericData {
+struct defgenericData : public EnvironmentModule {
     Construct *DefgenericConstruct;
     unsigned int DefgenericModuleIndex;
     EntityRecord GenericEntityRecord;

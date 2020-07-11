@@ -94,7 +94,7 @@ constexpr auto STRING_BATCH = 1;
 constexpr auto BUFFER_SIZE = 120;
 constexpr auto FILECOM_DATA = 14;
 
-struct fileCommandData {
+struct fileCommandData : public EnvironmentModule {
 #if DEBUGGING_FUNCTIONS
     FILE *DribbleFP;
     char *DribbleBuffer;
@@ -132,8 +132,8 @@ struct fileRouter {
     struct fileRouter *next;
 };
 
-struct fileRouterData {
-    struct fileRouter *ListOfFileRouters;
+struct fileRouterData : public EnvironmentModule {
+    fileRouter *ListOfFileRouters = nullptr;
 };
 RegisterEnvironmentModule(fileRouterData, FILE_ROUTER_DATA);
 #define FileRouterData(theEnv) (GetEnvironmentData(theEnv,FILE_ROUTER_DATA))

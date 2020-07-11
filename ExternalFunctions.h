@@ -95,10 +95,10 @@ struct FunctionDefinition {
 /*==================*/
 
 constexpr auto EXTERNAL_FUNCTION_DATA = 50;
-
-struct externalFunctionData {
-    FunctionDefinition *ListOfFunctions;
-    struct FunctionHash **FunctionHashtable;
+struct FunctionHash;
+struct externalFunctionData : public EnvironmentModule {
+    FunctionDefinition *ListOfFunctions = nullptr;
+    FunctionHash **FunctionHashtable = nullptr;
 };
 RegisterEnvironmentModule(externalFunctionData, EXTERNAL_FUNCTION_DATA);
 #define ExternalFunctionData(theEnv) (GetEnvironmentData(theEnv,EXTERNAL_FUNCTION_DATA))
@@ -112,8 +112,8 @@ enum AddUDFError {
 };
 
 struct FunctionHash {
-    FunctionDefinition *fdPtr;
-    struct FunctionHash *next;
+    FunctionDefinition *fdPtr = nullptr;
+    FunctionHash *next = nullptr;
 };
 
 constexpr auto SIZE_FUNCTION_HASH = 517;

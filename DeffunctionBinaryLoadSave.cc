@@ -112,7 +112,8 @@ static void DeallocateDeffunctionBloadData(const Environment&);
  ***********************************************************/
 void SetupDeffunctionsBload(
         const Environment&theEnv) {
-    AllocateEnvironmentData(theEnv, DFFNXBIN_DATA, sizeof(deffunctionBinaryData), DeallocateDeffunctionBloadData);
+    theEnv->allocateEnvironmentModule<deffunctionBinaryData>();
+    //AllocateEnvironmentData(theEnv, DFFNXBIN_DATA, sizeof(deffunctionBinaryData), DeallocateDeffunctionBloadData);
 #if BLOAD_AND_BSAVE
     AddBinaryItem(theEnv, "deffunctions", 0, BsaveDeffunctionFind, BsaveDeffunctionExpressions,
                   BsaveStorageDeffunctions, BsaveDeffunctions,

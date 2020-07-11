@@ -62,7 +62,7 @@ typedef struct deffacts Deffacts;
 
 constexpr auto DEFFACTS_DATA = 0;
 
-struct deffactsData {
+struct deffactsData : public EnvironmentModule {
     Construct *DeffactsConstruct;
     unsigned DeffactsModuleIndex;
 };

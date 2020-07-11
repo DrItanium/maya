@@ -65,7 +65,8 @@ static void DeallocateDeffactsBloadData(const Environment&);
 /********************************************/
 void DeffactsBinarySetup(
         const Environment&theEnv) {
-    AllocateEnvironmentData(theEnv, DFFCTBIN_DATA, sizeof(deffactsBinaryData), DeallocateDeffactsBloadData);
+    theEnv->allocateEnvironmentModule<deffactsBinaryData>();
+    //AllocateEnvironmentData(theEnv, DFFCTBIN_DATA, sizeof(deffactsBinaryData), DeallocateDeffactsBloadData);
 #if BLOAD_AND_BSAVE
     AddBinaryItem(theEnv, "deffacts", 0, BsaveFind, BsaveExpressions,
                   BsaveStorage, BsaveBinaryItem,

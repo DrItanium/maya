@@ -106,7 +106,8 @@ static Expression *SwitchParse(const Environment&, Expression *, const char *);
 /*****************************/
 void ProceduralFunctionParsers(
         const Environment&theEnv) {
-    AllocateEnvironmentData(theEnv, PRCDRPSR_DATA, sizeof(procedureParserData), DeallocateProceduralFunctionData);
+    //AllocateEnvironmentData(theEnv, PRCDRPSR_DATA, sizeof(procedureParserData), DeallocateProceduralFunctionData);
+    theEnv->allocateEnvironmentModule<procedureParserData>();
 
     AddFunctionParser(theEnv, "bind", BindParse);
     AddFunctionParser(theEnv, "progn", PrognParse);

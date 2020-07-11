@@ -80,7 +80,7 @@ typedef struct ProcParamStack {
 
 constexpr auto PROCEDURAL_PRIMITIVE_DATA = 37;
 
-struct proceduralPrimitiveData {
+struct proceduralPrimitiveData : public EnvironmentModule {
     Multifield *NoParamValue;
     UDFValue *ProcParamArray;
     unsigned int ProcParamArraySize;

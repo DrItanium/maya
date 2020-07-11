@@ -212,21 +212,22 @@ void InstallObjectPrimitives(
                                                 JNSimpleCompareFunction3,
                                                 nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    AllocateEnvironmentData(theEnv, OBJECT_RETE_DATA, sizeof(objectReteData), DeallocateObjectReteData);
+    //AllocateEnvironmentData(theEnv, OBJECT_RETE_DATA, sizeof(objectReteData), DeallocateObjectReteData);
+    theEnv->allocateEnvironmentModule<objectReteData>();
     ObjectReteData(theEnv)->CurrentObjectSlotLength = 1;
 
-    memcpy(&ObjectReteData(theEnv)->ObjectGVInfo1, &objectGVInfo1, sizeof(EntityRecord));
-    memcpy(&ObjectReteData(theEnv)->ObjectGVInfo2, &objectGVInfo2, sizeof(EntityRecord));
-    memcpy(&ObjectReteData(theEnv)->ObjectGVPNInfo1, &objectGVPNInfo1, sizeof(EntityRecord));
-    memcpy(&ObjectReteData(theEnv)->ObjectGVPNInfo2, &objectGVPNInfo2, sizeof(EntityRecord));
-    memcpy(&ObjectReteData(theEnv)->ObjectCmpConstantInfo, &objectCmpConstantInfo, sizeof(EntityRecord));
-    memcpy(&ObjectReteData(theEnv)->LengthTestInfo, &lengthTestInfo, sizeof(EntityRecord));
-    memcpy(&ObjectReteData(theEnv)->PNSimpleCompareInfo1, &pNSimpleCompareInfo1, sizeof(EntityRecord));
-    memcpy(&ObjectReteData(theEnv)->PNSimpleCompareInfo2, &pNSimpleCompareInfo2, sizeof(EntityRecord));
-    memcpy(&ObjectReteData(theEnv)->PNSimpleCompareInfo3, &pNSimpleCompareInfo3, sizeof(EntityRecord));
-    memcpy(&ObjectReteData(theEnv)->JNSimpleCompareInfo1, &jNSimpleCompareInfo1, sizeof(EntityRecord));
-    memcpy(&ObjectReteData(theEnv)->JNSimpleCompareInfo2, &jNSimpleCompareInfo2, sizeof(EntityRecord));
-    memcpy(&ObjectReteData(theEnv)->JNSimpleCompareInfo3, &jNSimpleCompareInfo3, sizeof(EntityRecord));
+    ObjectReteData(theEnv)->ObjectGVInfo1= objectGVInfo1;
+    ObjectReteData(theEnv)->ObjectGVInfo2= objectGVInfo2;
+    ObjectReteData(theEnv)->ObjectGVPNInfo1= objectGVPNInfo1;
+    ObjectReteData(theEnv)->ObjectGVPNInfo2= objectGVPNInfo2;
+    ObjectReteData(theEnv)->ObjectCmpConstantInfo = objectCmpConstantInfo;
+    ObjectReteData(theEnv)->LengthTestInfo= lengthTestInfo;
+    ObjectReteData(theEnv)->PNSimpleCompareInfo1 = pNSimpleCompareInfo1;
+    ObjectReteData(theEnv)->PNSimpleCompareInfo2 = pNSimpleCompareInfo2;
+    ObjectReteData(theEnv)->PNSimpleCompareInfo3 = pNSimpleCompareInfo3;
+    ObjectReteData(theEnv)->JNSimpleCompareInfo1 = jNSimpleCompareInfo1;
+    ObjectReteData(theEnv)->JNSimpleCompareInfo2 = jNSimpleCompareInfo2;
+    ObjectReteData(theEnv)->JNSimpleCompareInfo3 = jNSimpleCompareInfo3;
 
     InstallPrimitive(theEnv, &ObjectReteData(theEnv)->ObjectGVInfo1, OBJ_GET_SLOT_JNVAR1);
     InstallPrimitive(theEnv, &ObjectReteData(theEnv)->ObjectGVInfo2, OBJ_GET_SLOT_JNVAR2);

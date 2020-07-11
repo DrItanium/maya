@@ -154,7 +154,7 @@ struct memoryPtr {
 
 constexpr auto MEMORY_DATA = 59;
 
-struct memoryData {
+struct memoryData : public EnvironmentModule {
     long long MemoryAmount;
     long long MemoryCalls;
     bool ConserveMemory;

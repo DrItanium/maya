@@ -46,7 +46,7 @@ void *BloadDeffunctionModuleReference(const Environment&, unsigned long);
 
 constexpr auto DFFNXBIN_DATA = 24;
 
-struct deffunctionBinaryData {
+struct deffunctionBinaryData : public EnvironmentModule {
     Deffunction *DeffunctionArray;
     unsigned long DeffunctionCount;
     unsigned long ModuleCount;

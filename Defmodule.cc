@@ -88,7 +88,8 @@ static void DeallocateDefmoduleData(const Environment&);
 /************************************************/
 void AllocateDefmoduleGlobals(
         const Environment&theEnv) {
-    AllocateEnvironmentData(theEnv, DEFMODULE_DATA, sizeof(defmoduleData));
+    //AllocateEnvironmentData(theEnv, DEFMODULE_DATA, sizeof(defmoduleData));
+    theEnv->allocateEnvironmentModule<defmoduleData>();
     AddEnvironmentCleanupFunction(theEnv, "defmodules", DeallocateDefmoduleData, -1000);
     DefmoduleData(theEnv)->CallModuleChangeFunctions = true;
     DefmoduleData(theEnv)->MainModuleRedefinable = true;

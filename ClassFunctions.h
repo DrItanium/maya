@@ -117,7 +117,7 @@ constexpr auto PRIMITIVE_CLASSES = 9;
 
 #include "ClassCommands.h"
 
-struct defclassData {
+struct defclassData : public EnvironmentModule {
     Construct *DefclassConstruct;
     unsigned DefclassModuleIndex;
     EntityRecord DefclassEntityRecord;

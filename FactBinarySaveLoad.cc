@@ -91,7 +91,8 @@ static void DeallocateFactBloadData(const Environment&);
 /*****************************************************/
 void FactBinarySetup(
         const Environment&theEnv) {
-    AllocateEnvironmentData(theEnv, FACTBIN_DATA, sizeof(factBinaryData), DeallocateFactBloadData);
+    theEnv->allocateEnvironmentModule<factBinaryData>();
+    //AllocateEnvironmentData(theEnv, FACTBIN_DATA, sizeof(factBinaryData), DeallocateFactBloadData);
 
 #if BLOAD_AND_BSAVE
     AddBinaryItem(theEnv, "facts", 0, BsaveFind, nullptr,

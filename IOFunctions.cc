@@ -172,7 +172,7 @@ static void PrintDriver(UDFContext *, const char *, bool);
 /**************************************/
 void IOFunctionDefinitions(
         const Environment&theEnv) {
-    AllocateEnvironmentData(theEnv, IO_FUNCTION_DATA, sizeof(IOFunctionData));
+    theEnv->allocateEnvironmentModule<IOFunctionData>();
 
 #if IO_FUNCTIONS
     IOFunctionData(theEnv)->useFullCRLF = false;

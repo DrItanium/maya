@@ -104,7 +104,7 @@ struct factModifier {
 
 constexpr auto FACTS_DATA = 3;
 
-struct factsData {
+struct factsData : public EnvironmentModule {
     bool ChangeToFactList;
 #if DEBUGGING_FUNCTIONS
     bool WatchFacts;
@@ -254,7 +254,7 @@ typedef struct query_stack {
 
 constexpr auto FACT_QUERY_DATA = 63;
 
-struct factQueryData {
+struct factQueryData : public EnvironmentModule {
     CLIPSLexeme *QUERY_DELIMITER_SYMBOL;
     QUERY_CORE *QueryCore;
     QUERY_STACK *QueryCoreStack;
@@ -322,7 +322,7 @@ void FactsIncrementalReset(const Environment&);
 
 constexpr auto FACTBIN_DATA = 62;
 
-struct factBinaryData {
+struct factBinaryData : public EnvironmentModule{
     FactPatternNode *FactPatternArray;
     unsigned long NumberOfPatterns;
 };

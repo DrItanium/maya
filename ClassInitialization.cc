@@ -157,7 +157,7 @@ void SetupObjectSystem(
                                          (EntityBusyCountFunction *) IncrementDefclassBusyCount,
                                          nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    AllocateEnvironmentData(theEnv, DEFCLASS_DATA, sizeof(defclassData));
+    theEnv->allocateEnvironmentModule<defclassData>();
     AddEnvironmentCleanupFunction(theEnv, "defclasses", DeallocateDefclassData, -500);
 
     memcpy(&DefclassData(theEnv)->DefclassEntityRecord, &defclassEntityRecord, sizeof(EntityRecord));

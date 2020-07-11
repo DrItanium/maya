@@ -196,7 +196,7 @@ struct moduleStackItem {
 
 constexpr auto DEFMODULE_DATA = 4;
 
-struct defmoduleData {
+struct defmoduleData : public EnvironmentModule {
     struct moduleItem *LastModuleItem;
     struct voidCallFunctionItem *AfterModuleChangeFunctions;
     ModuleStackItem *ModuleStack;

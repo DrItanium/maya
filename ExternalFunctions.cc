@@ -88,7 +88,10 @@ static void AssignErrorValue(UDFContext *);
 /*********************************************************/
 void InitializeExternalFunctionData(
         const Environment&theEnv) {
-    AllocateEnvironmentData(theEnv, EXTERNAL_FUNCTION_DATA, sizeof(externalFunctionData), DeallocateExternalFunctionData);
+    auto ptr = std::make_unique<externalFunctionData>();
+    theEnv->installEnvironmentModule(std::move(ptr));
+    /// @todo move DeallocateExternalFunctionData to externalFunctionData's dtor
+    //AllocateEnvironmentData(theEnv, EXTERNAL_FUNCTION_DATA, sizeof(externalFunctionData), DeallocateExternalFunctionData);
 }
 
 /***********************************************************/

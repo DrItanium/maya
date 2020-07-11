@@ -89,8 +89,7 @@ void InitializeBloadData(
     char sizeBuffer[20];
     sprintf(sizeBuffer, "%2zu%2zu%2zu%2zu%2zu", sizeof(void *), sizeof(double),
             sizeof(int), sizeof(long), sizeof(long long));
-
-    AllocateEnvironmentData(theEnv, BLOAD_DATA, sizeof(bloadData));
+    theEnv->allocateEnvironmentModule<bloadData>();
     AddEnvironmentCleanupFunction(theEnv, "bload", DeallocateBloadData, -1500);
     AddClearFunction(theEnv, "bload", ClearBloadCallback, 10000, nullptr);
 

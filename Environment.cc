@@ -121,6 +121,7 @@
 
 #define SIZE_ENVIRONMENT_HASH  131
 
+#if 0
 /*******************************************************/
 /* AllocateEnvironmentData: Allocates environment data */
 /*    for the specified environment data record.       */
@@ -130,7 +131,6 @@ bool AllocateEnvironmentData(
         unsigned position,
         size_t size,
         EnvironmentCleanupFunction *cleanupFunction) {
-#if 0
     /*================================================================*/
     /* Check to see if the data position exceeds the maximum allowed. */
     /*================================================================*/
@@ -171,9 +171,9 @@ bool AllocateEnvironmentData(
     /* Data successfully registered. */
     /*===============================*/
     return true;
-#endif
     return false;
 }
+#endif
 
 /**********************************************/
 /* GetEnvironmentContext: Returns the context */

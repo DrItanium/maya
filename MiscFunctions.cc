@@ -160,7 +160,8 @@ static void ConvertTime(const Environment&, UDFValue *, struct tm *);
 /*****************************************************************/
 void MiscFunctionDefinitions(
         const Environment&theEnv) {
-    AllocateEnvironmentData(theEnv, MISCFUN_DATA, sizeof(miscFunctionData));
+    theEnv->allocateEnvironmentModule<miscFunctionData>();
+    //AllocateEnvironmentData(theEnv, MISCFUN_DATA, sizeof(miscFunctionData));
     MiscFunctionData(theEnv)->GensymNumber = 1;
     MiscFunctionData(theEnv)->errorCode.lexemeValue = FalseSymbol(theEnv);
     Retain(theEnv, MiscFunctionData(theEnv)->errorCode.header);

@@ -70,7 +70,8 @@ static void DeallocatePrettyPrintData(const Environment&);
 /****************************************************/
 void InitializePrettyPrintData(
         const Environment&theEnv) {
-    AllocateEnvironmentData(theEnv, PRETTY_PRINT_DATA, sizeof(prettyPrintData), DeallocatePrettyPrintData);
+    theEnv->allocateEnvironmentModule<prettyPrintData>();
+    //AllocateEnvironmentData(theEnv, PRETTY_PRINT_DATA, sizeof(prettyPrintData), DeallocatePrettyPrintData);
 
     PrettyPrintData(theEnv)->PPBufferEnabled = true;
 }

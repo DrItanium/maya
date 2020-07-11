@@ -61,7 +61,7 @@
 
 constexpr auto BLOAD_DATA = 38;
 
-struct bloadData {
+struct bloadData : public EnvironmentModule {
     const char *BinaryPrefixID;
     const char *BinaryVersionID;
     char *BinarySizes;

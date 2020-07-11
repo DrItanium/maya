@@ -89,7 +89,7 @@ constexpr auto CONSTRUCT_HEADER_SIZE = 20;
 
 constexpr auto BSAVE_DATA = 39;
 
-struct bsaveData {
+struct bsaveData : public EnvironmentModule {
     struct BinaryItem *ListOfBinaryItems;
 #if BLOAD_AND_BSAVE
     BLOADCNTSV *BloadCountSaveTop;

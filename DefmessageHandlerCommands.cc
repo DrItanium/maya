@@ -151,7 +151,8 @@ void SetupMessageHandlers(
                               HandlerSlotPutFunction,
                               nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    AllocateEnvironmentData(theEnv, MESSAGE_HANDLER_DATA, sizeof(messageHandlerData), DeallocateMessageHandlerData);
+    //AllocateEnvironmentData(theEnv, MESSAGE_HANDLER_DATA, sizeof(messageHandlerData), DeallocateMessageHandlerData);
+    theEnv->allocateEnvironmentModule<messageHandlerData>();
     memcpy(&MessageHandlerData(theEnv)->HandlerGetInfo, &handlerGetInfo, sizeof(EntityRecord));
     memcpy(&MessageHandlerData(theEnv)->HandlerPutInfo, &handlerPutInfo, sizeof(EntityRecord));
 

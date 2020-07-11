@@ -73,7 +73,8 @@ static struct patternNodeHashEntry **CreatePatternHashTable(const Environment&, 
 /*****************************************************************************/
 void InitializePatterns(
         const Environment&theEnv) {
-    AllocateEnvironmentData(theEnv, PATTERN_DATA, sizeof(patternData), DeallocatePatternData);
+    //AllocateEnvironmentData(theEnv, PATTERN_DATA, sizeof(patternData), DeallocatePatternData);
+    theEnv->allocateEnvironmentModule<patternData>();
     PatternData(theEnv)->NextPosition = 1;
     PatternData(theEnv)->PatternHashTable = CreatePatternHashTable(theEnv, SIZE_PATTERN_HASH);
     PatternData(theEnv)->PatternHashTableSize = SIZE_PATTERN_HASH;

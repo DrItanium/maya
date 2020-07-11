@@ -78,7 +78,7 @@ typedef struct definstances {
 
 constexpr auto DEFINSTANCES_DATA = 22;
 
-struct definstancesData {
+struct definstancesData : public EnvironmentModule {
     Construct *DefinstancesConstruct;
     unsigned DefinstancesModuleIndex;
 };

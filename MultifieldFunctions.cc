@@ -140,7 +140,7 @@ RegisterEnvironmentModule(multiFunctionData, MULTIFUN_DATA);
 /**********************************************/
 void MultifieldFunctionDefinitions(
         const Environment&theEnv) {
-    AllocateEnvironmentData(theEnv, MULTIFUN_DATA, sizeof(multiFunctionData));
+    theEnv->allocateEnvironmentModule<multiFunctionData>();
 
     AddUDF(theEnv, "first$", "m", 1, 1, "m", FirstFunction);
     AddUDF(theEnv, "rest$", "m", 1, 1, "m", RestFunction);

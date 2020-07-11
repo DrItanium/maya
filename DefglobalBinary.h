@@ -48,7 +48,7 @@ struct bsaveDefglobalModule {
 
 constexpr auto GLOBLBIN_DATA = 60;
 
-struct defglobalBinaryData {
+struct defglobalBinaryData : public EnvironmentModule {
     Defglobal *DefglobalArray;
     unsigned long NumberOfDefglobals;
     struct defglobalModule *ModuleArray;

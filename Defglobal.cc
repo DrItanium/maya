@@ -126,7 +126,8 @@ void InitializeDefglobals(
                                               (EntityBusyCountFunction *) IncrementDefglobalBusyCount,
                                               nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    AllocateEnvironmentData(theEnv, DEFGLOBAL_DATA, sizeof(defglobalData), DeallocateDefglobalData);
+    theEnv->allocateEnvironmentModule<defglobalData>();
+    //AllocateEnvironmentData(theEnv, DEFGLOBAL_DATA, sizeof(defglobalData), DeallocateDefglobalData);
 
     memcpy(&DefglobalData(theEnv)->GlobalInfo, &globalInfo, sizeof(EntityRecord));
     memcpy(&DefglobalData(theEnv)->DefglobalPtrRecord, &defglobalPtrRecord, sizeof(EntityRecord));

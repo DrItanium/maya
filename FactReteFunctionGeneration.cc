@@ -65,7 +65,7 @@
 
 constexpr auto FACTGEN_DATA = 2;
 
-struct factgenData {
+struct factgenData : public EnvironmentModule {
     EntityRecord FactJNGV1Info;
     EntityRecord FactJNGV2Info;
     EntityRecord FactJNGV3Info;
@@ -181,7 +181,7 @@ void InitializeFactReteFunctions(
                                                FactPNConstant2,
                                                nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    AllocateEnvironmentData(theEnv, FACTGEN_DATA, sizeof(factgenData));
+    theEnv->allocateEnvironmentModule<factgenData>();
 
     memcpy(&FactgenData(theEnv)->FactJNGV1Info, &factJNGV1Info, sizeof(EntityRecord));
     memcpy(&FactgenData(theEnv)->FactJNGV2Info, &factJNGV2Info, sizeof(EntityRecord));

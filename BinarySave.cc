@@ -86,7 +86,10 @@ static void DeallocateBsaveData(const Environment&);
 /**********************************************/
 void InitializeBsaveData(
         const Environment&theEnv) {
-    AllocateEnvironmentData(theEnv, BSAVE_DATA, sizeof(bsaveData), DeallocateBsaveData);
+    auto ptr = std::make_unique<bsaveData>();
+    theEnv->installEnvironmentModule(std::move(ptr));
+    /// @todo DeallocateBsaveData becomes the dtor to bsaveData
+    //AllocateEnvironmentData(theEnv, BSAVE_DATA, sizeof(bsaveData), DeallocateBsaveData);
 }
 
 /************************************************/

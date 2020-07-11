@@ -191,7 +191,7 @@ static void *GetBinaryAtomValue(const Environment&, struct bsaveSlotValueAtom *)
 void SetupInstanceFileCommands(
         const Environment&theEnv) {
 #if BLOAD_INSTANCES || BSAVE_INSTANCES
-    AllocateEnvironmentData(theEnv, INSTANCE_FILE_DATA, sizeof(instanceFileData));
+    theEnv->allocateEnvironmentModule<instanceFileData>();
 
     InstanceFileData(theEnv)->InstanceBinaryPrefixID = "\5\6\7CLIPS";
     InstanceFileData(theEnv)->InstanceBinaryVersionID = "V6.00";

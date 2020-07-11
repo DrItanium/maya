@@ -86,6 +86,7 @@ void InitExpressionData(
     theEnv->installEnvironmentModule(std::move(ptr));
     InitExpressionPointers(theEnv);
 
+    /// @todo fix this
     ExpressionData(theEnv)->ExpressionHashTable = (ExpressionHashNode **)
             gm2(theEnv, sizeof(ExpressionHashNode *) * EXPRESSION_HASH_SIZE);
     for (i = 0; i < EXPRESSION_HASH_SIZE; i++)

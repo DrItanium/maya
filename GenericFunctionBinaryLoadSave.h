@@ -41,7 +41,7 @@
 
 constexpr auto GENRCBIN_DATA = 28;
 
-struct defgenericBinaryData {
+struct defgenericBinaryData : public EnvironmentModule {
     Defgeneric *DefgenericArray;
     unsigned long ModuleCount;
     unsigned long GenericCount;

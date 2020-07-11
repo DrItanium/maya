@@ -110,7 +110,8 @@ static void DeallocateDefinstancesBinaryData(const Environment&);
  ***********************************************************/
 void SetupDefinstancesBload(
         const Environment&theEnv) {
-    AllocateEnvironmentData(theEnv, DFINSBIN_DATA, sizeof(definstancesBinaryData), DeallocateDefinstancesBinaryData);
+    theEnv->allocateEnvironmentModule<definstancesBinaryData>();
+    //AllocateEnvironmentData(theEnv, DFINSBIN_DATA, sizeof(definstancesBinaryData), DeallocateDefinstancesBinaryData);
 #if BLOAD_AND_BSAVE
     AddBinaryItem(theEnv, "definstances", 0, BsaveDefinstancesFind, BsaveDefinstancesExpressions,
                   BsaveStorageDefinstances, BsaveDefinstancesDriver,

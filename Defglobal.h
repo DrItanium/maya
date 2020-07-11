@@ -74,7 +74,7 @@ typedef struct defglobal Defglobal;
 
 constexpr auto DEFGLOBAL_DATA = 1;
 
-struct defglobalData {
+struct defglobalData : public EnvironmentModule {
     Construct *DefglobalConstruct;
     unsigned DefglobalModuleIndex;
     bool ChangeToGlobals;
