@@ -96,7 +96,7 @@ void ConstructProfilingFunctionDefinitions(
     //AllocateEnvironmentData(theEnv, PROFLFUN_DATA, sizeof(profileFunctionData));
     theEnv->allocateEnvironmentModule<profileFunctionData>();
 
-    memcpy(&ProfileFunctionData(theEnv)->ProfileDataInfo, &profileDataInfo, sizeof(userDataRecord));
+    ProfileFunctionData(theEnv)->ProfileDataInfo = profileDataInfo;
 
     ProfileFunctionData(theEnv)->LastProfileInfo = NO_PROFILE;
     ProfileFunctionData(theEnv)->PercentThreshold = 0.0;

@@ -183,19 +183,19 @@ void InitializeFactReteFunctions(
 
     theEnv->allocateEnvironmentModule<factgenData>();
 
-    memcpy(&FactgenData(theEnv)->FactJNGV1Info, &factJNGV1Info, sizeof(EntityRecord));
-    memcpy(&FactgenData(theEnv)->FactJNGV2Info, &factJNGV2Info, sizeof(EntityRecord));
-    memcpy(&FactgenData(theEnv)->FactJNGV3Info, &factJNGV3Info, sizeof(EntityRecord));
-    memcpy(&FactgenData(theEnv)->FactPNGV1Info, &factPNGV1Info, sizeof(EntityRecord));
-    memcpy(&FactgenData(theEnv)->FactPNGV2Info, &factPNGV2Info, sizeof(EntityRecord));
-    memcpy(&FactgenData(theEnv)->FactPNGV3Info, &factPNGV3Info, sizeof(EntityRecord));
-    memcpy(&FactgenData(theEnv)->FactJNCV1Info, &factJNCV1Info, sizeof(EntityRecord));
-    memcpy(&FactgenData(theEnv)->FactJNCV2Info, &factJNCV2Info, sizeof(EntityRecord));
-    memcpy(&FactgenData(theEnv)->FactPNCV1Info, &factPNCV1Info, sizeof(EntityRecord));
-    memcpy(&FactgenData(theEnv)->FactStoreMFInfo, &factStoreMFInfo, sizeof(EntityRecord));
-    memcpy(&FactgenData(theEnv)->FactSlotLengthInfo, &factSlotLengthInfo, sizeof(EntityRecord));
-    memcpy(&FactgenData(theEnv)->FactPNConstant1Info, &factPNConstant1Info, sizeof(EntityRecord));
-    memcpy(&FactgenData(theEnv)->FactPNConstant2Info, &factPNConstant2Info, sizeof(EntityRecord));
+    FactgenData(theEnv)->FactJNGV1Info = factJNGV1Info,
+    FactgenData(theEnv)->FactJNGV2Info = factJNGV2Info,
+    FactgenData(theEnv)->FactJNGV3Info = factJNGV3Info,
+    FactgenData(theEnv)->FactPNGV1Info = factPNGV1Info,
+    FactgenData(theEnv)->FactPNGV2Info = factPNGV2Info;
+    FactgenData(theEnv)->FactPNGV3Info = factPNGV3Info;
+    FactgenData(theEnv)->FactJNCV1Info = factJNCV1Info;
+    FactgenData(theEnv)->FactJNCV2Info = factJNCV2Info;
+    FactgenData(theEnv)->FactPNCV1Info = factPNCV1Info;
+    FactgenData(theEnv)->FactStoreMFInfo = factStoreMFInfo;
+    FactgenData(theEnv)->FactSlotLengthInfo = factSlotLengthInfo;
+    FactgenData(theEnv)->FactPNConstant1Info = factPNConstant1Info;
+    FactgenData(theEnv)->FactPNConstant2Info = factPNConstant2Info;
 
     InstallPrimitive(theEnv, (EntityRecord *) &FactData(theEnv)->FactInfo, FACT_ADDRESS_TYPE);
     InstallPrimitive(theEnv, &FactgenData(theEnv)->FactJNGV1Info, FACT_JN_VAR1);

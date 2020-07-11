@@ -129,8 +129,8 @@ void InitializeDefglobals(
     theEnv->allocateEnvironmentModule<defglobalData>();
     //AllocateEnvironmentData(theEnv, DEFGLOBAL_DATA, sizeof(defglobalData), DeallocateDefglobalData);
 
-    memcpy(&DefglobalData(theEnv)->GlobalInfo, &globalInfo, sizeof(EntityRecord));
-    memcpy(&DefglobalData(theEnv)->DefglobalPtrRecord, &defglobalPtrRecord, sizeof(EntityRecord));
+    DefglobalData(theEnv)->GlobalInfo = globalInfo;
+    DefglobalData(theEnv)->DefglobalPtrRecord = defglobalPtrRecord;
 
     DefglobalData(theEnv)->ResetGlobals = true;
     DefglobalData(theEnv)->LastModuleIndex = -1;

@@ -115,7 +115,7 @@ void InitializeDeftemplates(
     //AllocateEnvironmentData(theEnv, DEFTEMPLATE_DATA, sizeof(deftemplateData), DeallocateDeftemplateData);
     theEnv->allocateEnvironmentModule<deftemplateData>();
 
-    memcpy(&DeftemplateData(theEnv)->DeftemplatePtrRecord, &deftemplatePtrRecord, sizeof(EntityRecord));
+    DeftemplateData(theEnv)->DeftemplatePtrRecord = deftemplatePtrRecord;
 
     InitializeFacts(theEnv);
 

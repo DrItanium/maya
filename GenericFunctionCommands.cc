@@ -176,7 +176,7 @@ void SetupGenericFunctions(
 
     theEnv->allocateEnvironmentModule<defgenericData>();
     //AllocateEnvironmentData(theEnv, DEFGENERIC_DATA, sizeof(defgenericData), DeallocateDefgenericData);
-    memcpy(&DefgenericData(theEnv)->GenericEntityRecord, &genericEntityRecord, sizeof(EntityRecord));
+    DefgenericData(theEnv)->GenericEntityRecord = genericEntityRecord;
 
     InstallPrimitive(theEnv, &DefgenericData(theEnv)->GenericEntityRecord, GCALL);
 

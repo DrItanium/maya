@@ -510,7 +510,6 @@ PartialMatch *MergePartialMatches(
     /*============================================*/
     /* Set the flags to their appropriate values. */
     /*============================================*/
-
     memcpy(linker, &mergeTemplate, sizeof(PartialMatch) - sizeof(genericMatch));
 
     linker->deleting = false;

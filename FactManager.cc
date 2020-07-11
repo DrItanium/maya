@@ -187,9 +187,9 @@ void InitializeFacts(
     //AllocateEnvironmentData(theEnv, FACTS_DATA, sizeof(factsData), DeallocateFactData);
     theEnv->installEnvironmentModule(std::move(fdata));
 
-    memcpy(&FactData(theEnv)->FactInfo, &factInfo, sizeof(PatternEntityRecord));
+    FactData(theEnv)->FactInfo = factInfo;
     dummyFact.patternHeader.theInfo = &FactData(theEnv)->FactInfo;
-    memcpy(&FactData(theEnv)->DummyFact, &dummyFact, sizeof(Fact));
+    FactData(theEnv)->DummyFact = dummyFact;
     FactData(theEnv)->LastModuleIndex = -1;
 
     /*=========================================*/

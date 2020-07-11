@@ -166,7 +166,7 @@ void SetupDeffunctions(
     theEnv->allocateEnvironmentModule<deffunctionData>();
     /// @todo DeallocateDeffunctionData is the dtor
     //AllocateEnvironmentData(theEnv, DEFFUNCTION_DATA, sizeof(deffunctionData), DeallocateDeffunctionData);
-    memcpy(&DeffunctionData(theEnv)->DeffunctionEntityRecord, &deffunctionEntityRecord, sizeof(EntityRecord));
+    DeffunctionData(theEnv)->DeffunctionEntityRecord = deffunctionEntityRecord;
 
     InstallPrimitive(theEnv, &DeffunctionData(theEnv)->DeffunctionEntityRecord, PCALL);
 

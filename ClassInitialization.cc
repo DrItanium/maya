@@ -160,10 +160,9 @@ void SetupObjectSystem(
     theEnv->allocateEnvironmentModule<defclassData>();
     AddEnvironmentCleanupFunction(theEnv, "defclasses", DeallocateDefclassData, -500);
 
-    memcpy(&DefclassData(theEnv)->DefclassEntityRecord, &defclassEntityRecord, sizeof(EntityRecord));
 
+    DefclassData(theEnv)->DefclassEntityRecord = defclassEntityRecord;
     DefclassData(theEnv)->newSlotID = 2; // IS_A and NAME assigned 0 and 1
-
     DefclassData(theEnv)->ClassDefaultsModeValue = CONVENIENCE_MODE;
     DefclassData(theEnv)->ISA_SYMBOL = CreateSymbol(theEnv, SUPERCLASS_RLN);
     IncrementLexemeCount(DefclassData(theEnv)->ISA_SYMBOL);

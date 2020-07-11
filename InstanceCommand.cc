@@ -170,9 +170,9 @@ void SetupInstances(
     //AllocateEnvironmentData(theEnv, INSTANCE_DATA, sizeof(instanceData), DeallocateInstanceData);
 
     InstanceData(theEnv)->MkInsMsgPass = true;
-    memcpy(&InstanceData(theEnv)->InstanceInfo, &instanceInfo, sizeof(PatternEntityRecord));
+    InstanceData(theEnv)->InstanceInfo = instanceInfo;
     dummyInstance.patternHeader.theInfo = &InstanceData(theEnv)->InstanceInfo;
-    memcpy(&InstanceData(theEnv)->DummyInstance, &dummyInstance, sizeof(Instance));
+    InstanceData(theEnv)->DummyInstance = dummyInstance;
 
     InitializeInstanceTable(theEnv);
     InstallPrimitive(theEnv, (EntityRecord *) &InstanceData(theEnv)->InstanceInfo, INSTANCE_ADDRESS_TYPE);
