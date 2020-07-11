@@ -347,7 +347,7 @@ void BsaveConstructExpressions(
 /***************************************/
 void BsaveExpression(
         const Environment&theEnv,
-        struct expr *testPtr,
+        Expression *testPtr,
         FILE *fp) {
     BSAVE_EXPRESSION newTest;
     unsigned long newIndex;

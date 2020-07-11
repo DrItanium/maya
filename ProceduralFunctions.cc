@@ -478,7 +478,7 @@ void PrognFunction(
         const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
-    struct expr *argPtr;
+    Expression *argPtr;
 
     argPtr = EvaluationData(theEnv)->CurrentExpression->argList;
 

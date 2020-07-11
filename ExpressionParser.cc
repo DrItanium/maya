@@ -106,11 +106,11 @@
 /* Function0Parse: Parses a function. Assumes that */
 /*   none of the function has been parsed yet.     */
 /***************************************************/
-struct expr *Function0Parse(
+Expression *Function0Parse(
         const Environment&theEnv,
         const char *logicalName) {
     struct token theToken;
-    struct expr *top;
+    Expression *top;
 
     /*=================================*/
     /* All functions begin with a '('. */
@@ -135,11 +135,11 @@ struct expr *Function0Parse(
 /* Function1Parse: Parses a function. Assumes that the */
 /*   opening left parenthesis has already been parsed. */
 /*******************************************************/
-struct expr *Function1Parse(
+Expression *Function1Parse(
         const Environment&theEnv,
         const char *logicalName) {
     struct token theToken;
-    struct expr *top;
+    Expression *top;
 
     /*========================*/
     /* Get the function name. */
@@ -165,12 +165,12 @@ struct expr *Function1Parse(
 /*   the opening left parenthesis and function name */
 /*   have already been parsed.                      */
 /****************************************************/
-struct expr *Function2Parse(
+Expression *Function2Parse(
         const Environment&theEnv,
         const char *logicalName,
         const char *name) {
     struct functionDefinition *theFunction;
-    struct expr *top;
+    Expression *top;
     bool moduleSpecified = false;
     unsigned position;
     CLIPSLexeme *moduleName = nullptr, *constructName = nullptr;
@@ -466,13 +466,13 @@ bool RestrictionExists(
 /*****************************************************************/
 FunctionArgumentsError CheckExpressionAgainstRestrictions(
         const Environment&theEnv,
-        struct expr *theExpression,
+        Expression *theExpression,
         struct functionDefinition *theFunction,
         const char *functionName) {
     unsigned int j = 1;
     unsigned short number1, number2;
     unsigned short argCount;
-    struct expr *argPtr;
+    Expression *argPtr;
     const char *restrictions;
     unsigned defaultRestriction2, argRestriction2;
 
@@ -552,12 +552,12 @@ FunctionArgumentsError CheckExpressionAgainstRestrictions(
 /* CollectArguments: Parses and groups together all of */
 /*   the arguments for a function call expression.     */
 /*******************************************************/
-struct expr *CollectArguments(
+Expression *CollectArguments(
         const Environment&theEnv,
-        struct expr *top,
+        Expression *top,
         const char *logicalName) {
     bool errorFlag;
-    struct expr *lastOne, *nextOne;
+    Expression *lastOne, *nextOne;
 
     /*========================================*/
     /* Default parsing routine for functions. */
@@ -594,11 +594,11 @@ struct expr *CollectArguments(
 /* ArgumentParse: Parses an argument within */
 /*   a function call expression.            */
 /********************************************/
-struct expr *ArgumentParse(
+Expression *ArgumentParse(
         const Environment&theEnv,
         const char *logicalName,
         bool *errorFlag) {
-    struct expr *top;
+    Expression *top;
     struct token theToken;
 
     /*===============*/
@@ -649,12 +649,12 @@ struct expr *ArgumentParse(
 /*   a function call, atomic value (string, symbol, etc.),  */
 /*   or variable (local or global).                         */
 /************************************************************/
-struct expr *ParseAtomOrExpression(
+Expression *ParseAtomOrExpression(
         const Environment&theEnv,
         const char *logicalName,
         struct token *useToken) {
     struct token theToken, *thisToken;
-    struct expr *rv;
+    Expression *rv;
 
     if (useToken == nullptr) {
         thisToken = &theToken;
@@ -687,14 +687,14 @@ struct expr *ParseAtomOrExpression(
 /*   actions within a progn expression. Used */
 /*   for example to parse the RHS of a rule. */
 /*********************************************/
-struct expr *GroupActions(
+Expression *GroupActions(
         const Environment&theEnv,
         const char *logicalName,
         struct token *theToken,
         bool readFirstToken,
         const char *endWord,
         bool functionNameParsed) {
-    struct expr *top, *nextOne, *lastOne = nullptr;
+    Expression *top, *nextOne, *lastOne = nullptr;
 
     /*=============================*/
     /* Create the enclosing progn. */
@@ -979,11 +979,11 @@ Expression *ParseConstantArguments(
 /************************/
 /* RemoveUnneededProgn: */
 /************************/
-struct expr *RemoveUnneededProgn(
+Expression *RemoveUnneededProgn(
         const Environment&theEnv,
-        struct expr *theExpression) {
+        Expression *theExpression) {
     struct functionDefinition *fptr;
-    struct expr *temp;
+    Expression *temp;
 
     if (theExpression == nullptr) return (theExpression);
 

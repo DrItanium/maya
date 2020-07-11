@@ -134,7 +134,7 @@ bool CheckSyntax(
         const char *theString,
         UDFValue *returnValue) {
     struct token theToken;
-    struct expr *top;
+    Expression *top;
 
     /*==============================*/
     /* Set the default return value */

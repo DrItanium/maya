@@ -49,11 +49,11 @@
 #include "Network.h"
 
 void NetworkAssert(const Environment&, PartialMatch *, struct joinNode *);
-bool EvaluateJoinExpression(const Environment&, struct expr *, struct joinNode *);
+bool EvaluateJoinExpression(const Environment&, Expression *, struct joinNode *);
 void NetworkAssertLeft(const Environment&, PartialMatch *, struct joinNode *, int);
 void NetworkAssertRight(const Environment&, PartialMatch *, struct joinNode *, int);
 void PPDrive(const Environment&, PartialMatch *, PartialMatch *, struct joinNode *, int);
-unsigned long BetaMemoryHashValue(const Environment&, struct expr *, PartialMatch *, PartialMatch *, struct joinNode *);
+unsigned long BetaMemoryHashValue(const Environment&, Expression *, PartialMatch *, PartialMatch *, struct joinNode *);
 bool EvaluateSecondaryNetworkTest(const Environment&, PartialMatch *, struct joinNode *);
 void EPMDrive(const Environment&, PartialMatch *, struct joinNode *, int);
 

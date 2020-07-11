@@ -590,7 +590,7 @@ static struct patternNodeHeader *PlaceObjectPattern(
     OBJECT_ALPHA_NODE *newAlphaNode;
     bool endSlot;
     CLIPSBitMap *newClassBitMap, *newSlotBitMap;
-    struct expr *rightHash;
+    Expression *rightHash;
     unsigned int i;
     CLASS_BITMAP *cbmp;
     Defclass *relevantDefclass;
@@ -747,7 +747,7 @@ static OBJECT_PATTERN_NODE *FindObjectPatternNode(
         OBJECT_PATTERN_NODE **nodeSlotGroup,
         bool endSlot,
         bool constantSelector) {
-    struct expr *compareTest;
+    Expression *compareTest;
     *nodeSlotGroup = nullptr;
 
     if (constantSelector) { compareTest = thePattern->constantValue; }
@@ -2104,7 +2104,7 @@ static struct lhsParseNode *RemoveSlotExistenceTests(
  **************************************************************/
 static Expression *ObjectMatchDelayParse(
         const Environment&theEnv,
-        struct expr *top,
+        Expression *top,
         const char *infile) {
     struct token tkn;
 

@@ -88,12 +88,12 @@ public:
     bool installed: 1;
 private:
     unsigned long bsaveID;
-    expr *classList;
-    expr *restrictionList;
-    expr *minValue;
-    expr *maxValue;
-    expr *minFields;
-    expr *maxFields;
+    Expression *classList;
+    Expression *restrictionList;
+    Expression *minValue;
+    Expression *maxValue;
+    Expression *minFields;
+    Expression *maxFields;
     constraintRecord *multifield;
     constraintRecord *next;
     unsigned int bucket;
@@ -130,7 +130,7 @@ public:
     void setBSaveID(unsigned long value) noexcept { bsaveID = value; }
 #define X(field, form) \
     auto get ## form () const noexcept { return field ; } \
-    void set ## form (expr* value) noexcept { field = value ; }
+    void set ## form (Expression* value) noexcept { field = value ; }
     X(maxFields, MaxFields);
     X(minFields, MinFields);
     X(maxValue, MaxValue);
@@ -153,7 +153,7 @@ public:
 constexpr auto SIZE_CONSTRAINT_HASH  = 167;
 constexpr auto CONSTRAINT_DATA = 43;
 
-struct constraintData {
+struct constraintData : public EnvironmentModule {
     struct constraintRecord **ConstraintHashtable;
     bool DynamicConstraintChecking;
 #if (BLOAD_AND_BSAVE)
@@ -162,7 +162,9 @@ struct constraintData {
 #endif
 };
 
-#define ConstraintData(theEnv) ((constraintData *) GetEnvironmentData(theEnv,CONSTRAINT_DATA))
+RegisterEnvironmentModule(constraintData, CONSTRAINT_DATA);
+
+#define ConstraintData(theEnv) (GetEnvironmentData(theEnv,CONSTRAINT_DATA))
 
 void InitializeConstraints(const Environment&);
 void GDCCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);

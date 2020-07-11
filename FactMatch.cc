@@ -72,7 +72,7 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static bool EvaluatePatternExpression(const Environment&, struct factPatternNode *, struct expr *);
+static bool EvaluatePatternExpression(const Environment&, struct factPatternNode *, Expression *);
 static void TraceErrorToJoin(const Environment&, struct factPatternNode *, bool);
 static void ProcessFactAlphaMatch(const Environment&, Fact *, struct multifieldMarker *, struct factPatternNode *);
 static struct factPatternNode *GetNextFactPatternNode(const Environment&, bool, struct factPatternNode *);
@@ -537,9 +537,9 @@ static void ProcessFactAlphaMatch(
 static bool EvaluatePatternExpression(
         const Environment&theEnv,
         struct factPatternNode *patternPtr,
-        struct expr *theTest) {
+        Expression *theTest) {
     UDFValue theResult;
-    struct expr *oldArgument;
+    Expression *oldArgument;
     bool rv;
 
     /*=====================================*/

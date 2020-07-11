@@ -381,7 +381,7 @@ int CompareNumbers(
 /****************************************************************/
 CONSTRAINT_RECORD *ExpressionToConstraintRecord(
         const Environment&theEnv,
-        struct expr *theExpression) {
+        Expression *theExpression) {
     CONSTRAINT_RECORD *rv;
 
     /*================================================*/

@@ -260,7 +260,7 @@ bool CheckAllowedValuesConstraint(
         int type,
         void *vPtr,
         CONSTRAINT_RECORD *constraints) {
-    struct expr *tmpPtr;
+    Expression *tmpPtr;
 
     /*=========================================*/
     /* If the constraint record is nullptr, there */
@@ -334,7 +334,7 @@ bool CheckAllowedClassesConstraint(
         int type,
         void *vPtr,
         CONSTRAINT_RECORD *constraints) {
-    struct expr *tmpPtr;
+    Expression *tmpPtr;
     Instance *ins;
     Defclass *insClass, *cmpClass;
 
@@ -401,7 +401,7 @@ static bool CheckRangeConstraint(
         int type,
         void *vPtr,
         CONSTRAINT_RECORD *constraints) {
-    struct expr *minList, *maxList;
+    Expression *minList, *maxList;
 
     /*===================================*/
     /* If the constraint record is nullptr, */
@@ -614,9 +614,9 @@ ConstraintViolationType ConstraintCheckValue(
 /********************************************************************/
 ConstraintViolationType ConstraintCheckExpressionChain(
         const Environment&theEnv,
-        struct expr *theExpression,
+        Expression *theExpression,
         CONSTRAINT_RECORD *theConstraints) {
-    struct expr *theExp;
+    Expression *theExp;
     int min = 0, max = 0;
     ConstraintViolationType vCode;
 
@@ -663,7 +663,7 @@ ConstraintViolationType ConstraintCheckExpressionChain(
 /***************************************************/
 ConstraintViolationType ConstraintCheckExpression(
         const Environment&theEnv,
-        struct expr *theExpression,
+        Expression *theExpression,
         CONSTRAINT_RECORD *theConstraints) {
     ConstraintViolationType rv = NO_VIOLATION;
 

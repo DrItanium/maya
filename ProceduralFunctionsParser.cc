@@ -90,16 +90,16 @@ struct procedureParserData {
 /***************************************/
 
 static void DeallocateProceduralFunctionData(const Environment&);
-static struct expr *WhileParse(const Environment&, struct expr *, const char *);
-static struct expr *LoopForCountParse(const Environment&, struct expr *, const char *);
+static Expression *WhileParse(const Environment&, Expression *, const char *);
+static Expression *LoopForCountParse(const Environment&, Expression *, const char *);
 static void ReplaceLoopCountVars(const Environment&, CLIPSLexeme *, Expression *, int);
-static struct expr *IfParse(const Environment&, struct expr *, const char *);
-static struct expr *PrognParse(const Environment&, struct expr *, const char *);
-static struct expr *BindParse(const Environment&, struct expr *, const char *);
+static Expression *IfParse(const Environment&, Expression *, const char *);
+static Expression *PrognParse(const Environment&, Expression *, const char *);
+static Expression *BindParse(const Environment&, Expression *, const char *);
 static int AddBindName(const Environment&, CLIPSLexeme *, CONSTRAINT_RECORD *);
-static struct expr *ReturnParse(const Environment&, struct expr *, const char *);
-static struct expr *BreakParse(const Environment&, struct expr *, const char *);
-static struct expr *SwitchParse(const Environment&, struct expr *, const char *);
+static Expression *ReturnParse(const Environment&, Expression *, const char *);
+static Expression *BreakParse(const Environment&, Expression *, const char *);
+static Expression *SwitchParse(const Environment&, Expression *, const char *);
 
 /*****************************/
 /* ProceduralFunctionParsers */
@@ -179,9 +179,9 @@ bool ParsedBindNamesEmpty(
 /*   The parse of the statement is the return value.     */
 /*   Syntax: (while <expression> do <action>+)           */
 /*********************************************************/
-static struct expr *WhileParse(
+static Expression *WhileParse(
         const Environment&theEnv,
-        struct expr *parse,
+        Expression *parse,
         const char *infile) {
     struct token theToken;
     bool read_first_token;
@@ -257,9 +257,9 @@ static struct expr *WhileParse(
 /*   Syntax: (loop-for-count <range> [do] <action>+)                                      */
 /*           <range> ::= (<sf-var> [<start-integer-expression>] <end-integer-expression>) */
 /******************************************************************************************/
-static struct expr *LoopForCountParse(
+static Expression *LoopForCountParse(
         const Environment&theEnv,
-        struct expr *parse,
+        Expression *parse,
         const char *infile) {
     struct token theToken;
     CLIPSLexeme *loopVar = nullptr;
@@ -451,9 +451,9 @@ static void ReplaceLoopCountVars(
 /*   Syntax: (if <expression> then <action>+             */
 /*               [ else <action>+ ] )                    */
 /*********************************************************/
-static struct expr *IfParse(
+static Expression *IfParse(
         const Environment&theEnv,
-        struct expr *top,
+        Expression *top,
         const char *infile) {
     struct token theToken;
 
@@ -564,12 +564,12 @@ static struct expr *IfParse(
 /*   The parse of the statement is the return value.    */
 /*   Syntax:  (progn <expression>*)                     */
 /********************************************************/
-static struct expr *PrognParse(
+static Expression *PrognParse(
         const Environment&theEnv,
-        struct expr *top,
+        Expression *top,
         const char *infile) {
     struct token tkn;
-    struct expr *tmp;
+    Expression *tmp;
 
     ReturnExpression(theEnv, top);
     ExpressionData(theEnv)->BreakContext = ExpressionData(theEnv)->svContexts->brk;
@@ -589,13 +589,13 @@ static struct expr *PrognParse(
 /*   parse of the statement is the return value.           */
 /*   Syntax:  (bind ?var <expression>)                     */
 /***********************************************************/
-static struct expr *BindParse(
+static Expression *BindParse(
         const Environment&theEnv,
-        struct expr *top,
+        Expression *top,
         const char *infile) {
     struct token theToken;
     CLIPSLexeme *variableName;
-    struct expr *texp;
+    Expression *texp;
     CONSTRAINT_RECORD *theConstraint = nullptr;
 #if DEFGLOBAL_CONSTRUCT
     Defglobal *theGlobal = nullptr;
@@ -665,9 +665,9 @@ static struct expr *BindParse(
 /********************************************/
 /* ReturnParse: Parses the return function. */
 /********************************************/
-static struct expr *ReturnParse(
+static Expression *ReturnParse(
         const Environment&theEnv,
-        struct expr *top,
+        Expression *top,
         const char *infile) {
     bool error_flag = false;
     struct token theToken;
@@ -710,9 +710,9 @@ static struct expr *ReturnParse(
 /***************/
 /* BreakParse: */
 /***************/
-static struct expr *BreakParse(
+static Expression *BreakParse(
         const Environment&theEnv,
-        struct expr *top,
+        Expression *top,
         const char *infile) {
     struct token theToken;
 
@@ -739,9 +739,9 @@ static struct expr *BreakParse(
 /****************/
 /* SwitchParse: */
 /****************/
-static struct expr *SwitchParse(
+static Expression *SwitchParse(
         const Environment&theEnv,
-        struct expr *top,
+        Expression *top,
         const char *infile) {
     struct token theToken;
     Expression *theExp, *chk;

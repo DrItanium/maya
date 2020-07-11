@@ -81,8 +81,8 @@
 static void SaveDefglobals(const Environment&, Defmodule *, const char *, void *);
 static void ResetDefglobalAction(const Environment&, ConstructHeader *, void *);
 #if DEBUGGING_FUNCTIONS
-static bool DefglobalWatchAccess(const Environment&, int, bool, struct expr *);
-static bool DefglobalWatchPrint(const Environment&, const char *, int, struct expr *);
+static bool DefglobalWatchAccess(const Environment&, int, bool, Expression *);
+static bool DefglobalWatchPrint(const Environment&, const char *, int, Expression *);
 #endif
 
 /*****************************************************************/

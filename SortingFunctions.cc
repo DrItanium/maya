@@ -52,7 +52,7 @@
 constexpr auto SORTFUN_DATA = 7;
 
 struct sortFunctionData {
-    struct expr *SortComparisonFunction;
+    Expression *SortComparisonFunction;
 };
 
 #define SortFunctionData(theEnv) ((sortFunctionData *) GetEnvironmentData(theEnv,SORTFUN_DATA))
@@ -122,7 +122,7 @@ void SortFunction(
     UDFValue theArg;
     Multifield *theMultifield, *tempMultifield;
     const char *functionName;
-    struct expr *functionReference;
+    Expression *functionReference;
     size_t argumentSize = 0;
     struct functionDefinition *fptr;
 #if DEFFUNCTION_CONSTRUCT

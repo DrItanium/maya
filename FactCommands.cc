@@ -109,7 +109,7 @@ constexpr auto UNSPECIFIED = -1L;
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static struct expr *AssertParse(const Environment&, struct expr *, const char *);
+static Expression *AssertParse(const Environment&, Expression *, const char *);
 #if DEBUGGING_FUNCTIONS
 static long long GetFactsArgument(UDFContext *);
 #endif
@@ -149,7 +149,7 @@ void AssertCommand(
     Deftemplate *theDeftemplate;
     CLIPSValue *theField;
     UDFValue theValue;
-    struct expr *theExpression;
+    Expression *theExpression;
     struct templateSlot *slotPtr;
     Fact *newFact;
     bool error = false;
@@ -671,12 +671,12 @@ void AssertStringFunction(
 /****************************************************************/
 /* AssertParse: Driver routine for parsing the assert function. */
 /****************************************************************/
-static struct expr *AssertParse(
+static Expression *AssertParse(
         const Environment&theEnv,
-        struct expr *top,
+        Expression *top,
         const char *logicalName) {
     bool error;
-    struct expr *rv;
+    Expression *rv;
     struct token theToken;
 
     ReturnExpression(theEnv, top);

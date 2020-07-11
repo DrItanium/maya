@@ -114,9 +114,9 @@ typedef struct fieldVarStack {
 #if MULTIFIELD_FUNCTIONS
 static bool MVRangeCheck(size_t, size_t, size_t *, unsigned int);
 static void MultifieldPrognDriver(UDFContext *, UDFValue *, const char *);
-static struct expr *MultifieldPrognParser(const Environment&, struct expr *, const char *);
-static struct expr *ForeachParser(const Environment&, struct expr *, const char *);
-static void ReplaceMvPrognFieldVars(const Environment&, CLIPSLexeme *, struct expr *, int);
+static Expression *MultifieldPrognParser(const Environment&, Expression *, const char *);
+static Expression *ForeachParser(const Environment&, Expression *, const char *);
+static void ReplaceMvPrognFieldVars(const Environment&, CLIPSLexeme *, Expression *, int);
 #endif /* MULTIFIELD_FUNCTIONS */
 static void MVRangeErrorSizet(const Environment&, size_t, size_t, size_t, const char *);
 
@@ -975,13 +975,13 @@ static bool MVRangeCheck(
 /******************************************************/
 /* MultifieldPrognParser: Parses the progn$ function. */
 /******************************************************/
-static struct expr *MultifieldPrognParser(
+static Expression *MultifieldPrognParser(
         const Environment&theEnv,
-        struct expr *top,
+        Expression *top,
         const char *infile) {
     struct BindInfo *oldBindList, *newBindList, *prev;
     struct token tkn;
-    struct expr *tmp;
+    Expression *tmp;
     CLIPSLexeme *fieldVar = nullptr;
 
     SavePPBuffer(theEnv, " ");
@@ -1085,13 +1085,13 @@ static struct expr *MultifieldPrognParser(
 /***********************************************/
 /* ForeachParser: Parses the foreach function. */
 /***********************************************/
-static struct expr *ForeachParser(
+static Expression *ForeachParser(
         const Environment&theEnv,
-        struct expr *top,
+        Expression *top,
         const char *infile) {
     struct BindInfo *oldBindList, *newBindList, *prev;
     struct token tkn;
-    struct expr *tmp;
+    Expression *tmp;
     CLIPSLexeme *fieldVar;
 
     SavePPBuffer(theEnv, " ");
@@ -1167,7 +1167,7 @@ static struct expr *ForeachParser(
 static void ReplaceMvPrognFieldVars(
         const Environment&theEnv,
         CLIPSLexeme *fieldVar,
-        struct expr *theExp,
+        Expression *theExp,
         int depth) {
     size_t flen;
 

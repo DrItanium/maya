@@ -67,7 +67,7 @@ constexpr auto PRIME_THREE = 269;
 /* LOCAL INTERNAL FUNCTION DEFINITIONS  */
 /****************************************/
 
-static unsigned long ListToPacked(expr *, struct expr *, unsigned long);
+static unsigned long ListToPacked(expr *, Expression *, unsigned long);
 static EXPRESSION_HN *FindHashedExpression(const Environment&, Expression *, unsigned *, EXPRESSION_HN **);
 static unsigned HashExpression(Expression *);
 static void DeallocateExpressionData(const Environment&);
@@ -152,7 +152,7 @@ void InitExpressionPointers(
 /***************************************************/
 void ExpressionInstall(
         const Environment&theEnv,
-        struct expr *expression) {
+        Expression *expression) {
     if (expression == nullptr) return;
 
     while (expression != nullptr) {
@@ -168,7 +168,7 @@ void ExpressionInstall(
 /*****************************************************/
 void ExpressionDeinstall(
         const Environment&theEnv,
-        struct expr *expression) {
+        Expression *expression) {
     if (expression == nullptr) return;
 
     while (expression != nullptr) {
@@ -186,10 +186,10 @@ void ExpressionDeinstall(
 /*   packed expression requires less total memory because it reduces   */
 /*   the overhead required for multiple memory allocations.            */
 /***********************************************************************/
-struct expr *PackExpression(
+Expression *PackExpression(
         const Environment&theEnv,
-        struct expr *original) {
-    struct expr *packPtr;
+        Expression *original) {
+    Expression *packPtr;
 
     if (original == nullptr) return nullptr;
 
@@ -204,8 +204,8 @@ struct expr *PackExpression(
 /* ListToPacked: Copies a list of expressions to an array. */
 /***********************************************************/
 static unsigned long ListToPacked(
-        struct expr *original,
-        struct expr *destination,
+        Expression *original,
+        Expression *destination,
         unsigned long count) {
     unsigned long i;
 
@@ -243,7 +243,7 @@ static unsigned long ListToPacked(
 /***************************************************************/
 void ReturnPackedExpression(
         const Environment&theEnv,
-        struct expr *packPtr) {
+        Expression *packPtr) {
     if (packPtr != nullptr) {
         rm(theEnv, packPtr, sizeof(expr) * ExpressionSize(packPtr));
     }
@@ -255,8 +255,8 @@ void ReturnPackedExpression(
 /***********************************************/
 void ReturnExpression(
         const Environment&theEnv,
-        struct expr *waste) {
-    struct expr *tmp;
+        Expression *waste) {
+    Expression *tmp;
 
     while (waste != nullptr) {
         if (waste->argList != nullptr) ReturnExpression(theEnv, waste->argList);

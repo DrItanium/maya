@@ -1030,7 +1030,7 @@ void FuncallFunction(
     Expression theReference;
     const char *name;
     Multifield *theMultifield;
-    struct expr *lastAdd = nullptr, *nextAdd, *multiAdd;
+    Expression *lastAdd = nullptr, *nextAdd, *multiAdd;
     struct functionDefinition *theFunction = nullptr;
 
     /*==================================*/

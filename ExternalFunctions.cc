@@ -278,7 +278,7 @@ static bool RemoveHashFunction(
 bool AddFunctionParser(
         const Environment&theEnv,
         const char *functionName,
-        struct expr *(*fpPtr)(const Environment&, struct expr *, const char *)) {
+        Expression *(*fpPtr)(const Environment&, Expression *, const char *)) {
     struct functionDefinition *fdPtr;
 
     fdPtr = FindFunction(theEnv, functionName);
@@ -538,7 +538,7 @@ void AssignErrorValue(
 unsigned int UDFArgumentCount(
         UDFContext *context) {
     unsigned int count = 0;
-    struct expr *argPtr;
+    Expression *argPtr;
 
     for (argPtr = EvaluationData(context->environment)->CurrentExpression->argList;
          argPtr != nullptr;
@@ -566,7 +566,7 @@ bool UDFNextArgument(
         UDFContext *context,
         unsigned expectedType,
         UDFValue *returnValue) {
-    struct expr *argPtr = context->lastArg;
+    Expression *argPtr = context->lastArg;
     unsigned int argumentPosition = context->lastPosition;
     const Environment&theEnv = context->environment;
 

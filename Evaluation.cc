@@ -148,9 +148,9 @@ static void DeallocateEvaluationData(
 /**************************************************************/
 bool EvaluateExpression(
         const Environment&theEnv,
-        struct expr *problem,
+        Expression *problem,
         UDFValue *returnValue) {
-    struct expr *oldArgument;
+    Expression *oldArgument;
     struct functionDefinition *fptr;
     UDFContext theUDFContext;
 #if PROFILING_FUNCTIONS
@@ -729,11 +729,11 @@ void TransferDataObjectValues(
 /*   is generated and the chain is linked by the nextArg field. For a   */
 /*   single field value, a single expression is created.                */
 /************************************************************************/
-struct expr *ConvertValueToExpression(
+Expression *ConvertValueToExpression(
         const Environment&theEnv,
         UDFValue *theValue) {
     size_t i;
-    struct expr *head = nullptr, *last = nullptr, *newItem;
+    Expression *head = nullptr, *last = nullptr, *newItem;
 
     if (theValue->header->type != MULTIFIELD_TYPE) { return (GenConstant(theEnv, theValue->header->type, theValue->value)); }
 
@@ -809,7 +809,7 @@ unsigned long GetAtomicHashValue(
 /*   name if it is the name of a deffunction, defgeneric,  */
 /*   or user/system defined function.                      */
 /***********************************************************/
-struct expr *FunctionReferenceExpression(
+Expression *FunctionReferenceExpression(
         const Environment&theEnv,
         const char *name) {
 #if DEFGENERIC_CONSTRUCT

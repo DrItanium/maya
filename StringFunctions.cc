@@ -725,7 +725,7 @@ EvalError Eval(
         const Environment&theEnv,
         const char *theString,
         CLIPSValue *returnValue) {
-    struct expr *top;
+    Expression *top;
     bool ov;
     static int depth = 0;
     char logicalNameBuffer[20];

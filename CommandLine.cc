@@ -821,7 +821,7 @@ bool RouteCommand(
         const char *command,
         bool printResult) {
     UDFValue returnValue;
-    struct expr *top;
+    Expression *top;
     const char *commandName;
     struct token theToken;
     int danglingConstructs;

@@ -1203,7 +1203,7 @@ static void UnlinkAlphaMemoryBucketSiblings(
 unsigned long ComputeRightHashValue(
         const Environment&theEnv,
         struct patternNodeHeader *theHeader) {
-    struct expr *tempExpr;
+    Expression *tempExpr;
     unsigned long hashValue = 0;
     unsigned long multiplier = 1;
     union {
@@ -1217,7 +1217,7 @@ unsigned long ComputeRightHashValue(
          tempExpr != nullptr;
          tempExpr = tempExpr->nextArg, multiplier = multiplier * 509) {
         UDFValue theResult;
-        struct expr *oldArgument;
+        Expression *oldArgument;
 
         oldArgument = EvaluationData(theEnv)->CurrentExpression;
         EvaluationData(theEnv)->CurrentExpression = tempExpr;

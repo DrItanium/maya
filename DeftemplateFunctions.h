@@ -83,9 +83,9 @@
 #include "Symbol.h"
 #include "Deftemplate.h"
 
-bool UpdateModifyDuplicate(const Environment&, struct expr *, const char *, void *);
-struct expr *ModifyParse(const Environment&, struct expr *, const char *);
-struct expr *DuplicateParse(const Environment&, struct expr *, const char *);
+bool UpdateModifyDuplicate(const Environment&, Expression *, const char *, void *);
+Expression *ModifyParse(const Environment&, Expression *, const char *);
+Expression *DuplicateParse(const Environment&, Expression *, const char *);
 void DeftemplateFunctions(const Environment&);
 void ModifyCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 void DuplicateCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);

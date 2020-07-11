@@ -62,17 +62,17 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static struct expr *ParseAssertSlotValues(const Environment&, const char *, struct token *, struct templateSlot *, bool *, bool);
-static struct expr *ReorderAssertSlotValues(const Environment&, struct templateSlot *, struct expr *, bool *);
-static struct expr *GetSlotAssertValues(const Environment&, struct templateSlot *, struct expr *, bool *);
-static struct expr *FindAssertSlotItem(templateSlot *, struct expr *);
+static Expression *ParseAssertSlotValues(const Environment&, const char *, struct token *, struct templateSlot *, bool *, bool);
+static Expression *ReorderAssertSlotValues(const Environment&, struct templateSlot *, Expression *, bool *);
+static Expression *GetSlotAssertValues(const Environment&, struct templateSlot *, Expression *, bool *);
+static Expression *FindAssertSlotItem(templateSlot *, Expression *);
 static struct templateSlot *ParseSlotLabel(const Environment&, const char *, struct token *, Deftemplate *, bool *, TokenType);
 
 /******************************************************************/
 /* ParseAssertTemplate: Parses and builds the list of values that */
 /*   are used for an assert of a fact with a deftemplate.         */
 /******************************************************************/
-struct expr *ParseAssertTemplate(
+Expression *ParseAssertTemplate(
         const Environment&theEnv,
         const char *readSource,
         struct token *theToken,
@@ -80,8 +80,8 @@ struct expr *ParseAssertTemplate(
         TokenType endType,
         bool constantsOnly,
         Deftemplate *theDeftemplate) {
-    struct expr *firstSlot, *lastSlot, *nextSlot = nullptr;
-    struct expr *firstArg, *tempSlot;
+    Expression *firstSlot, *lastSlot, *nextSlot = nullptr;
+    Expression *firstArg, *tempSlot;
     struct templateSlot *slotPtr;
 
     firstSlot = nullptr;
@@ -242,15 +242,15 @@ static struct templateSlot *ParseSlotLabel(
 /**************************************************************************/
 /* ParseAssertSlotValues: Gets a single assert slot value for a template. */
 /**************************************************************************/
-static struct expr *ParseAssertSlotValues(
+static Expression *ParseAssertSlotValues(
         const Environment&theEnv,
         const char *inputSource,
         struct token *tempToken,
         struct templateSlot *slotPtr,
         bool *error,
         bool constantsOnly) {
-    struct expr *nextSlot;
-    struct expr *newField, *valueList, *lastValue;
+    Expression *nextSlot;
+    Expression *newField, *valueList, *lastValue;
     bool printError;
 
     /*=============================*/
@@ -385,13 +385,13 @@ static struct expr *ParseAssertSlotValues(
 /* ReorderAssertSlotValues: Rearranges the asserted values to correspond */
 /*   to the order of the values described by the deftemplate.            */
 /*************************************************************************/
-static struct expr *ReorderAssertSlotValues(
+static Expression *ReorderAssertSlotValues(
         const Environment&theEnv,
         struct templateSlot *slotPtr,
-        struct expr *firstSlot,
+        Expression *firstSlot,
         bool *error) {
-    struct expr *firstArg = nullptr;
-    struct expr *lastArg = nullptr, *newArg;
+    Expression *firstArg = nullptr;
+    Expression *lastArg = nullptr, *newArg;
 
     /*=============================================*/
     /* Loop through each of the slots in the order */
@@ -440,13 +440,13 @@ static struct expr *ReorderAssertSlotValues(
 /*   it will be used. If not the default value or default      */
 /*   default value will be used.                               */
 /***************************************************************/
-static struct expr *GetSlotAssertValues(
+static Expression *GetSlotAssertValues(
         const Environment&theEnv,
         struct templateSlot *slotPtr,
-        struct expr *firstSlot,
+        Expression *firstSlot,
         bool *error) {
-    struct expr *slotItem;
-    struct expr *newArg, *tempArg;
+    Expression *slotItem;
+    Expression *newArg, *tempArg;
     UDFValue theDefault;
     const char *nullptrBitMap = "\0";
 
@@ -528,9 +528,9 @@ static struct expr *GetSlotAssertValues(
 /*******************************************************************/
 /* FindAssertSlotItem: Finds a particular slot in a list of slots. */
 /*******************************************************************/
-static struct expr *FindAssertSlotItem(
+static Expression *FindAssertSlotItem(
         struct templateSlot *slotPtr,
-        struct expr *listOfSlots) {
+        Expression *listOfSlots) {
     while (listOfSlots != nullptr) {
         if (listOfSlots->value == (void *) slotPtr->slotName) return (listOfSlots);
         listOfSlots = listOfSlots->nextArg;

@@ -454,7 +454,7 @@ bool SetWatchItem(
         const Environment&theEnv,
         const char *itemName,
         bool newState,
-        struct expr *argExprs) {
+        Expression *argExprs) {
     WatchItemRecord *wPtr;
 
     /*===================================================*/

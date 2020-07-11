@@ -219,10 +219,10 @@ void InitializeFactReteFunctions(
 /*   pattern network that compares a field from a single field or */
 /*   multifield slot against a constant.                          */
 /******************************************************************/
-struct expr *FactGenPNConstant(
+Expression *FactGenPNConstant(
         const Environment&theEnv,
         struct lhsParseNode *theField) {
-    struct expr *top;
+    Expression *top;
     ParseNodeType tempValue;
     struct factConstantPN1Call hack1;
     struct factConstantPN2Call hack2;
@@ -308,7 +308,7 @@ struct expr *FactGenPNConstant(
 /*   the fact pattern network that retrieves a value   */
 /*   from a single or multifield slot.                 */
 /*******************************************************/
-struct expr *FactGenGetfield(
+Expression *FactGenGetfield(
         const Environment&theEnv,
         struct lhsParseNode *theNode) {
     /*===================================================*/
@@ -350,7 +350,7 @@ struct expr *FactGenGetfield(
 /*   in the join network that retrieves a value   */
 /*   from a single or multifield slot of a fact.  */
 /**************************************************/
-struct expr *FactGenGetvar(
+Expression *FactGenGetvar(
         const Environment&theEnv,
         struct lhsParseNode *theNode,
         int side) {
@@ -394,7 +394,7 @@ struct expr *FactGenGetvar(
 /*   slot constraints (foo ?x a $? ?y) couldn't be matched    */
 /*   unless the foo slot contained at least 3 fields.         */
 /**************************************************************/
-struct expr *FactGenCheckLength(
+Expression *FactGenCheckLength(
         const Environment&theEnv,
         struct lhsParseNode *theNode) {
     struct factCheckLengthPNCall hack;
@@ -445,7 +445,7 @@ struct expr *FactGenCheckLength(
 /*   the fact pattern network that determines if the value of */
 /*   a multifield slot is a zero length multifield value.     */
 /**************************************************************/
-struct expr *FactGenCheckZeroLength(
+Expression *FactGenCheckZeroLength(
         const Environment&theEnv,
         unsigned short theSlot) {
     struct factCheckLengthPNCall hack;
@@ -466,7 +466,7 @@ struct expr *FactGenCheckZeroLength(
 /*********************************************************************/
 void FactReplaceGetvar(
         const Environment&theEnv,
-        struct expr *theItem,
+        Expression *theItem,
         struct lhsParseNode *theNode,
         int side) {
     /*====================================================*/
@@ -520,7 +520,7 @@ void FactReplaceGetvar(
 /***********************************************************************/
 void FactReplaceGetfield(
         const Environment&theEnv,
-        struct expr *theItem,
+        Expression *theItem,
         struct lhsParseNode *theNode) {
     /*====================================================*/
     /* Generate call to retrieve single field slot value. */
@@ -987,11 +987,11 @@ static void *FactGetVarPN3(
 /*   in the fact pattern network to compare two variables of */
 /*   the same name found in the same pattern.                */
 /*************************************************************/
-struct expr *FactPNVariableComparison(
+Expression *FactPNVariableComparison(
         const Environment&theEnv,
         struct lhsParseNode *selfNode,
         struct lhsParseNode *referringNode) {
-    struct expr *top;
+    Expression *top;
     struct factCompVarsPN1Call hack;
 
     /*===================================================*/
@@ -1048,12 +1048,12 @@ struct expr *FactPNVariableComparison(
 /*   use in the join network to compare two variables of */
 /*   the same name found in different patterns.          */
 /*********************************************************/
-struct expr *FactJNVariableComparison(
+Expression *FactJNVariableComparison(
         const Environment&theEnv,
         struct lhsParseNode *selfNode,
         struct lhsParseNode *referringNode,
         bool nandJoin) {
-    struct expr *top;
+    Expression *top;
     struct factCompVarsJN1Call hack1;
     struct factCompVarsJN2Call hack2;
     struct lhsParseNode *firstNode;

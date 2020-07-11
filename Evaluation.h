@@ -134,8 +134,8 @@ static_assert(!BitwiseTest(0b010, 2));
 
 constexpr auto EVALUATION_DATA = 44;
 
-struct evaluationData {
-    struct expr *CurrentExpression;
+struct evaluationData : public EnvironmentModule {
+    Expression *CurrentExpression;
     bool EvaluationError;
     bool HaltExecution;
     int CurrentEvaluationDepth;
@@ -143,11 +143,11 @@ struct evaluationData {
     EntityRecord *PrimitivesArray[MAXIMUM_PRIMITIVES];
     struct externalAddressType *ExternalAddressTypes[MAXIMUM_EXTERNAL_ADDRESS_TYPES];
 };
-
-#define EvaluationData(theEnv) ((evaluationData *) GetEnvironmentData(theEnv,EVALUATION_DATA))
+RegisterEnvironmentModule(evaluationData, EVALUATION_DATA);
+#define EvaluationData(theEnv) (GetEnvironmentData(theEnv,EVALUATION_DATA))
 
 void InitializeEvaluationData(const Environment&);
-bool EvaluateExpression(const Environment&, struct expr *, UDFValue *);
+bool EvaluateExpression(const Environment&, Expression *, UDFValue *);
 void SetEvaluationError(const Environment&, bool);
 bool GetEvaluationError(const Environment&);
 void SetHaltExecution(const Environment&, bool);
@@ -165,12 +165,12 @@ void RetainCV(const Environment&, CLIPSValue *);
 void ReleaseCV(const Environment&, CLIPSValue *);
 void RetainUDFV(const Environment&, UDFValue *);
 void ReleaseUDFV(const Environment&, UDFValue *);
-struct expr *ConvertValueToExpression(const Environment&, UDFValue *);
+Expression *ConvertValueToExpression(const Environment&, UDFValue *);
 unsigned long GetAtomicHashValue(unsigned short, void *, unsigned short);
 void InstallPrimitive(const Environment&, EntityRecord *, int);
 int InstallExternalAddressType(const Environment&, struct externalAddressType *);
 void TransferDataObjectValues(UDFValue *, UDFValue *);
-struct expr *FunctionReferenceExpression(const Environment&, const char *);
+Expression *FunctionReferenceExpression(const Environment&, const char *);
 bool GetFunctionReference(const Environment&, const char *, Expression *);
 bool DOsEqual(UDFValue *, UDFValue *);
 bool EvaluateAndStoreInDataObject(const Environment&, bool, Expression *, UDFValue *, bool);

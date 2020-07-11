@@ -86,7 +86,7 @@ void InitializeConstraints(
         const Environment&theEnv) {
     int i;
 
-    AllocateEnvironmentData(theEnv, CONSTRAINT_DATA, sizeof(constraintData), DeallocateConstraintData);
+    //AllocateEnvironmentData(theEnv, CONSTRAINT_DATA, sizeof(constraintData), DeallocateConstraintData);
 
     ConstraintData(theEnv)->ConstraintHashtable = (constraintRecord **)
             gm2(theEnv, sizeof(constraintRecord *) *
@@ -237,7 +237,7 @@ unsigned long HashConstraint(
     unsigned short i = 0;
     unsigned long count = 0;
     unsigned long hashValue;
-    struct expr *tmpPtr;
+    Expression *tmpPtr;
 
     count +=
             (theConstraint->getAnyAllowed() * 17) +
@@ -302,7 +302,7 @@ unsigned long HashConstraint(
 static bool ConstraintCompare(
         struct constraintRecord *constraint1,
         struct constraintRecord *constraint2) {
-    struct expr *tmpPtr1, *tmpPtr2;
+    Expression *tmpPtr1, *tmpPtr2;
 
     if ((constraint1->getAnyAllowed() != constraint2->getAnyAllowed()) ||
         (constraint1->getSymbolsAllowed()!= constraint2->getSymbolsAllowed()) ||
@@ -414,7 +414,7 @@ struct constraintRecord *AddConstraint(
 static void InstallConstraintRecord(
         const Environment&theEnv,
         CONSTRAINT_RECORD *constraints) {
-    struct expr *tempExpr;
+    Expression *tempExpr;
 
     tempExpr = AddHashedExpression(theEnv, constraints->getClassList());
     ReturnExpression(theEnv, constraints->getClassList());

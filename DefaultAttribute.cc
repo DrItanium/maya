@@ -206,7 +206,7 @@ static void *FindDefaultValue(
 /**********************************************/
 /* ParseDefault: Parses a default value list. */
 /**********************************************/
-struct expr *ParseDefault(
+Expression *ParseDefault(
         const Environment&theEnv,
         const char *readSource,
         bool multifield,
@@ -215,8 +215,8 @@ struct expr *ParseDefault(
         bool *noneSpecified,
         bool *deriveSpecified,
         bool *error) {
-    struct expr *defaultList = nullptr, *lastDefault = nullptr;
-    struct expr *newItem, *tmpItem;
+    Expression *defaultList = nullptr, *lastDefault = nullptr;
+    Expression *newItem, *tmpItem;
     struct token theToken;
     UDFValue theValue;
     CONSTRAINT_RECORD *rv;

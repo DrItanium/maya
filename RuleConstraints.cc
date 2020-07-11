@@ -65,7 +65,7 @@ static struct lhsParseNode *AddToVariableConstraints(const Environment&, struct 
                                                      struct lhsParseNode *);
 static void ConstraintConflictMessage(const Environment&, CLIPSLexeme *,
                                       unsigned short, unsigned short, CLIPSLexeme *);
-static bool CheckArgumentForConstraintError(const Environment&, struct expr *, struct expr *,
+static bool CheckArgumentForConstraintError(const Environment&, Expression *, Expression *,
                                             unsigned int, struct functionDefinition *,
                                             struct lhsParseNode *);
 
@@ -148,7 +148,7 @@ static bool MultifieldCardinalityViolation(
         const Environment&theEnv,
         struct lhsParseNode *theNode) {
     struct lhsParseNode *tmpNode;
-    struct expr *tmpMax;
+    Expression *tmpMax;
     long long minFields = 0;
     long long maxFields = 0;
     bool posInfinity = false;
@@ -263,7 +263,7 @@ bool ProcessConnectedConstraints(
     struct constraintRecord *orConstraints = nullptr, *andConstraints;
     struct constraintRecord *tmpConstraints, *rvConstraints;
     struct lhsParseNode *orNode, *andNode;
-    struct expr *tmpExpr;
+    Expression *tmpExpr;
 
     /*============================================*/
     /* Loop through all of the or (|) constraints */
@@ -387,7 +387,7 @@ void ConstraintReferenceErrorMessage(
         int whichCE,
         CLIPSLexeme *slotName,
         int theField) {
-    struct expr *temprv;
+    Expression *temprv;
 
     PrintErrorID(theEnv, "RULECSTR", 2, true);
 
@@ -652,11 +652,11 @@ struct lhsParseNode *DeriveVariableConstraints(
 /*******************************************/
 bool CheckRHSForConstraintErrors(
         const Environment&theEnv,
-        struct expr *expressionList,
+        Expression *expressionList,
         struct lhsParseNode *theLHS) {
     struct functionDefinition *theFunction;
     unsigned int i;
-    struct expr *lastOne = nullptr, *checkList, *tmpPtr;
+    Expression *lastOne = nullptr, *checkList, *tmpPtr;
 
     if (expressionList == nullptr) return false;
 
@@ -696,15 +696,15 @@ bool CheckRHSForConstraintErrors(
 /*************************************************************/
 static bool CheckArgumentForConstraintError(
         const Environment&theEnv,
-        struct expr *expressionList,
-        struct expr *lastOne,
+        Expression *expressionList,
+        Expression *lastOne,
         unsigned int i,
         struct functionDefinition *theFunction,
         struct lhsParseNode *theLHS) {
     unsigned theRestriction2;
     CONSTRAINT_RECORD *constraint1, *constraint2, *constraint3, *constraint4;
     struct lhsParseNode *theVariable;
-    struct expr *tmpPtr;
+    Expression *tmpPtr;
     bool rv = false;
 
     /*=============================================================*/

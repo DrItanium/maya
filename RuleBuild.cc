@@ -71,13 +71,13 @@
 /***************************************/
 
 static struct joinNode *FindShareableJoin(joinLink *, struct joinNode *, bool, void *, bool, bool,
-                                          bool, bool, struct expr *, struct expr *,
-                                          struct expr *, struct expr *);
+                                          bool, bool, Expression *, Expression *,
+                                          Expression *, Expression *);
 static bool TestJoinForReuse(joinNode *, bool, bool,
-                             bool, bool, struct expr *, struct expr *,
-                             struct expr *, struct expr *);
-static struct joinNode *CreateNewJoin(const Environment&, struct expr *, struct expr *, struct joinNode *, void *,
-                                      bool, bool, bool, struct expr *, struct expr *);
+                             bool, bool, Expression *, Expression *,
+                             Expression *, Expression *);
+static struct joinNode *CreateNewJoin(const Environment&, Expression *, Expression *, struct joinNode *, void *,
+                                      bool, bool, bool, Expression *, Expression *);
 
 /****************************************************************/
 /* ConstructJoins: Integrates a set of pattern and join tests   */
@@ -99,10 +99,10 @@ struct joinNode *ConstructJoins(
     struct joinNode *lastRightJoin;
     bool lastIteration = false;
     unsigned short rhsType;
-    struct expr *leftHash, *rightHash;
+    Expression *leftHash, *rightHash;
     void *rhsStruct;
     struct lhsParseNode *nextLHS;
-    struct expr *networkTest, *secondaryNetworkTest, *secondaryExternalTest;
+    Expression *networkTest, *secondaryNetworkTest, *secondaryExternalTest;
     bool joinFromTheRight;
     struct joinLink *theLinks;
     bool useLinks;
@@ -844,10 +844,10 @@ static struct joinNode *FindShareableJoin(
         bool negatedRHS,
         bool existsRHS,
         bool isLogical,
-        struct expr *joinTest,
-        struct expr *secondaryJoinTest,
-        struct expr *leftHash,
-        struct expr *rightHash) {
+        Expression *joinTest,
+        Expression *secondaryJoinTest,
+        Expression *leftHash,
+        Expression *rightHash) {
     /*========================================*/
     /* Loop through all of the joins in the   */
     /* list of potential candiates for reuse. */
@@ -907,10 +907,10 @@ static bool TestJoinForReuse(
         bool negatedRHS,
         bool existsRHS,
         bool isLogical,
-        struct expr *joinTest,
-        struct expr *secondaryJoinTest,
-        struct expr *leftHash,
-        struct expr *rightHash) {
+        Expression *joinTest,
+        Expression *secondaryJoinTest,
+        Expression *leftHash,
+        Expression *rightHash) {
     /*==================================================*/
     /* The first join of a rule may only be shared with */
     /* a join that has its firstJoin field set to true. */
@@ -973,15 +973,15 @@ static bool TestJoinForReuse(
 /*************************************************************************/
 static struct joinNode *CreateNewJoin(
         const Environment&theEnv,
-        struct expr *joinTest,
-        struct expr *secondaryJoinTest,
+        Expression *joinTest,
+        Expression *secondaryJoinTest,
         struct joinNode *lhsEntryStruct,
         void *rhsEntryStruct,
         bool joinFromTheRight,
         bool negatedRHSPattern,
         bool existsRHSPattern,
-        struct expr *leftHash,
-        struct expr *rightHash) {
+        Expression *leftHash,
+        Expression *rightHash) {
     struct joinNode *newJoin;
     struct joinLink *theLink;
 

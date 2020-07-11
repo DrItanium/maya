@@ -102,7 +102,7 @@ void EqFunction(
         UDFValue *returnValue) {
     UDFValue item, nextItem;
     unsigned int numArgs, i;
-    struct expr *theExpression;
+    Expression *theExpression;
 
     /*====================================*/
     /* Determine the number of arguments. */
@@ -167,7 +167,7 @@ void NeqFunction(
         UDFValue *returnValue) {
     UDFValue item, nextItem;
     unsigned int numArgs, i;
-    struct expr *theExpression;
+    Expression *theExpression;
 
     /*====================================*/
     /* Determine the number of arguments. */

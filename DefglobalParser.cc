@@ -80,7 +80,7 @@
 /***************************************/
 
 static bool GetVariableDefinition(const Environment&, const char *, bool *, bool, struct token *);
-static void AddDefglobal(const Environment&, CLIPSLexeme *, UDFValue *, struct expr *);
+static void AddDefglobal(const Environment&, CLIPSLexeme *, UDFValue *, Expression *);
 
 /*********************************************************************/
 /* ParseDefglobal: Coordinates all actions necessary for the parsing */
@@ -204,7 +204,7 @@ static bool GetVariableDefinition(
         bool tokenRead,
         struct token *theToken) {
     CLIPSLexeme *variableName;
-    struct expr *assignPtr;
+    Expression *assignPtr;
     UDFValue assignValue;
 
     /*========================================*/
@@ -318,7 +318,7 @@ static void AddDefglobal(
         const Environment&theEnv,
         CLIPSLexeme *name,
         UDFValue *vPtr,
-        struct expr *ePtr) {
+        Expression *ePtr) {
     Defglobal *defglobalPtr;
     bool newGlobal = false;
 #if DEBUGGING_FUNCTIONS
@@ -420,7 +420,7 @@ static void AddDefglobal(
 /*****************************************************************/
 bool ReplaceGlobalVariable(
         const Environment&theEnv,
-        struct expr *ePtr) {
+        Expression *ePtr) {
     Defglobal *theGlobal;
     unsigned int count;
 

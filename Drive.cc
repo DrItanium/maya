@@ -537,7 +537,7 @@ void NetworkAssertLeft(
 /*******************************************************/
 bool EvaluateJoinExpression(
         const Environment&theEnv,
-        struct expr *joinExpr,
+        Expression *joinExpr,
         struct joinNode *joinPtr) {
     UDFValue theResult;
     bool andLogic, result = true;
@@ -578,7 +578,7 @@ bool EvaluateJoinExpression(
         if ((EvaluationData(theEnv)->PrimitivesArray[joinExpr->type] == nullptr) ?
             false :
             EvaluationData(theEnv)->PrimitivesArray[joinExpr->type]->evaluateFunction != nullptr) {
-            struct expr *oldArgument;
+            Expression *oldArgument;
 
             oldArgument = EvaluationData(theEnv)->CurrentExpression;
             EvaluationData(theEnv)->CurrentExpression = joinExpr;
@@ -686,7 +686,7 @@ bool EvaluateSecondaryNetworkTest(
 /************************/
 unsigned long BetaMemoryHashValue(
         const Environment&theEnv,
-        struct expr *hashExpr,
+        Expression *hashExpr,
         struct partialMatch *lbinds,
         struct partialMatch *rbinds,
         struct joinNode *joinPtr) {
@@ -732,7 +732,7 @@ unsigned long BetaMemoryHashValue(
         if ((EvaluationData(theEnv)->PrimitivesArray[hashExpr->type] == nullptr) ?
             false :
             EvaluationData(theEnv)->PrimitivesArray[hashExpr->type]->evaluateFunction != nullptr) {
-            struct expr *oldArgument;
+            Expression *oldArgument;
 
             oldArgument = EvaluationData(theEnv)->CurrentExpression;
             EvaluationData(theEnv)->CurrentExpression = hashExpr;

@@ -71,14 +71,14 @@ enum ConstraintViolationType {
 bool CheckCardinalityConstraint(const Environment&, size_t, CONSTRAINT_RECORD *);
 bool CheckAllowedValuesConstraint(int, void *, CONSTRAINT_RECORD *);
 bool CheckAllowedClassesConstraint(const Environment&, int, void *, CONSTRAINT_RECORD *);
-ConstraintViolationType ConstraintCheckExpressionChain(const Environment&, struct expr *,
+ConstraintViolationType ConstraintCheckExpressionChain(const Environment&, Expression *,
                                                        CONSTRAINT_RECORD *);
 void ConstraintViolationErrorMessage(const Environment&, const char *, const char *, bool,
                                      unsigned short, CLIPSLexeme *, unsigned short,
                                      ConstraintViolationType, CONSTRAINT_RECORD *, bool);
 ConstraintViolationType ConstraintCheckValue(const Environment&, int, void *, CONSTRAINT_RECORD *);
 ConstraintViolationType ConstraintCheckDataObject(const Environment&, UDFValue *, CONSTRAINT_RECORD *);
-ConstraintViolationType ConstraintCheckExpression(const Environment&, struct expr *,
+ConstraintViolationType ConstraintCheckExpression(const Environment&, Expression *,
                                                   CONSTRAINT_RECORD *);
 bool UnmatchableConstraint(constraintRecord *);
 

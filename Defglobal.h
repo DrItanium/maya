@@ -94,7 +94,7 @@ struct defglobal {
     bool inScope: 1;
     long busyCount;
     CLIPSValue current;
-    struct expr *initial;
+    Expression *initial;
 };
 
 struct defglobalModule {

@@ -991,7 +991,7 @@ static struct lhsParseNode *LiteralRestrictionParse(
         struct token *theToken,
         bool *error) {
     struct lhsParseNode *topNode;
-    struct expr *theExpression;
+    Expression *theExpression;
 
     /*============================================*/
     /* Create a node to represent the constraint. */

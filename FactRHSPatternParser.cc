@@ -92,7 +92,7 @@ static void NoSuchTemplateError(const Environment&, const char *);
 /*   there is more than one assert command, then a progn command is   */
 /*   wrapped around all of the assert commands.                       */
 /**********************************************************************/
-struct expr *BuildRHSAssert(
+Expression *BuildRHSAssert(
         const Environment&theEnv,
         const char *logicalName,
         struct token *theToken,
@@ -100,7 +100,7 @@ struct expr *BuildRHSAssert(
         bool atLeastOne,
         bool readFirstParen,
         const char *whereParsed) {
-    struct expr *lastOne, *nextOne, *assertList, *stub;
+    Expression *lastOne, *nextOne, *assertList, *stub;
 
     *error = false;
 
@@ -199,7 +199,7 @@ struct expr *BuildRHSAssert(
 /*   for no more facts is the first token parsed). If an error */
 /*   occurs, then the error flag passed as an argument is set. */
 /***************************************************************/
-struct expr *GetRHSPattern(
+Expression *GetRHSPattern(
         const Environment&theEnv,
         const char *readSource,
         struct token *tempToken,
@@ -208,8 +208,8 @@ struct expr *GetRHSPattern(
         bool readFirstParen,
         bool checkFirstParen,
         TokenType endType) {
-    struct expr *lastOne = nullptr;
-    struct expr *nextOne, *firstOne, *argHead = nullptr;
+    Expression *lastOne = nullptr;
+    Expression *nextOne, *firstOne, *argHead = nullptr;
     bool printError;
     unsigned int count;
     Deftemplate *theDeftemplate;
@@ -396,7 +396,7 @@ struct expr *GetRHSPattern(
 /*   encountered. In the event of a parse error, the error flag     */
 /*   passed as an argument is set.                                  */
 /********************************************************************/
-struct expr *GetAssertArgument(
+Expression *GetAssertArgument(
         const Environment&theEnv,
         const char *logicalName,
         struct token *theToken,
@@ -404,7 +404,7 @@ struct expr *GetAssertArgument(
         TokenType endType,
         bool constantsOnly,
         bool *printError) {
-    struct expr *nextField;
+    Expression *nextField;
 
     /*=================================================*/
     /* Read in the first token of the slot's value. If */
@@ -497,7 +497,7 @@ Fact *StringToFact(
     struct token theToken;
     Fact *factPtr;
     unsigned numberOfFields = 0, whichField;
-    struct expr *assertArgs, *tempPtr;
+    Expression *assertArgs, *tempPtr;
     bool error = false;
     UDFValue theResult;
 

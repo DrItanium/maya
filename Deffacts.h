@@ -69,7 +69,7 @@ struct deffactsData {
 
 struct deffacts {
     ConstructHeader header;
-    struct expr *assertList;
+    Expression *assertList;
 };
 
 struct deffactsModule {

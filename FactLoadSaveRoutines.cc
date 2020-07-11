@@ -77,8 +77,8 @@ constexpr auto MAX_BLOCK_SIZE = 10240;
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static struct expr *StandardLoadFact(const Environment&, const char *, struct token *);
-static Deftemplate **GetSaveFactsDeftemplateNames(const Environment&, const char *, struct expr *, SaveScope,
+static Expression *StandardLoadFact(const Environment&, const char *, struct token *);
+static Deftemplate **GetSaveFactsDeftemplateNames(const Environment&, const char *, Expression *, SaveScope,
                                                   unsigned int *, bool *);
 
 static bool VerifyBinaryHeader(const Environment&, const char *);
@@ -122,7 +122,7 @@ void SaveFactsCommand(
     SaveScope saveCode = LOCAL_SAVE;
     const char *argument;
     UDFValue theValue;
-    struct expr *theList = nullptr;
+    Expression *theList = nullptr;
     long factCount = 0;
 
     /*============================================*/
@@ -196,7 +196,7 @@ long SaveFactsDriver(
         const Environment&theEnv,
         const char *fileName,
         SaveScope saveCode,
-        struct expr *theList) {
+        Expression *theList) {
     bool tempValue1, tempValue2, tempValue3;
     Fact *theFact;
     FILE *filePtr;
@@ -334,11 +334,11 @@ long SaveFactsDriver(
 static Deftemplate **GetSaveFactsDeftemplateNames(
         const Environment&theEnv,
         const char *functionName,
-        struct expr *theList,
+        Expression *theList,
         SaveScope saveCode,
         unsigned int *count,
         bool *error) {
-    struct expr *tempList;
+    Expression *tempList;
     Deftemplate **deftemplateArray;
     UDFValue tempArg;
     unsigned int i, tempCount;
@@ -483,7 +483,7 @@ long LoadFacts(
         const char *fileName) {
     FILE *filePtr;
     struct token theToken;
-    struct expr *testPtr;
+    Expression *testPtr;
     UDFValue rv;
     int danglingConstructs;
     GCBlock gcb;
@@ -575,7 +575,7 @@ long LoadFactsFromString(
         size_t theMax) {
     const char *theStrRouter = "*** load-facts-from-string ***";
     struct token theToken;
-    struct expr *testPtr;
+    Expression *testPtr;
     UDFValue rv;
     long factCount = 0;
 
@@ -625,12 +625,12 @@ long LoadFactsFromString(
 /**************************************************************************/
 /* StandardLoadFact: Loads a single fact from the specified logical name. */
 /**************************************************************************/
-static struct expr *StandardLoadFact(
+static Expression *StandardLoadFact(
         const Environment&theEnv,
         const char *logicalName,
         struct token *theToken) {
     bool error = false;
-    struct expr *temp;
+    Expression *temp;
 
     GetToken(theEnv, logicalName, theToken);
     if (theToken->tknType != LEFT_PARENTHESIS_TOKEN) return nullptr;
@@ -1064,7 +1064,7 @@ void BinarySaveFactsCommand(
     SaveScope saveCode = LOCAL_SAVE;
     const char *argument;
     UDFValue theValue;
-    struct expr *theList = nullptr;
+    Expression *theList = nullptr;
     long factCount;
 
     /*============================================*/

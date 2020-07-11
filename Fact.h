@@ -133,7 +133,7 @@ struct factsData {
     FactModifierError factModifierError;
     FactBuilderError factBuilderError;
 };
-
+RegisterEnvironmentModule(factsData, FACTS_DATA);
 #define FactData(theEnv) ((factsData *) GetEnvironmentData(theEnv,FACTS_DATA))
 
 Fact *Assert(Fact *);
@@ -295,9 +295,9 @@ bool FactPNConstant2(const Environment&, void *, UDFValue *);
 bool FactStoreMultifield(const Environment&, void *, UDFValue *);
 size_t AdjustFieldPosition(const Environment&, struct multifieldMarker *,
                            unsigned short, unsigned short, size_t *);
-struct expr *BuildRHSAssert(const Environment&, const char *, struct token *, bool *, bool, bool, const char *);
-struct expr *GetAssertArgument(const Environment&, const char *, struct token *, bool *, TokenType, bool, bool *);
-struct expr *GetRHSPattern(const Environment&, const char *, struct token *, bool *, bool,
+Expression *BuildRHSAssert(const Environment&, const char *, struct token *, bool *, bool, bool, const char *);
+Expression *GetAssertArgument(const Environment&, const char *, struct token *, bool *, TokenType, bool, bool *);
+Expression *GetRHSPattern(const Environment&, const char *, struct token *, bool *, bool,
                            bool, bool, TokenType);
 Fact *StringToFact(const Environment&, const char *);
 
@@ -341,7 +341,7 @@ struct FactPatternNode {
     unsigned short whichField; // TBD seems to be 1 based rather than 0 based
     unsigned short whichSlot;
     unsigned short leaveFields;
-    expr *networkTest;
+    Expression *networkTest;
     FactPatternNode *nextLevel;
     FactPatternNode *lastLevel;
     FactPatternNode *leftNode;
@@ -368,7 +368,7 @@ void FactFileCommandDefinitions(const Environment&);
 void SaveFactsCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 void LoadFactsCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 long SaveFacts(const Environment&, const char *, SaveScope);
-long SaveFactsDriver(const Environment&, const char *, SaveScope, struct expr *);
+long SaveFactsDriver(const Environment&, const char *, SaveScope, Expression *);
 long LoadFacts(const Environment&, const char *);
 long LoadFactsFromString(const Environment&, const char *, size_t);
 void BinarySaveFactsCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
@@ -540,17 +540,17 @@ struct factCheckLengthPNCall {
 /****************************************/
 
 void InitializeFactReteFunctions(const Environment&);
-struct expr *FactPNVariableComparison(const Environment&, struct lhsParseNode *,
+Expression *FactPNVariableComparison(const Environment&, struct lhsParseNode *,
                                       struct lhsParseNode *);
-struct expr *FactJNVariableComparison(const Environment&, struct lhsParseNode *,
+Expression *FactJNVariableComparison(const Environment&, struct lhsParseNode *,
                                       struct lhsParseNode *, bool);
-void FactReplaceGetvar(const Environment&, struct expr *, struct lhsParseNode *, int);
-void FactReplaceGetfield(const Environment&, struct expr *, struct lhsParseNode *);
-struct expr *FactGenPNConstant(const Environment&, struct lhsParseNode *);
-struct expr *FactGenGetfield(const Environment&, struct lhsParseNode *);
-struct expr *FactGenGetvar(const Environment&, struct lhsParseNode *, int);
-struct expr *FactGenCheckLength(const Environment&, struct lhsParseNode *);
-struct expr *FactGenCheckZeroLength(const Environment&, unsigned short);
+void FactReplaceGetvar(const Environment&, Expression *, struct lhsParseNode *, int);
+void FactReplaceGetfield(const Environment&, Expression *, struct lhsParseNode *);
+Expression *FactGenPNConstant(const Environment&, struct lhsParseNode *);
+Expression *FactGenGetfield(const Environment&, struct lhsParseNode *);
+Expression *FactGenGetvar(const Environment&, struct lhsParseNode *, int);
+Expression *FactGenCheckLength(const Environment&, struct lhsParseNode *);
+Expression *FactGenCheckZeroLength(const Environment&, unsigned short);
 void FactRelationFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 CLIPSLexeme *FactRelation(Fact *);
 Deftemplate *FactDeftemplate(Fact *);

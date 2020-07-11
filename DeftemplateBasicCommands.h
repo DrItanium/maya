@@ -78,8 +78,8 @@ void ListDeftemplatesCommand(const Environment&theEnv, UDFContext *context, UDFV
 void ListDeftemplates(const Environment&, const char *, Defmodule *);
 bool DeftemplateGetWatch(Deftemplate *);
 void DeftemplateSetWatch(Deftemplate *, bool);
-bool DeftemplateWatchAccess(const Environment&, int, bool, struct expr *);
-bool DeftemplateWatchPrint(const Environment&, const char *, int, struct expr *);
+bool DeftemplateWatchAccess(const Environment&, int, bool, Expression *);
+bool DeftemplateWatchPrint(const Environment&, const char *, int, Expression *);
 #endif
 
 #endif /* _H_tmpltbsc */

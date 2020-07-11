@@ -64,7 +64,7 @@
 /************************************/
 bool CheckArgumentAgainstRestriction(
         const Environment&theEnv,
-        struct expr *theExpression,
+        Expression *theExpression,
         unsigned theRestriction) {
     CONSTRAINT_RECORD *cr1, *cr2, *cr3;
 
@@ -116,7 +116,7 @@ bool CheckArgumentAgainstRestriction(
 /*   is a constant, otherwise false.                  */
 /******************************************************/
 bool ConstantExpression(
-        struct expr *testPtr) {
+        Expression *testPtr) {
     while (testPtr != nullptr) {
         if ((testPtr->type != SYMBOL_TYPE) && (testPtr->type != STRING_TYPE) &&
             (testPtr->type != INSTANCE_NAME_TYPE) && (testPtr->type != INSTANCE_ADDRESS_TYPE) &&
@@ -151,8 +151,8 @@ bool ConstantType(
 /*   true if the expressions are identical, otherwise false is returned.     */
 /*****************************************************************************/
 bool IdenticalExpression(
-        struct expr *firstList,
-        struct expr *secondList) {
+        Expression *firstList,
+        Expression *secondList) {
     /*==============================================*/
     /* Compare each argument in both expressions by */
     /* following the nextArg list.                  */
@@ -197,7 +197,7 @@ bool IdenticalExpression(
 /*   pointer.                                       */
 /****************************************************/
 unsigned short CountArguments(
-        struct expr *testPtr) {
+        Expression *testPtr) {
     unsigned short size = 0;
 
     while (testPtr != nullptr) {
@@ -211,10 +211,10 @@ unsigned short CountArguments(
 /******************************************/
 /* CopyExpresssion: Copies an expression. */
 /******************************************/
-struct expr *CopyExpression(
+Expression *CopyExpression(
         const Environment&theEnv,
-        struct expr *original) {
-    struct expr *topLevel, *next, *last;
+        Expression *original) {
+    Expression *topLevel, *next, *last;
 
     if (original == nullptr) return nullptr;
 
@@ -241,7 +241,7 @@ struct expr *CopyExpression(
 /*   contains any variables, otherwise false is returned.   */
 /************************************************************/
 bool ExpressionContainsVariables(
-        struct expr *theExpression,
+        Expression *theExpression,
         bool globalsAreVariables) {
     while (theExpression != nullptr) {
         if (theExpression->argList != nullptr) {
@@ -265,7 +265,7 @@ bool ExpressionContainsVariables(
 /*   structures stored in an expression. */
 /*****************************************/
 unsigned long ExpressionSize(
-        struct expr *testPtr) {
+        Expression *testPtr) {
     unsigned long size = 0;
 
     while (testPtr != nullptr) {
@@ -280,11 +280,11 @@ unsigned long ExpressionSize(
 /* GenConstant: Generates a constant expression */
 /*   value of type string, symbol, or number.   */
 /************************************************/
-struct expr *GenConstant(
+Expression *GenConstant(
         const Environment&theEnv,
         unsigned short type,
         void *value) {
-    struct expr *top;
+    Expression *top;
 
     top = get_struct(theEnv, expr);
     top->nextArg = nullptr;
@@ -301,8 +301,8 @@ struct expr *GenConstant(
 void PrintExpression(
         const Environment&theEnv,
         const char *fileid,
-        struct expr *theExpression) {
-    struct expr *oldExpression;
+        Expression *theExpression) {
+    Expression *oldExpression;
 
     if (theExpression == nullptr) { return; }
 
@@ -351,11 +351,11 @@ void PrintExpression(
 /*   is more efficient to add the arguments of one of the "and"          */
 /*   expressions to the list of arguments for the other and expression). */
 /*************************************************************************/
-struct expr *CombineExpressions(
+Expression *CombineExpressions(
         const Environment&theEnv,
-        struct expr *expr1,
-        struct expr *expr2) {
-    struct expr *tempPtr;
+        Expression *expr1,
+        Expression *expr2) {
+    Expression *tempPtr;
 
     /*===========================================================*/
     /* If the 1st expression is nullptr, return the 2nd expression. */
@@ -446,10 +446,10 @@ struct expr *CombineExpressions(
 /*********************/
 /* NegateExpression: */
 /*********************/
-struct expr *NegateExpression(
+Expression *NegateExpression(
         const Environment&theEnv,
-        struct expr *theExpression) {
-    struct expr *tempPtr;
+        Expression *theExpression) {
+    Expression *tempPtr;
 
     /*=========================================*/
     /* If the expression is nullptr, return nullptr. */
@@ -482,10 +482,10 @@ struct expr *NegateExpression(
 /* AppendExpressions: Attaches an expression to the end */
 /*   of another expression's nextArg list.              */
 /********************************************************/
-struct expr *AppendExpressions(
-        struct expr *expr1,
-        struct expr *expr2) {
-    struct expr *tempPtr;
+Expression *AppendExpressions(
+        Expression *expr1,
+        Expression *expr2) {
+    Expression *tempPtr;
 
     /*===========================================================*/
     /* If the 1st expression is nullptr, return the 2nd expression. */

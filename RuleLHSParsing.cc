@@ -215,7 +215,7 @@ static void DeclarationParse(
         const char *ruleName,
         bool *error) {
     struct token theToken;
-    struct expr *packPtr;
+    Expression *packPtr;
     bool notDone = true;
     bool salienceParsed = false, autoFocusParsed = false;
 
@@ -892,7 +892,7 @@ static struct lhsParseNode *TestPattern(
         bool *error) {
     struct lhsParseNode *theNode;
     struct token theToken;
-    struct expr *theExpression;
+    Expression *theExpression;
 
     /*================================================*/
     /* Create the data specification for the test CE. */

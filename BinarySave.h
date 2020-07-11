@@ -95,14 +95,14 @@ struct bsaveData {
     BLOADCNTSV *BloadCountSaveTop;
 #endif
 };
-
-#define BsaveData(theEnv) ((bsaveData *) GetEnvironmentData(theEnv,BSAVE_DATA))
+RegisterEnvironmentModule(bsaveData, BSAVE_DATA);
+#define BsaveData(theEnv) (GetEnvironmentData(theEnv,BSAVE_DATA))
 
 void InitializeBsaveData(const Environment&);
 void BsaveCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 #if BLOAD_AND_BSAVE
 bool Bsave(const Environment&, const char *);
-void MarkNeededItems(const Environment&, struct expr *);
+void MarkNeededItems(const Environment&, Expression *);
 void SaveBloadCount(const Environment&, unsigned long);
 void RestoreBloadCount(const Environment&, unsigned long *);
 #endif

@@ -138,8 +138,9 @@ struct defclassData {
     ClassDefaultsMode ClassDefaultsModeValue;
     int newSlotID;
 };
+RegisterEnvironmentModule(defclassData, DEFCLASS_DATA);
 
-#define DefclassData(theEnv) ((defclassData *) GetEnvironmentData(theEnv,DEFCLASS_DATA))
+#define DefclassData(theEnv) (GetEnvironmentData(theEnv,DEFCLASS_DATA))
 
 #endif
 

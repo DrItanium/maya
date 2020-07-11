@@ -158,7 +158,7 @@ struct symbolMatch {
 
 constexpr auto SYMBOL_DATA = 49;
 
-struct symbolData {
+struct symbolData : public EnvironmentModule {
     CLIPSLexeme *PositiveInfinity;
     CLIPSLexeme *NegativeInfinity;
     CLIPSInteger *Zero;
@@ -180,8 +180,8 @@ struct symbolData {
     CLIPSExternalAddress **ExternalAddressArray;
 #endif
 };
-
-#define SymbolData(theEnv) ((symbolData *) GetEnvironmentData(theEnv,SYMBOL_DATA))
+RegisterEnvironmentModule(symbolData, SYMBOL_DATA);
+#define SymbolData(theEnv) (GetEnvironmentData(theEnv,SYMBOL_DATA))
 
 void InitializeAtomTables(const Environment&, CLIPSLexeme **, CLIPSFloat **,
                           CLIPSInteger **, CLIPSBitMap **,

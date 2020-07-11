@@ -70,7 +70,7 @@ bool ParseDeffacts(
         const Environment&theEnv,
         const char *readSource) {
     CLIPSLexeme *deffactsName;
-    struct expr *temp;
+    Expression *temp;
     Deffacts *newDeffacts;
     bool deffactsError;
     struct token inputToken;

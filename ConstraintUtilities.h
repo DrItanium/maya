@@ -46,7 +46,7 @@ bool SetConstraintType(int, CONSTRAINT_RECORD *);
 void SetAnyAllowedFlags(CONSTRAINT_RECORD *, bool);
 void SetAnyRestrictionFlags(CONSTRAINT_RECORD *, bool);
 CONSTRAINT_RECORD *FunctionCallToConstraintRecord(const Environment&, void *);
-CONSTRAINT_RECORD *ExpressionToConstraintRecord(const Environment&, struct expr *);
+CONSTRAINT_RECORD *ExpressionToConstraintRecord(const Environment&, Expression *);
 CONSTRAINT_RECORD *ArgumentTypeToConstraintRecord(const Environment&, unsigned);
 
 #endif /* _H_cstrnutl */

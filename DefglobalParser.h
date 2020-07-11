@@ -50,7 +50,7 @@
 #include "Expression.h"
 
 bool ParseDefglobal(const Environment&, const char *);
-bool ReplaceGlobalVariable(const Environment&, struct expr *);
+bool ReplaceGlobalVariable(const Environment&, Expression *);
 void GlobalReferenceErrorMessage(const Environment&, const char *);
 
 #endif /* _H_globlpsr */

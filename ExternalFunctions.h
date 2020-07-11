@@ -66,7 +66,7 @@
 #include "UserData.h"
 
 typedef void UserDefinedFunction(const Environment& theEnv, UDFContext *context, UDFValue *ret);
-typedef struct expr* UserDefinedFunctionParser(const Environment&, struct expr*, const char*);
+typedef Expression* UserDefinedFunctionParser(const Environment&, Expression*, const char*);
 
 struct functionDefinition {
     CLIPSLexeme *callFunctionName;
@@ -122,7 +122,7 @@ void InitializeExternalFunctionData(const Environment&);
 AddUDFError AddUDF(const Environment&theEnv, const char *name, const char *returnTypes, unsigned short minArgs, unsigned short maxArgs,
                    const char *argumentTypes, UserDefinedFunction *cFunctionPointer, void *context = nullptr);
 bool AddFunctionParser(const Environment&, const char *,
-                       struct expr *(*)(const Environment&, struct expr *, const char *));
+                       Expression *(*)(const Environment&, Expression *, const char *));
 bool RemoveFunctionParser(const Environment&, const char *);
 bool FuncSeqOvlFlags(const Environment&, const char *, bool, bool);
 struct functionDefinition *GetFunctionList(const Environment&);

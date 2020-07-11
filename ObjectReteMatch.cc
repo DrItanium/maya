@@ -1108,7 +1108,7 @@ static bool EvaluateObjectPatternTest(
     if (networkTest == nullptr) return true;
 
     if (networkTest->type == OBJ_PN_CONSTANT) {
-        struct expr *oldArgument;
+        Expression *oldArgument;
 
         oldArgument = EvaluationData(theEnv)->CurrentExpression;
         EvaluationData(theEnv)->CurrentExpression = networkTest;

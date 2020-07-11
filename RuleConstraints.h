@@ -47,7 +47,7 @@ void ConstraintReferenceErrorMessage(const Environment&,
                                      int, int,
                                      CLIPSLexeme *,
                                      int);
-bool CheckRHSForConstraintErrors(const Environment&, struct expr *, struct lhsParseNode *);
+bool CheckRHSForConstraintErrors(const Environment&, Expression *, struct lhsParseNode *);
 
 #endif /* _H_rulecstr */
 

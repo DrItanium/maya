@@ -65,19 +65,19 @@ static void IntersectAllowedClassExpressions(const Environment&,
                                              CONSTRAINT_RECORD *,
                                              CONSTRAINT_RECORD *,
                                              CONSTRAINT_RECORD *);
-static bool FindItemInExpression(int, void *, bool, struct expr *);
+static bool FindItemInExpression(int, void *, bool, Expression *);
 static void UpdateRestrictionFlags(CONSTRAINT_RECORD *);
 static void UnionRangeMinMaxValueWithList(const Environment&,
-                                          struct expr *,
-                                          struct expr *,
-                                          struct expr **,
-                                          struct expr **);
+                                          Expression *,
+                                          Expression *,
+                                          Expression **,
+                                          Expression **);
 static void UnionNumericExpressions(const Environment&,
                                     CONSTRAINT_RECORD *,
                                     CONSTRAINT_RECORD *,
                                     CONSTRAINT_RECORD *, bool);
-static struct expr *AddToUnionList(const Environment&,
-                                   struct expr *, struct expr *,
+static Expression *AddToUnionList(const Environment&,
+                                   Expression *, Expression *,
                                    CONSTRAINT_RECORD *);
 static void UnionAllowedValueExpressions(const Environment&,
                                          CONSTRAINT_RECORD *,
@@ -227,8 +227,8 @@ static void IntersectAllowedValueExpressions(
         CONSTRAINT_RECORD *constraint1,
         CONSTRAINT_RECORD *constraint2,
         CONSTRAINT_RECORD *newConstraint) {
-    struct expr *theList1, *theList2;
-    struct expr *theHead = nullptr, *tmpExpr;
+    Expression *theList1, *theList2;
+    Expression *theHead = nullptr, *tmpExpr;
 
     /*===========================================*/
     /* Loop through each value in allowed-values */
@@ -285,8 +285,8 @@ static void IntersectAllowedClassExpressions(
         CONSTRAINT_RECORD *constraint1,
         CONSTRAINT_RECORD *constraint2,
         CONSTRAINT_RECORD *newConstraint) {
-    struct expr *theList1, *theList2;
-    struct expr *theHead = nullptr, *tmpExpr;
+    Expression *theList1, *theList2;
+    Expression *theHead = nullptr, *tmpExpr;
 
     /*============================================*/
     /* Loop through each value in allowed-classes */
@@ -344,8 +344,8 @@ static void IntersectNumericExpressions(
         CONSTRAINT_RECORD *constraint2,
         CONSTRAINT_RECORD *newConstraint,
         bool range) {
-    struct expr *tmpmin1, *tmpmax1, *tmpmin2, *tmpmax2, *theMin, *theMax;
-    struct expr *theMinList, *theMaxList, *lastMin = nullptr, *lastMax = nullptr;
+    Expression *tmpmin1, *tmpmax1, *tmpmin2, *tmpmax2, *theMin, *theMax;
+    Expression *theMinList, *theMaxList, *lastMin = nullptr, *lastMax = nullptr;
     int cmaxmax, cminmin, cmaxmin, cminmax;
 
     /*==========================================*/
@@ -545,7 +545,7 @@ static bool FindItemInExpression(
         int theType,
         void *theValue,
         bool useValue,
-        struct expr *theList) {
+        Expression *theList) {
     while (theList != nullptr) {
         if (theList->type == theType) {
             if (!useValue) return true;
@@ -699,8 +699,8 @@ static void UnionNumericExpressions(
         CONSTRAINT_RECORD *constraint2,
         CONSTRAINT_RECORD *newConstraint,
         bool range) {
-    struct expr *tmpmin, *tmpmax;
-    struct expr *theMinList, *theMaxList;
+    Expression *tmpmin, *tmpmax;
+    Expression *theMinList, *theMaxList;
 
     /*=========================================*/
     /* Initialize the new range/min/max values */
@@ -803,12 +803,12 @@ static void UnionNumericExpressions(
 /*********************************************************/
 static void UnionRangeMinMaxValueWithList(
         const Environment&theEnv,
-        struct expr *addmin,
-        struct expr *addmax,
-        struct expr **theMinList,
-        struct expr **theMaxList) {
-    struct expr *tmpmin, *tmpmax, *lastmin, *lastmax;
-    struct expr *themin, *themax, *nextmin, *nextmax;
+        Expression *addmin,
+        Expression *addmax,
+        Expression **theMinList,
+        Expression **theMaxList) {
+    Expression *tmpmin, *tmpmax, *lastmin, *lastmax;
+    Expression *themin, *themax, *nextmin, *nextmax;
     int cmaxmin, cmaxmax, cminmin, cminmax;
 
     /*=========================================================*/
@@ -945,7 +945,7 @@ static void UnionAllowedClassExpressions(
         CONSTRAINT_RECORD *constraint1,
         CONSTRAINT_RECORD *constraint2,
         CONSTRAINT_RECORD *newConstraint) {
-    struct expr *theHead = nullptr;
+    Expression *theHead = nullptr;
 
     theHead = AddToUnionList(theEnv, constraint1->getClassList(), theHead, newConstraint);
     theHead = AddToUnionList(theEnv, constraint2->getClassList(), theHead, newConstraint);
@@ -962,7 +962,7 @@ static void UnionAllowedValueExpressions(
         CONSTRAINT_RECORD *constraint1,
         CONSTRAINT_RECORD *constraint2,
         CONSTRAINT_RECORD *newConstraint) {
-    struct expr *theHead = nullptr;
+    Expression *theHead = nullptr;
 
     theHead = AddToUnionList(theEnv, constraint1->getRestrictionList(), theHead, newConstraint);
     theHead = AddToUnionList(theEnv, constraint2->getRestrictionList(), theHead, newConstraint);
@@ -975,12 +975,12 @@ static void UnionAllowedValueExpressions(
 /*   making sure that duplicates are not added and that any */
 /*   value added satisfies the constraints for the list.    */
 /************************************************************/
-static struct expr *AddToUnionList(
+static Expression *AddToUnionList(
         const Environment&theEnv,
-        struct expr *theList1,
-        struct expr *theHead,
+        Expression *theList1,
+        Expression *theHead,
         CONSTRAINT_RECORD *theConstraint) {
-    struct expr *theList2;
+    Expression *theList2;
     bool flag;
 
     /*======================================*/
@@ -1038,7 +1038,7 @@ void RemoveConstantFromConstraint(
         int theType,
         void *theValue,
         CONSTRAINT_RECORD *theConstraint) {
-    struct expr *theList, *lastOne = nullptr, *tmpList;
+    Expression *theList, *lastOne = nullptr, *tmpList;
 
     if (theConstraint == nullptr) return;
 

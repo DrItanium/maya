@@ -98,13 +98,13 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static struct expr *ParseRuleRHS(const Environment&, const char *);
-static int ReplaceRHSVariable(const Environment&, struct expr *, void *);
-static Defrule *ProcessRuleLHS(const Environment&, struct lhsParseNode *, struct expr *, CLIPSLexeme *, bool *);
-static Defrule *CreateNewDisjunct(const Environment&, CLIPSLexeme *, unsigned short, struct expr *,
+static Expression *ParseRuleRHS(const Environment&, const char *);
+static int ReplaceRHSVariable(const Environment&, Expression *, void *);
+static Defrule *ProcessRuleLHS(const Environment&, struct lhsParseNode *, Expression *, CLIPSLexeme *, bool *);
+static Defrule *CreateNewDisjunct(const Environment&, CLIPSLexeme *, unsigned short, Expression *,
                                   unsigned int, unsigned, struct joinNode *);
 static unsigned short RuleComplexity(const Environment&, struct lhsParseNode *);
-static unsigned short ExpressionComplexity(const Environment&, struct expr *);
+static unsigned short ExpressionComplexity(const Environment&, Expression *);
 static int LogicalAnalysis(const Environment&, struct lhsParseNode *);
 static void AddToDefruleList(Defrule *);
 
@@ -118,7 +118,7 @@ bool ParseDefrule(
         const char *readSource) {
     CLIPSLexeme *ruleName;
     struct lhsParseNode *theLHS;
-    struct expr *actions;
+    Expression *actions;
     struct token theToken;
     Defrule *topDisjunct, *tempPtr;
     struct defruleModule *theModuleItem;
@@ -275,12 +275,12 @@ bool ParseDefrule(
 static Defrule *ProcessRuleLHS(
         const Environment&theEnv,
         struct lhsParseNode *theLHS,
-        struct expr *actions,
+        Expression *actions,
         CLIPSLexeme *ruleName,
         bool *error) {
     struct lhsParseNode *tempNode = nullptr;
     Defrule *topDisjunct = nullptr, *currentDisjunct, *lastDisjunct = nullptr;
-    struct expr *newActions, *packPtr;
+    Expression *newActions, *packPtr;
     int logicalJoin;
     unsigned short localVarCnt;
     unsigned short complexity;
@@ -465,7 +465,7 @@ static Defrule *CreateNewDisjunct(
         const Environment&theEnv,
         CLIPSLexeme *ruleName,
         unsigned short localVarCnt,
-        struct expr *theActions,
+        Expression *theActions,
         unsigned int complexity,
         unsigned logicalJoin,
         struct joinNode *lastJoin) {
@@ -543,7 +543,7 @@ static Defrule *CreateNewDisjunct(
 /****************************************************************/
 static int ReplaceRHSVariable(
         const Environment&theEnv,
-        struct expr *list,
+        Expression *list,
         void *VtheLHS) {
     struct lhsParseNode *theVariable;
 
@@ -592,10 +592,10 @@ static int ReplaceRHSVariable(
 /* ParseRuleRHS: Coordinates all the actions necessary */
 /*   for parsing the RHS of a rule.                    */
 /*******************************************************/
-static struct expr *ParseRuleRHS(
+static Expression *ParseRuleRHS(
         const Environment&theEnv,
         const char *readSource) {
-    struct expr *actions;
+    Expression *actions;
     struct token theToken;
 
     /*=========================================================*/
@@ -669,7 +669,7 @@ static unsigned short RuleComplexity(
 /********************************************************************/
 static unsigned short ExpressionComplexity(
         const Environment&theEnv,
-        struct expr *exprPtr) {
+        Expression *exprPtr) {
     unsigned short complexity = 0;
 
     while (exprPtr != nullptr) {

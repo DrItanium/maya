@@ -82,8 +82,8 @@ bool DefruleGetWatchFirings(Defrule *);
 bool DefruleGetWatchActivations(Defrule *);
 void DefruleSetWatchFirings(Defrule *, bool);
 void DefruleSetWatchActivations(Defrule *, bool);
-bool DefruleWatchAccess(const Environment&, int, bool, struct expr *);
-bool DefruleWatchPrint(const Environment&, const char *, int, struct expr *);
+bool DefruleWatchAccess(const Environment&, int, bool, Expression *);
+bool DefruleWatchPrint(const Environment&, const char *, int, Expression *);
 #endif
 
 #endif /* _H_rulebsc */

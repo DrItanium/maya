@@ -135,7 +135,7 @@
 
 static CLIPSLexeme *CheckDeftemplateAndSlotArguments(UDFContext *, Deftemplate **);
 static void FreeTemplateValueArray(const Environment&, CLIPSValue *, Deftemplate *);
-static struct expr *ModAndDupParse(const Environment&, struct expr *, const char *, const char *);
+static Expression *ModAndDupParse(const Environment&, Expression *, const char *, const char *);
 static CLIPSLexeme *FindTemplateForFactAddress(CLIPSLexeme *, struct lhsParseNode *);
 
 /****************************************************************/
@@ -196,7 +196,7 @@ void ModifyCommand(
         UDFValue *returnValue) {
     long long factNum;
     Fact *oldFact;
-    struct expr *testPtr;
+    Expression *testPtr;
     UDFValue computeResult;
     Deftemplate *templatePtr;
     struct templateSlot *slotPtr;
@@ -549,7 +549,7 @@ void DuplicateCommand(
         UDFValue *returnValue) {
     long long factNum;
     Fact *oldFact, *newFact, *theFact;
-    struct expr *testPtr;
+    Expression *testPtr;
     UDFValue computeResult;
     Deftemplate *templatePtr;
     struct templateSlot *slotPtr;
@@ -1725,7 +1725,7 @@ bool DeftemplateSlotFacetExistP(
         const char *facetName) {
     struct templateSlot *theSlot;
     CLIPSLexeme *facetHN;
-    struct expr *tempFacet;
+    Expression *tempFacet;
 
     /*=================================================*/
     /* An implied deftemplate doesn't have any facets. */
@@ -1808,7 +1808,7 @@ bool DeftemplateSlotFacetValue(
         UDFValue *rv) {
     struct templateSlot *theSlot;
     CLIPSLexeme *facetHN;
-    struct expr *tempFacet;
+    Expression *tempFacet;
 
     /*=================================================*/
     /* An implied deftemplate doesn't have any facets. */
@@ -1891,10 +1891,10 @@ static CLIPSLexeme *CheckDeftemplateAndSlotArguments(
 /***************************************************************/
 bool UpdateModifyDuplicate(
         const Environment&theEnv,
-        struct expr *top,
+        Expression *top,
         const char *name,
         void *vTheLHS) {
-    struct expr *functionArgs, *tempArg;
+    Expression *functionArgs, *tempArg;
     CLIPSLexeme *templateName;
     Deftemplate *theDeftemplate;
     struct templateSlot *slotPtr;
@@ -2032,9 +2032,9 @@ static CLIPSLexeme *FindTemplateForFactAddress(
 /*******************************************/
 /* ModifyParse: Parses the modify command. */
 /*******************************************/
-struct expr *ModifyParse(
+Expression *ModifyParse(
         const Environment&theEnv,
-        struct expr *top,
+        Expression *top,
         const char *logicalName) {
     return ModAndDupParse(theEnv, top, logicalName, "modify");
 }
@@ -2042,9 +2042,9 @@ struct expr *ModifyParse(
 /*************************************************/
 /* DuplicateParse: Parses the duplicate command. */
 /*************************************************/
-struct expr *DuplicateParse(
+Expression *DuplicateParse(
         const Environment&theEnv,
-        struct expr *top,
+        Expression *top,
         const char *logicalName) {
     return ModAndDupParse(theEnv, top, logicalName, "duplicate");
 }
@@ -2052,15 +2052,15 @@ struct expr *DuplicateParse(
 /*************************************************************/
 /* ModAndDupParse: Parses the modify and duplicate commands. */
 /*************************************************************/
-static struct expr *ModAndDupParse(
+static Expression *ModAndDupParse(
         const Environment&theEnv,
-        struct expr *top,
+        Expression *top,
         const char *logicalName,
         const char *name) {
     bool error = false;
     struct token theToken;
-    struct expr *nextOne, *tempSlot;
-    struct expr *newField, *firstField, *lastField;
+    Expression *nextOne, *tempSlot;
+    Expression *newField, *firstField, *lastField;
     bool printError;
     bool done;
 

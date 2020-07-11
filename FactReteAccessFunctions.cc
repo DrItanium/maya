@@ -265,7 +265,7 @@ bool FactPNConstant1(
 #endif
     struct factConstantPN1Call *hack;
     CLIPSValue *fieldPtr;
-    struct expr *theConstant;
+    Expression *theConstant;
 
     /*==========================================*/
     /* Retrieve the arguments for the function. */
@@ -307,7 +307,7 @@ bool FactPNConstant2(
 #endif
     struct factConstantPN2Call *hack;
     CLIPSValue *fieldPtr;
-    struct expr *theConstant;
+    Expression *theConstant;
     Multifield *segmentPtr;
 
     /*==========================================*/

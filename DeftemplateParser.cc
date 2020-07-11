@@ -224,7 +224,7 @@ void InstallDeftemplate(
         const Environment&theEnv,
         Deftemplate *theDeftemplate) {
     struct templateSlot *slotPtr;
-    struct expr *tempExpr;
+    Expression *tempExpr;
 
     IncrementLexemeCount(theDeftemplate->header.name);
 
@@ -430,7 +430,7 @@ static struct templateSlot *DefinedSlots(
         bool multifieldSlot,
         struct token *inputToken) {
     struct templateSlot *newSlot;
-    struct expr *defaultList;
+    Expression *defaultList;
     bool defaultFound = false;
     bool noneSpecified, deriveSpecified;
     CONSTRAINT_PARSE_RECORD parsedConstraints;
@@ -609,7 +609,7 @@ static bool ParseFacetAttribute(
         bool multifacet) {
     struct token inputToken;
     CLIPSLexeme *facetName;
-    struct expr *facetPair, *tempFacet, *facetValue = nullptr, *lastValue = nullptr;
+    Expression *facetPair, *tempFacet, *facetValue = nullptr, *lastValue = nullptr;
 
     /*==============================*/
     /* Parse the name of the facet. */

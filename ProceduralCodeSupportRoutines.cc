@@ -1316,7 +1316,7 @@ static bool ReplaceProcBinds(
 static Expression *CompactActions(
         const Environment&theEnv,
         Expression *actions) {
-    struct expr *tmp;
+    Expression *tmp;
 
     if (actions->argList == nullptr) {
         actions->type = SYMBOL_TYPE;

@@ -230,7 +230,7 @@ void CheckTemplateFact(
 /***********************************************************************/
 bool CheckRHSSlotTypes(
         const Environment&theEnv,
-        struct expr *rhsSlots,
+        Expression *rhsSlots,
         struct templateSlot *slotPtr,
         const char *thePlace) {
     ConstraintViolationType rv;

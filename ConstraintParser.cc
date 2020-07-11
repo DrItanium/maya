@@ -122,7 +122,7 @@ bool CheckConstraintParseConflicts(
         AttributeConflictErrorMessage(theEnv, "type", "allowed-instance-names");
         return false;
     } else if (constraints->anyRestriction) {
-        struct expr *theExp;
+        Expression *theExp;
 
         for (theExp = constraints->getRestrictionList();
              theExp != nullptr;
@@ -439,7 +439,7 @@ static void AddToRestrictionList(
         int type,
         CONSTRAINT_RECORD *cdst,
         CONSTRAINT_RECORD *csrc) {
-    struct expr *theExp, *tmp;
+    Expression *theExp, *tmp;
 
     for (theExp = csrc->getRestrictionList(); theExp != nullptr; theExp = theExp->nextArg) {
         if (theExp->type == type) {
@@ -462,7 +462,7 @@ static bool ParseAllowedValuesAttribute(
     struct token inputToken;
     int expectedType, restrictionType;
     bool error = false;
-    struct expr *newValue, *lastValue;
+    Expression *newValue, *lastValue;
     bool constantParsed = false, variableParsed = false;
     const char *tempPtr = nullptr;
     unsigned short genType;

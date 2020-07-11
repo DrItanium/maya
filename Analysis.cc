@@ -965,7 +965,7 @@ static void VariableReferenceErrorMessage(
         int whichCE,
         CLIPSLexeme *slotName,
         int theField) {
-    struct expr *temprv;
+    Expression*temprv;
 
     /*=============================*/
     /* Print the error message ID. */

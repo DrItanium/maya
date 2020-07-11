@@ -100,8 +100,8 @@ struct defrule {
     bool watchFiring: 1;
     bool autoFocus: 1;
     bool executing: 1;
-    struct expr *dynamicSalience;
-    struct expr *actions;
+    Expression *dynamicSalience;
+    Expression *actions;
     struct joinNode *logicalJoin;
     struct joinNode *lastJoin;
     Defrule *disjunct;

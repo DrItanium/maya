@@ -440,7 +440,7 @@ void RestoreBloadCount(
 /**********************************************/
 void MarkNeededItems(
         const Environment&theEnv,
-        struct expr *testPtr) {
+        Expression *testPtr) {
     while (testPtr != nullptr) {
         switch (testPtr->type) {
             case SYMBOL_TYPE:

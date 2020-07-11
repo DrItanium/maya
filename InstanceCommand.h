@@ -120,8 +120,8 @@ struct instanceData {
     InstanceModifierError instanceModifierError;
     InstanceBuilderError instanceBuilderError;
 };
-
-#define InstanceData(theEnv) ((instanceData *) GetEnvironmentData(theEnv,INSTANCE_DATA))
+RegisterEnvironmentModule(instanceData, INSTANCE_DATA);
+#define InstanceData(theEnv) (GetEnvironmentData(theEnv,INSTANCE_DATA))
 
 void SetupInstances(const Environment&);
 UnmakeInstanceError DeleteInstance(Instance *);

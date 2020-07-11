@@ -293,7 +293,7 @@ static struct factPatternNode *FindPatternNode(
         struct factPatternNode **nodeBeforeMatch,
         bool endSlot,
         bool constantSelector) {
-    struct expr *compareTest;
+    Expression *compareTest;
     *nodeBeforeMatch = nullptr;
 
     if (constantSelector) { compareTest = thePattern->constantValue; }
@@ -365,7 +365,7 @@ static struct lhsParseNode *RemoveUnneededSlots(
         struct lhsParseNode *thePattern) {
     struct lhsParseNode *tempPattern = thePattern;
     struct lhsParseNode *lastPattern = nullptr, *head = thePattern;
-    struct expr *theTest;
+    Expression *theTest;
 
     while (tempPattern != nullptr) {
         /*=============================================================*/

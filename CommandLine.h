@@ -80,7 +80,7 @@ typedef void EventFunction(const Environment&);
 struct commandLineData {
     bool EvaluatingTopLevelCommand;
     bool HaltCommandLoopBatch;
-    struct expr *CurrentCommand;
+    Expression *CurrentCommand;
     char *CommandString;
     size_t MaximumCharacters;
     bool ParsingTopLevelCommand;
@@ -89,8 +89,8 @@ struct commandLineData {
     AfterPromptFunction *AfterPromptCallback;
     BeforeCommandExecutionFunction *BeforeCommandExecutionCallback;
 };
-
-#define CommandLineData(theEnv) ((commandLineData *) GetEnvironmentData(theEnv,COMMANDLINE_DATA))
+RegisterEnvironmentModule(commandLineData, COMMANDLINE_DATA);
+#define CommandLineData(theEnv) (GetEnvironmentData(theEnv,COMMANDLINE_DATA))
 
 void InitializeCommandLineData(const Environment&);
 bool ExpandCommandString(const Environment&, int);

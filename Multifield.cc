@@ -202,7 +202,7 @@ Multifield *StringToMultifield(
     Multifield *theSegment;
     CLIPSValue *contents;
     unsigned long numberOfFields = 0;
-    struct expr *topAtom = nullptr, *lastAtom = nullptr, *theAtom;
+    Expression *topAtom = nullptr, *lastAtom = nullptr, *theAtom;
 
     /*====================================================*/
     /* Open the string as an input source and read in the */

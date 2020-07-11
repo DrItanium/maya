@@ -427,7 +427,7 @@ bool DefruleWatchAccess(
         const Environment&theEnv,
         int code,
         bool newState,
-        struct expr *argExprs) {
+        Expression *argExprs) {
     if (code)
         return (ConstructSetWatchAccess(theEnv, DefruleData(theEnv)->DefruleConstruct, newState, argExprs,
                                         (ConstructGetWatchFunction *) DefruleGetWatchActivations,
@@ -446,7 +446,7 @@ bool DefruleWatchPrint(
         const Environment&theEnv,
         const char *logName,
         int code,
-        struct expr *argExprs) {
+        Expression *argExprs) {
     if (code)
         return (ConstructPrintWatchAccess(theEnv, DefruleData(theEnv)->DefruleConstruct, logName, argExprs,
                                           (ConstructGetWatchFunction *) DefruleGetWatchActivations,

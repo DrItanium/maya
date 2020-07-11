@@ -64,7 +64,7 @@ void InvalidDeftemplateSlotMessage(const Environment&, const char *, const char 
 void SingleFieldSlotCardinalityError(const Environment&, const char *);
 void MultiIntoSingleFieldSlotError(const Environment&, struct templateSlot *, Deftemplate *);
 void CheckTemplateFact(const Environment&, Fact *);
-bool CheckRHSSlotTypes(const Environment&, struct expr *, struct templateSlot *, const char *);
+bool CheckRHSSlotTypes(const Environment&, Expression *, struct templateSlot *, const char *);
 struct templateSlot *GetNthSlot(Deftemplate *, long long);
 int FindSlotPosition(Deftemplate *, CLIPSLexeme *);
 void PrintTemplateFact(const Environment&, const char *, Fact *, bool, bool, const char *);

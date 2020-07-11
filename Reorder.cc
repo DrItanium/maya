@@ -783,7 +783,7 @@ static struct lhsParseNode *CompressCEs(
     struct lhsParseNode *argPtr, *lastArg, *nextArg;
     struct lhsParseNode *tempArg;
     bool change;
-    struct expr *e1, *e2;
+    Expression *e1, *e2;
 
     /*======================================================*/
     /* Loop through the CEs as long as changes can be made. */
@@ -1186,7 +1186,7 @@ void ReturnLHSParseNodes(
 /********************************************************/
 struct lhsParseNode *ExpressionToLHSParseNodes(
         const Environment&theEnv,
-        struct expr *expressionList) {
+        Expression *expressionList) {
     struct lhsParseNode *newList, *theList;
     struct functionDefinition *theFunction;
     unsigned int i;
@@ -1239,10 +1239,10 @@ struct lhsParseNode *ExpressionToLHSParseNodes(
 /* LHSParseNodesToExpression: Copies lhsParseNode data structures */
 /*   into the equivalent expression data structures.              */
 /******************************************************************/
-struct expr *LHSParseNodesToExpression(
+Expression *LHSParseNodesToExpression(
         const Environment&theEnv,
         struct lhsParseNode *nodeList) {
-    struct expr *newList;
+    Expression *newList;
 
     if (nodeList == nullptr) { return nullptr; }
 

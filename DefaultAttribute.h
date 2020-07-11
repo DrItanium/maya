@@ -49,7 +49,7 @@
 #include "Evaluation.h"
 
 void DeriveDefaultFromConstraints(const Environment&, CONSTRAINT_RECORD *, UDFValue *, bool, bool);
-struct expr *ParseDefault(const Environment&, const char *, bool, bool, bool, bool *, bool *, bool *);
+Expression *ParseDefault(const Environment&, const char *, bool, bool, bool, bool *, bool *, bool *);
 
 #endif /* _H_default */
 
