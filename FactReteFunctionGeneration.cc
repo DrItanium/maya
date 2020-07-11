@@ -66,22 +66,22 @@
 constexpr auto FACTGEN_DATA = 2;
 
 struct factgenData {
-    struct entityRecord FactJNGV1Info;
-    struct entityRecord FactJNGV2Info;
-    struct entityRecord FactJNGV3Info;
-    struct entityRecord FactPNGV1Info;
-    struct entityRecord FactPNGV2Info;
-    struct entityRecord FactPNGV3Info;
-    struct entityRecord FactJNCV1Info;
-    struct entityRecord FactJNCV2Info;
-    struct entityRecord FactPNCV1Info;
-    struct entityRecord FactStoreMFInfo;
-    struct entityRecord FactSlotLengthInfo;
-    struct entityRecord FactPNConstant1Info;
-    struct entityRecord FactPNConstant2Info;
+    EntityRecord FactJNGV1Info;
+    EntityRecord FactJNGV2Info;
+    EntityRecord FactJNGV3Info;
+    EntityRecord FactPNGV1Info;
+    EntityRecord FactPNGV2Info;
+    EntityRecord FactPNGV3Info;
+    EntityRecord FactJNCV1Info;
+    EntityRecord FactJNCV2Info;
+    EntityRecord FactPNCV1Info;
+    EntityRecord FactStoreMFInfo;
+    EntityRecord FactSlotLengthInfo;
+    EntityRecord FactPNConstant1Info;
+    EntityRecord FactPNConstant2Info;
 };
-
-#define FactgenData(theEnv) ((factgenData *) GetEnvironmentData(theEnv,FACTGEN_DATA))
+RegisterEnvironmentModule(factgenData, FACTGEN_DATA);
+#define FactgenData(theEnv) (GetEnvironmentData(theEnv,FACTGEN_DATA))
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
@@ -100,81 +100,81 @@ static void *FactGetVarPN3(const Environment&, struct lhsParseNode *);
 /*******************************************************************/
 void InitializeFactReteFunctions(
         const Environment&theEnv) {
-    struct entityRecord factJNGV1Info = {"FACT_JN_VAR1", FACT_JN_VAR1, 0, 1, 0,
+    EntityRecord factJNGV1Info = {"FACT_JN_VAR1", FACT_JN_VAR1, 0, 1, 0,
                                          PrintFactJNGetVar1,
                                          PrintFactJNGetVar1, nullptr,
                                          FactJNGetVar1,
                                          nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    struct entityRecord factJNGV2Info = {"FACT_JN_VAR2", FACT_JN_VAR2, 0, 1, 0,
+    EntityRecord factJNGV2Info = {"FACT_JN_VAR2", FACT_JN_VAR2, 0, 1, 0,
                                          PrintFactJNGetVar2,
                                          PrintFactJNGetVar2, nullptr,
                                          FactJNGetVar2,
                                          nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    struct entityRecord factJNGV3Info = {"FACT_JN_VAR3", FACT_JN_VAR3, 0, 1, 0,
+    EntityRecord factJNGV3Info = {"FACT_JN_VAR3", FACT_JN_VAR3, 0, 1, 0,
                                          PrintFactJNGetVar3,
                                          PrintFactJNGetVar3, nullptr,
                                          FactJNGetVar3,
                                          nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    struct entityRecord factPNGV1Info = {"FACT_PN_VAR1", FACT_PN_VAR1, 0, 1, 0,
+    EntityRecord factPNGV1Info = {"FACT_PN_VAR1", FACT_PN_VAR1, 0, 1, 0,
                                          PrintFactPNGetVar1,
                                          PrintFactPNGetVar1, nullptr,
                                          FactPNGetVar1,
                                          nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    struct entityRecord factPNGV2Info = {"FACT_PN_VAR2", FACT_PN_VAR2, 0, 1, 0,
+    EntityRecord factPNGV2Info = {"FACT_PN_VAR2", FACT_PN_VAR2, 0, 1, 0,
                                          PrintFactPNGetVar2,
                                          PrintFactPNGetVar2, nullptr,
                                          FactPNGetVar2,
                                          nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    struct entityRecord factPNGV3Info = {"FACT_PN_VAR3", FACT_PN_VAR3, 0, 1, 0,
+    EntityRecord factPNGV3Info = {"FACT_PN_VAR3", FACT_PN_VAR3, 0, 1, 0,
                                          PrintFactPNGetVar3,
                                          PrintFactPNGetVar3, nullptr,
                                          FactPNGetVar3,
                                          nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    struct entityRecord factJNCV1Info = {"FACT_JN_CMP1", FACT_JN_CMP1, 0, 1, 1,
+    EntityRecord factJNCV1Info = {"FACT_JN_CMP1", FACT_JN_CMP1, 0, 1, 1,
                                          PrintFactJNCompVars1,
                                          PrintFactJNCompVars1, nullptr,
                                          FactJNCompVars1,
                                          nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    struct entityRecord factJNCV2Info = {"FACT_JN_CMP2", FACT_JN_CMP2, 0, 1, 1,
+    EntityRecord factJNCV2Info = {"FACT_JN_CMP2", FACT_JN_CMP2, 0, 1, 1,
                                          PrintFactJNCompVars2,
                                          PrintFactJNCompVars2, nullptr,
                                          FactJNCompVars2,
                                          nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    struct entityRecord factPNCV1Info = {"FACT_PN_CMP1", FACT_PN_CMP1, 0, 1, 1,
+    EntityRecord factPNCV1Info = {"FACT_PN_CMP1", FACT_PN_CMP1, 0, 1, 1,
                                          PrintFactPNCompVars1,
                                          PrintFactPNCompVars1, nullptr,
                                          FactPNCompVars1,
                                          nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    struct entityRecord factStoreMFInfo = {"FACT_STORE_MULTIFIELD",
+    EntityRecord factStoreMFInfo = {"FACT_STORE_MULTIFIELD",
                                            FACT_STORE_MULTIFIELD, 0, 1, 0,
                                            nullptr, nullptr, nullptr,
                                            (EntityEvaluationFunction *) FactStoreMultifield,
                                            nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    struct entityRecord factSlotLengthInfo = {"FACT_SLOT_LENGTH",
+    EntityRecord factSlotLengthInfo = {"FACT_SLOT_LENGTH",
                                               FACT_SLOT_LENGTH, 0, 1, 0,
                                               PrintFactSlotLength,
                                               PrintFactSlotLength, nullptr,
                                               FactSlotLength,
                                               nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    struct entityRecord factPNConstant1Info = {"FACT_PN_CONSTANT1",
+    EntityRecord factPNConstant1Info = {"FACT_PN_CONSTANT1",
                                                FACT_PN_CONSTANT1, 0, 1, 1,
                                                PrintFactPNConstant1,
                                                PrintFactPNConstant1, nullptr,
                                                FactPNConstant1,
                                                nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    struct entityRecord factPNConstant2Info = {"FACT_PN_CONSTANT2",
+    EntityRecord factPNConstant2Info = {"FACT_PN_CONSTANT2",
                                                FACT_PN_CONSTANT2, 0, 1, 1,
                                                PrintFactPNConstant2,
                                                PrintFactPNConstant2, nullptr,
@@ -183,19 +183,19 @@ void InitializeFactReteFunctions(
 
     AllocateEnvironmentData(theEnv, FACTGEN_DATA, sizeof(factgenData));
 
-    memcpy(&FactgenData(theEnv)->FactJNGV1Info, &factJNGV1Info, sizeof(entityRecord));
-    memcpy(&FactgenData(theEnv)->FactJNGV2Info, &factJNGV2Info, sizeof(entityRecord));
-    memcpy(&FactgenData(theEnv)->FactJNGV3Info, &factJNGV3Info, sizeof(entityRecord));
-    memcpy(&FactgenData(theEnv)->FactPNGV1Info, &factPNGV1Info, sizeof(entityRecord));
-    memcpy(&FactgenData(theEnv)->FactPNGV2Info, &factPNGV2Info, sizeof(entityRecord));
-    memcpy(&FactgenData(theEnv)->FactPNGV3Info, &factPNGV3Info, sizeof(entityRecord));
-    memcpy(&FactgenData(theEnv)->FactJNCV1Info, &factJNCV1Info, sizeof(entityRecord));
-    memcpy(&FactgenData(theEnv)->FactJNCV2Info, &factJNCV2Info, sizeof(entityRecord));
-    memcpy(&FactgenData(theEnv)->FactPNCV1Info, &factPNCV1Info, sizeof(entityRecord));
-    memcpy(&FactgenData(theEnv)->FactStoreMFInfo, &factStoreMFInfo, sizeof(entityRecord));
-    memcpy(&FactgenData(theEnv)->FactSlotLengthInfo, &factSlotLengthInfo, sizeof(entityRecord));
-    memcpy(&FactgenData(theEnv)->FactPNConstant1Info, &factPNConstant1Info, sizeof(entityRecord));
-    memcpy(&FactgenData(theEnv)->FactPNConstant2Info, &factPNConstant2Info, sizeof(entityRecord));
+    memcpy(&FactgenData(theEnv)->FactJNGV1Info, &factJNGV1Info, sizeof(EntityRecord));
+    memcpy(&FactgenData(theEnv)->FactJNGV2Info, &factJNGV2Info, sizeof(EntityRecord));
+    memcpy(&FactgenData(theEnv)->FactJNGV3Info, &factJNGV3Info, sizeof(EntityRecord));
+    memcpy(&FactgenData(theEnv)->FactPNGV1Info, &factPNGV1Info, sizeof(EntityRecord));
+    memcpy(&FactgenData(theEnv)->FactPNGV2Info, &factPNGV2Info, sizeof(EntityRecord));
+    memcpy(&FactgenData(theEnv)->FactPNGV3Info, &factPNGV3Info, sizeof(EntityRecord));
+    memcpy(&FactgenData(theEnv)->FactJNCV1Info, &factJNCV1Info, sizeof(EntityRecord));
+    memcpy(&FactgenData(theEnv)->FactJNCV2Info, &factJNCV2Info, sizeof(EntityRecord));
+    memcpy(&FactgenData(theEnv)->FactPNCV1Info, &factPNCV1Info, sizeof(EntityRecord));
+    memcpy(&FactgenData(theEnv)->FactStoreMFInfo, &factStoreMFInfo, sizeof(EntityRecord));
+    memcpy(&FactgenData(theEnv)->FactSlotLengthInfo, &factSlotLengthInfo, sizeof(EntityRecord));
+    memcpy(&FactgenData(theEnv)->FactPNConstant1Info, &factPNConstant1Info, sizeof(EntityRecord));
+    memcpy(&FactgenData(theEnv)->FactPNConstant2Info, &factPNConstant2Info, sizeof(EntityRecord));
 
     InstallPrimitive(theEnv, (EntityRecord *) &FactData(theEnv)->FactInfo, FACT_ADDRESS_TYPE);
     InstallPrimitive(theEnv, &FactgenData(theEnv)->FactJNGV1Info, FACT_JN_VAR1);

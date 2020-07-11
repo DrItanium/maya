@@ -275,7 +275,7 @@ long long Run(
         DetachActivation(theEnv, theActivation);
         theTM = AddTrackedMemory(theEnv, theActivation, sizeof(activation));
         ruleFiring = ActivationRuleName(theActivation);
-        theBasis = (partialMatch *) theActivation->getBasis();
+        theBasis = (PartialMatch *) theActivation->getBasis();
         EngineData(theEnv)->ExecutingRule = theActivation->getRule();
 
         /*=============================================*/

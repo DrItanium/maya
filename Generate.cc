@@ -71,21 +71,21 @@
 /***************************************/
 
 static void ExtractAnds(const Environment&, lhsParseNode *, bool,
-                        expr **, expr **, expr **,
-                        expr **, nandFrame *);
+                        Expression **, Expression **, Expression **,
+                        Expression **, nandFrame *);
 static void ExtractFieldTest(const Environment&, lhsParseNode *, bool,
-                             expr **, expr **, expr **,
-                             expr **, nandFrame *);
-static expr *GetfieldReplace(const Environment&, lhsParseNode *);
-static expr *GenPNConstant(const Environment&, lhsParseNode *);
-static expr *GenJNConstant(const Environment&, lhsParseNode *, bool);
-static expr *GenJNColon(const Environment&, lhsParseNode *, bool, nandFrame *);
-static expr *GenPNColon(const Environment&, lhsParseNode *);
-static expr *GenJNEq(const Environment&, lhsParseNode *, bool, nandFrame *);
-static expr *GenPNEq(const Environment&, lhsParseNode *);
-static expr *GenJNVariableComparison(const Environment&, lhsParseNode *,
+                             Expression **, Expression **, Expression **,
+                             Expression **, nandFrame *);
+static Expression *GetfieldReplace(const Environment&, lhsParseNode *);
+static Expression *GenPNConstant(const Environment&, lhsParseNode *);
+static Expression *GenJNConstant(const Environment&, lhsParseNode *, bool);
+static Expression *GenJNColon(const Environment&, lhsParseNode *, bool, nandFrame *);
+static Expression *GenPNColon(const Environment&, lhsParseNode *);
+static Expression *GenJNEq(const Environment&, lhsParseNode *, bool, nandFrame *);
+static Expression *GenPNEq(const Environment&, lhsParseNode *);
+static Expression *GenJNVariableComparison(const Environment&, lhsParseNode *,
                                             lhsParseNode *, bool);
-static expr *GenPNVariableComparison(const Environment&, lhsParseNode *,
+static Expression *GenPNVariableComparison(const Environment&, lhsParseNode *,
                                             lhsParseNode *);
 static bool AllVariablesInPattern(lhsParseNode *,
                                   int);
@@ -103,13 +103,13 @@ void FieldConversion(
         nandFrame *theNandFrames) {
     bool testInPatternNetwork = true;
     lhsParseNode *patternPtr;
-    expr *headOfPNExpression, *headOfJNExpression;
-    expr *lastPNExpression, *lastJNExpression;
-    expr *tempExpression;
-    expr *patternNetTest = nullptr;
-    expr *joinNetTest = nullptr;
-    expr *constantSelector = nullptr;
-    expr *constantValue = nullptr;
+    Expression *headOfPNExpression, *headOfJNExpression;
+    Expression *lastPNExpression, *lastJNExpression;
+    Expression *tempExpression;
+    Expression *patternNetTest = nullptr;
+    Expression *joinNetTest = nullptr;
+    Expression *constantSelector = nullptr;
+    Expression *constantValue = nullptr;
 
     /*==================================================*/
     /* Consider a nullptr pointer to be an internal error. */
@@ -292,12 +292,12 @@ static void ExtractAnds(
         const Environment&theEnv,
         lhsParseNode *andField,
         bool testInPatternNetwork,
-        expr **patternNetTest,
-        expr **joinNetTest,
-        expr **constantSelector,
-        expr **constantValue,
+        Expression **patternNetTest,
+        Expression **joinNetTest,
+        Expression **constantSelector,
+        Expression **constantValue,
         nandFrame *theNandFrames) {
-    expr *newPNTest, *newJNTest, *newConstantSelector, *newConstantValue;
+    Expression *newPNTest, *newJNTest, *newConstantSelector, *newConstantValue;
 
     /*=================================================*/
     /* Before starting, the subfield has no pattern or */
@@ -357,10 +357,10 @@ static void ExtractFieldTest(
         const Environment&theEnv,
         lhsParseNode *theField,
         bool testInPatternNetwork,
-        expr **patternNetTest,
-        expr **joinNetTest,
-        expr **constantSelector,
-        expr **constantValue,
+        Expression **patternNetTest,
+        Expression **joinNetTest,
+        Expression **constantSelector,
+        Expression **constantValue,
         nandFrame *theNandFrames) {
     *patternNetTest = nullptr;
     *joinNetTest = nullptr;

@@ -8,8 +8,7 @@
 typedef struct factBuilder FactBuilder;
 typedef struct factModifier FactModifier;
 typedef struct factHashEntry FactHashEntry;
-struct factPatternNode;
-
+struct FactPatternNode;
 #include "Setup.h"
 #include "Network.h"
 #include "Entities.h"
@@ -261,8 +260,8 @@ struct factQueryData {
     QUERY_STACK *QueryCoreStack;
     bool AbortQuery;
 };
-
-#define FactQueryData(theEnv) ((factQueryData *) GetEnvironmentData(theEnv,FACT_QUERY_DATA))
+RegisterEnvironmentModule(factQueryData, FACT_QUERY_DATA);
+#define FactQueryData(theEnv) (GetEnvironmentData(theEnv,FACT_QUERY_DATA))
 
 #define QUERY_DELIMITER_STRING     "(QDS)"
 
@@ -315,7 +314,7 @@ void PrintFactPNConstant1(const Environment&, const char *, void *);
 void PrintFactPNConstant2(const Environment&, const char *, void *);
 
 void FactPatternMatch(const Environment&, Fact *,
-                      struct factPatternNode *, size_t, size_t,
+                      FactPatternNode *, size_t, size_t,
                       struct multifieldMarker *,
                       struct multifieldMarker *);
 void MarkFactPatternForIncrementalReset(const Environment&, struct patternNodeHeader *, bool);
@@ -324,11 +323,11 @@ void FactsIncrementalReset(const Environment&);
 constexpr auto FACTBIN_DATA = 62;
 
 struct factBinaryData {
-    struct factPatternNode *FactPatternArray;
+    FactPatternNode *FactPatternArray;
     unsigned long NumberOfPatterns;
 };
-
-#define FactBinaryData(theEnv) ((factBinaryData *) GetEnvironmentData(theEnv,FACTBIN_DATA))
+RegisterEnvironmentModule(factBinaryData, FACTBIN_DATA);
+#define FactBinaryData(theEnv) (GetEnvironmentData(theEnv,FACTBIN_DATA))
 
 void FactBinarySetup(const Environment&);
 
@@ -349,7 +348,7 @@ struct FactPatternNode {
 };
 
 void InitializeFactPatterns(const Environment&);
-void DestroyFactPatternNetwork(const Environment&, struct factPatternNode *);
+void DestroyFactPatternNetwork(const Environment&, FactPatternNode *);
 #if DEFTEMPLATE_CONSTRUCT
 
 void FactCommandDefinitions(const Environment&);

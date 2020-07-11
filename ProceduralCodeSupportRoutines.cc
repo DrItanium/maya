@@ -172,10 +172,10 @@ void InstallProcedurePrimitives(
 
     AllocateEnvironmentData(theEnv, PROCEDURAL_PRIMITIVE_DATA, sizeof(proceduralPrimitiveData), DeallocateProceduralPrimitiveData);
 
-    memcpy(&ProceduralPrimitiveData(theEnv)->ProcParameterInfo, &procParameterInfo, sizeof(entityRecord));
-    memcpy(&ProceduralPrimitiveData(theEnv)->ProcWildInfo, &procWildInfo, sizeof(entityRecord));
-    memcpy(&ProceduralPrimitiveData(theEnv)->ProcGetInfo, &procGetInfo, sizeof(entityRecord));
-    memcpy(&ProceduralPrimitiveData(theEnv)->ProcBindInfo, &procBindInfo, sizeof(entityRecord));
+    memcpy(&ProceduralPrimitiveData(theEnv)->ProcParameterInfo, &procParameterInfo, sizeof(EntityRecord));
+    memcpy(&ProceduralPrimitiveData(theEnv)->ProcWildInfo, &procWildInfo, sizeof(EntityRecord));
+    memcpy(&ProceduralPrimitiveData(theEnv)->ProcGetInfo, &procGetInfo, sizeof(EntityRecord));
+    memcpy(&ProceduralPrimitiveData(theEnv)->ProcBindInfo, &procBindInfo, sizeof(EntityRecord));
 
     InstallPrimitive(theEnv, &ProceduralPrimitiveData(theEnv)->ProcParameterInfo, PROC_PARAM);
     InstallPrimitive(theEnv, &ProceduralPrimitiveData(theEnv)->ProcWildInfo, PROC_WILD_PARAM);
@@ -193,12 +193,12 @@ void InstallProcedurePrimitives(
        =============================================== */
 
 #if !DEFFUNCTION_CONSTRUCT
-    memcpy(&ProceduralPrimitiveData(theEnv)->DeffunctionEntityRecord,&deffunctionEntityRecord,sizeof(entityRecord));
+    memcpy(&ProceduralPrimitiveData(theEnv)->DeffunctionEntityRecord,&deffunctionEntityRecord,sizeof(EntityRecord));
     InstallPrimitive(theEnv,&ProceduralPrimitiveData(theEnv)->DeffunctionEntityRecord,PCALL);
 #endif
 
 #if !DEFGENERIC_CONSTRUCT
-    memcpy(&ProceduralPrimitiveData(theEnv)->GenericEntityRecord,&genericEntityRecord,sizeof(entityRecord));
+    memcpy(&ProceduralPrimitiveData(theEnv)->GenericEntityRecord,&genericEntityRecord,sizeof(EntityRecord));
     InstallPrimitive(theEnv,&ProceduralPrimitiveData(theEnv)->GenericEntityRecord,GCALL);
 #endif
 

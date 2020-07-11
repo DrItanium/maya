@@ -354,7 +354,7 @@ const Environment&theEnv,
 UDFContext *context,
 UDFValue *returnValue)
 {
-struct factPatternNode *patternPtr;
+FactPatternNode *patternPtr;
 Deftemplate *theDeftemplate;
 const char *theName;
 int depth = 0, i;

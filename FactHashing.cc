@@ -238,7 +238,7 @@ size_t HandleFactDuplication(
         theFact->garbage = true;
     }
 
-    AddLogicalDependencies(theEnv, (patternEntity *) *duplicate, true);
+    AddLogicalDependencies(theEnv, (PatternEntity *) *duplicate, true);
 
     return 0;
 }

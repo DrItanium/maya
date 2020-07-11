@@ -364,15 +364,15 @@ void AddBetaMemoriesToJoin(
     if ((!theNode->firstJoin) || theNode->patternIsExists || theNode->patternIsNegated || theNode->joinFromTheRight) {
         if (theNode->leftHash == nullptr) {
             theNode->leftMemory = get_struct(theEnv, betaMemory);
-            theNode->leftMemory->beta = (partialMatch **) genalloc(theEnv, sizeof(partialMatch *));
+            theNode->leftMemory->beta = (PartialMatch **) genalloc(theEnv, sizeof(PartialMatch *));
             theNode->leftMemory->beta[0] = nullptr;
             theNode->leftMemory->size = 1;
             theNode->leftMemory->count = 0;
             theNode->leftMemory->last = nullptr;
         } else {
             theNode->leftMemory = get_struct(theEnv, betaMemory);
-            theNode->leftMemory->beta = (partialMatch **) genalloc(theEnv, sizeof(partialMatch *) * INITIAL_BETA_HASH_SIZE);
-            memset(theNode->leftMemory->beta, 0, sizeof(partialMatch *) * INITIAL_BETA_HASH_SIZE);
+            theNode->leftMemory->beta = (PartialMatch **) genalloc(theEnv, sizeof(PartialMatch *) * INITIAL_BETA_HASH_SIZE);
+            memset(theNode->leftMemory->beta, 0, sizeof(PartialMatch *) * INITIAL_BETA_HASH_SIZE);
             theNode->leftMemory->size = INITIAL_BETA_HASH_SIZE;
             theNode->leftMemory->count = 0;
             theNode->leftMemory->last = nullptr;
@@ -387,25 +387,25 @@ void AddBetaMemoriesToJoin(
     if (theNode->joinFromTheRight) {
         if (theNode->leftHash == nullptr) {
             theNode->rightMemory = get_struct(theEnv, betaMemory);
-            theNode->rightMemory->beta = (partialMatch **) genalloc(theEnv, sizeof(partialMatch *));
-            theNode->rightMemory->last = (partialMatch **) genalloc(theEnv, sizeof(partialMatch *));
+            theNode->rightMemory->beta = (PartialMatch **) genalloc(theEnv, sizeof(PartialMatch *));
+            theNode->rightMemory->last = (PartialMatch **) genalloc(theEnv, sizeof(PartialMatch *));
             theNode->rightMemory->beta[0] = nullptr;
             theNode->rightMemory->last[0] = nullptr;
             theNode->rightMemory->size = 1;
             theNode->rightMemory->count = 0;
         } else {
             theNode->rightMemory = get_struct(theEnv, betaMemory);
-            theNode->rightMemory->beta = (partialMatch **) genalloc(theEnv, sizeof(partialMatch *) * INITIAL_BETA_HASH_SIZE);
-            theNode->rightMemory->last = (partialMatch **) genalloc(theEnv, sizeof(partialMatch *) * INITIAL_BETA_HASH_SIZE);
-            memset(theNode->rightMemory->beta, 0, sizeof(partialMatch **) * INITIAL_BETA_HASH_SIZE);
-            memset(theNode->rightMemory->last, 0, sizeof(partialMatch **) * INITIAL_BETA_HASH_SIZE);
+            theNode->rightMemory->beta = (PartialMatch **) genalloc(theEnv, sizeof(PartialMatch *) * INITIAL_BETA_HASH_SIZE);
+            theNode->rightMemory->last = (PartialMatch **) genalloc(theEnv, sizeof(PartialMatch *) * INITIAL_BETA_HASH_SIZE);
+            memset(theNode->rightMemory->beta, 0, sizeof(PartialMatch **) * INITIAL_BETA_HASH_SIZE);
+            memset(theNode->rightMemory->last, 0, sizeof(PartialMatch **) * INITIAL_BETA_HASH_SIZE);
             theNode->rightMemory->size = INITIAL_BETA_HASH_SIZE;
             theNode->rightMemory->count = 0;
         }
     } else if (theNode->rightSideEntryStructure == nullptr) {
         theNode->rightMemory = get_struct(theEnv, betaMemory);
-        theNode->rightMemory->beta = (partialMatch **) genalloc(theEnv, sizeof(partialMatch *));
-        theNode->rightMemory->last = (partialMatch **) genalloc(theEnv, sizeof(partialMatch *));
+        theNode->rightMemory->beta = (PartialMatch **) genalloc(theEnv, sizeof(PartialMatch *));
+        theNode->rightMemory->last = (PartialMatch **) genalloc(theEnv, sizeof(PartialMatch *));
         theNode->rightMemory->beta[0] = CreateEmptyPartialMatch(theEnv);
         theNode->rightMemory->beta[0]->owner = theNode;
         theNode->rightMemory->beta[0]->rhsMemory = true;

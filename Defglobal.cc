@@ -110,7 +110,7 @@ static void DestroyDefglobal(const Environment&, Defglobal *);
 /**************************************************************/
 void InitializeDefglobals(
         const Environment&theEnv) {
-    struct entityRecord globalInfo = {"GBL_VARIABLE", GBL_VARIABLE, 0, 0, 0,
+    EntityRecord globalInfo = {"GBL_VARIABLE", GBL_VARIABLE, 0, 0, 0,
                                       nullptr,
                                       nullptr,
                                       nullptr,
@@ -118,7 +118,7 @@ void InitializeDefglobals(
                                       nullptr, nullptr,
                                       nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    struct entityRecord defglobalPtrRecord = {"DEFGLOBAL_PTR", DEFGLOBAL_PTR, 0, 0, 0,
+    EntityRecord defglobalPtrRecord = {"DEFGLOBAL_PTR", DEFGLOBAL_PTR, 0, 0, 0,
                                               nullptr, nullptr, nullptr,
                                               (EntityEvaluationFunction *) QGetDefglobalUDFValue,
                                               nullptr,
@@ -128,8 +128,8 @@ void InitializeDefglobals(
 
     AllocateEnvironmentData(theEnv, DEFGLOBAL_DATA, sizeof(defglobalData), DeallocateDefglobalData);
 
-    memcpy(&DefglobalData(theEnv)->GlobalInfo, &globalInfo, sizeof(entityRecord));
-    memcpy(&DefglobalData(theEnv)->DefglobalPtrRecord, &defglobalPtrRecord, sizeof(entityRecord));
+    memcpy(&DefglobalData(theEnv)->GlobalInfo, &globalInfo, sizeof(EntityRecord));
+    memcpy(&DefglobalData(theEnv)->DefglobalPtrRecord, &defglobalPtrRecord, sizeof(EntityRecord));
 
     DefglobalData(theEnv)->ResetGlobals = true;
     DefglobalData(theEnv)->LastModuleIndex = -1;

@@ -102,7 +102,7 @@ static void DestroyDeftemplate(const Environment&, Deftemplate *);
 /******************************************************************/
 void InitializeDeftemplates(
         const Environment&theEnv) {
-    struct entityRecord deftemplatePtrRecord =
+    EntityRecord deftemplatePtrRecord =
             {"DEFTEMPLATE_PTR",
              DEFTEMPLATE_PTR, 1, 0, 0,
              nullptr,
@@ -114,7 +114,7 @@ void InitializeDeftemplates(
              nullptr, nullptr, nullptr, nullptr, nullptr};
     AllocateEnvironmentData(theEnv, DEFTEMPLATE_DATA, sizeof(deftemplateData), DeallocateDeftemplateData);
 
-    memcpy(&DeftemplateData(theEnv)->DeftemplatePtrRecord, &deftemplatePtrRecord, sizeof(entityRecord));
+    memcpy(&DeftemplateData(theEnv)->DeftemplatePtrRecord, &deftemplatePtrRecord, sizeof(EntityRecord));
 
     InitializeFacts(theEnv);
 

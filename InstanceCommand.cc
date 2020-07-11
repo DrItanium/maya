@@ -143,7 +143,7 @@ static void DeallocateInstanceData(const Environment&);
  *********************************************************/
 void SetupInstances(
         const Environment&theEnv) {
-    struct patternEntityRecord instanceInfo = {{"INSTANCE_ADDRESS_TYPE",
+    PatternEntityRecord instanceInfo = {{"INSTANCE_ADDRESS_TYPE",
                                                 INSTANCE_ADDRESS_TYPE, 0, 0, 0,
                                                 (EntityPrintFunction *) PrintInstanceName,
                                                 (EntityPrintFunction *) PrintInstanceLongForm,
@@ -169,12 +169,12 @@ void SetupInstances(
     AllocateEnvironmentData(theEnv, INSTANCE_DATA, sizeof(instanceData), DeallocateInstanceData);
 
     InstanceData(theEnv)->MkInsMsgPass = true;
-    memcpy(&InstanceData(theEnv)->InstanceInfo, &instanceInfo, sizeof(patternEntityRecord));
+    memcpy(&InstanceData(theEnv)->InstanceInfo, &instanceInfo, sizeof(PatternEntityRecord));
     dummyInstance.patternHeader.theInfo = &InstanceData(theEnv)->InstanceInfo;
     memcpy(&InstanceData(theEnv)->DummyInstance, &dummyInstance, sizeof(Instance));
 
     InitializeInstanceTable(theEnv);
-    InstallPrimitive(theEnv, (entityRecord *) &InstanceData(theEnv)->InstanceInfo, INSTANCE_ADDRESS_TYPE);
+    InstallPrimitive(theEnv, (EntityRecord *) &InstanceData(theEnv)->InstanceInfo, INSTANCE_ADDRESS_TYPE);
 
     AddUDF(theEnv, "initialize-instance", "bn", 0, UNBOUNDED, nullptr, InactiveInitializeInstance);
     AddUDF(theEnv, "active-initialize-instance", "bn", 0, UNBOUNDED, nullptr, InitializeInstanceCommand);

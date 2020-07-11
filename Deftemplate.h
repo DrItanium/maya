@@ -90,7 +90,7 @@ struct deftemplate {
     bool inScope: 1;
     unsigned short numberOfSlots;
     long busyCount;
-    struct factPatternNode *patternNetwork;
+    FactPatternNode *patternNetwork;
     Fact *factList;
     Fact *lastFact;
 };

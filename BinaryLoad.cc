@@ -483,8 +483,8 @@ static FunctionDefinition **ReadNeededFunctions(
     /* Store the function pointers in the function array. */
     /*====================================================*/
 
-    temp = sizeof(functionDefinition *) * *numberOfFunctions;
-    newFunctionArray = (functionDefinition **) genalloc(theEnv, temp);
+    temp = sizeof(FunctionDefinition *) * *numberOfFunctions;
+    newFunctionArray = (FunctionDefinition **) genalloc(theEnv, temp);
     namePtr = functionNames;
     functionPtr = nullptr;
     for (i = 0; i < *numberOfFunctions; i++) {

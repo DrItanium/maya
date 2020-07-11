@@ -195,7 +195,7 @@ typedef void EntityRecordDeinstallFunction(void*, void*);
 typedef bool EntityRecordDeleteFunction(void*, const Environment&);
 typedef void* EntityRecordGetNextFunction(void*, void*);
 /****************/
-/* entityRecord */
+/* EntityRecord */
 /****************/
 struct EntityRecord {
     const char *name;
@@ -223,7 +223,7 @@ typedef void PatternEntityRecordMatchFunction(const Environment&, void*);
 typedef bool PatternEntityRecordSynchronizedFunction(const Environment&, void*);
 typedef bool PatternEntityRecordIsDeletedFunction(const Environment&, void*);
 /***********************/
-/* patternEntityRecord */
+/* PatternEntityRecord */
 /***********************/
 struct PatternEntityRecord {
     struct EntityRecord base;

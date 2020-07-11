@@ -272,7 +272,7 @@ bool EvaluateExpression(
 /******************************************/
 void InstallPrimitive(
         const Environment&theEnv,
-        struct entityRecord *thePrimitive,
+        EntityRecord *thePrimitive,
         int whichPosition) {
     if (EvaluationData(theEnv)->PrimitivesArray[whichPosition] != nullptr) {
         SystemError(theEnv, "EVALUATN", 5);

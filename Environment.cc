@@ -207,23 +207,21 @@ void *SetEnvironmentContext(
 bool AddEnvironmentCleanupFunction(
         const Environment&theEnv,
         const char *name,
-        EnvironmentCleanupFunction *functionPtr,
+        EnvironmentCleanupFunctionBody functionPtr,
         int priority) {
-    struct environmentCleanupFunction *newPtr, *currentPtr, *lastPtr = nullptr;
+    EnvironmentCleanupFunction *newPtr, *currentPtr, *lastPtr = nullptr;
 
-    newPtr = (environmentCleanupFunction *) malloc(sizeof(environmentCleanupFunction));
+    newPtr = (EnvironmentCleanupFunction *) malloc(sizeof(EnvironmentCleanupFunction));
     if (newPtr == nullptr) { return false; }
 
     newPtr->name = name;
     newPtr->func = functionPtr;
     newPtr->priority = priority;
-
-    if (theEnv->listOfCleanupEnvironmentFunctions == nullptr) {
-        newPtr->next = nullptr;
-        theEnv->listOfCleanupEnvironmentFunctions = newPtr;
-        return true;
+    if (theEnv->listOfCleanupEnvironmentFunctions.empty()) {
+        theEnv->listOfCleanupEnvironmentFunctions.emplace_back(newPtr);
     }
-
+    /// @todo fix this
+#if 0
     currentPtr = theEnv->listOfCleanupEnvironmentFunctions;
     while ((currentPtr != nullptr) ? (priority < currentPtr->priority) : false) {
         lastPtr = currentPtr;
@@ -239,4 +237,6 @@ bool AddEnvironmentCleanupFunction(
     }
 
     return true;
+#endif
+    return false;
 }

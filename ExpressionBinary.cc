@@ -86,8 +86,8 @@ void AllocateExpressions(
     if (ExpressionData(theEnv)->NumberOfExpressions == 0L)
         ExpressionData(theEnv)->ExpressionArray = nullptr;
     else {
-        space = ExpressionData(theEnv)->NumberOfExpressions * sizeof(expr);
-        ExpressionData(theEnv)->ExpressionArray = (expr *) genalloc(theEnv, space);
+        space = ExpressionData(theEnv)->NumberOfExpressions * sizeof(Expression);
+        ExpressionData(theEnv)->ExpressionArray = (Expression *) genalloc(theEnv, space);
     }
 }
 
@@ -213,11 +213,11 @@ static void UpdateExpression(
 
     theIndex = bexp->nextArg;
     if (theIndex == ULONG_MAX) { ExpressionData(theEnv)->ExpressionArray[obji].nextArg = nullptr; }
-    else { ExpressionData(theEnv)->ExpressionArray[obji].nextArg = (expr *) &ExpressionData(theEnv)->ExpressionArray[theIndex]; }
+    else { ExpressionData(theEnv)->ExpressionArray[obji].nextArg = (Expression *) &ExpressionData(theEnv)->ExpressionArray[theIndex]; }
 
     theIndex = bexp->argList;
     if (theIndex == ULONG_MAX) { ExpressionData(theEnv)->ExpressionArray[obji].argList = nullptr; }
-    else { ExpressionData(theEnv)->ExpressionArray[obji].argList = (expr *) &ExpressionData(theEnv)->ExpressionArray[theIndex]; }
+    else { ExpressionData(theEnv)->ExpressionArray[obji].argList = (Expression *) &ExpressionData(theEnv)->ExpressionArray[theIndex]; }
 }
 
 /*********************************************/
@@ -275,7 +275,7 @@ void ClearBloadedExpressions(
     /* Free the binary expression array. */
     /*===================================*/
 
-    space = ExpressionData(theEnv)->NumberOfExpressions * sizeof(expr);
+    space = ExpressionData(theEnv)->NumberOfExpressions * sizeof(Expression);
     if (space != 0) genfree(theEnv, ExpressionData(theEnv)->ExpressionArray, space);
     ExpressionData(theEnv)->ExpressionArray = 0;
 }

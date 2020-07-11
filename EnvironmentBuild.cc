@@ -132,7 +132,7 @@ Environment CreateEnvironmentDriver(
         CLIPSInteger **integerTable,
         CLIPSBitMap **bitmapTable,
         CLIPSExternalAddress **externalAddressTable,
-        functionDefinition *functions) {
+        FunctionDefinition *functions) {
     auto theEnvironment = std::make_shared<environmentData>();
 
     if (theEnvironment == nullptr) {

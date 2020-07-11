@@ -58,15 +58,15 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static struct factPatternNode *FindPatternNode(factPatternNode *, struct lhsParseNode *,
-                                               struct factPatternNode **, bool, bool);
-static struct factPatternNode *CreateNewPatternNode(const Environment&, struct lhsParseNode *, struct factPatternNode *,
-                                                    struct factPatternNode *, bool, bool);
-static void ClearPatternMatches(const Environment&, struct factPatternNode *);
+static FactPatternNode *FindPatternNode(FactPatternNode *, struct lhsParseNode *,
+                                               FactPatternNode **, bool, bool);
+static FactPatternNode *CreateNewPatternNode(const Environment&, struct lhsParseNode *, FactPatternNode *,
+                                                    FactPatternNode *, bool, bool);
+static void ClearPatternMatches(const Environment&, FactPatternNode *);
 static void DetachFactPattern(const Environment&, struct patternNodeHeader *);
 static struct patternNodeHeader *PlaceFactPattern(const Environment&, struct lhsParseNode *);
 static struct lhsParseNode *RemoveUnneededSlots(const Environment&, struct lhsParseNode *);
-static void FindAndSetDeftemplatePatternNetwork(const Environment&, struct factPatternNode *, struct factPatternNode *);
+static void FindAndSetDeftemplatePatternNetwork(const Environment&, FactPatternNode *, FactPatternNode *);
 
 /*********************************************************/
 /* InitializeFactPatterns: Adds fact patterns to the set */
@@ -117,8 +117,8 @@ static struct patternNodeHeader *PlaceFactPattern(
         const Environment&theEnv,
         struct lhsParseNode *thePattern) {
     struct lhsParseNode *tempPattern;
-    struct factPatternNode *currentLevel, *lastLevel;
-    struct factPatternNode *nodeBeforeMatch, *newNode = nullptr;
+    FactPatternNode *currentLevel, *lastLevel;
+    FactPatternNode *nodeBeforeMatch, *newNode = nullptr;
     bool endSlot;
     unsigned int count;
     const char *deftemplateName;
@@ -287,10 +287,10 @@ static struct patternNodeHeader *PlaceFactPattern(
 /*  level in the pattern network that can be reused (shared) */
 /*  with a pattern field being added to the pattern network. */
 /*************************************************************/
-static struct factPatternNode *FindPatternNode(
-        struct factPatternNode *listOfNodes,
+static FactPatternNode *FindPatternNode(
+        FactPatternNode *listOfNodes,
         struct lhsParseNode *thePattern,
-        struct factPatternNode **nodeBeforeMatch,
+        FactPatternNode **nodeBeforeMatch,
         bool endSlot,
         bool constantSelector) {
     Expression *compareTest;
@@ -519,21 +519,21 @@ static struct lhsParseNode *RemoveUnneededSlots(
 /* CreateNewPatternNode: Creates a new pattern node */
 /*   and initializes all of its values.             */
 /****************************************************/
-static struct factPatternNode *CreateNewPatternNode(
+static FactPatternNode *CreateNewPatternNode(
         const Environment&theEnv,
         struct lhsParseNode *thePattern,
-        struct factPatternNode *nodeBeforeMatch,
-        struct factPatternNode *upperLevel,
+        FactPatternNode *nodeBeforeMatch,
+        FactPatternNode *upperLevel,
         bool endSlot,
         bool constantSelector) {
-    struct factPatternNode *newNode;
+    FactPatternNode *newNode;
 
     /*========================================*/
     /* Create the pattern node and initialize */
     /* its slots to the default values.       */
     /*========================================*/
 
-    newNode = get_struct(theEnv, factPatternNode);
+    newNode = get_struct(theEnv, FactPatternNode);
     newNode->nextLevel = nullptr;
     newNode->rightNode = nullptr;
     newNode->leftNode = nullptr;
@@ -651,8 +651,8 @@ static struct factPatternNode *CreateNewPatternNode(
 static void DetachFactPattern(
         const Environment&theEnv,
         struct patternNodeHeader *thePattern) {
-    struct factPatternNode *patternPtr;
-    struct factPatternNode *upperLevel;
+    FactPatternNode *patternPtr;
+    FactPatternNode *upperLevel;
 
     /*=====================================================*/
     /* Get rid of any matches stored in the alpha memory.  */
@@ -758,8 +758,8 @@ static void DetachFactPattern(
 /**************************************************************/
 void DestroyFactPatternNetwork(
         const Environment&theEnv,
-        struct factPatternNode *thePattern) {
-    struct factPatternNode *patternPtr;
+        FactPatternNode *thePattern) {
+    FactPatternNode *patternPtr;
 
     if (thePattern == nullptr) return;
 
@@ -795,8 +795,8 @@ void DestroyFactPatternNetwork(
 /***********************************************************/
 static void FindAndSetDeftemplatePatternNetwork(
         const Environment&theEnv,
-        struct factPatternNode *rootNode,
-        struct factPatternNode *newRootNode) {
+        FactPatternNode *rootNode,
+        FactPatternNode *newRootNode) {
     Deftemplate *theDeftemplate;
     Defmodule *theModule;
 
@@ -862,7 +862,7 @@ static void FindAndSetDeftemplatePatternNetwork(
 /***************************************************************/
 static void ClearPatternMatches(
         const Environment&theEnv,
-        struct factPatternNode *patternPtr) {
+        FactPatternNode *patternPtr) {
     Fact *theFact;
     struct patternMatch *lastMatch, *theMatch;
 

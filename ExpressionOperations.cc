@@ -379,7 +379,7 @@ Expression *CombineExpressions(
         (expr2->value != ExpressionData(theEnv)->PTR_AND)) {
         tempPtr = expr1->argList;
         if (tempPtr == nullptr) {
-            rtn_struct(theEnv, expr, expr1);
+            rtn_struct(theEnv, Expression, expr1);
             return (expr2);
         }
 
@@ -399,7 +399,7 @@ Expression *CombineExpressions(
         (expr2->value == ExpressionData(theEnv)->PTR_AND)) {
         tempPtr = expr2->argList;
         if (tempPtr == nullptr) {
-            rtn_struct(theEnv, expr, expr2);
+            rtn_struct(theEnv, Expression, expr2);
             return (expr1);
         }
 

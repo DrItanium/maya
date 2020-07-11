@@ -112,8 +112,8 @@ struct fileCommandData {
     BatchEntry *BottomOfBatchList;
     char *batchPriorParsingFile;
 };
-
-#define FileCommandData(theEnv) ((fileCommandData *) GetEnvironmentData(theEnv,FILECOM_DATA))
+RegisterEnvironmentModule(fileCommandData, FILECOM_DATA);
+#define FileCommandData(theEnv) (GetEnvironmentData(theEnv,FILECOM_DATA))
 
 void FileCommandDefinitions(const Environment&);
 void BatchCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
@@ -135,8 +135,8 @@ struct fileRouter {
 struct fileRouterData {
     struct fileRouter *ListOfFileRouters;
 };
-
-#define FileRouterData(theEnv) ((fileRouterData *) GetEnvironmentData(theEnv,FILE_ROUTER_DATA))
+RegisterEnvironmentModule(fileRouterData, FILE_ROUTER_DATA);
+#define FileRouterData(theEnv) (GetEnvironmentData(theEnv,FILE_ROUTER_DATA))
 
 void InitializeFileRouter(const Environment&);
 FILE *FindFptr(const Environment&, const char *);

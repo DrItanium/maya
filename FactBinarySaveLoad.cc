@@ -73,11 +73,11 @@ constexpr auto BSAVE_PATTERNS     = 1;
 /***************************************/
 
 #if BLOAD_AND_BSAVE
-static void BsaveDriver(const Environment&, int, FILE *, struct factPatternNode *);
+static void BsaveDriver(const Environment&, int, FILE *, FactPatternNode *);
 static void BsaveFind(const Environment&);
 static void BsaveStorage(const Environment&, FILE *);
 static void BsaveFactPatterns(const Environment&, FILE *);
-static void BsavePatternNode(const Environment&, struct factPatternNode *, FILE *);
+static void BsavePatternNode(const Environment&, FactPatternNode *, FILE *);
 #endif
 static void BloadStorage(const Environment&);
 static void BloadBinaryItem(const Environment&);
@@ -182,7 +182,7 @@ static void BsaveDriver(
         const Environment&theEnv,
         int action,
         FILE *fp,
-        struct factPatternNode *thePattern) {
+        FactPatternNode *thePattern) {
     while (thePattern != nullptr) {
         switch (action) {
             case BSAVE_FIND:
@@ -277,7 +277,7 @@ static void BsaveFactPatterns(
 /******************************************************/
 static void BsavePatternNode(
         const Environment&theEnv,
-        struct factPatternNode *thePattern,
+        FactPatternNode *thePattern,
         FILE *fp) {
     struct bsaveFactPatternNode tempNode;
 

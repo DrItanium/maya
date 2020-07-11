@@ -152,8 +152,8 @@ void SetupMessageHandlers(
                               nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
     AllocateEnvironmentData(theEnv, MESSAGE_HANDLER_DATA, sizeof(messageHandlerData), DeallocateMessageHandlerData);
-    memcpy(&MessageHandlerData(theEnv)->HandlerGetInfo, &handlerGetInfo, sizeof(entityRecord));
-    memcpy(&MessageHandlerData(theEnv)->HandlerPutInfo, &handlerPutInfo, sizeof(entityRecord));
+    memcpy(&MessageHandlerData(theEnv)->HandlerGetInfo, &handlerGetInfo, sizeof(EntityRecord));
+    memcpy(&MessageHandlerData(theEnv)->HandlerPutInfo, &handlerPutInfo, sizeof(EntityRecord));
 
     MessageHandlerData(theEnv)->hndquals[0] = "around";
     MessageHandlerData(theEnv)->hndquals[1] = "before";

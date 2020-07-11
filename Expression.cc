@@ -192,8 +192,8 @@ Expression *PackExpression(
 
     if (original == nullptr) return nullptr;
 
-    packPtr = (expr *)
-            gm2(theEnv, sizeof(expr) * ExpressionSize(original));
+    packPtr = (Expression*)
+            gm2(theEnv, sizeof(Expression) * ExpressionSize(original));
     ListToPacked(original, packPtr, 0);
 
     return packPtr;
@@ -220,7 +220,7 @@ static unsigned long ListToPacked(
         if (original->argList == nullptr) { destination[i].argList = nullptr; }
         else {
             destination[i].argList =
-                    (expr *) &destination[count];
+                    (Expression*) &destination[count];
             count = ListToPacked(original->argList, destination, count);
         }
 
@@ -244,7 +244,7 @@ void ReturnPackedExpression(
         const Environment&theEnv,
         Expression *packPtr) {
     if (packPtr != nullptr) {
-        rm(theEnv, packPtr, sizeof(expr) * ExpressionSize(packPtr));
+        rm(theEnv, packPtr, sizeof(Expression) * ExpressionSize(packPtr));
     }
 }
 

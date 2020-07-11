@@ -140,73 +140,73 @@ static void DestroyObjectAlphaNodes(const Environment&, OBJECT_ALPHA_NODE *);
  ***************************************************/
 void InstallObjectPrimitives(
         const Environment&theEnv) {
-    struct entityRecord objectGVInfo1 = {"OBJ_GET_SLOT_JNVAR1", OBJ_GET_SLOT_JNVAR1, 0, 1, 0,
+    EntityRecord objectGVInfo1 = {"OBJ_GET_SLOT_JNVAR1", OBJ_GET_SLOT_JNVAR1, 0, 1, 0,
                                          PrintObjectGetVarJN1,
                                          PrintObjectGetVarJN1, nullptr,
                                          ObjectGetVarJNFunction1,
                                          nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    struct entityRecord objectGVInfo2 = {"OBJ_GET_SLOT_JNVAR2", OBJ_GET_SLOT_JNVAR2, 0, 1, 0,
+    EntityRecord objectGVInfo2 = {"OBJ_GET_SLOT_JNVAR2", OBJ_GET_SLOT_JNVAR2, 0, 1, 0,
                                          PrintObjectGetVarJN2,
                                          PrintObjectGetVarJN2, nullptr,
                                          ObjectGetVarJNFunction2,
                                          nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    struct entityRecord objectGVPNInfo1 = {"OBJ_GET_SLOT_PNVAR1", OBJ_GET_SLOT_PNVAR1, 0, 1, 0,
+    EntityRecord objectGVPNInfo1 = {"OBJ_GET_SLOT_PNVAR1", OBJ_GET_SLOT_PNVAR1, 0, 1, 0,
                                            PrintObjectGetVarPN1,
                                            PrintObjectGetVarPN1, nullptr,
                                            ObjectGetVarPNFunction1,
                                            nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    struct entityRecord objectGVPNInfo2 = {"OBJ_GET_SLOT_PNVAR2", OBJ_GET_SLOT_PNVAR2, 0, 1, 0,
+    EntityRecord objectGVPNInfo2 = {"OBJ_GET_SLOT_PNVAR2", OBJ_GET_SLOT_PNVAR2, 0, 1, 0,
                                            PrintObjectGetVarPN2,
                                            PrintObjectGetVarPN2, nullptr,
                                            ObjectGetVarPNFunction2,
                                            nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    struct entityRecord objectCmpConstantInfo = {"OBJ_PN_CONSTANT", OBJ_PN_CONSTANT, 0, 1, 1,
+    EntityRecord objectCmpConstantInfo = {"OBJ_PN_CONSTANT", OBJ_PN_CONSTANT, 0, 1, 1,
                                                  PrintObjectCmpConstant,
                                                  PrintObjectCmpConstant, nullptr,
                                                  ObjectCmpConstantFunction,
                                                  nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    struct entityRecord lengthTestInfo = {"OBJ_SLOT_LENGTH", OBJ_SLOT_LENGTH, 0, 1, 0,
+    EntityRecord lengthTestInfo = {"OBJ_SLOT_LENGTH", OBJ_SLOT_LENGTH, 0, 1, 0,
                                           PrintSlotLengthTest,
                                           PrintSlotLengthTest, nullptr,
                                           SlotLengthTestFunction,
                                           nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    struct entityRecord pNSimpleCompareInfo1 = {"OBJ_PN_CMP1", OBJ_PN_CMP1, 0, 1, 1,
+    EntityRecord pNSimpleCompareInfo1 = {"OBJ_PN_CMP1", OBJ_PN_CMP1, 0, 1, 1,
                                                 PrintPNSimpleCompareFunction1,
                                                 PrintPNSimpleCompareFunction1, nullptr,
                                                 PNSimpleCompareFunction1,
                                                 nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    struct entityRecord pNSimpleCompareInfo2 = {"OBJ_PN_CMP2", OBJ_PN_CMP2, 0, 1, 1,
+    EntityRecord pNSimpleCompareInfo2 = {"OBJ_PN_CMP2", OBJ_PN_CMP2, 0, 1, 1,
                                                 PrintPNSimpleCompareFunction2,
                                                 PrintPNSimpleCompareFunction2, nullptr,
                                                 PNSimpleCompareFunction2,
                                                 nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    struct entityRecord pNSimpleCompareInfo3 = {"OBJ_PN_CMP3", OBJ_PN_CMP3, 0, 1, 1,
+    EntityRecord pNSimpleCompareInfo3 = {"OBJ_PN_CMP3", OBJ_PN_CMP3, 0, 1, 1,
                                                 PrintPNSimpleCompareFunction3,
                                                 PrintPNSimpleCompareFunction3, nullptr,
                                                 PNSimpleCompareFunction3,
                                                 nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    struct entityRecord jNSimpleCompareInfo1 = {"OBJ_JN_CMP1", OBJ_JN_CMP1, 0, 1, 1,
+    EntityRecord jNSimpleCompareInfo1 = {"OBJ_JN_CMP1", OBJ_JN_CMP1, 0, 1, 1,
                                                 PrintJNSimpleCompareFunction1,
                                                 PrintJNSimpleCompareFunction1, nullptr,
                                                 JNSimpleCompareFunction1,
                                                 nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    struct entityRecord jNSimpleCompareInfo2 = {"OBJ_JN_CMP2", OBJ_JN_CMP2, 0, 1, 1,
+    EntityRecord jNSimpleCompareInfo2 = {"OBJ_JN_CMP2", OBJ_JN_CMP2, 0, 1, 1,
                                                 PrintJNSimpleCompareFunction2,
                                                 PrintJNSimpleCompareFunction2, nullptr,
                                                 JNSimpleCompareFunction2,
                                                 nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
-    struct entityRecord jNSimpleCompareInfo3 = {"OBJ_JN_CMP3", OBJ_JN_CMP3, 0, 1, 1,
+    EntityRecord jNSimpleCompareInfo3 = {"OBJ_JN_CMP3", OBJ_JN_CMP3, 0, 1, 1,
                                                 PrintJNSimpleCompareFunction3,
                                                 PrintJNSimpleCompareFunction3, nullptr,
                                                 JNSimpleCompareFunction3,
@@ -215,18 +215,18 @@ void InstallObjectPrimitives(
     AllocateEnvironmentData(theEnv, OBJECT_RETE_DATA, sizeof(objectReteData), DeallocateObjectReteData);
     ObjectReteData(theEnv)->CurrentObjectSlotLength = 1;
 
-    memcpy(&ObjectReteData(theEnv)->ObjectGVInfo1, &objectGVInfo1, sizeof(entityRecord));
-    memcpy(&ObjectReteData(theEnv)->ObjectGVInfo2, &objectGVInfo2, sizeof(entityRecord));
-    memcpy(&ObjectReteData(theEnv)->ObjectGVPNInfo1, &objectGVPNInfo1, sizeof(entityRecord));
-    memcpy(&ObjectReteData(theEnv)->ObjectGVPNInfo2, &objectGVPNInfo2, sizeof(entityRecord));
-    memcpy(&ObjectReteData(theEnv)->ObjectCmpConstantInfo, &objectCmpConstantInfo, sizeof(entityRecord));
-    memcpy(&ObjectReteData(theEnv)->LengthTestInfo, &lengthTestInfo, sizeof(entityRecord));
-    memcpy(&ObjectReteData(theEnv)->PNSimpleCompareInfo1, &pNSimpleCompareInfo1, sizeof(entityRecord));
-    memcpy(&ObjectReteData(theEnv)->PNSimpleCompareInfo2, &pNSimpleCompareInfo2, sizeof(entityRecord));
-    memcpy(&ObjectReteData(theEnv)->PNSimpleCompareInfo3, &pNSimpleCompareInfo3, sizeof(entityRecord));
-    memcpy(&ObjectReteData(theEnv)->JNSimpleCompareInfo1, &jNSimpleCompareInfo1, sizeof(entityRecord));
-    memcpy(&ObjectReteData(theEnv)->JNSimpleCompareInfo2, &jNSimpleCompareInfo2, sizeof(entityRecord));
-    memcpy(&ObjectReteData(theEnv)->JNSimpleCompareInfo3, &jNSimpleCompareInfo3, sizeof(entityRecord));
+    memcpy(&ObjectReteData(theEnv)->ObjectGVInfo1, &objectGVInfo1, sizeof(EntityRecord));
+    memcpy(&ObjectReteData(theEnv)->ObjectGVInfo2, &objectGVInfo2, sizeof(EntityRecord));
+    memcpy(&ObjectReteData(theEnv)->ObjectGVPNInfo1, &objectGVPNInfo1, sizeof(EntityRecord));
+    memcpy(&ObjectReteData(theEnv)->ObjectGVPNInfo2, &objectGVPNInfo2, sizeof(EntityRecord));
+    memcpy(&ObjectReteData(theEnv)->ObjectCmpConstantInfo, &objectCmpConstantInfo, sizeof(EntityRecord));
+    memcpy(&ObjectReteData(theEnv)->LengthTestInfo, &lengthTestInfo, sizeof(EntityRecord));
+    memcpy(&ObjectReteData(theEnv)->PNSimpleCompareInfo1, &pNSimpleCompareInfo1, sizeof(EntityRecord));
+    memcpy(&ObjectReteData(theEnv)->PNSimpleCompareInfo2, &pNSimpleCompareInfo2, sizeof(EntityRecord));
+    memcpy(&ObjectReteData(theEnv)->PNSimpleCompareInfo3, &pNSimpleCompareInfo3, sizeof(EntityRecord));
+    memcpy(&ObjectReteData(theEnv)->JNSimpleCompareInfo1, &jNSimpleCompareInfo1, sizeof(EntityRecord));
+    memcpy(&ObjectReteData(theEnv)->JNSimpleCompareInfo2, &jNSimpleCompareInfo2, sizeof(EntityRecord));
+    memcpy(&ObjectReteData(theEnv)->JNSimpleCompareInfo3, &jNSimpleCompareInfo3, sizeof(EntityRecord));
 
     InstallPrimitive(theEnv, &ObjectReteData(theEnv)->ObjectGVInfo1, OBJ_GET_SLOT_JNVAR1);
     InstallPrimitive(theEnv, &ObjectReteData(theEnv)->ObjectGVInfo2, OBJ_GET_SLOT_JNVAR2);

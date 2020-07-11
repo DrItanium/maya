@@ -198,7 +198,7 @@ void RemoveEntityDependencies(
         /* Remove the link between the data entity and the partial match. */
         /*================================================================*/
 
-        theBinds = (partialMatch *) fdPtr->dPtr;
+        theBinds = (PartialMatch *) fdPtr->dPtr;
         theList = (dependency *) theBinds->dependents;
         theList = DetachAssociatedDependencies(theEnv, theList, theEntity);
         theBinds->dependents = theList;
@@ -489,7 +489,7 @@ void Dependencies(
          fdPtr != nullptr;
          fdPtr = fdPtr->next) {
         if (GetHaltExecution(theEnv)) return;
-        PrintPartialMatch(theEnv, STDOUT, (partialMatch *) fdPtr->dPtr);
+        PrintPartialMatch(theEnv, STDOUT, (PartialMatch *) fdPtr->dPtr);
         WriteString(theEnv, STDOUT, "\n");
     }
 }
@@ -534,7 +534,7 @@ void Dependents(
             /* to the next data entity.                            */
             /*=====================================================*/
 
-            theBinds = (partialMatch *) fdPtr->dPtr;
+            theBinds = (PartialMatch *) fdPtr->dPtr;
             if (FindEntityInPartialMatch(theEntity, theBinds)) {
                 if (found) WriteString(theEnv, STDOUT, ",");
                 (*entityPtr->theInfo->base.shortPrintFunction)(theEnv, STDOUT, entityPtr);

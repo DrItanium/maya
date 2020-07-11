@@ -159,7 +159,7 @@ static bool RetractCallback(Fact *, const Environment&);
 /**************************************************************/
 void InitializeFacts(
         const Environment&theEnv) {
-    struct patternEntityRecord factInfo =
+    PatternEntityRecord factInfo =
             {{"FACT_ADDRESS_TYPE", FACT_ADDRESS_TYPE, 1, 0, 0,
               (EntityPrintFunction *) PrintFactIdentifier,
               (EntityPrintFunction *) PrintFactIdentifierInLongForm,
@@ -184,7 +184,7 @@ void InitializeFacts(
 
     AllocateEnvironmentData(theEnv, FACTS_DATA, sizeof(factsData), DeallocateFactData);
 
-    memcpy(&FactData(theEnv)->FactInfo, &factInfo, sizeof(patternEntityRecord));
+    memcpy(&FactData(theEnv)->FactInfo, &factInfo, sizeof(PatternEntityRecord));
     dummyFact.patternHeader.theInfo = &FactData(theEnv)->FactInfo;
     memcpy(&FactData(theEnv)->DummyFact, &dummyFact, sizeof(fact));
     FactData(theEnv)->LastModuleIndex = -1;

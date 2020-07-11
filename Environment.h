@@ -72,19 +72,20 @@
 #include <functional>
 #include <tuple>
 #include <iostream>
+#include <list>
 
 using Environment = std::shared_ptr<struct environmentData>;
 //typedef void EnvironmentCleanupFunction(const Environment&);
-using EnvironmentCleanupFunction = std::function<void(const Environment&)>;
+using EnvironmentCleanupFunctionBody = std::function<void(const Environment&)>;
 
 constexpr auto USER_ENVIRONMENT_DATA = 70;
 constexpr auto MAXIMUM_ENVIRONMENT_POSITIONS = 100;
 
-struct environmentCleanupFunction {
+struct EnvironmentCleanupFunction {
     const char *name;
-    void (*func)(const Environment&);
+    EnvironmentCleanupFunctionBody func;
     int priority;
-    struct environmentCleanupFunction *next;
+    EnvironmentCleanupFunction *next;
 };
 class EnvironmentModule {
 public:
@@ -147,7 +148,7 @@ struct environmentData {
     CLIPSLexeme *FalseSymbol = nullptr;
     CLIPSVoid *VoidConstant = nullptr;
     std::array<std::unique_ptr<EnvironmentModule>, MAXIMUM_ENVIRONMENT_POSITIONS> environmentModules;
-    environmentCleanupFunction *listOfCleanupEnvironmentFunctions = nullptr;
+    std::list<EnvironmentCleanupFunction> listOfCleanupEnvironmentFunctions;
     environmentData *next = nullptr;
     template<typename T>
     bool installEnvironmentModule(std::unique_ptr<T>&& module) noexcept {
@@ -184,8 +185,8 @@ inline auto TrueSymbol(const Environment& theEnv) noexcept { return theEnv->True
 
 #define GetEnvironmentData(theEnv, position) (theEnv->getEnvironmentModule<position>())
 
-bool AllocateEnvironmentData(const Environment&, unsigned, size_t, EnvironmentCleanupFunction = nullptr);
-bool AddEnvironmentCleanupFunction(const Environment&, const char *, EnvironmentCleanupFunction, int);
+bool AllocateEnvironmentData(const Environment&, unsigned, size_t, EnvironmentCleanupFunctionBody = nullptr);
+bool AddEnvironmentCleanupFunction(const Environment&, const char *, EnvironmentCleanupFunctionBody, int);
 void *GetEnvironmentContext(const Environment&);
 void *SetEnvironmentContext(const Environment&, void *);
 

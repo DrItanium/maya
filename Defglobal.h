@@ -100,8 +100,8 @@ struct defglobal {
 struct defglobalModule {
     struct defmoduleItemHeader header;
 };
-
-#define DefglobalData(theEnv) ((defglobalData *) GetEnvironmentData(theEnv,DEFGLOBAL_DATA))
+RegisterEnvironmentModule(defglobalData, DEFGLOBAL_DATA);
+#define DefglobalData(theEnv) (GetEnvironmentData(theEnv,DEFGLOBAL_DATA))
 
 void InitializeDefglobals(const Environment&);
 Defglobal *FindDefglobal(const Environment&, const char *);
