@@ -191,8 +191,6 @@ inline auto TrueSymbol(const Environment& theEnv) noexcept { return theEnv->True
 
 #define GetEnvironmentData(theEnv, position) (theEnv->getEnvironmentModule<position>())
 
-//bool AllocateEnvironmentData(const Environment&, unsigned, size_t, EnvironmentCleanupFunctionBody = nullptr);
-bool AddEnvironmentCleanupFunction(const Environment&, const char *, EnvironmentCleanupFunctionBody, int);
 void *GetEnvironmentContext(const Environment&);
 void *SetEnvironmentContext(const Environment&, void *);
 

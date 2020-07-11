@@ -158,7 +158,8 @@ void SetupObjectSystem(
                                          nullptr, nullptr, nullptr, nullptr, nullptr};
 
     theEnv->allocateEnvironmentModule<defclassData>();
-    AddEnvironmentCleanupFunction(theEnv, "defclasses", DeallocateDefclassData, -500);
+    /// @todo DeallocateDefclassData is the dtor for defclassData
+    //AddEnvironmentCleanupFunction(theEnv, "defclasses", DeallocateDefclassData, -500);
 
 
     DefclassData(theEnv)->DefclassEntityRecord = defclassEntityRecord;

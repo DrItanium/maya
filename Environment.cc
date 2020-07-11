@@ -121,59 +121,6 @@
 
 #define SIZE_ENVIRONMENT_HASH  131
 
-#if 0
-/*******************************************************/
-/* AllocateEnvironmentData: Allocates environment data */
-/*    for the specified environment data record.       */
-/*******************************************************/
-bool AllocateEnvironmentData(
-        const Environment& theEnvironment,
-        unsigned position,
-        size_t size,
-        EnvironmentCleanupFunction *cleanupFunction) {
-    /*================================================================*/
-    /* Check to see if the data position exceeds the maximum allowed. */
-    /*================================================================*/
-
-    if (position >= MAXIMUM_ENVIRONMENT_POSITIONS) {
-        std::cout << "\n[ENVRNMNT2] Environment data position " << position << " exceeds the maximum allowed.\n";
-        return false;
-    }
-
-    /*============================================================*/
-    /* Check if the environment data has already been registered. */
-    /*============================================================*/
-
-    if (theEnvironment->theData[position] != nullptr) {
-        std::cout << "\n[ENVRNMNT3] Environment data position " << position << " already allocated.\n";
-        return false;
-    }
-
-    /*====================*/
-    /* Allocate the data. */
-    /*====================*/
-
-    theEnvironment->theData[position] = malloc(size);
-    if (theEnvironment->theData[position] == nullptr) {
-        std::cout << "\n[ENVRNMNT4] Environment data position " << position << " could not be allocated.\n";
-        return false;
-    }
-
-    memset(theEnvironment->theData[position], 0, size);
-
-    /*=============================*/
-    /* Store the cleanup function. */
-    /*=============================*/
-
-    theEnvironment->cleanupFunctions[position] = cleanupFunction;
-
-    /*===============================*/
-    /* Data successfully registered. */
-    /*===============================*/
-    return true;
-    return false;
-}
-#endif
 
 /**********************************************/
 /* GetEnvironmentContext: Returns the context */
@@ -198,47 +145,6 @@ void *SetEnvironmentContext(
     theEnvironment->context = theContext;
 
     return oldContext;
-}
-
-/**************************************************/
-/* AddEnvironmentCleanupFunction: Adds a function */
-/*   to the ListOfCleanupEnvironmentFunctions.    */
-/**************************************************/
-bool AddEnvironmentCleanupFunction(
-        const Environment&theEnv,
-        const char *name,
-        EnvironmentCleanupFunctionBody functionPtr,
-        int priority) {
-    /// @todo fix this
-#if 0
-    EnvironmentCleanupFunction *newPtr, *currentPtr, *lastPtr = nullptr;
-
-    newPtr = (EnvironmentCleanupFunction *) malloc(sizeof(EnvironmentCleanupFunction));
-    if (newPtr == nullptr) { return false; }
-
-    newPtr->name = name;
-    newPtr->func = functionPtr;
-    newPtr->priority = priority;
-    if (theEnv->listOfCleanupEnvironmentFunctions.empty()) {
-        theEnv->listOfCleanupEnvironmentFunctions.emplace_back(newPtr);
-    }
-    currentPtr = theEnv->listOfCleanupEnvironmentFunctions;
-    while ((currentPtr != nullptr) ? (priority < currentPtr->priority) : false) {
-        lastPtr = currentPtr;
-        currentPtr = currentPtr->next;
-    }
-
-    if (lastPtr == nullptr) {
-        newPtr->next = theEnv->listOfCleanupEnvironmentFunctions;
-        theEnv->listOfCleanupEnvironmentFunctions = newPtr;
-    } else {
-        newPtr->next = currentPtr;
-        lastPtr->next = newPtr;
-    }
-
-    return true;
-#endif
-    return false;
 }
 
 void
