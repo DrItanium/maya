@@ -258,7 +258,7 @@ static void DeallocateObjectBinaryData(
                 (ObjectBinaryData(theEnv)->SlotArray[i].dynamicDefault == 0)) {
                 UDFValue *theValue = (UDFValue *) ObjectBinaryData(theEnv)->SlotArray[i].defaultValue;
                 if (theValue->header->type == MULTIFIELD_TYPE) { ReturnMultifield(theEnv, theValue->multifieldValue); }
-                rtn_struct(theEnv, udfValue, ObjectBinaryData(theEnv)->SlotArray[i].defaultValue);
+                rtn_struct(theEnv, UDFValue, ObjectBinaryData(theEnv)->SlotArray[i].defaultValue);
             }
         }
 
@@ -1208,7 +1208,7 @@ static void UpdateSlot(
         if (sp->dynamicDefault)
             sp->defaultValue = ExpressionPointer(bsp->defaultValue);
         else {
-            sp->defaultValue = get_struct(theEnv, udfValue);
+            sp->defaultValue = get_struct(theEnv, UDFValue);
             EvaluateAndStoreInDataObject(theEnv, sp->multiple, ExpressionPointer(bsp->defaultValue),
                                          (UDFValue *) sp->defaultValue, false);
             RetainUDFV(theEnv, (UDFValue *) sp->defaultValue);
@@ -1322,7 +1322,7 @@ static void ClearBloadObjects(
                 UDFValue *theValue = (UDFValue *) ObjectBinaryData(theEnv)->SlotArray[i].defaultValue;
                 ReleaseUDFV(theEnv, (UDFValue *) ObjectBinaryData(theEnv)->SlotArray[i].defaultValue);
                 if (theValue->header->type == MULTIFIELD_TYPE) { ReturnMultifield(theEnv, theValue->multifieldValue); }
-                rtn_struct(theEnv, udfValue, ObjectBinaryData(theEnv)->SlotArray[i].defaultValue);
+                rtn_struct(theEnv, UDFValue, ObjectBinaryData(theEnv)->SlotArray[i].defaultValue);
             }
         }
         for (i = 0; i < ObjectBinaryData(theEnv)->SlotNameCount; i++) {

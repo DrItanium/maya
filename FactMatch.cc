@@ -492,7 +492,7 @@ static void ProcessFactAlphaMatch(
         Fact *theFact,
         struct multifieldMarker *theMarks,
         struct factPatternNode *thePattern) {
-    struct partialMatch *theMatch;
+    PartialMatch *theMatch;
     struct patternMatch *listOfMatches;
     struct joinNode *listOfJoins;
     unsigned long hashValue;

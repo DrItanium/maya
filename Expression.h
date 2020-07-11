@@ -185,7 +185,7 @@ Expression *RemoveUnneededProgn(const Environment&, Expression *);
 void PopulateRestriction(const Environment&, unsigned *, unsigned, const char *, unsigned int);
 
 FunctionArgumentsError CheckExpressionAgainstRestrictions(const Environment&, Expression *,
-                                                          struct functionDefinition *, const char *);
+                                                          FunctionDefinition *, const char *);
 
 bool RestrictionExists(const char *, int);
 #endif

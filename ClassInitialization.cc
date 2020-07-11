@@ -160,7 +160,7 @@ void SetupObjectSystem(
     AllocateEnvironmentData(theEnv, DEFCLASS_DATA, sizeof(defclassData));
     AddEnvironmentCleanupFunction(theEnv, "defclasses", DeallocateDefclassData, -500);
 
-    memcpy(&DefclassData(theEnv)->DefclassEntityRecord, &defclassEntityRecord, sizeof(entityRecord));
+    memcpy(&DefclassData(theEnv)->DefclassEntityRecord, &defclassEntityRecord, sizeof(EntityRecord));
 
     DefclassData(theEnv)->newSlotID = 2; // IS_A and NAME assigned 0 and 1
 

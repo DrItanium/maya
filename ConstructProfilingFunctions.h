@@ -89,8 +89,8 @@ struct profileFunctionData {
     struct constructProfileInfo *ActiveProfileFrame;
     const char *OutputString;
 };
-
-#define ProfileFunctionData(theEnv) ((profileFunctionData *) GetEnvironmentData(theEnv,PROFLFUN_DATA))
+RegisterEnvironmentModule(profileFunctionData, PROFLFUN_DATA);
+#define ProfileFunctionData(theEnv) (GetEnvironmentData(theEnv,PROFLFUN_DATA))
 
 void ConstructProfilingFunctionDefinitions(const Environment&);
 void ProfileCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);

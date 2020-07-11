@@ -66,7 +66,7 @@ static struct lhsParseNode *AddToVariableConstraints(const Environment&, struct 
 static void ConstraintConflictMessage(const Environment&, CLIPSLexeme *,
                                       unsigned short, unsigned short, CLIPSLexeme *);
 static bool CheckArgumentForConstraintError(const Environment&, Expression *, Expression *,
-                                            unsigned int, struct functionDefinition *,
+                                            unsigned int, FunctionDefinition *,
                                             struct lhsParseNode *);
 
 /***********************************************************/
@@ -654,7 +654,7 @@ bool CheckRHSForConstraintErrors(
         const Environment&theEnv,
         Expression *expressionList,
         struct lhsParseNode *theLHS) {
-    struct functionDefinition *theFunction;
+    FunctionDefinition *theFunction;
     unsigned int i;
     Expression *lastOne = nullptr, *checkList, *tmpPtr;
 
@@ -699,7 +699,7 @@ static bool CheckArgumentForConstraintError(
         Expression *expressionList,
         Expression *lastOne,
         unsigned int i,
-        struct functionDefinition *theFunction,
+        FunctionDefinition *theFunction,
         struct lhsParseNode *theLHS) {
     unsigned theRestriction2;
     CONSTRAINT_RECORD *constraint1, *constraint2, *constraint3, *constraint4;

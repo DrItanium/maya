@@ -1188,7 +1188,7 @@ struct lhsParseNode *ExpressionToLHSParseNodes(
         const Environment&theEnv,
         Expression *expressionList) {
     struct lhsParseNode *newList, *theList;
-    struct functionDefinition *theFunction;
+    FunctionDefinition *theFunction;
     unsigned int i;
     unsigned theRestriction2;
 

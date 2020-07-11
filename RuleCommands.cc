@@ -625,7 +625,7 @@ static long long ListAlphaMatches(
         struct joinInformation *theInfo,
         Verbosity output) {
     struct alphaMemoryHash *listOfHashNodes;
-    struct partialMatch *listOfMatches;
+    PartialMatch *listOfMatches;
     long long count;
     struct joinNode *theJoin;
     long long alphaCount = 0;
@@ -1385,7 +1385,7 @@ void ShowAlphaHashTable(
     int i, count;
     long totalCount = 0;
     struct alphaMemoryHash *theEntry;
-    struct partialMatch *theMatch;
+    PartialMatch *theMatch;
     char buffer[40];
 
     for (i = 0; i < ALPHA_MEMORY_HASH_SIZE; i++)

@@ -367,7 +367,7 @@ void DeleteSlots(
             UDFValue *theValue = (UDFValue *) stmp->getDescription()->defaultValue;
             ReleaseUDFV(theEnv, theValue);
             if (theValue->header->type == MULTIFIELD_TYPE) { ReturnMultifield(theEnv, theValue->multifieldValue); }
-            rtn_struct(theEnv, udfValue, theValue);
+            rtn_struct(theEnv, UDFValue, theValue);
         }
         rtn_struct(theEnv, slotDescriptor, stmp->getDescription());
         rtn_struct(theEnv, tempSlotLink, stmp);
@@ -667,7 +667,7 @@ static void BuildCompositeFacets(
                 } else {
                     UDFValue *newValue;
                     UDFValue *oldValue = (UDFValue *) compslot->defaultValue;
-                    sd->defaultValue = get_struct(theEnv, udfValue);
+                    sd->defaultValue = get_struct(theEnv, UDFValue);
                     GenCopyMemory(UDFValue, 1, sd->defaultValue, oldValue);
                     newValue = (UDFValue *) sd->defaultValue;
                     if (oldValue->header->type == MULTIFIELD_TYPE) {
@@ -801,7 +801,7 @@ static bool EvaluateSlotDefaultValue(
                 UDFValue *newValue;
                 ExpressionDeinstall(theEnv, (Expression *) sd->defaultValue);
                 ReturnPackedExpression(theEnv, (Expression *) sd->defaultValue);
-                sd->defaultValue = get_struct(theEnv, udfValue);
+                sd->defaultValue = get_struct(theEnv, UDFValue);
                 newValue = (UDFValue *) sd->defaultValue;
                 GenCopyMemory(UDFValue, 1, sd->defaultValue, &temp);
                 if (temp.header->type == MULTIFIELD_TYPE) { newValue->multifieldValue = CopyMultifield(theEnv, temp.multifieldValue); }
@@ -811,7 +811,7 @@ static bool EvaluateSlotDefaultValue(
                 return false;
             }
         } else if (sd->defaultSpecified == 0) {
-            sd->defaultValue = get_struct(theEnv, udfValue);
+            sd->defaultValue = get_struct(theEnv, UDFValue);
             DeriveDefaultFromConstraints(theEnv, sd->constraint,
                                          (UDFValue *) sd->defaultValue, sd->multiple, false);
             RetainUDFV(theEnv, (UDFValue *) sd->defaultValue);

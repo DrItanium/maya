@@ -154,7 +154,7 @@ struct Multifield {
 };
 
 /************/
-/* udfValue */
+/* UDFValue */
 /************/
 struct UDFValue {
     void *supplementalInfo;

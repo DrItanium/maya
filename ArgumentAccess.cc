@@ -249,7 +249,7 @@ void ExpectedCountError(
 /*************************************************************/
 bool CheckFunctionArgCount(
         const Environment&theEnv,
-        struct functionDefinition *func,
+        FunctionDefinition *func,
         int argumentCount) {
     unsigned short minArguments, maxArguments;
     const char *functionName;
@@ -363,7 +363,7 @@ void ExpectedTypeError2(
         const char *functionName,
         unsigned int whichArg) {
     unsigned theRestriction;
-    struct functionDefinition *theFunction;
+    FunctionDefinition *theFunction;
 
     theFunction = FindFunction(theEnv, functionName);
 

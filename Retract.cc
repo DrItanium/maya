@@ -72,13 +72,13 @@
 /***************************************/
 
 static void ReturnMarkers(const Environment&, struct multifieldMarker *);
-static bool FindNextConflictingMatch(const Environment&, struct partialMatch *,
-                                     struct partialMatch *,
-                                     struct joinNode *, struct partialMatch *, int);
-static bool PartialMatchDefunct(const Environment&, struct partialMatch *);
-static void NegEntryRetractAlpha(const Environment&, struct partialMatch *, int);
-static void NegEntryRetractBeta(const Environment&, struct joinNode *, struct partialMatch *,
-                                struct partialMatch *, int);
+static bool FindNextConflictingMatch(const Environment&, PartialMatch *,
+                                     PartialMatch *,
+                                     struct joinNode *, PartialMatch *, int);
+static bool PartialMatchDefunct(const Environment&, PartialMatch *);
+static void NegEntryRetractAlpha(const Environment&, PartialMatch *, int);
+static void NegEntryRetractBeta(const Environment&, struct joinNode *, PartialMatch *,
+                                PartialMatch *, int);
 
 /************************************************************/
 /* NetworkRetract:  Retracts a data entity (such as a fact  */
@@ -120,9 +120,9 @@ void NetworkRetract(
 /*************************/
 void PosEntryRetractAlpha(
         const Environment&theEnv,
-        struct partialMatch *alphaMatch,
+        PartialMatch *alphaMatch,
         int operation) {
-    struct partialMatch *betaMatch, *tempMatch;
+    PartialMatch *betaMatch, *tempMatch;
     struct joinNode *joinPtr;
 
     betaMatch = alphaMatch->children;
@@ -154,9 +154,9 @@ void PosEntryRetractAlpha(
 /*************************/
 static void NegEntryRetractAlpha(
         const Environment&theEnv,
-        struct partialMatch *alphaMatch,
+        PartialMatch *alphaMatch,
         int operation) {
-    struct partialMatch *betaMatch;
+    PartialMatch *betaMatch;
     struct joinNode *joinPtr;
 
     betaMatch = alphaMatch->blockList;
@@ -182,8 +182,8 @@ static void NegEntryRetractAlpha(
 static void NegEntryRetractBeta(
         const Environment&theEnv,
         struct joinNode *joinPtr,
-        struct partialMatch *alphaMatch,
-        struct partialMatch *betaMatch,
+        PartialMatch *alphaMatch,
+        PartialMatch *betaMatch,
         int operation) {
     /*======================================================*/
     /* Try to find another RHS partial match which prevents */
@@ -231,10 +231,10 @@ static void NegEntryRetractBeta(
 /************************/
 void PosEntryRetractBeta(
         const Environment&theEnv,
-        struct partialMatch *parentMatch,
-        struct partialMatch *betaMatch,
+        PartialMatch *parentMatch,
+        PartialMatch *betaMatch,
         int operation) {
-    struct partialMatch *tempMatch;
+    PartialMatch *tempMatch;
 
     while (betaMatch != nullptr) {
         if (betaMatch->children != nullptr) {
@@ -270,14 +270,14 @@ void PosEntryRetractBeta(
 /******************************************************************/
 static bool FindNextConflictingMatch(
         const Environment&theEnv,
-        struct partialMatch *theBind,
-        struct partialMatch *possibleConflicts,
+        PartialMatch *theBind,
+        PartialMatch *possibleConflicts,
         struct joinNode *theJoin,
-        struct partialMatch *skipMatch,
+        PartialMatch *skipMatch,
         int operation) {
     bool result, restore = false;
-    struct partialMatch *oldLHSBinds = nullptr;
-    struct partialMatch *oldRHSBinds = nullptr;
+    PartialMatch *oldLHSBinds = nullptr;
+    PartialMatch *oldRHSBinds = nullptr;
     struct joinNode *oldJoin = nullptr;
 
     /*====================================*/
@@ -402,7 +402,7 @@ static bool FindNextConflictingMatch(
 /***********************************************************/
 static bool PartialMatchDefunct(
         const Environment&theEnv,
-        struct partialMatch *thePM) {
+        PartialMatch *thePM) {
     unsigned short i;
     struct patternEntity *thePE;
 
@@ -428,7 +428,7 @@ static bool PartialMatchDefunct(
 /*****************************************************************/
 bool PartialMatchWillBeDeleted(
         const Environment&theEnv,
-        struct partialMatch *thePM) {
+        PartialMatch *thePM) {
     unsigned short i;
     struct patternEntity *thePE;
 
@@ -453,8 +453,8 @@ bool PartialMatchWillBeDeleted(
 /***************************************************/
 void DeletePartialMatches(
         const Environment&theEnv,
-        struct partialMatch *listOfPMs) {
-    struct partialMatch *nextPM;
+        PartialMatch *listOfPMs) {
+    PartialMatch *nextPM;
 
     while (listOfPMs != nullptr) {
         /*============================================*/
@@ -500,7 +500,7 @@ void DeletePartialMatches(
 /**************************************************************/
 void ReturnPartialMatch(
         const Environment&theEnv,
-        struct partialMatch *waste) {
+        PartialMatch *waste) {
     /*==============================================*/
     /* If the partial match is in use, then put it  */
     /* on a garbage list to be processed later when */
@@ -548,7 +548,7 @@ void ReturnPartialMatch(
 /***************************************************************/
 void DestroyPartialMatch(
         const Environment&theEnv,
-        struct partialMatch *waste) {
+        PartialMatch *waste) {
     /*======================================================*/
     /* If we're dealing with an alpha memory partial match, */
     /* then return the multifield markers associated with   */
@@ -605,7 +605,7 @@ static void ReturnMarkers(
 /*************************************************************/
 void FlushGarbagePartialMatches(
         const Environment&theEnv) {
-    struct partialMatch *pmPtr;
+    PartialMatch *pmPtr;
     struct alphaMatch *amPtr;
 
     /*===================================================*/

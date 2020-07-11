@@ -73,7 +73,7 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void EmptyDrive(const Environment&, struct joinNode *, struct partialMatch *, int);
+static void EmptyDrive(const Environment&, struct joinNode *, PartialMatch *, int);
 static void JoinNetErrorMessage(const Environment&, struct joinNode *);
 
 /************************************************/
@@ -82,7 +82,7 @@ static void JoinNetErrorMessage(const Environment&, struct joinNode *);
 /************************************************/
 void NetworkAssert(
         const Environment&theEnv,
-        struct partialMatch *binds,
+        PartialMatch *binds,
         struct joinNode *join) {
     /*=========================================================*/
     /* If an incremental reset is being performed and the join */
@@ -116,13 +116,13 @@ void NetworkAssert(
 /*****************************************************/
 void NetworkAssertRight(
         const Environment&theEnv,
-        struct partialMatch *rhsBinds,
+        PartialMatch *rhsBinds,
         struct joinNode *join,
         int operation) {
-    struct partialMatch *lhsBinds, *nextBind;
+    PartialMatch *lhsBinds, *nextBind;
     bool exprResult, restore = false;
-    struct partialMatch *oldLHSBinds = nullptr;
-    struct partialMatch *oldRHSBinds = nullptr;
+    PartialMatch *oldLHSBinds = nullptr;
+    PartialMatch *oldRHSBinds = nullptr;
     struct joinNode *oldJoin = nullptr;
 
     /*=========================================================*/
@@ -294,14 +294,14 @@ void NetworkAssertRight(
 /****************************************************/
 void NetworkAssertLeft(
         const Environment&theEnv,
-        struct partialMatch *lhsBinds,
+        PartialMatch *lhsBinds,
         struct joinNode *join,
         int operation) {
-    struct partialMatch *rhsBinds;
+    PartialMatch *rhsBinds;
     bool exprResult, restore = false;
     unsigned long entryHashValue;
-    struct partialMatch *oldLHSBinds = nullptr;
-    struct partialMatch *oldRHSBinds = nullptr;
+    PartialMatch *oldLHSBinds = nullptr;
+    PartialMatch *oldRHSBinds = nullptr;
     struct joinNode *oldJoin = nullptr;
 
     if ((operation == NETWORK_RETRACT) && PartialMatchWillBeDeleted(theEnv, lhsBinds)) { return; }
@@ -652,11 +652,11 @@ bool EvaluateJoinExpression(
 /*********************************/
 bool EvaluateSecondaryNetworkTest(
         const Environment&theEnv,
-        struct partialMatch *leftMatch,
+        PartialMatch *leftMatch,
         struct joinNode *joinPtr) {
     bool joinExpr;
-    struct partialMatch *oldLHSBinds;
-    struct partialMatch *oldRHSBinds;
+    PartialMatch *oldLHSBinds;
+    PartialMatch *oldRHSBinds;
     struct joinNode *oldJoin;
 
     if (joinPtr->secondaryNetworkTest == nullptr) { return true; }
@@ -687,12 +687,12 @@ bool EvaluateSecondaryNetworkTest(
 unsigned long BetaMemoryHashValue(
         const Environment&theEnv,
         Expression *hashExpr,
-        struct partialMatch *lbinds,
-        struct partialMatch *rbinds,
+        PartialMatch *lbinds,
+        PartialMatch *rbinds,
         struct joinNode *joinPtr) {
     UDFValue theResult;
-    struct partialMatch *oldLHSBinds;
-    struct partialMatch *oldRHSBinds;
+    PartialMatch *oldLHSBinds;
+    PartialMatch *oldRHSBinds;
     struct joinNode *oldJoin;
     unsigned long hashValue = 0;
     unsigned long multiplier = 1;
@@ -809,11 +809,11 @@ unsigned long BetaMemoryHashValue(
 /*******************************************************************/
 void PPDrive(
         const Environment&theEnv,
-        struct partialMatch *lhsBinds,
-        struct partialMatch *rhsBinds,
+        PartialMatch *lhsBinds,
+        PartialMatch *rhsBinds,
         struct joinNode *join,
         int operation) {
-    struct partialMatch *linker;
+    PartialMatch *linker;
     struct joinLink *listOfJoins;
     unsigned long hashValue;
 
@@ -872,10 +872,10 @@ void PPDrive(
 /***********************************************************************/
 void EPMDrive(
         const Environment&theEnv,
-        struct partialMatch *parent,
+        PartialMatch *parent,
         struct joinNode *join,
         int operation) {
-    struct partialMatch *linker;
+    PartialMatch *linker;
     struct joinLink *listOfJoins;
 
     listOfJoins = join->nextLinks;
@@ -901,14 +901,14 @@ void EPMDrive(
 static void EmptyDrive(
         const Environment&theEnv,
         struct joinNode *join,
-        struct partialMatch *rhsBinds,
+        PartialMatch *rhsBinds,
         int operation) {
-    struct partialMatch *linker, *existsParent = nullptr, *notParent;
+    PartialMatch *linker, *existsParent = nullptr, *notParent;
     struct joinLink *listOfJoins;
     bool joinExpr;
     unsigned long hashValue;
-    struct partialMatch *oldLHSBinds;
-    struct partialMatch *oldRHSBinds;
+    PartialMatch *oldLHSBinds;
+    PartialMatch *oldRHSBinds;
     struct joinNode *oldJoin;
 
     /*======================================================*/

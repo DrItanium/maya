@@ -72,8 +72,8 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static struct functionDefinition **ReadNeededFunctions(const Environment&, unsigned long *, bool *);
-static struct functionDefinition *FastFindFunction(const Environment&, const char *, struct functionDefinition *);
+static FunctionDefinition **ReadNeededFunctions(const Environment&, unsigned long *, bool *);
+static FunctionDefinition *FastFindFunction(const Environment&, const char *, FunctionDefinition *);
 static bool ClearBload(const Environment&);
 static void ClearBloadCallback(const Environment&, void *);
 static void AbortBload(const Environment&);
@@ -360,7 +360,7 @@ bool Bload(
 
     if (BloadData(theEnv)->FunctionArray != nullptr) {
         genfree(theEnv, BloadData(theEnv)->FunctionArray,
-                sizeof(functionDefinition *) * numberOfFunctions);
+                sizeof(FunctionDefinition *) * numberOfFunctions);
     }
     FreeAtomicValueStorage(theEnv);
 
@@ -449,7 +449,7 @@ void BloadandRefresh(
 /* ReadNeededFunctions: Reads in the names of */
 /*   functions needed by the binary image.    */
 /**********************************************/
-static struct functionDefinition **ReadNeededFunctions(
+static FunctionDefinition **ReadNeededFunctions(
         const Environment&theEnv,
         unsigned long *numberOfFunctions,
         bool *error) {
@@ -457,7 +457,7 @@ static struct functionDefinition **ReadNeededFunctions(
     unsigned long space;
     size_t temp;
     unsigned long i;
-    struct functionDefinition **newFunctionArray, *functionPtr;
+    FunctionDefinition **newFunctionArray, *functionPtr;
     bool functionsNotFound = false;
 
     /*===================================================*/
@@ -534,11 +534,11 @@ static struct functionDefinition **ReadNeededFunctions(
 /* FastFindFunction: Search the function */
 /*   list for a specific function.       */
 /*****************************************/
-static struct functionDefinition *FastFindFunction(
+static FunctionDefinition *FastFindFunction(
         const Environment&theEnv,
         const char *functionName,
-        struct functionDefinition *lastFunction) {
-    struct functionDefinition *theList, *theFunction;
+        FunctionDefinition *lastFunction) {
+    FunctionDefinition *theList, *theFunction;
 
     /*========================*/
     /* Get the function list. */

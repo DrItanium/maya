@@ -169,7 +169,7 @@ Expression *Function2Parse(
         const Environment&theEnv,
         const char *logicalName,
         const char *name) {
-    struct functionDefinition *theFunction;
+    FunctionDefinition *theFunction;
     Expression *top;
     bool moduleSpecified = false;
     unsigned position;
@@ -467,7 +467,7 @@ bool RestrictionExists(
 FunctionArgumentsError CheckExpressionAgainstRestrictions(
         const Environment&theEnv,
         Expression *theExpression,
-        struct functionDefinition *theFunction,
+        FunctionDefinition *theFunction,
         const char *functionName) {
     unsigned int j = 1;
     unsigned short number1, number2;
@@ -982,7 +982,7 @@ Expression *ParseConstantArguments(
 Expression *RemoveUnneededProgn(
         const Environment&theEnv,
         Expression *theExpression) {
-    struct functionDefinition *fptr;
+    FunctionDefinition *fptr;
     Expression *temp;
 
     if (theExpression == nullptr) return (theExpression);

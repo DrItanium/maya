@@ -90,7 +90,7 @@ static bool ParseQueryTestExpression(const Environment&, Expression *, const cha
 static bool ParseQueryActionExpression(const Environment&, Expression *, const char *, Expression *, struct token *);
 static bool ReplaceInstanceVariables(const Environment&, Expression *, Expression *, bool, int);
 static bool ReplaceSlotReference(const Environment&, Expression *, Expression *,
-                                 struct functionDefinition *, int);
+                                 FunctionDefinition *, int);
 static bool IsQueryFunction(Expression *);
 
 /* =========================================
@@ -537,7 +537,7 @@ static bool ReplaceInstanceVariables(
         bool sdirect,
         int ndepth) {
     Expression *eptr;
-    struct functionDefinition *rindx_func, *rslot_func;
+    FunctionDefinition *rindx_func, *rslot_func;
     int posn;
 
     rindx_func = FindFunction(theEnv, "(query-instance)");
@@ -592,7 +592,7 @@ static bool ReplaceSlotReference(
         const Environment&theEnv,
         Expression *vlist,
         Expression *theExp,
-        struct functionDefinition *func,
+        FunctionDefinition *func,
         int ndepth) {
     size_t len;
     int posn;

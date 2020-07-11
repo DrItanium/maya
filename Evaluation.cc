@@ -151,7 +151,7 @@ bool EvaluateExpression(
         Expression *problem,
         UDFValue *returnValue) {
     Expression *oldArgument;
-    struct functionDefinition *fptr;
+    FunctionDefinition *fptr;
     UDFContext theUDFContext;
 #if PROFILING_FUNCTIONS
     struct profileFrameInfo profileFrame;
@@ -365,7 +365,7 @@ void ReturnValues(
         if ((garbagePtr->supplementalInfo != nullptr) && decrementSupplementalInfo) {
             ReleaseLexeme(theEnv, (CLIPSLexeme *) garbagePtr->supplementalInfo);
         }
-        rtn_struct(theEnv, udfValue, garbagePtr);
+        rtn_struct(theEnv, UDFValue, garbagePtr);
         garbagePtr = nextPtr;
     }
 }
@@ -818,7 +818,7 @@ Expression *FunctionReferenceExpression(
 #if DEFFUNCTION_CONSTRUCT
     Deffunction *dptr;
 #endif
-    struct functionDefinition *fptr;
+    FunctionDefinition *fptr;
 
     /*=====================================================*/
     /* Check to see if the function call is a deffunction. */
@@ -867,7 +867,7 @@ bool GetFunctionReference(
 #if DEFFUNCTION_CONSTRUCT
     Deffunction *dptr;
 #endif
-    struct functionDefinition *fptr;
+    FunctionDefinition *fptr;
     bool moduleSpecified = false;
     unsigned position;
     CLIPSLexeme *moduleName = nullptr, *constructName = nullptr;
@@ -1326,7 +1326,7 @@ FunctionCallBuilderError FCBCall(
         CLIPSValue *returnValue) {
     Environment theEnv;
     Expression theReference, *lastAdd = nullptr, *nextAdd, *multiAdd;
-    struct functionDefinition *theFunction = nullptr;
+    FunctionDefinition *theFunction = nullptr;
     size_t i, j;
     UDFValue udfReturnValue;
     GCBlock gcb;

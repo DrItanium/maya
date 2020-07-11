@@ -67,8 +67,8 @@ constexpr auto PRIME_THREE = 269;
 /* LOCAL INTERNAL FUNCTION DEFINITIONS  */
 /****************************************/
 
-static unsigned long ListToPacked(expr *, Expression *, unsigned long);
-static EXPRESSION_HN *FindHashedExpression(const Environment&, Expression *, unsigned *, EXPRESSION_HN **);
+static unsigned long ListToPacked(Expression *, Expression *, unsigned long);
+static ExpressionHashNode *FindHashedExpression(const Environment&, Expression *, unsigned *, ExpressionHashNode **);
 static unsigned HashExpression(Expression *);
 static void DeallocateExpressionData(const Environment&);
 
@@ -80,13 +80,12 @@ static void DeallocateExpressionData(const Environment&);
 void InitExpressionData(
         const Environment&theEnv) {
     unsigned i;
-
-    AllocateEnvironmentData(theEnv, EXPRESSION_DATA, sizeof(expressionData), DeallocateExpressionData);
+    AllocateEnvironmentData(theEnv, EXPRESSION_DATA, sizeof(ExpressionData), DeallocateExpressionData);
 
     InitExpressionPointers(theEnv);
 
-    ExpressionData(theEnv)->ExpressionHashTable = (EXPRESSION_HN **)
-            gm2(theEnv, sizeof(EXPRESSION_HN *) * EXPRESSION_HASH_SIZE);
+    ExpressionData(theEnv)->ExpressionHashTable = (ExpressionHashNode **)
+            gm2(theEnv, sizeof(ExpressionHashNode *) * EXPRESSION_HASH_SIZE);
     for (i = 0; i < EXPRESSION_HASH_SIZE; i++)
         ExpressionData(theEnv)->ExpressionHashTable[i] = nullptr;
 }
@@ -98,7 +97,7 @@ void InitExpressionData(
 static void DeallocateExpressionData(
         const Environment&theEnv) {
     int i;
-    EXPRESSION_HN *tmpPtr, *nextPtr;
+    ExpressionHashNode *tmpPtr, *nextPtr;
 
 #if (BLOAD_AND_BSAVE)
     if (!Bloaded(theEnv))
@@ -109,19 +108,19 @@ static void DeallocateExpressionData(
             while (tmpPtr != nullptr) {
                 nextPtr = tmpPtr->next;
                 ReturnPackedExpression(theEnv, tmpPtr->exp);
-                rtn_struct(theEnv, exprHashNode, tmpPtr);
+                rtn_struct(theEnv, ExpressionHashNode, tmpPtr);
                 tmpPtr = nextPtr;
             }
         }
     }
 
     rm(theEnv, ExpressionData(theEnv)->ExpressionHashTable,
-       sizeof(EXPRESSION_HN *) * EXPRESSION_HASH_SIZE);
+       sizeof(ExpressionHashNode *) * EXPRESSION_HASH_SIZE);
 
 #if (BLOAD_AND_BSAVE)
     if ((ExpressionData(theEnv)->NumberOfExpressions != 0) && Bloaded(theEnv)) {
         genfree(theEnv, ExpressionData(theEnv)->ExpressionArray,
-                ExpressionData(theEnv)->NumberOfExpressions * sizeof(expr));
+                ExpressionData(theEnv)->NumberOfExpressions * sizeof(Expression));
     }
 #endif
 }
@@ -280,12 +279,12 @@ void ReturnExpression(
   SIDE EFFECTS : None
   NOTES        : None
  ***************************************************/
-static EXPRESSION_HN *FindHashedExpression(
+static ExpressionHashNode *FindHashedExpression(
         const Environment&theEnv,
         Expression *theExp,
         unsigned *hashval,
-        EXPRESSION_HN **prv) {
-    EXPRESSION_HN *exphash;
+        ExpressionHashNode **prv) {
+    ExpressionHashNode *exphash;
 
     if (theExp == nullptr)
         return nullptr;
@@ -347,7 +346,7 @@ static unsigned HashExpression(
 void RemoveHashedExpression(
         const Environment&theEnv,
         Expression *theExp) {
-    EXPRESSION_HN *exphash, *prv;
+    ExpressionHashNode *exphash, *prv;
     unsigned hashval;
 
     exphash = FindHashedExpression(theEnv, theExp, &hashval, &prv);
@@ -381,7 +380,7 @@ void RemoveHashedExpression(
 Expression *AddHashedExpression(
         const Environment&theEnv,
         Expression *theExp) {
-    EXPRESSION_HN *prv, *exphash;
+    ExpressionHashNode *prv, *exphash;
     unsigned hashval;
 
     if (theExp == nullptr) return nullptr;
@@ -415,7 +414,7 @@ Expression *AddHashedExpression(
 unsigned long HashedExpressionIndex(
         const Environment&theEnv,
         Expression *theExp) {
-    EXPRESSION_HN *exphash, *prv;
+    ExpressionHashNode *exphash, *prv;
     unsigned hashval;
 
     if (theExp == nullptr)

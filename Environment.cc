@@ -130,6 +130,7 @@ bool AllocateEnvironmentData(
         unsigned position,
         size_t size,
         EnvironmentCleanupFunction *cleanupFunction) {
+#if 0
     /*================================================================*/
     /* Check to see if the data position exceeds the maximum allowed. */
     /*================================================================*/
@@ -169,8 +170,9 @@ bool AllocateEnvironmentData(
     /*===============================*/
     /* Data successfully registered. */
     /*===============================*/
-
     return true;
+#endif
+    return false;
 }
 
 /**********************************************/

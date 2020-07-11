@@ -1033,7 +1033,7 @@ static void CreateObjectAlphaMatch(
         const Environment&theEnv,
         OBJECT_ALPHA_NODE *alphaPtr) {
     struct joinNode *listOfJoins;
-    struct partialMatch *theMatch;
+    PartialMatch *theMatch;
     struct patternMatch *newMatch;
     unsigned long hashValue;
 

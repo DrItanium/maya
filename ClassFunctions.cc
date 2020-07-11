@@ -734,7 +734,7 @@ void RemoveDefclass(
             else {
                 UDFValue *theValue = (UDFValue *) cls->slots[i].defaultValue;
                 if (theValue->header->type == MULTIFIELD_TYPE) { ReturnMultifield(theEnv, theValue->multifieldValue); }
-                rtn_struct(theEnv, udfValue, theValue);
+                rtn_struct(theEnv, UDFValue, theValue);
             }
         }
         DeleteSlotName(theEnv, cls->slots[i].slotName);
@@ -803,7 +803,7 @@ void DestroyDefclass(
             else {
                 UDFValue *theValue = (UDFValue *) cls->slots[i].defaultValue;
                 if (theValue->header->type == MULTIFIELD_TYPE) { ReturnMultifield(theEnv, theValue->multifieldValue); }
-                rtn_struct(theEnv, udfValue, theValue);
+                rtn_struct(theEnv, UDFValue, theValue);
             }
         }
     }

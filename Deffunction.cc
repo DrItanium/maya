@@ -164,7 +164,7 @@ void SetupDeffunctions(
              nullptr, nullptr, nullptr, nullptr, nullptr};
 
     AllocateEnvironmentData(theEnv, DEFFUNCTION_DATA, sizeof(deffunctionData), DeallocateDeffunctionData);
-    memcpy(&DeffunctionData(theEnv)->DeffunctionEntityRecord, &deffunctionEntityRecord, sizeof(entityRecord));
+    memcpy(&DeffunctionData(theEnv)->DeffunctionEntityRecord, &deffunctionEntityRecord, sizeof(EntityRecord));
 
     InstallPrimitive(theEnv, &DeffunctionData(theEnv)->DeffunctionEntityRecord, PCALL);
 

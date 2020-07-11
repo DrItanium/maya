@@ -286,7 +286,7 @@ Expression *GenConstant(
         void *value) {
     Expression *top;
 
-    top = get_struct(theEnv, expr);
+    top = get_struct(theEnv, Expression);
     top->nextArg = nullptr;
     top->argList = nullptr;
     top->type = type;

@@ -125,7 +125,7 @@ static void DeallocateProceduralFunctionData(
 
     while (garbagePtr != nullptr) {
         nextPtr = garbagePtr->next;
-        rtn_struct(theEnv, udfValue, garbagePtr);
+        rtn_struct(theEnv, UDFValue, garbagePtr);
         garbagePtr = nextPtr;
     }
 }
@@ -407,7 +407,7 @@ void BindFunction(
 
     if (!found) {
         if (!unbindVar) {
-            theBind = get_struct(theEnv, udfValue);
+            theBind = get_struct(theEnv, UDFValue);
             theBind->supplementalInfo = (void *) variableName;
             IncrementLexemeCount(variableName);
             theBind->next = nullptr;
@@ -432,7 +432,7 @@ void BindFunction(
         if (lastBind == nullptr) ProcedureFunctionData(theEnv)->BindList = theBind->next;
         else lastBind->next = theBind->next;
         ReleaseLexeme(theEnv, (CLIPSLexeme *) theBind->supplementalInfo);
-        rtn_struct(theEnv, udfValue, theBind);
+        rtn_struct(theEnv, UDFValue, theBind);
         returnValue->value = FalseSymbol(theEnv);
     }
 }

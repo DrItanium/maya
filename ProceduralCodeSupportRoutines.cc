@@ -711,7 +711,7 @@ void PopProcParameters(
         ReleaseMultifield(theEnv, ProceduralPrimitiveData(theEnv)->WildcardValue->multifieldValue);
         if (ProceduralPrimitiveData(theEnv)->WildcardValue->value != ProceduralPrimitiveData(theEnv)->NoParamValue)
             AddToMultifieldList(theEnv, ProceduralPrimitiveData(theEnv)->WildcardValue->multifieldValue);
-        rtn_struct(theEnv, udfValue, ProceduralPrimitiveData(theEnv)->WildcardValue);
+        rtn_struct(theEnv, UDFValue, ProceduralPrimitiveData(theEnv)->WildcardValue);
     }
     ProceduralPrimitiveData(theEnv)->WildcardValue = ptmp->WildcardValue;
     ProceduralPrimitiveData(theEnv)->ProcUnboundErrFunc = ptmp->UnboundErrFunc;
@@ -739,7 +739,7 @@ static void ReleaseProcParameters(
             ReturnMultifield(theEnv, ProceduralPrimitiveData(theEnv)->WildcardValue->multifieldValue);
         }
 
-        rtn_struct(theEnv, udfValue, ProceduralPrimitiveData(theEnv)->WildcardValue);
+        rtn_struct(theEnv, UDFValue, ProceduralPrimitiveData(theEnv)->WildcardValue);
     }
 
 #if DEFGENERIC_CONSTRUCT
@@ -764,7 +764,7 @@ static void ReleaseProcParameters(
                 ReturnMultifield(theEnv, ptmp->WildcardValue->multifieldValue);
             }
 
-            rtn_struct(theEnv, udfValue, ptmp->WildcardValue);
+            rtn_struct(theEnv, UDFValue, ptmp->WildcardValue);
         }
 
         rtn_struct(theEnv, ProcParamStack, ptmp);
@@ -885,7 +885,7 @@ void EvaluateProcActions(
         ReleaseMultifield(theEnv, ProceduralPrimitiveData(theEnv)->WildcardValue->multifieldValue);
         if (ProceduralPrimitiveData(theEnv)->WildcardValue->value != ProceduralPrimitiveData(theEnv)->NoParamValue)
             AddToMultifieldList(theEnv, ProceduralPrimitiveData(theEnv)->WildcardValue->multifieldValue);
-        rtn_struct(theEnv, udfValue, ProceduralPrimitiveData(theEnv)->WildcardValue);
+        rtn_struct(theEnv, UDFValue, ProceduralPrimitiveData(theEnv)->WildcardValue);
         ProceduralPrimitiveData(theEnv)->WildcardValue = nullptr;
     }
 
@@ -947,7 +947,7 @@ void GrabProcWildargs(
 
     returnValue->begin = 0;
     if (ProceduralPrimitiveData(theEnv)->WildcardValue == nullptr) {
-        ProceduralPrimitiveData(theEnv)->WildcardValue = get_struct(theEnv, udfValue);
+        ProceduralPrimitiveData(theEnv)->WildcardValue = get_struct(theEnv, UDFValue);
         ProceduralPrimitiveData(theEnv)->WildcardValue->begin = 0;
     } else if (theIndex == ProceduralPrimitiveData(theEnv)->Oldindex) {
         returnValue->range = ProceduralPrimitiveData(theEnv)->WildcardValue->range;

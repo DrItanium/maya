@@ -124,7 +124,7 @@ void SortFunction(
     const char *functionName;
     Expression *functionReference;
     size_t argumentSize = 0;
-    struct functionDefinition *fptr;
+    FunctionDefinition *fptr;
 #if DEFFUNCTION_CONSTRUCT
     Deffunction *dptr;
 #endif

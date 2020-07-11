@@ -103,7 +103,7 @@ struct lhsParseNode {
     union {
         void *value;
         CLIPSLexeme *lexemeValue;
-        struct functionDefinition *functionValue;
+        FunctionDefinition *functionValue;
     };
     bool negated: 1;
     bool exists: 1;

@@ -65,7 +65,7 @@ struct bloadData {
     const char *BinaryPrefixID;
     const char *BinaryVersionID;
     char *BinarySizes;
-    struct functionDefinition **FunctionArray;
+    FunctionDefinition **FunctionArray;
     bool BloadActive;
     struct voidCallFunctionItem *BeforeBloadFunctions;
     struct voidCallFunctionItem *AfterBloadFunctions;

@@ -73,10 +73,10 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void AddHashFunction(const Environment&, struct functionDefinition *);
+static void AddHashFunction(const Environment&, FunctionDefinition *);
 static void InitializeFunctionHashTable(const Environment&);
 static void DeallocateExternalFunctionData(const Environment&);
-static bool RemoveHashFunction(const Environment&, struct functionDefinition *);
+static bool RemoveHashFunction(const Environment&, FunctionDefinition *);
 static AddUDFError DefineFunction(const Environment&, const char *, unsigned, void (*)(const Environment&theEnv, UDFContext *context, UDFValue *ret),
                                   unsigned short, unsigned short, const char *, void *);
 static void PrintType(const Environment&, const char *, int, int *, const char *);
@@ -100,7 +100,7 @@ static void DeallocateExternalFunctionData(
     struct FunctionHash *fhPtr, *nextFHPtr;
     int i;
 
-    struct functionDefinition *tmpPtr, *nextPtr;
+    FunctionDefinition *tmpPtr, *nextPtr;
 
     tmpPtr = ExternalFunctionData(theEnv)->ListOfFunctions;
     while (tmpPtr != nullptr) {
@@ -169,7 +169,7 @@ static AddUDFError DefineFunction(
         unsigned short maxArgs,
         const char *restrictions,
         void *context) {
-    struct functionDefinition *newFunction;
+    FunctionDefinition *newFunction;
 
     newFunction = FindFunction(theEnv, name);
     if (newFunction != nullptr) { return AUE_FUNCTION_NAME_IN_USE_ERROR; }
@@ -210,7 +210,7 @@ bool RemoveUDF(
         const Environment&theEnv,
         const char *functionName) {
     CLIPSLexeme *findValue;
-    struct functionDefinition *fPtr, *lastPtr = nullptr;
+    FunctionDefinition *fPtr, *lastPtr = nullptr;
 
     findValue = FindSymbolHN(theEnv, functionName, SYMBOL_BIT);
 
@@ -242,7 +242,7 @@ bool RemoveUDF(
 /******************************************/
 static bool RemoveHashFunction(
         const Environment&theEnv,
-        struct functionDefinition *fdPtr) {
+        FunctionDefinition *fdPtr) {
     struct FunctionHash *fhPtr, *lastPtr = nullptr;
     size_t hashValue;
 
@@ -279,7 +279,7 @@ bool AddFunctionParser(
         const Environment&theEnv,
         const char *functionName,
         Expression *(*fpPtr)(const Environment&, Expression *, const char *)) {
-    struct functionDefinition *fdPtr;
+    FunctionDefinition *fdPtr;
 
     fdPtr = FindFunction(theEnv, functionName);
     if (fdPtr == nullptr) {
@@ -301,7 +301,7 @@ bool AddFunctionParser(
 bool RemoveFunctionParser(
         const Environment&theEnv,
         const char *functionName) {
-    struct functionDefinition *fdPtr;
+    FunctionDefinition *fdPtr;
 
     fdPtr = FindFunction(theEnv, functionName);
     if (fdPtr == nullptr) {
@@ -323,7 +323,7 @@ bool FuncSeqOvlFlags(
         const char *functionName,
         bool seqp,
         bool ovlp) {
-    struct functionDefinition *fdPtr;
+    FunctionDefinition *fdPtr;
 
     fdPtr = FindFunction(theEnv, functionName);
     if (fdPtr == nullptr) {
@@ -344,7 +344,7 @@ bool FuncSeqOvlFlags(
 /***********************************************/
 unsigned GetNthRestriction(
         const Environment&theEnv,
-        struct functionDefinition *theFunction,
+        FunctionDefinition *theFunction,
         unsigned int position) {
     unsigned rv, df;
     const char *restrictions;
@@ -363,7 +363,7 @@ unsigned GetNthRestriction(
 /*************************************************/
 /* GetFunctionList: Returns the ListOfFunctions. */
 /*************************************************/
-struct functionDefinition *GetFunctionList(
+FunctionDefinition *GetFunctionList(
         const Environment&theEnv) {
     return (ExternalFunctionData(theEnv)->ListOfFunctions);
 }
@@ -374,7 +374,7 @@ struct functionDefinition *GetFunctionList(
 /**************************************************************/
 void InstallFunctionList(
         const Environment&theEnv,
-        struct functionDefinition *value) {
+        FunctionDefinition *value) {
     int i;
     struct FunctionHash *fhPtr, *nextPtr;
 
@@ -403,7 +403,7 @@ void InstallFunctionList(
 /*   functionDefinition structure if a function name is */
 /*   in the function list, otherwise returns nullptr.      */
 /********************************************************/
-struct functionDefinition *FindFunction(
+FunctionDefinition *FindFunction(
         const Environment&theEnv,
         const char *functionName) {
     struct FunctionHash *fhPtr;
@@ -470,7 +470,7 @@ static void InitializeFunctionHashTable(
 /****************************************************************/
 static void AddHashFunction(
         const Environment&theEnv,
-        struct functionDefinition *fdPtr) {
+        FunctionDefinition *fdPtr) {
     struct FunctionHash *newhash, *temp;
     size_t hashValue;
 
@@ -491,7 +491,7 @@ static void AddHashFunction(
 /*   arguments expected by an external function. */
 /*************************************************/
 int GetMinimumArgs(
-        struct functionDefinition *theFunction) {
+        FunctionDefinition *theFunction) {
     return theFunction->minArgs;
 }
 
@@ -500,7 +500,7 @@ int GetMinimumArgs(
 /*   arguments expected by an external function. */
 /*************************************************/
 int GetMaximumArgs(
-        struct functionDefinition *theFunction) {
+        FunctionDefinition *theFunction) {
     return theFunction->maxArgs;
 }
 

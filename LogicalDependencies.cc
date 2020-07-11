@@ -82,7 +82,7 @@ bool AddLogicalDependencies(
         const Environment&theEnv,
         struct patternEntity *theEntity,
         bool existingEntity) {
-    struct partialMatch *theBinds;
+    PartialMatch *theBinds;
     struct dependency *newDependency;
 
     /*==============================================*/
@@ -143,10 +143,10 @@ bool AddLogicalDependencies(
 /*   creating logical support links between the data entity and         */
 /*   supporting partial matches.                                        */
 /************************************************************************/
-struct partialMatch *FindLogicalBind(
+PartialMatch *FindLogicalBind(
         struct joinNode *theJoin,
-        struct partialMatch *theBinds) {
-    struct partialMatch *compPtr;
+        PartialMatch *theBinds) {
+    PartialMatch *compPtr;
 
     /*========================================================*/
     /* Follow the parent link of the activation back through  */
@@ -175,7 +175,7 @@ void RemoveEntityDependencies(
         const Environment&theEnv,
         struct patternEntity *theEntity) {
     struct dependency *fdPtr, *nextPtr, *theList;
-    struct partialMatch *theBinds;
+    PartialMatch *theBinds;
 
     /*===============================*/
     /* Get the list of dependencies. */
@@ -282,7 +282,7 @@ static struct dependency *DetachAssociatedDependencies(
 /**************************************************************************/
 void RemovePMDependencies(
         const Environment&theEnv,
-        struct partialMatch *theBinds) {
+        PartialMatch *theBinds) {
     struct dependency *fdPtr, *nextPtr, *theList;
     struct patternEntity *theEntity;
 
@@ -310,7 +310,7 @@ void RemovePMDependencies(
 /************************************************************/
 void DestroyPMDependencies(
         const Environment&theEnv,
-        struct partialMatch *theBinds) {
+        PartialMatch *theBinds) {
     struct dependency *fdPtr, *nextPtr;
 
     fdPtr = (dependency *) theBinds->dependents;
@@ -337,7 +337,7 @@ void DestroyPMDependencies(
 /************************************************************************/
 void RemoveLogicalSupport(
         const Environment&theEnv,
-        struct partialMatch *theBinds) {
+        PartialMatch *theBinds) {
     struct dependency *dlPtr, *tempPtr, *theList;
     struct patternEntity *theEntity;
 
@@ -503,7 +503,7 @@ void Dependents(
     struct patternEntity *entityPtr = nullptr;
     struct patternParser *theParser = nullptr;
     struct dependency *fdPtr;
-    struct partialMatch *theBinds;
+    PartialMatch *theBinds;
     bool found = false;
 
     /*=================================*/

@@ -401,7 +401,7 @@ void ProfileResetCommand(
         const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
-    struct functionDefinition *theFunction;
+    FunctionDefinition *theFunction;
     int i;
 #if DEFFUNCTION_CONSTRUCT
     Deffunction *theDeffunction;
@@ -504,7 +504,7 @@ void ResetProfileInfo(
 /****************************/
 static void OutputUserFunctionsInfo(
         const Environment&theEnv) {
-    struct functionDefinition *theFunction;
+    FunctionDefinition *theFunction;
     int i;
 
     for (theFunction = GetFunctionList(theEnv);
@@ -712,7 +712,7 @@ const char *SetProfileOutputString(
 static void ProfileClearFunction(
         const Environment&theEnv,
         void *context) {
-    struct functionDefinition *theFunction;
+    FunctionDefinition *theFunction;
     int i;
 
     for (theFunction = GetFunctionList(theEnv);

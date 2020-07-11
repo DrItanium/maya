@@ -107,7 +107,7 @@ static void TagNetworkTraverseJoins(const Environment&, unsigned long *, unsigne
 void PrintPartialMatch(
         const Environment&theEnv,
         const char *logicalName,
-        struct partialMatch *list) {
+        PartialMatch *list) {
     struct patternEntity *matchingItem;
     unsigned short i;
 
@@ -125,10 +125,10 @@ void PrintPartialMatch(
 /**********************************************/
 /* CopyPartialMatch:  Copies a partial match. */
 /**********************************************/
-struct partialMatch *CopyPartialMatch(
+PartialMatch *CopyPartialMatch(
         const Environment&theEnv,
-        struct partialMatch *list) {
-    struct partialMatch *linker;
+        PartialMatch *list) {
+    PartialMatch *linker;
     unsigned short i;
 
     linker = get_var_struct(theEnv, partialMatch, sizeof(genericMatch) *
@@ -150,9 +150,9 @@ struct partialMatch *CopyPartialMatch(
 /****************************/
 /* CreateEmptyPartialMatch: */
 /****************************/
-struct partialMatch *CreateEmptyPartialMatch(
+PartialMatch *CreateEmptyPartialMatch(
         const Environment&theEnv) {
-    struct partialMatch *linker;
+    PartialMatch *linker;
 
     linker = get_struct(theEnv, partialMatch);
 
@@ -172,7 +172,7 @@ struct partialMatch *CreateEmptyPartialMatch(
 /* InitializePMLinks: */
 /**********************/
 static void InitializePMLinks(
-        struct partialMatch *theMatch) {
+        PartialMatch *theMatch) {
     theMatch->nextInMemory = nullptr;
     theMatch->prevInMemory = nullptr;
     theMatch->nextRightChild = nullptr;
@@ -194,9 +194,9 @@ static void InitializePMLinks(
 /**********************/
 void UpdateBetaPMLinks(
         const Environment&theEnv,
-        struct partialMatch *thePM,
-        struct partialMatch *lhsBinds,
-        struct partialMatch *rhsBinds,
+        PartialMatch *thePM,
+        PartialMatch *lhsBinds,
+        PartialMatch *rhsBinds,
         struct joinNode *join,
         unsigned long hashValue,
         int side) {
@@ -274,8 +274,8 @@ void UpdateBetaPMLinks(
 /*   the next join in the rule.                           */
 /**********************************************************/
 void AddBlockedLink(
-        struct partialMatch *thePM,
-        struct partialMatch *rhsBinds) {
+        PartialMatch *thePM,
+        PartialMatch *rhsBinds) {
     thePM->marker = rhsBinds;
     thePM->nextBlocked = rhsBinds->blockList;
     if (rhsBinds->blockList != nullptr) { rhsBinds->blockList->prevBlocked = thePM; }
@@ -290,8 +290,8 @@ void AddBlockedLink(
 /*   the next join in the rule.                              */
 /*************************************************************/
 void RemoveBlockedLink(
-        struct partialMatch *thePM) {
-    struct partialMatch *blocker;
+        PartialMatch *thePM) {
+    PartialMatch *blocker;
 
     if (thePM->prevBlocked == nullptr) {
         blocker = (partialMatch *) thePM->marker;
@@ -311,7 +311,7 @@ void RemoveBlockedLink(
 void UnlinkBetaPMFromNodeAndLineage(
         const Environment&theEnv,
         struct joinNode *join,
-        struct partialMatch *thePM,
+        PartialMatch *thePM,
         int side) {
     unsigned long betaLocation;
     struct betaMemory *theMemory;
@@ -356,11 +356,11 @@ void UnlinkBetaPMFromNodeAndLineage(
 void UnlinkNonLeftLineage(
         const Environment&theEnv,
         struct joinNode *join,
-        struct partialMatch *thePM,
+        PartialMatch *thePM,
         int side) {
     unsigned long betaLocation;
     struct betaMemory *theMemory;
-    struct partialMatch *tempPM;
+    PartialMatch *tempPM;
 
     if (side == CLIPS_LHS) { theMemory = join->leftMemory; }
     else { theMemory = join->rightMemory; }
@@ -427,8 +427,8 @@ void UnlinkNonLeftLineage(
 /*   partial match and any of its children in other beta memories. */
 /*******************************************************************/
 static void UnlinkBetaPartialMatchfromAlphaAndBetaLineage(
-        struct partialMatch *thePM) {
-    struct partialMatch *tempPM;
+        PartialMatch *thePM) {
+    PartialMatch *tempPM;
 
     /*=========================*/
     /* Update the alpha lists. */
@@ -494,12 +494,12 @@ static void UnlinkBetaPartialMatchfromAlphaAndBetaLineage(
 /*   second match should either be nullptr (indicating a   */
 /*   negated CE) or contain a single match.             */
 /********************************************************/
-struct partialMatch *MergePartialMatches(
+PartialMatch *MergePartialMatches(
         const Environment&theEnv,
-        struct partialMatch *lhsBind,
-        struct partialMatch *rhsBind) {
-    struct partialMatch *linker;
-    static struct partialMatch mergeTemplate = {1}; /* betaMemory is true, remainder are 0 or nullptr */
+        PartialMatch *lhsBind,
+        PartialMatch *rhsBind) {
+    PartialMatch *linker;
+    static PartialMatch mergeTemplate = {1}; /* betaMemory is true, remainder are 0 or nullptr */
 
     /*=================================*/
     /* Allocate the new partial match. */
@@ -564,13 +564,13 @@ void InitializePatternHeader(
 /*   are passed as a calling argument are copied (thus the caller */
 /*   is still responsible for freeing these data structures).     */
 /******************************************************************/
-struct partialMatch *CreateAlphaMatch(
+PartialMatch *CreateAlphaMatch(
         const Environment&theEnv,
         void *theEntity,
         struct multifieldMarker *markers,
         struct patternNodeHeader *theHeader,
         unsigned long hashOffset) {
-    struct partialMatch *theMatch;
+    PartialMatch *theMatch;
     struct alphaMatch *afbtemp;
     unsigned long hashValue;
     struct alphaMemoryHash *theAlphaMemory;
@@ -690,8 +690,8 @@ struct multifieldMarker *CopyMultifieldMarkers(
 /***************************************************************/
 void FlushAlphaBetaMemory(
         const Environment&theEnv,
-        struct partialMatch *pfl) {
-    struct partialMatch *pfltemp;
+        PartialMatch *pfl) {
+    PartialMatch *pfltemp;
 
     while (pfl != nullptr) {
         pfltemp = pfl->nextInMemory;
@@ -709,8 +709,8 @@ void FlushAlphaBetaMemory(
 /*****************************************************************/
 void DestroyAlphaBetaMemory(
         const Environment&theEnv,
-        struct partialMatch *pfl) {
-    struct partialMatch *pfltemp;
+        PartialMatch *pfl) {
+    PartialMatch *pfltemp;
 
     while (pfl != nullptr) {
         pfltemp = pfl->nextInMemory;
@@ -725,7 +725,7 @@ void DestroyAlphaBetaMemory(
 /******************************************************/
 bool FindEntityInPartialMatch(
         struct patternEntity *theEntity,
-        struct partialMatch *thePartialMatch) {
+        PartialMatch *thePartialMatch) {
     unsigned short i;
 
     for (i = 0; i < thePartialMatch->bcount; i++) {
@@ -901,7 +901,7 @@ void MarkRuleJoins(
 /* GetAlphaMemory: Retrieves the list of */
 /*   matches from an alpha memory.       */
 /*****************************************/
-struct partialMatch *GetAlphaMemory(
+PartialMatch *GetAlphaMemory(
         const Environment&theEnv,
         struct patternNodeHeader *theHeader,
         unsigned long hashOffset) {
@@ -920,7 +920,7 @@ struct partialMatch *GetAlphaMemory(
 /* GetLeftBetaMemory: Retrieves the list */
 /*   of matches from a beta memory.      */
 /*****************************************/
-struct partialMatch *GetLeftBetaMemory(
+PartialMatch *GetLeftBetaMemory(
         struct joinNode *theJoin,
         unsigned long hashValue) {
     unsigned long betaLocation;
@@ -934,7 +934,7 @@ struct partialMatch *GetLeftBetaMemory(
 /* GetRightBetaMemory: Retrieves the list */
 /*   of matches from a beta memory.       */
 /******************************************/
-struct partialMatch *GetRightBetaMemory(
+PartialMatch *GetRightBetaMemory(
         struct joinNode *theJoin,
         unsigned long hashValue) {
     unsigned long betaLocation;
@@ -1043,7 +1043,7 @@ bool BetaMemoryNotEmpty(
 void RemoveAlphaMemoryMatches(
         const Environment&theEnv,
         struct patternNodeHeader *theHeader,
-        struct partialMatch *theMatch,
+        PartialMatch *theMatch,
         struct alphaMatch *theAlphaMatch) {
     struct alphaMemoryHash *theAlphaMemory = nullptr;
     unsigned long hashValue;
@@ -1263,7 +1263,7 @@ unsigned long ComputeRightHashValue(
 void ResizeBetaMemory(
         const Environment&theEnv,
         struct betaMemory *theMemory) {
-    struct partialMatch **oldArray, **lastAdd, *thePM, *nextPM;
+    PartialMatch **oldArray, **lastAdd, *thePM, *nextPM;
     unsigned long i, oldSize, betaLocation;
 
     oldSize = theMemory->size;
@@ -1309,7 +1309,7 @@ void ResizeBetaMemory(
 static void ResetBetaMemory(
         const Environment&theEnv,
         struct betaMemory *theMemory) {
-    struct partialMatch **oldArray, **lastAdd;
+    PartialMatch **oldArray, **lastAdd;
     unsigned long oldSize;
 
     if ((theMemory->size == 1) ||
@@ -1341,7 +1341,7 @@ unsigned long PrintBetaMemory(
         bool indentFirst,
         const char *indentString,
         Verbosity output) {
-    struct partialMatch *listOfMatches;
+    PartialMatch *listOfMatches;
     unsigned long b, count = 0;
 
     if (GetHaltExecution(theEnv)) { return count; }

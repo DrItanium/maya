@@ -94,12 +94,12 @@ static void RemoveEnvironmentCleanupFunctions(const Environment&);
 static Environment CreateEnvironmentDriver(CLIPSLexeme **, CLIPSFloat **,
                                             CLIPSInteger **, CLIPSBitMap **,
                                             CLIPSExternalAddress **,
-                                            struct functionDefinition *);
+                                            FunctionDefinition *);
 static void SystemFunctionDefinitions(const Environment&);
 static void InitializeEnvironment(const Environment&, CLIPSLexeme **, CLIPSFloat **,
                                   CLIPSInteger **, CLIPSBitMap **,
                                   CLIPSExternalAddress **,
-                                  struct functionDefinition *);
+                                  FunctionDefinition *);
 
 /************************************************************/
 /* CreateEnvironment: Creates an environment data structure */
@@ -118,7 +118,7 @@ Environment CreateRuntimeEnvironment(
         CLIPSFloat **floatTable,
         CLIPSInteger **integerTable,
         CLIPSBitMap **bitmapTable,
-        struct functionDefinition *functions) {
+        FunctionDefinition *functions) {
     return CreateEnvironmentDriver(symbolTable, floatTable, integerTable, bitmapTable, nullptr, functions);
 }
 
@@ -231,7 +231,7 @@ static void InitializeEnvironment(
         CLIPSInteger **integerTable,
         CLIPSBitMap **bitmapTable,
         CLIPSExternalAddress **externalAddressTable,
-        struct functionDefinition *functions) {
+        FunctionDefinition *functions) {
     /*================================================*/
     /* Don't allow the initialization to occur twice. */
     /*================================================*/

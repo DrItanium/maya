@@ -177,7 +177,7 @@ long long Run(
 #endif
     unsigned short i;
     struct patternEntity *theMatchingItem;
-    struct partialMatch *theBasis = nullptr;
+    PartialMatch *theBasis = nullptr;
     Activation *theActivation;
     const char *ruleFiring;
 #if PROFILING_FUNCTIONS

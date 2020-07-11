@@ -60,7 +60,7 @@ const char *GetFileName(UDFContext *);
 const char *GetConstructName(UDFContext *, const char *, const char *);
 void ExpectedCountError(const Environment&, const char *, int, unsigned int);
 void OpenErrorMessage(const Environment&, const char *, const char *);
-bool CheckFunctionArgCount(const Environment&, struct functionDefinition *, int);
+bool CheckFunctionArgCount(const Environment&, FunctionDefinition *, int);
 void ExpectedTypeError0(const Environment&, const char *, unsigned int);
 void ExpectedTypeError1(const Environment&, const char *, unsigned int, const char *);
 void ExpectedTypeError2(const Environment&, const char *, unsigned int);

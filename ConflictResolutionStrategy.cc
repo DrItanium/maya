@@ -84,7 +84,7 @@ static Activation *PlaceSimplicityActivation(Activation *, struct SalienceGroup 
 static Activation *PlaceRandomActivation(Activation *, struct SalienceGroup *);
 static int ComparePartialMatches(const Environment&, Activation *, Activation *);
 static const char *GetStrategyName(StrategyType);
-static unsigned long long *SortPartialMatch(const Environment&, struct partialMatch *);
+static unsigned long long *SortPartialMatch(const Environment&, PartialMatch *);
 
 /******************************************************************/
 /* PlaceActivation: Coordinates placement of an activation on the */

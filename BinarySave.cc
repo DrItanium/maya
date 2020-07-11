@@ -299,8 +299,8 @@ bool Bsave(
 /*   being unneeded by this binary image.    */
 /*********************************************/
 static void InitializeFunctionNeededFlags(
-        const Environment&theEnv) {
-    struct functionDefinition *functionList;
+        const Environment& theEnv) {
+    FunctionDefinition *functionList;
 
     for (functionList = GetFunctionList(theEnv);
          functionList != nullptr;
@@ -331,7 +331,7 @@ static void WriteNeededFunctions(
         FILE *fp) {
     unsigned long count = 0;
     size_t space, length;
-    struct functionDefinition *functionList;
+    FunctionDefinition *functionList;
 
     /*================================================*/
     /* Assign each function an index if it is needed. */
@@ -384,7 +384,7 @@ static void WriteNeededFunctions(
 static size_t FunctionBinarySize(
         const Environment&theEnv) {
     size_t size = 0;
-    struct functionDefinition *functionList;
+    FunctionDefinition *functionList;
 
     for (functionList = GetFunctionList(theEnv);
          functionList != nullptr;

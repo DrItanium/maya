@@ -135,7 +135,7 @@ static void ResetDefrules(
         void *context) {
     Defmodule *theModule;
     struct joinLink *theLink;
-    struct partialMatch *notParent;
+    PartialMatch *notParent;
 
     DefruleData(theEnv)->CurrentEntityTimeTag = 1L;
     ClearFocusStack(theEnv);
@@ -176,7 +176,7 @@ static void ResetDefrulesPrime(
         const Environment&theEnv,
         void *context) {
     struct joinLink *theLink;
-    struct partialMatch *notParent;
+    PartialMatch *notParent;
 
     for (theLink = DefruleData(theEnv)->RightPrimeJoins;
          theLink != nullptr;

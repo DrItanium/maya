@@ -261,12 +261,12 @@ static void CheckForPrimableJoins(
 static void PrimeJoinFromLeftMemory(
         const Environment&theEnv,
         struct joinNode *joinPtr) {
-    struct partialMatch *theList, *linker;
+    PartialMatch *theList, *linker;
     struct alphaMemoryHash *listOfHashNodes;
     unsigned long b;
     unsigned long hashValue;
     struct betaMemory *theMemory;
-    struct partialMatch *notParent;
+    PartialMatch *notParent;
     struct joinLink *tempLink;
 
     /*===========================================================*/
@@ -358,12 +358,12 @@ static void PrimeJoinFromLeftMemory(
 static void PrimeJoinFromRightMemory(
         const Environment&theEnv,
         struct joinNode *joinPtr) {
-    struct partialMatch *theList, *linker;
+    PartialMatch *theList, *linker;
     unsigned long b;
     struct betaMemory *theMemory;
     unsigned long hashValue;
     struct joinLink *tempLink;
-    struct partialMatch *notParent;
+    PartialMatch *notParent;
 
     /*=======================================*/
     /* This should be a join from the right. */

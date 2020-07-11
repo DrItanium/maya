@@ -75,7 +75,7 @@
    =========================================
    ***************************************** */
 
-static void FormMethodsFromRestrictions(const Environment&, Defgeneric *, struct functionDefinition *, Expression *);
+static void FormMethodsFromRestrictions(const Environment&, Defgeneric *, FunctionDefinition *, Expression *);
 static RESTRICTION *ParseRestrictionType(const Environment&, unsigned);
 static Expression *GenTypeExpression(const Environment&, Expression *, int, int, const char *);
 static Expression *ParseRestrictionCreateTypes(const Environment&, CONSTRAINT_RECORD *);
@@ -99,7 +99,7 @@ static Expression *ParseRestrictionCreateTypes(const Environment&, CONSTRAINT_RE
 void AddImplicitMethods(
         const Environment&theEnv,
         Defgeneric *gfunc) {
-    struct functionDefinition *sysfunc;
+    FunctionDefinition *sysfunc;
     Expression action;
 
     sysfunc = FindFunction(theEnv, gfunc->header.name->contents);
@@ -133,7 +133,7 @@ void AddImplicitMethods(
 static void FormMethodsFromRestrictions(
         const Environment&theEnv,
         Defgeneric *gfunc,
-        struct functionDefinition *sysfunc,
+        FunctionDefinition *sysfunc,
         Expression *actions) {
     Defmethod *meth;
     Expression *plist, *tmp, *bot, *svBot;

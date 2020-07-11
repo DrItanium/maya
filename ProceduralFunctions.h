@@ -66,8 +66,8 @@ struct procedureFunctionData {
     LOOP_COUNTER_STACK *LoopCounterStack;
     UDFValue *BindList;
 };
-
-#define ProcedureFunctionData(theEnv) ((procedureFunctionData *) GetEnvironmentData(theEnv,PRCDRFUN_DATA))
+RegisterEnvironmentModule(procedureFunctionData, PRCDRFUN_DATA);
+#define ProcedureFunctionData(theEnv) (GetEnvironmentData(theEnv,PRCDRFUN_DATA))
 
 void ProceduralFunctionDefinitions(const Environment&);
 void WhileFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);

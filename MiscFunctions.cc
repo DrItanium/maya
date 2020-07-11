@@ -739,7 +739,7 @@ void ExpandFuncCall(
         UDFContext *context,
         UDFValue *returnValue) {
     Expression *newargexp, *fcallexp;
-    struct functionDefinition *func;
+    FunctionDefinition *func;
 
     /* ======================================================================
        Copy the original function call's argument expression list.
@@ -939,7 +939,7 @@ void GetFunctionRestrictions(
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
-    struct functionDefinition *fptr;
+    FunctionDefinition *fptr;
     char *stringBuffer = nullptr;
     size_t bufferPosition = 0;
     size_t bufferMaximum = 0;
@@ -997,7 +997,7 @@ void GetFunctionListFunction(
         const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
-    struct functionDefinition *theFunction;
+    FunctionDefinition *theFunction;
     Multifield *theList;
     unsigned long functionCount = 0;
 
@@ -1031,7 +1031,7 @@ void FuncallFunction(
     const char *name;
     Multifield *theMultifield;
     Expression *lastAdd = nullptr, *nextAdd, *multiAdd;
-    struct functionDefinition *theFunction = nullptr;
+    FunctionDefinition *theFunction = nullptr;
 
     /*==================================*/
     /* Set up the default return value. */

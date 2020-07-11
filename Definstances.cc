@@ -477,7 +477,7 @@ static bool ParseDefinstances(
         const Environment&theEnv,
         const char *readSource) {
     CLIPSLexeme *dname;
-    struct functionDefinition *mkinsfcall;
+    FunctionDefinition *mkinsfcall;
     Expression *mkinstance, *mkbot = nullptr;
     Definstances *dobj;
     bool active;

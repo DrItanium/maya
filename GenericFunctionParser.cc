@@ -640,7 +640,7 @@ static bool ValidGenericName(
     Defmodule *theModule;
     Deffunction *theDeffunction;
 #endif
-    struct functionDefinition *systemFunction;
+    FunctionDefinition *systemFunction;
 
     /*==============================================*/
     /* A defgeneric cannot be named the same as a   */
