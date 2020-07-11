@@ -125,27 +125,10 @@
 /**********************************************/
 /* GetEnvironmentContext: Returns the context */
 /*   of the specified environment.            */
-/**********************************************/
-void *GetEnvironmentContext(
-        const Environment&theEnvironment) {
-    return theEnvironment->context;
-}
 
 /*******************************************/
 /* SetEnvironmentContext: Sets the context */
 /*   of the specified environment.         */
-/*******************************************/
-void *SetEnvironmentContext(
-        const Environment&theEnvironment,
-        void *theContext) {
-    void *oldContext;
-
-    oldContext = theEnvironment->context;
-
-    theEnvironment->context = theContext;
-
-    return oldContext;
-}
 
 void
 EnvironmentModule::clear() noexcept {

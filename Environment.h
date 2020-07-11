@@ -145,7 +145,6 @@ struct CLIPSLexeme;
 struct CLIPSVoid;
 struct environmentData {
     bool initialized = false;
-    void *context = nullptr;
     CLIPSLexeme *TrueSymbol = nullptr;
     CLIPSLexeme *FalseSymbol = nullptr;
     CLIPSVoid *VoidConstant = nullptr;
@@ -190,9 +189,6 @@ inline auto FalseSymbol(const Environment& theEnv) noexcept { return theEnv->Fal
 inline auto TrueSymbol(const Environment& theEnv) noexcept { return theEnv->TrueSymbol; }
 
 #define GetEnvironmentData(theEnv, position) (theEnv->getEnvironmentModule<position>())
-
-void *GetEnvironmentContext(const Environment&);
-void *SetEnvironmentContext(const Environment&, void *);
 
 Environment CreateEnvironment();
 struct CLIPSFloat;
