@@ -296,7 +296,7 @@ void ClearBloadedExpressions(
 void FindHashedExpressions(
         const Environment&theEnv) {
     unsigned i;
-    EXPRESSION_HN *exphash;
+    ExpressionHashNode *exphash;
 
     for (i = 0; i < EXPRESSION_HASH_SIZE; i++)
         for (exphash = ExpressionData(theEnv)->ExpressionHashTable[i]; exphash != nullptr; exphash = exphash->next) {
@@ -318,7 +318,7 @@ void BsaveHashedExpressions(
         const Environment&theEnv,
         FILE *fp) {
     unsigned i;
-    EXPRESSION_HN *exphash;
+    ExpressionHashNode *exphash;
 
     for (i = 0; i < EXPRESSION_HASH_SIZE; i++)
         for (exphash = ExpressionData(theEnv)->ExpressionHashTable[i]; exphash != nullptr; exphash = exphash->next)

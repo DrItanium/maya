@@ -186,7 +186,7 @@ void InitializeFacts(
 
     memcpy(&FactData(theEnv)->FactInfo, &factInfo, sizeof(PatternEntityRecord));
     dummyFact.patternHeader.theInfo = &FactData(theEnv)->FactInfo;
-    memcpy(&FactData(theEnv)->DummyFact, &dummyFact, sizeof(fact));
+    memcpy(&FactData(theEnv)->DummyFact, &dummyFact, sizeof(Fact));
     FactData(theEnv)->LastModuleIndex = -1;
 
     /*=========================================*/
@@ -1368,7 +1368,7 @@ Fact *CreateFactBySize(
     if (size <= 0) newSize = 1;
     else newSize = size;
 
-    theFact = get_var_struct(theEnv, fact, sizeof(clipsValue) * (newSize - 1));
+    theFact = get_var_struct(theEnv, Fact, sizeof(CLIPSValue) * (newSize - 1));
 
     theFact->patternHeader.header.type = FACT_ADDRESS_TYPE;
     theFact->garbage = false;
@@ -1415,7 +1415,7 @@ void ReturnFact(
     if (theFact->theProposition.length == 0) newSize = 1;
     else newSize = theFact->theProposition.length;
 
-    rtn_var_struct(theEnv, fact, sizeof(clipsValue) * (newSize - 1), theFact);
+    rtn_var_struct(theEnv, Fact, sizeof(CLIPSValue) * (newSize - 1), theFact);
 }
 
 /*************************************************************/

@@ -18,7 +18,7 @@
 /*                                                           */
 /*      6.30: Added support for hashed memories.             */
 /*                                                           */
-/*            Added additional members to partialMatch to    */
+/*            Added additional members to PartialMatch to    */
 /*            support changes to the matching algorithm.     */
 /*                                                           */
 /*      6.31: Bug fix to prevent rule activations for        */
@@ -67,7 +67,7 @@ struct genericMatch {
 };
 
 /****************/
-/* partialMatch */
+/* PartialMatch */
 /****************/
 struct PartialMatch {
     bool betaMemory: 1;

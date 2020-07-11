@@ -180,7 +180,7 @@ void InitializeAtomTables(
     SymbolData(theEnv)->Zero = CreateInteger(theEnv, 0LL);
     IncrementIntegerCount(SymbolData(theEnv)->Zero);
 
-    theEnv->VoidConstant = get_struct(theEnv, clipsVoid);
+    theEnv->VoidConstant = get_struct(theEnv, CLIPSVoid);
     theEnv->VoidConstant->header.type = VOID_TYPE;
 }
 
@@ -211,7 +211,7 @@ static void DeallocateSymbolData(
             nextSHPtr = shPtr->next;
             if (!shPtr->permanent) {
                 rm(theEnv, (void *) shPtr->contents, strlen(shPtr->contents) + 1);
-                rtn_struct(theEnv, clipsLexeme, shPtr);
+                rtn_struct(theEnv, CLIPSLexeme, shPtr);
             }
             shPtr = nextSHPtr;
         }
@@ -222,7 +222,7 @@ static void DeallocateSymbolData(
 
         while (fhPtr != nullptr) {
             nextFHPtr = fhPtr->next;
-            if (!fhPtr->permanent) { rtn_struct(theEnv, clipsFloat, fhPtr); }
+            if (!fhPtr->permanent) { rtn_struct(theEnv, CLIPSFloat, fhPtr); }
             fhPtr = nextFHPtr;
         }
     }
@@ -232,7 +232,7 @@ static void DeallocateSymbolData(
 
         while (ihPtr != nullptr) {
             nextIHPtr = ihPtr->next;
-            if (!ihPtr->permanent) { rtn_struct(theEnv, clipsInteger, ihPtr); }
+            if (!ihPtr->permanent) { rtn_struct(theEnv, CLIPSInteger, ihPtr); }
             ihPtr = nextIHPtr;
         }
     }
@@ -244,7 +244,7 @@ static void DeallocateSymbolData(
             nextBMHPtr = bmhPtr->next;
             if (!bmhPtr->permanent) {
                 rm(theEnv, (void *) bmhPtr->contents, bmhPtr->size);
-                rtn_struct(theEnv, clipsBitMap, bmhPtr);
+                rtn_struct(theEnv, CLIPSBitMap, bmhPtr);
             }
             bmhPtr = nextBMHPtr;
         }
@@ -256,7 +256,7 @@ static void DeallocateSymbolData(
         while (eahPtr != nullptr) {
             nextEAHPtr = eahPtr->next;
             if (!eahPtr->permanent) {
-                rtn_struct(theEnv, clipsExternalAddress, eahPtr);
+                rtn_struct(theEnv, CLIPSExternalAddress, eahPtr);
             }
             eahPtr = nextEAHPtr;
         }
@@ -375,7 +375,7 @@ CLIPSLexeme *AddSymbol(
     /* for this symbol table location.                  */
     /*==================================================*/
 
-    peek = get_struct(theEnv, clipsLexeme);
+    peek = get_struct(theEnv, CLIPSLexeme);
 
     if (past == nullptr) SymbolData(theEnv)->SymbolTable[tally] = peek;
     else past->next = peek;
@@ -464,7 +464,7 @@ CLIPSFloat *CreateFloat(
     /* for this hash location.                         */
     /*=================================================*/
 
-    peek = get_struct(theEnv, clipsFloat);
+    peek = get_struct(theEnv, CLIPSFloat);
 
     if (past == nullptr) SymbolData(theEnv)->FloatTable[tally] = peek;
     else past->next = peek;
@@ -527,7 +527,7 @@ CLIPSInteger *CreateInteger(
     /* for this hash location.                        */
     /*================================================*/
 
-    peek = get_struct(theEnv, clipsInteger);
+    peek = get_struct(theEnv, CLIPSInteger);
     if (past == nullptr) SymbolData(theEnv)->IntegerTable[tally] = peek;
     else past->next = peek;
 
@@ -622,7 +622,7 @@ void *AddBitMap(
     /* for this hash table location.  Return the        */
     /*==================================================*/
 
-    peek = get_struct(theEnv, clipsBitMap);
+    peek = get_struct(theEnv, CLIPSBitMap);
     if (past == nullptr) SymbolData(theEnv)->BitMapTable[tally] = peek;
     else past->next = peek;
 
@@ -702,7 +702,7 @@ CLIPSExternalAddress *CreateExternalAddress(
     /* of entries for this hash table location.        */
     /*=================================================*/
 
-    peek = get_struct(theEnv, clipsExternalAddress);
+    peek = get_struct(theEnv, CLIPSExternalAddress);
     if (past == nullptr) SymbolData(theEnv)->ExternalAddressTable[tally] = peek;
     else past->next = peek;
 

@@ -312,9 +312,7 @@ static void PrintTemplateSlot(
         /*==========================================================*/
 
     else {
-        struct multifield *theSegment;
-
-        theSegment = (Multifield *) slotValue->value;
+        auto theSegment = (Multifield *) slotValue->value;
         if (theSegment->length > 0) {
             WriteString(theEnv, logicalName, " ");
             PrintMultifieldDriver(theEnv, logicalName, theSegment, 0, theSegment->length, false);
@@ -333,15 +331,14 @@ static void PrintTemplateSlot(
 /********************************/
 static struct templateSlot *GetNextTemplateSlotToPrint(
         const Environment&theEnv,
-        struct fact *theFact,
+        Fact *theFact,
         struct templateSlot *slotPtr,
         int *position,
         int ignoreDefaults,
         const char *changeMap) {
     UDFValue tempDO;
-    CLIPSValue *sublist;
 
-    sublist = theFact->theProposition.contents;
+    auto sublist = theFact->theProposition.contents;
     if (slotPtr == nullptr) { slotPtr = theFact->whichDeftemplate->slotList; }
     else {
         slotPtr = slotPtr->next;

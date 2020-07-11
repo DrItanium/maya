@@ -537,7 +537,7 @@ void ReturnPartialMatch(
     /* Return the partial match to the pool of free memory. */
     /*======================================================*/
 
-    rtn_var_struct(theEnv, partialMatch, sizeof(genericMatch *) *
+    rtn_var_struct(theEnv, PartialMatch, sizeof(genericMatch *) *
                                          (waste->bcount - 1),
                    waste);
 }
@@ -573,7 +573,7 @@ void DestroyPartialMatch(
     /* Return the partial match to the pool of free memory. */
     /*======================================================*/
 
-    rtn_var_struct(theEnv, partialMatch, sizeof(genericMatch *) *
+    rtn_var_struct(theEnv, PartialMatch, sizeof(genericMatch *) *
                                          (waste->bcount - 1),
                    waste);
 }

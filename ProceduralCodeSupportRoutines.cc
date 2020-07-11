@@ -536,10 +536,10 @@ int ReplaceProcVars(
                     altvarexp = GenConstant(theEnv, actions->type, actions->value);
                     altcode = (*altvarfunc)(theEnv, altvarexp, specdata);
                     if (altcode == 0) {
-                        rtn_struct(theEnv, expr, altvarexp);
+                        rtn_struct(theEnv, Expression, altvarexp);
                         altvarexp = nullptr;
                     } else if (altcode == -1) {
-                        rtn_struct(theEnv, expr, altvarexp);
+                        rtn_struct(theEnv, Expression, altvarexp);
                         return true;
                     }
                 } else
@@ -581,7 +581,7 @@ int ReplaceProcVars(
                 boundPosn = SearchParsedBindNames(theEnv, actions->argList->lexemeValue);
                 actions->value = AddBitMap(theEnv, &boundPosn, sizeof(int));
                 arg_lvl = actions->argList->nextArg;
-                rtn_struct(theEnv, expr, actions->argList);
+                rtn_struct(theEnv, Expression, actions->argList);
                 actions->argList = arg_lvl;
             }
         }
@@ -1324,7 +1324,7 @@ static Expression *CompactActions(
     } else if (actions->argList->nextArg == nullptr) {
         tmp = actions;
         actions = actions->argList;
-        rtn_struct(theEnv, expr, tmp);
+        rtn_struct(theEnv, Expression, tmp);
     }
     return (actions);
 }

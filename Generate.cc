@@ -689,7 +689,7 @@ void AddNandUnification(
 /*   from a partial match (i.e. from information stored in the     */
 /*   join network or the activation of the rule).                  */
 /*******************************************************************/
-expr *GetvarReplace(
+Expression *GetvarReplace(
         const Environment&theEnv,
         lhsParseNode *nodeList,
         bool isNand,

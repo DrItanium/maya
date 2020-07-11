@@ -649,7 +649,7 @@ static Expression *BindParse(
     }
 
     top->argList->nextArg = texp->argList;
-    rtn_struct(theEnv, expr, texp);
+    rtn_struct(theEnv, Expression, texp);
 
 #if DEFGLOBAL_CONSTRUCT
     if (top->argList->type == DEFGLOBAL_PTR) return (top);

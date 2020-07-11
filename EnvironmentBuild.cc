@@ -158,13 +158,13 @@ Environment CreateEnvironmentDriver(
 bool DestroyEnvironment(Environment& theEnvironment) {
     struct environmentCleanupFunction *cleanupPtr;
     int i;
-    struct memoryData *theMemData;
     bool rv = true;
+    /// @todo fix this
+#if 0
+    const auto& theMemData = MemoryData(theEnvironment);
 
-    theMemData = MemoryData(theEnvironment);
 
     ReleaseMem(theEnvironment, -1);
-
     for (i = 0; i < MAXIMUM_ENVIRONMENT_POSITIONS; i++) {
         if (theEnvironment->cleanupFunctions[i] != nullptr) { (*theEnvironment->cleanupFunctions[i])(theEnvironment); }
     }
@@ -201,7 +201,7 @@ bool DestroyEnvironment(Environment& theEnvironment) {
 
     theEnvironment.reset();
     //free(theEnvironment);
-
+#endif
     return rv;
 }
 
@@ -212,12 +212,13 @@ bool DestroyEnvironment(Environment& theEnvironment) {
 static void RemoveEnvironmentCleanupFunctions(
         const Environment& theEnv) {
     struct environmentCleanupFunction *nextPtr;
-
+#if 0
     while (theEnv->listOfCleanupEnvironmentFunctions != nullptr) {
         nextPtr = theEnv->listOfCleanupEnvironmentFunctions->next;
         free(theEnv->listOfCleanupEnvironmentFunctions);
         theEnv->listOfCleanupEnvironmentFunctions = nextPtr;
     }
+#endif
 }
 
 /**************************************************/

@@ -51,7 +51,7 @@ struct CLIPSVoid {
 };
 
 /***************/
-/* clipsLexeme */
+/* CLIPSLexeme */
 /***************/
 struct CLIPSLexeme {
     TypeHeader header;
@@ -65,7 +65,7 @@ struct CLIPSLexeme {
 };
 
 /**************/
-/* clipsFloat */
+/* CLIPSFloat */
 /**************/
 struct CLIPSFloat {
     TypeHeader header;
@@ -79,7 +79,7 @@ struct CLIPSFloat {
 };
 
 /****************/
-/* clipsInteger */
+/* CLIPSInteger */
 /****************/
 struct CLIPSInteger {
     TypeHeader header;
@@ -93,7 +93,7 @@ struct CLIPSInteger {
 };
 
 /***************/
-/* clipsBitMap */
+/* CLIPSBitMap */
 /***************/
 struct CLIPSBitMap {
     TypeHeader header;
@@ -108,7 +108,7 @@ struct CLIPSBitMap {
 };
 
 /************************/
-/* clipsExternalAddress */
+/* CLIPSExternalAddress */
 /************************/
 struct CLIPSExternalAddress{
     TypeHeader header;
@@ -125,7 +125,7 @@ struct Multifield;
 struct Fact;
 struct Instance;
 /**************/
-/* clipsValue */
+/* CLIPSValue */
 /**************/
 struct CLIPSValue {
     union {

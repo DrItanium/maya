@@ -246,7 +246,7 @@ static void DeallocateInstanceData(
     while (tmpIPtr != nullptr) {
         nextIPtr = tmpIPtr->nxtList;
 
-        theMatch = (patternMatch *) tmpIPtr->partialMatchList;
+        theMatch = (patternMatch *) tmpIPtr->_partialMatchList;
         while (theMatch != nullptr) {
             tmpMatch = theMatch->next;
             rtn_struct(theEnv, patternMatch, theMatch);
@@ -272,7 +272,7 @@ static void DeallocateInstanceData(
             }
         }
 
-        rtn_struct(theEnv, instance, tmpIPtr);
+        rtn_struct(theEnv, Instance, tmpIPtr);
 
         tmpIPtr = nextIPtr;
     }
@@ -284,7 +284,7 @@ static void DeallocateInstanceData(
     tmpGPtr = InstanceData(theEnv)->InstanceGarbageList;
     while (tmpGPtr != nullptr) {
         nextGPtr = tmpGPtr->nxt;
-        rtn_struct(theEnv, instance, tmpGPtr->ins);
+        rtn_struct(theEnv, Instance, tmpGPtr->ins);
         rtn_struct(theEnv, igarbage, tmpGPtr);
         tmpGPtr = nextGPtr;
     }

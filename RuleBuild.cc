@@ -1010,15 +1010,15 @@ static struct joinNode *CreateNewJoin(
     if ((lhsEntryStruct != nullptr) || existsRHSPattern || negatedRHSPattern || joinFromTheRight) {
         if (leftHash == nullptr) {
             newJoin->leftMemory = get_struct(theEnv, betaMemory);
-            newJoin->leftMemory->beta = (partialMatch **) genalloc(theEnv, sizeof(partialMatch *));
+            newJoin->leftMemory->beta = (PartialMatch **) genalloc(theEnv, sizeof(PartialMatch *));
             newJoin->leftMemory->beta[0] = nullptr;
             newJoin->leftMemory->last = nullptr;
             newJoin->leftMemory->size = 1;
             newJoin->leftMemory->count = 0;
         } else {
             newJoin->leftMemory = get_struct(theEnv, betaMemory);
-            newJoin->leftMemory->beta = (partialMatch **) genalloc(theEnv, sizeof(partialMatch *) * INITIAL_BETA_HASH_SIZE);
-            memset(newJoin->leftMemory->beta, 0, sizeof(partialMatch *) * INITIAL_BETA_HASH_SIZE);
+            newJoin->leftMemory->beta = (PartialMatch **) genalloc(theEnv, sizeof(PartialMatch *) * INITIAL_BETA_HASH_SIZE);
+            memset(newJoin->leftMemory->beta, 0, sizeof(PartialMatch *) * INITIAL_BETA_HASH_SIZE);
             newJoin->leftMemory->last = nullptr;
             newJoin->leftMemory->size = INITIAL_BETA_HASH_SIZE;
             newJoin->leftMemory->count = 0;
@@ -1041,25 +1041,25 @@ static struct joinNode *CreateNewJoin(
     if (joinFromTheRight) {
         if (leftHash == nullptr) {
             newJoin->rightMemory = get_struct(theEnv, betaMemory);
-            newJoin->rightMemory->beta = (partialMatch **) genalloc(theEnv, sizeof(partialMatch *));
-            newJoin->rightMemory->last = (partialMatch **) genalloc(theEnv, sizeof(partialMatch *));
+            newJoin->rightMemory->beta = (PartialMatch **) genalloc(theEnv, sizeof(PartialMatch *));
+            newJoin->rightMemory->last = (PartialMatch **) genalloc(theEnv, sizeof(PartialMatch *));
             newJoin->rightMemory->beta[0] = nullptr;
             newJoin->rightMemory->last[0] = nullptr;
             newJoin->rightMemory->size = 1;
             newJoin->rightMemory->count = 0;
         } else {
             newJoin->rightMemory = get_struct(theEnv, betaMemory);
-            newJoin->rightMemory->beta = (partialMatch **) genalloc(theEnv, sizeof(partialMatch *) * INITIAL_BETA_HASH_SIZE);
-            newJoin->rightMemory->last = (partialMatch **) genalloc(theEnv, sizeof(partialMatch *) * INITIAL_BETA_HASH_SIZE);
-            memset(newJoin->rightMemory->beta, 0, sizeof(partialMatch *) * INITIAL_BETA_HASH_SIZE);
-            memset(newJoin->rightMemory->last, 0, sizeof(partialMatch *) * INITIAL_BETA_HASH_SIZE);
+            newJoin->rightMemory->beta = (PartialMatch **) genalloc(theEnv, sizeof(PartialMatch *) * INITIAL_BETA_HASH_SIZE);
+            newJoin->rightMemory->last = (PartialMatch **) genalloc(theEnv, sizeof(PartialMatch *) * INITIAL_BETA_HASH_SIZE);
+            memset(newJoin->rightMemory->beta, 0, sizeof(PartialMatch *) * INITIAL_BETA_HASH_SIZE);
+            memset(newJoin->rightMemory->last, 0, sizeof(PartialMatch *) * INITIAL_BETA_HASH_SIZE);
             newJoin->rightMemory->size = INITIAL_BETA_HASH_SIZE;
             newJoin->rightMemory->count = 0;
         }
     } else if (rhsEntryStruct == nullptr) {
         newJoin->rightMemory = get_struct(theEnv, betaMemory);
-        newJoin->rightMemory->beta = (partialMatch **) genalloc(theEnv, sizeof(partialMatch *));
-        newJoin->rightMemory->last = (partialMatch **) genalloc(theEnv, sizeof(partialMatch *));
+        newJoin->rightMemory->beta = (PartialMatch **) genalloc(theEnv, sizeof(PartialMatch *));
+        newJoin->rightMemory->last = (PartialMatch **) genalloc(theEnv, sizeof(PartialMatch *));
         newJoin->rightMemory->beta[0] = CreateEmptyPartialMatch(theEnv);
         newJoin->rightMemory->beta[0]->owner = newJoin;
         newJoin->rightMemory->beta[0]->rhsMemory = true;

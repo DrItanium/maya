@@ -560,7 +560,7 @@ void DeleteTempRestricts(
         ptmp = phead;
         phead = phead->nextArg;
         rtmp = (RESTRICTION *) ptmp->argList;
-        rtn_struct(theEnv, expr, ptmp);
+        rtn_struct(theEnv, Expression, ptmp);
         ReturnExpression(theEnv, rtmp->query);
         if (rtmp->tcnt != 0)
             rm(theEnv, rtmp->types, (sizeof(void *) * rtmp->tcnt));

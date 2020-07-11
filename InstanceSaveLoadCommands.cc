@@ -1286,7 +1286,7 @@ static long LoadOrRestoreInstances(
     while ((DefclassData(theEnv)->ObjectParseToken.tknType != STOP_TOKEN) && !EvaluationData(theEnv)->HaltExecution) {
         if (DefclassData(theEnv)->ObjectParseToken.tknType != LEFT_PARENTHESIS_TOKEN) {
             SyntaxErrorMessage(theEnv, "instance definition");
-            rtn_struct(theEnv, expr, top);
+            rtn_struct(theEnv, Expression, top);
             if (isFileName) {
                 GenClose(theEnv, sfile);
                 SetFastLoad(theEnv, svload);
@@ -1345,7 +1345,7 @@ static long LoadOrRestoreInstances(
         CleanCurrentGarbageFrame(theEnv, nullptr);
     }
 
-    rtn_struct(theEnv, expr, top);
+    rtn_struct(theEnv, Expression, top);
     if (isFileName) {
         GenClose(theEnv, sfile);
         SetFastLoad(theEnv, svload);

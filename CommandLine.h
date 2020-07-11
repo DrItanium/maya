@@ -72,7 +72,7 @@
 constexpr auto COMMANDLINE_DATA = 40;
 
 #include <cstdlib>
-
+struct Expression;
 typedef void AfterPromptFunction(const Environment&);
 typedef bool BeforeCommandExecutionFunction(const Environment&);
 typedef void EventFunction(const Environment&);

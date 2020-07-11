@@ -185,7 +185,7 @@ struct Instance {
         PatternEntity patternHeader;
         TypeHeader header;
     };
-    void *partialMatchList;
+    void *_partialMatchList;
     InstanceSlot *basisSlots;
     bool installed: 1;
     bool garbage: 1;

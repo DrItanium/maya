@@ -365,7 +365,7 @@ Instance *BuildInstance(
        match was deleted, abort the instance creation
        ============================================== */
     if (!AddLogicalDependencies(theEnv, (PatternEntity *) InstanceData(theEnv)->CurrentInstance, false)) {
-        rtn_struct(theEnv, instance, InstanceData(theEnv)->CurrentInstance);
+        rtn_struct(theEnv, Instance, InstanceData(theEnv)->CurrentInstance);
         InstanceData(theEnv)->CurrentInstance = nullptr;
         return nullptr;
     }
@@ -564,7 +564,7 @@ UnmakeInstanceError QuashInstance(
         && (ins->patternHeader.busyCount == 0)
             ) {
         ReleaseLexeme(theEnv, ins->name);
-        rtn_struct(theEnv, instance, ins);
+        rtn_struct(theEnv, Instance, ins);
     } else {
         gptr = get_struct(theEnv, igarbage);
         ins->garbage = 1;
@@ -652,14 +652,14 @@ static Instance *NewInstance(
         const Environment&theEnv) {
     Instance *instance;
 
-    instance = get_struct(theEnv, instance);
+    instance = get_struct(theEnv, Instance);
     instance->patternHeader.theInfo = &InstanceData(theEnv)->InstanceInfo;
 
     instance->patternHeader.dependents = nullptr;
     instance->patternHeader.busyCount = 0;
     instance->patternHeader.timeTag = 0L;
 
-    instance->partialMatchList = nullptr;
+    instance->_partialMatchList = nullptr;
     instance->basisSlots = nullptr;
     instance->reteSynchronized = false;
     instance->patternHeader.header.type = INSTANCE_ADDRESS_TYPE;

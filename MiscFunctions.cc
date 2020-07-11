@@ -865,12 +865,12 @@ static void ExpandFuncMultifield(
             }
             if (top == nullptr) {
                 *sto = theExp->nextArg;
-                rtn_struct(theEnv, expr, theExp);
+                rtn_struct(theEnv, Expression, theExp);
                 theExp = *sto;
             } else {
                 bot->nextArg = theExp->nextArg;
                 *sto = top;
-                rtn_struct(theEnv, expr, theExp);
+                rtn_struct(theEnv, Expression, theExp);
                 sto = &bot->nextArg;
                 theExp = bot->nextArg;
             }

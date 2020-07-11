@@ -646,7 +646,7 @@ static Defclass *DetermineRestrictionClass(
         ins = dobj->instanceValue;
         cls = (ins->garbage == 0) ? ins->cls : nullptr;
     } else {
-        auto dd = DefclassData(theEnv);
+        const auto& dd = DefclassData(theEnv);
         auto targetType = dobj->header->type;
         return dd->PrimitiveClassMap[targetType];
         //return (DefclassData(theEnv)->PrimitiveClassMap[dobj->header->type]);

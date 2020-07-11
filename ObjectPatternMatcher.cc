@@ -1183,7 +1183,7 @@ static void RemoveObjectPartialMatches(
     struct patternMatch *match_before, *match_ptr;
 
     match_before = nullptr;
-    match_ptr = (patternMatch *) ins->partialMatchList;
+    match_ptr = (patternMatch *) ins->_partialMatchList;
 
     /* =======================================
        Loop through every match for the object
@@ -1192,9 +1192,9 @@ static void RemoveObjectPartialMatches(
         if (match_ptr->matchingPattern == phead) {
             ins->busy--;
             if (match_before == nullptr) {
-                ins->partialMatchList = (void *) match_ptr->next;
+                ins->_partialMatchList = (void *) match_ptr->next;
                 rtn_struct(theEnv, patternMatch, match_ptr);
-                match_ptr = (patternMatch *) ins->partialMatchList;
+                match_ptr = (patternMatch *) ins->_partialMatchList;
             } else {
                 match_before->next = match_ptr->next;
                 rtn_struct(theEnv, patternMatch, match_ptr);

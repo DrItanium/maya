@@ -121,7 +121,7 @@ bool AddLogicalDependencies(
     theBinds->dependents = newDependency;
 
     /*================================================================*/
-    /* Add a dependency link between the entity and the partialMatch. */
+    /* Add a dependency link between the entity and the PartialMatch. */
     /*================================================================*/
 
     newDependency = get_struct(theEnv, dependency);

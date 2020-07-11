@@ -1061,10 +1061,10 @@ static void CreateObjectAlphaMatch(
                to ease later retraction
                ====================================== */
             newMatch = get_struct(theEnv, patternMatch);
-            newMatch->next = (patternMatch *) ObjectReteData(theEnv)->CurrentPatternObject->partialMatchList;
+            newMatch->next = (patternMatch *) ObjectReteData(theEnv)->CurrentPatternObject->_partialMatchList;
             newMatch->matchingPattern = (PatternNodeHeader *) alphaPtr;
             newMatch->theMatch = theMatch;
-            ObjectReteData(theEnv)->CurrentPatternObject->partialMatchList = (void *) newMatch;
+            ObjectReteData(theEnv)->CurrentPatternObject->_partialMatchList = (void *) newMatch;
 
             /* ================================================
                Drive the partial match through the join network
@@ -1254,20 +1254,20 @@ static void ObjectRetractAction(
     void *saveDependents;
 
     if (slotNameIDs == nullptr) {
-        if (ins->partialMatchList != nullptr) {
-            tmpMatch = (patternMatch *) ins->partialMatchList;
+        if (ins->_partialMatchList != nullptr) {
+            tmpMatch = (patternMatch *) ins->_partialMatchList;
             while (tmpMatch != nullptr) {
                 ins->busy--;
                 tmpMatch = tmpMatch->next;
             }
-            NetworkRetract(theEnv, (patternMatch *) ins->partialMatchList);
-            ins->partialMatchList = nullptr;
+            NetworkRetract(theEnv, (patternMatch *) ins->_partialMatchList);
+            ins->_partialMatchList = nullptr;
         }
     } else {
         deleteMatch = nullptr;
         lastDeleteMatch = nullptr;
         prvMatch = nullptr;
-        tmpMatch = (patternMatch *) ins->partialMatchList;
+        tmpMatch = (patternMatch *) ins->_partialMatchList;
         while (tmpMatch != nullptr) {
             alphaPtr = (OBJECT_ALPHA_NODE *) tmpMatch->matchingPattern;
             if (alphaPtr->slotbmp != nullptr) {
@@ -1275,7 +1275,7 @@ static void ObjectRetractAction(
                                        (SLOT_BITMAP *) alphaPtr->slotbmp->contents)) {
                     ins->busy--;
                     if (prvMatch == nullptr)
-                        ins->partialMatchList = (void *) tmpMatch->next;
+                        ins->_partialMatchList = (void *) tmpMatch->next;
                     else
                         prvMatch->next = tmpMatch->next;
                     if (!deleteMatch)

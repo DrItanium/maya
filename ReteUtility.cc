@@ -90,8 +90,8 @@ static struct alphaMemoryHash *FindAlphaMemory(const Environment&, PatternNodeHe
 static unsigned long AlphaMemoryHashValue(PatternNodeHeader *, unsigned long);
 static void UnlinkAlphaMemory(const Environment&, PatternNodeHeader *, struct alphaMemoryHash *);
 static void UnlinkAlphaMemoryBucketSiblings(const Environment&, struct alphaMemoryHash *);
-static void InitializePMLinks(partialMatch *);
-static void UnlinkBetaPartialMatchfromAlphaAndBetaLineage(partialMatch *);
+static void InitializePMLinks(PartialMatch *);
+static void UnlinkBetaPartialMatchfromAlphaAndBetaLineage(PartialMatch *);
 static int CountPriorPatterns(joinNode *);
 static void ResizeBetaMemory(const Environment&, struct betaMemory *);
 static void ResetBetaMemory(const Environment&, struct betaMemory *);
@@ -131,7 +131,7 @@ PartialMatch *CopyPartialMatch(
     PartialMatch *linker;
     unsigned short i;
 
-    linker = get_var_struct(theEnv, partialMatch, sizeof(genericMatch) *
+    linker = get_var_struct(theEnv, PartialMatch, sizeof(genericMatch) *
                                                   (list->bcount - 1));
 
     InitializePMLinks(linker);
@@ -154,7 +154,7 @@ PartialMatch *CreateEmptyPartialMatch(
         const Environment&theEnv) {
     PartialMatch *linker;
 
-    linker = get_struct(theEnv, partialMatch);
+    linker = get_struct(theEnv, PartialMatch);
 
     InitializePMLinks(linker);
     linker->betaMemory = true;
@@ -294,7 +294,7 @@ void RemoveBlockedLink(
     PartialMatch *blocker;
 
     if (thePM->prevBlocked == nullptr) {
-        blocker = (partialMatch *) thePM->marker;
+        blocker = (PartialMatch *) thePM->marker;
         blocker->blockList = thePM->nextBlocked;
     } else { thePM->prevBlocked->nextBlocked = thePM->nextBlocked; }
 
@@ -407,7 +407,7 @@ void UnlinkNonLeftLineage(
     /*===========================*/
 
     if (thePM->prevBlocked == nullptr) {
-        tempPM = (partialMatch *) thePM->marker;
+        tempPM = (PartialMatch *) thePM->marker;
 
         if (tempPM != nullptr) { tempPM->blockList = thePM->nextBlocked; }
     } else { thePM->prevBlocked->nextBlocked = thePM->nextBlocked; }
@@ -463,7 +463,7 @@ static void UnlinkBetaPartialMatchfromAlphaAndBetaLineage(
     /*===========================*/
 
     if (thePM->prevBlocked == nullptr) {
-        tempPM = (partialMatch *) thePM->marker;
+        tempPM = (PartialMatch *) thePM->marker;
 
         if (tempPM != nullptr) { tempPM->blockList = thePM->nextBlocked; }
     } else { thePM->prevBlocked->nextBlocked = thePM->nextBlocked; }
@@ -505,13 +505,13 @@ PartialMatch *MergePartialMatches(
     /* Allocate the new partial match. */
     /*=================================*/
 
-    linker = get_var_struct(theEnv, partialMatch, sizeof(genericMatch) * lhsBind->bcount);
+    linker = get_var_struct(theEnv, PartialMatch, sizeof(genericMatch) * lhsBind->bcount);
 
     /*============================================*/
     /* Set the flags to their appropriate values. */
     /*============================================*/
 
-    memcpy(linker, &mergeTemplate, sizeof(partialMatch) - sizeof(genericMatch));
+    memcpy(linker, &mergeTemplate, sizeof(PartialMatch) - sizeof(genericMatch));
 
     linker->deleting = false;
     linker->bcount = lhsBind->bcount + 1;
@@ -579,7 +579,7 @@ PartialMatch *CreateAlphaMatch(
     /* Create the alpha match and intialize its values. */
     /*==================================================*/
 
-    theMatch = get_struct(theEnv, partialMatch);
+    theMatch = get_struct(theEnv, PartialMatch);
     InitializePMLinks(theMatch);
     theMatch->betaMemory = false;
     theMatch->busy = false;
@@ -952,7 +952,7 @@ void ReturnLeftMemory(
         const Environment&theEnv,
         struct joinNode *theJoin) {
     if (theJoin->leftMemory == nullptr) return;
-    genfree(theEnv, theJoin->leftMemory->beta, sizeof(partialMatch *) * theJoin->leftMemory->size);
+    genfree(theEnv, theJoin->leftMemory->beta, sizeof(PartialMatch *) * theJoin->leftMemory->size);
     rtn_struct(theEnv, betaMemory, theJoin->leftMemory);
     theJoin->leftMemory = nullptr;
 }
@@ -965,8 +965,8 @@ void ReturnRightMemory(
         const Environment&theEnv,
         struct joinNode *theJoin) {
     if (theJoin->rightMemory == nullptr) return;
-    genfree(theEnv, theJoin->rightMemory->beta, sizeof(partialMatch *) * theJoin->rightMemory->size);
-    genfree(theEnv, theJoin->rightMemory->last, sizeof(partialMatch *) * theJoin->rightMemory->size);
+    genfree(theEnv, theJoin->rightMemory->beta, sizeof(PartialMatch *) * theJoin->rightMemory->size);
+    genfree(theEnv, theJoin->rightMemory->last, sizeof(PartialMatch *) * theJoin->rightMemory->size);
     rtn_struct(theEnv, betaMemory, theJoin->rightMemory);
     theJoin->rightMemory = nullptr;
 }
@@ -1270,11 +1270,11 @@ void ResizeBetaMemory(
     oldArray = theMemory->beta;
 
     theMemory->size = oldSize * 11;
-    theMemory->beta = (partialMatch **) genalloc(theEnv, sizeof(partialMatch *) * theMemory->size);
+    theMemory->beta = (PartialMatch **) genalloc(theEnv, sizeof(PartialMatch *) * theMemory->size);
 
-    lastAdd = (partialMatch **) genalloc(theEnv, sizeof(partialMatch *) * theMemory->size);
-    memset(theMemory->beta, 0, sizeof(partialMatch *) * theMemory->size);
-    memset(lastAdd, 0, sizeof(partialMatch *) * theMemory->size);
+    lastAdd = (PartialMatch **) genalloc(theEnv, sizeof(PartialMatch *) * theMemory->size);
+    memset(theMemory->beta, 0, sizeof(PartialMatch *) * theMemory->size);
+    memset(lastAdd, 0, sizeof(PartialMatch *) * theMemory->size);
 
     for (i = 0; i < oldSize; i++) {
         thePM = oldArray[i];
@@ -1296,11 +1296,11 @@ void ResizeBetaMemory(
     }
 
     if (theMemory->last != nullptr) {
-        genfree(theEnv, theMemory->last, sizeof(partialMatch *) * oldSize);
+        genfree(theEnv, theMemory->last, sizeof(PartialMatch *) * oldSize);
         theMemory->last = lastAdd;
-    } else { genfree(theEnv, lastAdd, sizeof(partialMatch *) * theMemory->size); }
+    } else { genfree(theEnv, lastAdd, sizeof(PartialMatch *) * theMemory->size); }
 
-    genfree(theEnv, oldArray, sizeof(partialMatch *) * oldSize);
+    genfree(theEnv, oldArray, sizeof(PartialMatch *) * oldSize);
 }
 
 /********************/
@@ -1319,14 +1319,14 @@ static void ResetBetaMemory(
     oldArray = theMemory->beta;
 
     theMemory->size = INITIAL_BETA_HASH_SIZE;
-    theMemory->beta = (partialMatch **) genalloc(theEnv, sizeof(partialMatch *) * theMemory->size);
-    memset(theMemory->beta, 0, sizeof(partialMatch *) * theMemory->size);
-    genfree(theEnv, oldArray, sizeof(partialMatch *) * oldSize);
+    theMemory->beta = (PartialMatch **) genalloc(theEnv, sizeof(PartialMatch *) * theMemory->size);
+    memset(theMemory->beta, 0, sizeof(PartialMatch *) * theMemory->size);
+    genfree(theEnv, oldArray, sizeof(PartialMatch *) * oldSize);
 
     if (theMemory->last != nullptr) {
-        lastAdd = (partialMatch **) genalloc(theEnv, sizeof(partialMatch *) * theMemory->size);
-        memset(lastAdd, 0, sizeof(partialMatch *) * theMemory->size);
-        genfree(theEnv, theMemory->last, sizeof(partialMatch *) * oldSize);
+        lastAdd = (PartialMatch **) genalloc(theEnv, sizeof(PartialMatch *) * theMemory->size);
+        memset(lastAdd, 0, sizeof(PartialMatch *) * theMemory->size);
+        genfree(theEnv, theMemory->last, sizeof(PartialMatch *) * oldSize);
         theMemory->last = lastAdd;
     }
 }

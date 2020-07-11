@@ -464,7 +464,7 @@ Expression *NegateExpression(
 
     if (theExpression->value == ExpressionData(theEnv)->PTR_NOT) {
         tempPtr = theExpression->argList;
-        rtn_struct(theEnv, expr, theExpression);
+        rtn_struct(theEnv, Expression, theExpression);
         return (tempPtr);
     }
 
