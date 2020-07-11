@@ -53,8 +53,7 @@ struct defgenericBinaryData : public EnvironmentModule {
     RESTRICTION *RestrictionArray;
     void **TypeArray;
 };
-RegisterEnvironmentModule(defgenericBinaryData, GENRCBIN_DATA);
-#define DefgenericBinaryData(theEnv) (GetEnvironmentData(theEnv,GENRCBIN_DATA))
+RegisterEnvironmentModule(defgenericBinaryData, GENRCBIN_DATA, DefgenericBinary);
 
 #define GenericPointer(i) (((i) == ULONG_MAX) ? nullptr : &DefgenericBinaryData(theEnv)->DefgenericArray[i])
 

@@ -119,8 +119,7 @@ struct defruleBinaryData : public EnvironmentModule {
     struct joinNode *JoinArray;
     struct joinLink *LinkArray;
 };
-RegisterEnvironmentModule(defruleBinaryData, RULEBIN_DATA);
-#define DefruleBinaryData(theEnv) (GetEnvironmentData(theEnv,RULEBIN_DATA))
+RegisterEnvironmentModule(defruleBinaryData, RULEBIN_DATA, DefruleBinary);
 
 #define BloadDefrulePointer(x, i) ((Defrule *) ((i == ULONG_MAX) ? nullptr : &x[i]))
 #define BsaveJoinIndex(joinPtr) ((joinPtr == nullptr) ? ULONG_MAX :  ((joinNode *) joinPtr)->bsaveID)

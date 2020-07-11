@@ -162,9 +162,7 @@ struct constraintData : public EnvironmentModule {
 #endif
 };
 
-RegisterEnvironmentModule(constraintData, CONSTRAINT_DATA);
-
-#define ConstraintData(theEnv) (GetEnvironmentData(theEnv,CONSTRAINT_DATA))
+RegisterEnvironmentModule(constraintData, CONSTRAINT_DATA, Constraint);
 
 void InitializeConstraints(const Environment&);
 void GDCCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);

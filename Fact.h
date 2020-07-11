@@ -132,8 +132,7 @@ struct factsData : public EnvironmentModule {
     FactModifierError factModifierError;
     FactBuilderError factBuilderError;
 };
-RegisterEnvironmentModule(factsData, FACTS_DATA);
-#define FactData(theEnv) (GetEnvironmentData(theEnv,FACTS_DATA))
+RegisterEnvironmentModule(factsData, FACTS_DATA, Fact);
 
 Fact *Assert(Fact *);
 AssertStringError GetAssertStringError(const Environment&);
@@ -260,8 +259,7 @@ struct factQueryData : public EnvironmentModule {
     QUERY_STACK *QueryCoreStack;
     bool AbortQuery;
 };
-RegisterEnvironmentModule(factQueryData, FACT_QUERY_DATA);
-#define FactQueryData(theEnv) (GetEnvironmentData(theEnv,FACT_QUERY_DATA))
+RegisterEnvironmentModule(factQueryData, FACT_QUERY_DATA,FactQuery);
 
 #define QUERY_DELIMITER_STRING     "(QDS)"
 
@@ -326,8 +324,7 @@ struct factBinaryData : public EnvironmentModule{
     FactPatternNode *FactPatternArray;
     unsigned long NumberOfPatterns;
 };
-RegisterEnvironmentModule(factBinaryData, FACTBIN_DATA);
-#define FactBinaryData(theEnv) (GetEnvironmentData(theEnv,FACTBIN_DATA))
+RegisterEnvironmentModule(factBinaryData, FACTBIN_DATA, FactBinary);
 
 void FactBinarySetup(const Environment&);
 

@@ -74,7 +74,6 @@
 #include <iostream>
 #include <list>
 
-using Environment = std::shared_ptr<struct environmentData>;
 
 constexpr auto USER_ENVIRONMENT_DATA = 70;
 constexpr auto MAXIMUM_ENVIRONMENT_POSITIONS = 100;
@@ -111,7 +110,7 @@ template<typename T>
 constexpr size_t EnvironmentModuleIndex = EnvironmentModuleTypeToIndex<T>::index;
 template<size_t index>
 using EnvironmentModuleType = typename EnvironmentModuleIndexToType<index>::type;
-#define RegisterEnvironmentModule(actual_type, pos) \
+#define RegisterEnvironmentModule(actual_type, pos, declAccessorPrefix) \
 template<> class EnvironmentModuleTypeToIndex<actual_type> final { \
     EnvironmentModuleTypeToIndex() = delete; \
 ~EnvironmentModuleTypeToIndex() = delete; \
@@ -131,12 +130,20 @@ EnvironmentModuleIndexToType< pos >& operator=(const EnvironmentModuleIndexToTyp
 EnvironmentModuleIndexToType< pos >& operator=(EnvironmentModuleIndexToType< pos >&&) = delete; \
 public: \
 using type = actual_type ; \
+}; \
+inline decltype(auto) declAccessorPrefix ## Data (const Environment& theEnv) { \
+    return theEnv->getEnvironmentModule<pos>(); \
 }
 
 struct CLIPSLexeme;
 struct CLIPSVoid;
-struct environmentData {
+struct EnvironmentData {
+public:
+    using Self = EnvironmentData;
+    using Ptr = std::shared_ptr<Self>;
+public:
     bool initialized = false;
+    /// @todo Make these symbol pointers shared_ptrs
     CLIPSLexeme *TrueSymbol = nullptr;
     CLIPSLexeme *FalseSymbol = nullptr;
     CLIPSVoid *VoidConstant = nullptr;
@@ -175,12 +182,10 @@ struct environmentData {
 };
 
 
+using Environment = EnvironmentData::Ptr;
 inline auto VoidConstant(const Environment& theEnv) noexcept { return theEnv->VoidConstant; }
 inline auto FalseSymbol(const Environment& theEnv) noexcept { return theEnv->FalseSymbol; }
 inline auto TrueSymbol(const Environment& theEnv) noexcept { return theEnv->TrueSymbol; }
-
-#define GetEnvironmentData(theEnv, position) (theEnv->getEnvironmentModule<position>())
-
 Environment CreateEnvironment();
 struct CLIPSFloat;
 struct CLIPSInteger;

@@ -51,8 +51,7 @@ struct definstancesBinaryData : public EnvironmentModule {
     unsigned long ModuleCount;
     DEFINSTANCES_MODULE *ModuleArray;
 };
-RegisterEnvironmentModule(definstancesBinaryData, DFINSBIN_DATA);
-#define DefinstancesBinaryData(theEnv) (GetEnvironmentData(theEnv,DFINSBIN_DATA))
+RegisterEnvironmentModule(definstancesBinaryData, DFINSBIN_DATA, DefinstancesBinary);
 
 void SetupDefinstancesBload(const Environment&);
 void *BloadDefinstancesModuleRef(const Environment&, unsigned long);

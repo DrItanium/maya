@@ -88,8 +88,7 @@ struct scannerData : public EnvironmentModule {
     long LineCount;
     bool IgnoreCompletionErrors;
 };
-RegisterEnvironmentModule(scannerData, SCANNER_DATA);
-#define ScannerData(theEnv) ( GetEnvironmentData(theEnv,SCANNER_DATA))
+RegisterEnvironmentModule(scannerData, SCANNER_DATA, Scanner);
 
 void InitializeScannerData(const Environment&);
 void GetToken(const Environment&, const char *, struct token *);

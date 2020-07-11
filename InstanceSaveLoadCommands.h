@@ -64,8 +64,7 @@ struct instanceFileData : public EnvironmentModule {
     const char *InstanceBinaryPrefixID;
     const char *InstanceBinaryVersionID;
 };
-RegisterEnvironmentModule(instanceFileData, INSTANCE_FILE_DATA);
-#define InstanceFileData(theEnv) (GetEnvironmentData(theEnv,INSTANCE_FILE_DATA))
+RegisterEnvironmentModule(instanceFileData, INSTANCE_FILE_DATA, InstanceFile);
 
 #endif /* BLOAD_INSTANCES || BSAVE_INSTANCES */
 

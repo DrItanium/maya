@@ -126,8 +126,7 @@ struct defgenericData : public EnvironmentModule {
     UDFValue *GenericCurrentArgument;
     unsigned OldGenericBusySave;
 };
-RegisterEnvironmentModule(defgenericData, DEFGENERIC_DATA);
-#define DefgenericData(theEnv) (GetEnvironmentData(theEnv,DEFGENERIC_DATA))
+RegisterEnvironmentModule(defgenericData, DEFGENERIC_DATA,Defgeneric);
 #define SaveBusyCount(gfunc)    (DefgenericData(theEnv)->OldGenericBusySave = gfunc->busy)
 #define RestoreBusyCount(gfunc) (gfunc->busy = DefgenericData(theEnv)->OldGenericBusySave)
 

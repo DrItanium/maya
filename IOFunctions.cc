@@ -145,12 +145,11 @@ constexpr auto FLAG_MAX    = 80;
 
 constexpr auto IO_FUNCTION_DATA = 64;
 
-struct IOFunctionData : public EnvironmentModule {
+struct IOFunctionModule : public EnvironmentModule {
     CLIPSLexeme *locale;
     bool useFullCRLF;
 };
-RegisterEnvironmentModule(IOFunctionData, IO_FUNCTION_DATA);
-#define IOFunctionData(theEnv) (GetEnvironmentData(theEnv,IO_FUNCTION_DATA))
+RegisterEnvironmentModule(IOFunctionModule, IO_FUNCTION_DATA, IOFunction);
 
 /****************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS  */
@@ -172,7 +171,7 @@ static void PrintDriver(UDFContext *, const char *, bool);
 /**************************************/
 void IOFunctionDefinitions(
         const Environment&theEnv) {
-    theEnv->allocateEnvironmentModule<IOFunctionData>();
+    theEnv->allocateEnvironmentModule<IOFunctionModule>();
 
 #if IO_FUNCTIONS
     IOFunctionData(theEnv)->useFullCRLF = false;

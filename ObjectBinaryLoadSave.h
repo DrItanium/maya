@@ -63,8 +63,7 @@ struct objectBinaryData : public EnvironmentModule {
     DefmessageHandler *HandlerArray;
     unsigned *MaphandlerArray;
 };
-RegisterEnvironmentModule(objectBinaryData, OBJECTBIN_DATA);
-#define ObjectBinaryData(theEnv) (GetEnvironmentData(theEnv,OBJECTBIN_DATA))
+RegisterEnvironmentModule(objectBinaryData, OBJECTBIN_DATA, ObjectBinary);
 
 #define DefclassPointer(i) (((i) == ULONG_MAX) ? nullptr : &ObjectBinaryData(theEnv)->DefclassArray[i])
 #define DefclassIndex(cls) (((cls) == nullptr) ? ULONG_MAX : ((ConstructHeader *) cls)->bsaveID)

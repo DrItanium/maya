@@ -53,8 +53,7 @@ struct prettyPrintData : public EnvironmentModule {
     size_t PPBackupTwice;
     char *PrettyPrintBuffer;
 };
-RegisterEnvironmentModule(prettyPrintData, PRETTY_PRINT_DATA);
-#define PrettyPrintData(theEnv) ( GetEnvironmentData(theEnv,PRETTY_PRINT_DATA))
+RegisterEnvironmentModule(prettyPrintData, PRETTY_PRINT_DATA, PrettyPrint);
 
 void InitializePrettyPrintData(const Environment&);
 void FlushPPBuffer(const Environment&);

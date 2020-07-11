@@ -180,8 +180,7 @@ struct symbolData : public EnvironmentModule {
     CLIPSExternalAddress **ExternalAddressArray;
 #endif
 };
-RegisterEnvironmentModule(symbolData, SYMBOL_DATA);
-#define SymbolData(theEnv) (GetEnvironmentData(theEnv,SYMBOL_DATA))
+RegisterEnvironmentModule(symbolData, SYMBOL_DATA, Symbol);
 
 void InitializeAtomTables(const Environment&, CLIPSLexeme **, CLIPSFloat **,
                           CLIPSInteger **, CLIPSBitMap **,

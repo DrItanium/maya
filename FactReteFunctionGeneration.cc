@@ -80,8 +80,7 @@ struct factgenData : public EnvironmentModule {
     EntityRecord FactPNConstant1Info;
     EntityRecord FactPNConstant2Info;
 };
-RegisterEnvironmentModule(factgenData, FACTGEN_DATA);
-#define FactgenData(theEnv) (GetEnvironmentData(theEnv,FACTGEN_DATA))
+RegisterEnvironmentModule(factgenData, FACTGEN_DATA, Factgen);
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */

@@ -164,11 +164,8 @@ public:
     constexpr auto getStrategy() const noexcept { return Strategy; }
     void setStrategy(StrategyType value) noexcept { Strategy = value; }
 };
-RegisterEnvironmentModule(AgendaModule, AGENDA_DATA);
+RegisterEnvironmentModule(AgendaModule, AGENDA_DATA, Agenda);
 
-inline const auto& AgendaData(const Environment& theEnv)  {
-    return theEnv->getEnvironmentModule<AGENDA_DATA>();
-}
 /****************************************/
 /* GLOBAL EXTERNAL FUNCTION DEFINITIONS */
 /****************************************/

@@ -218,8 +218,7 @@ struct defmoduleData : public EnvironmentModule {
     Defmodule *DefmoduleArray;
 #endif
 };
-RegisterEnvironmentModule(defmoduleData, DEFMODULE_DATA);
-#define DefmoduleData(theEnv) (GetEnvironmentData(theEnv,DEFMODULE_DATA))
+RegisterEnvironmentModule(defmoduleData, DEFMODULE_DATA, Defmodule);
 
 void InitializeDefmodules(const Environment&);
 Defmodule *FindDefmodule(const Environment&, const char *);

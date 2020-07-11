@@ -93,8 +93,7 @@ struct watchItemRecord {
 struct watchData : public EnvironmentModule {
     WatchItemRecord *ListOfWatchItems = nullptr;
 };
-RegisterEnvironmentModule(watchData, WATCH_DATA);
-#define WatchData(theEnv) (GetEnvironmentData(theEnv,WATCH_DATA))
+RegisterEnvironmentModule(watchData, WATCH_DATA, Watch);
 
 void Watch(const Environment&, WatchItem);
 void Unwatch(const Environment&, WatchItem);

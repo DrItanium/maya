@@ -113,8 +113,7 @@ struct routerData : public EnvironmentModule {
     FILE *FastSaveFilePtr;
     bool Abort;
 };
-RegisterEnvironmentModule(routerData, ROUTER_DATA);
-#define RouterData(theEnv) ( GetEnvironmentData(theEnv,ROUTER_DATA))
+RegisterEnvironmentModule(routerData, ROUTER_DATA, Router);
 
 void InitializeDefaultRouters(const Environment&);
 void WriteString(const Environment&, const char *, const char *);

@@ -138,9 +138,7 @@ struct defruleData : public EnvironmentModule {
     bool WatchRuleAnalysis;
 #endif
 };
-RegisterEnvironmentModule(defruleData, DEFRULE_DATA);
-
-#define DefruleData(theEnv) (GetEnvironmentData(theEnv,DEFRULE_DATA))
+RegisterEnvironmentModule(defruleData, DEFRULE_DATA, Defrule);
 
 #define GetPreviousJoin(theJoin) \
    (((theJoin)->joinFromTheRight) ? \

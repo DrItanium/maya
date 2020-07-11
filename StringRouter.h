@@ -73,8 +73,7 @@ struct stringRouterData : public EnvironmentModule {
     StringRouter *ListOfStringRouters;
     StringBuilderRouter *ListOfStringBuilderRouters;
 };
-RegisterEnvironmentModule(stringRouterData, STRING_ROUTER_DATA);
-#define StringRouterData(theEnv) (GetEnvironmentData(theEnv,STRING_ROUTER_DATA))
+RegisterEnvironmentModule(stringRouterData, STRING_ROUTER_DATA, StringRouter);
 
 /**************************/
 /* I/O ROUTER DEFINITIONS */

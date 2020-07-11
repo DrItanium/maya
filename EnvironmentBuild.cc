@@ -133,7 +133,7 @@ Environment CreateEnvironmentDriver(
         CLIPSBitMap **bitmapTable,
         CLIPSExternalAddress **externalAddressTable,
         FunctionDefinition *functions) {
-    Environment theEnvironment = std::make_shared<environmentData>();
+    Environment theEnvironment = std::make_shared<EnvironmentData>();
     if (!theEnvironment) {
         std::cout << "\n[ENVRNMNT5] Unable to create new environment.\n";
         return nullptr;

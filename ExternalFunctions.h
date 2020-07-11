@@ -100,8 +100,7 @@ struct externalFunctionData : public EnvironmentModule {
     FunctionDefinition *ListOfFunctions = nullptr;
     FunctionHash **FunctionHashtable = nullptr;
 };
-RegisterEnvironmentModule(externalFunctionData, EXTERNAL_FUNCTION_DATA);
-#define ExternalFunctionData(theEnv) (GetEnvironmentData(theEnv,EXTERNAL_FUNCTION_DATA))
+RegisterEnvironmentModule(externalFunctionData, EXTERNAL_FUNCTION_DATA, ExternalFunction);
 
 enum AddUDFError {
     AUE_NO_ERROR = 0,

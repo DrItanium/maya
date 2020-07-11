@@ -173,8 +173,7 @@ struct utilityData : public EnvironmentModule {
     size_t CurrentReadBufferSize;
     size_t CurrentReadBufferOffset;
 };
-RegisterEnvironmentModule(utilityData, UTILITY_DATA);
-#define UtilityData(theEnv) (GetEnvironmentData(theEnv,UTILITY_DATA))
+RegisterEnvironmentModule(utilityData, UTILITY_DATA, Utility);
 
 /* Is c the start of a utf8 sequence? */
 constexpr bool IsUTF8Start(char ch) noexcept {

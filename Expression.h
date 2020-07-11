@@ -100,7 +100,7 @@ constexpr auto EXPRESSION_HASH_SIZE = 503;
 
 constexpr auto EXPRESSION_DATA = 45;
 
-struct ExpressionData : public EnvironmentModule {
+struct ExpressionModule : public EnvironmentModule {
     /// @todo use std::shared_ptr where it makes perfect sense
     FunctionDefinition *PTR_AND = nullptr;
     FunctionDefinition *PTR_OR = nullptr;
@@ -119,8 +119,7 @@ struct ExpressionData : public EnvironmentModule {
     bool BreakContext = false;
     bool SequenceOpMode = false;
 };
-RegisterEnvironmentModule(ExpressionData, EXPRESSION_DATA);
-#define ExpressionData(theEnv) (GetEnvironmentData(theEnv,EXPRESSION_DATA))
+RegisterEnvironmentModule(ExpressionModule, EXPRESSION_DATA, Expression);
 
 /********************/
 /* Global Functions */

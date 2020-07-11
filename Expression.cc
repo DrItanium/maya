@@ -82,8 +82,7 @@ void InitExpressionData(
     unsigned i;
     /// @todo ExpressionData's dtor needs to contain DeallocateExpressionData's contents
     //AllocateEnvironmentData(theEnv, EXPRESSION_DATA, sizeof(ExpressionData), DeallocateExpressionData);
-    auto ptr = std::make_unique<ExpressionData>();
-    theEnv->installEnvironmentModule(std::move(ptr));
+    theEnv->allocateEnvironmentModule<ExpressionModule>();
     InitExpressionPointers(theEnv);
 
     /// @todo fix this

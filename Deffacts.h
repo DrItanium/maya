@@ -75,8 +75,7 @@ struct deffacts {
 struct deffactsModule {
     struct defmoduleItemHeader header;
 };
-RegisterEnvironmentModule(deffactsData, DEFFACTS_DATA);
-#define DeffactsData(theEnv) (GetEnvironmentData(theEnv,DEFFACTS_DATA))
+RegisterEnvironmentModule(deffactsData, DEFFACTS_DATA, Deffacts);
 
 void InitializeDeffacts(const Environment&);
 Deffacts *FindDeffacts(const Environment&, const char *);

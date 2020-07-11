@@ -79,8 +79,7 @@ struct parseFunctionData : public EnvironmentModule {
     size_t WarningCurrentPosition;
     size_t WarningMaximumPosition;
 };
-RegisterEnvironmentModule(parseFunctionData, PARSEFUN_DATA);
-#define ParseFunctionData(theEnv) (GetEnvironmentData(theEnv,PARSEFUN_DATA))
+RegisterEnvironmentModule(parseFunctionData, PARSEFUN_DATA, ParseFunction);
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */

@@ -163,8 +163,7 @@ struct memoryData : public EnvironmentModule {
     struct memoryPtr **MemoryTable;
     size_t TempSize;
 };
-RegisterEnvironmentModule(memoryData, MEMORY_DATA);
-#define MemoryData(theEnv) (GetEnvironmentData(theEnv,MEMORY_DATA))
+RegisterEnvironmentModule(memoryData, MEMORY_DATA, Memory);
 
 void InitializeMemory(const Environment&);
 void *genalloc(const Environment&, size_t);

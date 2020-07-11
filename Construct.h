@@ -155,8 +155,7 @@ struct ConstructModule : public EnvironmentModule {
     bool Executing;
     BeforeResetFunction *BeforeResetCallback;
 };
-RegisterEnvironmentModule(ConstructModule, CONSTRUCT_DATA);
-#define ConstructData(theEnv) (GetEnvironmentData(theEnv,CONSTRUCT_DATA))
+RegisterEnvironmentModule(ConstructModule, CONSTRUCT_DATA, Construct);
 
 bool Clear(const Environment&);
 void Reset(const Environment&);

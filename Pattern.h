@@ -110,8 +110,7 @@ struct patternData : public EnvironmentModule {
     patternNodeHashEntry **PatternHashTable;
     unsigned long PatternHashTableSize;
 };
-RegisterEnvironmentModule(patternData, PATTERN_DATA);
-#define PatternData(theEnv) (GetEnvironmentData(theEnv,PATTERN_DATA))
+RegisterEnvironmentModule(patternData, PATTERN_DATA, Pattern);
 
 void InitializePatterns(const Environment&);
 bool AddPatternParser(const Environment&, struct patternParser *);

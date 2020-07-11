@@ -144,8 +144,7 @@ struct evaluationData : public EnvironmentModule {
     EntityRecord *PrimitivesArray[MAXIMUM_PRIMITIVES];
     struct externalAddressType *ExternalAddressTypes[MAXIMUM_EXTERNAL_ADDRESS_TYPES];
 };
-RegisterEnvironmentModule(evaluationData, EVALUATION_DATA);
-#define EvaluationData(theEnv) (GetEnvironmentData(theEnv,EVALUATION_DATA))
+RegisterEnvironmentModule(evaluationData, EVALUATION_DATA, Evaluation);
 
 void InitializeEvaluationData(const Environment&);
 bool EvaluateExpression(const Environment&, Expression *, UDFValue *);

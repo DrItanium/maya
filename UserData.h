@@ -55,8 +55,7 @@ struct userDataData : public EnvironmentModule{
     userDataRecord *UserDataRecordArray[MAXIMUM_USER_DATA_RECORDS];
     unsigned char UserDataRecordCount;
 };
-RegisterEnvironmentModule(userDataData, USER_DATA_DATA);
-#define UserDataData(theEnv) (GetEnvironmentData(theEnv,USER_DATA_DATA))
+RegisterEnvironmentModule(userDataData, USER_DATA_DATA, UserData);
 
 void InitializeUserDataData(const Environment&);
 unsigned char InstallUserDataRecord(const Environment&, userDataRecord *);

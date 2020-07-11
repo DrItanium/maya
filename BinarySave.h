@@ -95,8 +95,7 @@ struct bsaveData : public EnvironmentModule {
     BLOADCNTSV *BloadCountSaveTop;
 #endif
 };
-RegisterEnvironmentModule(bsaveData, BSAVE_DATA);
-#define BsaveData(theEnv) (GetEnvironmentData(theEnv,BSAVE_DATA))
+RegisterEnvironmentModule(bsaveData, BSAVE_DATA, Bsave);
 
 void InitializeBsaveData(const Environment&);
 void BsaveCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);

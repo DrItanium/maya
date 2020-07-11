@@ -91,8 +91,7 @@ struct commandLineData : public EnvironmentModule {
     AfterPromptFunction *AfterPromptCallback = nullptr;
     BeforeCommandExecutionFunction *BeforeCommandExecutionCallback = nullptr;
 };
-RegisterEnvironmentModule(commandLineData, COMMANDLINE_DATA);
-#define CommandLineData(theEnv) (GetEnvironmentData(theEnv,COMMANDLINE_DATA))
+RegisterEnvironmentModule(commandLineData, COMMANDLINE_DATA, CommandLine);
 
 void InitializeCommandLineData(const Environment&);
 bool ExpandCommandString(const Environment&, int);

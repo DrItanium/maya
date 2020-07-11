@@ -58,6 +58,7 @@
 
 #include "Object.h"
 #include "Scanner.h"
+#include "Environment.h"
 
 #define TestTraversalID(traversalRecord, id) TestBitMap(traversalRecord,id)
 #define SetTraversalID(traversalRecord, id) SetBitMap(traversalRecord,id)
@@ -138,9 +139,7 @@ struct defclassData : public EnvironmentModule {
     ClassDefaultsMode ClassDefaultsModeValue;
     int newSlotID;
 };
-RegisterEnvironmentModule(defclassData, DEFCLASS_DATA);
-
-#define DefclassData(theEnv) (GetEnvironmentData(theEnv,DEFCLASS_DATA))
+RegisterEnvironmentModule(defclassData, DEFCLASS_DATA, Defclass);
 
 #endif
 

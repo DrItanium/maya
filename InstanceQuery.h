@@ -85,8 +85,7 @@ struct instanceQueryData : public EnvironmentModule {
     QUERY_STACK *QueryCoreStack;
     bool AbortQuery;
 };
-RegisterEnvironmentModule(instanceQueryData, INSTANCE_QUERY_DATA);
-#define InstanceQueryData(theEnv) (GetEnvironmentData(theEnv,INSTANCE_QUERY_DATA))
+RegisterEnvironmentModule(instanceQueryData, INSTANCE_QUERY_DATA, InstanceQuery);
 
 #define QUERY_DELIMITER_STRING     "(QDS)"
 
