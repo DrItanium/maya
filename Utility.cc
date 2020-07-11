@@ -1257,112 +1257,77 @@ size_t UTF8CharNum(
 /************************/
 /* CreateStringBuilder: */
 /************************/
-StringBuilder *CreateStringBuilder(
-        const Environment&theEnv,
-        size_t theSize) {
-    StringBuilder *theSB;
-
-    theSB = get_struct(theEnv, stringBuilder);
-    if (theSB == nullptr) return nullptr;
-    zeroMemory(theSB);
-
-    theSize++;
-    theSB->sbEnv = theEnv;
-    theSB->bufferReset = theSize;
-    theSB->bufferMaximum = theSize;
-    theSB->length = 0;
-    theSB->contents = (char *) gm2(theEnv, theSize);
-    zeroMemory(theSB->contents);
-    theSB->contents[0] = EOS;
-
-    return theSB;
+stringBuilder::stringBuilder(const Environment& theEnv) : _env (theEnv) { }
+std::string
+stringBuilder::contents() const noexcept {
+    // inefficient but fine for now
+   auto str = _internal.str();
+   if (str.empty()) {
+       return "" + EOS;
+   } else {
+       return str;
+   }
 }
-
+StringBuilder *CreateStringBuilder(const Environment&theEnv, size_t) {
+    return new StringBuilder(theEnv);
+}
+void
+stringBuilder::append(const char* str) {
+    std::string tmp(str);
+    _internal << tmp;
+}
 /*************/
 /* SBAppend: */
 /*************/
-void SBAppend(
-        StringBuilder *theSB,
-        const char *appendString) {
-    theSB->contents = AppendToString(theSB->sbEnv, appendString,
-                                     theSB->contents, &theSB->length, &theSB->bufferMaximum);
-}
+void SBAppend(StringBuilder *theSB, const char *appendString) { theSB->append(appendString); }
 
 /********************/
 /* SBAppendInteger: */
 /********************/
-void SBAppendInteger(
-        StringBuilder *theSB,
-        long long value) {
-    const char *appendString;
-
-    appendString = LongIntegerToString(theSB->sbEnv, value);
-
-    theSB->contents = AppendToString(theSB->sbEnv, appendString,
-                                     theSB->contents, &theSB->length, &theSB->bufferMaximum);
+void
+stringBuilder::append(long long value) {
+    _internal << value;
 }
+void SBAppendInteger( StringBuilder *theSB, long long value) { theSB->append(value); }
 
 /******************/
 /* SBAppendFloat: */
 /******************/
-void SBAppendFloat(
-        StringBuilder *theSB,
-        double value) {
-    const char *appendString;
-
-    appendString = FloatToString(theSB->sbEnv, value);
-
-    theSB->contents = AppendToString(theSB->sbEnv, appendString,
-                                     theSB->contents, &theSB->length, &theSB->bufferMaximum);
+void
+stringBuilder::append(double value) {
+    _internal << value;
 }
+void SBAppendFloat( StringBuilder *theSB, double value) { theSB->append(value); }
 
 /**************/
 /* SBAddChar: */
 /**************/
-void SBAddChar(
-        StringBuilder *theSB,
-        int theChar) {
-    theSB->contents = ExpandStringWithChar(theSB->sbEnv, theChar, theSB->contents,
-                                           &theSB->length, &theSB->bufferMaximum,
-                                           theSB->bufferMaximum + 80);
+void
+stringBuilder::appendChar(int value) {
+    _internal << char(value);
 }
+
+void SBAddChar( StringBuilder *theSB, int theChar) { theSB->appendChar(theChar); }
 
 /***********/
 /* SBReset */
 /***********/
-void SBReset(
-        StringBuilder *theSB) {
-    if (theSB->bufferReset != theSB->bufferMaximum) {
-        rm(theSB->sbEnv, theSB->contents, theSB->bufferMaximum);
-        theSB->contents = (char *) gm2(theSB->sbEnv, theSB->bufferReset);
-        theSB->bufferMaximum = theSB->bufferReset;
-    }
-
-    theSB->length = 0;
-    theSB->contents[0] = EOS;
+void
+stringBuilder::reset()
+{
+    _internal.str("");
 }
+void SBReset(StringBuilder *theSB) { theSB->reset(); }
 
 /**********/
 /* SBCopy */
 /**********/
-char *SBCopy(
-        StringBuilder *theSB) {
-    char *stringCopy;
-
-    stringCopy = (char *) malloc(strlen(theSB->contents) + 1);
-    strcpy(stringCopy, theSB->contents);
-
-    return stringCopy;
-}
-
+stringBuilder::stringBuilder(const stringBuilder & other) : _env(other._env), _internal(other._internal.str()){ }
 /**************/
 /* SBDispose: */
 /**************/
-void SBDispose(
-        StringBuilder *theSB) {
-    const Environment&theEnv = theSB->sbEnv;
-    rm(theEnv, theSB->contents, theSB->bufferMaximum);
-    rtn_struct(theEnv, stringBuilder, theSB);
+void SBDispose(StringBuilder *theSB) {
+    delete theSB;
 }
 
 /***************************************************

@@ -579,7 +579,8 @@ static void OutputConstructsCodeInfo(
             theMethod = GetDefmethodPointer(theDefgeneric, methodIndex);
 
             DefmethodDescription(theDefgeneric, methodIndex, theSB);
-            if (OutputProfileInfo(theEnv, theSB->contents,
+            auto str = theSB->contents();
+            if (OutputProfileInfo(theEnv, str.c_str(),
                                   (constructProfileInfo *)
                                           TestUserData(ProfileFunctionData(theEnv)->ProfileDataID, theMethod->header.usrData),
                                   prefixBefore, prefix, prefixAfter, &banner)) {

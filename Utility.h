@@ -86,6 +86,7 @@ typedef struct voidCallFunctionItem VoidCallFunctionItem;
 
 #include "Evaluation.h"
 #include "Defmodule.h"
+#include <sstream>
 
 typedef struct gcBlock GCBlock;
 typedef struct stringBuilder StringBuilder;
@@ -140,11 +141,19 @@ struct gcBlock {
 };
 
 struct stringBuilder {
-    Environment sbEnv;
-    char *contents;
-    size_t bufferReset;
-    size_t length;
-    size_t bufferMaximum;
+    stringBuilder(const Environment& env);
+    ~stringBuilder() = default;
+    stringBuilder(const stringBuilder&);
+    void reset();
+    void appendChar(int);
+    void append(long long);
+    void append(double);
+    void append(const char*);
+    std::string contents() const noexcept;
+private:
+    Environment _env;
+    std::stringstream _internal;
+
 };
 
 constexpr auto UTILITY_DATA = 55;
@@ -238,7 +247,6 @@ void SBAppendInteger(StringBuilder *, long long);
 void SBAppendFloat(StringBuilder *, double);
 void SBAddChar(StringBuilder *, int);
 void SBReset(StringBuilder *);
-char *SBCopy(StringBuilder *);
 void *GetPeriodicFunctionContext(const Environment&, const char *);
 void BufferedRead(const Environment&, void *, size_t);
 void FreeReadBuffer(const Environment&);

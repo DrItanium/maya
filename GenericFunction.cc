@@ -684,7 +684,8 @@ static void DisplayGenericCore(
             WriteString(theEnv, STDOUT, DefgenericName(gfunc));
             WriteString(theEnv, STDOUT, " #");
             PrintMethod(theEnv, &gfunc->methods[i], theSB);
-            WriteString(theEnv, STDOUT, theSB->contents);
+            auto str = theSB->contents();
+            WriteString(theEnv, STDOUT, str.c_str());
             WriteString(theEnv, STDOUT, "\n");
         }
         gfunc->methods[i].busy--;

@@ -1441,7 +1441,8 @@ static unsigned short ListMethodsForGeneric(
         WriteString(theEnv, logicalName, DefgenericName(gfunc));
         WriteString(theEnv, logicalName, " #");
         PrintMethod(theEnv, &gfunc->methods[gi], theSB);
-        WriteString(theEnv, logicalName, theSB->contents);
+        auto str = theSB->contents();
+        WriteString(theEnv, logicalName, str.c_str());
         WriteString(theEnv, logicalName, "\n");
     }
 
@@ -1688,7 +1689,8 @@ static void PrintMethodWatchFlag(
     WriteString(theEnv, logName, DefgenericName(theGeneric));
     WriteString(theEnv, logName, " ");
     DefmethodDescription(theGeneric, theMethod, theSB);
-    WriteString(theEnv, logName, theSB->contents);
+    auto str = theSB->contents();
+    WriteString(theEnv, logName, str.c_str());
     if (DefmethodGetWatch(theGeneric, theMethod))
         WriteString(theEnv, logName, " = on\n");
     else

@@ -522,7 +522,8 @@ void PPFactFunction(
         theSB = CreateStringBuilder(theEnv, 256);
 
         FactPPForm(theFact, theSB, ignoreDefaults);
-        returnValue->lexemeValue = CreateString(theEnv, theSB->contents);
+        auto contents = theSB->contents();
+        returnValue->lexemeValue = CreateString(theEnv, contents.c_str());
 
         SBDispose(theSB);
 

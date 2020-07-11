@@ -582,7 +582,7 @@ const char *DataObjectToString(
             }
 
             break;
-        case EXTERNAL_ADDRESS_TYPE:
+        case EXTERNAL_ADDRESS_TYPE: {
             theAddress = theDO->externalAddressValue;
 
             theSB = CreateStringBuilder(theEnv, 30);
@@ -603,11 +603,13 @@ const char *DataObjectToString(
                 WriteString(theEnv, "DOTS", ">");
             }
 
-            thePtr = CreateString(theEnv, theSB->contents);
+            auto strContents = theSB->contents();
+            thePtr = CreateString(theEnv, strContents.c_str());
             SBDispose(theSB);
 
             CloseStringBuilderDestination(theEnv, "DOTS");
             return thePtr->contents;
+        }
 
 #if DEFTEMPLATE_CONSTRUCT
         case FACT_ADDRESS_TYPE:
