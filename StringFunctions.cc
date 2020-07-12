@@ -125,6 +125,7 @@ static void StrOrSymCatFunction(UDFContext *, UDFValue *, unsigned short);
 /******************************************/
 void StringFunctionDefinitions(
         const Environment&theEnv) {
+#if STUBBING_INACTIVE
     AddUDF(theEnv, "str-cat", "sy", 1, UNBOUNDED, "synld", StrCatFunction);
     AddUDF(theEnv, "sym-cat", "sy", 1, UNBOUNDED, "synld", SymCatFunction);
     AddUDF(theEnv, "str-length", "l", 1, 1, "syn", StrLengthFunction);
@@ -137,8 +138,10 @@ void StringFunctionDefinitions(
     AddUDF(theEnv, "build", "b", 1, 1, "sy", BuildFunction);
     AddUDF(theEnv, "string-to-field", "*", 1, 1, "syn", StringToFieldFunction);
     AddUDF(theEnv, "str-replace", "syn", 3, 3, "syn", StrReplaceFunction);
+#endif
 }
 
+#if STUBBING_INACTIVE
 /****************************************/
 /* StrCatFunction: H/L access routine   */
 /*   for the str-cat function.          */
@@ -160,7 +163,6 @@ void SymCatFunction(
         UDFValue *returnValue) {
     StrOrSymCatFunction(context, returnValue, SYMBOL_TYPE);
 }
-
 /********************************************************/
 /* StrOrSymCatFunction: Driver routine for implementing */
 /*   the str-cat and sym-cat functions.                 */
@@ -1016,4 +1018,6 @@ BuildError Build(
     return errorFlag;
 }
 
+
+#endif
 #endif /* STRING_FUNCTIONS */

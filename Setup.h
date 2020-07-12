@@ -327,7 +327,7 @@
 /************************************************/
 
 #ifndef STRING_FUNCTIONS
-#define STRING_FUNCTIONS 0
+#define STRING_FUNCTIONS 1
 #endif
 
 /*********************************************/
