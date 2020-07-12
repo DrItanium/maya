@@ -144,7 +144,7 @@ add_library(clips
 	Utility.h
 	Watch.h
 		#Agenda.cc
-		#CommandLine.cc
+		CommandLine.cc
 		Environment.cc
 		EnvironmentBuild.cc
 		#Evaluation.cc

@@ -74,9 +74,10 @@ int main(
         int argc,
         char *argv[]) {
     mainEnv = CreateEnvironment();
-
+#if STUBBING_INACTIVE
 #if UNIX_V || LINUX || DARWIN || UNIX_7 || WIN_GCC || WIN_MVC
     signal(SIGINT, CatchCtrlC);
+#endif
 #endif
 
     RerouteStdin(mainEnv, argc, argv);
@@ -96,7 +97,7 @@ int main(
 
     return -1;
 }
-
+#if STUBBING_INACTIVE
 #if UNIX_V || LINUX || DARWIN || UNIX_7 || WIN_GCC || WIN_MVC || DARWIN
 /***************/
 /* CatchCtrlC: */
@@ -107,4 +108,5 @@ static void CatchCtrlC(
     CloseAllBatchSources(mainEnv);
     signal(SIGINT, CatchCtrlC);
 }
+#endif
 #endif
