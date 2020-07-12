@@ -110,7 +110,7 @@ bool CheckArgumentAgainstRestriction(
     RemoveConstraint(theEnv, cr3);
     return false;
 }
-
+#if 0
 /******************************************************/
 /* ConstantExpression: Returns true if the expression */
 /*   is a constant, otherwise false.                  */
@@ -126,6 +126,7 @@ bool ConstantExpression(
 
     return true;
 }
+#endif
 
 /******************************************/
 /* ConstantType: Returns true if the type */
@@ -145,7 +146,7 @@ bool ConstantType(
 
     return false;
 }
-
+#if 0
 /*****************************************************************************/
 /* IdenticalExpression: Determines if two expressions are identical. Returns */
 /*   true if the expressions are identical, otherwise false is returned.     */
@@ -259,7 +260,7 @@ bool ExpressionContainsVariables(
 
     return false;
 }
-
+#endif
 /*****************************************/
 /* ExpressionSize: Returns the number of */
 /*   structures stored in an expression. */
@@ -267,14 +268,17 @@ bool ExpressionContainsVariables(
 unsigned long ExpressionSize(
         Expression *testPtr) {
     unsigned long size = 0;
+#if 0
 
     while (testPtr != nullptr) {
         size++;
         if (testPtr->argList != nullptr) { size += ExpressionSize(testPtr->argList); }
         testPtr = testPtr->nextArg;
     }
+#endif
     return size;
 }
+#if 0
 
 /************************************************/
 /* GenConstant: Generates a constant expression */
@@ -514,4 +518,5 @@ Expression *AppendExpressions(
 
     return (expr1);
 }
+#endif
 

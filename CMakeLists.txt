@@ -196,7 +196,7 @@ add_library(clips
 		#ExtendedMathFunctions.cc
 		#Engine.cc
 		#ExpressionBinary.cc
-		#ExpressionOperations.cc
+		ExpressionOperations.cc
 		#ExpressionParser.cc
 		ExternalFunctions.cc
 		#FactBinarySaveLoad.cc
