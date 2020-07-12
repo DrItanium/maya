@@ -110,6 +110,7 @@ static void DestroyDefglobal(const Environment&, Defglobal *);
 /**************************************************************/
 void InitializeDefglobals(
         const Environment&theEnv) {
+#if STUBBING_INACTIVE
     EntityRecord globalInfo = {"GBL_VARIABLE", GBL_VARIABLE, 0, 0, 0,
                                       nullptr,
                                       nullptr,
@@ -126,14 +127,15 @@ void InitializeDefglobals(
                                               (EntityBusyCountFunction *) IncrementDefglobalBusyCount,
                                               nullptr, nullptr, nullptr, nullptr, nullptr};
 
+#endif
     theEnv->allocateEnvironmentModule<defglobalData>();
     //AllocateEnvironmentData(theEnv, DEFGLOBAL_DATA, sizeof(defglobalData), DeallocateDefglobalData);
-
+    DefglobalData(theEnv)->ResetGlobals = true;
+    DefglobalData(theEnv)->LastModuleIndex = -1;
+#if STUBBING_INACTIVE
     DefglobalData(theEnv)->GlobalInfo = globalInfo;
     DefglobalData(theEnv)->DefglobalPtrRecord = defglobalPtrRecord;
 
-    DefglobalData(theEnv)->ResetGlobals = true;
-    DefglobalData(theEnv)->LastModuleIndex = -1;
 
     InstallPrimitive(theEnv, &DefglobalData(theEnv)->GlobalInfo, GBL_VARIABLE);
     InstallPrimitive(theEnv, &DefglobalData(theEnv)->GlobalInfo, MF_GBL_VARIABLE);
@@ -154,8 +156,9 @@ void InitializeDefglobals(
                          (IsConstructDeletableFunction *) DefglobalIsDeletable,
                          (DeleteConstructFunction *) Undefglobal,
                          (FreeConstructFunction *) ReturnDefglobal);
+#endif
 }
-
+#if STUBBING_INACTIVE
 /****************************************************/
 /* DeallocateDefglobalData: Deallocates environment */
 /*    data for the defglobal construct.             */
@@ -938,7 +941,7 @@ const char *DefglobalPPForm(
         Defglobal *theDefglobal) {
     return GetConstructPPForm(&theDefglobal->header);
 }
-
+#endif
 #endif /* DEFGLOBAL_CONSTRUCT */
 
 

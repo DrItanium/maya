@@ -225,7 +225,7 @@ add_library(clips
 		#DefglobalBinary.cc
 		#DefglobalBasicCommands.cc
 		#DefglobalCommands.cc
-		#Defglobal.cc
+		Defglobal.cc
 		#DefglobalParser.cc
 		#ImplicitSystemMethodsParsing.cc
 		#IncrementalReset.cc

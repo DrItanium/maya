@@ -303,7 +303,6 @@ static void InitializeEnvironment(const Environment&theEnvironment) {
     SetupDeffunctions(theEnvironment);
 #endif
 
-#if STUBBING_INACTIVE
     /*=====================================*/
     /* Initialize the defglobal construct. */
     /*=====================================*/
@@ -311,6 +310,7 @@ static void InitializeEnvironment(const Environment&theEnvironment) {
 #if DEFGLOBAL_CONSTRUCT
     InitializeDefglobals(theEnvironment);
 #endif
+#if STUBBING_INACTIVE
 
     /*=======================================*/
     /* Initialize the deftemplate construct. */
