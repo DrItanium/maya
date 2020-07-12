@@ -282,7 +282,6 @@ static void InitializeEnvironment(
 
     SystemFunctionDefinitions(theEnvironment);
     UserFunctions(theEnvironment);
-#if STUBBING_INACTIVE
 
     /*====================================*/
     /* Initialize the constraint manager. */
@@ -297,6 +296,7 @@ static void InitializeEnvironment(
 
     InitExpressionData(theEnvironment);
 
+#if STUBBING_INACTIVE
     /*===================================*/
     /* Initialize the construct manager. */
     /*===================================*/
