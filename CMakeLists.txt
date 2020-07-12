@@ -239,7 +239,7 @@ add_library(clips
 		#InstanceParser.cc
 		#InstanceQuery.cc
 		#InstanceSetQueryParser.cc
-		#IOFunctions.cc
+		IOFunctions.cc
 		#LogicalDependencies.cc
 		MiscFunctions.cc
 		#DefmoduleBinarySaveLoad.cc

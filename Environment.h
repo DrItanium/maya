@@ -174,9 +174,9 @@ public:
             return (std::unique_ptr<EnvironmentModuleType<position>>&)thing;
         }
     }
-    template<typename T>
-    bool allocateEnvironmentModule() noexcept {
-        auto ptr = std::make_unique<T>();
+    template<typename T, typename ... Args>
+    bool allocateEnvironmentModule(Args&& ... args) noexcept {
+        auto ptr = std::make_unique<T>(std::forward<Args>(args)...);
         return installEnvironmentModule(std::move(ptr));
     }
 

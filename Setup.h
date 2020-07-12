@@ -317,7 +317,7 @@
 /************************************************/
 
 #ifndef IO_FUNCTIONS
-#define IO_FUNCTIONS 0
+#define IO_FUNCTIONS 1
 #endif
 
 /************************************************/

@@ -78,7 +78,6 @@
 #include "SystemDependency.h"
 
 #include "ArgumentAccess.h"
-#if STUBBING_INACTIVE
 /*********************************************************************/
 /* GetLogicalName: Retrieves the nth argument passed to the function */
 /*   call currently being evaluated and determines if it is a valid  */
@@ -88,24 +87,28 @@
 const char *GetLogicalName(
         UDFContext *context,
         const char *defaultLogicalName) {
-    const Environment&theEnv = context->environment;
-    const char *logicalName = nullptr;
-    UDFValue theArg;
+#if STUBBING_INACTIVE
+        const Environment &theEnv = context->environment;
+        const char *logicalName = nullptr;
+        UDFValue theArg;
 
-    if (!UDFNextArgument(context, ANY_TYPE_BITS, &theArg)) { return nullptr; }
+        if (!UDFNextArgument(context, ANY_TYPE_BITS, &theArg)) { return nullptr; }
 
-    if (CVIsLexeme(&theArg) ||
-        CVIsInstanceName(&theArg)) {
-        logicalName = theArg.lexemeValue->contents;
-        if ((strcmp(logicalName, "t") == 0) || (strcmp(logicalName, "T") == 0)) { logicalName = defaultLogicalName; }
-    } else if (CVIsFloat(&theArg)) {
-        logicalName = CreateSymbol(theEnv, FloatToString(theEnv, theArg.floatValue->contents))->contents;
-    } else if (CVIsInteger(&theArg)) {
-        logicalName = CreateSymbol(theEnv, LongIntegerToString(theEnv, theArg.integerValue->contents))->contents;
-    } else { logicalName = nullptr; }
+        if (CVIsLexeme(&theArg) ||
+            CVIsInstanceName(&theArg)) {
+            logicalName = theArg.lexemeValue->contents;
+            if ((strcmp(logicalName, "t") == 0) || (strcmp(logicalName, "T") == 0)) { logicalName = defaultLogicalName; }
+        } else if (CVIsFloat(&theArg)) {
+            logicalName = CreateSymbol(theEnv, FloatToString(theEnv, theArg.floatValue->contents))->contents;
+        } else if (CVIsInteger(&theArg)) {
+            logicalName = CreateSymbol(theEnv, LongIntegerToString(theEnv, theArg.integerValue->contents))->contents;
+        } else { logicalName = nullptr; }
 
-    return (logicalName);
+        return (logicalName);
+#endif
+    return nullptr;
 }
+#if STUBBING_INACTIVE
 
 /************************************************************/
 /* GetFileName: Retrieves the nth argument passed to the    */
@@ -454,6 +457,7 @@ void *GetFactOrInstanceArgument(
     return nullptr;
 }
 
+#endif
 /****************************************************/
 /* IllegalLogicalNameMessage: Generic error message */
 /*   for illegal logical names.                     */
@@ -466,4 +470,3 @@ void IllegalLogicalNameMessage(
     WriteString(theEnv, STDERR, theFunction);
     WriteString(theEnv, STDERR, "' function.\n");
 }
-#endif
