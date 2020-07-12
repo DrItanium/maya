@@ -294,7 +294,6 @@ static void InitializeEnvironment(const Environment&theEnvironment) {
 #if DEFGENERIC_CONSTRUCT
     SetupGenericFunctions(theEnvironment);
 #endif
-#if STUBBING_INACTIVE
 
     /*=======================================*/
     /* Initialize the deffunction construct. */
@@ -304,6 +303,7 @@ static void InitializeEnvironment(const Environment&theEnvironment) {
     SetupDeffunctions(theEnvironment);
 #endif
 
+#if STUBBING_INACTIVE
     /*=====================================*/
     /* Initialize the defglobal construct. */
     /*=====================================*/

@@ -170,7 +170,6 @@ void SetupDeffunctions(
     //AllocateEnvironmentData(theEnv, DEFFUNCTION_DATA, sizeof(deffunctionData), DeallocateDeffunctionData);
 #if STUBBING_INACTIVE
     DeffunctionData(theEnv)->DeffunctionEntityRecord = deffunctionEntityRecord;
-#endif
 
     InstallPrimitive(theEnv, &DeffunctionData(theEnv)->DeffunctionEntityRecord, PCALL);
 
@@ -222,8 +221,9 @@ void SetupDeffunctions(
                  DeffunctionWatchAccess, DeffunctionWatchPrint);
 #endif
 
+#endif
 }
-
+#if STUBBING_INACTIVE
 /******************************************************/
 /* DeallocateDeffunctionData: Deallocates environment */
 /*    data for the deffunction construct.             */
@@ -1024,7 +1024,7 @@ void SetDeffunctionPPForm(
     SetConstructPPForm(theEnv, &theDeffunction->header, thePPForm);
 }
 #endif
-
+#endif
 #endif
 
 
