@@ -369,7 +369,6 @@ void RemoveHashedExpression(
     ReturnPackedExpression(theEnv, exphash->exp);
     rtn_struct(theEnv, ExpressionHashNode, exphash);
 }
-#if 0
 /*****************************************************
   NAME         : AddHashedExpression
   DESCRIPTION  : Adds a new expression to the
@@ -387,6 +386,7 @@ void RemoveHashedExpression(
 Expression *AddHashedExpression(
         const Environment&theEnv,
         Expression *theExp) {
+#if 0
     ExpressionHashNode *prv, *exphash;
     unsigned hashval;
 
@@ -405,8 +405,9 @@ Expression *AddHashedExpression(
     ExpressionData(theEnv)->ExpressionHashTable[exphash->hashval] = exphash;
     exphash->bsaveID = 0L;
     return (exphash->exp);
-}
 #endif
+    return nullptr;
+}
 
 #if (BLOAD_AND_BSAVE)
 

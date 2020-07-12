@@ -736,7 +736,7 @@ CLIPSExternalAddress::Ptr CreateExternalAddress(
 
     return peek;
 }
-
+#endif
 /***************************************************/
 /* HashSymbol: Computes a hash value for a symbol. */
 /***************************************************/
@@ -745,14 +745,13 @@ size_t HashSymbol(
         size_t range) {
     size_t i;
     size_t tally = 0;
-
+#if 0
     for (i = 0; word[i]; i++) { tally = tally * 127 + (size_t) word[i]; }
-
+#endif
     if (range == 0) { return tally; }
-
     return tally % range;
 }
-
+#if 0
 /*************************************************/
 /* HashFloat: Computes a hash value for a float. */
 /*************************************************/

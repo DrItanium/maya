@@ -197,7 +197,7 @@ add_library(clips
 		#Engine.cc
 		#ExpressionBinary.cc
 		ExpressionOperations.cc
-		#ExpressionParser.cc
+		ExpressionParser.cc
 		ExternalFunctions.cc
 		#FactBinarySaveLoad.cc
 		#FactBuild.cc
