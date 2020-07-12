@@ -402,8 +402,8 @@ static void InitializeEnvironment(
 /**************************************************/
 static void SystemFunctionDefinitions(
         const Environment&theEnv) {
-#if STUBBING_INACTIVE
     ProceduralFunctionDefinitions(theEnv);
+#if STUBBING_INACTIVE
     MiscFunctionDefinitions(theEnv);
 #endif
 

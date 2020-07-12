@@ -77,7 +77,6 @@
 #include "ReferenceCounted.h"
 #endif
 
-#if STUBBING_INACTIVE
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
@@ -92,7 +91,7 @@ void ProceduralFunctionDefinitions(
         const Environment&theEnv) {
     //AllocateEnvironmentData(theEnv, PRCDRFUN_DATA, sizeof(procedureFunctionData), DeallocateProceduralFunctionData);
     theEnv->allocateEnvironmentModule<procedureFunctionData>();
-
+#if STUBBING_INACTIVE
     AddUDF(theEnv, "if", "*", 0, UNBOUNDED, nullptr, IfFunction);
     AddUDF(theEnv, "while", "*", 0, UNBOUNDED, nullptr, WhileFunction);
     AddUDF(theEnv, "loop-for-count", "*", 0, UNBOUNDED, nullptr, LoopForCountFunction);
@@ -114,7 +113,9 @@ void ProceduralFunctionDefinitions(
 
     AddResetFunction(theEnv, "bind", FlushBindList, 0, nullptr);
     AddClearFunction(theEnv, "bind", FlushBindList, 0, nullptr);
+#endif
 }
+#if STUBBING_INACTIVE
 /*************************************************************/
 /* DeallocateProceduralFunctionData: Deallocates environment */
 /*    data for procedural functions.                         */
