@@ -163,6 +163,7 @@ void ExpressionInstall(
     }
 }
 
+#endif
 /*****************************************************/
 /* ExpressionDeinstall: Decrements the busy count of */
 /*   atomic data values found in an expression.      */
@@ -170,6 +171,7 @@ void ExpressionInstall(
 void ExpressionDeinstall(
         const Environment&theEnv,
         Expression *expression) {
+#if 0
     if (expression == nullptr) return;
 
     while (expression != nullptr) {
@@ -177,8 +179,8 @@ void ExpressionDeinstall(
         ExpressionDeinstall(theEnv, expression->argList);
         expression = expression->nextArg;
     }
-}
 #endif
+}
 
 
 /***********************************************************************/
@@ -303,7 +305,6 @@ static ExpressionHashNode *FindHashedExpression(
     }
     return nullptr;
 }
-#if 0
 /***************************************************
   NAME         : HashExpression
   DESCRIPTION  : Assigns a deterministic number to
@@ -316,6 +317,7 @@ static ExpressionHashNode *FindHashedExpression(
 static unsigned HashExpression(
         Expression *theExp) {
     unsigned long tally = PRIME_THREE;
+#if 0
     union {
         void *vv;
         unsigned long uv;
@@ -330,9 +332,9 @@ static unsigned HashExpression(
         tally += fis.uv;
         theExp = theExp->nextArg;
     }
+#endif
     return (unsigned) (tally % EXPRESSION_HASH_SIZE);
 }
-#endif
 
 /***************************************************
   NAME         : RemoveHashedExpression

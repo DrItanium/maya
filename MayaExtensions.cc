@@ -42,8 +42,8 @@ static void Functionp(const Environment&theEnv, UDFContext *context, UDFValue *r
 //static void NextToken(Environment*, UDFContext* context, UDFValue* ret);
 static void LastFunction(const Environment&, UDFContext *context, UDFValue *ret);
 
-#if 0
 void InstallMayaExtensions(const Environment&theEnv) {
+#if 0
     AddUDF(theEnv, "empty$", "b", 1, 1, "m", EmptyFunction);
 //    AddUDF(theEnv, "functionp", "b", 1, 1, "y", Functionp);
     AddUDF(theEnv, "quit", "v", 0, 1, "l", ExitCommand);
@@ -55,7 +55,9 @@ void InstallMayaExtensions(const Environment&theEnv) {
 #if FUNCTIONAL_EXTENSIONS
     InstallFunctionalExtensions(theEnv);
 #endif
+#endif
 }
+#if 0
 void
 LastFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret) {
     UDFValue theArg;

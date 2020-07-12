@@ -146,7 +146,6 @@ bool ConstantType(
 
     return false;
 }
-#if 0
 /*****************************************************************************/
 /* IdenticalExpression: Determines if two expressions are identical. Returns */
 /*   true if the expressions are identical, otherwise false is returned.     */
@@ -154,6 +153,7 @@ bool ConstantType(
 bool IdenticalExpression(
         Expression *firstList,
         Expression *secondList) {
+#if 0
     /*==============================================*/
     /* Compare each argument in both expressions by */
     /* following the nextArg list.                  */
@@ -188,8 +188,11 @@ bool IdenticalExpression(
     /*============================*/
     /* Expressions are identical. */
     /*============================*/
+#endif
+    return false;
 
 }
+#if 0
 
 /****************************************************/
 /* CountArguments: Returns the number of structures */
