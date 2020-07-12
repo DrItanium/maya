@@ -311,7 +311,7 @@ int InstallExternalAddressType(
     struct externalAddressType *copyEAT;
 
     int rv = EvaluationData(theEnv)->numberOfAddressTypes;
-
+#if STUBBING_INACTIVE
     if (EvaluationData(theEnv)->numberOfAddressTypes == MAXIMUM_EXTERNAL_ADDRESS_TYPES) {
         SystemError(theEnv, "EVALUATN", 6);
         ExitRouter(theEnv, EXIT_FAILURE);
@@ -320,6 +320,7 @@ int InstallExternalAddressType(
     copyEAT = (externalAddressType *) genalloc(theEnv, sizeof(externalAddressType));
     memcpy(copyEAT, theAddressType, sizeof(externalAddressType));
     EvaluationData(theEnv)->ExternalAddressTypes[EvaluationData(theEnv)->numberOfAddressTypes++] = copyEAT;
+#endif
 
     return rv;
 }

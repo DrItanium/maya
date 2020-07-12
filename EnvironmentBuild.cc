@@ -243,7 +243,6 @@ static void InitializeEnvironment(
     /*===================================================*/
 
     InitializeCommandLineData(theEnvironment);
-#if STUBBING_INACTIVE
     InitializeConstructData(theEnvironment);
     InitializeEvaluationData(theEnvironment);
     InitializeExternalFunctionData(theEnvironment);
@@ -256,6 +255,7 @@ static void InitializeEnvironment(
 #if DEBUGGING_FUNCTIONS
     InitializeWatchData(theEnvironment);
 #endif
+#if STUBBING_INACTIVE
 
     /*===============================================*/
     /* Initialize the hash tables for atomic values. */
