@@ -224,6 +224,7 @@ CLIPSLexeme *ExtractConstructName(
 const char *ExtractModuleAndConstructName(
         const Environment&theEnv,
         const char *theName) {
+#if STUBBING_INACTIVE
     unsigned separatorPosition;
     CLIPSLexeme *moduleName, *shortName;
     Defmodule *theModule;
@@ -262,6 +263,8 @@ const char *ExtractModuleAndConstructName(
     shortName = ExtractConstructName(theEnv, separatorPosition, theName, SYMBOL_TYPE);
     if (shortName == nullptr) return nullptr;
     return shortName->contents;
+#endif
+    return nullptr;
 }
 
 /************************************************************/

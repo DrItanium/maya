@@ -125,7 +125,6 @@ void InitializeAtomTables(const Environment&theEnv) {
     //AllocateEnvironmentData(theEnv, SYMBOL_DATA, sizeof(symbolData), DeallocateSymbolData);
     theEnv->allocateEnvironmentModule<symbolData>();
 
-#if STUBBING_INACTIVE
     /*========================*/
     /* Predefine some values. */
     /*========================*/
@@ -141,9 +140,7 @@ void InitializeAtomTables(const Environment&theEnv) {
     SymbolData(theEnv)->Zero = CreateInteger(theEnv, 0LL);
     IncrementIntegerCount(SymbolData(theEnv)->Zero);
 
-    theEnv->VoidConstant = get_struct(theEnv, CLIPSVoid);
-    theEnv->VoidConstant->header.type = VOID_TYPE;
-#endif
+    theEnv->VoidConstant = std::make_shared<CLIPSVoid>();
 }
 
 #if STUBBING_INACTIVE
@@ -301,37 +298,29 @@ CLIPSLexeme::Ptr CreateInstanceName(
 /********************************************************************/
 CLIPSLexeme::Ptr AddSymbol(
         const Environment&theEnv,
-        const char *contents,
+        const std::string &contents,
         unsigned short type) {
-#if STUBBING_INACTIVE
-    size_t tally;
-    size_t length;
-    CLIPSLexeme *past = nullptr, *peek;
-    char *buffer;
 
     /*====================================*/
     /* Get the hash value for the string. */
     /*====================================*/
+//    if (!contents) {
+//        SystemError(theEnv, "SYMBOL", 1);
+//        ExitRouter(theEnv, EXIT_FAILURE);
+//    }
 
-    if (contents == nullptr) {
-        SystemError(theEnv, "SYMBOL", 1);
-        ExitRouter(theEnv, EXIT_FAILURE);
-    }
-
-    tally = HashSymbol(contents, SYMBOL_HASH_SIZE);
-    peek = SymbolData(theEnv)->SymbolTable[tally];
+    auto tally = HashSymbol(contents, SYMBOL_HASH_SIZE);
 
     /*==================================================*/
     /* Search for the string in the list of entries for */
     /* this symbol table location.  If the string is    */
     /* found, then return the address of the string.    */
     /*==================================================*/
-
-    while (peek != nullptr) {
-        if ((peek->header.type == type) &&
-            (strcmp(contents, peek->contents) == 0)) { return peek; }
-        past = peek;
-        peek = peek->next;
+    for (auto& peek : SymbolData(theEnv)->SymbolTable[tally]) {
+        std::string str (peek->contents);
+        if (peek->header.type == type && (str == contents)) {
+            return peek;
+        }
     }
 
     /*==================================================*/
@@ -339,12 +328,11 @@ CLIPSLexeme::Ptr AddSymbol(
     /* for this symbol table location.                  */
     /*==================================================*/
 
-    peek = get_struct(theEnv, CLIPSLexeme);
+    auto newEntry = getStruct<CLIPSLexeme>(theEnv);
+    SymbolData(theEnv)->SymbolTable[tally].emplace_back(newEntry);
 
-    if (past == nullptr) SymbolData(theEnv)->SymbolTable[tally] = peek;
-    else past->next = peek;
-
-    length = strlen(contents) + 1;
+#if 0
+    auto length = strlen(contents) + 1;
     buffer = (char *) gm2(theEnv, length);
     genstrcpy(buffer, contents);
     peek->contents = buffer;
@@ -353,22 +341,25 @@ CLIPSLexeme::Ptr AddSymbol(
     peek->count = 0;
     peek->permanent = false;
     peek->header.type = type;
+#endif
+    newEntry->header.type = type;
+    newEntry->setIsPermanent(false);
+    newEntry->setBucket((unsigned int)tally);
+    newEntry->contents = contents;
 
     /*================================================*/
     /* Add the string to the list of ephemeral items. */
     /*================================================*/
-
+#if STUBBING_INACTIVE
     AddEphemeralHashNode(theEnv, (genericHashNode::Ptr *) peek, &UtilityData(theEnv)->CurrentGarbageFrame->ephemeralSymbolList,
                          sizeof(CLIPSLexeme), AVERAGE_STRING_SIZE, true);
     UtilityData(theEnv)->CurrentGarbageFrame->dirty = true;
-
+#endif
     /*===================================*/
     /* Return the address of the symbol. */
     /*===================================*/
 
-    return peek;
-#endif
-    return nullptr;
+    return newEntry;
 }
 /*****************************************************************/
 /* FindSymbolHN: Searches for the string in the symbol table and */
@@ -457,7 +448,7 @@ CLIPSFloat::Ptr CreateFloat(
 
     return peek;
 }
-
+#endif
 /****************************************************************/
 /* CreateInteger: Searches for the long in the hash table. If   */
 /*   the long is already in the hash table, then the address of */
@@ -467,59 +458,51 @@ CLIPSFloat::Ptr CreateFloat(
 CLIPSInteger::Ptr CreateInteger(
         const Environment&theEnv,
         long long value) {
-    size_t tally;
-    CLIPSInteger *past = nullptr, *peek;
 
     /*==================================*/
     /* Get the hash value for the long. */
     /*==================================*/
 
-    tally = HashInteger(value, INTEGER_HASH_SIZE);
-    peek = SymbolData(theEnv)->IntegerTable[tally];
-
+    auto tally = HashInteger(value, INTEGER_HASH_SIZE);
     /*================================================*/
     /* Search for the long in the list of entries for */
     /* this hash location. If the long is found, then */
     /* return the address of the long.                */
     /*================================================*/
-
-    while (peek != nullptr) {
-        if (value == peek->contents) { return peek; }
-        past = peek;
-        peek = peek->next;
+    for (auto& peek : SymbolData(theEnv)->IntegerTable[tally]) {
+        if (value == peek->contents) {
+            return peek;
+        }
     }
 
     /*================================================*/
     /* Add the long at the end of the list of entries */
     /* for this hash location.                        */
     /*================================================*/
-
-    peek = get_struct(theEnv, CLIPSInteger);
-    if (past == nullptr) SymbolData(theEnv)->IntegerTable[tally] = peek;
-    else past->next = peek;
-
-    peek->contents = value;
-    peek->next = nullptr;
-    peek->bucket = (unsigned int) tally;
-    peek->count = 0;
-    peek->permanent = false;
-    peek->header.type = INTEGER_TYPE;
+    auto newEntry = getStruct<CLIPSInteger>(theEnv);
+    SymbolData(theEnv)->IntegerTable[tally].emplace_back(newEntry);
+    newEntry->contents = value;
+    newEntry->setBucket((unsigned int) tally);
+    newEntry->setIsPermanent(false);
+    newEntry->header.type = INTEGER_TYPE;
 
     /*=================================================*/
     /* Add the integer to the list of ephemeral items. */
     /*=================================================*/
 
+#if STUBBING_INACTIVE
     AddEphemeralHashNode(theEnv, (genericHashNode::Ptr *) peek, &UtilityData(theEnv)->CurrentGarbageFrame->ephemeralIntegerList,
                          sizeof(CLIPSInteger), 0, true);
     UtilityData(theEnv)->CurrentGarbageFrame->dirty = true;
+#endif
 
     /*====================================*/
     /* Return the address of the integer. */
     /*====================================*/
 
-    return peek;
+    return newEntry;
 }
-
+#if STUBBING_INACTIVE
 /*****************************************************************/
 /* FindLongHN: Searches for the integer in the integer table and */
 /*   returns a pointer to it if found, otherwise returns nullptr.   */
@@ -700,15 +683,15 @@ CLIPSExternalAddress::Ptr CreateExternalAddress(
 /* HashSymbol: Computes a hash value for a symbol. */
 /***************************************************/
 size_t HashSymbol(
-        const char *word,
-        size_t range) {
+        const std::string &str,
+        size_t maximum) {
     size_t i;
     size_t tally = 0;
 #if STUBBING_INACTIVE
     for (i = 0; word[i]; i++) { tally = tally * 127 + (size_t) word[i]; }
 #endif
-    if (range == 0) { return tally; }
-    return tally % range;
+    if (maximum == 0) { return tally; }
+    return tally % maximum;
 }
 #if STUBBING_INACTIVE
 /*************************************************/
@@ -729,13 +712,11 @@ size_t HashFloat(
 
     return tally % range;
 }
-
+#endif
 /******************************************************/
 /* HashInteger: Computes a hash value for an integer. */
 /******************************************************/
-size_t HashInteger(
-        long long number,
-        size_t range) {
+size_t HashInteger(long long number, size_t range) {
     size_t tally;
 
 #if WIN_MVC
@@ -746,11 +727,9 @@ size_t HashInteger(
     tally = (((size_t) llabs(number)) % range);
 #endif
 
-    if (range == 0) { return tally; }
-
     return tally;
 }
-
+#if STUBBING_INACTIVE
 /****************************************/
 /* HashExternalAddress: Computes a hash */
 /*   value for an external address.     */
@@ -1085,7 +1064,7 @@ static void RemoveHashNode(
 
     rtn_sized_struct(theEnv, size, theValue);
 }
-
+#endif
 /***********************************************************/
 /* AddEphemeralHashNode: Adds a symbol, integer, float, or */
 /*   bit map table entry to the list of ephemeral atomic   */
@@ -1094,11 +1073,12 @@ static void RemoveHashNode(
 /***********************************************************/
 static void AddEphemeralHashNode(
         const Environment&theEnv,
-        genericHashNode::Ptr *theHashNode,
+        genericHashNode::Ptr theHashNode,
         struct ephemeron **theEphemeralList,
         int hashNodeSize,
         int averageContentsSize,
         bool checkCount) {
+#if STUBBING_INACTIVE
     struct ephemeron *temp;
 
     /*===========================================*/
@@ -1126,8 +1106,9 @@ static void AddEphemeralHashNode(
     temp->associatedValue = theHashNode;
     temp->next = *theEphemeralList;
     *theEphemeralList = temp;
+#endif
 }
-
+#if STUBBING_INACTIVE
 /***************************************************/
 /* RemoveEphemeralAtoms: Causes the removal of all */
 /*   ephemeral symbols, integers, floats, and bit  */

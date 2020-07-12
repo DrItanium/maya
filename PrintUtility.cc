@@ -109,9 +109,8 @@ void WriteFloat(
         const Environment&theEnv,
         const char *fileid,
         double number) {
-    const char *theString;
 
-    theString = FloatToString(theEnv, number);
+    auto theString = FloatToString(theEnv, number);
     WriteString(theEnv, fileid, theString);
 }
 
@@ -484,15 +483,15 @@ void ArgumentOverUnderflowErrorMessage(
 /*******************************************************/
 /* FloatToString: Converts number to KB string format. */
 /*******************************************************/
-const char *FloatToString(
+std::string FloatToString(
         const Environment&theEnv,
-        double number) {
+        double value) {
     char floatString[40];
     int i;
     char x;
     CLIPSLexeme::Ptr thePtr;
 
-    gensprintf(floatString, "%.15g", number);
+    gensprintf(floatString, "%.15g", value);
 
     for (i = 0; (x = floatString[i]) != '\0'; i++) {
         if ((x == '.') || (x == 'e')) {
@@ -510,12 +509,12 @@ const char *FloatToString(
 /*******************************************************************/
 /* LongIntegerToString: Converts long integer to KB string format. */
 /*******************************************************************/
-const char *LongIntegerToString(
+std::string LongIntegerToString(
         const Environment&theEnv,
-        long long number) {
+        long long value) {
     char buffer[50];
 
-    gensprintf(buffer, "%lld", number);
+    gensprintf(buffer, "%lld", value);
 
     auto thePtr = CreateString(theEnv, buffer);
     return thePtr->contents;

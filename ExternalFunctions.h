@@ -135,7 +135,7 @@ int GetMaximumArgs(FunctionDefinition *);
 unsigned int UDFArgumentCount(UDFContext *);
 bool UDFNthArgument(UDFContext *, unsigned int, unsigned, UDFValue *);
 void UDFInvalidArgumentMessage(UDFContext *, const char *);
-const char *UDFContextFunctionName(UDFContext *);
+std::string UDFContextFunctionName(UDFContext *);
 void PrintTypesString(const Environment&, const char *, unsigned, bool);
 bool UDFFirstArgument(UDFContext *, unsigned, UDFValue *);
 bool UDFNextArgument(UDFContext *, unsigned, UDFValue *);

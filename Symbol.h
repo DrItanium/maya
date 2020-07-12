@@ -85,6 +85,9 @@
 #include <cstdlib>
 #include <cstdio>
 #include <vector>
+#include <array>
+#include <string>
+#include <list>
 
 #include "Entities.h"
 
@@ -169,16 +172,17 @@ public:
 /*==================*/
 
 constexpr auto SYMBOL_DATA = 49;
-
+template<typename T, size_t capacity>
+using PointerTable = std::array<std::list<typename T::Ptr>, capacity>;
 struct symbolData : public EnvironmentModule {
     CLIPSLexeme::Ptr PositiveInfinity;
     CLIPSLexeme::Ptr NegativeInfinity;
     CLIPSInteger::Ptr Zero;
-    std::vector<CLIPSLexeme::Ptr> SymbolTable;
-    std::vector<CLIPSFloat::Ptr> FloatTable;
-    std::vector<CLIPSInteger::Ptr> IntegerTable;
-    std::vector<CLIPSBitMap::Ptr> BitMapTable;
-    std::vector<CLIPSExternalAddress::Ptr> ExternalAddressTable;
+    PointerTable<CLIPSLexeme, SYMBOL_HASH_SIZE> SymbolTable;
+    PointerTable<CLIPSFloat, FLOAT_HASH_SIZE> FloatTable;
+    PointerTable<CLIPSInteger, INTEGER_HASH_SIZE> IntegerTable;
+    PointerTable<CLIPSBitMap, BITMAP_HASH_SIZE> BitMapTable;
+    PointerTable<CLIPSExternalAddress, EXTERNAL_ADDRESS_HASH_SIZE> ExternalAddressTable;
 #if BSAVE_INSTANCES
     unsigned long NumberOfSymbols;
     unsigned long NumberOfFloats;
@@ -195,7 +199,7 @@ struct symbolData : public EnvironmentModule {
 RegisterEnvironmentModule(symbolData, SYMBOL_DATA, Symbol);
 
 void InitializeAtomTables(const Environment&);
-CLIPSLexeme::Ptr AddSymbol(const Environment& theEnv, const char * contents, unsigned short type);
+CLIPSLexeme::Ptr AddSymbol(const Environment& theEnv, const std::string &contents, unsigned short type);
 CLIPSLexeme *FindSymbolHN(const Environment&, const char *, unsigned short);
 CLIPSFloat::Ptr CreateFloat(const Environment& theEnv, double value);
 CLIPSInteger::Ptr CreateInteger(const Environment& theEnv, long long value);
@@ -203,7 +207,7 @@ void *AddBitMap(const Environment&, void *, unsigned short);
 CLIPSExternalAddress::Ptr CreateExternalAddress(const Environment& theEnv, void * ctx, unsigned short kind);
 CLIPSExternalAddress::Ptr CreateCExternalAddress(const Environment& theEnv, void * ctx);
 CLIPSInteger *FindLongHN(const Environment&, long long);
-size_t HashSymbol(const char *, size_t);
+size_t HashSymbol(const std::string &str, size_t maximum);
 size_t HashFloat(double, size_t);
 size_t HashInteger(long long, size_t);
 size_t HashBitMap(const char *, size_t, unsigned);

@@ -115,7 +115,7 @@ struct routerData : public EnvironmentModule {
 RegisterEnvironmentModule(routerData, ROUTER_DATA, Router);
 
 void InitializeDefaultRouters(const Environment&);
-void WriteString(const Environment&, const char *, const char *);
+void WriteString(const Environment&, const std::string&, const std::string&);
 void Write(const Environment&, const char *);
 void Writeln(const Environment&, const char *);
 int ReadRouter(const Environment&, const char *);

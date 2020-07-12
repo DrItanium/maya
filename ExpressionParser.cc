@@ -797,7 +797,7 @@ void PopulateRestriction(
         const Environment&theEnv,
         unsigned *restriction,
         unsigned defaultRestriction,
-        const char *restrictionString,
+        const std::string &restrictionString,
         unsigned int position) {
 #if STUBBING_INACTIVE
     unsigned int i = 0, currentPosition = 0, valuesRead = 0;

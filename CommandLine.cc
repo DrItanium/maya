@@ -1031,6 +1031,7 @@ const char *GetCommandCompletionString(
         const Environment&theEnv,
         const char *theString,
         size_t maxPosition) {
+#if STUBBING_INACTIVE
     struct token lastToken;
     struct token theToken;
     char lastChar;
@@ -1087,6 +1088,7 @@ const char *GetCommandCompletionString(
     } else if ((lastToken.tknType == FLOAT_TOKEN) ||
                (lastToken.tknType == INTEGER_TOKEN)) { return nullptr; }
 
+#endif
     return ("");
 }
 

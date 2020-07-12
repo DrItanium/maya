@@ -30,6 +30,7 @@
 #include <any>
 #include <vector>
 
+#include "Constants.h"
 #include "ReferenceCounted.h"
 using Environment = std::shared_ptr<struct EnvironmentData>;
 struct UDFValue;
@@ -46,6 +47,7 @@ typedef void VoidCallFunctionWithArg(const Environment&, void *, void *);
 /* typeHeader */
 /**************/
 struct TypeHeader {
+    TypeHeader(unsigned short t = 0) : type(t) { }
     unsigned short type;
 };
 
@@ -57,6 +59,7 @@ public:
     using Self = CLIPSVoid;
     using Ptr = std::shared_ptr<Self>;
 public:
+    CLIPSVoid() : header(VOID_TYPE) { }
     TypeHeader header;
 };
 
@@ -70,7 +73,7 @@ public:
 public:
     TypeHeader header;
     Ptr next;
-    const char *contents;
+    std::string contents;
 };
 
 /**************/

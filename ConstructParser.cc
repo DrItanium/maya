@@ -453,6 +453,7 @@ static bool FindConstructBeginning(
         struct token *theToken,
         bool errorCorrection,
         bool *noErrors) {
+#if STUBBING_INACTIVE
     bool leftParenthesisFound = false;
     bool firstAttempt = true;
 
@@ -535,7 +536,7 @@ static bool FindConstructBeginning(
     /*===================================================================*/
     /* Couldn't find the beginning of a construct, so false is returned. */
     /*===================================================================*/
-
+#endif
     return false;
 }
 

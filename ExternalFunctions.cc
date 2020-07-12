@@ -354,12 +354,11 @@ unsigned GetNthRestriction(
         FunctionDefinition *theFunction,
         unsigned int position) {
     unsigned rv, df;
-    const char *restrictions;
 
     if (theFunction == nullptr) return (ANY_TYPE_BITS);
 
     if (theFunction->restrictions == nullptr) return (ANY_TYPE_BITS);
-    restrictions = theFunction->restrictions->contents;
+    auto restrictions = theFunction->restrictions->contents;
 
     PopulateRestriction(theEnv, &df, ANY_TYPE_BITS, restrictions, 0);
     PopulateRestriction(theEnv, &rv, df, restrictions, position);
@@ -789,7 +788,7 @@ void UDFInvalidArgumentMessage(
         UDFContext *context,
         const char *typeString) {
     ExpectedTypeError1(context->environment,
-                       UDFContextFunctionName(context),
+                       UDFContextFunctionName(context).c_str(),
                        context->lastPosition - 1, typeString);
 }
 
@@ -807,8 +806,7 @@ void UDFThrowError(
 /***************************/
 /* UDFContextFunctionName: */
 /***************************/
-const char *UDFContextFunctionName(
-        UDFContext *context) {
+std::string UDFContextFunctionName(UDFContext *context) {
     return context->theFunction->callFunctionName->contents;
 }
 

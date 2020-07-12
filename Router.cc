@@ -174,10 +174,10 @@ void Writeln(
 /****************************************/
 void WriteString(
         const Environment&theEnv,
-        const char *logicalName,
-        const char *str) {
-    struct router *currentPtr;
+        const std::string& logicalName,
+        const std::string& str) {
 #if STUBBING_INACTIVE
+    router *currentPtr;
     if (str == nullptr) return;
 
     /*===================================================*/

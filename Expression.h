@@ -188,7 +188,11 @@ Expression *ParseConstantArguments(const Environment&, const char *, bool *);
 Expression *GroupActions(const Environment&, const char *, struct token *,
                           bool, const char *, bool);
 Expression *RemoveUnneededProgn(const Environment&, Expression *);
-void PopulateRestriction(const Environment&, unsigned *, unsigned, const char *, unsigned int);
+void PopulateRestriction(const Environment& theEnv,
+                         unsigned * restriction,
+                         unsigned defaultRestriction,
+                         const std::string &restrictionString,
+                         unsigned int position);
 
 FunctionArgumentsError CheckExpressionAgainstRestrictions(const Environment&, Expression *,
                                                           FunctionDefinition *, const char *);
