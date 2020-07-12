@@ -230,7 +230,7 @@ static Activation::Ptr PlaceBreadthActivation(
         Activation::Ptr newActivation,
         struct SalienceGroup *theGroup) {
     unsigned long long timetag;
-    Activation::Ptr lastAct, *actPtr;
+    Activation::Ptr lastAct, actPtr;
 
     /*============================================*/
     /* Set up initial information for the search. */
@@ -293,7 +293,7 @@ static Activation::Ptr PlaceLEXActivation(
         Activation::Ptr newActivation,
         struct SalienceGroup *theGroup) {
     unsigned long long timetag;
-    Activation::Ptr lastAct, *actPtr;
+    Activation::Ptr lastAct;
     int flag;
 
     /*============================================*/
@@ -309,7 +309,7 @@ static Activation::Ptr PlaceLEXActivation(
     /* if the activation should be placed there.      */
     /*================================================*/
 
-    actPtr = theGroup->getLast();
+    auto actPtr = theGroup->getLast();
     if (actPtr != nullptr) {
         flag = ComparePartialMatches(theEnv, actPtr, newActivation);
 

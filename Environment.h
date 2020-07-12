@@ -73,6 +73,7 @@
 #include <tuple>
 #include <iostream>
 #include <list>
+#include "Entities.h"
 
 
 constexpr auto USER_ENVIRONMENT_DATA = 70;
@@ -144,9 +145,9 @@ public:
 public:
     bool initialized = false;
     /// @todo Make these symbol pointers shared_ptrs
-    CLIPSLexeme *TrueSymbol = nullptr;
-    CLIPSLexeme *FalseSymbol = nullptr;
-    CLIPSVoid *VoidConstant = nullptr;
+    CLIPSLexeme::Ptr TrueSymbol = nullptr;
+    CLIPSLexeme::Ptr FalseSymbol = nullptr;
+    CLIPSVoid::Ptr VoidConstant = nullptr;
     std::array<std::unique_ptr<EnvironmentModule>, MAXIMUM_ENVIRONMENT_POSITIONS> environmentModules;
     template<typename T>
     bool installEnvironmentModule(std::unique_ptr<T>&& module) noexcept {

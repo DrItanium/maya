@@ -484,13 +484,11 @@ void MessageHandlerExistPCommand(
         const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
-    Defclass *cls;
-    CLIPSLexeme *mname;
     UDFValue theArg;
     unsigned mtype = MPRIMARY;
 
     if (!UDFFirstArgument(context, SYMBOL_BIT, &theArg)) { return; }
-    cls = LookupDefclassByMdlOrScope(theEnv, theArg.lexemeValue->contents);
+    auto cls = LookupDefclassByMdlOrScope(theEnv, theArg.lexemeValue->contents);
     if (cls == nullptr) {
         ClassExistError(theEnv, "message-handler-existp", theArg.lexemeValue->contents);
         returnValue->lexemeValue = FalseSymbol(theEnv);
@@ -499,7 +497,7 @@ void MessageHandlerExistPCommand(
 
     if (!UDFNextArgument(context, SYMBOL_BIT, &theArg)) { return; }
 
-    mname = theArg.lexemeValue;
+    auto mname = theArg.lexemeValue;
     if (UDFHasNextArgument(context)) {
         if (!UDFNextArgument(context, SYMBOL_BIT, &theArg)) { return; }
 
@@ -832,14 +830,15 @@ static bool CheckTwoClasses(
         const char *func,
         Defclass **c1,
         Defclass **c2) {
+#if 0
     UDFValue theArg;
     const Environment&theEnv = context->environment;
 
     if (!UDFFirstArgument(context, SYMBOL_BIT, &theArg)) { return false; }
-
-    *c1 = LookupDefclassByMdlOrScope(theEnv, theArg.lexemeValue->contents);
+    auto lexemeValue = std::get<CLIPSLexeme::Ptr>(theArg.contents);
+    *c1 = LookupDefclassByMdlOrScope(theEnv, lexemeValue->contents);
     if (*c1 == nullptr) {
-        ClassExistError(theEnv, func, theArg.lexemeValue->contents);
+        ClassExistError(theEnv, func, lexemeValue->contents);
         return false;
     }
 
@@ -850,8 +849,9 @@ static bool CheckTwoClasses(
         ClassExistError(theEnv, func, theArg.lexemeValue->contents);
         return false;
     }
-
     return true;
+#endif
+    return false;
 }
 
 /***************************************************

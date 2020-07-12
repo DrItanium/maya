@@ -296,17 +296,17 @@ static void DeallocateSymbolData(
 /*****************/
 /* CreateBoolean */
 /*****************/
-CLIPSLexeme *CreateBoolean(
+CLIPSLexeme::Ptr CreateBoolean(
         const Environment&theEnv,
-        bool theValue) {
-    if (theValue) { return TrueSymbol(theEnv); }
+        bool value) {
+    if (value) { return TrueSymbol(theEnv); }
     else { return FalseSymbol(theEnv); }
 }
 
 /****************/
 /* CreateSymbol */
 /****************/
-CLIPSLexeme *CreateSymbol(
+CLIPSLexeme::Ptr CreateSymbol(
         const Environment&theEnv,
         const char *str) {
     return AddSymbol(theEnv, str, SYMBOL_TYPE);
@@ -315,7 +315,7 @@ CLIPSLexeme *CreateSymbol(
 /****************/
 /* CreateString */
 /****************/
-CLIPSLexeme *CreateString(
+CLIPSLexeme::Ptr CreateString(
         const Environment&theEnv,
         const char *str) {
     return AddSymbol(theEnv, str, STRING_TYPE);
@@ -324,7 +324,7 @@ CLIPSLexeme *CreateString(
 /**********************/
 /* CreateInstanceName */
 /**********************/
-CLIPSLexeme *CreateInstanceName(
+CLIPSLexeme::Ptr CreateInstanceName(
         const Environment&theEnv,
         const char *str) {
     return AddSymbol(theEnv, str, INSTANCE_NAME_TYPE);

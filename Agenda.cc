@@ -406,20 +406,18 @@ void DeleteActivation(
 /*************************************************/
 void DeleteAllActivations(
         Defmodule *theModule) {
-    struct Activation::Ptr tempPtr, *theActivation;
-    struct SalienceGroup *theGroup, *tempGroup;
-    const Environment&theEnv = theModule->header.env;
+    const Environment& theEnv = theModule->header.env;
 
-    theActivation = GetDefruleModuleItem(theEnv, nullptr)->agenda;
+    auto theActivation = GetDefruleModuleItem(theEnv, nullptr)->agenda;
     while (theActivation != nullptr) {
-        tempPtr = theActivation->getNext();
+        auto tempPtr = theActivation->getNext();
         RemoveActivation(theEnv, theActivation, true, true);
         theActivation = tempPtr;
     }
 
-    theGroup = GetDefruleModuleItem(theEnv, nullptr)->groupings;
+    auto theGroup = GetDefruleModuleItem(theEnv, nullptr)->groupings;
     while (theGroup != nullptr) {
-        tempGroup = theGroup->getNext();
+        auto tempGroup = theGroup->getNext();
         rtn_struct(theEnv, SalienceGroup, theGroup);
         theGroup = tempGroup;
     }
@@ -657,7 +655,7 @@ static void AgendaClearFunction(
 /*************************************************/
 void RemoveAllActivations(
         const Environment&theEnv) {
-    struct Activation::Ptr tempPtr, *theActivation;
+    Activation::Ptr tempPtr, theActivation;
     struct SalienceGroup *theGroup, *tempGroup;
 
     theActivation = GetDefruleModuleItem(theEnv, nullptr)->agenda;

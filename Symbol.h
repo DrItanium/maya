@@ -227,10 +227,10 @@ void ClearBitString(void *, size_t);
 void SetAtomicValueIndices(const Environment&, bool);
 void RestoreAtomicValueBuckets(const Environment&);
 void EphemerateValue(const Environment&, void *);
-CLIPSLexeme *CreateSymbol(const Environment&, const char *);
-CLIPSLexeme *CreateString(const Environment&, const char *);
-CLIPSLexeme *CreateInstanceName(const Environment&, const char *);
-CLIPSLexeme *CreateBoolean(const Environment&, bool);
+CLIPSLexeme::Ptr CreateSymbol(const Environment& theEnv, const char * str);
+CLIPSLexeme::Ptr CreateString(const Environment& theEnv, const char * str);
+CLIPSLexeme::Ptr CreateInstanceName(const Environment& theEnv, const char * str);
+CLIPSLexeme::Ptr CreateBoolean(const Environment& theEnv, bool value);
 bool BitStringHasBitsSet(void *, unsigned);
 
 #define BitMapPointer(i) ((CLIPSBitMap *) (SymbolData(theEnv)->BitMapArray[i]))

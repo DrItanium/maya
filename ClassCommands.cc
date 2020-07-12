@@ -263,12 +263,11 @@ Defclass *LookupDefclassAnywhere(
         const Environment&theEnv,
         Defmodule *theModule,
         const char *className) {
-    Defclass *cls;
     CLIPSLexeme *classSymbol;
 
     if ((classSymbol = FindSymbolHN(theEnv, className, SYMBOL_BIT)) == nullptr) { return nullptr; }
 
-    cls = DefclassData(theEnv)->ClassTable[HashClass(classSymbol)];
+    auto cls = DefclassData(theEnv)->ClassTable[HashClass(classSymbol)];
     while (cls != nullptr) {
         if ((cls->header.name == classSymbol) &&
             ((theModule == nullptr) ||

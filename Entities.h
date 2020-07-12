@@ -27,6 +27,7 @@
 #define _H_entities
 #include <memory>
 #include <variant>
+using Environment = std::shared_ptr<struct EnvironmentData>;
 struct UDFValue;
 typedef void EntityPrintFunction(const Environment&, const char *, void *);
 typedef bool EntityEvaluationFunction(const Environment&, void *, std::shared_ptr<UDFValue>);
@@ -171,16 +172,17 @@ public:
     using Self = CLIPSValue;
     using Ptr = std::shared_ptr<Self>;
 public:
-    std::variant<
-            std::monostate,
-            CLIPSLexeme::Ptr,
-            CLIPSFloat::Ptr,
-            CLIPSInteger::Ptr,
-            CLIPSVoid::Ptr,
-            Multifield::Ptr,
-            std::shared_ptr<Fact>,
-            std::shared_ptr<Instance>,
-            CLIPSExternalAddress::Ptr> contents;
+    union {
+        std::shared_ptr<TypeHeader> header; // does this work o_O????
+        CLIPSLexeme::Ptr lexemeValue;
+        CLIPSFloat::Ptr floatValue;
+        CLIPSInteger::Ptr integerValue;
+        CLIPSVoid::Ptr voidValue;
+        Multifield::Ptr multifieldValue;
+        std::shared_ptr<Fact> factValue;
+        std::shared_ptr<Instance> instanceValue;
+        CLIPSExternalAddress::Ptr externalAddressValue;
+    };
 };
 
 
@@ -193,16 +195,18 @@ public:
     using Ptr = std::shared_ptr<Self>;
 public:
     std::any supplementalInfo;
-    std::variant<
-            std::monostate,
-            CLIPSLexeme::Ptr,
-            CLIPSFloat::Ptr,
-            CLIPSInteger::Ptr,
-            CLIPSVoid::Ptr,
-            Multifield::Ptr,
-            std::shared_ptr<Fact>,
-            std::shared_ptr<Instance>,
-            CLIPSExternalAddress::Ptr> contents;
+    union {
+        std::shared_ptr<void> value;
+        std::shared_ptr<TypeHeader> header; // does this work o_O????
+        CLIPSLexeme::Ptr lexemeValue;
+        CLIPSFloat::Ptr floatValue;
+        CLIPSInteger::Ptr integerValue;
+        CLIPSVoid::Ptr voidValue;
+        Multifield::Ptr multifieldValue;
+        std::shared_ptr<Fact> factValue;
+        std::shared_ptr<Instance> instanceValue;
+        CLIPSExternalAddress::Ptr externalAddressValue;
+    };
     size_t begin;
     size_t range;
     Ptr next;
