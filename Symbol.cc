@@ -435,9 +435,9 @@ CLIPSLexeme *FindSymbolHN(
 /*   double is returned. Otherwise, the double is hashed into the */
 /*   table and the address of the double is also returned.        */
 /******************************************************************/
-CLIPSFloat *CreateFloat(
+CLIPSFloat::Ptr CreateFloat(
         const Environment&theEnv,
-        double number) {
+        double value) {
     size_t tally;
     CLIPSFloat *past = nullptr, *peek;
 
@@ -445,7 +445,7 @@ CLIPSFloat *CreateFloat(
     /* Get the hash value for the double. */
     /*====================================*/
 
-    tally = HashFloat(number, FLOAT_HASH_SIZE);
+    tally = HashFloat(value, FLOAT_HASH_SIZE);
     peek = SymbolData(theEnv)->FloatTable[tally];
 
     /*==================================================*/
@@ -455,7 +455,7 @@ CLIPSFloat *CreateFloat(
     /*==================================================*/
 
     while (peek != nullptr) {
-        if (number == peek->contents) { return peek; }
+        if (value == peek->contents) { return peek; }
         past = peek;
         peek = peek->next;
     }
@@ -470,7 +470,7 @@ CLIPSFloat *CreateFloat(
     if (past == nullptr) SymbolData(theEnv)->FloatTable[tally] = peek;
     else past->next = peek;
 
-    peek->contents = number;
+    peek->contents = value;
     peek->next = nullptr;
     peek->bucket = (unsigned int) tally;
     peek->count = 0;
@@ -498,9 +498,9 @@ CLIPSFloat *CreateFloat(
 /*   the long is returned. Otherwise, the long is hashed into   */
 /*   the table and the address of the long is also returned.    */
 /****************************************************************/
-CLIPSInteger *CreateInteger(
+CLIPSInteger::Ptr CreateInteger(
         const Environment&theEnv,
-        long long number) {
+        long long value) {
     size_t tally;
     CLIPSInteger *past = nullptr, *peek;
 
@@ -508,7 +508,7 @@ CLIPSInteger *CreateInteger(
     /* Get the hash value for the long. */
     /*==================================*/
 
-    tally = HashInteger(number, INTEGER_HASH_SIZE);
+    tally = HashInteger(value, INTEGER_HASH_SIZE);
     peek = SymbolData(theEnv)->IntegerTable[tally];
 
     /*================================================*/
@@ -518,7 +518,7 @@ CLIPSInteger *CreateInteger(
     /*================================================*/
 
     while (peek != nullptr) {
-        if (number == peek->contents) { return peek; }
+        if (value == peek->contents) { return peek; }
         past = peek;
         peek = peek->next;
     }
@@ -532,7 +532,7 @@ CLIPSInteger *CreateInteger(
     if (past == nullptr) SymbolData(theEnv)->IntegerTable[tally] = peek;
     else past->next = peek;
 
-    peek->contents = number;
+    peek->contents = value;
     peek->next = nullptr;
     peek->bucket = (unsigned int) tally;
     peek->count = 0;
@@ -656,10 +656,10 @@ void *AddBitMap(
 /* CreateCExternalAddress: Creates an external */
 /*    address for a C pointer.                 */
 /***********************************************/
-CLIPSExternalAddress *CreateCExternalAddress(
+CLIPSExternalAddress::Ptr CreateCExternalAddress(
         const Environment&theEnv,
-        void *theExternalAddress) {
-    return CreateExternalAddress(theEnv, theExternalAddress, C_POINTER_EXTERNAL_ADDRESS);
+        void *ctx) {
+    return CreateExternalAddress(theEnv, ctx, C_POINTER_EXTERNAL_ADDRESS);
 }
 
 /*******************************************************************/
@@ -669,10 +669,10 @@ CLIPSExternalAddress *CreateCExternalAddress(
 /*   Otherwise, the external address is hashed into the table and  */
 /*   the address of the external address is also returned.         */
 /*******************************************************************/
-CLIPSExternalAddress *CreateExternalAddress(
+CLIPSExternalAddress::Ptr CreateExternalAddress(
         const Environment&theEnv,
-        void *theExternalAddress,
-        unsigned short theType) {
+        void *ctx,
+        unsigned short kind) {
     size_t tally;
     CLIPSExternalAddress *past = nullptr, *peek;
 
@@ -680,7 +680,7 @@ CLIPSExternalAddress *CreateExternalAddress(
     /* Get the hash value for the bitmap. */
     /*====================================*/
 
-    tally = HashExternalAddress(theExternalAddress, EXTERNAL_ADDRESS_HASH_SIZE);
+    tally = HashExternalAddress(ctx, EXTERNAL_ADDRESS_HASH_SIZE);
 
     peek = SymbolData(theEnv)->ExternalAddressTable[tally];
 
@@ -691,8 +691,8 @@ CLIPSExternalAddress *CreateExternalAddress(
     /*=============================================================*/
 
     while (peek != nullptr) {
-        if ((peek->type == theType) &&
-            (peek->contents == theExternalAddress)) { return peek; }
+        if ((peek->type == kind) &&
+            (peek->contents == ctx)) { return peek; }
 
         past = peek;
         peek = peek->next;
@@ -707,8 +707,8 @@ CLIPSExternalAddress *CreateExternalAddress(
     if (past == nullptr) SymbolData(theEnv)->ExternalAddressTable[tally] = peek;
     else past->next = peek;
 
-    peek->contents = theExternalAddress;
-    peek->type = theType;
+    peek->contents = ctx;
+    peek->type = kind;
     peek->next = nullptr;
     peek->bucket = (unsigned int) tally;
     peek->count = 0;

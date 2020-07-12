@@ -187,11 +187,11 @@ void InitializeAtomTables(const Environment&, CLIPSLexeme **, CLIPSFloat **,
                           CLIPSExternalAddress **);
 CLIPSLexeme *AddSymbol(const Environment&, const char *, unsigned short);
 CLIPSLexeme *FindSymbolHN(const Environment&, const char *, unsigned short);
-CLIPSFloat *CreateFloat(const Environment&, double);
-CLIPSInteger *CreateInteger(const Environment&, long long);
+CLIPSFloat::Ptr CreateFloat(const Environment& theEnv, double value);
+CLIPSInteger::Ptr CreateInteger(const Environment& theEnv, long long value);
 void *AddBitMap(const Environment&, void *, unsigned short);
-CLIPSExternalAddress *CreateExternalAddress(const Environment&, void *, unsigned short);
-CLIPSExternalAddress *CreateCExternalAddress(const Environment&, void *);
+CLIPSExternalAddress::Ptr CreateExternalAddress(const Environment& theEnv, void * ctx, unsigned short kind);
+CLIPSExternalAddress::Ptr CreateCExternalAddress(const Environment& theEnv, void * ctx);
 CLIPSInteger *FindLongHN(const Environment&, long long);
 size_t HashSymbol(const char *, size_t);
 size_t HashFloat(double, size_t);
