@@ -79,43 +79,51 @@
 
 #include <cstdlib>
 
-typedef struct callFunctionItem CallFunctionItem;
-typedef struct callFunctionItemWithArg CallFunctionItemWithArg;
-typedef struct boolCallFunctionItem BoolCallFunctionItem;
-typedef struct voidCallFunctionItem VoidCallFunctionItem;
-
 #include "Evaluation.h"
 #include "Defmodule.h"
 #include <sstream>
+#include <string>
 
 typedef struct gcBlock GCBlock;
 typedef struct stringBuilder StringBuilder;
-
-struct voidCallFunctionItem {
-    const char *name;
-    VoidCallFunction *func;
-    int priority;
-    struct voidCallFunctionItem *next;
+template<typename FunctionKind>
+struct GenericCallFunctionItem {
+public:
+    using Self = GenericCallFunctionItem;
+    using Ptr = std::shared_ptr<Self>;
+public:
+    GenericCallFunctionItem(const std::string& name, int priority, FunctionKind body) : _name(name), _priority(priority), _body(body) { }
+    auto getName() const noexcept { return _name; }
+    constexpr auto getPriority() const noexcept { return _priority; }
+    FunctionKind getBody() const noexcept { return _body; }
+    Ptr getNext() const noexcept { return _next; }
+    void setNext(Ptr value) noexcept { _next = value; }
+private:
+    std::string _name;
+    int _priority;
+    FunctionKind _body;
+    Ptr _next;
 };
 
-struct boolCallFunctionItem {
-    const char *name;
-    BoolCallFunction *func;
-    int priority;
-    struct boolCallFunctionItem *next;
-};
+template<typename ReturnType>
+using NoExtraArgCallFunctionItem = GenericCallFunctionItem<std::function<ReturnType(const Environment&)>>;
+template<typename ReturnType, typename ArgumentKind>
+using OneExtraArgCallFunctionItem = GenericCallFunctionItem<std::function<ReturnType(const Environment&, ArgumentKind)>>;
 
-struct callFunctionItemWithArg {
-    const char *name;
-    VoidCallFunctionWithArg *func;
-    int priority;
-    struct callFunctionItemWithArg *next;
-};
+template<typename ReturnType>
+using OneExtraAnyArgCallFunctionItem = OneExtraArgCallFunctionItem<ReturnType, std::any>;
+using VoidCallFunctionItem = NoExtraArgCallFunctionItem<void>;
+using BoolCallFunctionItem = NoExtraArgCallFunctionItem<bool>;
+using CallFunctionItemWithArg = OneExtraAnyArgCallFunctionItem<void>;
 
 struct trackedMemory {
+public:
+    using Self = trackedMemory;
+    using Ptr = std::shared_ptr<Self>;
+public:
     void *theMemory;
-    struct trackedMemory *next;
-    struct trackedMemory *prev;
+    Ptr next;
+    Ptr prev;
     size_t memSize;
 };
 
@@ -154,13 +162,13 @@ private:
 };
 
 constexpr auto UTILITY_DATA = 55;
-typedef void YieldTimeFunctionType();
+using YieldTimeFunctionBody = std::function<void()>;
 struct utilityData : public EnvironmentModule {
-    voidCallFunctionItem *ListOfCleanupFunctions;
-    voidCallFunctionItem *ListOfPeriodicFunctions;
+    std::list<VoidCallFunctionItem> listOfCleanupFunctions;
+    std::list<VoidCallFunctionItem> listOfPeriodicFunctions;
     bool PeriodicFunctionsEnabled;
     bool YieldFunctionEnabled;
-    YieldTimeFunctionType* YieldTimeFunction;
+    YieldTimeFunctionBody YieldTimeFunction;
     trackedMemory *trackList;
     garbageFrame MasterGarbageFrame;
     garbageFrame *CurrentGarbageFrame;
