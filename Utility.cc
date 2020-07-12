@@ -461,13 +461,14 @@ const char *StringPrintForm(
 
     return thePtr->contents;
 }
-
+#endif
 /**************************************************************/
 /* CopyString: Copies a string using CLIPS memory management. */
 /**************************************************************/
 char *CopyString(
         const Environment&theEnv,
         const char *theString) {
+#if 0
     char *stringCopy = nullptr;
 
     if (theString != nullptr) {
@@ -476,8 +477,9 @@ char *CopyString(
     }
 
     return stringCopy;
-}
 #endif
+    return nullptr;
+}
 /*****************************************************************/
 /* DeleteString: Deletes a string using CLIPS memory management. */
 /*****************************************************************/

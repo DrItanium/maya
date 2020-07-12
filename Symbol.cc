@@ -411,7 +411,6 @@ CLIPSLexeme::Ptr AddSymbol(
 #endif
     return nullptr;
 }
-#if 0
 /*****************************************************************/
 /* FindSymbolHN: Searches for the string in the symbol table and */
 /*   returns a pointer to it if found, otherwise returns nullptr.   */
@@ -420,6 +419,7 @@ CLIPSLexeme *FindSymbolHN(
         const Environment&theEnv,
         const char *str,
         unsigned short expectedType) {
+#if 0
     size_t tally;
     CLIPSLexeme *peek;
 
@@ -431,9 +431,11 @@ CLIPSLexeme *FindSymbolHN(
         if (((1 << peek->header.type) & expectedType) &&
             (strcmp(str, peek->contents) == 0)) { return peek; }
     }
+#endif
 
     return nullptr;
 }
+#if 0
 /******************************************************************/
 /* CreateFloat: Searches for the double in the hash table. If the */
 /*   double is already in the hash table, then the address of the */
