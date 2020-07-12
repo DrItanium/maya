@@ -477,15 +477,16 @@ char *CopyString(
 
     return stringCopy;
 }
-
+#endif
 /*****************************************************************/
 /* DeleteString: Deletes a string using CLIPS memory management. */
 /*****************************************************************/
 void DeleteString(
         const Environment&theEnv,
         char *theString) {
-    if (theString != nullptr) { genfree(theEnv, theString, strlen(theString) + 1); }
+    //if (theString != nullptr) { genfree(theEnv, theString, strlen(theString) + 1); }
 }
+#if 0
 
 /***********************************************************/
 /* AppendStrings: Appends two strings together. The string */

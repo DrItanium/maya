@@ -856,6 +856,7 @@ size_t HashBitMap(
     return tally;
 }
 
+#endif
 /****************************************************/
 /* RetainLexeme: Increments the count value for a   */
 /*   SymbolTable entry. Adds the symbol to the      */
@@ -864,9 +865,8 @@ size_t HashBitMap(
 void RetainLexeme(
         const Environment&theEnv,
         CLIPSLexeme *theValue) {
-    theValue->count++;
+    //theValue->count++;
 }
-
 /****************************************************/
 /* ReleaseLexeme: Decrements the count value for a  */
 /*   SymbolTable entry. Adds the symbol to the      */
@@ -875,6 +875,7 @@ void RetainLexeme(
 void ReleaseLexeme(
         const Environment&theEnv,
         CLIPSLexeme *theValue) {
+#if 0
     if (theValue->count < 0) {
         SystemError(theEnv, "SYMBOL", 3);
         ExitRouter(theEnv, EXIT_FAILURE);
@@ -896,7 +897,9 @@ void ReleaseLexeme(
     }
 
     return;
+#endif
 }
+#if 0
 
 /***************************************************/
 /* RetainFloat: Increments the count value for a   */

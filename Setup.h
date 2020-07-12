@@ -263,10 +263,17 @@
 /*******************************************************************/
 
 #ifndef BLOAD_INSTANCES
-#define BLOAD_INSTANCES 1
+#define BLOAD_INSTANCES 0
 #endif
 #ifndef BSAVE_INSTANCES
-#define BSAVE_INSTANCES 1
+#define BSAVE_INSTANCES 0
+#endif
+#if !BSAVE_INSTANCES
+#warning "BSAVE_INSTANCES Hard Disabled!"
+#endif
+
+#if !BLOAD_INSTANCES
+#warning "BLOAD_INSTANCES Hard Disabled!"
 #endif
 
 /****************************************************************/
@@ -287,7 +294,10 @@
 /*************************************************************************/
 
 #ifndef BLOAD_AND_BSAVE
-#define BLOAD_AND_BSAVE 1
+#define BLOAD_AND_BSAVE 0
+#endif
+#if !BLOAD_AND_BSAVE
+#warning "BLOAD_AND_BSAVE Hard Disabled!"
 #endif
 
 /************************************************/
