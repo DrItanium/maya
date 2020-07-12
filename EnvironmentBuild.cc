@@ -310,7 +310,6 @@ static void InitializeEnvironment(const Environment&theEnvironment) {
 #if DEFGLOBAL_CONSTRUCT
     InitializeDefglobals(theEnvironment);
 #endif
-#if STUBBING_INACTIVE
 
     /*=======================================*/
     /* Initialize the deftemplate construct. */
@@ -318,7 +317,6 @@ static void InitializeEnvironment(const Environment&theEnvironment) {
 
 #if DEFTEMPLATE_CONSTRUCT
     InitializeDeftemplates(theEnvironment);
-#endif
 #endif
 
     /*=============================*/

@@ -102,6 +102,7 @@ static void DestroyDeftemplate(const Environment&, Deftemplate *);
 /******************************************************************/
 void InitializeDeftemplates(
         const Environment&theEnv) {
+#if STUBBING_INACTIVE
     EntityRecord deftemplatePtrRecord =
             {"DEFTEMPLATE_PTR",
              DEFTEMPLATE_PTR, 1, 0, 0,
@@ -113,10 +114,14 @@ void InitializeDeftemplates(
              (EntityBusyCountFunction *) IncrementDeftemplateBusyCount,
              nullptr, nullptr, nullptr, nullptr, nullptr};
     //AllocateEnvironmentData(theEnv, DEFTEMPLATE_DATA, sizeof(deftemplateData), DeallocateDeftemplateData);
+#endif
     theEnv->allocateEnvironmentModule<deftemplateData>();
 
+#if STUBBING_INACTIVE
     DeftemplateData(theEnv)->DeftemplatePtrRecord = deftemplatePtrRecord;
+#endif
 
+#if STUBBING_INACTIVE
     InitializeFacts(theEnv);
 
     InitializeDeftemplateModules(theEnv);
@@ -124,7 +129,8 @@ void InitializeDeftemplates(
     DeftemplateBasicCommands(theEnv);
 
     DeftemplateFunctions(theEnv);
-
+#endif
+#if STUBBING_INACTIVE
     DeftemplateData(theEnv)->DeftemplateConstruct =
             AddConstruct(theEnv, "deftemplate", "deftemplates", ParseDeftemplate,
                          (FindConstructFunction *) FindDeftemplate,
@@ -137,8 +143,9 @@ void InitializeDeftemplates(
                          (FreeConstructFunction *) ReturnDeftemplate);
 
     InstallPrimitive(theEnv, (EntityRecord *) &DeftemplateData(theEnv)->DeftemplatePtrRecord, DEFTEMPLATE_PTR);
+#endif
 }
-
+#if STUBBING_INACTIVE
 /******************************************************/
 /* DeallocateDeftemplateData: Deallocates environment */
 /*    data for the deftemplate construct.             */
@@ -471,7 +478,7 @@ const char *DeftemplatePPForm(
         Deftemplate *theDeftemplate) {
     return GetConstructPPForm(&theDeftemplate->header);
 }
-
+#endif
 #endif /* DEFTEMPLATE_CONSTRUCT */
 
 

@@ -287,7 +287,7 @@ add_library(clips
 		Symbol.cc
 		#DeftemplateBinarySaveLoad.cc
 		#DeftemplateBasicCommands.cc
-		#Deftemplate.cc
+		Deftemplate.cc
 		#DeftemplateFunctions.cc
 		#DeftemplateLHS.cc
 		#DeftemplateParser.cc
