@@ -143,22 +143,22 @@ add_library(clips
 	UserSetup.h
 	Utility.h
 	Watch.h
-		Agenda.cc
-		CommandLine.cc
+		#Agenda.cc
+		#CommandLine.cc
 		Environment.cc
 		EnvironmentBuild.cc
-		Evaluation.cc
-		Expression.cc
-		FileUtilities.cc
-		MemoryAllocation.cc
-		ReferenceCounted.cc
-		SystemDependency.cc
-		UserFunctions.cc
-		Utility.cc
-		PrintUtility.cc
-		Router.cc
+		#Evaluation.cc
+		#Expression.cc
+		#FileUtilities.cc
+		#MemoryAllocation.cc
+		#ReferenceCounted.cc
+		#SystemDependency.cc
+		#UserFunctions.cc
+		#Utility.cc
+		#PrintUtility.cc
+		#Router.cc
 		#Analysis.cc
-		ArgumentAccess.cc
+		#ArgumentAccess.cc
 		#BinaryLoad.cc
 		#BasicMathFunctions.cc
 		#BinarySave.cc
@@ -169,12 +169,12 @@ add_library(clips
 		#ClassInitialization.cc
 		#ClassParser.cc
 		#ClassSlotParser.cc
-		Construct.cc
-		Constraint.cc
+		#Construct.cc
+		#Constraint.cc
 		#ConflictResolutionStrategy.cc
 		#ConstructBinaryLoadSave.cc
 		#ConstructCommand.cc
-		ConstructParser.cc
+		#ConstructParser.cc
 		#ConstraintBinaryLoadSave.cc
 		#ConstraintChecking.cc
 		#ConstraintOperations.cc
@@ -185,20 +185,20 @@ add_library(clips
 		#Developer.cc
 		#DeffactsBinarySaveLoad.cc
 		#DeffactsBasicCommands.cc
-		Deffacts.cc
+		#Deffacts.cc
 		#DeffactsParser.cc
 		#DeffunctionBinaryLoadSave.cc
 		#DeffunctionExecution.cc
-		Deffunction.cc
+		#Deffunction.cc
 		#DeffunctionParser.cc
 		#DefinstancesBinaryLoadSave.cc
 		#Drive.cc
 		#ExtendedMathFunctions.cc
 		#Engine.cc
 		#ExpressionBinary.cc
-		ExpressionOperations.cc
-		ExpressionParser.cc
-		ExternalFunctions.cc
+		#ExpressionOperations.cc
+		#ExpressionParser.cc
+		#ExternalFunctions.cc
 		#FactBinarySaveLoad.cc
 		#FactBuild.cc
 		#FactCommands.cc
@@ -218,7 +218,7 @@ add_library(clips
 		#FileRouter.cc
 		#Generate.cc
 		#GenericFunctionBinaryLoadSave.cc
-		GenericFunctionCommands.cc
+		#GenericFunctionCommands.cc
 		#GenericFunctionExecution.cc
 		#GenericFunction.cc
 		#GenericFunctionParser.cc
@@ -244,9 +244,9 @@ add_library(clips
 		#MiscFunctions.cc
 		#DefmoduleBinarySaveLoad.cc
 		#DefModuleBasicCommands.cc
-		Defmodule.cc
+		#Defmodule.cc
 		#DefmoduleParser.cc
-		DefmoduleUtility.cc
+		#DefmoduleUtility.cc
 		#DefmessageHandlerCommands.cc
 		#DefmessageHandlerFunctions.cc
 		#DefmessageHandlerDispatch.cc
@@ -260,11 +260,11 @@ add_library(clips
 		#InferenceEngineObjectParsingRoutines.cc
 		#ObjectReteMatch.cc
 		#ParsingFunctions.cc
-		Pattern.cc
-		PrettyPrint.cc
+		#Pattern.cc
+		#PrettyPrint.cc
 		#ProceduralCodeSupportRoutines.cc
-		ProceduralFunctions.cc
-		ProceduralFunctionsParser.cc
+		#ProceduralFunctions.cc
+		#ProceduralFunctionsParser.cc
 		#PredicateFunctions.cc
 		#ConstructProfilingFunctions.cc
 		#Reorder.cc
@@ -275,16 +275,16 @@ add_library(clips
 		#BasicRuleCommands.cc
 		#RuleCommands.cc
 		#RuleConstraints.cc
-		Defrule.cc
+		#Defrule.cc
 		#RuleDelete.cc
 		#RuleLHSParsing.cc
 		#RuleParser.cc
-		Scanner.cc
+		#Scanner.cc
 		#SortingFunctions.cc
 		#StringFunctions.cc
-		StringRouter.cc
+		#StringRouter.cc
 		#SymbolBinarySave.cc
-		Symbol.cc
+		#Symbol.cc
 		#DeftemplateBinarySaveLoad.cc
 		#DeftemplateBasicCommands.cc
 		#Deftemplate.cc
@@ -293,8 +293,8 @@ add_library(clips
 		#DeftemplateParser.cc
 		#DeftemplateRHSParsing.cc
 		#DeftemplateUtilities.cc
-		UserData.cc
-		Watch.cc
+		#UserData.cc
+		#Watch.cc
 		)
 add_library(maya_extensions
 		BoostExtensions.h
