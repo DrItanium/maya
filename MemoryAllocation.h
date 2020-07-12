@@ -94,7 +94,6 @@ struct memoryPtr {
 #define GenCopyMemory(type, cnt, dst, src) \
    memcpy((void *) (dst),(void *) (src),sizeof(type) * (size_t) (cnt))
 
-void InitializeMemory(const Environment&);
 void *genalloc(const Environment&, size_t);
 void genfree(const Environment&, void *, size_t);
 void *genrealloc(const Environment&, void *, size_t, size_t);

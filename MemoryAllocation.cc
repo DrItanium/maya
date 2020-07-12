@@ -65,12 +65,6 @@
 #include <cstdlib>
 #include <memory>
 
-/********************************************/
-/* InitializeMemory: Sets up memory tables. */
-/********************************************/
-void InitializeMemory(const Environment& theEnv) {
-}
-
 /***************************************************/
 /* genalloc: A generic memory allocation function. */
 /***************************************************/
@@ -97,41 +91,8 @@ void *genrealloc(
         void *oldaddr,
         size_t oldsz,
         size_t newsz) {
-    char *newaddr;
-    unsigned i;
-    size_t limit;
-
-    newaddr = ((newsz != 0) ? (char *) gm2(theEnv, newsz) : nullptr);
-
-    if (oldaddr != nullptr) {
-        limit = (oldsz < newsz) ? oldsz : newsz;
-        for (i = 0; i < limit; i++) { newaddr[i] = ((char *) oldaddr)[i]; }
-        for (; i < newsz; i++) { newaddr[i] = '\0'; }
-        rm(theEnv, oldaddr, oldsz);
-    }
-
-    return ((void *) newaddr);
+    return nullptr;
 }
-
-/********************************/
-/* MemUsed: C access routine */
-/*   for the mem-used command.  */
-
-/***********************************/
-/* MemRequests: C access routine   */
-/*   for the mem-requests command. */
-
-/***************************************/
-/* UpdateMemoryUsed: Allows the amount */
-/*   of memory used to be updated.     */
-
-/*******************************************/
-/* UpdateMemoryRequests: Allows the number */
-/*   of memory requests to be updated.     */
-
-/**********************************/
-/* ReleaseMem: C access routine   */
-/*   for the release-mem command. */
 
 /*****************************************************/
 /* gm1: Allocates memory and sets all bytes to zero. */

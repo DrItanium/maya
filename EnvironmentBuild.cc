@@ -238,12 +238,6 @@ static void InitializeEnvironment(
 
     if (theEnvironment->initialized) return;
 
-    /*================================*/
-    /* Initialize the memory manager. */
-    /*================================*/
-
-    InitializeMemory(theEnvironment);
-
     /*===================================================*/
     /* Initialize environment data for various features. */
     /*===================================================*/
