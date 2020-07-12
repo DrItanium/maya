@@ -243,6 +243,7 @@ static void InitializeEnvironment(
     /*===================================================*/
 
     InitializeCommandLineData(theEnvironment);
+#if STUBBING_INACTIVE
     InitializeConstructData(theEnvironment);
     InitializeEvaluationData(theEnvironment);
     InitializeExternalFunctionData(theEnvironment);
@@ -353,11 +354,12 @@ static void InitializeEnvironment(
 #if DEFTEMPLATE_CONSTRUCT
     InitializeDeftemplates(theEnvironment);
 #endif
+#endif
 
     /*=============================*/
     /* Initialize COOL constructs. */
     /*=============================*/
-
+#if STUBBING_INACTIVE
     SetupObjectSystem(theEnvironment);
 
     /*=====================================*/
@@ -384,7 +386,7 @@ static void InitializeEnvironment(
     /*========================*/
     /* Issue a clear command. */
     /*========================*/
-
+#endif
     Clear(theEnvironment);
 
     /*=============================*/
@@ -401,16 +403,20 @@ static void InitializeEnvironment(
 static void SystemFunctionDefinitions(
         const Environment&theEnv) {
     ProceduralFunctionDefinitions(theEnv);
+#if STUBBING_INACTIVE
     MiscFunctionDefinitions(theEnv);
+#endif
 
 #if IO_FUNCTIONS
     IOFunctionDefinitions(theEnv);
 #endif
 
+#if STUBBING_INACTIVE
     PredicateFunctionDefinitions(theEnv);
     BasicMathFunctionDefinitions(theEnv);
     FileCommandDefinitions(theEnv);
     SortFunctionDefinitions(theEnv);
+#endif
 
 #if DEBUGGING_FUNCTIONS
     WatchFunctionDefinitions(theEnv);
@@ -431,7 +437,8 @@ static void SystemFunctionDefinitions(
 #if PROFILING_FUNCTIONS
     ConstructProfilingFunctionDefinitions(theEnv);
 #endif
-
+#if STUBBING_INACTIVE
     ParseFunctionDefinitions(theEnv);
+#endif
 }
 
