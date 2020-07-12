@@ -82,6 +82,7 @@
 #include "PrintUtility.h"
 #include "Router.h"
 #include "Utility.h"
+#include "ReferenceCounted.h"
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */

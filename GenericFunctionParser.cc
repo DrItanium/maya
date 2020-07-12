@@ -92,6 +92,7 @@
 #include "SystemDependency.h"
 
 #include "GenericFunctionParser.h"
+#include "ReferenceCounted.h"
 
 /* =========================================
    *****************************************

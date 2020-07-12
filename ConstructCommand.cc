@@ -88,6 +88,7 @@
 
 #include "Construct.h"
 #include "Construct.h"
+#include "ReferenceCounted.h"
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */

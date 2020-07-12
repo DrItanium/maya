@@ -63,6 +63,7 @@
 #endif
 
 #include "DefmoduleParser.h"
+#include "ReferenceCounted.h"
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */

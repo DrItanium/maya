@@ -66,6 +66,7 @@
 #include "InstanceCommand.h"
 
 #include "Expression.h"
+#include "ReferenceCounted.h"
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */

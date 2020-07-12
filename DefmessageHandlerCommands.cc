@@ -93,6 +93,7 @@
 #endif
 
 #include "DefmessageHandlerCommands.h"
+#include "ReferenceCounted.h"
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */

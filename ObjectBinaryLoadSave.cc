@@ -74,6 +74,7 @@
 #include "ObjectReteBinarySaveLoad.h"
 
 #include "ObjectBinaryLoadSave.h"
+#include "ReferenceCounted.h"
 
 /* =========================================
    *****************************************

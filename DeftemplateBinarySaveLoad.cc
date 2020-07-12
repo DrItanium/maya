@@ -53,6 +53,7 @@
 #include "DeftemplateUtilities.h"
 
 #include "DeftemplateBinarySaveLoad.h"
+#include "ReferenceCounted.h"
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */

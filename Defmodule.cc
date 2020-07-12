@@ -74,6 +74,7 @@
 #include "Utility.h"
 
 #include "Defmodule.h"
+#include "ReferenceCounted.h"
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */

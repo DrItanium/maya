@@ -69,6 +69,7 @@
 #include "Scanner.h"
 
 #include "ClassSlotParser.h"
+#include "ReferenceCounted.h"
 
 /* =========================================
    *****************************************

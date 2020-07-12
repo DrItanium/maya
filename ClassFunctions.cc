@@ -97,6 +97,7 @@
 #include "Utility.h"
 
 #include "ClassFunctions.h"
+#include "ReferenceCounted.h"
 
 /* =========================================
    *****************************************

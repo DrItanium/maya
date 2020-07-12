@@ -111,6 +111,7 @@
 #include "Drive.h"
 
 #include "StringFunctions.h"
+#include "ReferenceCounted.h"
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */

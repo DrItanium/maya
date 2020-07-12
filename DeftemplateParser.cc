@@ -77,6 +77,7 @@
 #include "Watch.h"
 
 #include "DeftemplateParser.h"
+#include "ReferenceCounted.h"
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */

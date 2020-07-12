@@ -74,6 +74,7 @@
 
 #if DEFGLOBAL_CONSTRUCT
 #include "Defglobal.h"
+#include "ReferenceCounted.h"
 #endif
 
 /***************************************/

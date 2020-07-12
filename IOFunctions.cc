@@ -131,6 +131,7 @@
 #include "Utility.h"
 
 #include "IOFunctions.h"
+#include "ReferenceCounted.h"
 
 /***************/
 /* DEFINITIONS */

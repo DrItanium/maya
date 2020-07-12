@@ -102,6 +102,7 @@
 #include "Utility.h"
 
 #include "Definstances.h"
+#include "ReferenceCounted.h"
 
 /* =========================================
    *****************************************

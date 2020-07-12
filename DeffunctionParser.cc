@@ -90,6 +90,7 @@
 #include "Symbol.h"
 
 #include "DeffunctionParser.h"
+#include "ReferenceCounted.h"
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */

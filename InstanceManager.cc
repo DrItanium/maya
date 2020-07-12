@@ -92,6 +92,7 @@
 
 #include "InstanceCommand.h"
 #include "Watch.h"
+#include "ReferenceCounted.h"
 
 /* =========================================
    *****************************************

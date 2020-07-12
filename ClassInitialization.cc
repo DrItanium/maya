@@ -107,6 +107,7 @@
 #include "ObjectReteMatch.h"
 
 #include "ClassInitialization.h"
+#include "ReferenceCounted.h"
 
 /* =========================================
    *****************************************

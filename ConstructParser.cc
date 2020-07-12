@@ -86,6 +86,7 @@
 #include "StringRouter.h"
 #include "SystemDependency.h"
 #include "Utility.h"
+#include "ReferenceCounted.h"
 
 
 /***************************************/

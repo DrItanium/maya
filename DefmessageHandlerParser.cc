@@ -85,6 +85,7 @@
 #include "SystemDependency.h"
 
 #include "DefmessageHandlerParser.h"
+#include "ReferenceCounted.h"
 
 /* =========================================
    *****************************************

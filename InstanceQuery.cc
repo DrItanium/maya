@@ -86,6 +86,7 @@
 #include "Utility.h"
 
 #include "InstanceQuery.h"
+#include "ReferenceCounted.h"
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */

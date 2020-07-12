@@ -59,6 +59,7 @@
 #include "Router.h"
 
 #include "DeffactsParser.h"
+#include "ReferenceCounted.h"
 
 /************************************************************/
 /* ParseDeffacts: Coordinates all actions necessary for the */

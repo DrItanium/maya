@@ -93,6 +93,7 @@
 #endif
 
 #include "RuleParser.h"
+#include "ReferenceCounted.h"
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */

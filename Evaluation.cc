@@ -104,6 +104,7 @@
 #include "InstanceCommand.h"
 
 #include "Evaluation.h"
+#include "ReferenceCounted.h"
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */

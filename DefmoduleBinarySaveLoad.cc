@@ -43,6 +43,7 @@
 #include "Defmodule.h"
 
 #include "DefmoduleBinarySaveLoad.h"
+#include "ReferenceCounted.h"
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */

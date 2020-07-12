@@ -67,6 +67,7 @@
 #include "Router.h"
 
 #include "DefmessageHandlerFunctions.h"
+#include "ReferenceCounted.h"
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */

@@ -40,6 +40,7 @@
 #include "Defmodule.h"
 
 #include "Construct.h"
+#include "ReferenceCounted.h"
 
 #if BLOAD_AND_BSAVE
 

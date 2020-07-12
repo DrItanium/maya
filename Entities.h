@@ -27,6 +27,8 @@
 #define _H_entities
 #include <memory>
 #include <variant>
+
+#include "ReferenceCounted.h"
 using Environment = std::shared_ptr<struct EnvironmentData>;
 struct UDFValue;
 typedef void EntityPrintFunction(const Environment&, const char *, void *);
@@ -59,14 +61,13 @@ public:
 /***************/
 /* CLIPSLexeme */
 /***************/
-struct CLIPSLexeme {
+struct CLIPSLexeme : public ReferenceCounted {
 public:
     using Self = CLIPSLexeme;
     using Ptr = std::shared_ptr<Self>;
 public:
     TypeHeader header;
     Ptr next;
-    long count;
     bool permanent: 1;
     bool markedEphemeral: 1;
     bool neededSymbol: 1;
@@ -77,14 +78,13 @@ public:
 /**************/
 /* CLIPSFloat */
 /**************/
-struct CLIPSFloat {
+struct CLIPSFloat : public ReferenceCounted {
 public:
     using Self = CLIPSFloat;
     using Ptr = std::shared_ptr<Self>;
 public:
     TypeHeader header;
     Ptr next;
-    long count;
     bool permanent: 1;
     bool markedEphemeral: 1;
     bool neededFloat: 1;
