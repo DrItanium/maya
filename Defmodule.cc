@@ -456,7 +456,7 @@ void SetListOfDefmodules(
         DefmoduleData(theEnv)->LastDefmodule->header.env = theEnv;
     }
 }
-
+#endif
 /*******************************************************************/
 /* GetNextDefmodule: If passed a nullptr pointer, returns the first   */
 /*   defmodule in the ListOfDefmodules. Otherwise returns the next */
@@ -465,10 +465,13 @@ void SetListOfDefmodules(
 Defmodule *GetNextDefmodule(
         const Environment&theEnv,
         Defmodule *defmodulePtr) {
+#if STUBBING_INACTIVE
     if (defmodulePtr == nullptr) { return DefmoduleData(theEnv)->ListOfDefmodules; }
     else { return (Defmodule *) defmodulePtr->header.next; }
+#endif
+    return nullptr;
 }
-
+#if STUBBING_INACTIVE
 /***********************************/
 /* DefmoduleName: Returns the name */
 /*   of the specified defmodule.   */

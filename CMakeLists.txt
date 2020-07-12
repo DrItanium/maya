@@ -147,7 +147,7 @@ add_library(clips
 		CommandLine.cc
 		Environment.cc
 		EnvironmentBuild.cc
-		#Evaluation.cc
+		Evaluation.cc
 		#Expression.cc
 		FileUtilities.cc
 		MemoryAllocation.cc
@@ -158,7 +158,7 @@ add_library(clips
 		PrintUtility.cc
 		Router.cc
 		#Analysis.cc
-		#ArgumentAccess.cc
+		ArgumentAccess.cc
 		#BinaryLoad.cc
 		#BasicMathFunctions.cc
 		#BinarySave.cc
@@ -169,7 +169,7 @@ add_library(clips
 		#ClassInitialization.cc
 		#ClassParser.cc
 		#ClassSlotParser.cc
-		#Construct.cc
+		Construct.cc
 		#Constraint.cc
 		#ConflictResolutionStrategy.cc
 		#ConstructBinaryLoadSave.cc
@@ -198,7 +198,7 @@ add_library(clips
 		#ExpressionBinary.cc
 		#ExpressionOperations.cc
 		#ExpressionParser.cc
-		#ExternalFunctions.cc
+		ExternalFunctions.cc
 		#FactBinarySaveLoad.cc
 		#FactBuild.cc
 		#FactCommands.cc
@@ -244,9 +244,9 @@ add_library(clips
 		#MiscFunctions.cc
 		#DefmoduleBinarySaveLoad.cc
 		#DefModuleBasicCommands.cc
-		#Defmodule.cc
+		Defmodule.cc
 		#DefmoduleParser.cc
-		#DefmoduleUtility.cc
+		DefmoduleUtility.cc
 		#DefmessageHandlerCommands.cc
 		#DefmessageHandlerFunctions.cc
 		#DefmessageHandlerDispatch.cc
@@ -261,9 +261,9 @@ add_library(clips
 		#ObjectReteMatch.cc
 		#ParsingFunctions.cc
 		#Pattern.cc
-		#PrettyPrint.cc
+		PrettyPrint.cc
 		#ProceduralCodeSupportRoutines.cc
-		#ProceduralFunctions.cc
+		ProceduralFunctions.cc
 		#ProceduralFunctionsParser.cc
 		#PredicateFunctions.cc
 		#ConstructProfilingFunctions.cc
@@ -282,9 +282,9 @@ add_library(clips
 		Scanner.cc
 		#SortingFunctions.cc
 		StringFunctions.cc
-		#StringRouter.cc
+		StringRouter.cc
 		#SymbolBinarySave.cc
-		#Symbol.cc
+		Symbol.cc
 		#DeftemplateBinarySaveLoad.cc
 		#DeftemplateBasicCommands.cc
 		#Deftemplate.cc

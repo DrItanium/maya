@@ -386,8 +386,8 @@ static void InitializeEnvironment(
     /*========================*/
     /* Issue a clear command. */
     /*========================*/
-#endif
     Clear(theEnvironment);
+#endif
 
     /*=============================*/
     /* Initialization is complete. */
@@ -402,8 +402,8 @@ static void InitializeEnvironment(
 /**************************************************/
 static void SystemFunctionDefinitions(
         const Environment&theEnv) {
-    ProceduralFunctionDefinitions(theEnv);
 #if STUBBING_INACTIVE
+    ProceduralFunctionDefinitions(theEnv);
     MiscFunctionDefinitions(theEnv);
 #endif
 

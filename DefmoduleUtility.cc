@@ -571,7 +571,7 @@ bool ConstructExported(
 
     return false;
 }
-
+#endif
 /*********************************************************/
 /* AllImportedModulesVisited: Returns true if all of the */
 /*   imported modules for a module have been visited.    */
@@ -579,6 +579,7 @@ bool ConstructExported(
 bool AllImportedModulesVisited(
         const Environment&theEnv,
         Defmodule *theModule) {
+#if STUBBING_INACTIVE
     struct portItem *theImportList;
     Defmodule *theImportModule;
 
@@ -592,8 +593,11 @@ bool AllImportedModulesVisited(
     }
 
     return true;
+#else
+    return false;
+#endif
 }
-
+#if STUBBING_INACTIVE
 /***************************************/
 /* ListItemsDriver: Driver routine for */
 /*   listing items in a module.        */
