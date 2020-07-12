@@ -98,6 +98,7 @@ static void ResetDeffactsAction(const Environment&, ConstructHeader *, void *);
 /***************************************************************/
 void DeffactsBasicCommands(
         const Environment&theEnv) {
+#if STUBBING_INACTIVE
     AddResetFunction(theEnv, "deffacts", ResetDeffacts, 0, nullptr);
     AddSaveFunction(theEnv, "deffacts", SaveDeffacts, 10, nullptr);
 
@@ -113,9 +114,10 @@ void DeffactsBasicCommands(
 #if (BLOAD_AND_BSAVE)
     DeffactsBinarySetup(theEnv);
 #endif
+#endif
 
 }
-
+#if STUBBING_INACTIVE
 /**********************************************************/
 /* ResetDeffacts: Deffacts reset routine for use with the */
 /*   reset command. Asserts all of the facts contained in */
@@ -276,7 +278,7 @@ void ListDeffacts(
 }
 
 #endif /* DEBUGGING_FUNCTIONS */
-
+#endif
 #endif /* DEFFACTS_CONSTRUCT */
 
 

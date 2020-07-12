@@ -88,6 +88,7 @@ void InitializeConstraints(
 
     //AllocateEnvironmentData(theEnv, CONSTRAINT_DATA, sizeof(constraintData), DeallocateConstraintData);
     theEnv->allocateEnvironmentModule<constraintData>();
+#if STUBBING_INACTIVE
     ConstraintData(theEnv)->ConstraintHashtable = (constraintRecord **)
             gm2(theEnv, sizeof(constraintRecord *) *
                         SIZE_CONSTRAINT_HASH);
@@ -98,6 +99,7 @@ void InitializeConstraints(
 
     AddUDF(theEnv, "get-dynamic-constraint-checking", "b", 0, 0, nullptr, GDCCommand);
     AddUDF(theEnv, "set-dynamic-constraint-checking", "b", 1, 1, nullptr, SDCCommand);
+#endif
 }
 
 /*****************************************************/

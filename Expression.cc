@@ -84,12 +84,13 @@ void InitExpressionData(
     //AllocateEnvironmentData(theEnv, EXPRESSION_DATA, sizeof(ExpressionData), DeallocateExpressionData);
     theEnv->allocateEnvironmentModule<ExpressionModule>();
     InitExpressionPointers(theEnv);
-
+#if STUBBING_INACTIVE
     /// @todo fix this
     ExpressionData(theEnv)->ExpressionHashTable = (ExpressionHashNode **)
             gm2(theEnv, sizeof(ExpressionHashNode *) * EXPRESSION_HASH_SIZE);
     for (i = 0; i < EXPRESSION_HASH_SIZE; i++)
         ExpressionData(theEnv)->ExpressionHashTable[i] = nullptr;
+#endif
 }
 
 /*****************************************/
@@ -133,6 +134,7 @@ static void DeallocateExpressionData(
 /****************************************************/
 void InitExpressionPointers(
         const Environment&theEnv) {
+#if STUBBING_INACTIVE
     ExpressionData(theEnv)->PTR_AND = FindFunction(theEnv, "and");
     ExpressionData(theEnv)->PTR_OR = FindFunction(theEnv, "or");
     ExpressionData(theEnv)->PTR_EQ = FindFunction(theEnv, "eq");
@@ -145,6 +147,7 @@ void InitExpressionPointers(
         SystemError(theEnv, "EXPRESSN", 1);
         ExitRouter(theEnv, EXIT_FAILURE);
     }
+#endif
 }
 #if STUBBING_INACTIVE
 /***************************************************/

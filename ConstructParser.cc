@@ -106,6 +106,7 @@ static bool FindConstructBeginning(const Environment&, const char *, struct toke
 LoadError Load(
         const Environment&theEnv,
         const char *fileName) {
+#if STUBBING_INACTIVE
     FILE *theFile;
     char *oldParsingFileName;
     int noErrorsDetected;
@@ -151,7 +152,7 @@ LoadError Load(
     /*=================================================*/
 
     if (noErrorsDetected) { return LE_NO_ERROR; }
-
+#endif
     return LE_PARSING_ERROR;
 }
 
@@ -162,6 +163,7 @@ bool LoadFromString(
         const Environment&theEnv,
         const char *theString,
         size_t theMax) {
+#if STUBBING_INACTIVE
     bool rv;
     const char *theStrRouter = "*** load-from-string ***";
 
@@ -186,6 +188,8 @@ bool LoadFromString(
     CloseStringSource(theEnv, theStrRouter);
 
     return rv;
+#endif
+    return false;
 }
 
 /****************************************************/
@@ -195,6 +199,7 @@ bool LoadFromString(
 void SetParsingFileName(
         const Environment&theEnv,
         const char *fileName) {
+#if STUBBING_INACTIVE
     char *fileNameCopy = nullptr;
 
     if (fileName != nullptr) {
@@ -207,6 +212,7 @@ void SetParsingFileName(
     }
 
     ConstructData(theEnv)->ParsingFileName = fileNameCopy;
+#endif
 }
 
 /*******************************************************/
