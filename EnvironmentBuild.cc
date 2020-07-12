@@ -279,7 +279,6 @@ static void InitializeEnvironment(const Environment&theEnvironment) {
 
     InitializeDefrules(theEnvironment);
 
-#if STUBBING_INACTIVE
     /*====================================*/
     /* Initialize the deffacts construct. */
     /*====================================*/
@@ -288,6 +287,7 @@ static void InitializeEnvironment(const Environment&theEnvironment) {
     InitializeDeffacts(theEnvironment);
 #endif
 
+#if STUBBING_INACTIVE
     /*=====================================================*/
     /* Initialize the defgeneric and defmethod constructs. */
     /*=====================================================*/

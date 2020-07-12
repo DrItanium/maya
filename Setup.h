@@ -180,7 +180,7 @@
 /****************************************************/
 
 #ifndef DEFTEMPLATE_CONSTRUCT
-#define DEFTEMPLATE_CONSTRUCT 0
+#define DEFTEMPLATE_CONSTRUCT 1
 #endif
 
 /************************************************************/
@@ -189,7 +189,7 @@
 /************************************************************/
 
 #ifndef FACT_SET_QUERIES
-#define FACT_SET_QUERIES 0
+#define FACT_SET_QUERIES 1
 #endif
 
 #if !DEFTEMPLATE_CONSTRUCT
@@ -203,7 +203,7 @@
 /****************************************************/
 
 #ifndef DEFFACTS_CONSTRUCT
-#define DEFFACTS_CONSTRUCT 0
+#define DEFFACTS_CONSTRUCT 1
 #endif
 
 #if !DEFTEMPLATE_CONSTRUCT

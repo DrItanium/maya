@@ -184,8 +184,8 @@ add_library(clips
 		#Definstances.cc
 		#Developer.cc
 		#DeffactsBinarySaveLoad.cc
-		#DeffactsBasicCommands.cc
-		#Deffacts.cc
+		DeffactsBasicCommands.cc
+		Deffacts.cc
 		#DeffactsParser.cc
 		#DeffunctionBinaryLoadSave.cc
 		#DeffunctionExecution.cc

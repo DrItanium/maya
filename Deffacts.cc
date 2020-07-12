@@ -88,7 +88,7 @@ void InitializeDeffacts(
     InitializeDeffactsModules(theEnv);
 
     DeffactsBasicCommands(theEnv);
-
+#if STUBBING_INACTIVE
     DeffactsData(theEnv)->DeffactsConstruct =
             AddConstruct(theEnv, "deffacts", "deffacts", ParseDeffacts,
                          (FindConstructFunction *) FindDeffacts,
@@ -99,8 +99,9 @@ void InitializeDeffacts(
                          (IsConstructDeletableFunction *) DeffactsIsDeletable,
                          (DeleteConstructFunction *) Undeffacts,
                          (FreeConstructFunction *) ReturnDeffacts);
+#endif
 }
-
+#if STUBBING_INACTIVE
 /***************************************************/
 /* DeallocateDeffactsData: Deallocates environment */
 /*    data for the deffacts construct.             */
@@ -150,13 +151,14 @@ static void DestroyDeffactsAction(
 
     rtn_struct(theEnv, deffacts, theDeffacts);
 }
-
+#endif
 /*******************************************************/
 /* InitializeDeffactsModules: Initializes the deffacts */
 /*   construct for use with the defmodule construct.   */
 /*******************************************************/
 static void InitializeDeffactsModules(
         const Environment&theEnv) {
+#if STUBBING_INACTIVE
     DeffactsData(theEnv)->DeffactsModuleIndex =
             RegisterModuleItem(theEnv, "deffacts",
                                AllocateModule,
@@ -167,6 +169,7 @@ static void InitializeDeffactsModules(
                     nullptr,
 #endif
                                (FindConstructFunction *) FindDeffactsInModule);
+#endif
 }
 #if STUBBING_INACTIVE
 /************************************************/
