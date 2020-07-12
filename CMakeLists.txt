@@ -293,7 +293,7 @@ add_library(clips
 		#DeftemplateParser.cc
 		#DeftemplateRHSParsing.cc
 		#DeftemplateUtilities.cc
-		#UserData.cc
+		UserData.cc
 		#Watch.cc
 		)
 add_library(maya_extensions
