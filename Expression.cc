@@ -251,7 +251,6 @@ void ReturnPackedExpression(
         rm(theEnv, packPtr, sizeof(Expression) * ExpressionSize(packPtr));
     }
 }
-#if 0
 /***********************************************/
 /* ReturnExpression: Returns a multiply linked */
 /*   list of Expression data structures.             */
@@ -259,6 +258,7 @@ void ReturnPackedExpression(
 void ReturnExpression(
         const Environment&theEnv,
         Expression *waste) {
+#if 0
     Expression *tmp;
 
     while (waste != nullptr) {
@@ -267,8 +267,8 @@ void ReturnExpression(
         waste = waste->nextArg;
         rtn_struct(theEnv, Expression, tmp);
     }
-}
 #endif
+}
 
 /***************************************************
   NAME         : FindHashedExpression

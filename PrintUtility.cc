@@ -141,7 +141,7 @@ void PrintUnsignedInteger(
     gensprintf(printBuffer, "%llu", number);
     WriteString(theEnv, logicalName, printBuffer);
 }
-
+#if 0
 /**************************************/
 /* PrintAtom: Prints an atomic value. */
 /**************************************/
@@ -214,6 +214,7 @@ void PrintAtom(
             break;
     }
 }
+#endif
 
 /**********************************************************/
 /* PrintTally: Prints a tally count indicating the number */
@@ -489,7 +490,7 @@ const char *FloatToString(
     char floatString[40];
     int i;
     char x;
-    CLIPSLexeme *thePtr;
+    CLIPSLexeme::Ptr thePtr;
 
     gensprintf(floatString, "%.15g", number);
 
@@ -513,14 +514,13 @@ const char *LongIntegerToString(
         const Environment&theEnv,
         long long number) {
     char buffer[50];
-    CLIPSLexeme *thePtr;
 
     gensprintf(buffer, "%lld", number);
 
-    thePtr = CreateString(theEnv, buffer);
+    auto thePtr = CreateString(theEnv, buffer);
     return thePtr->contents;
 }
-
+#if 0
 /******************************************************************/
 /* DataObjectToString: Converts a UDFValue to KB string format. */
 /******************************************************************/
@@ -634,6 +634,7 @@ const char *DataObjectToString(
     genfree(theEnv, newString, length);
     return thePtr->contents;
 }
+#endif
 
 /************************************************************/
 /* SalienceInformationError: Error message for errors which */

@@ -155,6 +155,7 @@ add_library(clips
 		SystemDependency.cc
 		UserFunctions.cc
 		Utility.cc
+		PrintUtility.cc
 		#Analysis.cc
 		#ArgumentAccess.cc
 		#BinaryLoad.cc
@@ -264,7 +265,6 @@ add_library(clips
 		#ProceduralFunctions.cc
 		#ProceduralFunctionsParser.cc
 		#PredicateFunctions.cc
-		#PrintUtility.cc
 		#ConstructProfilingFunctions.cc
 		#Reorder.cc
 		#ReteUtility.cc
