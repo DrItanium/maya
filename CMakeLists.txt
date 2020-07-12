@@ -207,7 +207,7 @@ add_library(clips
 		#FactRHSPatternParser.cc
 		#File.cc
 		#FileRouter.cc
-		#FileUtilities.cc
+		FileUtilities.cc
 		#Generate.cc
 		#GenericFunctionBinaryLoadSave.cc
 		#GenericFunctionCommands.cc

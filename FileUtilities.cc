@@ -631,7 +631,7 @@ bool OpenStringBatch(
 
     return true;
 }
-
+#if 0
 /*******************************************************/
 /* AddBatch: Creates the batch file data structure and */
 /*   adds it to the list of opened batch files.        */
@@ -644,13 +644,12 @@ static void AddBatch(
         int type,
         const char *theString,
         const char *theFileName) {
-    struct batchEntry *bptr;
 
     /*=========================*/
     /* Create the batch entry. */
     /*=========================*/
 
-    bptr = get_struct(theEnv, batchEntry);
+    auto bptr = get_struct(theEnv, batchEntry);
     bptr->batchType = type;
     bptr->fileSource = theFileSource;
     bptr->logicalSource = CopyString(theEnv, theLogicalSource);
@@ -682,6 +681,7 @@ static void AddBatch(
         FileCommandData(theEnv)->BottomOfBatchList = bptr;
     }
 }
+#endif
 
 /******************************************************************/
 /* RemoveBatch: Removes the top entry on the list of batch files. */
