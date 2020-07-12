@@ -316,6 +316,7 @@ bool OpenStringDestination(
         const char *name,
         char *str,
         size_t maximumPosition) {
+#if 0
     struct stringRouter *newStringRouter;
     char *theName;
 
@@ -334,6 +335,8 @@ bool OpenStringDestination(
     StringRouterData(theEnv)->ListOfStringRouters = newStringRouter;
 
     return true;
+#endif
+    return false;
 }
 
 /***************************************************/
@@ -370,6 +373,7 @@ bool OpenStringBuilderDestination(
         const Environment&theEnv,
         const char *name,
         StringBuilder *theSB) {
+#if 0
     StringBuilderRouter *newStringRouter;
     char *theName;
 
@@ -384,6 +388,8 @@ bool OpenStringBuilderDestination(
     StringRouterData(theEnv)->ListOfStringBuilderRouters = newStringRouter;
 
     return true;
+#endif
+    return false;
 }
 
 /*****************************************/
