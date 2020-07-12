@@ -162,11 +162,13 @@ static void DeallocateDefmoduleData(
     DeallocateVoidCallList(theEnv, DefmoduleData(theEnv)->AfterModuleDefinedFunctions);
     DeallocateVoidCallList(theEnv, DefmoduleData(theEnv)->AfterModuleChangeFunctions);
 }
+#endif
 /**************************************************************/
 /* InitializeDefmodules: Initializes the defmodule construct. */
 /**************************************************************/
 void InitializeDefmodules(
         const Environment&theEnv) {
+#if STUBBING_INACTIVE
     DefmoduleBasicCommands(theEnv);
 
     CreateMainModule(theEnv, nullptr);
@@ -181,8 +183,8 @@ void InitializeDefmodules(
 
     AddUDF(theEnv, "set-current-module", "y", 1, 1, "y", SetCurrentModuleCommand);
 #endif
-}
 #endif
+}
 #if STUBBING_INACTIVE
 /******************************************************/
 /* RegisterModuleItem: Called to register a construct */

@@ -323,7 +323,6 @@ static void InitializeEnvironment(const Environment&theEnvironment) {
     /* Initialize COOL constructs. */
     /*=============================*/
     SetupObjectSystem(theEnvironment);
-#if STUBBING_INACTIVE
 
     /*=====================================*/
     /* Initialize the defmodule construct. */
@@ -331,6 +330,7 @@ static void InitializeEnvironment(const Environment&theEnvironment) {
 
     InitializeDefmodules(theEnvironment);
 
+#if STUBBING_INACTIVE
     /*======================================================*/
     /* Register commands and functions for development use. */
     /*======================================================*/
