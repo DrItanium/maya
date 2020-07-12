@@ -84,10 +84,10 @@
 
 #include <cstdlib>
 #include <cstdio>
+#include <vector>
 
 #include "Entities.h"
 
-typedef struct genericHashNode GENERIC_HN;
 
 #ifndef SYMBOL_HASH_SIZE
 #define SYMBOL_HASH_SIZE       63559L
@@ -112,14 +112,13 @@ typedef struct genericHashNode GENERIC_HN;
 /******************************/
 /* genericHashNode STRUCTURE: */
 /******************************/
-struct genericHashNode {
+struct genericHashNode : public ReferenceCounted {
+public:
+    using Self = genericHashNode;
+    using Ptr = std::shared_ptr<Self>;
+public:
     TypeHeader header;
-    struct genericHashNode *next;
-    long count;
-    bool permanent: 1;
-    bool markedEphemeral: 1;
-    bool needed: 1;
-    unsigned int bucket: 29;
+    Ptr next;
 };
 
 /**********************************************************/
@@ -134,16 +133,24 @@ struct genericHashNode {
 /*   in a list of ephemeral items.                        */
 /**********************************************************/
 struct ephemeron {
-    GENERIC_HN *associatedValue;
-    struct ephemeron *next;
+public:
+    using Self = ephemeron;
+    using Ptr = std::shared_ptr<Self>;
+public:
+    genericHashNode::Ptr associatedValue;
+    Ptr next;
 };
 
 /***************/
 /* symbolMatch */
 /***************/
 struct symbolMatch {
-    CLIPSLexeme *match;
-    struct symbolMatch *next;
+public:
+    using Self = symbolMatch;
+    using Ptr = std::shared_ptr<Self>;
+public:
+    CLIPSLexeme::Ptr match;
+    Ptr next;
 };
 //#define IncrementLexemeCount(theValue) (((CLIPSLexeme *) theValue)->count++)
 //#define IncrementFloatCount(theValue) (((CLIPSFloat *) theValue)->count++)
@@ -164,14 +171,14 @@ struct symbolMatch {
 constexpr auto SYMBOL_DATA = 49;
 
 struct symbolData : public EnvironmentModule {
-    CLIPSLexeme *PositiveInfinity;
-    CLIPSLexeme *NegativeInfinity;
-    CLIPSInteger *Zero;
-    CLIPSLexeme **SymbolTable;
-    CLIPSFloat **FloatTable;
-    CLIPSInteger **IntegerTable;
-    CLIPSBitMap **BitMapTable;
-    CLIPSExternalAddress **ExternalAddressTable;
+    CLIPSLexeme::Ptr PositiveInfinity;
+    CLIPSLexeme::Ptr NegativeInfinity;
+    CLIPSInteger::Ptr Zero;
+    std::vector<CLIPSLexeme::Ptr> SymbolTable;
+    std::vector<CLIPSFloat::Ptr> FloatTable;
+    std::vector<CLIPSInteger::Ptr> IntegerTable;
+    std::vector<CLIPSBitMap::Ptr> BitMapTable;
+    std::vector<CLIPSExternalAddress::Ptr> ExternalAddressTable;
 #if BSAVE_INSTANCES
     unsigned long NumberOfSymbols;
     unsigned long NumberOfFloats;
@@ -187,9 +194,7 @@ struct symbolData : public EnvironmentModule {
 };
 RegisterEnvironmentModule(symbolData, SYMBOL_DATA, Symbol);
 
-void InitializeAtomTables(const Environment&, CLIPSLexeme **, CLIPSFloat **,
-                          CLIPSInteger **, CLIPSBitMap **,
-                          CLIPSExternalAddress **);
+void InitializeAtomTables(const Environment&);
 CLIPSLexeme::Ptr AddSymbol(const Environment& theEnv, const char * contents, unsigned short type);
 CLIPSLexeme *FindSymbolHN(const Environment&, const char *, unsigned short);
 CLIPSFloat::Ptr CreateFloat(const Environment& theEnv, double value);

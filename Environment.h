@@ -192,9 +192,6 @@ struct CLIPSFloat;
 struct CLIPSInteger;
 struct CLIPSBitMap;
 struct FunctionDefinition;
-Environment CreateRuntimeEnvironment(CLIPSLexeme **, CLIPSFloat **,
-                                      CLIPSInteger **, CLIPSBitMap **,
-                                      FunctionDefinition *);
 bool DestroyEnvironment(Environment&);
 
 #endif /* _H_envrnmnt */

@@ -91,48 +91,23 @@ extern void UserFunctions(const Environment&);
 /***************************************/
 
 static void RemoveEnvironmentCleanupFunctions(const Environment&);
-static Environment CreateEnvironmentDriver(CLIPSLexeme **, CLIPSFloat **,
-                                            CLIPSInteger **, CLIPSBitMap **,
-                                            CLIPSExternalAddress **,
-                                            FunctionDefinition *);
+static Environment CreateEnvironmentDriver();
 static void SystemFunctionDefinitions(const Environment&);
-static void InitializeEnvironment(const Environment&, CLIPSLexeme **, CLIPSFloat **,
-                                  CLIPSInteger **, CLIPSBitMap **,
-                                  CLIPSExternalAddress **,
-                                  FunctionDefinition *);
+static void InitializeEnvironment(const Environment&);
 
 /************************************************************/
 /* CreateEnvironment: Creates an environment data structure */
 /*   and initializes its content to zero/nullptr.              */
 /************************************************************/
 Environment CreateEnvironment() {
-    return CreateEnvironmentDriver(nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
-}
-
-/**********************************************************/
-/* CreateRuntimeEnvironment: Creates an environment data  */
-/*   structure and initializes its content to zero/nullptr.  */
-/**********************************************************/
-Environment CreateRuntimeEnvironment(
-        CLIPSLexeme **symbolTable,
-        CLIPSFloat **floatTable,
-        CLIPSInteger **integerTable,
-        CLIPSBitMap **bitmapTable,
-        FunctionDefinition *functions) {
-    return CreateEnvironmentDriver(symbolTable, floatTable, integerTable, bitmapTable, nullptr, functions);
+    return CreateEnvironmentDriver();
 }
 
 /*********************************************************/
 /* CreateEnvironmentDriver: Creates an environment data  */
 /*   structure and initializes its content to zero/nullptr. */
 /*********************************************************/
-Environment CreateEnvironmentDriver(
-        CLIPSLexeme **symbolTable,
-        CLIPSFloat **floatTable,
-        CLIPSInteger **integerTable,
-        CLIPSBitMap **bitmapTable,
-        CLIPSExternalAddress **externalAddressTable,
-        FunctionDefinition *functions) {
+Environment CreateEnvironmentDriver() {
     Environment theEnvironment = std::make_shared<EnvironmentData>();
     if (!theEnvironment) {
         std::cout << "\n[ENVRNMNT5] Unable to create new environment.\n";
@@ -142,9 +117,7 @@ Environment CreateEnvironmentDriver(
     /*=============================================*/
     /* Allocate storage for the cleanup functions. */
     /*=============================================*/
-    InitializeEnvironment(theEnvironment, symbolTable, floatTable, integerTable,
-                          bitmapTable, externalAddressTable, functions);
-
+    InitializeEnvironment(theEnvironment);
     CleanCurrentGarbageFrame(theEnvironment, nullptr);
 
     return theEnvironment;
@@ -224,14 +197,7 @@ static void RemoveEnvironmentCleanupFunctions(
 /* InitializeEnvironment: Performs initialization */
 /*   of the KB environment.                       */
 /**************************************************/
-static void InitializeEnvironment(
-        const Environment&theEnvironment,
-        CLIPSLexeme **symbolTable,
-        CLIPSFloat **floatTable,
-        CLIPSInteger **integerTable,
-        CLIPSBitMap **bitmapTable,
-        CLIPSExternalAddress **externalAddressTable,
-        FunctionDefinition *functions) {
+static void InitializeEnvironment(const Environment&theEnvironment) {
     /*================================================*/
     /* Don't allow the initialization to occur twice. */
     /*================================================*/
@@ -260,7 +226,8 @@ static void InitializeEnvironment(
     /* Initialize the hash tables for atomic values. */
     /*===============================================*/
 
-    InitializeAtomTables(theEnvironment, symbolTable, floatTable, integerTable, bitmapTable, externalAddressTable);
+    InitializeAtomTables(theEnvironment);
+
 
     /*=========================================*/
     /* Initialize file and string I/O routers. */
@@ -277,8 +244,6 @@ static void InitializeEnvironment(
     /*=============================================*/
     /* Register system and user defined functions. */
     /*=============================================*/
-
-    if (functions != nullptr) { InstallFunctionList(theEnvironment, functions); }
 
     SystemFunctionDefinitions(theEnvironment);
     UserFunctions(theEnvironment);

@@ -106,11 +106,11 @@ constexpr auto NUMBER_OF_LONGS_FOR_HASH = 25;
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void RemoveHashNode(const Environment&, GENERIC_HN *, GENERIC_HN **, int, int);
-static void AddEphemeralHashNode(const Environment&, GENERIC_HN *, struct ephemeron **,
+static void RemoveHashNode(const Environment&, genericHashNode::Ptr *, genericHashNode::Ptr **, int, int);
+static void AddEphemeralHashNode(const Environment&, genericHashNode::Ptr *, struct ephemeron **,
                                  int, int, bool);
 static void RemoveEphemeralHashNodes(const Environment&, struct ephemeron **,
-                                     GENERIC_HN **,
+                                     genericHashNode::Ptr **,
                                      int, int, int);
 static const char *StringWithinString(const char *, const char *);
 static size_t CommonPrefixLength(const char *, const char *);
@@ -121,53 +121,11 @@ static void DeallocateSymbolData(const Environment&);
 /*   IntegerTable, and FloatTable. It also initializes */
 /*   the TrueSymbol and FalseSymbol.                   */
 /*******************************************************/
-void InitializeAtomTables(
-        const Environment&theEnv,
-        CLIPSLexeme **symbolTable,
-        CLIPSFloat **floatTable,
-        CLIPSInteger **integerTable,
-        CLIPSBitMap **bitmapTable,
-        CLIPSExternalAddress **externalAddressTable) {
-#if MAC_XCD
-#pragma unused(symbolTable)
-#pragma unused(floatTable)
-#pragma unused(integerTable)
-#pragma unused(bitmapTable)
-#pragma unused(externalAddressTable)
-#endif
-    /// @todo fix this so that we do not have failing code
-#if STUBBING_INACTIVE
+void InitializeAtomTables(const Environment&theEnv) {
     //AllocateEnvironmentData(theEnv, SYMBOL_DATA, sizeof(symbolData), DeallocateSymbolData);
     theEnv->allocateEnvironmentModule<symbolData>();
 
-    /*=========================*/
-    /* Create the hash tables. */
-    /*=========================*/
-
-    SymbolData(theEnv)->SymbolTable = (CLIPSLexeme **)
-            gm2(theEnv, sizeof(CLIPSLexeme *) * SYMBOL_HASH_SIZE);
-
-    SymbolData(theEnv)->FloatTable = (CLIPSFloat **)
-            gm2(theEnv, sizeof(CLIPSFloat *) * FLOAT_HASH_SIZE);
-
-    SymbolData(theEnv)->IntegerTable = (CLIPSInteger **)
-            gm2(theEnv, sizeof(CLIPSInteger *) * INTEGER_HASH_SIZE);
-
-    SymbolData(theEnv)->BitMapTable = (CLIPSBitMap **)
-            gm2(theEnv, sizeof(CLIPSBitMap *) * BITMAP_HASH_SIZE);
-
-    SymbolData(theEnv)->ExternalAddressTable = (CLIPSExternalAddress **)
-            gm2(theEnv, sizeof(CLIPSExternalAddress *) * EXTERNAL_ADDRESS_HASH_SIZE);
-
-    /*===================================================*/
-    /* Initialize all of the hash table entries to nullptr. */
-    /*===================================================*/
-    for (unsigned long i = 0; i < SYMBOL_HASH_SIZE; i++) SymbolData(theEnv)->SymbolTable[i] = nullptr;
-    for (unsigned long i = 0; i < FLOAT_HASH_SIZE; i++) SymbolData(theEnv)->FloatTable[i] = nullptr;
-    for (unsigned long i = 0; i < INTEGER_HASH_SIZE; i++) SymbolData(theEnv)->IntegerTable[i] = nullptr;
-    for (unsigned long i = 0; i < BITMAP_HASH_SIZE; i++) SymbolData(theEnv)->BitMapTable[i] = nullptr;
-    for (unsigned long i = 0; i < EXTERNAL_ADDRESS_HASH_SIZE; i++) SymbolData(theEnv)->ExternalAddressTable[i] = nullptr;
-
+#if STUBBING_INACTIVE
     /*========================*/
     /* Predefine some values. */
     /*========================*/
@@ -400,7 +358,7 @@ CLIPSLexeme::Ptr AddSymbol(
     /* Add the string to the list of ephemeral items. */
     /*================================================*/
 
-    AddEphemeralHashNode(theEnv, (GENERIC_HN *) peek, &UtilityData(theEnv)->CurrentGarbageFrame->ephemeralSymbolList,
+    AddEphemeralHashNode(theEnv, (genericHashNode::Ptr *) peek, &UtilityData(theEnv)->CurrentGarbageFrame->ephemeralSymbolList,
                          sizeof(CLIPSLexeme), AVERAGE_STRING_SIZE, true);
     UtilityData(theEnv)->CurrentGarbageFrame->dirty = true;
 
@@ -489,7 +447,7 @@ CLIPSFloat::Ptr CreateFloat(
     /* Add the float to the list of ephemeral items. */
     /*===============================================*/
 
-    AddEphemeralHashNode(theEnv, (GENERIC_HN *) peek, &UtilityData(theEnv)->CurrentGarbageFrame->ephemeralFloatList,
+    AddEphemeralHashNode(theEnv, (genericHashNode::Ptr *) peek, &UtilityData(theEnv)->CurrentGarbageFrame->ephemeralFloatList,
                          sizeof(CLIPSFloat), 0, true);
     UtilityData(theEnv)->CurrentGarbageFrame->dirty = true;
 
@@ -551,7 +509,7 @@ CLIPSInteger::Ptr CreateInteger(
     /* Add the integer to the list of ephemeral items. */
     /*=================================================*/
 
-    AddEphemeralHashNode(theEnv, (GENERIC_HN *) peek, &UtilityData(theEnv)->CurrentGarbageFrame->ephemeralIntegerList,
+    AddEphemeralHashNode(theEnv, (genericHashNode::Ptr *) peek, &UtilityData(theEnv)->CurrentGarbageFrame->ephemeralIntegerList,
                          sizeof(CLIPSInteger), 0, true);
     UtilityData(theEnv)->CurrentGarbageFrame->dirty = true;
 
@@ -649,7 +607,7 @@ void *AddBitMap(
     /* Add the bitmap to the list of ephemeral items. */
     /*================================================*/
 
-    AddEphemeralHashNode(theEnv, (GENERIC_HN *) peek, &UtilityData(theEnv)->CurrentGarbageFrame->ephemeralBitMapList,
+    AddEphemeralHashNode(theEnv, (genericHashNode::Ptr *) peek, &UtilityData(theEnv)->CurrentGarbageFrame->ephemeralBitMapList,
                          sizeof(CLIPSBitMap), sizeof(long), true);
     UtilityData(theEnv)->CurrentGarbageFrame->dirty = true;
 
@@ -727,7 +685,7 @@ CLIPSExternalAddress::Ptr CreateExternalAddress(
     /* Add the bitmap to the list of ephemeral items. */
     /*================================================*/
 
-    AddEphemeralHashNode(theEnv, (GENERIC_HN *) peek, &UtilityData(theEnv)->CurrentGarbageFrame->ephemeralExternalAddressList,
+    AddEphemeralHashNode(theEnv, (genericHashNode::Ptr *) peek, &UtilityData(theEnv)->CurrentGarbageFrame->ephemeralExternalAddressList,
                          sizeof(CLIPSExternalAddress), sizeof(long), true);
     UtilityData(theEnv)->CurrentGarbageFrame->dirty = true;
 
@@ -893,7 +851,7 @@ void ReleaseLexeme(
     if (theValue->count != 0) return;
 
     if (theValue->markedEphemeral == false) {
-        AddEphemeralHashNode(theEnv, (GENERIC_HN *) theValue, &UtilityData(theEnv)->CurrentGarbageFrame->ephemeralSymbolList,
+        AddEphemeralHashNode(theEnv, (genericHashNode::Ptr *) theValue, &UtilityData(theEnv)->CurrentGarbageFrame->ephemeralSymbolList,
                              sizeof(CLIPSLexeme), AVERAGE_STRING_SIZE, true);
         UtilityData(theEnv)->CurrentGarbageFrame->dirty = true;
     }
@@ -932,7 +890,7 @@ void ReleaseFloat(
     if (theValue->count != 0) return;
 
     if (theValue->markedEphemeral == false) {
-        AddEphemeralHashNode(theEnv, (GENERIC_HN *) theValue, &UtilityData(theEnv)->CurrentGarbageFrame->ephemeralFloatList,
+        AddEphemeralHashNode(theEnv, (genericHashNode::Ptr *) theValue, &UtilityData(theEnv)->CurrentGarbageFrame->ephemeralFloatList,
                              sizeof(CLIPSFloat), 0, true);
         UtilityData(theEnv)->CurrentGarbageFrame->dirty = true;
     }
@@ -969,7 +927,7 @@ void ReleaseInteger(
     if (theValue->count != 0) return;
 
     if (theValue->markedEphemeral == false) {
-        AddEphemeralHashNode(theEnv, (GENERIC_HN *) theValue, &UtilityData(theEnv)->CurrentGarbageFrame->ephemeralIntegerList,
+        AddEphemeralHashNode(theEnv, (genericHashNode::Ptr *) theValue, &UtilityData(theEnv)->CurrentGarbageFrame->ephemeralIntegerList,
                              sizeof(CLIPSInteger), 0, true);
         UtilityData(theEnv)->CurrentGarbageFrame->dirty = true;
     }
@@ -1011,7 +969,7 @@ void DecrementBitMapReferenceCount(
     if (theValue->count != 0) return;
 
     if (theValue->markedEphemeral == false) {
-        AddEphemeralHashNode(theEnv, (GENERIC_HN *) theValue, &UtilityData(theEnv)->CurrentGarbageFrame->ephemeralBitMapList,
+        AddEphemeralHashNode(theEnv, (genericHashNode::Ptr *) theValue, &UtilityData(theEnv)->CurrentGarbageFrame->ephemeralBitMapList,
                              sizeof(CLIPSBitMap), sizeof(long), true);
         UtilityData(theEnv)->CurrentGarbageFrame->dirty = true;
     }
@@ -1053,7 +1011,7 @@ void ReleaseExternalAddress(
     if (theValue->count != 0) return;
 
     if (theValue->markedEphemeral == false) {
-        AddEphemeralHashNode(theEnv, (GENERIC_HN *) theValue, &UtilityData(theEnv)->CurrentGarbageFrame->ephemeralExternalAddressList,
+        AddEphemeralHashNode(theEnv, (genericHashNode::Ptr *) theValue, &UtilityData(theEnv)->CurrentGarbageFrame->ephemeralExternalAddressList,
                              sizeof(CLIPSExternalAddress), sizeof(long), true);
         UtilityData(theEnv)->CurrentGarbageFrame->dirty = true;
     }
@@ -1068,11 +1026,11 @@ void ReleaseExternalAddress(
 /************************************************/
 static void RemoveHashNode(
         const Environment&theEnv,
-        GENERIC_HN *theValue,
-        GENERIC_HN **theTable,
+        genericHashNode::Ptr *theValue,
+        genericHashNode::Ptr **theTable,
         int size,
         int type) {
-    GENERIC_HN *previousNode, *currentNode;
+    genericHashNode::Ptr *previousNode, *currentNode;
     CLIPSExternalAddress *theAddress;
 
     /*=============================================*/
@@ -1136,7 +1094,7 @@ static void RemoveHashNode(
 /***********************************************************/
 static void AddEphemeralHashNode(
         const Environment&theEnv,
-        GENERIC_HN *theHashNode,
+        genericHashNode::Ptr *theHashNode,
         struct ephemeron **theEphemeralList,
         int hashNodeSize,
         int averageContentsSize,
@@ -1183,16 +1141,16 @@ void RemoveEphemeralAtoms(
     theGarbageFrame = UtilityData(theEnv)->CurrentGarbageFrame;
     if (!theGarbageFrame->dirty) return;
 
-    RemoveEphemeralHashNodes(theEnv, &theGarbageFrame->ephemeralSymbolList, (GENERIC_HN **) SymbolData(theEnv)->SymbolTable,
+    RemoveEphemeralHashNodes(theEnv, &theGarbageFrame->ephemeralSymbolList, (genericHashNode::Ptr **) SymbolData(theEnv)->SymbolTable,
                              sizeof(CLIPSLexeme), SYMBOL_TYPE, AVERAGE_STRING_SIZE);
-    RemoveEphemeralHashNodes(theEnv, &theGarbageFrame->ephemeralFloatList, (GENERIC_HN **) SymbolData(theEnv)->FloatTable,
+    RemoveEphemeralHashNodes(theEnv, &theGarbageFrame->ephemeralFloatList, (genericHashNode::Ptr **) SymbolData(theEnv)->FloatTable,
                              sizeof(CLIPSFloat), FLOAT_TYPE, 0);
-    RemoveEphemeralHashNodes(theEnv, &theGarbageFrame->ephemeralIntegerList, (GENERIC_HN **) SymbolData(theEnv)->IntegerTable,
+    RemoveEphemeralHashNodes(theEnv, &theGarbageFrame->ephemeralIntegerList, (genericHashNode::Ptr **) SymbolData(theEnv)->IntegerTable,
                              sizeof(CLIPSInteger), INTEGER_TYPE, 0);
-    RemoveEphemeralHashNodes(theEnv, &theGarbageFrame->ephemeralBitMapList, (GENERIC_HN **) SymbolData(theEnv)->BitMapTable,
+    RemoveEphemeralHashNodes(theEnv, &theGarbageFrame->ephemeralBitMapList, (genericHashNode::Ptr **) SymbolData(theEnv)->BitMapTable,
                              sizeof(CLIPSBitMap), BITMAPARRAY, AVERAGE_BITMAP_SIZE);
     RemoveEphemeralHashNodes(theEnv, &theGarbageFrame->ephemeralExternalAddressList,
-                             (GENERIC_HN **) SymbolData(theEnv)->ExternalAddressTable,
+                             (genericHashNode::Ptr **) SymbolData(theEnv)->ExternalAddressTable,
                              sizeof(CLIPSExternalAddress), EXTERNAL_ADDRESS_TYPE, 0);
 }
 
@@ -1214,7 +1172,7 @@ void EphemerateValue(
         case INSTANCE_NAME_TYPE:
             theSymbol = (CLIPSLexeme *) theValue;
             if (theSymbol->markedEphemeral) return;
-            AddEphemeralHashNode(theEnv, (GENERIC_HN *) theValue,
+            AddEphemeralHashNode(theEnv, (genericHashNode::Ptr *) theValue,
                                  &UtilityData(theEnv)->CurrentGarbageFrame->ephemeralSymbolList,
                                  sizeof(CLIPSLexeme), AVERAGE_STRING_SIZE, false);
             UtilityData(theEnv)->CurrentGarbageFrame->dirty = true;
@@ -1223,7 +1181,7 @@ void EphemerateValue(
         case FLOAT_TYPE:
             theFloat = (CLIPSFloat *) theValue;
             if (theFloat->markedEphemeral) return;
-            AddEphemeralHashNode(theEnv, (GENERIC_HN *) theValue,
+            AddEphemeralHashNode(theEnv, (genericHashNode::Ptr *) theValue,
                                  &UtilityData(theEnv)->CurrentGarbageFrame->ephemeralFloatList,
                                  sizeof(CLIPSFloat), 0, false);
             UtilityData(theEnv)->CurrentGarbageFrame->dirty = true;
@@ -1232,7 +1190,7 @@ void EphemerateValue(
         case INTEGER_TYPE:
             theInteger = (CLIPSInteger *) theValue;
             if (theInteger->markedEphemeral) return;
-            AddEphemeralHashNode(theEnv, (GENERIC_HN *) theValue,
+            AddEphemeralHashNode(theEnv, (genericHashNode::Ptr *) theValue,
                                  &UtilityData(theEnv)->CurrentGarbageFrame->ephemeralIntegerList,
                                  sizeof(CLIPSInteger), 0, false);
             UtilityData(theEnv)->CurrentGarbageFrame->dirty = true;
@@ -1241,7 +1199,7 @@ void EphemerateValue(
         case EXTERNAL_ADDRESS_TYPE:
             theExternalAddress = (CLIPSExternalAddress *) theValue;
             if (theExternalAddress->markedEphemeral) return;
-            AddEphemeralHashNode(theEnv, (GENERIC_HN *) theValue,
+            AddEphemeralHashNode(theEnv, (genericHashNode::Ptr *) theValue,
                                  &UtilityData(theEnv)->CurrentGarbageFrame->ephemeralExternalAddressList,
                                  sizeof(CLIPSExternalAddress), sizeof(long), false);
             UtilityData(theEnv)->CurrentGarbageFrame->dirty = true;
@@ -1268,7 +1226,7 @@ void EphemerateValue(
 static void RemoveEphemeralHashNodes(
         const Environment&theEnv,
         struct ephemeron **theEphemeralList,
-        GENERIC_HN **theTable,
+        genericHashNode::Ptr **theTable,
         int hashNodeSize,
         int hashNodeType,
         int averageContentsSize) {
