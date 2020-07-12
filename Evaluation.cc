@@ -367,7 +367,6 @@ bool GetHaltExecution(
         const Environment&theEnv) {
     return (EvaluationData(theEnv)->HaltExecution);
 }
-#if 0
 /*****************************************************/
 /* ReturnValues: Returns a linked list of UDFValue */
 /*   structures to the pool of free memory.          */
@@ -376,6 +375,7 @@ void ReturnValues(
         const Environment&theEnv,
         UDFValue *garbagePtr,
         bool decrementSupplementalInfo) {
+#if 0
     UDFValue *nextPtr;
 
     while (garbagePtr != nullptr) {
@@ -387,7 +387,9 @@ void ReturnValues(
         rtn_struct(theEnv, UDFValue, garbagePtr);
         garbagePtr = nextPtr;
     }
+#endif
 }
+#if 0
 
 /**************************************************/
 /* WriteCLIPSValue: Prints a CLIPSValue structure */
