@@ -263,7 +263,6 @@ Defmodule *SetCurrentModule(
         const Environment&theEnv,
         Defmodule *newModule) {
     struct voidCallFunctionItem *changeFunctions;
-    Defmodule *oldModule;
 
     /*=============================================*/
     /* Change the current module to the specified  */
@@ -271,7 +270,7 @@ Defmodule *SetCurrentModule(
     /* for the return value.                       */
     /*=============================================*/
 
-    oldModule = DefmoduleData(theEnv)->CurrentModule;
+    auto oldModule = DefmoduleData(theEnv)->CurrentModule;
     DefmoduleData(theEnv)->CurrentModule = newModule;
 
     /*==========================================================*/
@@ -306,9 +305,7 @@ Defmodule *SetCurrentModule(
 /********************************************************/
 void SaveCurrentModule(
         const Environment&theEnv) {
-    ModuleStackItem *tmp;
-
-    tmp = get_struct(theEnv, moduleStackItem);
+    auto tmp = get_struct(theEnv, moduleStackItem);
     tmp->changeFlag = DefmoduleData(theEnv)->CallModuleChangeFunctions;
     DefmoduleData(theEnv)->CallModuleChangeFunctions = false;
     tmp->theModule = DefmoduleData(theEnv)->CurrentModule;
@@ -321,11 +318,8 @@ void SaveCurrentModule(
 /*   ability of SetCurrentModule() to call changed        */
 /*   functions to previous state                          */
 /**********************************************************/
-void RestoreCurrentModule(
-        const Environment&theEnv) {
-    ModuleStackItem *tmp;
-
-    tmp = DefmoduleData(theEnv)->ModuleStack;
+void RestoreCurrentModule(const Environment&theEnv) {
+    auto tmp = DefmoduleData(theEnv)->ModuleStack;
     DefmoduleData(theEnv)->ModuleStack = tmp->next;
     DefmoduleData(theEnv)->CallModuleChangeFunctions = tmp->changeFlag;
     DefmoduleData(theEnv)->CurrentModule = tmp->theModule;
