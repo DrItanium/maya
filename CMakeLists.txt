@@ -149,14 +149,14 @@ add_library(clips
 		EnvironmentBuild.cc
 		#Evaluation.cc
 		#Expression.cc
-		#FileUtilities.cc
-		#MemoryAllocation.cc
-		#ReferenceCounted.cc
-		#SystemDependency.cc
+		FileUtilities.cc
+		MemoryAllocation.cc
+		ReferenceCounted.cc
+		SystemDependency.cc
 		#UserFunctions.cc
-		#Utility.cc
-		#PrintUtility.cc
-		#Router.cc
+		Utility.cc
+		PrintUtility.cc
+		Router.cc
 		#Analysis.cc
 		#ArgumentAccess.cc
 		#BinaryLoad.cc
@@ -174,7 +174,7 @@ add_library(clips
 		#ConflictResolutionStrategy.cc
 		#ConstructBinaryLoadSave.cc
 		#ConstructCommand.cc
-		#ConstructParser.cc
+		ConstructParser.cc
 		#ConstraintBinaryLoadSave.cc
 		#ConstraintChecking.cc
 		#ConstraintOperations.cc
@@ -279,9 +279,9 @@ add_library(clips
 		#RuleDelete.cc
 		#RuleLHSParsing.cc
 		#RuleParser.cc
-		#Scanner.cc
+		Scanner.cc
 		#SortingFunctions.cc
-		#StringFunctions.cc
+		StringFunctions.cc
 		#StringRouter.cc
 		#SymbolBinarySave.cc
 		#Symbol.cc

@@ -150,6 +150,7 @@ void InitializeCommandLineData(
     theEnv->installEnvironmentModule(std::move(cmdlineData));
 }
 
+#if STUBBING_INACTIVE
 /*******************************************************/
 /* DeallocateCommandLineData: Deallocates environment */
 /*    data for the command line functionality.        */
@@ -163,6 +164,7 @@ static void DeallocateCommandLineData(
     if (CommandLineData(theEnv)->CurrentCommand != nullptr) { ReturnExpression(theEnv, CommandLineData(theEnv)->CurrentCommand); }
 }
 
+#endif
 /*************************************************/
 /* RerouteStdin: Processes the -f, -f2, and -l   */
 /*   options available on machines which support */
