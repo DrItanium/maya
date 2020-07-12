@@ -277,17 +277,19 @@ void RestorePriorGarbageFrame(
 
     if (returnValue != nullptr) { EphemerateValue(theEnv, returnValue->value); }
 }
-
+#endif
 /*****************/
 /* GCBlockStart: */
 /*****************/
 void GCBlockStart(
         const Environment&theEnv,
         GCBlock *theBlock) {
+#if 0
     theBlock->oldGarbageFrame = UtilityData(theEnv)->CurrentGarbageFrame;
     memset(&theBlock->newGarbageFrame, 0, sizeof(garbageFrame));
     theBlock->newGarbageFrame.priorFrame = theBlock->oldGarbageFrame;
     UtilityData(theEnv)->CurrentGarbageFrame = &theBlock->newGarbageFrame;
+#endif
 }
 
 /***************/
@@ -296,9 +298,11 @@ void GCBlockStart(
 void GCBlockEnd(
         const Environment&theEnv,
         GCBlock *theBlock) {
+#if 0
     RestorePriorGarbageFrame(theEnv, &theBlock->newGarbageFrame, theBlock->oldGarbageFrame, nullptr);
+#endif
 }
-
+#if 0
 /******************/
 /* GCBlockEndUDF: */
 /******************/

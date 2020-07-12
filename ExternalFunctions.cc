@@ -567,7 +567,6 @@ bool UDFFirstArgument(
     context->lastPosition = 1;
     return UDFNextArgument(context, expectedType, returnValue);
 }
-#if 0
 /********************/
 /* UDFNextArgument: */
 /********************/
@@ -575,6 +574,7 @@ bool UDFNextArgument(
         UDFContext *context,
         unsigned expectedType,
         UDFValue *returnValue) {
+#if 0
     Expression *argPtr = context->lastArg;
     unsigned int argumentPosition = context->lastPosition;
     const Environment&theEnv = context->environment;
@@ -759,9 +759,9 @@ bool UDFNextArgument(
     SetEvaluationError(theEnv, true);
     AssignErrorValue(context);
 
+#endif
     return false;
 }
-#endif
 
 /*******************/
 /* UDFNthArgument: */

@@ -389,7 +389,6 @@ void AbortExit(
         const Environment&theEnv) {
     RouterData(theEnv)->Abort = true;
 }
-#if 0
 /*********************************************************/
 /* AddRouter: Adds an I/O router to the list of routers. */
 /*********************************************************/
@@ -403,6 +402,7 @@ bool AddRouter(
         RouterUnreadFunction *unreadFunction,
         RouterExitFunction *exitFunction,
         void *context) {
+#if 0
     struct router *newPtr, *lastPtr, *currentPtr;
     char *nameCopy;
 
@@ -453,8 +453,9 @@ bool AddRouter(
     }
 
     return true;
-}
 #endif
+    return false;
+}
 
 /*****************************************************************/
 /* DeleteRouter: Removes an I/O router from the list of routers. */
