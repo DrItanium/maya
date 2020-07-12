@@ -189,7 +189,7 @@ add_library(clips
 		#DeffactsParser.cc
 		#DeffunctionBinaryLoadSave.cc
 		#DeffunctionExecution.cc
-		#Deffunction.cc
+		Deffunction.cc
 		#DeffunctionParser.cc
 		#DefinstancesBinaryLoadSave.cc
 		#Drive.cc

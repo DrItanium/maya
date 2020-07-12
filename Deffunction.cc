@@ -152,6 +152,7 @@ static bool DeffunctionWatchPrint(const Environment&, const char *, int, Express
  ***************************************************/
 void SetupDeffunctions(
         const Environment&theEnv) {
+#if 0
     EntityRecord deffunctionEntityRecord =
             {"PCALL", PCALL, 0, 0, 1,
              (EntityPrintFunction *) PrintDeffunctionCall,
@@ -162,11 +163,14 @@ void SetupDeffunctions(
              (EntityBusyCountFunction *) DecrementDeffunctionBusyCount,
              (EntityBusyCountFunction *) IncrementDeffunctionBusyCount,
              nullptr, nullptr, nullptr, nullptr, nullptr};
+#endif
 
     theEnv->allocateEnvironmentModule<deffunctionData>();
     /// @todo DeallocateDeffunctionData is the dtor
     //AllocateEnvironmentData(theEnv, DEFFUNCTION_DATA, sizeof(deffunctionData), DeallocateDeffunctionData);
+#if 0
     DeffunctionData(theEnv)->DeffunctionEntityRecord = deffunctionEntityRecord;
+#endif
 
     InstallPrimitive(theEnv, &DeffunctionData(theEnv)->DeffunctionEntityRecord, PCALL);
 
@@ -464,7 +468,7 @@ void GetDeffunctionModuleCommand(
         const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
-    returnValue->value = GetConstructModuleCommand(context, "deffunction-module", DeffunctionData(theEnv)->DeffunctionConstruct);
+    returnValue->contents = GetConstructModuleCommand(context, "deffunction-module", DeffunctionData(theEnv)->DeffunctionConstruct);
 }
 
 #if DEBUGGING_FUNCTIONS
@@ -555,7 +559,7 @@ void GetDeffunctionList(
 
     GetConstructList(theEnv, &result, DeffunctionData(theEnv)->DeffunctionConstruct, theModule);
     NormalizeMultifield(theEnv, &result);
-    returnValue->value = result.value;
+    returnValue->contents = result.contents;
 }
 
 /*******************************************************
@@ -630,7 +634,7 @@ static void PrintDeffunctionCall(
 #endif
 #endif
 }
-
+#if 0
 /*******************************************************
   NAME         : EvaluateDeffunctionCall
   DESCRIPTION  : Primitive support function for
@@ -650,8 +654,9 @@ static bool EvaluateDeffunctionCall(
         Deffunction *theDeffunction,
         UDFValue *returnValue) {
     CallDeffunction(theEnv, theDeffunction, GetFirstArgument(), returnValue);
-    return returnValue->value != FalseSymbol(theEnv);
+    return returnValue->contents != FalseSymbol(theEnv);
 }
+#endif
 
 /***************************************************
   NAME         : DecrementDeffunctionBusyCount
@@ -695,7 +700,7 @@ static void IncrementDeffunctionBusyCount(
 
     theDeffunction->busy++;
 }
-
+#if 0
 /*****************************************************
   NAME         : AllocateModule
   DESCRIPTION  : Creates and initializes a
@@ -1018,6 +1023,7 @@ void SetDeffunctionPPForm(
         const char *thePPForm) {
     SetConstructPPForm(theEnv, &theDeffunction->header, thePPForm);
 }
+#endif
 
 #endif
 
