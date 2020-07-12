@@ -294,10 +294,7 @@
 /****************************************************************/
 
 #ifndef EXTENDED_MATH_FUNCTIONS
-#define EXTENDED_MATH_FUNCTIONS 0
-#endif
-#if !EXTENDED_MATH_FUNCTIONS
-#warning "EXTENDED_MATH_FUNCTIONS Hard Disabled!"
+#define EXTENDED_MATH_FUNCTIONS 1
 #endif
 
 /*************************************************************************/

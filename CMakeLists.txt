@@ -193,7 +193,7 @@ add_library(clips
 		#DeffunctionParser.cc
 		#DefinstancesBinaryLoadSave.cc
 		#Drive.cc
-		#ExtendedMathFunctions.cc
+		ExtendedMathFunctions.cc
 		#Engine.cc
 		#ExpressionBinary.cc
 		ExpressionOperations.cc
