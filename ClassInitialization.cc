@@ -89,13 +89,8 @@
 #include "DefmessageHandlerCommands.h"
 #include "Watch.h"
 
-#if DEFINSTANCES_CONSTRUCT
 #include "Definstances.h"
-#endif
-
-#if INSTANCE_SET_QUERIES
 #include "InstanceQuery.h"
-#endif
 
 #if BLOAD_AND_BSAVE
 #include "BinaryLoad.h"
@@ -152,17 +147,19 @@ static void UpdateDefclassesScope(const Environment&, void *);
  **********************************************************/
 void SetupObjectSystem(
         const Environment&theEnv) {
+#if STUBBING_INACTIVE
     EntityRecord defclassEntityRecord = {"DEFCLASS_PTR", DEFCLASS_PTR, 1, 0, 0,
                                          nullptr, nullptr, nullptr, nullptr, nullptr,
                                          (EntityBusyCountFunction *) DecrementDefclassBusyCount,
                                          (EntityBusyCountFunction *) IncrementDefclassBusyCount,
                                          nullptr, nullptr, nullptr, nullptr, nullptr};
-
+#endif
     theEnv->allocateEnvironmentModule<defclassData>();
     /// @todo DeallocateDefclassData is the dtor for defclassData
     //AddEnvironmentCleanupFunction(theEnv, "defclasses", DeallocateDefclassData, -500);
 
 
+#if STUBBING_INACTIVE
     DefclassData(theEnv)->DefclassEntityRecord = defclassEntityRecord;
     DefclassData(theEnv)->newSlotID = 2; // IS_A and NAME assigned 0 and 1
     DefclassData(theEnv)->ClassDefaultsModeValue = CONVENIENCE_MODE;
@@ -188,8 +185,9 @@ void SetupObjectSystem(
 #endif
 
     SetupObjectPatternStuff(theEnv);
+#endif
 }
-
+#if STUBBING_INACTIVE
 /***************************************************/
 /* DeallocateDefclassData: Deallocates environment */
 /*    data for the defclass construct.             */
@@ -603,6 +601,6 @@ static void UpdateDefclassesScope(
         }
     rm(theEnv, newScopeMap, newScopeMapSize);
 }
-
+#endif
 #endif
 

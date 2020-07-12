@@ -166,7 +166,7 @@ add_library(clips
 		#ClassExamination.cc
 		#ClassFunctions.cc
 		#ClassInfo.cc
-		#ClassInitialization.cc
+		ClassInitialization.cc
 		#ClassParser.cc
 		#ClassSlotParser.cc
 		Construct.cc
