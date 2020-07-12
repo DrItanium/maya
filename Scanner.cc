@@ -99,6 +99,7 @@ void GetToken(
         const Environment&theEnv,
         const char *logicalName,
         struct token *theToken) {
+#if 0
     int inchar;
     TokenType type;
 
@@ -357,6 +358,7 @@ void GetToken(
     }
 
     return;
+#endif
 }
 
 /*************************************/
@@ -367,6 +369,7 @@ static CLIPSLexeme *ScanSymbol(
         const char *logicalName,
         int count,
         TokenType *type) {
+#if 0
     int inchar;
     CLIPSLexeme *symbol;
 
@@ -422,8 +425,10 @@ static CLIPSLexeme *ScanSymbol(
         *type = SYMBOL_TOKEN;
         return CreateSymbol(theEnv, ScannerData(theEnv)->GlobalString);
     }
+#endif
+    return nullptr;
 }
-
+#if 0
 /*************************************/
 /* ScanString: Scans a string token. */
 /*************************************/
@@ -467,6 +472,7 @@ static CLIPSLexeme *ScanString(
 
     return thePtr;
 }
+#endif
 
 /**************************************/
 /* ScanNumber: Scans a numeric token. */
@@ -475,6 +481,7 @@ static void ScanNumber(
         const Environment&theEnv,
         const char *logicalName,
         struct token *theToken) {
+#if 0
     int count = 0;
     int inchar, phase;
     bool digitFound = false;
@@ -690,6 +697,7 @@ static void ScanNumber(
     }
 
     return;
+#endif
 }
 
 /***********************************************************/

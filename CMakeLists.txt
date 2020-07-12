@@ -279,7 +279,7 @@ add_library(clips
 		#RuleDelete.cc
 		#RuleLHSParsing.cc
 		#RuleParser.cc
-		#Scanner.cc
+		Scanner.cc
 		#SortingFunctions.cc
 		#StringFunctions.cc
 		StringRouter.cc
