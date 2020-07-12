@@ -156,6 +156,7 @@ add_library(clips
 		UserFunctions.cc
 		Utility.cc
 		PrintUtility.cc
+		Router.cc
 		#Analysis.cc
 		#ArgumentAccess.cc
 		#BinaryLoad.cc
@@ -269,7 +270,6 @@ add_library(clips
 		#Reorder.cc
 		#ReteUtility.cc
 		#Retract.cc
-		#Router.cc
 		#RuleBinarySaveLoad.cc
 		#RuleBuild.cc
 		#BasicRuleCommands.cc
