@@ -121,7 +121,7 @@ const char *GetFileName(
 
     return theArg.lexemeValue->contents;
 }
-
+#endif
 /******************************************************************/
 /* OpenErrorMessage: Generalized error message for opening files. */
 /******************************************************************/
@@ -136,6 +136,7 @@ void OpenErrorMessage(
     WriteString(theEnv, STDERR, fileName);
     WriteString(theEnv, STDERR, "'.\n");
 }
+#if 0
 
 /************************************************************/
 /* GetModuleName: Retrieves the nth argument passed to the  */
