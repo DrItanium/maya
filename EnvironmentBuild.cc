@@ -159,7 +159,7 @@ bool DestroyEnvironment(Environment& theEnvironment) {
     int i;
     bool rv = true;
     /// @todo fix this
-#if 0
+#if STUBBING_INACTIVE
     const auto& theMemData = MemoryData(theEnvironment);
 
 
@@ -211,7 +211,7 @@ bool DestroyEnvironment(Environment& theEnvironment) {
 static void RemoveEnvironmentCleanupFunctions(
         const Environment& theEnv) {
     struct environmentCleanupFunction *nextPtr;
-#if 0
+#if STUBBING_INACTIVE
     while (theEnv->listOfCleanupEnvironmentFunctions != nullptr) {
         nextPtr = theEnv->listOfCleanupEnvironmentFunctions->next;
         free(theEnv->listOfCleanupEnvironmentFunctions);

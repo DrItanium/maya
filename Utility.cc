@@ -121,7 +121,7 @@ void InitializeUtilityData(
     UtilityData(theEnv)->PeriodicFunctionsEnabled = true;
     UtilityData(theEnv)->YieldFunctionEnabled = true;
 }
-#if 0
+#if STUBBING_INACTIVE
 /**************************************************/
 /* DeallocateUtilityData: Deallocates environment */
 /*    data for utility routines.                  */
@@ -221,7 +221,7 @@ static void DeallocateUtilityData(
 void CleanCurrentGarbageFrame(
         const Environment&theEnv,
         UDFValue *returnValue) {
-#if 0
+#if STUBBING_INACTIVE
     struct garbageFrame *currentGarbageFrame;
 
     currentGarbageFrame = UtilityData(theEnv)->CurrentGarbageFrame;
@@ -244,7 +244,7 @@ void CleanCurrentGarbageFrame(
         (currentGarbageFrame->LastMultifield == nullptr)) { currentGarbageFrame->dirty = false; }
 #endif
 }
-#if 0
+#if STUBBING_INACTIVE
 
 /*****************************/
 /* RestorePriorGarbageFrame: */
@@ -284,7 +284,7 @@ void RestorePriorGarbageFrame(
 void GCBlockStart(
         const Environment&theEnv,
         GCBlock *theBlock) {
-#if 0
+#if STUBBING_INACTIVE
     theBlock->oldGarbageFrame = UtilityData(theEnv)->CurrentGarbageFrame;
     memset(&theBlock->newGarbageFrame, 0, sizeof(garbageFrame));
     theBlock->newGarbageFrame.priorFrame = theBlock->oldGarbageFrame;
@@ -298,11 +298,11 @@ void GCBlockStart(
 void GCBlockEnd(
         const Environment&theEnv,
         GCBlock *theBlock) {
-#if 0
+#if STUBBING_INACTIVE
     RestorePriorGarbageFrame(theEnv, &theBlock->newGarbageFrame, theBlock->oldGarbageFrame, nullptr);
 #endif
 }
-#if 0
+#if STUBBING_INACTIVE
 /******************/
 /* GCBlockEndUDF: */
 /******************/
@@ -344,7 +344,7 @@ void CallCleanupFunctions(
 /**************************************************/
 void CallPeriodicTasks(
         const Environment&theEnv) {
-#if 0
+#if STUBBING_INACTIVE
     struct voidCallFunctionItem *periodPtr;
 
     if (UtilityData(theEnv)->PeriodicFunctionsEnabled) {
@@ -354,7 +354,7 @@ void CallPeriodicTasks(
     }
 #endif
 }
-#if 0
+#if STUBBING_INACTIVE
 
 /***************************************************/
 /* AddCleanupFunction: Adds a function to the list */
@@ -431,7 +431,7 @@ bool RemovePeriodicFunction(
 }
 
 #endif
-#if 0
+#if STUBBING_INACTIVE
 /*****************************************************/
 /* StringPrintForm: Generates printed representation */
 /*   of a string. Replaces / with // and " with /".  */
@@ -468,7 +468,7 @@ const char *StringPrintForm(
 char *CopyString(
         const Environment&theEnv,
         const char *theString) {
-#if 0
+#if STUBBING_INACTIVE
     char *stringCopy = nullptr;
 
     if (theString != nullptr) {
@@ -488,7 +488,7 @@ void DeleteString(
         char *theString) {
     //if (theString != nullptr) { genfree(theEnv, theString, strlen(theString) + 1); }
 }
-#if 0
+#if STUBBING_INACTIVE
 
 /***********************************************************/
 /* AppendStrings: Appends two strings together. The string */
@@ -522,7 +522,7 @@ char *AppendToString(
         char *oldStr,
         size_t *oldPos,
         size_t *oldMax) {
-#if 0
+#if STUBBING_INACTIVE
     size_t length;
 
     /*=========================================*/
@@ -564,7 +564,7 @@ char *InsertInString(
         char *oldStr,
         size_t *oldPos,
         size_t *oldMax) {
-#if 0
+#if STUBBING_INACTIVE
     size_t length;
 
     /*=========================================*/
@@ -603,7 +603,7 @@ char *InsertInString(
     return nullptr;
 }
 
-#if 0
+#if STUBBING_INACTIVE
 /*******************************************************************/
 /* EnlargeString: Enlarges a string by the specified amount.       */
 /*******************************************************************/
@@ -651,7 +651,7 @@ char *AppendNToString(
         size_t length,
         size_t *oldPos,
         size_t *oldMax) {
-#if 0
+#if STUBBING_INACTIVE
     size_t lengthWithEOS;
     size_t newSize;
 
@@ -713,7 +713,7 @@ char *ExpandStringWithChar(
         size_t *pos,
         size_t *max,
         size_t newSize) {
-#if 0
+#if STUBBING_INACTIVE
     if ((*pos + 1) >= *max) {
         if (newSize < sizeof(char *)) { newSize = sizeof(char *); }
         str = (char *) genrealloc(theEnv, str, *max, newSize);
@@ -743,7 +743,7 @@ char *ExpandStringWithChar(
 #endif
     return nullptr;
 }
-#if 0
+#if STUBBING_INACTIVE
 
 /**********************************************************/
 /* AddVoidFunctionToCallList: Adds a function to a list   */
@@ -1347,7 +1347,7 @@ stringBuilder::stringBuilder(const stringBuilder & other) : _env(other._env), _i
 void SBDispose(StringBuilder *theSB) {
     delete theSB;
 }
-#if 0
+#if STUBBING_INACTIVE
 /***************************************************
   NAME         : BufferedRead
   DESCRIPTION  : Reads data from binary file

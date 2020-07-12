@@ -90,6 +90,7 @@ CLIPSLexeme *ExtractModuleName(
         const Environment&theEnv,
         unsigned thePosition,
         const char *theString) {
+#if STUBBING_INACTIVE
     char *newString;
     CLIPSLexeme *returnValue;
 
@@ -137,6 +138,8 @@ CLIPSLexeme *ExtractModuleName(
     /*=============================================*/
 
     return returnValue;
+#endif
+    return nullptr;
 }
 
 /********************************************************************/
@@ -150,6 +153,7 @@ CLIPSLexeme *ExtractConstructName(
         unsigned thePosition,
         const char *theString,
         unsigned returnType) {
+#if STUBBING_INACTIVE
     size_t theLength;
     char *newString;
     CLIPSLexeme *returnValue;
@@ -208,6 +212,8 @@ CLIPSLexeme *ExtractConstructName(
     /*================================================*/
 
     return returnValue;
+#endif
+    return nullptr;
 }
 
 /****************************************************/
@@ -271,6 +277,7 @@ ConstructHeader *FindImportedConstruct(
         unsigned int *count,
         bool searchCurrent,
         Defmodule *notYetDefinedInModule) {
+#if STUBBING_INACTIVE
     ConstructHeader *rv;
     struct moduleItem *theModuleItem;
 
@@ -342,6 +349,8 @@ ConstructHeader *FindImportedConstruct(
     /*====================================*/
 
     return rv;
+#endif
+    return nullptr;
 }
 
 /*********************************************************/
@@ -374,7 +383,7 @@ void MarkModulesAsUnvisited(
          theModule != nullptr;
          theModule = GetNextDefmodule(theEnv, theModule)) { theModule->visitedFlag = false; }
 }
-
+#if STUBBING_INACTIVE
 /***********************************************************/
 /* SearchImportedConstructModules: Low level routine which */
 /*   searches a module and other modules from which it     */
@@ -943,5 +952,5 @@ CLIPSLexeme *GetConstructNameAndComment(
     return (name);
 }
 
-
+#endif // end STUBBING_INACTIVE
 

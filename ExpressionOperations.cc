@@ -110,7 +110,7 @@ bool CheckArgumentAgainstRestriction(
     RemoveConstraint(theEnv, cr3);
     return false;
 }
-#if 0
+#if STUBBING_INACTIVE
 /******************************************************/
 /* ConstantExpression: Returns true if the expression */
 /*   is a constant, otherwise false.                  */
@@ -153,7 +153,7 @@ bool ConstantType(
 bool IdenticalExpression(
         Expression *firstList,
         Expression *secondList) {
-#if 0
+#if STUBBING_INACTIVE
     /*==============================================*/
     /* Compare each argument in both expressions by */
     /* following the nextArg list.                  */
@@ -192,7 +192,7 @@ bool IdenticalExpression(
     return false;
 
 }
-#if 0
+#if STUBBING_INACTIVE
 
 /****************************************************/
 /* CountArguments: Returns the number of structures */
@@ -271,7 +271,7 @@ bool ExpressionContainsVariables(
 unsigned long ExpressionSize(
         Expression *testPtr) {
     unsigned long size = 0;
-#if 0
+#if STUBBING_INACTIVE
 
     while (testPtr != nullptr) {
         size++;
@@ -281,7 +281,7 @@ unsigned long ExpressionSize(
 #endif
     return size;
 }
-#if 0
+#if STUBBING_INACTIVE
 
 /************************************************/
 /* GenConstant: Generates a constant expression */

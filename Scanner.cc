@@ -99,7 +99,7 @@ void GetToken(
         const Environment&theEnv,
         const char *logicalName,
         struct token *theToken) {
-#if 0
+#if STUBBING_INACTIVE
     int inchar;
     TokenType type;
 
@@ -369,7 +369,7 @@ static CLIPSLexeme *ScanSymbol(
         const char *logicalName,
         int count,
         TokenType *type) {
-#if 0
+#if STUBBING_INACTIVE
     int inchar;
     CLIPSLexeme *symbol;
 
@@ -428,7 +428,7 @@ static CLIPSLexeme *ScanSymbol(
 #endif
     return nullptr;
 }
-#if 0
+#if STUBBING_INACTIVE
 /*************************************/
 /* ScanString: Scans a string token. */
 /*************************************/
@@ -481,7 +481,7 @@ static void ScanNumber(
         const Environment&theEnv,
         const char *logicalName,
         struct token *theToken) {
-#if 0
+#if STUBBING_INACTIVE
     int count = 0;
     int inchar, phase;
     bool digitFound = false;

@@ -222,7 +222,7 @@ long long CVCoerceToInteger(UDFValue::Ptr ptr);
 long long CVCoerceToInteger(UDFValue& ptr);
 long long CVCoerceToInteger(UDFValue* ptr);
 
-#if 0
+#if STUBBING_INACTIVE
 #define CVCoerceToFloat(cv) (((cv)->header->type == FLOAT_TYPE) ? \
                              ((cv)->floatValue->contents) : \
                              ((double) (cv)->integerValue->contents))

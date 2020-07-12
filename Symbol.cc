@@ -135,7 +135,7 @@ void InitializeAtomTables(
 #pragma unused(bitmapTable)
 #pragma unused(externalAddressTable)
 #endif
-#if 0
+#if STUBBING_INACTIVE
     //AllocateEnvironmentData(theEnv, SYMBOL_DATA, sizeof(symbolData), DeallocateSymbolData);
     theEnv->allocateEnvironmentModule<symbolData>();
 
@@ -187,7 +187,7 @@ void InitializeAtomTables(
 #endif
 }
 
-#if 0
+#if STUBBING_INACTIVE
 /*************************************************/
 /* DeallocateSymbolData: Deallocates environment */
 /*    data for symbols.                          */
@@ -344,7 +344,7 @@ CLIPSLexeme::Ptr AddSymbol(
         const Environment&theEnv,
         const char *contents,
         unsigned short type) {
-#if 0
+#if STUBBING_INACTIVE
     size_t tally;
     size_t length;
     CLIPSLexeme *past = nullptr, *peek;
@@ -419,7 +419,7 @@ CLIPSLexeme *FindSymbolHN(
         const Environment&theEnv,
         const char *str,
         unsigned short expectedType) {
-#if 0
+#if STUBBING_INACTIVE
     size_t tally;
     CLIPSLexeme *peek;
 
@@ -435,7 +435,7 @@ CLIPSLexeme *FindSymbolHN(
 
     return nullptr;
 }
-#if 0
+#if STUBBING_INACTIVE
 /******************************************************************/
 /* CreateFloat: Searches for the double in the hash table. If the */
 /*   double is already in the hash table, then the address of the */
@@ -745,13 +745,13 @@ size_t HashSymbol(
         size_t range) {
     size_t i;
     size_t tally = 0;
-#if 0
+#if STUBBING_INACTIVE
     for (i = 0; word[i]; i++) { tally = tally * 127 + (size_t) word[i]; }
 #endif
     if (range == 0) { return tally; }
     return tally % range;
 }
-#if 0
+#if STUBBING_INACTIVE
 /*************************************************/
 /* HashFloat: Computes a hash value for a float. */
 /*************************************************/
@@ -876,7 +876,7 @@ void RetainLexeme(
 void ReleaseLexeme(
         const Environment&theEnv,
         CLIPSLexeme *theValue) {
-#if 0
+#if STUBBING_INACTIVE
     if (theValue->count < 0) {
         SystemError(theEnv, "SYMBOL", 3);
         ExitRouter(theEnv, EXIT_FAILURE);
@@ -900,7 +900,7 @@ void ReleaseLexeme(
     return;
 #endif
 }
-#if 0
+#if STUBBING_INACTIVE
 
 /***************************************************/
 /* RetainFloat: Increments the count value for a   */

@@ -643,7 +643,7 @@ static void AddBatch(
         int type,
         const char *theString,
         const char *theFileName) {
-#if 0
+#if STUBBING_INACTIVE
 
     /*=========================*/
     /* Create the batch entry. */

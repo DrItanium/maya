@@ -445,7 +445,7 @@ void RestoreBloadCount(
 void MarkNeededItems(
         const Environment&theEnv,
         Expression *testPtr) {
-#if 0
+#if STUBBING_INACTIVE
     while (testPtr != nullptr) {
         switch (testPtr->type) {
             case SYMBOL_TYPE:

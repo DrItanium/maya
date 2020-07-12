@@ -472,7 +472,7 @@ CLIPSLexeme::Ptr GetConstructModuleCommand(
         UDFContext *context,
         const char *command,
         Construct *constructClass) {
-#if 0
+#if STUBBING_INACTIVE
     const Environment&theEnv = context->environment;
     const char *constructName;
     char buffer[80];
@@ -795,7 +795,7 @@ void GetConstructList(
         UDFValue *returnValue,
         Construct *constructClass,
         Defmodule *theModule) {
-#if 0
+#if STUBBING_INACTIVE
     ConstructHeader *theConstruct;
     unsigned long count = 0;
     Multifield *theList;
@@ -1409,7 +1409,7 @@ static bool ConstructWatchSupport(
         bool newState,
         ConstructGetWatchFunction *getWatchFunc,
         ConstructSetWatchFunction *setWatchFunc) {
-#if 0
+#if STUBBING_INACTIVE
     Defmodule *theModule;
     ConstructHeader *theConstruct = nullptr;
     UDFValue constructName;

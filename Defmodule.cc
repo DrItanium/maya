@@ -97,7 +97,7 @@ void AllocateDefmoduleGlobals(
     DefmoduleData(theEnv)->MainModuleRedefinable = true;
 }
 
-#if 0
+#if STUBBING_INACTIVE
 /****************************************************/
 /* DeallocateDefmoduleData: Deallocates environment */
 /*    data for the defmodule construct.             */
@@ -184,7 +184,7 @@ void InitializeDefmodules(
     AddUDF(theEnv, "set-current-module", "y", 1, 1, "y", SetCurrentModuleCommand);
 #endif
 }
-#if 0
+#if STUBBING_INACTIVE
 /******************************************************/
 /* RegisterModuleItem: Called to register a construct */
 /*   which can be placed within a module.             */
@@ -233,7 +233,7 @@ unsigned GetNumberOfModuleItems(
         const Environment&theEnv) {
     return DefmoduleData(theEnv)->NumberOfModuleItems;
 }
-#if 0
+#if STUBBING_INACTIVE
 /********************************************************/
 /* FindModuleItem: Finds the module item data structure */
 /*   corresponding to the specified name.               */
@@ -636,7 +636,7 @@ void GetCurrentModuleCommand(
         const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
-#if 0
+#if STUBBING_INACTIVE
     Defmodule *theModule;
 
     theModule = GetCurrentModule(theEnv);
@@ -649,7 +649,7 @@ void GetCurrentModuleCommand(
     returnValue->value = theModule->header.name;
 #endif
 }
-#if 0
+#if STUBBING_INACTIVE
 
 /*************************************************/
 /* SetCurrentModuleCommand: H/L access routine   */

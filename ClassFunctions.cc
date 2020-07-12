@@ -581,7 +581,7 @@ void AssignClassID(
         Defclass *cls) {
     unsigned short i;
     /// @todo reimplement
-#if 0
+#if STUBBING_INACTIVE
     if ((DefclassData(theEnv)->MaxClassID % CLASS_ID_MAP_CHUNK) == 0) {
         DefclassData(theEnv)->ClassIDMap =
                 (Defclass **) genrealloc(theEnv, DefclassData(theEnv)->ClassIDMap,

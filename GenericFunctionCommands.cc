@@ -163,7 +163,7 @@ static void PrintMethodWatchFlag(const Environment&, const char *, Defgeneric *,
  ***********************************************************/
 void SetupGenericFunctions(
         const Environment&theEnv) {
-#if 0
+#if STUBBING_INACTIVE
     EntityRecord genericEntityRecord =
             {"GCALL", GCALL, 0, 0, 1,
              (EntityPrintFunction *) PrintGenericCall,
@@ -177,7 +177,7 @@ void SetupGenericFunctions(
 #endif
     theEnv->allocateEnvironmentModule<defgenericData>();
     //AllocateEnvironmentData(theEnv, DEFGENERIC_DATA, sizeof(defgenericData), DeallocateDefgenericData);
-#if 0
+#if STUBBING_INACTIVE
     DefgenericData(theEnv)->GenericEntityRecord = genericEntityRecord;
 #endif
 
@@ -519,7 +519,7 @@ void GetDefgenericModuleCommand(
     returnValue->contents = GetConstructModuleCommand(context, "defgeneric-module", DefgenericData(theEnv)->DefgenericConstruct);
 }
 
-#if 0
+#if STUBBING_INACTIVE
 /**************************************************************
   NAME         : UndefmethodCommand
   DESCRIPTION  : Deletes one method for a generic function
@@ -978,7 +978,7 @@ void ListDefmethods(
 #endif
 
 #endif /* DEBUGGING_FUNCTIONS */
-#if 0
+#if STUBBING_INACTIVE
 /***************************************************************
   NAME         : GetDefgenericListFunction
   DESCRIPTION  : Groups all defgeneric names into

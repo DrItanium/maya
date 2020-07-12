@@ -185,7 +185,7 @@ public:
 /*                                                                    */
 /* next: A pointer to the next moduleItem data structure.             */
 /**********************************************************************/
-#if 0
+#if STUBBING_INACTIVE
 typedef void *AllocateModuleFunction(const Environment&);
 typedef void FreeModuleFunction(const Environment&, void *);
 typedef ConstructHeader *FindConstructFunction(const Environment&, const char *);

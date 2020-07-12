@@ -127,7 +127,7 @@ void InitializeDefrules(
 
     DefruleCommands(theEnv);
 
-#if 0
+#if STUBBING_INACTIVE
     DefruleData(theEnv)->DefruleConstruct =
             AddConstruct(theEnv, "defrule", "defrules",
                          ParseDefrule,
@@ -150,7 +150,7 @@ void InitializeDefrules(
     DefruleData(theEnv)->LeftPrimeJoins = nullptr;
 #endif
 }
-#if 0
+#if STUBBING_INACTIVE
 /**************************************************/
 /* DeallocateDefruleData: Deallocates environment */
 /*    data for the defrule construct.             */

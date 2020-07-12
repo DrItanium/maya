@@ -152,7 +152,7 @@ static bool DeffunctionWatchPrint(const Environment&, const char *, int, Express
  ***************************************************/
 void SetupDeffunctions(
         const Environment&theEnv) {
-#if 0
+#if STUBBING_INACTIVE
     EntityRecord deffunctionEntityRecord =
             {"PCALL", PCALL, 0, 0, 1,
              (EntityPrintFunction *) PrintDeffunctionCall,
@@ -168,7 +168,7 @@ void SetupDeffunctions(
     theEnv->allocateEnvironmentModule<deffunctionData>();
     /// @todo DeallocateDeffunctionData is the dtor
     //AllocateEnvironmentData(theEnv, DEFFUNCTION_DATA, sizeof(deffunctionData), DeallocateDeffunctionData);
-#if 0
+#if STUBBING_INACTIVE
     DeffunctionData(theEnv)->DeffunctionEntityRecord = deffunctionEntityRecord;
 #endif
 
@@ -634,7 +634,7 @@ static void PrintDeffunctionCall(
 #endif
 #endif
 }
-#if 0
+#if STUBBING_INACTIVE
 /*******************************************************
   NAME         : EvaluateDeffunctionCall
   DESCRIPTION  : Primitive support function for
@@ -700,7 +700,7 @@ static void IncrementDeffunctionBusyCount(
 
     theDeffunction->busy++;
 }
-#if 0
+#if STUBBING_INACTIVE
 /*****************************************************
   NAME         : AllocateModule
   DESCRIPTION  : Creates and initializes a

@@ -106,7 +106,7 @@ void InitializeBloadData(
 /************************************************/
 static void DeallocateBloadData(
         const Environment&theEnv) {
-#if 0
+#if STUBBING_INACTIVE
     DeallocateVoidCallList(theEnv, BloadData(theEnv)->BeforeBloadFunctions);
     DeallocateVoidCallList(theEnv, BloadData(theEnv)->AfterBloadFunctions);
     DeallocateBoolCallList(theEnv, BloadData(theEnv)->ClearBloadReadyFunctions);
@@ -417,7 +417,7 @@ void BloadandRefresh(
     size_t space;
 
     return;
-#if 0
+#if STUBBING_INACTIVE
     if (objcnt == 0L) return;
 
     //oldOutOfMemoryFunction = SetOutOfMemoryFunction(theEnv, BloadOutOfMemoryFunction);

@@ -141,7 +141,7 @@ void PrintUnsignedInteger(
     gensprintf(printBuffer, "%llu", number);
     WriteString(theEnv, logicalName, printBuffer);
 }
-#if 0
+#if STUBBING_INACTIVE
 /**************************************/
 /* PrintAtom: Prints an atomic value. */
 /**************************************/
@@ -520,7 +520,7 @@ const char *LongIntegerToString(
     auto thePtr = CreateString(theEnv, buffer);
     return thePtr->contents;
 }
-#if 0
+#if STUBBING_INACTIVE
 /******************************************************************/
 /* DataObjectToString: Converts a UDFValue to KB string format. */
 /******************************************************************/

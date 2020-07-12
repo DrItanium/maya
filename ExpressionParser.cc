@@ -93,7 +93,7 @@
 #include "Deffunction.h"
 #include "Expression.h"
 
-#if 0
+#if STUBBING_INACTIVE
 /***************************************************/
 /* Function0Parse: Parses a function. Assumes that */
 /*   none of the function has been parsed yet.     */
@@ -795,7 +795,7 @@ void PopulateRestriction(
         unsigned defaultRestriction,
         const char *restrictionString,
         unsigned int position) {
-#if 0
+#if STUBBING_INACTIVE
     unsigned int i = 0, currentPosition = 0, valuesRead = 0;
     char buffer[2];
 
@@ -898,7 +898,7 @@ void PopulateRestriction(
     *restriction = defaultRestriction;
 #endif
 }
-#if 0
+#if STUBBING_INACTIVE
 /*******************************************/
 /* ParseConstantArguments: Parses a string */
 /*    into a set of constant expressions.  */

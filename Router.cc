@@ -402,7 +402,7 @@ bool AddRouter(
         RouterUnreadFunction *unreadFunction,
         RouterExitFunction *exitFunction,
         void *context) {
-#if 0
+#if STUBBING_INACTIVE
     struct router *newPtr, *lastPtr, *currentPtr;
     char *nameCopy;
 

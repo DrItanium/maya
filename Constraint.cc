@@ -237,7 +237,7 @@ unsigned long HashConstraint(
     unsigned short i = 0;
     unsigned long count = 0;
     unsigned long hashValue;
-#if 0
+#if STUBBING_INACTIVE
     Expression *tmpPtr;
 
     count +=
@@ -294,7 +294,7 @@ unsigned long HashConstraint(
 
     return hashValue;
 }
-#if 0
+#if STUBBING_INACTIVE
 /**********************************************/
 /* ConstraintCompare: Compares two constraint */
 /*   records and returns true if they are     */
@@ -454,7 +454,7 @@ void SDCCommand(
         const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
-#if 0
+#if STUBBING_INACTIVE
     UDFValue theArg;
 
     returnValue->contents = CreateBoolean(theEnv, GetDynamicConstraintChecking(theEnv));

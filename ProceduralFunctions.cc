@@ -114,7 +114,7 @@ void ProceduralFunctionDefinitions(
     AddResetFunction(theEnv, "bind", FlushBindList, 0, nullptr);
     AddClearFunction(theEnv, "bind", FlushBindList, 0, nullptr);
 }
-#if 0
+#if STUBBING_INACTIVE
 /*************************************************************/
 /* DeallocateProceduralFunctionData: Deallocates environment */
 /*    data for procedural functions.                         */
@@ -471,7 +471,7 @@ void FlushBindList(
     ReturnValues(theEnv, ProcedureFunctionData(theEnv)->BindList, true);
     ProcedureFunctionData(theEnv)->BindList = nullptr;
 }
-#if 0
+#if STUBBING_INACTIVE
 
 /***************************************/
 /* PrognFunction: H/L access routine   */

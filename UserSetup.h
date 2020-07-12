@@ -7,7 +7,13 @@
 /*******************************************************/
 #ifndef USER_SETUP_H__
 #define USER_SETUP_H__
+#ifndef STUBBING_INACTIVE
+#define STUBBING_INACTIVE 0
+#endif
 
+#if !STUBBING_INACTIVE
+#warning "Specific bodies are currently stubbed"
+#endif
 template<typename T>
 inline void zeroMemory(T* container) noexcept {
     char* tmpBuf = (char*)container;

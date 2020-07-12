@@ -78,7 +78,7 @@
 #include "SystemDependency.h"
 
 #include "ArgumentAccess.h"
-#if 0
+#if STUBBING_INACTIVE
 /*********************************************************************/
 /* GetLogicalName: Retrieves the nth argument passed to the function */
 /*   call currently being evaluated and determines if it is a valid  */
@@ -136,7 +136,7 @@ void OpenErrorMessage(
     WriteString(theEnv, STDERR, fileName);
     WriteString(theEnv, STDERR, "'.\n");
 }
-#if 0
+#if STUBBING_INACTIVE
 
 /************************************************************/
 /* GetModuleName: Retrieves the nth argument passed to the  */

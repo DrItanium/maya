@@ -830,7 +830,7 @@ static bool CheckTwoClasses(
         const char *func,
         Defclass **c1,
         Defclass **c2) {
-#if 0
+#if STUBBING_INACTIVE
     UDFValue theArg;
     const Environment&theEnv = context->environment;
 

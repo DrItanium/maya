@@ -174,7 +174,7 @@ static AddUDFError DefineFunction(
         const char *restrictions,
         void *context) {
     return AddUDFError::AUE_CREATE_FUNCTION_STUBBED;
-#if 0
+#if STUBBING_INACTIVE
     FunctionDefinition *newFunction;
 
     newFunction = FindFunction(theEnv, name);
@@ -472,7 +472,7 @@ static void InitializeFunctionHashTable(
     for (i = 0; i < SIZE_FUNCTION_HASH; i++) ExternalFunctionData(theEnv)->FunctionHashtable[i] = nullptr;
 }
 
-#if 0
+#if STUBBING_INACTIVE
 /****************************************************************/
 /* AddHashFunction: Adds a function to the function hash table. */
 /****************************************************************/
@@ -512,7 +512,7 @@ int GetMaximumArgs(
         FunctionDefinition *theFunction) {
     return theFunction->maxArgs;
 }
-#if 0
+#if STUBBING_INACTIVE
 /********************/
 /* AssignErrorValue */
 /********************/
@@ -574,7 +574,7 @@ bool UDFNextArgument(
         UDFContext *context,
         unsigned expectedType,
         UDFValue *returnValue) {
-#if 0
+#if STUBBING_INACTIVE
     Expression *argPtr = context->lastArg;
     unsigned int argumentPosition = context->lastPosition;
     const Environment&theEnv = context->environment;

@@ -168,7 +168,7 @@ static void InitializeDeffactsModules(
 #endif
                                (FindConstructFunction *) FindDeffactsInModule);
 }
-#if 0
+#if STUBBING_INACTIVE
 /************************************************/
 /* AllocateModule: Allocates a deffacts module. */
 /************************************************/

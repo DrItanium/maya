@@ -246,7 +246,7 @@ add_library(clips
 		#DefModuleBasicCommands.cc
 		Defmodule.cc
 		#DefmoduleParser.cc
-		#DefmoduleUtility.cc
+		DefmoduleUtility.cc
 		#DefmessageHandlerCommands.cc
 		#DefmessageHandlerFunctions.cc
 		#DefmessageHandlerDispatch.cc

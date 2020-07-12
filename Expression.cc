@@ -146,7 +146,7 @@ void InitExpressionPointers(
         ExitRouter(theEnv, EXIT_FAILURE);
     }
 }
-#if 0
+#if STUBBING_INACTIVE
 /***************************************************/
 /* ExpressionInstall: Increments the busy count of */
 /*   atomic data values found in an expression.    */
@@ -171,7 +171,7 @@ void ExpressionInstall(
 void ExpressionDeinstall(
         const Environment&theEnv,
         Expression *expression) {
-#if 0
+#if STUBBING_INACTIVE
     if (expression == nullptr) return;
 
     while (expression != nullptr) {
@@ -210,7 +210,7 @@ static unsigned long ListToPacked(
         Expression *original,
         Expression *destination,
         unsigned long count) {
-#if 0
+#if STUBBING_INACTIVE
     unsigned long i;
 
     if (original == nullptr) { return count; }
@@ -259,7 +259,7 @@ void ReturnPackedExpression(
 void ReturnExpression(
         const Environment&theEnv,
         Expression *waste) {
-#if 0
+#if STUBBING_INACTIVE
     Expression *tmp;
 
     while (waste != nullptr) {
@@ -317,7 +317,7 @@ static ExpressionHashNode *FindHashedExpression(
 static unsigned HashExpression(
         Expression *theExp) {
     unsigned long tally = PRIME_THREE;
-#if 0
+#if STUBBING_INACTIVE
     union {
         void *vv;
         unsigned long uv;
@@ -386,7 +386,7 @@ void RemoveHashedExpression(
 Expression *AddHashedExpression(
         const Environment&theEnv,
         Expression *theExp) {
-#if 0
+#if STUBBING_INACTIVE
     ExpressionHashNode *prv, *exphash;
     unsigned hashval;
 

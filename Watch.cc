@@ -118,7 +118,7 @@ bool AddWatchItem(
         int priority,
         WatchAccessFunction accessFunc,
         WatchPrintFunction printFunc) {
-#if 0
+#if STUBBING_INACTIVE
     WatchItemRecord *newPtr, *currentPtr, *lastPtr;
 
     /*================================================================*/
@@ -605,7 +605,7 @@ int GetNthWatchValue(
 
     return (-1);
 }
-#if 0
+#if STUBBING_INACTIVE
 /**************************************/
 /* WatchCommand: H/L access routine   */
 /*   for the watch command.           */

@@ -254,7 +254,7 @@ static bool CreateReadStringSource(
         const char *str,
         size_t currentPosition,
         size_t maximumPosition) {
-#if 0
+#if STUBBING_INACTIVE
     struct stringRouter *newStringRouter;
     char *theName;
 
@@ -316,7 +316,7 @@ bool OpenStringDestination(
         const char *name,
         char *str,
         size_t maximumPosition) {
-#if 0
+#if STUBBING_INACTIVE
     struct stringRouter *newStringRouter;
     char *theName;
 
@@ -373,7 +373,7 @@ bool OpenStringBuilderDestination(
         const Environment&theEnv,
         const char *name,
         StringBuilder *theSB) {
-#if 0
+#if STUBBING_INACTIVE
     StringBuilderRouter *newStringRouter;
     char *theName;
 

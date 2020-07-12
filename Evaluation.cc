@@ -144,7 +144,7 @@ static void DeallocateEvaluationData(
     }
 }
 
-#if 0
+#if STUBBING_INACTIVE
 /**************************************************************/
 /* EvaluateExpression: Evaluates an expression. Returns false */
 /*   if no errors occurred during evaluation, otherwise true. */
@@ -169,7 +169,7 @@ bool EvaluateExpression(
         return (EvaluationData(theEnv)->EvaluationError);
     }
     /// @todo continue
-#if 0
+#if STUBBING_INACTIVE
     std::visit([returnValue](auto&& value) {
         using K = std::decay_t<decltype(value)>;
         if constexpr ( std::is_same_v<K, CLIPSLexeme::Ptr> ||
@@ -375,7 +375,7 @@ void ReturnValues(
         const Environment&theEnv,
         UDFValue *garbagePtr,
         bool decrementSupplementalInfo) {
-#if 0
+#if STUBBING_INACTIVE
     UDFValue *nextPtr;
 
     while (garbagePtr != nullptr) {
@@ -389,7 +389,7 @@ void ReturnValues(
     }
 #endif
 }
-#if 0
+#if STUBBING_INACTIVE
 
 /**************************************************/
 /* WriteCLIPSValue: Prints a CLIPSValue structure */
@@ -1034,7 +1034,7 @@ static void PrintCAddress(
         const Environment&theEnv,
         const char *logicalName,
         void *theValue) {
-#if 0
+#if STUBBING_INACTIVE
     char buffer[20];
 
     WriteString(theEnv, logicalName, "<Pointer-C-");
@@ -1051,7 +1051,7 @@ static void PrintCAddress(
 static void NewCAddress(
         UDFContext *context,
         UDFValue *rv) {
-#if 0
+#if STUBBING_INACTIVE
     unsigned int numberOfArguments;
     const Environment&theEnv = context->environment;
 
@@ -1067,7 +1067,7 @@ static void NewCAddress(
     rv->value = CreateExternalAddress(theEnv, nullptr, 0);
 #endif
 }
-#if 0
+#if STUBBING_INACTIVE
 /******************************/
 /* CreateFunctionCallBuilder: */
 /******************************/

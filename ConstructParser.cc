@@ -285,7 +285,7 @@ char *GetWarningFileName(
 bool LoadConstructsFromLogicalName(
         const Environment&theEnv,
         const char *readSource) {
-#if 0
+#if STUBBING_INACTIVE
     BuildError constructFlag;
     struct token theToken;
     bool noErrors = true;

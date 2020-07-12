@@ -192,7 +192,7 @@ void AddActivation(
     PlaceActivation(theEnv, &(theModuleItem->agenda), newActivation, theGroup);
 }
 
-#if 0
+#if STUBBING_INACTIVE
 /*******************************/
 /* ReuseOrCreateSalienceGroup: */
 /*******************************/
@@ -402,7 +402,7 @@ void DeleteActivation(
         Activation::Ptr theActivation) {
     RemoveActivation(theActivation->getRule()->header.env, theActivation, true, true);
 }
-#if 0
+#if STUBBING_INACTIVE
 /*************************************************/
 /* DeleteAllActivations: Removes all activations */
 /*   from the agenda of the specified module.    */
@@ -485,7 +485,7 @@ bool DetachActivation(
 
     return true;
 }
-#if 0
+#if STUBBING_INACTIVE
 /****************************************************************************/
 /* PrintActivation: Prints an activation in a "pretty" format. Salience,    */
 /*   rule name, and the partial match which activated the rule are printed. */
@@ -518,7 +518,7 @@ void Agenda(
                     (PrintItemFunction *) PrintActivation,
                     nullptr);
 }
-#if 0
+#if STUBBING_INACTIVE
 /*******************************************************************/
 /* RemoveActivation: Returns an activation and its associated data */
 /*   structures to the Memory Manager. Links to other activations  */
@@ -654,7 +654,7 @@ static void AgendaClearFunction(
         void *context) {
     AgendaData(theEnv)->setCurrentTimetag(1);
 }
-#if 0
+#if STUBBING_INACTIVE
 /*************************************************/
 /* RemoveAllActivations: Removes all activations */
 /*   from the agenda of the current module.      */
@@ -691,7 +691,7 @@ void ReorderAllAgendas(
          theModule != nullptr;
          theModule = GetNextDefmodule(theEnv, theModule)) { ReorderAgenda(theModule); }
 }
-#if 0
+#if STUBBING_INACTIVE
 /*******************************************************/
 /* ReorderAgenda: Completely reorders the agenda based */
 /*   on the current conflict resolution strategy.      */
@@ -772,7 +772,7 @@ void RefreshCommand(
     Refresh(rulePtr);
 }
 
-#if 0
+#if STUBBING_INACTIVE
 /***********************************************************/
 /* Refresh: Refreshes a defrule. Activations of the rule   */
 /*   that have already been fired are added to the agenda. */
@@ -933,7 +933,7 @@ void RefreshAgenda(
 
     RestoreCurrentModule(theEnv);
 }
-#if 0
+#if STUBBING_INACTIVE
 /*********************************************************/
 /* SetSalienceEvaluationCommand: H/L Command for setting */
 /*   the salience evaluation behavior.                   */
@@ -1047,7 +1047,7 @@ SalienceEvaluationType SetSalienceEvaluation(
     AgendaData(theEnv)->setSalienceEvaluation(value);
     return ov;
 }
-#if 0
+#if STUBBING_INACTIVE
 /*****************************************************************/
 /* EvaluateSalience: Returns the salience value of the specified */
 /*   defrule. If salience evaluation is currently set to         */

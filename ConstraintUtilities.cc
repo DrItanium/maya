@@ -57,7 +57,7 @@
 /************************************************/
 struct constraintRecord *GetConstraintRecord(
         const Environment&theEnv) {
-#if 0
+#if STUBBING_INACTIVE
     unsigned i;
 
     auto constraints = get_struct(theEnv, constraintRecord);

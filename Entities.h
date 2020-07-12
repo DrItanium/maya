@@ -160,7 +160,7 @@ public:
     using Ptr = std::shared_ptr<Self>;
 public:
     ValueContainer contents;
-#if 0
+#if STUBBING_INACTIVE
     union {
         std::shared_ptr<TypeHeader> header; // does this work o_O????
         CLIPSLexeme::Ptr lexemeValue;
@@ -186,7 +186,7 @@ public:
 public:
     std::any supplementalInfo;
     ValueContainer contents;
-#if 0
+#if STUBBING_INACTIVE
     union {
         std::shared_ptr<TypeHeader> header; // does this work o_O????
         CLIPSLexeme::Ptr lexemeValue;

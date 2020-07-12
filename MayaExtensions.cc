@@ -43,7 +43,7 @@ static void Functionp(const Environment&theEnv, UDFContext *context, UDFValue *r
 static void LastFunction(const Environment&, UDFContext *context, UDFValue *ret);
 
 void InstallMayaExtensions(const Environment&theEnv) {
-#if 0
+#if STUBBING_INACTIVE
     AddUDF(theEnv, "empty$", "b", 1, 1, "m", EmptyFunction);
 //    AddUDF(theEnv, "functionp", "b", 1, 1, "y", Functionp);
     AddUDF(theEnv, "quit", "v", 0, 1, "l", ExitCommand);
@@ -57,7 +57,7 @@ void InstallMayaExtensions(const Environment&theEnv) {
 #endif
 #endif
 }
-#if 0
+#if STUBBING_INACTIVE
 void
 LastFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret) {
     UDFValue theArg;

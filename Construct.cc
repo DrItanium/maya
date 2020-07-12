@@ -123,7 +123,7 @@ void InitializeConstructData(
     /// @todo DeallocateConstructData is ConstructModule's dtor
     //AllocateEnvironmentData(theEnv, CONSTRUCT_DATA, sizeof(ConstructModule), DeallocateConstructData);
 }
-#if 0
+#if STUBBING_INACTIVE
 /****************************************************/
 /* DeallocateConstructData: Deallocates environment */
 /*    data for constructs.                          */
@@ -446,7 +446,7 @@ void ResetCommand(
 /****************************/
 void Reset(
         const Environment&theEnv) {
-#if 0
+#if STUBBING_INACTIVE
     struct voidCallFunctionItem *resetPtr;
     GCBlock gcb;
 
@@ -553,7 +553,7 @@ bool AddResetFunction(
         VoidCallFunction *functionPtr,
         int priority,
         void *context) {
-#if 0
+#if STUBBING_INACTIVE
     ConstructData(theEnv)->ListOfResetFunctions =
             AddVoidFunctionToCallList(theEnv, name, priority, functionPtr,
                                       ConstructData(theEnv)->ListOfResetFunctions, context);
@@ -569,7 +569,7 @@ bool RemoveResetFunction(
         const Environment&theEnv,
         const char *name) {
     bool found = false;
-#if 0
+#if STUBBING_INACTIVE
     ConstructData(theEnv)->ListOfResetFunctions =
             RemoveVoidFunctionFromCallList(theEnv, name, ConstructData(theEnv)->ListOfResetFunctions, &found);
 
@@ -600,7 +600,7 @@ void DecrementClearReadyLocks(
 /**************************************************/
 bool Clear(
         const Environment&theEnv) {
-#if 0
+#if STUBBING_INACTIVE
     struct voidCallFunctionItem *theFunction;
     GCBlock gcb;
 
@@ -688,7 +688,7 @@ bool Clear(
 /*********************************************************/
 bool ClearReady(
         const Environment&theEnv) {
-#if 0
+#if STUBBING_INACTIVE
     struct boolCallFunctionItem *theFunction;
 
     for (theFunction = ConstructData(theEnv)->ListOfClearReadyFunctions;
@@ -712,7 +712,7 @@ bool AddClearReadyFunction(
         BoolCallFunction *functionPtr,
         int priority,
         void *context) {
-#if 0
+#if STUBBING_INACTIVE
     ConstructData(theEnv)->ListOfClearReadyFunctions =
             AddBoolFunctionToCallList(theEnv, name, priority, functionPtr,
                                       ConstructData(theEnv)->ListOfClearReadyFunctions, context);
@@ -728,7 +728,7 @@ bool RemoveClearReadyFunction(
         const Environment&theEnv,
         const char *name) {
     bool found = false;
-#if 0
+#if STUBBING_INACTIVE
     ConstructData(theEnv)->ListOfClearReadyFunctions =
             RemoveBoolFunctionFromCallList(theEnv, name, ConstructData(theEnv)->ListOfClearReadyFunctions, &found);
 #endif
@@ -747,7 +747,7 @@ bool AddClearFunction(
         VoidCallFunction *functionPtr,
         int priority,
         void *context) {
-#if 0
+#if STUBBING_INACTIVE
     ConstructData(theEnv)->ListOfClearFunctions =
             AddVoidFunctionToCallList(theEnv, name, priority, functionPtr,
                                       ConstructData(theEnv)->ListOfClearFunctions, context);
@@ -763,7 +763,7 @@ bool RemoveClearFunction(
         const Environment&theEnv,
         const char *name) {
     bool found = false;
-#if 0
+#if STUBBING_INACTIVE
     ConstructData(theEnv)->ListOfClearFunctions =
             RemoveVoidFunctionFromCallList(theEnv, name, ConstructData(theEnv)->ListOfClearFunctions, &found);
 #endif
@@ -855,7 +855,7 @@ Construct *AddConstruct(
         IsConstructDeletableFunction *isConstructDeletableFunction,
         DeleteConstructFunction *deleteFunction,
         FreeConstructFunction *freeFunction) {
-#if 0
+#if STUBBING_INACTIVE
     Construct *newPtr;
 
     /*=============================*/
@@ -920,7 +920,7 @@ SaveCallFunctionItem *AddSaveFunctionToCallList(
         SaveCallFunction *func,
         struct saveCallFunctionItem *head,
         void *context) {
-#if 0
+#if STUBBING_INACTIVE
     struct saveCallFunctionItem *newPtr, *currentPtr, *lastPtr = nullptr;
     char *nameCopy;
 

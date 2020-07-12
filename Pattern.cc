@@ -98,7 +98,7 @@ static struct patternNodeHashEntry **CreatePatternHashTable(
 
     return (theTable);
 }
-#if 0
+#if STUBBING_INACTIVE
 /**************************************************/
 /* DeallocatePatternData: Deallocates environment */
 /*    data for rule pattern registration.         */
@@ -482,7 +482,7 @@ bool PostPatternAnalysis(
 
     return false;
 }
-#if 0
+#if STUBBING_INACTIVE
 /******************************************************************/
 /* RestrictionParse: Parses a single field within a pattern. This */
 /*    field may either be a single field wildcard, a multifield   */

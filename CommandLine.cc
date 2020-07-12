@@ -822,7 +822,7 @@ bool RouteCommand(
         const Environment&theEnv,
         const char *command,
         bool printResult) {
-#if 0
+#if STUBBING_INACTIVE
     UDFValue returnValue;
     Expression *top;
     const char *commandName;
