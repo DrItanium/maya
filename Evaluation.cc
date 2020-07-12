@@ -1024,7 +1024,7 @@ bool EvaluateAndStoreInDataObject(
 
     return !EvaluationData(theEnv)->EvaluationError;
 }
-
+#endif
 /******************/
 /* PrintCAddress: */
 /******************/
@@ -1032,6 +1032,7 @@ static void PrintCAddress(
         const Environment&theEnv,
         const char *logicalName,
         void *theValue) {
+#if 0
     char buffer[20];
 
     WriteString(theEnv, logicalName, "<Pointer-C-");
@@ -1039,6 +1040,7 @@ static void PrintCAddress(
     gensprintf(buffer, "%p", ((CLIPSExternalAddress *) theValue)->contents);
     WriteString(theEnv, logicalName, buffer);
     WriteString(theEnv, logicalName, ">");
+#endif
 }
 
 /****************/
@@ -1047,6 +1049,7 @@ static void PrintCAddress(
 static void NewCAddress(
         UDFContext *context,
         UDFValue *rv) {
+#if 0
     unsigned int numberOfArguments;
     const Environment&theEnv = context->environment;
 
@@ -1060,8 +1063,9 @@ static void NewCAddress(
     }
 
     rv->value = CreateExternalAddress(theEnv, nullptr, 0);
+#endif
 }
-
+#if 0
 /******************************/
 /* CreateFunctionCallBuilder: */
 /******************************/
