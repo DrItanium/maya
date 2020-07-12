@@ -469,14 +469,12 @@ static Defrule *CreateNewDisjunct(
         unsigned logicalJoin,
         struct joinNode *lastJoin) {
     struct joinNode *tempJoin;
-    Defrule *newDisjunct;
 
     /*===================================================*/
     /* Create and initialize the defrule data structure. */
     /*===================================================*/
 
-    newDisjunct = get_struct(theEnv, defrule);
-    zeroMemory(newDisjunct);
+    auto newDisjunct = get_struct(theEnv, defrule);
     newDisjunct->header.ppForm = nullptr;
     newDisjunct->header.next = nullptr;
     newDisjunct->header.usrData = nullptr;

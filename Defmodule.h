@@ -131,6 +131,10 @@ typedef void FreeConstructFunction(const Environment&, ConstructHeader *);
 /**********************************************************************/
 
 struct defmodule {
+public:
+    using Self = defmodule;
+    using Ptr = std::shared_ptr<Self>;
+public:
     ConstructHeader header;
     DefmoduleItemHeader **itemsArray;
     PortItem *importList;
@@ -139,10 +143,14 @@ struct defmodule {
 };
 
 struct portItem {
-    CLIPSLexeme *moduleName;
-    CLIPSLexeme *constructType;
-    CLIPSLexeme *constructName;
-    PortItem *next;
+public:
+    using Self = defmodule;
+    using Ptr = std::shared_ptr<Self>;
+public:
+    CLIPSLexeme::Ptr moduleName;
+    CLIPSLexeme::Ptr constructType;
+    CLIPSLexeme::Ptr constructName;
+    Ptr next;
 };
 
 #define MIHS (DefmoduleItemHeader *)
@@ -177,33 +185,49 @@ struct portItem {
 /*                                                                    */
 /* next: A pointer to the next moduleItem data structure.             */
 /**********************************************************************/
-
+#if 0
+typedef void *AllocateModuleFunction(const Environment&);
+typedef void FreeModuleFunction(const Environment&, void *);
+typedef ConstructHeader *FindConstructFunction(const Environment&, const char *);
+typedef ConstructHeader *GetNextConstructFunction(const Environment&, ConstructHeader *);
+typedef bool IsConstructDeletableFunction(ConstructHeader *);
+typedef bool DeleteConstructFunction(ConstructHeader *, const Environment&);
+typedef void FreeConstructFunction(const Environment&, ConstructHeader *);
+#endif
 struct moduleItem {
+public:
+    using Self = moduleItem;
+    using Ptr = std::shared_ptr<Self>;
+public:
     const char *name;
     unsigned moduleIndex;
     AllocateModuleFunction* allocateFunction;
     FreeModuleFunction* freeFunction;
     void *(*bloadModuleReference)(const Environment&, unsigned long);
     FindConstructFunction *findFunction;
-    ModuleItem *next;
+    Ptr next;
 };
 
 struct moduleStackItem {
+public:
+    using Self = moduleStackItem;
+    using Ptr = std::shared_ptr<Self>;
+public:
     bool changeFlag;
     Defmodule *theModule;
-    ModuleStackItem *next;
+    Ptr next;
 };
 
 constexpr auto DEFMODULE_DATA = 4;
 
 struct defmoduleData : public EnvironmentModule {
-    struct moduleItem *LastModuleItem;
+    moduleItem::Ptr LastModuleItem;
     struct voidCallFunctionItem *AfterModuleChangeFunctions;
-    ModuleStackItem *ModuleStack;
+    ModuleStackItem::Ptr ModuleStack;
     bool CallModuleChangeFunctions;
-    Defmodule *ListOfDefmodules;
-    Defmodule *CurrentModule;
-    Defmodule *LastDefmodule;
+    Defmodule::Ptr ListOfDefmodules;
+    Defmodule::Ptr CurrentModule;
+    Defmodule::Ptr LastDefmodule;
     unsigned NumberOfModuleItems;
     struct moduleItem *ListOfModuleItems;
     long ModuleChangeIndex;

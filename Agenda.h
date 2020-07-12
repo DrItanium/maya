@@ -66,6 +66,7 @@
 #include "Defrule.h"
 #include "Symbol.h"
 #include "Match.h"
+#include "Defrule.h"
 
 enum SalienceEvaluationType {
     WHEN_DEFINED,
@@ -79,7 +80,8 @@ constexpr auto MIN_DEFRULE_SALIENCE = -10000;
 /*******************/
 /* DATA STRUCTURES */
 /*******************/
-
+struct Defrule;
+struct PartialMatch;
 struct Activation {
 public:
     using Ptr = std::shared_ptr<Activation>;

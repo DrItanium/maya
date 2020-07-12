@@ -31,20 +31,22 @@
 
 #define _H_network
 
+
+#include "Entities.h"
+#include "Match.h"
+#include "Defrule.h"
+
 struct alphaMemoryHash;
 struct betaMemory;
 struct joinLink;
 struct joinNode;
 struct patternNodeHashEntry;
 
-#include "Entities.h"
-#include "Match.h"
-
 struct PatternNodeHeader {
-    struct alphaMemoryHash *firstHash;
-    struct alphaMemoryHash *lastHash;
-    struct joinNode *entryJoin;
-    Expression *rightHash;
+    std::shared_ptr<alphaMemoryHash> firstHash;
+    std::shared_ptr<alphaMemoryHash> lastHash;
+    std::shared_ptr<joinNode> entryJoin;
+    std::shared_ptr<Expression> rightHash;
     bool singlefieldNode: 1;
     bool multifieldNode: 1;
     bool stopNode: 1;
@@ -57,46 +59,45 @@ struct PatternNodeHeader {
 
 
 struct patternNodeHashEntry {
-    void *parent;
-    void *child;
+    std::any parent;
+    std::any child;
     int type;
-    void *value;
-    struct patternNodeHashEntry *next;
+    std::any value;
+    std::shared_ptr<patternNodeHashEntry> next;
 };
 
 constexpr auto SIZE_PATTERN_HASH = 16231;
 struct PartialMatch;
 struct alphaMemoryHash {
     unsigned long bucket;
-    PatternNodeHeader *owner;
-    PartialMatch *alphaMemory;
-    PartialMatch *endOfQueue;
-    struct alphaMemoryHash *nextHash;
-    struct alphaMemoryHash *prevHash;
-    struct alphaMemoryHash *next;
-    struct alphaMemoryHash *prev;
+    std::shared_ptr<PatternNodeHeader> owner;
+    std::shared_ptr<PartialMatch> alphaMemory;
+    std::shared_ptr<PartialMatch> endOfQueue;
+    std::shared_ptr<alphaMemoryHash> nextHash;
+    std::shared_ptr<alphaMemoryHash> prevHash;
+    std::shared_ptr<alphaMemoryHash> next;
+    std::shared_ptr<alphaMemoryHash> prev;
 };
 
 typedef struct alphaMemoryHash ALPHA_MEMORY_HASH;
 
-#include "Defrule.h"
 
 constexpr auto INITIAL_BETA_HASH_SIZE = 17;
 
 struct betaMemory {
     unsigned long size;
     unsigned long count;
-    PartialMatch **beta;
-    PartialMatch **last;
+    std::shared_ptr<PartialMatch>*beta;
+    std::shared_ptr<PartialMatch>*last;
 };
 
 struct joinLink {
     char enterDirection;
-    struct joinNode *join;
-    struct joinLink *next;
+    std::shared_ptr<joinNode> join;
+    std::shared_ptr<joinLink> next;
     unsigned long bsaveID;
 };
-
+struct Defrule;
 struct joinNode {
     bool firstJoin: 1;
     bool logicalJoin: 1;
@@ -113,17 +114,17 @@ struct joinNode {
     long long memoryLeftDeletes;
     long long memoryRightDeletes;
     long long memoryCompares;
-    struct betaMemory *leftMemory;
-    struct betaMemory *rightMemory;
-    Expression *networkTest;
-    Expression *secondaryNetworkTest;
-    Expression *leftHash;
-    Expression *rightHash;
-    void *rightSideEntryStructure;
-    struct joinLink *nextLinks;
-    struct joinNode *lastLevel;
-    struct joinNode *rightMatchNode;
-    Defrule *ruleToActivate;
+    std::shared_ptr<betaMemory > leftMemory;
+    std::shared_ptr<betaMemory > rightMemory;
+    std::shared_ptr<Expression > networkTest;
+    std::shared_ptr<Expression > secondaryNetworkTest;
+    std::shared_ptr<Expression > leftHash;
+    std::shared_ptr<Expression > rightHash;
+    std::any rightSideEntryStructure;
+    std::shared_ptr<joinLink> nextLinks;
+    std::shared_ptr<joinNode> lastLevel;
+    std::shared_ptr<joinNode> rightMatchNode;
+    std::shared_ptr<Defrule> ruleToActivate;
 };
 
 #endif /* _H_network */

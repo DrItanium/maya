@@ -76,9 +76,6 @@
 
 #define GetDisjunctIndex(r) (r->header.bsaveID)
 
-typedef struct defrule Defrule;
-struct defruleModule;
-
 #include "Construct.h"
 #include "Expression.h"
 #include "Network.h"
@@ -89,8 +86,11 @@ struct defruleModule;
 #include "Construct.h"
 #include "Evaluation.h"
 #include "Defmodule.h"
-
-struct defrule {
+struct joinNode;
+struct Defrule {
+public:
+    using Ptr = std::shared_ptr<Defrule>;
+public:
     ConstructHeader header;
     int salience;
     unsigned short localVarCnt;
@@ -100,11 +100,11 @@ struct defrule {
     bool watchFiring: 1;
     bool autoFocus: 1;
     bool executing: 1;
-    Expression *dynamicSalience;
-    Expression *actions;
-    struct joinNode *logicalJoin;
-    struct joinNode *lastJoin;
-    Defrule *disjunct;
+    std::shared_ptr<Expression> dynamicSalience;
+    std::shared_ptr<Expression> actions;
+    std::shared_ptr<joinNode> logicalJoin;
+    std::shared_ptr<joinNode> lastJoin;
+    std::shared_ptr<Defrule> disjunct;
 };
 
 
@@ -122,13 +122,13 @@ struct defruleModule {
 constexpr auto DEFRULE_DATA = 16;
 
 struct defruleData : public EnvironmentModule {
-    Construct *DefruleConstruct;
+    std::shared_ptr<Construct> DefruleConstruct;
     unsigned DefruleModuleIndex;
     unsigned long long CurrentEntityTimeTag;
-    struct alphaMemoryHash **AlphaMemoryTable;
+    std::shared_ptr<alphaMemoryHash>* AlphaMemoryTable;
     bool BetaMemoryResizingFlag;
-    struct joinLink *RightPrimeJoins;
-    struct joinLink *LeftPrimeJoins;
+    std::shared_ptr<joinLink> RightPrimeJoins;
+    std::shared_ptr<joinLink> LeftPrimeJoins;
 
 #if DEBUGGING_FUNCTIONS
     bool WatchRules;
@@ -150,19 +150,19 @@ RegisterEnvironmentModule(defruleData, DEFRULE_DATA, Defrule);
     ((theJoin)->rightSideEntryStructure))
 
 void InitializeDefrules(const Environment&);
-Defrule *FindDefrule(const Environment&, const char *);
-Defrule *FindDefruleInModule(const Environment&, const char *);
-Defrule *GetNextDefrule(const Environment&, Defrule *);
+Defrule::Ptr FindDefrule(const Environment&, const char *);
+Defrule::Ptr FindDefruleInModule(const Environment&, const char *);
+Defrule::Ptr GetNextDefrule(const Environment&, Defrule::Ptr );
 struct defruleModule *GetDefruleModuleItem(const Environment&, Defmodule *);
-bool DefruleIsDeletable(Defrule *);
+bool DefruleIsDeletable(Defrule::Ptr );
 #if BLOAD_AND_BSAVE
 void AddBetaMemoriesToJoin(const Environment&, struct joinNode *);
 #endif
-long GetDisjunctCount(const Environment&, Defrule *);
-Defrule *GetNthDisjunct(const Environment&, Defrule *, long);
-const char *DefruleModule(Defrule *);
-const char *DefruleName(Defrule *);
-const char *DefrulePPForm(Defrule *);
+long GetDisjunctCount(const Environment&, Defrule::Ptr );
+Defrule::Ptr GetNthDisjunct(const Environment&, Defrule::Ptr , long);
+const char *DefruleModule(Defrule::Ptr );
+const char *DefruleName(Defrule::Ptr );
+const char *DefrulePPForm(Defrule::Ptr );
 
 #endif /* _H_ruledef */
 
