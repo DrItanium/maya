@@ -80,6 +80,7 @@ using BeforeCommandExecutionFunction = std::function<bool(const Environment&)>;
 using AfterPromptFunction = std::function<void(const Environment&)>;
 
 struct commandLineData : public EnvironmentModule {
+    commandLineData(const std::string& banner, EventFunction callback);
     bool EvaluatingTopLevelCommand = false;
     bool HaltCommandLoopBatch = false;
     Expression::Ptr CurrentCommand;

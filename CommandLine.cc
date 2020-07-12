@@ -135,19 +135,16 @@ static int DoWhiteSpace(const char *, int);
 static void DefaultGetNextEvent(const Environment&);
 static void DeallocateCommandLineData(const Environment&);
 
+commandLineData::commandLineData(const std::string &banner, EventFunction callback) : BannerString(banner), EventCallback(callback) { }
 /****************************************************/
 /* InitializeCommandLineData: Allocates environment */
 /*    data for command line functionality.          */
 /****************************************************/
 void InitializeCommandLineData(
         const Environment&theEnv) {
-    auto cmdlineData = std::make_unique<commandLineData>();
+    theEnv->allocateEnvironmentModule<commandLineData>(BANNER_STRING, DefaultGetNextEvent);
     /// @todo migrate DeallocateCommandLineData to the destructor of cmdlineData
     //AllocateEnvironmentData(theEnv, COMMANDLINE_DATA, sizeof(commandLineData), DeallocateCommandLineData);
-
-    cmdlineData->BannerString = BANNER_STRING;
-    cmdlineData->EventCallback = DefaultGetNextEvent;
-    theEnv->installEnvironmentModule(std::move(cmdlineData));
 }
 
 #if STUBBING_INACTIVE
