@@ -76,7 +76,7 @@ struct multifieldBuilder {
     size_t bufferMaximum;
 };
 
-Multifield *CreateUnmanagedMultifield(const Environment&, size_t);
+Multifield::Ptr CreateUnmanagedMultifield(const Environment&, size_t);
 void ReturnMultifield(const Environment&, Multifield *);
 void RetainMultifield(const Environment&, Multifield *);
 void ReleaseMultifield(const Environment&, Multifield *);

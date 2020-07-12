@@ -83,30 +83,20 @@
 /******************************/
 /* CreateUnmanagedMultifield: */
 /******************************/
-Multifield *CreateUnmanagedMultifield(
-        const Environment&theEnv,
-        size_t size) {
-    Multifield *theSegment;
-    size_t newSize = size;
-
-    if (size == 0) newSize = 1;
-
-    theSegment = get_var_struct(theEnv, Multifield, sizeof(CLIPSValue) * (newSize - 1));
-
+Multifield::Ptr CreateUnmanagedMultifield( const Environment&theEnv, size_t size) {
+    size_t newSize = size == 0 ? 1 : size;
+    auto theSegment = getStruct<Multifield>(theEnv);
+    theSegment->contents.reserve(newSize);
     theSegment->header.type = MULTIFIELD_TYPE;
-    theSegment->length = size;
     theSegment->busyCount = 0;
-    theSegment->next = nullptr;
-
     return theSegment;
 }
 
 /*********************/
 /* ReturnMultifield: */
 /*********************/
-void ReturnMultifield(
-        const Environment&theEnv,
-        Multifield *theSegment) {
+void ReturnMultifield(const Environment& theEnv, Multifield *theSegment) {
+#if STUBBING_INACTIVE
     size_t newSize;
 
     if (theSegment == nullptr) return;
@@ -115,6 +105,7 @@ void ReturnMultifield(
     else newSize = theSegment->length;
 
     rtn_var_struct(theEnv, Multifield, sizeof(CLIPSValue) * (newSize - 1), theSegment);
+#endif
 }
 
 /*********************/

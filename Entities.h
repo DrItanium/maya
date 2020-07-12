@@ -84,7 +84,6 @@ public:
     using Ptr = std::shared_ptr<Self>;
 public:
     TypeHeader header;
-    Ptr next;
     double contents;
 };
 
@@ -97,7 +96,6 @@ public:
     using Ptr = std::shared_ptr<Self>;
 public:
     TypeHeader header;
-    Ptr next;
     long long contents;
 };
 
@@ -110,7 +108,6 @@ public:
     using Ptr = std::shared_ptr<Self>;
 public:
     TypeHeader header;
-    Ptr next;
     const char *contents;
     unsigned short size;
 };
@@ -124,7 +121,6 @@ public:
     using Ptr = std::shared_ptr<Self>;
 public:
     TypeHeader header;
-    Ptr next;
     std::any contents;
     unsigned short type;
 };
@@ -139,8 +135,7 @@ public:
 public:
     TypeHeader header;
     unsigned busyCount;
-    size_t length;
-    Ptr next;
+    auto length() const noexcept { return contents.size(); }
     std::vector<struct CLIPSValue> contents;
     void retain();
     void release();
@@ -209,7 +204,6 @@ public:
 #endif
     size_t begin;
     size_t range;
-    Ptr next;
 };
 struct FunctionDefinition;
 struct Expression;
