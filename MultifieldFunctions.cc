@@ -140,7 +140,7 @@ RegisterEnvironmentModule(multiFunctionData, MULTIFUN_DATA, MultiFunction);
 void MultifieldFunctionDefinitions(
         const Environment&theEnv) {
     theEnv->allocateEnvironmentModule<multiFunctionData>();
-
+if constexpr (STUBBING_INACTIVE) {
     AddUDF(theEnv, "first$", "m", 1, 1, "m", FirstFunction);
     AddUDF(theEnv, "rest$", "m", 1, 1, "m", RestFunction);
     AddUDF(theEnv, "subseq$", "m", 3, 3, "l;m", SubseqFunction);
@@ -164,7 +164,8 @@ void MultifieldFunctionDefinitions(
     AddFunctionParser(theEnv, "progn$", MultifieldPrognParser);
     AddFunctionParser(theEnv, "foreach", ForeachParser);
 }
-
+}
+#if STUBBING_INACTIVE
 /****************************************/
 /* DeleteFunction: H/L access routine   */
 /*   for the delete$ function.          */
@@ -1327,10 +1328,10 @@ void GetMvPrognIndex(
 
     returnValue->integerValue = CreateInteger(theEnv, (long long) tmpField->index);
 }
-
+#endif
 #endif /* MULTIFIELD_FUNCTIONS */
 
-
+#if STUBBING_INACTIVE
 bool ReplaceMultiValueFieldSizet(
         const Environment&theEnv,
         UDFValue *dst,
@@ -1528,3 +1529,4 @@ static void MVRangeErrorSizet(
     WriteString(theEnv, STDERR, ".\n");
 }
 
+#endif

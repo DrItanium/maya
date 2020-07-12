@@ -252,7 +252,7 @@ add_library(clips
 		#DefmessageHandlerDispatch.cc
 		#DefmessageHandlerParser.cc
 		Multifield.cc
-		#MultifieldFunctions.cc
+		MultifieldFunctions.cc
 		#ObjectBinaryLoadSave.cc
 		#ObjectReteBinarySaveLoad.cc
 		#ObjectPatternMatcher.cc
