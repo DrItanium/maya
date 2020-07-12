@@ -153,7 +153,7 @@ add_library(clips
 		MemoryAllocation.cc
 		ReferenceCounted.cc
 		SystemDependency.cc
-		#UserFunctions.cc
+		UserFunctions.cc
 		Utility.cc
 		PrintUtility.cc
 		Router.cc

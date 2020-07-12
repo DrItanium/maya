@@ -281,8 +281,8 @@ static void InitializeEnvironment(
     if (functions != nullptr) { InstallFunctionList(theEnvironment, functions); }
 
     SystemFunctionDefinitions(theEnvironment);
-#if STUBBING_INACTIVE
     UserFunctions(theEnvironment);
+#if STUBBING_INACTIVE
 
     /*====================================*/
     /* Initialize the constraint manager. */

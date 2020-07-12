@@ -63,5 +63,7 @@ void UserFunctions(const Environment&);
 /*   included in another file.                           */
 /*********************************************************/
 void UserFunctions(const Environment&theEnv) {
+#if STUBBING_INACTIVE
     InstallMayaExtensions(theEnv);
+#endif
 }
