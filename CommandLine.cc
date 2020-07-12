@@ -255,13 +255,15 @@ bool ExpandCommandString(
         const Environment&theEnv,
         int inchar) {
     size_t k;
-
+#if STUBBING_INACTIVE
     k = RouterData(theEnv)->CommandBufferInputCount;
     CommandLineData(theEnv)->CommandString = ExpandStringWithChar(theEnv, inchar, CommandLineData(theEnv)->CommandString,
                                                                   &RouterData(theEnv)->CommandBufferInputCount,
                                                                   &CommandLineData(theEnv)->MaximumCharacters,
                                                                   CommandLineData(theEnv)->MaximumCharacters + 80);
     return RouterData(theEnv)->CommandBufferInputCount != k;
+#endif
+    return false;
 }
 
 /******************************************************************/
@@ -269,6 +271,7 @@ bool ExpandCommandString(
 /******************************************************************/
 void FlushCommandString(
         const Environment&theEnv) {
+#if STUBBING_INACTIVE
     if (CommandLineData(theEnv)->CommandString != nullptr)
         rm(theEnv, CommandLineData(theEnv)->CommandString, CommandLineData(theEnv)->MaximumCharacters);
     CommandLineData(theEnv)->CommandString = nullptr;
@@ -276,6 +279,7 @@ void FlushCommandString(
     RouterData(theEnv)->CommandBufferInputCount = 0;
     RouterData(theEnv)->InputUngets = 0;
     RouterData(theEnv)->AwaitingInput = true;
+#endif
 }
 
 /*********************************************************************************/
@@ -284,6 +288,7 @@ void FlushCommandString(
 void SetCommandString(
         const Environment&theEnv,
         const char *str) {
+#if STUBBING_INACTIVE
     size_t length;
 
     FlushCommandString(theEnv);
@@ -296,6 +301,7 @@ void SetCommandString(
     genstrcpy(CommandLineData(theEnv)->CommandString, str);
     CommandLineData(theEnv)->MaximumCharacters += (length + 1);
     RouterData(theEnv)->CommandBufferInputCount += length;
+#endif
 }
 
 /*************************************************************/
@@ -306,6 +312,7 @@ void SetNCommandString(
         const Environment&theEnv,
         const char *str,
         unsigned length) {
+#if STUBBING_INACTIVE
     FlushCommandString(theEnv);
     CommandLineData(theEnv)->CommandString = (char *)
             genrealloc(theEnv, CommandLineData(theEnv)->CommandString,
@@ -316,6 +323,7 @@ void SetNCommandString(
     CommandLineData(theEnv)->CommandString[CommandLineData(theEnv)->MaximumCharacters + length] = 0;
     CommandLineData(theEnv)->MaximumCharacters += (length + 1);
     RouterData(theEnv)->CommandBufferInputCount += length;
+#endif
 }
 
 /******************************************************************************/
@@ -324,9 +332,11 @@ void SetNCommandString(
 void AppendCommandString(
         const Environment&theEnv,
         const char *str) {
+#if STUBBING_INACTIVE
     CommandLineData(theEnv)->CommandString = AppendToString(theEnv, str, CommandLineData(theEnv)->CommandString,
                                                             &RouterData(theEnv)->CommandBufferInputCount,
                                                             &CommandLineData(theEnv)->MaximumCharacters);
+#endif
 }
 
 /******************************************************************************/
@@ -336,9 +346,11 @@ void InsertCommandString(
         const Environment&theEnv,
         const char *str,
         unsigned int position) {
+#if STUBBING_INACTIVE
     CommandLineData(theEnv)->CommandString =
             InsertInString(theEnv, str, position, CommandLineData(theEnv)->CommandString,
                            &RouterData(theEnv)->CommandBufferInputCount, &CommandLineData(theEnv)->MaximumCharacters);
+#endif
 }
 
 /************************************************************/
@@ -349,17 +361,19 @@ void AppendNCommandString(
         const Environment&theEnv,
         const char *str,
         unsigned length) {
+#if STUBBING_INACTIVE
     CommandLineData(theEnv)->CommandString = AppendNToString(theEnv, str, CommandLineData(theEnv)->CommandString, length,
                                                              &RouterData(theEnv)->CommandBufferInputCount,
                                                              &CommandLineData(theEnv)->MaximumCharacters);
+#endif
 }
 
 /*****************************************************************************/
 /* GetCommandString: Returns a pointer to the contents of the CommandString. */
 /*****************************************************************************/
-char *GetCommandString(
-        const Environment&theEnv) {
-    return (CommandLineData(theEnv)->CommandString);
+std::string
+GetCommandString(const Environment&theEnv) {
+    return (CommandLineData(theEnv)->getCommandString());
 }
 
 /**************************************************************************/
@@ -601,8 +615,8 @@ static int DoWhiteSpace(
 /*   executes them. The command loop will bypass the EventFunction  */
 /*   if there is an active batch file.                              */
 /********************************************************************/
-void CommandLoop(
-        const Environment&theEnv) {
+void CommandLoop(const Environment&theEnv) {
+#if STUBBING_INACTIVE
     int inchar;
 
     WriteString(theEnv, STDOUT, CommandLineData(theEnv)->BannerString);
@@ -650,6 +664,7 @@ void CommandLoop(
 
         ExecuteIfCommandComplete(theEnv);
     }
+#endif
 }
 
 /***********************************************************/
@@ -740,6 +755,7 @@ void CommandLoopBatchDriver(
 /**********************************************************/
 bool ExecuteIfCommandComplete(
         const Environment&theEnv) {
+#if STUBBING_INACTIVE
     if ((CompleteCommand(CommandLineData(theEnv)->CommandString) == 0) ||
         (RouterData(theEnv)->CommandBufferInputCount == 0) ||
         !RouterData(theEnv)->AwaitingInput) { return false; }
@@ -766,6 +782,8 @@ bool ExecuteIfCommandComplete(
     PrintPrompt(theEnv);
 
     return true;
+#endif
+    return false;
 }
 
 /*******************************/
@@ -773,20 +791,24 @@ bool ExecuteIfCommandComplete(
 /*******************************/
 bool CommandCompleteAndNotEmpty(
         const Environment&theEnv) {
+#if STUBBING_INACTIVE
     return !((CompleteCommand(CommandLineData(theEnv)->CommandString) == 0) ||
              (RouterData(theEnv)->CommandBufferInputCount == 0) ||
              !RouterData(theEnv)->AwaitingInput);
+#endif
+    return false;
 
 }
 
 /*******************************************/
 /* PrintPrompt: Prints the command prompt. */
 /*******************************************/
-void PrintPrompt(
-        const Environment&theEnv) {
+void PrintPrompt(const Environment&theEnv) {
+#if STUBBING_INACTIVE
     WriteString(theEnv, STDOUT, COMMAND_PROMPT);
 
     if (CommandLineData(theEnv)->AfterPromptCallback != nullptr) { (*CommandLineData(theEnv)->AfterPromptCallback)(theEnv); }
+#endif
 }
 
 /*****************************************/
@@ -794,7 +816,9 @@ void PrintPrompt(
 /*****************************************/
 void PrintBanner(
         const Environment&theEnv) {
+#if STUBBING_INACTIVE
     WriteString(theEnv, STDOUT, CommandLineData(theEnv)->BannerString);
+#endif
 }
 
 /************************************************/
@@ -804,7 +828,9 @@ void PrintBanner(
 void SetAfterPromptFunction(
         const Environment&theEnv,
         AfterPromptFunction *funptr) {
+#if STUBBING_INACTIVE
     CommandLineData(theEnv)->AfterPromptCallback = funptr;
+#endif
 }
 
 /***********************************************************/
@@ -814,7 +840,9 @@ void SetAfterPromptFunction(
 void SetBeforeCommandExecutionFunction(
         const Environment&theEnv,
         BeforeCommandExecutionFunction *funptr) {
+#if STUBBING_INACTIVE
     CommandLineData(theEnv)->BeforeCommandExecutionCallback = funptr;
+#endif
 }
 /*********************************************************/
 /* RouteCommand: Processes a completed command. Returns  */
@@ -1007,11 +1035,14 @@ static void DefaultGetNextEvent(
 EventFunction *SetEventFunction(
         const Environment&theEnv,
         EventFunction *theFunction) {
+#if STUBBING_INACTIVE
     EventFunction *tmp_ptr;
 
     tmp_ptr = CommandLineData(theEnv)->EventCallback;
     CommandLineData(theEnv)->EventCallback = theFunction;
     return tmp_ptr;
+#endif
+    return nullptr;
 }
 
 /****************************************/

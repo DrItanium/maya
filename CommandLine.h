@@ -74,22 +74,23 @@ constexpr auto COMMANDLINE_DATA = 40;
 #include <cstdlib>
 #include <string>
 #include "Environment.h"
-struct Expression;
-typedef void AfterPromptFunction(const Environment&);
-typedef bool BeforeCommandExecutionFunction(const Environment&);
-typedef void EventFunction(const Environment&);
+#include "Expression.h"
+using EventFunction = std::function<void(const Environment&)>;
+using BeforeCommandExecutionFunction = std::function<bool(const Environment&)>;
+using AfterPromptFunction = std::function<void(const Environment&)>;
 
 struct commandLineData : public EnvironmentModule {
     bool EvaluatingTopLevelCommand = false;
     bool HaltCommandLoopBatch = false;
-    Expression *CurrentCommand = nullptr;
-    char *CommandString = nullptr;
+    Expression::Ptr CurrentCommand;
+    std::string CommandString;
     size_t MaximumCharacters = 0;
     bool ParsingTopLevelCommand = false;
-    const char *BannerString = nullptr;
-    EventFunction *EventCallback = nullptr;
-    AfterPromptFunction *AfterPromptCallback = nullptr;
-    BeforeCommandExecutionFunction *BeforeCommandExecutionCallback = nullptr;
+    std::string BannerString;
+    EventFunction EventCallback;
+    AfterPromptFunction AfterPromptCallback;
+    BeforeCommandExecutionFunction BeforeCommandExecutionCallback;
+    std::string getCommandString() const noexcept { return CommandString; }
 };
 RegisterEnvironmentModule(commandLineData, COMMANDLINE_DATA, CommandLine);
 
@@ -99,7 +100,7 @@ void FlushCommandString(const Environment&);
 void SetCommandString(const Environment&, const char *);
 void AppendCommandString(const Environment&, const char *);
 void InsertCommandString(const Environment&, const char *, unsigned);
-char *GetCommandString(const Environment&);
+std::string GetCommandString(const Environment&);
 int CompleteCommand(const char *);
 void CommandLoop(const Environment&);
 void CommandLoopBatch(const Environment&);
