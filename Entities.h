@@ -68,10 +68,6 @@ public:
 public:
     TypeHeader header;
     Ptr next;
-    bool permanent: 1;
-    bool markedEphemeral: 1;
-    bool neededSymbol: 1;
-    unsigned int bucket: 29;
     const char *contents;
 };
 
@@ -85,46 +81,32 @@ public:
 public:
     TypeHeader header;
     Ptr next;
-    bool permanent: 1;
-    bool markedEphemeral: 1;
-    bool neededFloat: 1;
-    unsigned int bucket: 29;
     double contents;
 };
 
 /****************/
 /* CLIPSInteger */
 /****************/
-struct CLIPSInteger {
+struct CLIPSInteger : public ReferenceCounted {
 public:
     using Self = CLIPSInteger;
     using Ptr = std::shared_ptr<Self>;
 public:
     TypeHeader header;
     Ptr next;
-    long count;
-    bool permanent: 1;
-    bool markedEphemeral: 1;
-    bool neededInteger: 1;
-    unsigned int bucket: 29;
     long long contents;
 };
 
 /***************/
 /* CLIPSBitMap */
 /***************/
-struct CLIPSBitMap {
+struct CLIPSBitMap : public ReferenceCounted {
 public:
     using Self = CLIPSBitMap;
     using Ptr = std::shared_ptr<Self>;
 public:
     TypeHeader header;
     Ptr next;
-    long count;
-    bool permanent: 1;
-    bool markedEphemeral: 1;
-    bool neededBitMap: 1;
-    unsigned int bucket: 29;
     const char *contents;
     unsigned short size;
 };
@@ -132,18 +114,13 @@ public:
 /************************/
 /* CLIPSExternalAddress */
 /************************/
-struct CLIPSExternalAddress{
+struct CLIPSExternalAddress : public ReferenceCounted {
 public:
     using Self = CLIPSExternalAddress;
     using Ptr = std::shared_ptr<Self>;
 public:
     TypeHeader header;
     Ptr next;
-    long count;
-    bool permanent: 1;
-    bool markedEphemeral: 1;
-    bool neededPointer: 1;
-    unsigned int bucket: 29;
     std::any contents;
     unsigned short type;
 };

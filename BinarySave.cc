@@ -65,6 +65,7 @@
 #include "Symbol.h"
 
 #include "BinarySave.h"
+#include "ReferenceCounted.h"
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */

@@ -63,6 +63,7 @@
 #include "RuleBinarySaveLoad.h"
 
 #include "ObjectReteBinarySaveLoad.h"
+#include "ReferenceCounted.h"
 
 /* =========================================
    *****************************************

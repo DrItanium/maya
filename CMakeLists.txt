@@ -292,7 +292,9 @@ add_library(clips
 		UserData.cc
 		UserFunctions.cc
 		Utility.cc
-		Watch.cc)
+		Watch.cc
+		ReferenceCounted.cc
+		ReferenceCounted.h)
 add_library(maya_extensions
 		BoostExtensions.cc
 		BoostExtensions.h

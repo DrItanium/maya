@@ -46,6 +46,7 @@
 #include "Router.h"
 
 #include "Symbol.h"
+#include "ReferenceCounted.h"
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
