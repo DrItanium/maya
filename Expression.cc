@@ -201,7 +201,6 @@ Expression *PackExpression(
 
     return packPtr;
 }
-#if 0
 /***********************************************************/
 /* ListToPacked: Copies a list of expressions to an array. */
 /***********************************************************/
@@ -209,6 +208,7 @@ static unsigned long ListToPacked(
         Expression *original,
         Expression *destination,
         unsigned long count) {
+#if 0
     unsigned long i;
 
     if (original == nullptr) { return count; }
@@ -234,10 +234,9 @@ static unsigned long ListToPacked(
 
         original = original->nextArg;
     }
-
+#endif
     return count;
 }
-#endif
 
 
 /***************************************************************/
