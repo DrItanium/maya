@@ -59,6 +59,7 @@
 
 #include "Expression.h"
 
+#if STUBBING_INACTIVE
 /************************************/
 /* CheckArgumentAgainstRestriction: */
 /************************************/
@@ -110,7 +111,6 @@ bool CheckArgumentAgainstRestriction(
     RemoveConstraint(theEnv, cr3);
     return false;
 }
-#if STUBBING_INACTIVE
 /******************************************************/
 /* ConstantExpression: Returns true if the expression */
 /*   is a constant, otherwise false.                  */

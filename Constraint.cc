@@ -294,7 +294,6 @@ unsigned long HashConstraint(
 
     return hashValue;
 }
-#if STUBBING_INACTIVE
 /**********************************************/
 /* ConstraintCompare: Compares two constraint */
 /*   records and returns true if they are     */
@@ -303,6 +302,7 @@ unsigned long HashConstraint(
 static bool ConstraintCompare(
         struct constraintRecord *constraint1,
         struct constraintRecord *constraint2) {
+#if STUBBING_INACTIVE
     Expression *tmpPtr1, *tmpPtr2;
 
     if ((constraint1->getAnyAllowed() != constraint2->getAnyAllowed()) ||
@@ -372,8 +372,9 @@ static bool ConstraintCompare(
     else if (constraint1->getMultifield() == constraint2->getMultifield()) { return true; }
 
     return (ConstraintCompare(constraint1->getMultifield(), constraint2->getMultifield()));
-}
 #endif
+    return false;
+}
 
 /************************************/
 /* AddConstraint: Adds a constraint */

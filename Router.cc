@@ -177,7 +177,7 @@ void WriteString(
         const char *logicalName,
         const char *str) {
     struct router *currentPtr;
-
+#if STUBBING_INACTIVE
     if (str == nullptr) return;
 
     /*===================================================*/
@@ -211,6 +211,7 @@ void WriteString(
     /*=====================================================*/
 
     if (strcmp(STDERR, logicalName) != 0) { UnrecognizedRouterMessage(theEnv, logicalName); }
+#endif
 }
 
 /***********************************************/

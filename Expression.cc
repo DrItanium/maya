@@ -193,6 +193,7 @@ void ExpressionDeinstall(
 Expression *PackExpression(
         const Environment&theEnv,
         Expression *original) {
+#if STUBBING_INACTIVE
     Expression *packPtr;
 
     if (original == nullptr) return nullptr;
@@ -202,6 +203,8 @@ Expression *PackExpression(
     ListToPacked(original, packPtr, 0);
 
     return packPtr;
+#endif
+    return nullptr;
 }
 /***********************************************************/
 /* ListToPacked: Copies a list of expressions to an array. */
@@ -248,9 +251,11 @@ static unsigned long ListToPacked(
 void ReturnPackedExpression(
         const Environment&theEnv,
         Expression *packPtr) {
+#if STUBBING_INACTIVE
     if (packPtr != nullptr) {
         rm(theEnv, packPtr, sizeof(Expression) * ExpressionSize(packPtr));
     }
+#endif
 }
 /***********************************************/
 /* ReturnExpression: Returns a multiply linked */
