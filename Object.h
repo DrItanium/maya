@@ -199,6 +199,8 @@ struct Instance {
             *prvList, *nxtList;
     InstanceSlot **slotAddresses,
             *slots;
+    void retain();
+    void release();
 };
 
 struct defmessageHandler {

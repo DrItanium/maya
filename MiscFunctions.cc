@@ -162,9 +162,9 @@ void MiscFunctionDefinitions(
     theEnv->allocateEnvironmentModule<miscFunctionData>();
     //AllocateEnvironmentData(theEnv, MISCFUN_DATA, sizeof(miscFunctionData));
     MiscFunctionData(theEnv)->GensymNumber = 1;
-    MiscFunctionData(theEnv)->errorCode.lexemeValue = FalseSymbol(theEnv);
-    Retain(theEnv, MiscFunctionData(theEnv)->errorCode.header);
-
+    MiscFunctionData(theEnv)->errorCode.contents = FalseSymbol(theEnv);
+    MiscFunctionData(theEnv)->errorCode.retain();
+#if STUBBING_INACTIVE
     AddUDF(theEnv, "exit", "v", 0, 1, "l", ExitCommand);
 
     AddUDF(theEnv, "gensym", "y", 0, 0, nullptr, GensymFunction);
@@ -203,8 +203,9 @@ void MiscFunctionDefinitions(
     AddUDF(theEnv, "set-error", "v", 1, 1, nullptr, SetErrorFunction);
 
     AddUDF(theEnv, "void", "v", 0, 0, nullptr, VoidFunction);
+#endif
 }
-
+#if STUBBING_INACTIVE
 /*****************************************************/
 /* ExitCommand: H/L command for exiting the program. */
 /*****************************************************/
@@ -222,7 +223,7 @@ void ExitCommand(
     else {
         if (!UDFFirstArgument(context, INTEGER_BIT, &theArg)) { ExitRouter(theEnv, EXIT_SUCCESS); }
 
-        status = (int) theArg.integerValue->contents;
+        status = (int) std::get<CLIPSInteger::Ptr>(theArg.contents)->contents;
         if (GetEvaluationError(theEnv)) return;
         ExitRouter(theEnv, status);
     }
@@ -259,11 +260,11 @@ void SetgenFunction(
     /* The integer must be greater than zero. */
     /*========================================*/
 
-    theLong = returnValue->integerValue->contents;
+    theLong = std::get<CLIPSInteger::Ptr>(returnValue->contents)->contents;
 
     if (theLong < 1LL) {
         UDFInvalidArgumentMessage(context, "integer (greater than or equal to 1)");
-        returnValue->integerValue = CreateInteger(theEnv, MiscFunctionData(theEnv)->GensymNumber);
+        returnValue->contents = CreateInteger(theEnv, MiscFunctionData(theEnv)->GensymNumber);
         return;
     }
 
@@ -296,7 +297,7 @@ void GensymFunction(
     /* Return the symbol. */
     /*====================*/
 
-    returnValue->lexemeValue = CreateSymbol(theEnv, genstring);
+    returnValue->contents = CreateSymbol(theEnv, genstring);
 }
 
 /************************************************/
@@ -339,7 +340,7 @@ void GensymStar(
     /* Return the symbol. */
     /*====================*/
 
-    returnValue->lexemeValue = CreateSymbol(theEnv, genstring);
+    returnValue->contents = CreateSymbol(theEnv, genstring);
 }
 
 /********************************************/
@@ -375,22 +376,22 @@ void RandomFunction(
 
     if (argCount == 2) {
         if (!UDFFirstArgument(context, INTEGER_BIT, &theArg)) { return; }
-        begin = theArg.integerValue->contents;
+        begin = std::get<CLIPSInteger::Ptr>(theArg.contents)->contents;
 
         if (!UDFNextArgument(context, INTEGER_BIT, &theArg)) { return; }
 
-        end = theArg.integerValue->contents;
+        end = std::get<CLIPSInteger::Ptr>(theArg.contents)->contents;
         if (end < begin) {
             PrintErrorID(theEnv, "MISCFUN", 3, false);
             WriteString(theEnv, STDERR, "Function random expected argument #1 to be less than argument #2\n");
-            returnValue->integerValue = CreateInteger(theEnv, rv);
+            returnValue->contents = CreateInteger(theEnv, rv);
             return;
         }
 
         rv = begin + (rv % ((end - begin) + 1));
     }
 
-    returnValue->integerValue = CreateInteger(theEnv, rv);
+    returnValue->contents = CreateInteger(theEnv, rv);
 }
 
 /******************************************/
@@ -413,7 +414,7 @@ void SeedFunction(
     /* Seed the random number generator with the provided integer. */
     /*=============================================================*/
 
-    genseed((unsigned int) theValue.integerValue->contents);
+    genseed((unsigned int) std::get<CLIPSInteger::Ptr>(theValue.contents)->contents);
 }
 
 /********************************************/
@@ -436,28 +437,8 @@ void LengthFunction(
     /* Return the number of fields in the argument. */
     /*==============================================*/
 
-    returnValue->value = CreateInteger(theEnv, (long long) theArg.range);
+    returnValue->contents = CreateInteger(theEnv, (long long) theArg.range);
 }
-
-/*******************************************/
-/* ReleaseMemCommand: H/L access routine   */
-/*   for the release-mem function.         */
-
-/******************************************/
-/* ConserveMemCommand: H/L access routine */
-/*   for the conserve-mem command.        */
-
-#if DEBUGGING_FUNCTIONS
-
-/****************************************/
-/* MemUsedCommand: H/L access routine   */
-/*   for the mem-used command.          */
-
-/********************************************/
-/* MemRequestsCommand: H/L access routine   */
-/*   for the mem-requests command.          */
-
-#endif
 
 /****************************************/
 /* AproposCommand: H/L access routine   */
@@ -1455,3 +1436,4 @@ void VoidFunction(
         UDFValue *returnValue) {
     returnValue->voidValue = VoidConstant(theEnv);
 }
+#endif

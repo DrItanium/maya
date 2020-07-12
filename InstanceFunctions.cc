@@ -170,8 +170,11 @@ void DecrementInstanceCallback(
 void RetainInstance(
         Instance *theInstance) {
     if (theInstance == nullptr) return;
-
-    theInstance->busy++;
+    theInstance->retain();
+}
+void
+Instance::retain() {
+    ++busy;
 }
 
 /***************************************************
@@ -186,8 +189,11 @@ void RetainInstance(
 void ReleaseInstance(
         Instance *theInstance) {
     if (theInstance == nullptr) return;
-
-    theInstance->busy--;
+    theInstance->release();
+}
+void
+Instance::release() {
+    --busy;
 }
 
 /***************************************************
@@ -248,7 +254,7 @@ void CleanupInstances(
         }
     }
 }
-
+#if STUBBING_INACTIVE
 /*******************************************************
   NAME         : HashInstance
   DESCRIPTION  : Generates a hash index for a given
@@ -1317,3 +1323,4 @@ static void NetworkModifyForSharedSlot(
 
 
 
+#endif

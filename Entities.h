@@ -27,6 +27,8 @@
 #define _H_entities
 #include <memory>
 #include <variant>
+#include <any>
+#include <vector>
 
 #include "ReferenceCounted.h"
 using Environment = std::shared_ptr<struct EnvironmentData>;
@@ -138,6 +140,8 @@ public:
     size_t length;
     Ptr next;
     std::vector<struct CLIPSValue> contents;
+    void retain();
+    void release();
 };
 struct Fact;
 struct Instance;
@@ -160,6 +164,8 @@ public:
     using Ptr = std::shared_ptr<Self>;
 public:
     ValueContainer contents;
+    void retain();
+    void release();
 #if STUBBING_INACTIVE
     union {
         std::shared_ptr<TypeHeader> header; // does this work o_O????

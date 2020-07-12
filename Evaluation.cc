@@ -358,9 +358,7 @@ bool GetEvaluationError(
 void SetHaltExecution(
         const Environment&theEnv,
         bool value) {
-#if STUBBING_INACTIVE
     EvaluationData(theEnv)->HaltExecution = value;
-#endif
 }
 
 /*****************************************************/
@@ -368,9 +366,7 @@ void SetHaltExecution(
 /*****************************************************/
 bool GetHaltExecution(
         const Environment&theEnv) {
-#if STUBBING_INACTIVE
     return (EvaluationData(theEnv)->HaltExecution);
-#endif
 }
 /*****************************************************/
 /* ReturnValues: Returns a linked list of UDFValue */

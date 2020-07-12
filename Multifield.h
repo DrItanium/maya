@@ -90,7 +90,7 @@ void DuplicateMultifield(const Environment&, UDFValue *, UDFValue *);
 void WriteMultifield(const Environment&, const char *, Multifield *);
 void PrintMultifieldDriver(const Environment&, const char *, Multifield *, size_t, size_t, bool);
 bool MultifieldDOsEqual(UDFValue *, UDFValue *);
-void StoreInMultifield(const Environment&, UDFValue *, Expression *, bool);
+void StoreInMultifield(const Environment&, UDFValue *, Expression::Ptr, bool);
 Multifield *CopyMultifield(const Environment&, Multifield *);
 bool MultifieldsEqual(Multifield *, Multifield *);
 Multifield *DOToMultifield(const Environment&, UDFValue *);

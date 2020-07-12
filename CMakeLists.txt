@@ -232,7 +232,7 @@ add_library(clips
 		#MultipleInheritanceParser.cc
 		#InstanceCommand.cc
 		#InstanceSaveLoadCommands.cc
-		#InstanceFunctions.cc
+		InstanceFunctions.cc
 		#InstanceManager.cc
 		#InstanceModifyAndDuplicate.cc
 		#InstanceMultifieldTypeSlot.cc
@@ -241,7 +241,7 @@ add_library(clips
 		#InstanceSetQueryParser.cc
 		#IOFunctions.cc
 		#LogicalDependencies.cc
-		#MiscFunctions.cc
+		MiscFunctions.cc
 		#DefmoduleBinarySaveLoad.cc
 		#DefModuleBasicCommands.cc
 		Defmodule.cc
@@ -251,7 +251,7 @@ add_library(clips
 		#DefmessageHandlerFunctions.cc
 		#DefmessageHandlerDispatch.cc
 		#DefmessageHandlerParser.cc
-		#Multifield.cc
+		Multifield.cc
 		#MultifieldFunctions.cc
 		#ObjectBinaryLoadSave.cc
 		#ObjectReteBinarySaveLoad.cc
@@ -295,7 +295,7 @@ add_library(clips
 		#DeftemplateUtilities.cc
 		UserData.cc
 		Watch.cc
-		)
+		CLIPSValue.cc)
 add_library(maya_extensions
 		BoostExtensions.h
 		#BoostExtensions.cc

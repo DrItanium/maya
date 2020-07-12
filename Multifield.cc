@@ -123,17 +123,18 @@ void ReturnMultifield(
 void RetainMultifield(
         const Environment&theEnv,
         Multifield *theSegment) {
+    theSegment->retain();
+#if STUBBING_INACTIVE
     size_t length, i;
-    CLIPSValue *contents;
 
     if (theSegment == nullptr) return;
 
     length = theSegment->length;
 
     theSegment->busyCount++;
-    contents = theSegment->contents;
-
+    auto contents = theSegment->contents;
     for (i = 0; i < length; i++) { AtomInstall(theEnv, contents[i].header->type, contents[i].value); }
+#endif
 }
 
 /**********************/
@@ -142,6 +143,8 @@ void RetainMultifield(
 void ReleaseMultifield(
         const Environment&theEnv,
         Multifield *theSegment) {
+    theSegment->release();
+#if STUBBING_INACTIVE
     size_t length, i;
     CLIPSValue *contents;
 
@@ -152,8 +155,9 @@ void ReleaseMultifield(
     contents = theSegment->contents;
 
     for (i = 0; i < length; i++) { AtomDeinstall(theEnv, contents[i].header->type, contents[i].value); }
+#endif
 }
-
+#if STUBBING_INACTIVE
 /************************************************/
 /* IncrementCLIPSValueMultifieldReferenceCount: */
 /************************************************/
@@ -531,7 +535,7 @@ void PrintMultifieldDriver(
 void StoreInMultifield(
         const Environment&theEnv,
         UDFValue *returnValue,
-        Expression *expptr,
+        Expression::Ptr expptr,
         bool garbageSegment) {
     UDFValue val_ptr;
     UDFValue *val_arr;
@@ -1243,4 +1247,15 @@ void MBDispose(
     if (theMB->bufferMaximum != 0) { rm(theMB->mbEnv, theMB->contents, sizeof(CLIPSValue) * theMB->bufferMaximum); }
 
     rtn_struct(theEnv, multifieldBuilder, theMB);
+}
+#endif
+
+void
+Multifield::release() {
+    /// @todo implement
+}
+
+void
+Multifield::retain() {
+    /// @todo implement
 }
