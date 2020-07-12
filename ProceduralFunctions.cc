@@ -77,6 +77,7 @@
 #include "ReferenceCounted.h"
 #endif
 
+#if STUBBING_INACTIVE
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
@@ -114,7 +115,6 @@ void ProceduralFunctionDefinitions(
     AddResetFunction(theEnv, "bind", FlushBindList, 0, nullptr);
     AddClearFunction(theEnv, "bind", FlushBindList, 0, nullptr);
 }
-#if STUBBING_INACTIVE
 /*************************************************************/
 /* DeallocateProceduralFunctionData: Deallocates environment */
 /*    data for procedural functions.                         */

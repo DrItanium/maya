@@ -170,7 +170,7 @@ add_library(clips
 		#ClassParser.cc
 		#ClassSlotParser.cc
 		Construct.cc
-		#Constraint.cc
+		Constraint.cc
 		#ConflictResolutionStrategy.cc
 		#ConstructBinaryLoadSave.cc
 		#ConstructCommand.cc

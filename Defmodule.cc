@@ -162,8 +162,6 @@ static void DeallocateDefmoduleData(
     DeallocateVoidCallList(theEnv, DefmoduleData(theEnv)->AfterModuleDefinedFunctions);
     DeallocateVoidCallList(theEnv, DefmoduleData(theEnv)->AfterModuleChangeFunctions);
 }
-#endif
-
 /**************************************************************/
 /* InitializeDefmodules: Initializes the defmodule construct. */
 /**************************************************************/
@@ -184,6 +182,7 @@ void InitializeDefmodules(
     AddUDF(theEnv, "set-current-module", "y", 1, 1, "y", SetCurrentModuleCommand);
 #endif
 }
+#endif
 #if STUBBING_INACTIVE
 /******************************************************/
 /* RegisterModuleItem: Called to register a construct */
@@ -258,6 +257,7 @@ Defmodule *GetCurrentModule(
         const Environment&theEnv) {
     return DefmoduleData(theEnv)->CurrentModule;
 }
+#endif
 
 /***********************************************************/
 /* SetCurrentModule: Sets the value of the current module. */
@@ -265,6 +265,7 @@ Defmodule *GetCurrentModule(
 Defmodule *SetCurrentModule(
         const Environment&theEnv,
         Defmodule *newModule) {
+#if STUBBING_INACTIVE
     struct voidCallFunctionItem *changeFunctions;
 
     /*=============================================*/
@@ -299,8 +300,10 @@ Defmodule *SetCurrentModule(
     /*=====================================*/
 
     return oldModule;
+#endif
+    return nullptr;
 }
-
+#if STUBBING_INACTIVE
 /********************************************************/
 /* SaveCurrentModule: Saves current module on stack and */
 /*   prevents SetCurrentModule() from calling change    */
@@ -608,6 +611,7 @@ static void ReturnDefmodule(
 }
 
 
+#endif
 /************************************************/
 /* FindDefmodule: Searches for a defmodule in   */
 /*   the list of defmodules. Returns a pointer  */
@@ -616,6 +620,7 @@ static void ReturnDefmodule(
 Defmodule *FindDefmodule(
         const Environment&theEnv,
         const char *defmoduleName) {
+#if STUBBING_INACTIVE
     Defmodule *defmodulePtr;
     CLIPSLexeme *findValue;
 
@@ -627,10 +632,10 @@ Defmodule *FindDefmodule(
 
         defmodulePtr = (Defmodule *) defmodulePtr->header.next;
     }
+#endif
 
     return nullptr;
 }
-#endif
 /*************************************************/
 /* GetCurrentModuleCommand: H/L access routine   */
 /*   for the get-current-module command.         */

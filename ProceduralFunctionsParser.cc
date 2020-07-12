@@ -87,7 +87,7 @@ RegisterEnvironmentModule(procedureParserData, PRCDRPSR_DATA, ProcedureParser);
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
-
+#if STUBBING_INACTIVE
 static void DeallocateProceduralFunctionData(const Environment&);
 static Expression *WhileParse(const Environment&, Expression *, const char *);
 static Expression *LoopForCountParse(const Environment&, Expression *, const char *);
@@ -117,6 +117,7 @@ void ProceduralFunctionParsers(
     AddFunctionParser(theEnv, "break", BreakParse);
     AddFunctionParser(theEnv, "switch", SwitchParse);
 }
+#endif
 
 /*************************************************************/
 /* DeallocateProceduralFunctionData: Deallocates environment */
