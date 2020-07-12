@@ -171,7 +171,7 @@
 /************************************************/
 
 #ifndef DEFMODULE_CONSTRUCT
-#define DEFMODULE_CONSTRUCT 1
+#define DEFMODULE_CONSTRUCT 0
 #endif
 
 /****************************************************/
@@ -180,7 +180,7 @@
 /****************************************************/
 
 #ifndef DEFTEMPLATE_CONSTRUCT
-#define DEFTEMPLATE_CONSTRUCT 1
+#define DEFTEMPLATE_CONSTRUCT 0
 #endif
 
 /************************************************************/
@@ -189,7 +189,7 @@
 /************************************************************/
 
 #ifndef FACT_SET_QUERIES
-#define FACT_SET_QUERIES 1
+#define FACT_SET_QUERIES 0
 #endif
 
 #if !DEFTEMPLATE_CONSTRUCT
@@ -203,7 +203,7 @@
 /****************************************************/
 
 #ifndef DEFFACTS_CONSTRUCT
-#define DEFFACTS_CONSTRUCT 1
+#define DEFFACTS_CONSTRUCT 0
 #endif
 
 #if !DEFTEMPLATE_CONSTRUCT
@@ -217,7 +217,7 @@
 /************************************************/
 
 #ifndef DEFGLOBAL_CONSTRUCT
-#define DEFGLOBAL_CONSTRUCT 1
+#define DEFGLOBAL_CONSTRUCT 0
 #endif
 
 /**********************************************/
@@ -226,7 +226,7 @@
 /**********************************************/
 
 #ifndef DEFFUNCTION_CONSTRUCT
-#define DEFFUNCTION_CONSTRUCT 1
+#define DEFFUNCTION_CONSTRUCT 0
 #endif
 
 /*********************************************/
@@ -235,7 +235,7 @@
 /*********************************************/
 
 #ifndef DEFGENERIC_CONSTRUCT
-#define DEFGENERIC_CONSTRUCT 1
+#define DEFGENERIC_CONSTRUCT 0
 #endif
 
 /*****************************************************************/
@@ -244,7 +244,11 @@
 /*****************************************************************/
 
 #ifndef DEFINSTANCES_CONSTRUCT
-#define DEFINSTANCES_CONSTRUCT      1
+#define DEFINSTANCES_CONSTRUCT      0
+#endif
+
+#if !DEFINSTANCES_CONSTRUCT
+#warning "DEFINSTANCES_CONSTRUCT Hard Disabled!"
 #endif
 
 /********************************************************************/
@@ -253,7 +257,11 @@
 /********************************************************************/
 
 #ifndef INSTANCE_SET_QUERIES
-#define INSTANCE_SET_QUERIES 1
+#define INSTANCE_SET_QUERIES 0
+#endif
+
+#if !INSTANCE_SET_QUERIES
+#warning "INSTANCE_SET_QUERIES Hard Disabled!"
 #endif
 
 /*******************************************************************/
@@ -286,7 +294,10 @@
 /****************************************************************/
 
 #ifndef EXTENDED_MATH_FUNCTIONS
-#define EXTENDED_MATH_FUNCTIONS 1
+#define EXTENDED_MATH_FUNCTIONS 0
+#endif
+#if !EXTENDED_MATH_FUNCTIONS
+#warning "EXTENDED_MATH_FUNCTIONS Hard Disabled!"
 #endif
 
 /*************************************************************************/
@@ -306,7 +317,7 @@
 /************************************************/
 
 #ifndef IO_FUNCTIONS
-#define IO_FUNCTIONS 1
+#define IO_FUNCTIONS 0
 #endif
 
 /************************************************/
@@ -316,7 +327,7 @@
 /************************************************/
 
 #ifndef STRING_FUNCTIONS
-#define STRING_FUNCTIONS 1
+#define STRING_FUNCTIONS 0
 #endif
 
 /*********************************************/
@@ -326,7 +337,7 @@
 /*********************************************/
 
 #ifndef MULTIFIELD_FUNCTIONS
-#define MULTIFIELD_FUNCTIONS 1
+#define MULTIFIELD_FUNCTIONS 0
 #endif
 
 /****************************************************/
@@ -335,7 +346,7 @@
 /****************************************************/
 
 #ifndef DEBUGGING_FUNCTIONS
-#define DEBUGGING_FUNCTIONS 1
+#define DEBUGGING_FUNCTIONS 0
 #endif
 
 /***************************************************/
@@ -344,7 +355,7 @@
 /***************************************************/
 
 #ifndef PROFILING_FUNCTIONS
-#define PROFILING_FUNCTIONS 1
+#define PROFILING_FUNCTIONS 0
 #endif
 
 /********************************************/
