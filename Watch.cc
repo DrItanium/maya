@@ -799,17 +799,19 @@ void GetWatchItemCommand(
     else { returnValue->lexemeValue = FalseSymbol(theEnv); }
 }
 
+#endif
 /*************************************************************/
 /* WatchFunctionDefinitions: Initializes the watch commands. */
 /*************************************************************/
 void WatchFunctionDefinitions(
         const Environment&theEnv) {
+#if STUBBING_INACTIVE
     AddUDF(theEnv, "watch", "v", 1, UNBOUNDED, "*;y", WatchCommand);
     AddUDF(theEnv, "unwatch", "v", 1, UNBOUNDED, "*;y", UnwatchCommand);
     AddUDF(theEnv, "get-watch-item", "b", 1, 1, "y", GetWatchItemCommand);
     AddUDF(theEnv, "list-watch-items", "v", 0, UNBOUNDED, "*;y", ListWatchItemsCommand);
-}
 #endif
+}
 
 #endif /* DEBUGGING_FUNCTIONS */
 

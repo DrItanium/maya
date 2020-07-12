@@ -346,7 +346,7 @@
 /****************************************************/
 
 #ifndef DEBUGGING_FUNCTIONS
-#define DEBUGGING_FUNCTIONS 0
+#define DEBUGGING_FUNCTIONS 1
 #endif
 
 /***************************************************/
