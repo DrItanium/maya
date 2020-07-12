@@ -146,7 +146,7 @@ add_library(clips
 		Analysis.cc
 		ArgumentAccess.cc
 		BinaryLoad.cc
-		BasicMathFunctions.cc
+		#BasicMathFunctions.cc
 		BinarySave.cc
 		ClassCommands.cc
 		ClassExamination.cc

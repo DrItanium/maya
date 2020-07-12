@@ -57,6 +57,7 @@
 /************************************************/
 struct constraintRecord *GetConstraintRecord(
         const Environment&theEnv) {
+#if 0
     unsigned i;
 
     auto constraints = get_struct(theEnv, constraintRecord);
@@ -88,6 +89,8 @@ struct constraintRecord *GetConstraintRecord(
     constraints->setNext(nullptr);
 
     return constraints;
+#endif
+    return nullptr;
 }
 
 /********************************************************/

@@ -181,10 +181,8 @@ struct slotDescriptor {
 };
 
 struct Instance {
-    union {
-        PatternEntity patternHeader;
-        TypeHeader header;
-    };
+    PatternEntity patternHeader;
+    inline TypeHeader& header() { return patternHeader.header; }
     void *_partialMatchList;
     InstanceSlot *basisSlots;
     bool installed: 1;

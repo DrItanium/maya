@@ -285,6 +285,7 @@ char *GetWarningFileName(
 bool LoadConstructsFromLogicalName(
         const Environment&theEnv,
         const char *readSource) {
+#if 0
     BuildError constructFlag;
     struct token theToken;
     bool noErrors = true;
@@ -436,6 +437,8 @@ bool LoadConstructsFromLogicalName(
     /*==========================================================*/
 
     return noErrors;
+#endif
+    return false;
 }
 
 /********************************************************************/
