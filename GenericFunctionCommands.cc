@@ -163,6 +163,7 @@ static void PrintMethodWatchFlag(const Environment&, const char *, Defgeneric *,
  ***********************************************************/
 void SetupGenericFunctions(
         const Environment&theEnv) {
+#if 0
     EntityRecord genericEntityRecord =
             {"GCALL", GCALL, 0, 0, 1,
              (EntityPrintFunction *) PrintGenericCall,
@@ -173,10 +174,12 @@ void SetupGenericFunctions(
              (EntityBusyCountFunction *) DecrementGenericBusyCount,
              (EntityBusyCountFunction *) IncrementGenericBusyCount,
              nullptr, nullptr, nullptr, nullptr, nullptr};
-
+#endif
     theEnv->allocateEnvironmentModule<defgenericData>();
     //AllocateEnvironmentData(theEnv, DEFGENERIC_DATA, sizeof(defgenericData), DeallocateDefgenericData);
+#if 0
     DefgenericData(theEnv)->GenericEntityRecord = genericEntityRecord;
+#endif
 
     InstallPrimitive(theEnv, &DefgenericData(theEnv)->GenericEntityRecord, GCALL);
 
@@ -513,9 +516,10 @@ void GetDefgenericModuleCommand(
         const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
-    returnValue->value = GetConstructModuleCommand(context, "defgeneric-module", DefgenericData(theEnv)->DefgenericConstruct);
+    returnValue->contents = GetConstructModuleCommand(context, "defgeneric-module", DefgenericData(theEnv)->DefgenericConstruct);
 }
 
+#if 0
 /**************************************************************
   NAME         : UndefmethodCommand
   DESCRIPTION  : Deletes one method for a generic function
@@ -812,7 +816,6 @@ void PPDefgenericCommand(
         UDFValue *returnValue) {
     PPConstructCommand(context, "ppdefgeneric", DefgenericData(theEnv)->DefgenericConstruct, returnValue);
 }
-
 /**********************************************************
   NAME         : PPDefmethodCommand
   DESCRIPTION  : Displays the pretty-print form of
@@ -972,9 +975,10 @@ void ListDefmethods(
     }
     PrintTally(theEnv, logicalName, count, "method", "methods");
 }
+#endif
 
 #endif /* DEBUGGING_FUNCTIONS */
-
+#if 0
 /***************************************************************
   NAME         : GetDefgenericListFunction
   DESCRIPTION  : Groups all defgeneric names into
@@ -1742,6 +1746,7 @@ void SetDefgenericPPForm(
         const char *thePPForm) {
     SetConstructPPForm(theEnv, &theDefgeneric->header, thePPForm);
 }
+#endif
 
 #endif /* DEFGENERIC_CONSTRUCT */
 
