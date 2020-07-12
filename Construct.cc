@@ -123,7 +123,7 @@ void InitializeConstructData(
     /// @todo DeallocateConstructData is ConstructModule's dtor
     //AllocateEnvironmentData(theEnv, CONSTRUCT_DATA, sizeof(ConstructModule), DeallocateConstructData);
 }
-
+#if 0
 /****************************************************/
 /* DeallocateConstructData: Deallocates environment */
 /*    data for constructs.                          */
@@ -159,6 +159,7 @@ static void DeallocateConstructData(
         tmpPtr = nextPtr;
     }
 }
+#endif
 
 
 /***********************************************/
@@ -445,6 +446,7 @@ void ResetCommand(
 /****************************/
 void Reset(
         const Environment&theEnv) {
+#if 0
     struct voidCallFunctionItem *resetPtr;
     GCBlock gcb;
 
@@ -524,6 +526,7 @@ void Reset(
     /*===================================*/
 
     ConstructData(theEnv)->ResetInProgress = false;
+#endif
 }
 
 /************************************/
@@ -550,9 +553,11 @@ bool AddResetFunction(
         VoidCallFunction *functionPtr,
         int priority,
         void *context) {
+#if 0
     ConstructData(theEnv)->ListOfResetFunctions =
             AddVoidFunctionToCallList(theEnv, name, priority, functionPtr,
                                       ConstructData(theEnv)->ListOfResetFunctions, context);
+#endif
     return true;
 }
 
@@ -563,11 +568,12 @@ bool AddResetFunction(
 bool RemoveResetFunction(
         const Environment&theEnv,
         const char *name) {
-    bool found;
-
+    bool found = false;
+#if 0
     ConstructData(theEnv)->ListOfResetFunctions =
             RemoveVoidFunctionFromCallList(theEnv, name, ConstructData(theEnv)->ListOfResetFunctions, &found);
 
+#endif
     return found;
 }
 
@@ -594,6 +600,7 @@ void DecrementClearReadyLocks(
 /**************************************************/
 bool Clear(
         const Environment&theEnv) {
+#if 0
     struct voidCallFunctionItem *theFunction;
     GCBlock gcb;
 
@@ -669,6 +676,8 @@ bool Clear(
     Reset(theEnv);
 
     return true;
+#endif
+    return false;
 }
 
 /*********************************************************/
@@ -679,6 +688,7 @@ bool Clear(
 /*********************************************************/
 bool ClearReady(
         const Environment&theEnv) {
+#if 0
     struct boolCallFunctionItem *theFunction;
 
     for (theFunction = ConstructData(theEnv)->ListOfClearReadyFunctions;
@@ -688,6 +698,8 @@ bool ClearReady(
     }
 
     return true;
+#endif
+    return false;
 }
 
 /******************************************/
@@ -700,9 +712,11 @@ bool AddClearReadyFunction(
         BoolCallFunction *functionPtr,
         int priority,
         void *context) {
+#if 0
     ConstructData(theEnv)->ListOfClearReadyFunctions =
             AddBoolFunctionToCallList(theEnv, name, priority, functionPtr,
                                       ConstructData(theEnv)->ListOfClearReadyFunctions, context);
+#endif
     return true;
 }
 
@@ -713,10 +727,11 @@ bool AddClearReadyFunction(
 bool RemoveClearReadyFunction(
         const Environment&theEnv,
         const char *name) {
-    bool found;
-
+    bool found = false;
+#if 0
     ConstructData(theEnv)->ListOfClearReadyFunctions =
             RemoveBoolFunctionFromCallList(theEnv, name, ConstructData(theEnv)->ListOfClearReadyFunctions, &found);
+#endif
 
     return found;
 
@@ -732,9 +747,11 @@ bool AddClearFunction(
         VoidCallFunction *functionPtr,
         int priority,
         void *context) {
+#if 0
     ConstructData(theEnv)->ListOfClearFunctions =
             AddVoidFunctionToCallList(theEnv, name, priority, functionPtr,
                                       ConstructData(theEnv)->ListOfClearFunctions, context);
+#endif
     return true;
 }
 
@@ -745,10 +762,11 @@ bool AddClearFunction(
 bool RemoveClearFunction(
         const Environment&theEnv,
         const char *name) {
-    bool found;
-
+    bool found = false;
+#if 0
     ConstructData(theEnv)->ListOfClearFunctions =
             RemoveVoidFunctionFromCallList(theEnv, name, ConstructData(theEnv)->ListOfClearFunctions, &found);
+#endif
 
     return found;
 
@@ -837,6 +855,7 @@ Construct *AddConstruct(
         IsConstructDeletableFunction *isConstructDeletableFunction,
         DeleteConstructFunction *deleteFunction,
         FreeConstructFunction *freeFunction) {
+#if 0
     Construct *newPtr;
 
     /*=============================*/
@@ -867,6 +886,8 @@ Construct *AddConstruct(
     newPtr->next = ConstructData(theEnv)->ListOfConstructs;
     ConstructData(theEnv)->ListOfConstructs = newPtr;
     return (newPtr);
+#endif
+    return nullptr;
 }
 
 /************************************/
@@ -899,6 +920,7 @@ SaveCallFunctionItem *AddSaveFunctionToCallList(
         SaveCallFunction *func,
         struct saveCallFunctionItem *head,
         void *context) {
+#if 0
     struct saveCallFunctionItem *newPtr, *currentPtr, *lastPtr = nullptr;
     char *nameCopy;
 
@@ -932,6 +954,8 @@ SaveCallFunctionItem *AddSaveFunctionToCallList(
     }
 
     return (head);
+#endif
+    return nullptr;
 }
 
 /******************************************************************/
