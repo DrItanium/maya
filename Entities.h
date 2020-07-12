@@ -25,9 +25,11 @@
 #pragma once
 
 #define _H_entities
+#include <memory>
+#include <variant>
 struct UDFValue;
 typedef void EntityPrintFunction(const Environment&, const char *, void *);
-typedef bool EntityEvaluationFunction(const Environment&, void *, UDFValue *);
+typedef bool EntityEvaluationFunction(const Environment&, void *, std::shared_ptr<UDFValue>);
 typedef void EntityBusyCountFunction(const Environment&, void *);
 
 
@@ -38,7 +40,6 @@ typedef void VoidCallFunctionWithArg(const Environment&, void *, void *);
 /**************/
 /* typeHeader */
 /**************/
-
 struct TypeHeader {
     unsigned short type;
 };
@@ -47,6 +48,10 @@ struct TypeHeader {
 /* clipsVoid */
 /*************/
 struct CLIPSVoid {
+public:
+    using Self = CLIPSVoid;
+    using Ptr = std::shared_ptr<Self>;
+public:
     TypeHeader header;
 };
 
@@ -54,8 +59,12 @@ struct CLIPSVoid {
 /* CLIPSLexeme */
 /***************/
 struct CLIPSLexeme {
+public:
+    using Self = CLIPSLexeme;
+    using Ptr = std::shared_ptr<Self>;
+public:
     TypeHeader header;
-    CLIPSLexeme *next;
+    Ptr next;
     long count;
     bool permanent: 1;
     bool markedEphemeral: 1;
@@ -68,8 +77,12 @@ struct CLIPSLexeme {
 /* CLIPSFloat */
 /**************/
 struct CLIPSFloat {
+public:
+    using Self = CLIPSFloat;
+    using Ptr = std::shared_ptr<Self>;
+public:
     TypeHeader header;
-    CLIPSFloat *next;
+    Ptr next;
     long count;
     bool permanent: 1;
     bool markedEphemeral: 1;
@@ -82,8 +95,12 @@ struct CLIPSFloat {
 /* CLIPSInteger */
 /****************/
 struct CLIPSInteger {
+public:
+    using Self = CLIPSInteger;
+    using Ptr = std::shared_ptr<Self>;
+public:
     TypeHeader header;
-    CLIPSInteger *next;
+    Ptr next;
     long count;
     bool permanent: 1;
     bool markedEphemeral: 1;
@@ -96,8 +113,12 @@ struct CLIPSInteger {
 /* CLIPSBitMap */
 /***************/
 struct CLIPSBitMap {
+public:
+    using Self = CLIPSBitMap;
+    using Ptr = std::shared_ptr<Self>;
+public:
     TypeHeader header;
-    CLIPSBitMap *next;
+    Ptr next;
     long count;
     bool permanent: 1;
     bool markedEphemeral: 1;
@@ -111,68 +132,80 @@ struct CLIPSBitMap {
 /* CLIPSExternalAddress */
 /************************/
 struct CLIPSExternalAddress{
+public:
+    using Self = CLIPSExternalAddress;
+    using Ptr = std::shared_ptr<Self>;
+public:
     TypeHeader header;
-    CLIPSExternalAddress *next;
+    Ptr next;
     long count;
     bool permanent: 1;
     bool markedEphemeral: 1;
     bool neededPointer: 1;
     unsigned int bucket: 29;
-    void *contents;
+    std::any contents;
     unsigned short type;
-};
-struct Multifield;
-struct Fact;
-struct Instance;
-/**************/
-/* CLIPSValue */
-/**************/
-struct CLIPSValue {
-    union {
-        void *value;
-        TypeHeader *header;
-        CLIPSLexeme *lexemeValue;
-        CLIPSFloat *floatValue;
-        CLIPSInteger *integerValue;
-        CLIPSVoid *voidValue;
-        Multifield *multifieldValue;
-        Fact *factValue;
-        Instance *instanceValue;
-        CLIPSExternalAddress *externalAddressValue;
-    };
 };
 
 /**************/
 /* multifield */
 /**************/
 struct Multifield {
+public:
+    using Self = Multifield;
+    using Ptr = std::shared_ptr<Self>;
+public:
     TypeHeader header;
     unsigned busyCount;
     size_t length;
-    Multifield *next;
-    CLIPSValue contents[1];
+    Ptr next;
+    std::vector<struct CLIPSValue> contents;
 };
+struct Fact;
+struct Instance;
+/**************/
+/* CLIPSValue */
+/**************/
+struct CLIPSValue {
+public:
+    using Self = CLIPSValue;
+    using Ptr = std::shared_ptr<Self>;
+public:
+    std::variant<
+            std::monostate,
+            CLIPSLexeme::Ptr,
+            CLIPSFloat::Ptr,
+            CLIPSInteger::Ptr,
+            CLIPSVoid::Ptr,
+            Multifield::Ptr,
+            std::shared_ptr<Fact>,
+            std::shared_ptr<Instance>,
+            CLIPSExternalAddress::Ptr> contents;
+};
+
 
 /************/
 /* UDFValue */
 /************/
 struct UDFValue {
-    void *supplementalInfo;
-    union {
-        void *value;
-        TypeHeader *header;
-        CLIPSLexeme *lexemeValue;
-        CLIPSFloat *floatValue;
-        CLIPSInteger *integerValue;
-        CLIPSVoid *voidValue;
-        Multifield *multifieldValue;
-        Fact *factValue;
-        Instance *instanceValue;
-        CLIPSExternalAddress *externalAddressValue;
-    };
+public:
+    using Self = UDFValue;
+    using Ptr = std::shared_ptr<Self>;
+public:
+    std::any supplementalInfo;
+    std::variant<
+            std::monostate,
+            CLIPSLexeme::Ptr,
+            CLIPSFloat::Ptr,
+            CLIPSInteger::Ptr,
+            CLIPSVoid::Ptr,
+            Multifield::Ptr,
+            std::shared_ptr<Fact>,
+            std::shared_ptr<Instance>,
+            CLIPSExternalAddress::Ptr> contents;
     size_t begin;
     size_t range;
-    UDFValue *next;
+    Ptr next;
 };
 struct FunctionDefinition;
 struct Expression;
@@ -181,11 +214,11 @@ struct Expression;
 /**************/
 struct UDFContext {
     Environment environment;
-    void *context;
-    FunctionDefinition *theFunction;
+    std::any context;
+    std::shared_ptr<FunctionDefinition> theFunction;
     unsigned int lastPosition;
-    Expression *lastArg;
-    UDFValue *returnValue;
+    std::shared_ptr<struct Expression> lastArg;
+    UDFValue::Ptr returnValue;
 };
 
 typedef void EntityRecordPropagateDepthFunction(void*, void*);
@@ -203,18 +236,18 @@ struct EntityRecord {
     bool copyToEvaluate: 1;
     bool bitMap: 1;
     bool addsToRuleComplexity: 1;
-    EntityPrintFunction *shortPrintFunction;
-    EntityPrintFunction *longPrintFunction;
-    EntityRecordDeleteFunction* deleteFunction;
-    EntityEvaluationFunction *evaluateFunction;
-    EntityRecordGetNextFunction* getNextFunction;
-    EntityBusyCountFunction *decrementBusyCount;
-    EntityBusyCountFunction *incrementBusyCount;
-    EntityRecordPropagateDepthFunction* propagateDepth;
-    EntityRecordMarkNeededFunction* markNeeded;
-    EntityRecordInstallFunction* install;
-    EntityRecordDeinstallFunction* deinstall;
-    struct userData *usrData;
+    std::shared_ptr<EntityPrintFunction> shortPrintFunction;
+    std::shared_ptr<EntityPrintFunction> longPrintFunction;
+    std::shared_ptr<EntityRecordDeleteFunction> deleteFunction;
+    std::shared_ptr<EntityEvaluationFunction> evaluateFunction;
+    std::shared_ptr<EntityRecordGetNextFunction> getNextFunction;
+    std::shared_ptr<EntityBusyCountFunction> decrementBusyCount;
+    std::shared_ptr<EntityBusyCountFunction> incrementBusyCount;
+    std::shared_ptr<EntityRecordPropagateDepthFunction> propagateDepth;
+    std::shared_ptr<EntityRecordMarkNeededFunction> markNeeded;
+    std::shared_ptr<EntityRecordInstallFunction> install;
+    std::shared_ptr<EntityRecordDeinstallFunction> deinstall;
+    std::shared_ptr<struct userData> usrData;
 };
 
 typedef void PatternEntityRecordDecrementBasisCountFunction(const Environment&, void*);
@@ -239,8 +272,8 @@ struct PatternEntityRecord {
 /*****************/
 struct PatternEntity {
     TypeHeader header;
-    PatternEntityRecord *theInfo;
-    void *dependents;
+    std::shared_ptr<struct PatternEntityRecord> theInfo;
+    std::any dependents;
     unsigned busyCount;
     unsigned long long timeTag;
 };

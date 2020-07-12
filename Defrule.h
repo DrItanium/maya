@@ -125,7 +125,7 @@ struct defruleData : public EnvironmentModule {
     std::shared_ptr<Construct> DefruleConstruct;
     unsigned DefruleModuleIndex;
     unsigned long long CurrentEntityTimeTag;
-    std::shared_ptr<alphaMemoryHash>* AlphaMemoryTable;
+    std::shared_ptr<struct alphaMemoryHash>* AlphaMemoryTable;
     bool BetaMemoryResizingFlag;
     std::shared_ptr<joinLink> RightPrimeJoins;
     std::shared_ptr<joinLink> LeftPrimeJoins;
