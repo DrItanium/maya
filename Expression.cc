@@ -146,7 +146,7 @@ void InitExpressionPointers(
         ExitRouter(theEnv, EXIT_FAILURE);
     }
 }
-
+#if 0
 /***************************************************/
 /* ExpressionInstall: Increments the busy count of */
 /*   atomic data values found in an expression.    */
@@ -178,6 +178,7 @@ void ExpressionDeinstall(
         expression = expression->nextArg;
     }
 }
+#endif
 
 
 /***********************************************************************/
@@ -200,7 +201,7 @@ Expression *PackExpression(
 
     return packPtr;
 }
-
+#if 0
 /***********************************************************/
 /* ListToPacked: Copies a list of expressions to an array. */
 /***********************************************************/
@@ -236,6 +237,7 @@ static unsigned long ListToPacked(
 
     return count;
 }
+#endif
 
 
 /***************************************************************/
@@ -249,7 +251,7 @@ void ReturnPackedExpression(
         rm(theEnv, packPtr, sizeof(Expression) * ExpressionSize(packPtr));
     }
 }
-
+#if 0
 /***********************************************/
 /* ReturnExpression: Returns a multiply linked */
 /*   list of Expression data structures.             */
@@ -266,6 +268,7 @@ void ReturnExpression(
         rtn_struct(theEnv, Expression, tmp);
     }
 }
+#endif
 
 /***************************************************
   NAME         : FindHashedExpression
@@ -301,7 +304,7 @@ static ExpressionHashNode *FindHashedExpression(
     }
     return nullptr;
 }
-
+#if 0
 /***************************************************
   NAME         : HashExpression
   DESCRIPTION  : Assigns a deterministic number to
@@ -330,6 +333,7 @@ static unsigned HashExpression(
     }
     return (unsigned) (tally % EXPRESSION_HASH_SIZE);
 }
+#endif
 
 /***************************************************
   NAME         : RemoveHashedExpression
@@ -364,7 +368,7 @@ void RemoveHashedExpression(
     ReturnPackedExpression(theEnv, exphash->exp);
     rtn_struct(theEnv, ExpressionHashNode, exphash);
 }
-
+#if 0
 /*****************************************************
   NAME         : AddHashedExpression
   DESCRIPTION  : Adds a new expression to the
@@ -401,6 +405,7 @@ Expression *AddHashedExpression(
     exphash->bsaveID = 0L;
     return (exphash->exp);
 }
+#endif
 
 #if (BLOAD_AND_BSAVE)
 

@@ -120,6 +120,7 @@ add_library(clips
 	ProceduralCodeSupportRoutines.h
 	ProceduralFunctions.h
 	ProceduralFunctionsParser.h
+		ReferenceCounted.h
 	Reorder.h
 	ReteUtility.h
 	Retract.h
@@ -143,6 +144,17 @@ add_library(clips
 	Utility.h
 	Watch.h
 		Agenda.cc
+		CommandLine.cc
+		Environment.cc
+		EnvironmentBuild.cc
+		Evaluation.cc
+		Expression.cc
+		FileUtilities.cc
+		MemoryAllocation.cc
+		ReferenceCounted.cc
+		SystemDependency.cc
+		UserFunctions.cc
+		Utility.cc
 		#Analysis.cc
 		#ArgumentAccess.cc
 		#BinaryLoad.cc
@@ -155,7 +167,6 @@ add_library(clips
 		#ClassInitialization.cc
 		#ClassParser.cc
 		#ClassSlotParser.cc
-		CommandLine.cc
 		#Construct.cc
 		#Constraint.cc
 		#ConflictResolutionStrategy.cc
@@ -182,10 +193,6 @@ add_library(clips
 		#Drive.cc
 		#ExtendedMathFunctions.cc
 		#Engine.cc
-		Environment.cc
-		EnvironmentBuild.cc
-		Evaluation.cc
-		#Expression.cc
 		#ExpressionBinary.cc
 		#ExpressionOperations.cc
 		#ExpressionParser.cc
@@ -207,7 +214,6 @@ add_library(clips
 		#FactRHSPatternParser.cc
 		#File.cc
 		#FileRouter.cc
-		FileUtilities.cc
 		#Generate.cc
 		#GenericFunctionBinaryLoadSave.cc
 		#GenericFunctionCommands.cc
@@ -233,7 +239,6 @@ add_library(clips
 		#InstanceSetQueryParser.cc
 		#IOFunctions.cc
 		#LogicalDependencies.cc
-		#MemoryAllocation.cc
 		#MiscFunctions.cc
 		#DefmoduleBinarySaveLoad.cc
 		#DefModuleBasicCommands.cc
@@ -280,7 +285,6 @@ add_library(clips
 		#StringRouter.cc
 		#SymbolBinarySave.cc
 		#Symbol.cc
-		SystemDependency.cc
 		#DeftemplateBinarySaveLoad.cc
 		#DeftemplateBasicCommands.cc
 		#Deftemplate.cc
@@ -290,11 +294,8 @@ add_library(clips
 		#DeftemplateRHSParsing.cc
 		#DeftemplateUtilities.cc
 		#UserData.cc
-		UserFunctions.cc
-		Utility.cc
 		#Watch.cc
-		ReferenceCounted.cc
-		ReferenceCounted.h)
+		)
 add_library(maya_extensions
 		BoostExtensions.h
 		#BoostExtensions.cc
