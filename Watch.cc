@@ -118,6 +118,7 @@ bool AddWatchItem(
         int priority,
         WatchAccessFunction accessFunc,
         WatchPrintFunction printFunc) {
+#if 0
     WatchItemRecord *newPtr, *currentPtr, *lastPtr;
 
     /*================================================================*/
@@ -161,6 +162,8 @@ bool AddWatchItem(
     /*==================================================*/
 
     return true;
+#endif
+    return false;
 }
 
 /**************************************************/
@@ -602,7 +605,7 @@ int GetNthWatchValue(
 
     return (-1);
 }
-
+#if 0
 /**************************************/
 /* WatchCommand: H/L access routine   */
 /*   for the watch command.           */
@@ -806,6 +809,7 @@ void WatchFunctionDefinitions(
     AddUDF(theEnv, "get-watch-item", "b", 1, 1, "y", GetWatchItemCommand);
     AddUDF(theEnv, "list-watch-items", "v", 0, UNBOUNDED, "*;y", ListWatchItemsCommand);
 }
+#endif
 
 #endif /* DEBUGGING_FUNCTIONS */
 

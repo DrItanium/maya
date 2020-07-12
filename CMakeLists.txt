@@ -294,7 +294,7 @@ add_library(clips
 		#DeftemplateRHSParsing.cc
 		#DeftemplateUtilities.cc
 		UserData.cc
-		#Watch.cc
+		Watch.cc
 		)
 add_library(maya_extensions
 		BoostExtensions.h
