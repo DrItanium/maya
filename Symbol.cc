@@ -135,7 +135,7 @@ void InitializeAtomTables(
 #pragma unused(bitmapTable)
 #pragma unused(externalAddressTable)
 #endif
-
+#if 0
     //AllocateEnvironmentData(theEnv, SYMBOL_DATA, sizeof(symbolData), DeallocateSymbolData);
     theEnv->allocateEnvironmentModule<symbolData>();
 
@@ -184,8 +184,10 @@ void InitializeAtomTables(
 
     theEnv->VoidConstant = get_struct(theEnv, CLIPSVoid);
     theEnv->VoidConstant->header.type = VOID_TYPE;
+#endif
 }
 
+#if 0
 /*************************************************/
 /* DeallocateSymbolData: Deallocates environment */
 /*    data for symbols.                          */
@@ -197,7 +199,6 @@ static void DeallocateSymbolData(
     CLIPSFloat *fhPtr, *nextFHPtr;
     CLIPSBitMap *bmhPtr, *nextBMHPtr;
     CLIPSExternalAddress *eahPtr, *nextEAHPtr;
-
     if ((SymbolData(theEnv)->SymbolTable == nullptr) ||
         (SymbolData(theEnv)->FloatTable == nullptr) ||
         (SymbolData(theEnv)->IntegerTable == nullptr) ||
@@ -293,6 +294,7 @@ static void DeallocateSymbolData(
         rm(theEnv, SymbolData(theEnv)->BitMapArray, sizeof(CLIPSBitMap *) * SymbolData(theEnv)->NumberOfBitMaps);
 #endif
 }
+#endif
 
 /*****************/
 /* CreateBoolean */
@@ -338,10 +340,11 @@ CLIPSLexeme::Ptr CreateInstanceName(
 /*   the string is added to the symbol table and then the address   */
 /*   of the string's location in the symbol table is returned.      */
 /********************************************************************/
-CLIPSLexeme *AddSymbol(
+CLIPSLexeme::Ptr AddSymbol(
         const Environment&theEnv,
-        const char *str,
-        unsigned short theType) {
+        const char *contents,
+        unsigned short type) {
+#if 0
     size_t tally;
     size_t length;
     CLIPSLexeme *past = nullptr, *peek;
@@ -351,12 +354,12 @@ CLIPSLexeme *AddSymbol(
     /* Get the hash value for the string. */
     /*====================================*/
 
-    if (str == nullptr) {
+    if (contents == nullptr) {
         SystemError(theEnv, "SYMBOL", 1);
         ExitRouter(theEnv, EXIT_FAILURE);
     }
 
-    tally = HashSymbol(str, SYMBOL_HASH_SIZE);
+    tally = HashSymbol(contents, SYMBOL_HASH_SIZE);
     peek = SymbolData(theEnv)->SymbolTable[tally];
 
     /*==================================================*/
@@ -366,8 +369,8 @@ CLIPSLexeme *AddSymbol(
     /*==================================================*/
 
     while (peek != nullptr) {
-        if ((peek->header.type == theType) &&
-            (strcmp(str, peek->contents) == 0)) { return peek; }
+        if ((peek->header.type == type) &&
+            (strcmp(contents, peek->contents) == 0)) { return peek; }
         past = peek;
         peek = peek->next;
     }
@@ -382,15 +385,15 @@ CLIPSLexeme *AddSymbol(
     if (past == nullptr) SymbolData(theEnv)->SymbolTable[tally] = peek;
     else past->next = peek;
 
-    length = strlen(str) + 1;
+    length = strlen(contents) + 1;
     buffer = (char *) gm2(theEnv, length);
-    genstrcpy(buffer, str);
+    genstrcpy(buffer, contents);
     peek->contents = buffer;
     peek->next = nullptr;
     peek->bucket = (unsigned int) tally;
     peek->count = 0;
     peek->permanent = false;
-    peek->header.type = theType;
+    peek->header.type = type;
 
     /*================================================*/
     /* Add the string to the list of ephemeral items. */
@@ -405,8 +408,10 @@ CLIPSLexeme *AddSymbol(
     /*===================================*/
 
     return peek;
+#endif
+    return nullptr;
 }
-
+#if 0
 /*****************************************************************/
 /* FindSymbolHN: Searches for the string in the symbol table and */
 /*   returns a pointer to it if found, otherwise returns nullptr.   */
@@ -429,7 +434,6 @@ CLIPSLexeme *FindSymbolHN(
 
     return nullptr;
 }
-
 /******************************************************************/
 /* CreateFloat: Searches for the double in the hash table. If the */
 /*   double is already in the hash table, then the address of the */
@@ -1781,3 +1785,4 @@ void RestoreAtomicValueBuckets(
 }
 
 #endif /* BLOAD_AND_BSAVE || BSAVE_INSTANCES */
+#endif

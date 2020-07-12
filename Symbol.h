@@ -190,7 +190,7 @@ RegisterEnvironmentModule(symbolData, SYMBOL_DATA, Symbol);
 void InitializeAtomTables(const Environment&, CLIPSLexeme **, CLIPSFloat **,
                           CLIPSInteger **, CLIPSBitMap **,
                           CLIPSExternalAddress **);
-CLIPSLexeme *AddSymbol(const Environment&, const char *, unsigned short);
+CLIPSLexeme::Ptr AddSymbol(const Environment& theEnv, const char * contents, unsigned short type);
 CLIPSLexeme *FindSymbolHN(const Environment&, const char *, unsigned short);
 CLIPSFloat::Ptr CreateFloat(const Environment& theEnv, double value);
 CLIPSInteger::Ptr CreateInteger(const Environment& theEnv, long long value);

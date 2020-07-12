@@ -284,7 +284,7 @@ add_library(clips
 		#StringFunctions.cc
 		StringRouter.cc
 		#SymbolBinarySave.cc
-		#Symbol.cc
+		Symbol.cc
 		#DeftemplateBinarySaveLoad.cc
 		#DeftemplateBasicCommands.cc
 		#Deftemplate.cc
