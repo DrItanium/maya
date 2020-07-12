@@ -155,7 +155,7 @@ add_library(clips
 		#ClassInitialization.cc
 		#ClassParser.cc
 		#ClassSlotParser.cc
-		#CommandLine.cc
+		CommandLine.cc
 		#Construct.cc
 		#Constraint.cc
 		#ConflictResolutionStrategy.cc
