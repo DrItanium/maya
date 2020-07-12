@@ -433,8 +433,6 @@ static void SystemFunctionDefinitions(
 #if PROFILING_FUNCTIONS
     ConstructProfilingFunctionDefinitions(theEnv);
 #endif
-#if STUBBING_INACTIVE
     ParseFunctionDefinitions(theEnv);
-#endif
 }
 

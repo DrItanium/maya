@@ -259,7 +259,7 @@ add_library(clips
 		#InferenceEngineObjectAccessRoutines.cc
 		#InferenceEngineObjectParsingRoutines.cc
 		#ObjectReteMatch.cc
-		#ParsingFunctions.cc
+		ParsingFunctions.cc
 		#Pattern.cc
 		PrettyPrint.cc
 		#ProceduralCodeSupportRoutines.cc

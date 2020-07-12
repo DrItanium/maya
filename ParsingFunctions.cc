@@ -97,10 +97,11 @@ static void SetErrorCaptureValues(const Environment&, UDFValue *);
 void ParseFunctionDefinitions(
         const Environment&theEnv) {
     theEnv->allocateEnvironmentModule<parseFunctionData>();
-
+#if STUBBING_INACTIVE
     AddUDF(theEnv, "check-syntax", "ym", 1, 1, "s", CheckSyntaxFunction);
+#endif
 }
-
+#if STUBBING_INACTIVE
 /*******************************************/
 /* CheckSyntaxFunction: H/L access routine */
 /*   for the check-syntax function.        */
@@ -343,6 +344,7 @@ static void WriteErrorCaptureCallback(
                                                                   &ParseFunctionData(theEnv)->WarningMaximumPosition);
     }
 }
+#endif
 
 
 
