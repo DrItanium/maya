@@ -144,6 +144,7 @@ static void DeallocateEvaluationData(
     }
 }
 
+#if 0
 /**************************************************************/
 /* EvaluateExpression: Evaluates an expression. Returns false */
 /*   if no errors occurred during evaluation, otherwise true. */
@@ -159,15 +160,31 @@ bool EvaluateExpression(
     struct profileFrameInfo profileFrame;
 #endif
 
-    returnValue->voidValue = VoidConstant(theEnv);
+    returnValue->contents = VoidConstant(theEnv);
     returnValue->begin = 0;
     returnValue->range = SIZE_MAX;
 
     if (problem == nullptr) {
-        returnValue->value = FalseSymbol(theEnv);
+        returnValue->contents = FalseSymbol(theEnv);
         return (EvaluationData(theEnv)->EvaluationError);
     }
+    /// @todo continue
+#if 0
+    std::visit([returnValue](auto&& value) {
+        using K = std::decay_t<decltype(value)>;
+        if constexpr ( std::is_same_v<K, CLIPSLexeme::Ptr> ||
+                std::is_same_v<K, CLIPSFloat::Ptr> ||
+                std::is_same_v<K, CLIPSInteger::Ptr> ||
+                std::is_same_v<K, Fact::Ptr> ||
+                std::is_same_v<K, std::shared_ptr<Instance>> ||
+                std::is_same_v<K, CLIPSExternalAddress::Ptr>) {
+            returnValue->contents = value;
+        } else if constexpr (std::is_same_v<K, std::shared_ptr<FunctionDefinition>>) {
 
+        } else if
+
+    }, problem->contents);
+#endif
     switch (problem->type) {
         case STRING_TYPE:
         case SYMBOL_TYPE:
@@ -177,7 +194,7 @@ bool EvaluateExpression(
         case INSTANCE_ADDRESS_TYPE:
         case FACT_ADDRESS_TYPE:
         case EXTERNAL_ADDRESS_TYPE:
-            returnValue->value = problem->value;
+            returnValue->contents = problem->value;
             break;
 
         case FCALL: {
@@ -266,6 +283,7 @@ bool EvaluateExpression(
 
     return EvaluationData(theEnv)->EvaluationError;
 }
+#endif
 
 /******************************************/
 /* InstallPrimitive: Installs a primitive */
@@ -349,7 +367,7 @@ bool GetHaltExecution(
         const Environment&theEnv) {
     return (EvaluationData(theEnv)->HaltExecution);
 }
-
+#if 0
 /*****************************************************/
 /* ReturnValues: Returns a linked list of UDFValue */
 /*   structures to the pool of free memory.          */
@@ -1538,4 +1556,4 @@ static bool DiscardCAddress(
    return true;
   }
 */
-
+#endif

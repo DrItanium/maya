@@ -184,7 +184,7 @@ add_library(clips
 		#Engine.cc
 		Environment.cc
 		EnvironmentBuild.cc
-		#Evaluation.cc
+		Evaluation.cc
 		#Expression.cc
 		#ExpressionBinary.cc
 		#ExpressionOperations.cc

@@ -61,18 +61,23 @@ typedef struct savedContexts SavedContexts;
 /******************************/
 
 struct Expression {
+public:
+    using Self = Expression;
+    using Ptr = std::shared_ptr<Self>;
+public:
     unsigned short type;
-    union {
-        void *value;
-        CLIPSLexeme *lexemeValue;
-        CLIPSFloat *floatValue;
-        CLIPSInteger *integerValue;
-        CLIPSBitMap *bitMapValue;
-        ConstructHeader *constructValue;
-        FunctionDefinition *functionValue;
-    };
-    Expression *argList;
-    Expression *nextArg;
+    std::variant<std::monostate,
+            CLIPSLexeme::Ptr,
+            CLIPSFloat::Ptr,
+            CLIPSInteger::Ptr,
+            CLIPSBitMap::Ptr,
+            std::shared_ptr<struct Fact>,
+            std::shared_ptr<struct Instance>,
+            Multifield::Ptr,
+            std::shared_ptr<ConstructHeader>,
+            std::shared_ptr<FunctionDefinition>> contents;
+    Ptr argList;
+    Ptr nextArg;
 };
 
 #define arg_list argList
