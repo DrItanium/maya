@@ -244,7 +244,7 @@ add_library(clips
 		#MiscFunctions.cc
 		#DefmoduleBinarySaveLoad.cc
 		#DefModuleBasicCommands.cc
-		#Defmodule.cc
+		Defmodule.cc
 		#DefmoduleParser.cc
 		#DefmoduleUtility.cc
 		#DefmessageHandlerCommands.cc

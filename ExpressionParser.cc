@@ -88,20 +88,12 @@
 #include "Router.h"
 #include "Scanner.h"
 #include "StringRouter.h"
-
 #include "Network.h"
-
-#if DEFGENERIC_CONSTRUCT
 #include "GenericFunctionCommands.h"
-#endif
-
-#if DEFFUNCTION_CONSTRUCT
 #include "Deffunction.h"
-#endif
-
 #include "Expression.h"
 
-
+#if 0
 /***************************************************/
 /* Function0Parse: Parses a function. Assumes that */
 /*   none of the function has been parsed yet.     */
@@ -793,7 +785,7 @@ Expression *GroupActions(
         PPCRAndIndent(theEnv);
     }
 }
-
+#endif
 /************************/
 /* PopulateRestriction: */
 /************************/
@@ -803,6 +795,7 @@ void PopulateRestriction(
         unsigned defaultRestriction,
         const char *restrictionString,
         unsigned int position) {
+#if 0
     unsigned int i = 0, currentPosition = 0, valuesRead = 0;
     char buffer[2];
 
@@ -903,8 +896,9 @@ void PopulateRestriction(
     }
 
     *restriction = defaultRestriction;
+#endif
 }
-
+#if 0
 /*******************************************/
 /* ParseConstantArguments: Parses a string */
 /*    into a set of constant expressions.  */
@@ -1004,4 +998,4 @@ Expression *RemoveUnneededProgn(
 
     return (theExpression);
 }
-
+#endif
