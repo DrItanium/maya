@@ -579,7 +579,8 @@ void AssignClassID(
         const Environment&theEnv,
         Defclass *cls) {
     unsigned short i;
-
+    /// @todo reimplement
+#if 0
     if ((DefclassData(theEnv)->MaxClassID % CLASS_ID_MAP_CHUNK) == 0) {
         DefclassData(theEnv)->ClassIDMap =
                 (Defclass **) genrealloc(theEnv, DefclassData(theEnv)->ClassIDMap,
@@ -592,6 +593,7 @@ void AssignClassID(
     }
     DefclassData(theEnv)->ClassIDMap[DefclassData(theEnv)->MaxClassID] = cls;
     cls->id = DefclassData(theEnv)->MaxClassID++;
+#endif
 }
 
 /*********************************************************

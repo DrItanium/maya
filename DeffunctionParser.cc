@@ -468,8 +468,7 @@ static Deffunction *AddDeffunction(
 
 #if DEBUGGING_FUNCTIONS
     DeffunctionSetWatch(dfuncPtr, DFHadWatch ? true : DeffunctionData(theEnv)->WatchDeffunctions);
-
-    if (!GetConserveMemory(theEnv) && !headerp) { SetDeffunctionPPForm(theEnv, dfuncPtr, CopyPPBuffer(theEnv)); }
+    SetDeffunctionPPForm(theEnv, dfuncPtr, CopyPPBuffer(theEnv));
 #endif
 
     return dfuncPtr;

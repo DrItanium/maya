@@ -65,70 +65,14 @@
 struct memoryPtr;
 
 typedef bool OutOfMemoryFunction(const Environment&, size_t);
-#define MEM_TABLE_SIZE 0
 #ifndef MEM_TABLE_SIZE
-#define MEM_TABLE_SIZE 500
+#define MEM_TABLE_SIZE 0
 #endif
 
 struct memoryPtr {
     struct memoryPtr *next;
 };
 
-#if (MEM_TABLE_SIZE > 0)
-/*
- * Normal memory management case
- */
-
-#define get_struct(theEnv, type) \
-  ((MemoryData(theEnv)->MemoryTable[sizeof(struct type)] == nullptr) ? \
-   ((struct type *) genalloc(theEnv,sizeof(struct type))) :\
-   ((MemoryData(theEnv)->TempMemoryPtr = MemoryData(theEnv)->MemoryTable[sizeof(struct type)]),\
-    MemoryData(theEnv)->MemoryTable[sizeof(struct type)] = MemoryData(theEnv)->TempMemoryPtr->next,\
-    ((struct type *) MemoryData(theEnv)->TempMemoryPtr)))
-
-#define rtn_struct(theEnv, type, struct_ptr) \
-  (MemoryData(theEnv)->TempMemoryPtr = (struct memoryPtr *) struct_ptr,\
-   MemoryData(theEnv)->TempMemoryPtr->next = MemoryData(theEnv)->MemoryTable[sizeof(struct type)], \
-   MemoryData(theEnv)->MemoryTable[sizeof(struct type)] = MemoryData(theEnv)->TempMemoryPtr)
-
-#define rtn_sized_struct(theEnv, size, struct_ptr) \
-  (MemoryData(theEnv)->TempMemoryPtr = (struct memoryPtr *) struct_ptr,\
-   MemoryData(theEnv)->TempMemoryPtr->next = MemoryData(theEnv)->MemoryTable[size], \
-   MemoryData(theEnv)->MemoryTable[size] = MemoryData(theEnv)->TempMemoryPtr)
-
-#define get_var_struct(theEnv, type, vsize) \
-  ((((sizeof(struct type) + vsize) <  MEM_TABLE_SIZE) ? \
-    (MemoryData(theEnv)->MemoryTable[sizeof(struct type) + vsize] == nullptr) : 1) ? \
-   ((struct type *) genalloc(theEnv,(sizeof(struct type) + vsize))) :\
-   ((MemoryData(theEnv)->TempMemoryPtr = MemoryData(theEnv)->MemoryTable[sizeof(struct type) + vsize]),\
-    MemoryData(theEnv)->MemoryTable[sizeof(struct type) + vsize] = MemoryData(theEnv)->TempMemoryPtr->next,\
-    ((struct type *) MemoryData(theEnv)->TempMemoryPtr)))
-
-#define rtn_var_struct(theEnv, type, vsize, struct_ptr) \
-  (MemoryData(theEnv)->TempSize = sizeof(struct type) + vsize, \
-   ((MemoryData(theEnv)->TempSize < MEM_TABLE_SIZE) ? \
-    (MemoryData(theEnv)->TempMemoryPtr = (struct memoryPtr *) struct_ptr,\
-     MemoryData(theEnv)->TempMemoryPtr->next = MemoryData(theEnv)->MemoryTable[MemoryData(theEnv)->TempSize], \
-     MemoryData(theEnv)->MemoryTable[MemoryData(theEnv)->TempSize] =  MemoryData(theEnv)->TempMemoryPtr) : \
-    (genfree(theEnv,struct_ptr,MemoryData(theEnv)->TempSize),(struct memoryPtr *) struct_ptr)))
-
-#define get_mem(theEnv, size) \
-  (((size <  MEM_TABLE_SIZE) ? \
-    (MemoryData(theEnv)->MemoryTable[size] == nullptr) : 1) ? \
-   ((void *) genalloc(theEnv,(size_t) (size))) :\
-   ((MemoryData(theEnv)->TempMemoryPtr = MemoryData(theEnv)->MemoryTable[size]),\
-    MemoryData(theEnv)->MemoryTable[size] = MemoryData(theEnv)->TempMemoryPtr->next,\
-    ((void *) MemoryData(theEnv)->TempMemoryPtr)))
-
-#define rtn_mem(theEnv, size, ptr) \
-  (MemoryData(theEnv)->TempSize = size, \
-   ((MemoryData(theEnv)->TempSize < MEM_TABLE_SIZE) ? \
-    (MemoryData(theEnv)->TempMemoryPtr = (struct memoryPtr *) ptr,\
-     MemoryData(theEnv)->TempMemoryPtr->next = MemoryData(theEnv)->MemoryTable[MemoryData(theEnv)->TempSize], \
-     MemoryData(theEnv)->MemoryTable[MemoryData(theEnv)->TempSize] =  MemoryData(theEnv)->TempMemoryPtr) : \
-    (genfree(theEnv,ptr,MemoryData(theEnv)->TempSize),(struct memoryPtr *) ptr)))
-
-#else // MEM_TABLE_SIZE == 0
 /*
  * Debug case (routes all memory management through genalloc/genfree to take advantage of
  * platform, memory debugging aids)
@@ -147,43 +91,16 @@ struct memoryPtr {
 
 #define rtn_mem(theEnv,size,ptr) (genfree(theEnv,ptr,size))
 
-#endif
-
 #define GenCopyMemory(type, cnt, dst, src) \
    memcpy((void *) (dst),(void *) (src),sizeof(type) * (size_t) (cnt))
 
-constexpr auto MEMORY_DATA = 59;
-
-struct memoryData : public EnvironmentModule {
-    long long MemoryAmount;
-    long long MemoryCalls;
-    bool ConserveMemory;
-    OutOfMemoryFunction *OutOfMemoryCallback;
-    struct memoryPtr *TempMemoryPtr;
-    struct memoryPtr **MemoryTable;
-    size_t TempSize;
-};
-RegisterEnvironmentModule(memoryData, MEMORY_DATA, Memory);
-
 void InitializeMemory(const Environment&);
 void *genalloc(const Environment&, size_t);
-bool DefaultOutOfMemoryFunction(const Environment&, size_t);
-OutOfMemoryFunction *SetOutOfMemoryFunction(const Environment&, OutOfMemoryFunction *);
 void genfree(const Environment&, void *, size_t);
 void *genrealloc(const Environment&, void *, size_t, size_t);
-long long MemUsed(const Environment&);
-long long MemRequests(const Environment&);
-long long UpdateMemoryUsed(const Environment&, long long);
-long long UpdateMemoryRequests(const Environment&, long long);
-long long ReleaseMem(const Environment&, long long);
 void *gm1(const Environment&, size_t);
 void *gm2(const Environment&, size_t);
 void rm(const Environment&, void *, size_t);
-unsigned long PoolSize(const Environment&);
-unsigned long ActualPoolSize(const Environment&);
-bool SetConserveMemory(const Environment&, bool);
-bool GetConserveMemory(const Environment&);
-void genmemcpy(char *, char *, unsigned long);
 
 #endif /* _H_memalloc */
 

@@ -222,8 +222,7 @@ bool ParseDefrule(
     /*======================================*/
 
     SavePPBuffer(theEnv, "\n");
-    if (GetConserveMemory(theEnv)) { topDisjunct->header.ppForm = nullptr; }
-    else { topDisjunct->header.ppForm = CopyPPBuffer(theEnv); }
+    topDisjunct->header.ppForm = CopyPPBuffer(theEnv);
 
     /*=======================================*/
     /* Store a pointer to the rule's module. */

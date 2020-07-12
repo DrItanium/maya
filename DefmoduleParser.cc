@@ -302,9 +302,7 @@ bool ParseDefmodule(
     /*=======================================*/
 
     SavePPBuffer(theEnv, "\n");
-
-    if (GetConserveMemory(theEnv)) { newDefmodule->header.ppForm = nullptr; }
-    else { newDefmodule->header.ppForm = CopyPPBuffer(theEnv); }
+    newDefmodule->header.ppForm = CopyPPBuffer(theEnv);
 
     /*==============================================*/
     /* Add the defmodule to the list of defmodules. */

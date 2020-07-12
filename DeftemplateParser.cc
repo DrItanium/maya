@@ -191,8 +191,7 @@ bool ParseDeftemplate(
     /* Store pretty print representation. */
     /*====================================*/
 
-    if (GetConserveMemory(theEnv)) { newDeftemplate->header.ppForm = nullptr; }
-    else { newDeftemplate->header.ppForm = CopyPPBuffer(theEnv); }
+    newDeftemplate->header.ppForm = CopyPPBuffer(theEnv);
 
     /*=======================================================================*/
     /* If a template is redefined, then we want to restore its watch status. */

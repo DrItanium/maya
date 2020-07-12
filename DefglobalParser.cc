@@ -386,8 +386,7 @@ static void AddDefglobal(
     IncrementLexemeCount(name);
 
     SavePPBuffer(theEnv, "\n");
-    if (GetConserveMemory(theEnv)) { defglobalPtr->header.ppForm = nullptr; }
-    else { defglobalPtr->header.ppForm = CopyPPBuffer(theEnv); }
+    defglobalPtr->header.ppForm = CopyPPBuffer(theEnv);
 
     defglobalPtr->inScope = true;
 

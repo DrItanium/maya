@@ -193,7 +193,7 @@ bool ParseDefgeneric(
     gfunc = AddGeneric(theEnv, gname, &newGeneric);
 
 #if DEBUGGING_FUNCTIONS
-    SetDefgenericPPForm(theEnv, gfunc, GetConserveMemory(theEnv) ? nullptr : CopyPPBuffer(theEnv));
+    SetDefgenericPPForm(theEnv, gfunc, CopyPPBuffer(theEnv));
 #endif
     return false;
 }
@@ -354,7 +354,7 @@ bool ParseDefmethod(
 
 #if DEBUGGING_FUNCTIONS
     meth = AddMethod(theEnv, gfunc, meth, mposn, theIndex, params, rcnt, lvars, wildcard, actions,
-                     GetConserveMemory(theEnv) ? nullptr : CopyPPBuffer(theEnv), false);
+                     CopyPPBuffer(theEnv), false);
 #else
     meth = AddMethod(theEnv,gfunc,meth,mposn,theIndex,params,rcnt,lvars,wildcard,actions,nullptr,false);
 #endif

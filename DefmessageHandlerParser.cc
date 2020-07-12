@@ -281,16 +281,7 @@ bool ParseDefmessageHandler(
     hnd->localVarCount = lvars;
     hnd->actions = actions;
     ExpressionInstall(theEnv, hnd->actions);
-#if DEBUGGING_FUNCTIONS
-
-    /* ===================================================
-       Old handler trace status is automatically preserved
-       =================================================== */
-    if (!GetConserveMemory(theEnv))
-        hnd->header.ppForm = CopyPPBuffer(theEnv);
-    else
-#endif
-        hnd->header.ppForm = nullptr;
+    hnd->header.ppForm = CopyPPBuffer(theEnv);
     return false;
 }
 
@@ -339,7 +330,7 @@ void CreateGetAndPutHandlers(
 
     oldPWL = GetPrintWhileLoading(theEnv);
     SetPrintWhileLoading(theEnv, false);
-    oldCM = SetConserveMemory(theEnv, true);
+    //oldCM = SetConserveMemory(theEnv, true);
 
     if (sd->createReadAccessor) {
         gensprintf(buf, "%s get-%s () ?self:%s)", className, slotName, slotName);
@@ -396,7 +387,7 @@ void CreateGetAndPutHandlers(
     }
 
     SetPrintWhileLoading(theEnv, oldPWL);
-    SetConserveMemory(theEnv, oldCM);
+    //SetConserveMemory(theEnv, oldCM);
 
     rm(theEnv, buf, bufsz);
 }

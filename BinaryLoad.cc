@@ -415,9 +415,11 @@ void BloadandRefresh(
     size_t space;
     OutOfMemoryFunction *oldOutOfMemoryFunction;
 
+    return;
+#if 0
     if (objcnt == 0L) return;
 
-    oldOutOfMemoryFunction = SetOutOfMemoryFunction(theEnv, BloadOutOfMemoryFunction);
+    //oldOutOfMemoryFunction = SetOutOfMemoryFunction(theEnv, BloadOutOfMemoryFunction);
     objsmaxread = objcnt;
     do {
         space = objsmaxread * objsz;
@@ -443,6 +445,7 @@ void BloadandRefresh(
             (*objupdate)(theEnv, buf + objsz * bi, i);
     } while (i < objcnt);
     genfree(theEnv, buf, space);
+#endif
 }
 
 /**********************************************/

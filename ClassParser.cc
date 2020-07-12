@@ -559,8 +559,7 @@ static void AddClass(
 #endif
 
 #if DEBUGGING_FUNCTIONS
-    if (!GetConserveMemory(theEnv))
-        SetDefclassPPForm(theEnv, cls, CopyPPBuffer(theEnv));
+    SetDefclassPPForm(theEnv, cls, CopyPPBuffer(theEnv));
 #endif
 
 #if DEFMODULE_CONSTRUCT

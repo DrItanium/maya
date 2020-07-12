@@ -93,10 +93,6 @@ void GensymStarFunction(const Environment&theEnv, UDFContext *context, UDFValue 
 void RandomFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 void SeedFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 void LengthFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void ConserveMemCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void ReleaseMemCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void MemUsedCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void MemRequestsCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 void OptionsCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 void OperatingSystemFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 void ExpandFuncCall(const Environment&theEnv, UDFContext *context, UDFValue *ret);

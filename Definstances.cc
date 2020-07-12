@@ -544,13 +544,11 @@ static bool ParseDefinstances(
             return false;
         }
 #if DEBUGGING_FUNCTIONS
-        if (!GetConserveMemory(theEnv)) {
-            if (dobj->mkinstance != nullptr)
-                PPBackup(theEnv);
+        if (dobj->mkinstance != nullptr)
             PPBackup(theEnv);
-            SavePPBuffer(theEnv, ")\n");
-            SetDefinstancesPPForm(theEnv, dobj, CopyPPBuffer(theEnv));
-        }
+        PPBackup(theEnv);
+        SavePPBuffer(theEnv, ")\n");
+        SetDefinstancesPPForm(theEnv, dobj, CopyPPBuffer(theEnv));
 #endif
         mkinstance = dobj->mkinstance;
         dobj->mkinstance = PackExpression(theEnv, mkinstance);

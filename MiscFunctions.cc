@@ -179,12 +179,6 @@ void MiscFunctionDefinitions(
 
     AddUDF(theEnv, "random", "l", 0, 2, "l", RandomFunction);
     AddUDF(theEnv, "seed", "v", 1, 1, "l", SeedFunction);
-    AddUDF(theEnv, "conserve-mem", "v", 1, 1, "y", ConserveMemCommand);
-    AddUDF(theEnv, "release-mem", "l", 0, 0, nullptr, ReleaseMemCommand);
-#if DEBUGGING_FUNCTIONS
-    AddUDF(theEnv, "mem-used", "l", 0, 0, nullptr, MemUsedCommand);
-    AddUDF(theEnv, "mem-requests", "l", 0, 0, nullptr, MemRequestsCommand);
-#endif
 
     AddUDF(theEnv, "options", "v", 0, 0, nullptr, OptionsCommand);
 
@@ -448,101 +442,20 @@ void LengthFunction(
 /*******************************************/
 /* ReleaseMemCommand: H/L access routine   */
 /*   for the release-mem function.         */
-/*******************************************/
-void ReleaseMemCommand(
-        const Environment&theEnv,
-        UDFContext *context,
-        UDFValue *returnValue) {
-    /*========================================*/
-    /* Release memory to the operating system */
-    /* and return the amount of memory freed. */
-    /*========================================*/
-
-    returnValue->integerValue = CreateInteger(theEnv, ReleaseMem(theEnv, -1));
-}
 
 /******************************************/
 /* ConserveMemCommand: H/L access routine */
 /*   for the conserve-mem command.        */
-/******************************************/
-void ConserveMemCommand(
-        const Environment&theEnv,
-        UDFContext *context,
-        UDFValue *returnValue) {
-    const char *argument;
-    UDFValue theValue;
-
-    /*===================================*/
-    /* The conserve-mem function expects */
-    /* a single symbol argument.         */
-    /*===================================*/
-
-    if (!UDFFirstArgument(context, SYMBOL_BIT, &theValue)) { return; }
-
-    argument = theValue.lexemeValue->contents;
-
-    /*====================================================*/
-    /* If the argument is the symbol "on", then store the */
-    /* pretty print representation of a construct when it */
-    /* is defined.                                        */
-    /*====================================================*/
-
-    if (strcmp(argument, "on") == 0) { SetConserveMemory(theEnv, true); }
-
-        /*======================================================*/
-        /* Otherwise, if the argument is the symbol "off", then */
-        /* don't store the pretty print representation of a     */
-        /* construct when it is defined.                        */
-        /*======================================================*/
-
-    else if (strcmp(argument, "off") == 0) { SetConserveMemory(theEnv, false); }
-
-        /*=====================================================*/
-        /* Otherwise, generate an error since the only allowed */
-        /* arguments are "on" or "off."                        */
-        /*=====================================================*/
-
-    else {
-        UDFInvalidArgumentMessage(context, "symbol with value on or off");
-        return;
-    }
-
-    return;
-}
 
 #if DEBUGGING_FUNCTIONS
 
 /****************************************/
 /* MemUsedCommand: H/L access routine   */
 /*   for the mem-used command.          */
-/****************************************/
-void MemUsedCommand(
-        const Environment&theEnv,
-        UDFContext *context,
-        UDFValue *returnValue) {
-    /*============================================*/
-    /* Return the amount of memory currently held */
-    /* (both for current use and for later use).  */
-    /*============================================*/
-
-    returnValue->integerValue = CreateInteger(theEnv, MemUsed(theEnv));
-}
 
 /********************************************/
 /* MemRequestsCommand: H/L access routine   */
 /*   for the mem-requests command.          */
-/********************************************/
-void MemRequestsCommand(
-        const Environment&theEnv,
-        UDFContext *context,
-        UDFValue *returnValue) {
-    /*==================================*/
-    /* Return the number of outstanding */
-    /* memory requests.                 */
-    /*==================================*/
-
-    returnValue->integerValue = CreateInteger(theEnv, MemRequests(theEnv));
-}
 
 #endif
 

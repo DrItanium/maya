@@ -150,8 +150,7 @@ bool ParseDeffacts(
     /* Save the pretty print representation of the deffacts. */
     /*=======================================================*/
 
-    if (GetConserveMemory(theEnv)) { newDeffacts->header.ppForm = nullptr; }
-    else { newDeffacts->header.ppForm = CopyPPBuffer(theEnv); }
+    newDeffacts->header.ppForm = CopyPPBuffer(theEnv);
 
     /*=============================================*/
     /* Add the deffacts to the appropriate module. */
