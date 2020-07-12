@@ -98,7 +98,7 @@ static struct patternNodeHashEntry **CreatePatternHashTable(
 
     return (theTable);
 }
-
+#if 0
 /**************************************************/
 /* DeallocatePatternData: Deallocates environment */
 /*    data for rule pattern registration.         */
@@ -247,6 +247,7 @@ void AddReservedPatternSymbol(
     newSymbol->next = PatternData(theEnv)->ListOfReservedPatternSymbols;
     PatternData(theEnv)->ListOfReservedPatternSymbols = newSymbol;
 }
+#endif
 
 /******************************************************************/
 /* ReservedPatternSymbol: Returns true if the specified symbol is */
@@ -481,7 +482,7 @@ bool PostPatternAnalysis(
 
     return false;
 }
-
+#if 0
 /******************************************************************/
 /* RestrictionParse: Parses a single field within a pattern. This */
 /*    field may either be a single field wildcard, a multifield   */
@@ -699,6 +700,7 @@ struct lhsParseNode *RestrictionParse(
 
     return (topNode);
 }
+#endif
 
 /***************************************************************/
 /* TallyFieldTypes: Determines the number of single field and  */
