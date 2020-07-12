@@ -121,7 +121,7 @@ void InitializeUtilityData(
     UtilityData(theEnv)->PeriodicFunctionsEnabled = true;
     UtilityData(theEnv)->YieldFunctionEnabled = true;
 }
-
+#if 0
 /**************************************************/
 /* DeallocateUtilityData: Deallocates environment */
 /*    data for utility routines.                  */
@@ -330,6 +330,7 @@ void CallCleanupFunctions(
          cleanupPtr = cleanupPtr->next) { (*cleanupPtr->func)(theEnv, nullptr); }
 }
 
+
 /**************************************************/
 /* CallPeriodicTasks: Calls the list of functions */
 /*   for handling periodic tasks.                 */
@@ -419,6 +420,8 @@ bool RemovePeriodicFunction(
     return found;
 }
 
+#endif
+#if 0
 /*****************************************************/
 /* StringPrintForm: Generates printed representation */
 /*   of a string. Replaces / with // and " with /".  */
@@ -1247,6 +1250,7 @@ size_t UTF8CharNum(
     return charnum;
 }
 
+#endif
 /************************/
 /* CreateStringBuilder: */
 /************************/
@@ -1318,7 +1322,7 @@ stringBuilder::stringBuilder(const stringBuilder & other) : _env(other._env), _i
 void SBDispose(StringBuilder *theSB) {
     delete theSB;
 }
-
+#if 0
 /***************************************************
   NAME         : BufferedRead
   DESCRIPTION  : Reads data from binary file
@@ -1392,3 +1396,4 @@ void FreeReadBuffer(
         UtilityData(theEnv)->CurrentReadBufferOffset = 0L; // TBD Added
     }
 }
+#endif

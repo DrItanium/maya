@@ -290,8 +290,8 @@ add_library(clips
 		#DeftemplateRHSParsing.cc
 		#DeftemplateUtilities.cc
 		#UserData.cc
-		#UserFunctions.cc
-		#Utility.cc
+		UserFunctions.cc
+		Utility.cc
 		#Watch.cc
 		ReferenceCounted.cc
 		ReferenceCounted.h)
