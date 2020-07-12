@@ -428,10 +428,6 @@ static void SystemFunctionDefinitions(
     ExtendedMathFunctionDefinitions(theEnv);
 #endif
 
-#if TEXTPRO_FUNCTIONS
-    HelpFunctionDefinitions(theEnv);
-#endif
-
 #if PROFILING_FUNCTIONS
     ConstructProfilingFunctionDefinitions(theEnv);
 #endif

@@ -173,7 +173,7 @@ bool ParsedBindNamesEmpty(
     return ProcedureParserData(theEnv)->ListOfParsedBindNames == nullptr;
 
 }
-
+#if 0
 /*********************************************************/
 /* WhileParse: purpose is to parse the while statement.  */
 /*   The parse of the statement is the return value.     */
@@ -960,3 +960,4 @@ void RemoveParsedBindName(
         rtn_struct(theEnv, BindInfo, tmp);
     }
 }
+#endif

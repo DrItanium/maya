@@ -114,7 +114,7 @@ void ProceduralFunctionDefinitions(
     AddResetFunction(theEnv, "bind", FlushBindList, 0, nullptr);
     AddClearFunction(theEnv, "bind", FlushBindList, 0, nullptr);
 }
-
+#if 0
 /*************************************************************/
 /* DeallocateProceduralFunctionData: Deallocates environment */
 /*    data for procedural functions.                         */
@@ -460,7 +460,7 @@ bool GetBoundVariable(
 
     return false;
 }
-
+#endif
 /*************************************************/
 /* FlushBindList: Removes all variables from the */
 /*   list of currently bound local variables.    */
@@ -471,6 +471,7 @@ void FlushBindList(
     ReturnValues(theEnv, ProcedureFunctionData(theEnv)->BindList, true);
     ProcedureFunctionData(theEnv)->BindList = nullptr;
 }
+#if 0
 
 /***************************************/
 /* PrognFunction: H/L access routine   */
@@ -571,7 +572,7 @@ void SwitchFunction(
     }
 }
 
-
+#endif
 
 
 
