@@ -148,7 +148,7 @@ add_library(clips
 		Environment.cc
 		EnvironmentBuild.cc
 		Evaluation.cc
-		#Expression.cc
+		Expression.cc
 		FileUtilities.cc
 		MemoryAllocation.cc
 		ReferenceCounted.cc
@@ -197,7 +197,7 @@ add_library(clips
 		#Engine.cc
 		#ExpressionBinary.cc
 		#ExpressionOperations.cc
-		#ExpressionParser.cc
+		ExpressionParser.cc
 		ExternalFunctions.cc
 		#FactBinarySaveLoad.cc
 		#FactBuild.cc
@@ -264,7 +264,7 @@ add_library(clips
 		PrettyPrint.cc
 		#ProceduralCodeSupportRoutines.cc
 		ProceduralFunctions.cc
-		#ProceduralFunctionsParser.cc
+		ProceduralFunctionsParser.cc
 		#PredicateFunctions.cc
 		#ConstructProfilingFunctions.cc
 		#Reorder.cc
@@ -293,7 +293,7 @@ add_library(clips
 		#DeftemplateParser.cc
 		#DeftemplateRHSParsing.cc
 		#DeftemplateUtilities.cc
-		#UserData.cc
+		UserData.cc
 		#Watch.cc
 		)
 add_library(maya_extensions

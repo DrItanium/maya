@@ -472,13 +472,13 @@ static void InitializeFunctionHashTable(
     for (i = 0; i < SIZE_FUNCTION_HASH; i++) ExternalFunctionData(theEnv)->FunctionHashtable[i] = nullptr;
 }
 
-#if STUBBING_INACTIVE
 /****************************************************************/
 /* AddHashFunction: Adds a function to the function hash table. */
 /****************************************************************/
 static void AddHashFunction(
         const Environment&theEnv,
         FunctionDefinition *fdPtr) {
+#if STUBBING_INACTIVE
     struct FunctionHash *newhash, *temp;
     size_t hashValue;
 
@@ -492,8 +492,8 @@ static void AddHashFunction(
     temp = ExternalFunctionData(theEnv)->FunctionHashtable[hashValue];
     ExternalFunctionData(theEnv)->FunctionHashtable[hashValue] = newhash;
     newhash->next = temp;
-}
 #endif
+}
 
 /*************************************************/
 /* GetMinimumArgs: Returns the minimum number of */

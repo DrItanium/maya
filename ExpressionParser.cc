@@ -395,6 +395,7 @@ bool ReplaceSequenceExpansionOps(
     }
     return false;
 }
+#endif
 
 /*************************************************/
 /* PushRtnBrkContexts: Saves the current context */
@@ -402,6 +403,7 @@ bool ReplaceSequenceExpansionOps(
 /*************************************************/
 void PushRtnBrkContexts(
         const Environment&theEnv) {
+#if STUBBING_INACTIVE
     SavedContexts *svtmp;
 
     svtmp = get_struct(theEnv, savedContexts);
@@ -409,6 +411,7 @@ void PushRtnBrkContexts(
     svtmp->brk = ExpressionData(theEnv)->BreakContext;
     svtmp->nxt = ExpressionData(theEnv)->svContexts;
     ExpressionData(theEnv)->svContexts = svtmp;
+#endif
 }
 
 /***************************************************/
@@ -418,15 +421,16 @@ void PushRtnBrkContexts(
 void PopRtnBrkContexts(
         const Environment&theEnv) {
     SavedContexts *svtmp;
-
+#if STUBBING_INACTIVE
     ExpressionData(theEnv)->ReturnContext = ExpressionData(theEnv)->svContexts->rtn;
     ExpressionData(theEnv)->BreakContext = ExpressionData(theEnv)->svContexts->brk;
     svtmp = ExpressionData(theEnv)->svContexts;
     ExpressionData(theEnv)->svContexts = ExpressionData(theEnv)->svContexts->nxt;
     rtn_struct(theEnv, savedContexts, svtmp);
+#endif
 }
 
-
+#if STUBBING_INACTIVE
 /**********************/
 /* RestrictionExists: */
 /**********************/

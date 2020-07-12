@@ -322,6 +322,7 @@ bool CheckFunctionArgCount(
     return true;
 }
 
+#endif
 /*******************************************************************/
 /* ExpectedTypeError0: Prints the error message for the wrong type */
 /*   of argument passed to a user or system defined function.      */
@@ -352,7 +353,7 @@ void ExpectedTypeError1(
     WriteString(theEnv, STDERR, expectedType);
     WriteString(theEnv, STDERR, ".\n");
 }
-
+#if STUBBING_INACTIVE
 /**************************************************************/
 /* ExpectedTypeError2: Prints the error message for the wrong */
 /*   type of argument passed to a user or system defined      */
