@@ -67,7 +67,7 @@
 
 static void RemoveIntranetworkLink(const Environment&, struct joinNode *);
 static void DetachJoins(const Environment&, struct joinNode *, bool);
-static void DetachJoinsDriver(const Environment&, Defrule *, bool);
+static void DetachJoinsDriver(const Environment&, Defrule::Ptr , bool);
 
 /**********************************************************************/
 /* ReturnDefrule: Returns a defrule data structure and its associated */
@@ -78,9 +78,9 @@ static void DetachJoinsDriver(const Environment&, Defrule *, bool);
 /**********************************************************************/
 void ReturnDefrule(
         const Environment&theEnv,
-        Defrule *theDefrule) {
+        Defrule::Ptr theDefrule) {
     bool first = true;
-    Defrule *nextPtr, *tmpPtr;
+    Defrule::Ptr nextPtr, *tmpPtr;
 
     if (theDefrule == nullptr) return;
 
@@ -183,8 +183,8 @@ void ReturnDefrule(
 /********************************************************/
 void DestroyDefrule(
         const Environment&theEnv,
-        Defrule *theDefrule) {
-    Defrule *nextDisjunct;
+        Defrule::Ptr theDefrule) {
+    Defrule::Ptr nextDisjunct;
     bool first = true;
 
     if (theDefrule == nullptr) return;
@@ -196,7 +196,7 @@ void DestroyDefrule(
             if (theDefrule->dynamicSalience != nullptr) { ReturnPackedExpression(theEnv, theDefrule->dynamicSalience); }
 
             if (theDefrule->header.ppForm != nullptr) {
-                Defrule *tmpPtr;
+                Defrule::Ptr tmpPtr;
 
                 rm(theEnv, (void *) theDefrule->header.ppForm, strlen(theDefrule->header.ppForm) + 1);
 
@@ -228,7 +228,7 @@ void DestroyDefrule(
 /**********************/
 static void DetachJoinsDriver(
         const Environment&theEnv,
-        Defrule *theRule,
+        Defrule::Ptr theRule,
         bool destroy) {
     struct joinNode *join;
 

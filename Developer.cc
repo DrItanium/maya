@@ -629,9 +629,9 @@ void *buffer)
 #if MAC_XCD
 #pragma unused(buffer)
 #endif
-Defrule *rulePtr;
+Defrule::Ptr rulePtr;
 
-for (rulePtr = (Defrule *) theConstruct;
+for (rulePtr = (Defrule::Ptr ) theConstruct;
      rulePtr != nullptr;
      rulePtr = rulePtr->disjunct)
   {

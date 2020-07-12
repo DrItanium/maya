@@ -1105,8 +1105,8 @@ void Halt(
 /*   for the set-break command. */
 /********************************/
 void SetBreak(
-        Defrule *theRule) {
-    Defrule *thePtr;
+        Defrule::Ptr theRule) {
+    Defrule::Ptr thePtr;
 
     for (thePtr = theRule;
          thePtr != nullptr;
@@ -1118,8 +1118,8 @@ void SetBreak(
 /*   for the remove-break command. */
 /***********************************/
 bool RemoveBreak(
-        Defrule *theRule) {
-    Defrule *thePtr;
+        Defrule::Ptr theRule) {
+    Defrule::Ptr thePtr;
     bool rv = false;
 
     for (thePtr = theRule;
@@ -1139,7 +1139,7 @@ bool RemoveBreak(
 /**************************************************/
 void RemoveAllBreakpoints(
         const Environment&theEnv) {
-    Defrule *theRule;
+    Defrule::Ptr theRule;
     Defmodule *theDefmodule = nullptr;
 
     while ((theDefmodule = GetNextDefmodule(theEnv, theDefmodule)) != nullptr) {
@@ -1169,7 +1169,7 @@ void ShowBreaks(
 /*   specified rule has a breakpoint set.      */
 /***********************************************/
 bool DefruleHasBreakpoint(
-        Defrule *theRule) {
+        Defrule::Ptr theRule) {
     return theRule->afterBreakpoint;
 }
 
@@ -1183,7 +1183,7 @@ void SetBreakCommand(
         UDFValue *returnValue) {
     UDFValue theArg;
     const char *argument;
-    Defrule *defrulePtr;
+    Defrule::Ptr defrulePtr;
 
     if (!UDFFirstArgument(context, SYMBOL_BIT, &theArg)) return;
 
@@ -1207,7 +1207,7 @@ void RemoveBreakCommand(
         UDFValue *returnValue) {
     UDFValue theArg;
     const char *argument;
-    Defrule *defrulePtr;
+    Defrule::Ptr defrulePtr;
 
     if (UDFArgumentCount(context) == 0) {
         RemoveAllBreakpoints(theEnv);

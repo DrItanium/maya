@@ -174,8 +174,8 @@ RegisterEnvironmentModule(AgendaModule, AGENDA_DATA, Agenda);
 /* GLOBAL EXTERNAL FUNCTION DEFINITIONS */
 /****************************************/
 
-void AddActivation(const Environment&, Defrule *, PartialMatch *);
-void ClearRuleFromAgenda(const Environment&, Defrule *);
+void AddActivation(const Environment&, Defrule::Ptr , PartialMatch *);
+void ClearRuleFromAgenda(const Environment&, Defrule::Ptr );
 Activation::Ptr GetNextActivation(const Environment&, Activation::Ptr );
 const char *ActivationRuleName(Activation::Ptr );
 void GetActivationBasisPPForm(const Environment&, char *, size_t, Activation::Ptr );
@@ -197,7 +197,7 @@ void SetSalienceEvaluationCommand(const Environment&theEnv, UDFContext *context,
 void GetSalienceEvaluationCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 void RefreshAgendaCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 void RefreshCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void Refresh(Defrule *);
+void Refresh(Defrule::Ptr );
 #if DEBUGGING_FUNCTIONS
 void AgendaCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 #endif

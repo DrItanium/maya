@@ -72,7 +72,7 @@ static void BsaveStorage(const Environment&, FILE *);
 static void BsaveBinaryItem(const Environment&, FILE *);
 static void BsaveJoins(const Environment&, FILE *);
 static void BsaveJoin(const Environment&, FILE *, struct joinNode *);
-static void BsaveDisjuncts(const Environment&, FILE *, Defrule *);
+static void BsaveDisjuncts(const Environment&, FILE *, Defrule::Ptr );
 static void BsaveTraverseJoins(const Environment&, FILE *, struct joinNode *);
 static void BsaveLinks(const Environment&, FILE *);
 static void BsaveTraverseLinks(const Environment&, FILE *, struct joinNode *);
@@ -171,7 +171,7 @@ static void DeallocateDefruleBloadData(
 /*************************************************************/
 static void BsaveFind(
         const Environment&theEnv) {
-    Defrule *theDefrule, *theDisjunct;
+    Defrule::Ptr theDefrule, *theDisjunct;
     Defmodule *theModule;
 
     /*=======================================================*/
@@ -261,7 +261,7 @@ static void BsaveFind(
 static void BsaveExpressions(
         const Environment&theEnv,
         FILE *fp) {
-    Defrule *theDefrule, *theDisjunct;
+    Defrule::Ptr theDefrule, *theDisjunct;
     Defmodule *theModule;
 
     /*===========================*/
@@ -345,7 +345,7 @@ static void BsaveBinaryItem(
         const Environment&theEnv,
         FILE *fp) {
     size_t space;
-    Defrule *theDefrule;
+    Defrule::Ptr theDefrule;
     Defmodule *theModule;
     struct defruleModule *theModuleItem;
     struct bsaveDefruleModule tempDefruleModule;
@@ -425,8 +425,8 @@ static void BsaveBinaryItem(
 static void BsaveDisjuncts(
         const Environment&theEnv,
         FILE *fp,
-        Defrule *theDefrule) {
-    Defrule *theDisjunct;
+        Defrule::Ptr theDefrule) {
+    Defrule::Ptr theDisjunct;
     struct bsaveDefrule tempDefrule;
     unsigned long disjunctExpressionCount = 0;
     bool first;
@@ -502,7 +502,7 @@ static void BsaveDisjuncts(
 static void BsaveJoins(
         const Environment&theEnv,
         FILE *fp) {
-    Defrule *rulePtr, *disjunctPtr;
+    Defrule::Ptr rulePtr, *disjunctPtr;
     Defmodule *theModule;
 
     /*===========================*/
@@ -598,7 +598,7 @@ static void BsaveJoin(
 static void BsaveLinks(
         const Environment&theEnv,
         FILE *fp) {
-    Defrule *rulePtr, *disjunctPtr;
+    Defrule::Ptr rulePtr, *disjunctPtr;
     Defmodule *theModule;
     struct joinLink *theLink;
 
@@ -750,7 +750,7 @@ static void BloadStorage(
     }
 
     space = DefruleBinaryData(theEnv)->NumberOfDefrules * sizeof(Defrule);
-    DefruleBinaryData(theEnv)->DefruleArray = (Defrule *) genalloc(theEnv, space);
+    DefruleBinaryData(theEnv)->DefruleArray = (Defrule::Ptr ) genalloc(theEnv, space);
 
     /*===============================*/
     /* Allocate the space needed for */

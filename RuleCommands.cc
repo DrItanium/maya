@@ -109,7 +109,7 @@
 /***************************************/
 
 #if DEVELOPER
-static void                    ShowJoins(const Environment&,Defrule *);
+static void                    ShowJoins(const Environment&,Defrule::Ptr );
 #endif
 #if DEBUGGING_FUNCTIONS
 static long long ListAlphaMatches(const Environment&, struct joinInformation *, Verbosity);
@@ -269,7 +269,7 @@ void MatchesCommand(
         UDFContext *context,
         UDFValue *returnValue) {
     const char *ruleName, *argument;
-    Defrule *rulePtr;
+    Defrule::Ptr rulePtr;
     UDFValue theArg;
     Verbosity output;
     CLIPSValue result;
@@ -308,11 +308,11 @@ void MatchesCommand(
 /*   for the matches command. */
 /******************************/
 void Matches(
-        Defrule *theDefrule,
+        Defrule::Ptr theDefrule,
         Verbosity output,
         CLIPSValue *returnValue) {
-    Defrule *rulePtr;
-    Defrule *topDisjunct = theDefrule;
+    Defrule::Ptr rulePtr;
+    Defrule::Ptr topDisjunct = theDefrule;
     long joinIndex;
     unsigned short arraySize;
     struct joinInformation *theInfo;
@@ -450,7 +450,7 @@ static unsigned short AlphaJoinCountDriver(
 /***********************************************/
 unsigned short AlphaJoinCount(
         const Environment&theEnv,
-        Defrule *theDefrule) {
+        Defrule::Ptr theDefrule) {
     return AlphaJoinCountDriver(theEnv, theDefrule->lastJoin->lastLevel);
 }
 
@@ -482,7 +482,7 @@ static void AlphaJoinsDriver(
 /*****************************************/
 void AlphaJoins(
         const Environment&theEnv,
-        Defrule *theDefrule,
+        Defrule::Ptr theDefrule,
         unsigned short alphaCount,
         struct joinInformation *theInfo) {
     AlphaJoinsDriver(theEnv, theDefrule->lastJoin->lastLevel, alphaCount, theInfo);
@@ -514,7 +514,7 @@ static unsigned short BetaJoinCountDriver(
 /***********************************************/
 unsigned short BetaJoinCount(
         const Environment&theEnv,
-        Defrule *theDefrule) {
+        Defrule::Ptr theDefrule) {
     return BetaJoinCountDriver(theEnv, theDefrule->lastJoin->lastLevel);
 }
 
@@ -585,7 +585,7 @@ static void BetaJoinsDriver(
 /*****************************************/
 void BetaJoins(
         const Environment&theEnv,
-        Defrule *theDefrule,
+        Defrule::Ptr theDefrule,
         unsigned short betaArraySize,
         struct joinInformation *theInfo) {
     BetaJoinsDriver(theEnv, theDefrule->lastJoin->lastLevel, betaArraySize, theInfo, theDefrule->lastJoin->leftMemory,
@@ -882,7 +882,7 @@ void JoinActivityCommand(
         UDFContext *context,
         UDFValue *returnValue) {
     const char *ruleName, *argument;
-    Defrule *rulePtr;
+    Defrule::Ptr rulePtr;
     UDFValue theArg;
     int output;
 
@@ -920,10 +920,10 @@ void JoinActivityCommand(
 /************************************/
 void JoinActivity(
         const Environment&theEnv,
-        Defrule *theRule,
+        Defrule::Ptr theRule,
         int output,
         UDFValue *returnValue) {
-    Defrule *rulePtr;
+    Defrule::Ptr rulePtr;
     long disjunctCount, disjunctIndex, joinIndex;
     unsigned short arraySize;
     struct joinInformation *theInfo;
@@ -1118,7 +1118,7 @@ static void JoinActivityReset(
 #if MAC_XCD
 #pragma unused(buffer)
 #endif
-    Defrule *theDefrule = (Defrule *) theConstruct;
+    Defrule::Ptr theDefrule = (Defrule::Ptr ) theConstruct;
     struct joinNode *theJoin = theDefrule->lastJoin;
 
     while (theJoin != nullptr) {
@@ -1180,7 +1180,7 @@ void RuleComplexityCommand(
   UDFValue *returnValue)
   {
    const char *ruleName;
-   Defrule *rulePtr;
+   Defrule::Ptr rulePtr;
 
    ruleName = GetConstructName(context,"rule-complexity","rule name");
    if (ruleName == nullptr)
@@ -1210,7 +1210,7 @@ void ShowJoinsCommand(
   UDFValue *returnValue)
   {
    const char *ruleName;
-   Defrule *rulePtr;
+   Defrule::Ptr rulePtr;
 
    ruleName = GetConstructName(context,"show-joins","rule name");
    if (ruleName == nullptr) return;
@@ -1233,9 +1233,9 @@ void ShowJoinsCommand(
 /*********************************/
 static void ShowJoins(
   const Environment&theEnv,
-  Defrule *theRule)
+  Defrule::Ptr theRule)
   {
-   Defrule *rulePtr;
+   Defrule::Ptr rulePtr;
    struct joinNode *theJoin;
    struct joinNode *joinList[MAXIMUM_NUMBER_OF_PATTERNS];
    int numberOfJoins;

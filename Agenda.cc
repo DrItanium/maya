@@ -92,7 +92,7 @@
 static void PrintActivation(const Environment&, const char *, Activation::Ptr );
 static void AgendaClearFunction(const Environment&, void *);
 static const char *SalienceEvaluationName(SalienceEvaluationType);
-static int EvaluateSalience(const Environment&, Defrule *);
+static int EvaluateSalience(const Environment&, Defrule::Ptr );
 static struct SalienceGroup *ReuseOrCreateSalienceGroup(const Environment&, struct defruleModule *, int);
 static struct SalienceGroup *FindSalienceGroup(defruleModule *, int);
 static void RemoveActivationFromGroup(const Environment&, Activation::Ptr , struct defruleModule *);
@@ -128,7 +128,7 @@ void InitializeAgenda(
 /*****************************************************************/
 void AddActivation(
         const Environment&theEnv,
-        Defrule *theRule,
+        Defrule::Ptr theRule,
         PartialMatch *binds) {
     defruleModule *theModuleItem;
     SalienceGroup *theGroup;
@@ -250,8 +250,8 @@ static struct SalienceGroup *FindSalienceGroup(
 /***************************************************************/
 void ClearRuleFromAgenda(
         const Environment&theEnv,
-        Defrule *theRule) {
-    Defrule *tempRule;
+        Defrule::Ptr theRule) {
+    Defrule::Ptr tempRule;
     struct Activation::Ptr agendaPtr, *agendaNext;
 
     /*============================================*/
@@ -782,8 +782,8 @@ void RefreshCommand(
 /*   that have already been fired are added to the agenda. */
 /***********************************************************/
 void Refresh(
-        Defrule *theRule) {
-    Defrule *rulePtr;
+        Defrule::Ptr theRule) {
+    Defrule::Ptr rulePtr;
     PartialMatch *listOfMatches;
     unsigned long b;
     const Environment&theEnv = theRule->header.env;
@@ -1060,7 +1060,7 @@ SalienceEvaluationType SetSalienceEvaluation(
 /*****************************************************************/
 static int EvaluateSalience(
         const Environment&theEnv,
-        Defrule *theDefrule) {
+        Defrule::Ptr theDefrule) {
     UDFValue salienceValue;
     long long salience;
 

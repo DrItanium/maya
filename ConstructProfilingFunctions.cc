@@ -407,7 +407,7 @@ void ProfileResetCommand(
 #if DEFFUNCTION_CONSTRUCT
     Deffunction *theDeffunction;
 #endif
-    Defrule *theDefrule;
+    Defrule::Ptr theDefrule;
 #if DEFGENERIC_CONSTRUCT
     Defgeneric *theDefgeneric;
     unsigned short methodIndex;
@@ -537,7 +537,7 @@ static void OutputConstructsCodeInfo(
 #if DEFFUNCTION_CONSTRUCT
     Deffunction *theDeffunction;
 #endif
-    Defrule *theDefrule;
+    Defrule::Ptr theDefrule;
 #if DEFGENERIC_CONSTRUCT
     Defgeneric *theDefgeneric;
     Defmethod *theMethod;

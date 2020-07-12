@@ -100,13 +100,13 @@
 
 static Expression *ParseRuleRHS(const Environment&, const char *);
 static int ReplaceRHSVariable(const Environment&, Expression *, void *);
-static Defrule *ProcessRuleLHS(const Environment&, struct lhsParseNode *, Expression *, CLIPSLexeme *, bool *);
-static Defrule *CreateNewDisjunct(const Environment&, CLIPSLexeme *, unsigned short, Expression *,
+static Defrule::Ptr ProcessRuleLHS(const Environment&, struct lhsParseNode *, Expression *, CLIPSLexeme *, bool *);
+static Defrule::Ptr CreateNewDisjunct(const Environment&, CLIPSLexeme *, unsigned short, Expression *,
                                   unsigned int, unsigned, struct joinNode *);
 static unsigned short RuleComplexity(const Environment&, struct lhsParseNode *);
 static unsigned short ExpressionComplexity(const Environment&, Expression *);
 static int LogicalAnalysis(const Environment&, struct lhsParseNode *);
-static void AddToDefruleList(Defrule *);
+static void AddToDefruleList(Defrule::Ptr );
 
 /****************************************************/
 /* ParseDefrule: Coordinates all actions necessary  */
@@ -120,7 +120,7 @@ bool ParseDefrule(
     struct lhsParseNode *theLHS;
     Expression *actions;
     struct token theToken;
-    Defrule *topDisjunct, *tempPtr;
+    Defrule::Ptr topDisjunct, *tempPtr;
     struct defruleModule *theModuleItem;
     bool error;
 
@@ -271,14 +271,14 @@ bool ParseDefrule(
 /**************************************************************/
 /* ProcessRuleLHS: Processes each of the disjuncts of a rule. */
 /**************************************************************/
-static Defrule *ProcessRuleLHS(
+static Defrule::Ptr ProcessRuleLHS(
         const Environment&theEnv,
         struct lhsParseNode *theLHS,
         Expression *actions,
         CLIPSLexeme *ruleName,
         bool *error) {
     struct lhsParseNode *tempNode = nullptr;
-    Defrule *topDisjunct = nullptr, *currentDisjunct, *lastDisjunct = nullptr;
+    Defrule::Ptr topDisjunct = nullptr, *currentDisjunct, *lastDisjunct = nullptr;
     Expression *newActions, *packPtr;
     int logicalJoin;
     unsigned short localVarCnt;
@@ -460,7 +460,7 @@ static Defrule *ProcessRuleLHS(
 /************************************************************************/
 /* CreateNewDisjunct: Creates and initializes a defrule data structure. */
 /************************************************************************/
-static Defrule *CreateNewDisjunct(
+static Defrule::Ptr CreateNewDisjunct(
         const Environment&theEnv,
         CLIPSLexeme *ruleName,
         unsigned short localVarCnt,
@@ -881,15 +881,15 @@ struct lhsParseNode *FindVariable(
 /* AddToDefruleList: Adds a defrule to the list of rules. */
 /**********************************************************/
 static void AddToDefruleList(
-        Defrule *rulePtr) {
-    Defrule *tempRule;
+        Defrule::Ptr rulePtr) {
+    Defrule::Ptr tempRule;
     struct defruleModule *theModuleItem;
 
     theModuleItem = (defruleModule *) rulePtr->header.whichModule;
 
     if (theModuleItem->header.lastItem == nullptr) { theModuleItem->header.firstItem = &rulePtr->header; }
     else {
-        tempRule = (Defrule *) theModuleItem->header.lastItem; // Note: Only the first disjunct
+        tempRule = (Defrule::Ptr ) theModuleItem->header.lastItem; // Note: Only the first disjunct
         tempRule->header.next = &rulePtr->header;   // points to the next rule
     }
 

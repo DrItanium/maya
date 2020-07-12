@@ -108,7 +108,7 @@ struct ruleFiredFunctionItem {
 constexpr auto ENGINE_DATA = 18;
 
 struct engineData : public EnvironmentModule {
-    Defrule *ExecutingRule;
+    Defrule::Ptr ExecutingRule;
     bool HaltRules;
     struct joinNode *TheLogicalJoin;
     PartialMatch *TheLogicalBind;
@@ -159,12 +159,12 @@ RuleFiredFunctionItem *RemoveRuleFiredFunctionFromCallList(const Environment&, c
                                                            RuleFiredFunctionItem *, bool *);
 void DeallocateRuleFiredCallList(const Environment&, RuleFiredFunctionItem *);
 void InitializeEngine(const Environment&);
-void SetBreak(Defrule *);
+void SetBreak(Defrule::Ptr );
 void Halt(const Environment&);
-bool RemoveBreak(Defrule *);
+bool RemoveBreak(Defrule::Ptr );
 void RemoveAllBreakpoints(const Environment&);
 void ShowBreaks(const Environment&, const char *, Defmodule *);
-bool DefruleHasBreakpoint(Defrule *);
+bool DefruleHasBreakpoint(Defrule::Ptr );
 void RunCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 void SetBreakCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 void RemoveBreakCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);

@@ -840,7 +840,7 @@ static int CountPriorPatterns(
 void MarkRuleNetwork(
         const Environment&theEnv,
         bool value) {
-    Defrule *rulePtr, *disjunctPtr;
+    Defrule::Ptr rulePtr, *disjunctPtr;
     struct joinNode *joinPtr;
     Defmodule *modulePtr;
 
@@ -1404,7 +1404,7 @@ void TagRuleNetwork(
         unsigned long *joinCount,
         unsigned long *linkCount) {
     Defmodule *modulePtr;
-    Defrule *rulePtr, *disjunctPtr;
+    Defrule::Ptr rulePtr, *disjunctPtr;
     struct joinLink *theLink;
 
     *moduleCount = 0;

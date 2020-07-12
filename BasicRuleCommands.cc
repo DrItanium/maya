@@ -261,7 +261,7 @@ void UndefruleCommand(
 /*   for the undefrule command. */
 /********************************/
 bool Undefrule(
-        Defrule *theDefrule,
+        Defrule::Ptr theDefrule,
         const Environment&allEnv) {
     Environment theEnv;
 
@@ -363,8 +363,8 @@ void ListDefrules(
 /*   activations.                                      */
 /*******************************************************/
 bool DefruleGetWatchActivations(
-        Defrule *rulePtr) {
-    Defrule *thePtr;
+        Defrule::Ptr rulePtr) {
+    Defrule::Ptr thePtr;
 
     for (thePtr = rulePtr;
          thePtr != nullptr;
@@ -379,8 +379,8 @@ bool DefruleGetWatchActivations(
 /*   of a defrule's firings.                */
 /********************************************/
 bool DefruleGetWatchFirings(
-        Defrule *rulePtr) {
-    Defrule *thePtr;
+        Defrule::Ptr rulePtr) {
+    Defrule::Ptr thePtr;
 
     for (thePtr = rulePtr;
          thePtr != nullptr;
@@ -395,9 +395,9 @@ bool DefruleGetWatchFirings(
 /*   defrule's activations.                     */
 /************************************************/
 void DefruleSetWatchActivations(
-        Defrule *rulePtr,
+        Defrule::Ptr rulePtr,
         bool newState) {
-    Defrule *thePtr;
+    Defrule::Ptr thePtr;
 
     for (thePtr = rulePtr;
          thePtr != nullptr;
@@ -410,9 +410,9 @@ void DefruleSetWatchActivations(
 /*   a defrule's firings.                   */
 /********************************************/
 void DefruleSetWatchFirings(
-        Defrule *rulePtr,
+        Defrule::Ptr rulePtr,
         bool newState) {
-    Defrule *thePtr;
+    Defrule::Ptr thePtr;
 
     for (thePtr = rulePtr;
          thePtr != nullptr;

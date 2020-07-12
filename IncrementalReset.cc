@@ -77,9 +77,9 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void MarkNetworkForIncrementalReset(const Environment&, Defrule *, bool);
+static void MarkNetworkForIncrementalReset(const Environment&, Defrule::Ptr , bool);
 static void MarkJoinsForIncrementalReset(const Environment&, struct joinNode *, bool);
-static void CheckForPrimableJoins(const Environment&, Defrule *, struct joinNode *);
+static void CheckForPrimableJoins(const Environment&, Defrule::Ptr , struct joinNode *);
 static void PrimeJoinFromLeftMemory(const Environment&, struct joinNode *);
 static void PrimeJoinFromRightMemory(const Environment&, struct joinNode *);
 static void MarkPatternForIncrementalReset(const Environment&, unsigned short,
@@ -90,8 +90,8 @@ static void MarkPatternForIncrementalReset(const Environment&, unsigned short,
 /**************************************************************/
 void IncrementalReset(
         const Environment&theEnv,
-        Defrule *tempRule) {
-    Defrule *tempPtr;
+        Defrule::Ptr tempRule) {
+    Defrule::Ptr tempPtr;
     struct patternParser *theParser;
 
     /*=====================================================*/
@@ -149,7 +149,7 @@ void IncrementalReset(
 /**********************************************************************/
 static void MarkNetworkForIncrementalReset(
         const Environment&theEnv,
-        Defrule *tempRule,
+        Defrule::Ptr tempRule,
         bool value) {
     /*============================================*/
     /* Loop through each of the rule's disjuncts. */
@@ -209,7 +209,7 @@ static void MarkJoinsForIncrementalReset(
 /*******************************************************************************/
 static void CheckForPrimableJoins(
         const Environment&theEnv,
-        Defrule *tempRule,
+        Defrule::Ptr tempRule,
         struct joinNode *joinPtr) {
     /*========================================*/
     /* Loop through each of the rule's joins. */

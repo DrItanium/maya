@@ -210,7 +210,7 @@ static void DestroyDefruleAction(
 #if MAC_XCD
 #pragma unused(buffer)
 #endif
-    Defrule *theDefrule = (Defrule *) theConstruct;
+    Defrule::Ptr theDefrule = (Defrule::Ptr ) theConstruct;
 
     DestroyDefrule(theEnv, theDefrule);
 }
@@ -269,20 +269,20 @@ struct defruleModule *GetDefruleModuleItem(
 /* FindDefrule: Searches for a defrule in the list of defrules. */
 /*   Returns a pointer to the defrule if found, otherwise nullptr. */
 /****************************************************************/
-Defrule *FindDefrule(
+Defrule::Ptr FindDefrule(
         const Environment&theEnv,
         const char *defruleName) {
-    return (Defrule *) FindNamedConstructInModuleOrImports(theEnv, defruleName, DefruleData(theEnv)->DefruleConstruct);
+    return (Defrule::Ptr ) FindNamedConstructInModuleOrImports(theEnv, defruleName, DefruleData(theEnv)->DefruleConstruct);
 }
 
 /************************************************************************/
 /* FindDefruleInModule: Searches for a defrule in the list of defrules. */
 /*   Returns a pointer to the defrule if found, otherwise nullptr.         */
 /************************************************************************/
-Defrule *FindDefruleInModule(
+Defrule::Ptr FindDefruleInModule(
         const Environment&theEnv,
         const char *defruleName) {
-    return (Defrule *) FindNamedConstructInModule(theEnv, defruleName, DefruleData(theEnv)->DefruleConstruct);
+    return (Defrule::Ptr ) FindNamedConstructInModule(theEnv, defruleName, DefruleData(theEnv)->DefruleConstruct);
 }
 
 /************************************************************/
@@ -291,10 +291,10 @@ Defrule *FindDefruleInModule(
 /*   the next defrule following the defrule passed as an    */
 /*   argument.                                              */
 /************************************************************/
-Defrule *GetNextDefrule(
+Defrule::Ptr GetNextDefrule(
         const Environment&theEnv,
-        Defrule *defrulePtr) {
-    return (Defrule *) GetNextConstructItem(theEnv, &defrulePtr->header, DefruleData(theEnv)->DefruleModuleIndex);
+        Defrule::Ptr defrulePtr) {
+    return (Defrule::Ptr ) GetNextConstructItem(theEnv, &defrulePtr->header, DefruleData(theEnv)->DefruleModuleIndex);
 }
 
 /******************************************************/
@@ -302,7 +302,7 @@ Defrule *GetNextDefrule(
 /*   defrule can be deleted, otherwise returns false. */
 /******************************************************/
 bool DefruleIsDeletable(
-        Defrule *theDefrule) {
+        Defrule::Ptr theDefrule) {
     const Environment&theEnv = theDefrule->header.env;
 
     if (!ConstructsDeletable(theEnv)) { return false; }
@@ -321,7 +321,7 @@ bool DefruleIsDeletable(
 /********************************************************/
 long GetDisjunctCount(
         const Environment&theEnv,
-        Defrule *theDefrule) {
+        Defrule::Ptr theDefrule) {
     long count = 0;
 
     for (;
@@ -336,9 +336,9 @@ long GetDisjunctCount(
 /*   The disjunct indices run from 1 to N rather than  */
 /*   0 to N - 1.                                       */
 /*******************************************************/
-Defrule *GetNthDisjunct(
+Defrule::Ptr GetNthDisjunct(
         const Environment&theEnv,
-        Defrule *theDefrule,
+        Defrule::Ptr theDefrule,
         long index) {
     long count = 0;
 
@@ -423,17 +423,17 @@ void AddBetaMemoriesToJoin(
 /*##################################*/
 
 const char *DefruleModule(
-        Defrule *theDefrule) {
+        Defrule::Ptr theDefrule) {
     return GetConstructModuleName(&theDefrule->header);
 }
 
 const char *DefruleName(
-        Defrule *theDefrule) {
+        Defrule::Ptr theDefrule) {
     return GetConstructNameString(&theDefrule->header);
 }
 
 const char *DefrulePPForm(
-        Defrule *theDefrule) {
+        Defrule::Ptr theDefrule) {
     return GetConstructPPForm(&theDefrule->header);
 }
 
