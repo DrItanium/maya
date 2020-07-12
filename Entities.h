@@ -72,7 +72,6 @@ public:
     using Ptr = std::shared_ptr<Self>;
 public:
     TypeHeader header;
-    Ptr next;
     std::string contents;
 };
 

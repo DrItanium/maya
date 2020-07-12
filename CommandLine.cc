@@ -251,8 +251,8 @@ void RerouteStdin(
 bool ExpandCommandString(
         const Environment&theEnv,
         int inchar) {
-    size_t k;
 #if STUBBING_INACTIVE
+    size_t k;
     k = RouterData(theEnv)->CommandBufferInputCount;
     CommandLineData(theEnv)->CommandString = ExpandStringWithChar(theEnv, inchar, CommandLineData(theEnv)->CommandString,
                                                                   &RouterData(theEnv)->CommandBufferInputCount,
