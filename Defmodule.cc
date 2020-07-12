@@ -97,6 +97,7 @@ void AllocateDefmoduleGlobals(
     DefmoduleData(theEnv)->MainModuleRedefinable = true;
 }
 
+#if 0
 /****************************************************/
 /* DeallocateDefmoduleData: Deallocates environment */
 /*    data for the defmodule construct.             */
@@ -161,6 +162,7 @@ static void DeallocateDefmoduleData(
     DeallocateVoidCallList(theEnv, DefmoduleData(theEnv)->AfterModuleDefinedFunctions);
     DeallocateVoidCallList(theEnv, DefmoduleData(theEnv)->AfterModuleChangeFunctions);
 }
+#endif
 
 /**************************************************************/
 /* InitializeDefmodules: Initializes the defmodule construct. */
@@ -182,7 +184,7 @@ void InitializeDefmodules(
     AddUDF(theEnv, "set-current-module", "y", 1, 1, "y", SetCurrentModuleCommand);
 #endif
 }
-
+#if 0
 /******************************************************/
 /* RegisterModuleItem: Called to register a construct */
 /*   which can be placed within a module.             */
@@ -215,7 +217,7 @@ RegisterModuleItem(const Environment&theEnv,
 
     return newModuleItem->moduleIndex;
 }
-
+#endif
 /***********************************************************/
 /* GetListOfModuleItems: Returns the list of module items. */
 /***********************************************************/
@@ -231,7 +233,7 @@ unsigned GetNumberOfModuleItems(
         const Environment&theEnv) {
     return DefmoduleData(theEnv)->NumberOfModuleItems;
 }
-
+#if 0
 /********************************************************/
 /* FindModuleItem: Finds the module item data structure */
 /*   corresponding to the specified name.               */
@@ -625,7 +627,7 @@ Defmodule *FindDefmodule(
 
     return nullptr;
 }
-
+#endif
 /*************************************************/
 /* GetCurrentModuleCommand: H/L access routine   */
 /*   for the get-current-module command.         */
@@ -634,6 +636,7 @@ void GetCurrentModuleCommand(
         const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
+#if 0
     Defmodule *theModule;
 
     theModule = GetCurrentModule(theEnv);
@@ -644,7 +647,9 @@ void GetCurrentModuleCommand(
     }
 
     returnValue->value = theModule->header.name;
+#endif
 }
+#if 0
 
 /*************************************************/
 /* SetCurrentModuleCommand: H/L access routine   */
@@ -732,3 +737,4 @@ unsigned short GetNumberOfDefmodules(
 #endif
 }
 
+#endif

@@ -168,7 +168,7 @@ static void InitializeDeffactsModules(
 #endif
                                (FindConstructFunction *) FindDeffactsInModule);
 }
-
+#if 0
 /************************************************/
 /* AllocateModule: Allocates a deffacts module. */
 /************************************************/
@@ -280,7 +280,7 @@ const char *DeffactsPPForm(
         Deffacts *theDeffacts) {
     return GetConstructPPForm(&theDeffacts->header);
 }
-
+#endif
 #endif /* DEFFACTS_CONSTRUCT */
 
 

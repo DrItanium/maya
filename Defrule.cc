@@ -127,6 +127,7 @@ void InitializeDefrules(
 
     DefruleCommands(theEnv);
 
+#if 0
     DefruleData(theEnv)->DefruleConstruct =
             AddConstruct(theEnv, "defrule", "defrules",
                          ParseDefrule,
@@ -138,7 +139,6 @@ void InitializeDefrules(
                          (IsConstructDeletableFunction *) DefruleIsDeletable,
                          (DeleteConstructFunction *) Undefrule,
                          (FreeConstructFunction *) ReturnDefrule);
-
     DefruleData(theEnv)->AlphaMemoryTable = (ALPHA_MEMORY_HASH **)
             gm2(theEnv, sizeof(ALPHA_MEMORY_HASH *) * ALPHA_MEMORY_HASH_SIZE);
 
@@ -148,8 +148,9 @@ void InitializeDefrules(
 
     DefruleData(theEnv)->RightPrimeJoins = nullptr;
     DefruleData(theEnv)->LeftPrimeJoins = nullptr;
+#endif
 }
-
+#if 0
 /**************************************************/
 /* DeallocateDefruleData: Deallocates environment */
 /*    data for the defrule construct.             */
@@ -438,3 +439,4 @@ const char *DefrulePPForm(
 }
 
 
+#endif
