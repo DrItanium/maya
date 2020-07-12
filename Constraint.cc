@@ -237,6 +237,7 @@ unsigned long HashConstraint(
     unsigned short i = 0;
     unsigned long count = 0;
     unsigned long hashValue;
+#if 0
     Expression *tmpPtr;
 
     count +=
@@ -288,12 +289,12 @@ unsigned long HashConstraint(
     }
 
     if (theConstraint->getMultifield() != nullptr) { count += HashConstraint(theConstraint->getMultifield()); }
-
+#endif
     hashValue = count % SIZE_CONSTRAINT_HASH;
 
     return hashValue;
 }
-
+#if 0
 /**********************************************/
 /* ConstraintCompare: Compares two constraint */
 /*   records and returns true if they are     */
@@ -372,6 +373,7 @@ static bool ConstraintCompare(
 
     return (ConstraintCompare(constraint1->getMultifield(), constraint2->getMultifield()));
 }
+#endif
 
 /************************************/
 /* AddConstraint: Adds a constraint */
