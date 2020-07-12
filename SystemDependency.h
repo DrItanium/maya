@@ -134,7 +134,6 @@ char *genstrncpy(char *, const char *, size_t);
 char *genstrcat(char *, const char *);
 char *genstrncat(char *, const char *, size_t);
 int genchdir(Environment *, const char *);
-void SetJmpBuffer(Environment *, jmp_buf *);
 void genprintfile(Environment *, FILE *, const char *);
 int gengetchar(Environment *);
 int genungetchar(Environment *, int);

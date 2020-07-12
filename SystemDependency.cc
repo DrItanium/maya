@@ -171,7 +171,6 @@ struct systemDependentData {
 #endif
     int (*BeforeOpenFunction)(Environment *);
     int (*AfterOpenFunction)(Environment *);
-    jmp_buf *jmpBuffer;
 };
 
 #define SystemDependentData(theEnv) ((systemDependentData *) GetEnvironmentData(theEnv,SYSTEM_DEPENDENT_DATA))
@@ -271,18 +270,8 @@ void InitializeNonportableFeatures(
 void genexit(
         Environment *theEnv,
         int num) {
-    if (SystemDependentData(theEnv)->jmpBuffer != nullptr) { longjmp(*SystemDependentData(theEnv)->jmpBuffer, 1); }
 
     exit(num);
-}
-
-/**************************************/
-/* SetJmpBuffer: */
-/**************************************/
-void SetJmpBuffer(
-        Environment *theEnv,
-        jmp_buf *theJmpBuffer) {
-    SystemDependentData(theEnv)->jmpBuffer = theJmpBuffer;
 }
 
 /******************************************/
