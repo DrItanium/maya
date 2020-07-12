@@ -174,7 +174,7 @@ add_library(clips
 		#ConflictResolutionStrategy.cc
 		#ConstructBinaryLoadSave.cc
 		#ConstructCommand.cc
-		#ConstructParser.cc
+		ConstructParser.cc
 		#ConstraintBinaryLoadSave.cc
 		#ConstraintChecking.cc
 		#ConstraintOperations.cc

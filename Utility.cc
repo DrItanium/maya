@@ -214,13 +214,14 @@ static void DeallocateUtilityData(
         UtilityData(theEnv)->CurrentGarbageFrame = UtilityData(theEnv)->CurrentGarbageFrame->priorFrame;
     }
 }
-
+#endif
 /*****************************/
 /* CleanCurrentGarbageFrame: */
 /*****************************/
 void CleanCurrentGarbageFrame(
         const Environment&theEnv,
         UDFValue *returnValue) {
+#if 0
     struct garbageFrame *currentGarbageFrame;
 
     currentGarbageFrame = UtilityData(theEnv)->CurrentGarbageFrame;
@@ -241,7 +242,9 @@ void CleanCurrentGarbageFrame(
         (currentGarbageFrame->ephemeralBitMapList == nullptr) &&
         (currentGarbageFrame->ephemeralExternalAddressList == nullptr) &&
         (currentGarbageFrame->LastMultifield == nullptr)) { currentGarbageFrame->dirty = false; }
+#endif
 }
+#if 0
 
 /*****************************/
 /* RestorePriorGarbageFrame: */
@@ -330,13 +333,14 @@ void CallCleanupFunctions(
          cleanupPtr = cleanupPtr->next) { (*cleanupPtr->func)(theEnv, nullptr); }
 }
 
-
+#endif
 /**************************************************/
 /* CallPeriodicTasks: Calls the list of functions */
 /*   for handling periodic tasks.                 */
 /**************************************************/
 void CallPeriodicTasks(
         const Environment&theEnv) {
+#if 0
     struct voidCallFunctionItem *periodPtr;
 
     if (UtilityData(theEnv)->PeriodicFunctionsEnabled) {
@@ -344,7 +348,9 @@ void CallPeriodicTasks(
              periodPtr != nullptr;
              periodPtr = periodPtr->next) { (*periodPtr->func)(theEnv, nullptr); }
     }
+#endif
 }
+#if 0
 
 /***************************************************/
 /* AddCleanupFunction: Adds a function to the list */
@@ -498,7 +504,7 @@ const char *AppendStrings(
     rm(theEnv, theString, max);
     return thePtr->contents;
 }
-
+#endif
 /******************************************************/
 /* AppendToString: Appends a string to another string */
 /*   (expanding the other string if necessary).       */
@@ -509,6 +515,7 @@ char *AppendToString(
         char *oldStr,
         size_t *oldPos,
         size_t *oldMax) {
+#if 0
     size_t length;
 
     /*=========================================*/
@@ -536,8 +543,9 @@ char *AppendToString(
     /*============================================================*/
 
     return oldStr;
+#endif
+    return nullptr;
 }
-
 /**********************************************************/
 /* InsertInString: Inserts a string within another string */
 /*   (expanding the other string if necessary).           */
@@ -549,6 +557,7 @@ char *InsertInString(
         char *oldStr,
         size_t *oldPos,
         size_t *oldMax) {
+#if 0
     size_t length;
 
     /*=========================================*/
@@ -583,8 +592,11 @@ char *InsertInString(
     /*============================================================*/
 
     return (oldStr);
+#endif
+    return nullptr;
 }
 
+#if 0
 /*******************************************************************/
 /* EnlargeString: Enlarges a string by the specified amount.       */
 /*******************************************************************/
@@ -618,7 +630,7 @@ char *EnlargeString(
 
     return (oldStr);
 }
-
+#endif
 /*******************************************************/
 /* AppendNToString: Appends a string to another string */
 /*   (expanding the other string if necessary). Only a */
@@ -632,6 +644,7 @@ char *AppendNToString(
         size_t length,
         size_t *oldPos,
         size_t *oldMax) {
+#if 0
     size_t lengthWithEOS;
     size_t newSize;
 
@@ -676,8 +689,9 @@ char *AppendNToString(
     /*============================================================*/
 
     return (oldStr);
+#endif
+    return nullptr;
 }
-
 /*******************************************************/
 /* ExpandStringWithChar: Adds a character to a string, */
 /*   reallocating space for the string if it needs to  */
@@ -692,6 +706,7 @@ char *ExpandStringWithChar(
         size_t *pos,
         size_t *max,
         size_t newSize) {
+#if 0
     if ((*pos + 1) >= *max) {
         if (newSize < sizeof(char *)) { newSize = sizeof(char *); }
         str = (char *) genrealloc(theEnv, str, *max, newSize);
@@ -718,7 +733,10 @@ char *ExpandStringWithChar(
     }
 
     return (str);
+#endif
+    return nullptr;
 }
+#if 0
 
 /**********************************************************/
 /* AddVoidFunctionToCallList: Adds a function to a list   */
