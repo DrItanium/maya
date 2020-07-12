@@ -337,7 +337,7 @@
 /*********************************************/
 
 #ifndef MULTIFIELD_FUNCTIONS
-#define MULTIFIELD_FUNCTIONS 0
+#define MULTIFIELD_FUNCTIONS 1
 #endif
 
 /****************************************************/

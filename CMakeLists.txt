@@ -160,7 +160,7 @@ add_library(clips
 		#Analysis.cc
 		ArgumentAccess.cc
 		#BinaryLoad.cc
-		#BasicMathFunctions.cc
+		BasicMathFunctions.cc
 		#BinarySave.cc
 		#ClassCommands.cc
 		#ClassExamination.cc
@@ -214,7 +214,7 @@ add_library(clips
 		#FactQuery.cc
 		#FactReteAccessFunctions.cc
 		#FactRHSPatternParser.cc
-		#File.cc
+		File.cc
 		#FileRouter.cc
 		#Generate.cc
 		#GenericFunctionBinaryLoadSave.cc
@@ -280,7 +280,7 @@ add_library(clips
 		#RuleLHSParsing.cc
 		#RuleParser.cc
 		Scanner.cc
-		#SortingFunctions.cc
+		SortingFunctions.cc
 		StringFunctions.cc
 		StringRouter.cc
 		#SymbolBinarySave.cc

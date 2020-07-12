@@ -410,11 +410,9 @@ static void SystemFunctionDefinitions(
 #endif
 
     PredicateFunctionDefinitions(theEnv);
-#if STUBBING_INACTIVE
     BasicMathFunctionDefinitions(theEnv);
     FileCommandDefinitions(theEnv);
     SortFunctionDefinitions(theEnv);
-#endif
 
 #if DEBUGGING_FUNCTIONS
     WatchFunctionDefinitions(theEnv);

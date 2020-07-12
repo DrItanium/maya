@@ -107,7 +107,7 @@ void FileCommandDefinitions(
         const Environment&theEnv) {
     theEnv->allocateEnvironmentModule<fileCommandData>();
     //AllocateEnvironmentData(theEnv, FILECOM_DATA, sizeof(fileCommandData), DeallocateFileCommandData);
-
+if constexpr (STUBBING_INACTIVE) {
 #if DEBUGGING_FUNCTIONS
     AddUDF(theEnv, "batch", "b", 1, 1, "sy", BatchCommand);
     AddUDF(theEnv, "batch*", "b", 1, 1, "sy", BatchStarCommand);
@@ -125,8 +125,10 @@ void FileCommandDefinitions(
     InitializeBloadData(theEnv);
     AddUDF(theEnv, "bload", "b", 1, 1, "sy", BloadCommand);
 #endif
+    }
 }
 
+#if STUBBING_INACTIVE
 /******************************************************/
 /* DeallocateFileCommandData: Deallocates environment */
 /*    data for file commands.                         */
@@ -164,7 +166,6 @@ static void DeallocateFileCommandData(
     if (FileCommandData(theEnv)->DribbleFP != nullptr) { GenClose(theEnv, FileCommandData(theEnv)->DribbleFP); }
 #endif
 }
-
 #if DEBUGGING_FUNCTIONS
 
 /******************************************/
@@ -312,4 +313,5 @@ void SaveCommand(
 
     returnValue->lexemeValue = TrueSymbol(theEnv);
 }
+#endif
 #endif

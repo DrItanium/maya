@@ -74,9 +74,11 @@ void SortFunctionDefinitions(
         const Environment&theEnv) {
     //AllocateEnvironmentData(theEnv, SORTFUN_DATA, sizeof(sortFunctionData), DeallocateSortFunctionData);
     theEnv->allocateEnvironmentModule<sortFunctionData>();
-    AddUDF(theEnv, "sort", "bm", 1, UNBOUNDED, "*;y", SortFunction);
+    if constexpr (STUBBING_INACTIVE) {
+        AddUDF(theEnv, "sort", "bm", 1, UNBOUNDED, "*;y", SortFunction);
+    }
 }
-
+#if STUBBING_INACTIVE
 /*******************************************************/
 /* DeallocateSortFunctionData: Deallocates environment */
 /*    data for the sort function.                      */
@@ -381,4 +383,4 @@ static void DoMergeSort(
 }
 
 
-
+#endif

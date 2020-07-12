@@ -67,18 +67,20 @@
 /***************************************************************/
 void BasicMathFunctionDefinitions(
         const Environment&theEnv) {
-    AddUDF(theEnv, "+", "ld", 2, UNBOUNDED, "ld", AdditionFunction);
-    AddUDF(theEnv, "*", "ld", 2, UNBOUNDED, "ld", MultiplicationFunction);
-    AddUDF(theEnv, "-", "ld", 2, UNBOUNDED, "ld", SubtractionFunction);
-    AddUDF(theEnv, "/", "d", 2, UNBOUNDED, "ld", DivisionFunction);
-    AddUDF(theEnv, "div", "l", 2, UNBOUNDED, "ld", DivFunction);
-    AddUDF(theEnv, "integer", "l", 1, 1, "ld", IntegerFunction);
-    AddUDF(theEnv, "float", "d", 1, 1, "ld", FloatFunction);
-    AddUDF(theEnv, "abs", "ld", 1, 1, "ld", AbsFunction);
-    AddUDF(theEnv, "min", "ld", 1, UNBOUNDED, "ld", MinFunction);
-    AddUDF(theEnv, "max", "ld", 1, UNBOUNDED, "ld", MaxFunction);
+    if constexpr (STUBBING_INACTIVE) {
+        AddUDF(theEnv, "+", "ld", 2, UNBOUNDED, "ld", AdditionFunction);
+        AddUDF(theEnv, "*", "ld", 2, UNBOUNDED, "ld", MultiplicationFunction);
+        AddUDF(theEnv, "-", "ld", 2, UNBOUNDED, "ld", SubtractionFunction);
+        AddUDF(theEnv, "/", "d", 2, UNBOUNDED, "ld", DivisionFunction);
+        AddUDF(theEnv, "div", "l", 2, UNBOUNDED, "ld", DivFunction);
+        AddUDF(theEnv, "integer", "l", 1, 1, "ld", IntegerFunction);
+        AddUDF(theEnv, "float", "d", 1, 1, "ld", FloatFunction);
+        AddUDF(theEnv, "abs", "ld", 1, 1, "ld", AbsFunction);
+        AddUDF(theEnv, "min", "ld", 1, UNBOUNDED, "ld", MinFunction);
+        AddUDF(theEnv, "max", "ld", 1, UNBOUNDED, "ld", MaxFunction);
+    }
 }
-
+#if STUBBING_INACTIVE
 /**********************************/
 /* AdditionFunction: H/L access   */
 /*   routine for the + function.  */
@@ -479,4 +481,4 @@ void MaxFunction(
         }
     }
 }
-
+#endif
