@@ -814,7 +814,6 @@ void SetBeforeCommandExecutionFunction(
         BeforeCommandExecutionFunction *funptr) {
     CommandLineData(theEnv)->BeforeCommandExecutionCallback = funptr;
 }
-#if 0
 /*********************************************************/
 /* RouteCommand: Processes a completed command. Returns  */
 /*   true if a command could be parsed, otherwise false. */
@@ -823,6 +822,7 @@ bool RouteCommand(
         const Environment&theEnv,
         const char *command,
         bool printResult) {
+#if 0
     UDFValue returnValue;
     Expression *top;
     const char *commandName;
@@ -977,8 +977,9 @@ bool RouteCommand(
     }
 
     return true;
-}
 #endif
+    return false;
+}
 
 /*****************************************************************/
 /* DefaultGetNextEvent: Default event-handling function. Handles */

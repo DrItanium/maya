@@ -254,6 +254,7 @@ static bool CreateReadStringSource(
         const char *str,
         size_t currentPosition,
         size_t maximumPosition) {
+#if 0
     struct stringRouter *newStringRouter;
     char *theName;
 
@@ -272,6 +273,8 @@ static bool CreateReadStringSource(
     StringRouterData(theEnv)->ListOfStringRouters = newStringRouter;
 
     return true;
+#endif
+    return false;
 }
 
 /**********************************************/

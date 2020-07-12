@@ -261,7 +261,7 @@ add_library(clips
 		#ObjectReteMatch.cc
 		#ParsingFunctions.cc
 		#Pattern.cc
-		#PrettyPrint.cc
+		PrettyPrint.cc
 		#ProceduralCodeSupportRoutines.cc
 		#ProceduralFunctions.cc
 		#ProceduralFunctionsParser.cc
@@ -282,7 +282,7 @@ add_library(clips
 		#Scanner.cc
 		#SortingFunctions.cc
 		#StringFunctions.cc
-		#StringRouter.cc
+		StringRouter.cc
 		#SymbolBinarySave.cc
 		#Symbol.cc
 		#DeftemplateBinarySaveLoad.cc
