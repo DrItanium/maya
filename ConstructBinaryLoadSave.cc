@@ -59,7 +59,7 @@
 void MarkConstructHeaderNeededItems(
         ConstructHeader *theConstruct,
         unsigned long theBsaveID) {
-    theConstruct->name->neededSymbol = true;
+    theConstruct->name->markContentsNeeded(true);
     theConstruct->bsaveID = theBsaveID;
 }
 
@@ -83,7 +83,7 @@ void MarkConstructHeaderNeededItems(
 void AssignBsaveConstructHeaderVals(
         struct bsaveConstructHeader *theBsaveConstruct,
         ConstructHeader *theConstruct) {
-    if (theConstruct->name != nullptr) { theBsaveConstruct->name = theConstruct->name->bucket; }
+    if (theConstruct->name != nullptr) { theBsaveConstruct->name = theConstruct->name->getBucket(); }
     else { theBsaveConstruct->name = ULONG_MAX; }
 
     if ((theConstruct->whichModule != nullptr) &&

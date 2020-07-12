@@ -106,11 +106,13 @@ void InitializeBloadData(
 /************************************************/
 static void DeallocateBloadData(
         const Environment&theEnv) {
+#if 0
     DeallocateVoidCallList(theEnv, BloadData(theEnv)->BeforeBloadFunctions);
     DeallocateVoidCallList(theEnv, BloadData(theEnv)->AfterBloadFunctions);
     DeallocateBoolCallList(theEnv, BloadData(theEnv)->ClearBloadReadyFunctions);
     DeallocateVoidCallList(theEnv, BloadData(theEnv)->AbortBloadFunctions);
     genfree(theEnv, BloadData(theEnv)->BinarySizes, strlen(BloadData(theEnv)->BinarySizes) + 1);
+#endif
 }
 
 /****************************/

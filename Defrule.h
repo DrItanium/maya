@@ -89,7 +89,8 @@
 struct joinNode;
 struct Defrule {
 public:
-    using Ptr = std::shared_ptr<Defrule>;
+    using Self = Defrule;
+    using Ptr = std::shared_ptr<Self>;
 public:
     ConstructHeader header;
     int salience;
@@ -107,12 +108,13 @@ public:
     std::shared_ptr<Defrule> disjunct;
 };
 
-
+using ActivationPtr = std::shared_ptr<struct Activation>;
+using SalienceGroupPtr = std::shared_ptr<struct SalienceGroup>;
 
 struct defruleModule {
     struct defmoduleItemHeader header;
-    SalienceGroup::Ptr groupings;
-    Activation::Ptr agenda;
+    SalienceGroupPtr groupings;
+    ActivationPtr agenda;
 };
 
 #ifndef ALPHA_MEMORY_HASH_SIZE

@@ -255,7 +255,7 @@ ConstructHeader *FindNamedConstructInModule(
     /* a construct that's currently defined.         */
     /*===============================================*/
 
-    if (findValue->count == 0) {
+    if (findValue->getCount() == 0) {
         RestoreCurrentModule(theEnv);
         return nullptr;
     }
@@ -380,7 +380,7 @@ void PPConstructCommand(
 
         if (ppForm == nullptr) { CantFindItemErrorMessage(theEnv, constructClass->constructName, constructName, true); }
 
-        returnValue->lexemeValue = CreateString(theEnv, ppForm);
+        returnValue->contents = CreateString(theEnv, ppForm);
 
         return;
     }
@@ -468,10 +468,11 @@ bool PPConstruct(
 /* GetConstructModuleCommand: Driver routine */
 /*   for def<construct>-module routines      */
 /*********************************************/
-CLIPSLexeme *GetConstructModuleCommand(
+CLIPSLexeme::Ptr GetConstructModuleCommand(
         UDFContext *context,
         const char *command,
         Construct *constructClass) {
+#if 0
     const Environment&theEnv = context->environment;
     const char *constructName;
     char buffer[80];
@@ -502,6 +503,8 @@ CLIPSLexeme *GetConstructModuleCommand(
     /*============================================*/
 
     return constructModule->header.name;
+#endif
+    return nullptr;
 }
 
 /******************************************/
@@ -757,8 +760,8 @@ void GetConstructListFunction(
         /* list for all modules).                    */
         /*===========================================*/
 
-        if ((theModule = FindDefmodule(theEnv, result.lexemeValue->contents)) == nullptr) {
-            if (strcmp("*", result.lexemeValue->contents) != 0) {
+        if (auto lexValue = std::get<CLIPSLexeme::Ptr>(result.contents); (theModule = FindDefmodule(theEnv, lexValue->contents)) == nullptr) {
+            if (strcmp("*", lexValue->contents) != 0) {
                 SetMultifieldErrorValue(theEnv, returnValue);
                 ExpectedTypeError1(theEnv, UDFContextFunctionName(context), 1, "'defmodule name'");
                 return;
@@ -792,6 +795,7 @@ void GetConstructList(
         UDFValue *returnValue,
         Construct *constructClass,
         Defmodule *theModule) {
+#if 0
     ConstructHeader *theConstruct;
     unsigned long count = 0;
     Multifield *theList;
@@ -890,7 +894,7 @@ void GetConstructList(
     returnValue->begin = 0;
     returnValue->range = count;
     theList = CreateMultifield(theEnv, count);
-    returnValue->value = theList;
+    returnValue->contents = theList;
 
     /*===========================*/
     /* Store the construct names */
@@ -945,6 +949,7 @@ void GetConstructList(
     /*=============================*/
 
     RestoreCurrentModule(theEnv);
+#endif
 }
 
 /*********************************************/
@@ -978,8 +983,8 @@ void ListConstructCommand(
         /* list for all modules).                    */
         /*===========================================*/
 
-        if ((theModule = FindDefmodule(theEnv, result.lexemeValue->contents)) == nullptr) {
-            if (strcmp("*", result.lexemeValue->contents) != 0) {
+        if (auto lexValue = std::get<CLIPSLexeme::Ptr>(result.contents); (theModule = FindDefmodule(theEnv, lexValue->contents)) == nullptr) {
+            if (strcmp("*", lexValue->contents) != 0) {
                 ExpectedTypeError1(theEnv, UDFContextFunctionName(context), 1, "'defmodule name'");
                 return;
             }
@@ -1404,6 +1409,7 @@ static bool ConstructWatchSupport(
         bool newState,
         ConstructGetWatchFunction *getWatchFunc,
         ConstructSetWatchFunction *setWatchFunc) {
+#if 0
     Defmodule *theModule;
     ConstructHeader *theConstruct = nullptr;
     UDFValue constructName;
@@ -1526,6 +1532,8 @@ static bool ConstructWatchSupport(
     /*====================================*/
 
     return true;
+#endif
+    return false;
 }
 
 /*************************************************/

@@ -452,13 +452,15 @@ void SDCCommand(
         const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
+#if 0
     UDFValue theArg;
 
-    returnValue->lexemeValue = CreateBoolean(theEnv, GetDynamicConstraintChecking(theEnv));
+    returnValue->contents = CreateBoolean(theEnv, GetDynamicConstraintChecking(theEnv));
 
     if (!UDFFirstArgument(context, ANY_TYPE_BITS, &theArg)) { return; }
 
     SetDynamicConstraintChecking(theEnv, theArg.value != FalseSymbol(theEnv));
+#endif
 }
 
 /**********************************************/
@@ -469,7 +471,7 @@ void GDCCommand(
         const Environment&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
-    returnValue->lexemeValue = CreateBoolean(theEnv, GetDynamicConstraintChecking(theEnv));
+    returnValue->contents = CreateBoolean(theEnv, GetDynamicConstraintChecking(theEnv));
 }
 
 /******************************************************/

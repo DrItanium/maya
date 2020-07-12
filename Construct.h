@@ -257,7 +257,7 @@ ConstructHeader *FindNamedConstructInModuleOrImports(const Environment&, const c
 void UndefconstructCommand(UDFContext *, const char *, Construct *);
 bool PPConstruct(const Environment&, const char *, const char *, Construct *);
 const char *PPConstructNil(const Environment&, const char *, Construct *);
-CLIPSLexeme *GetConstructModuleCommand(UDFContext *, const char *, Construct *);
+CLIPSLexeme::Ptr GetConstructModuleCommand(UDFContext *, const char *, Construct *);
 Defmodule *GetConstructModule(const Environment&, const char *, Construct *);
 bool Undefconstruct(const Environment&, ConstructHeader *, Construct *);
 bool UndefconstructAll(const Environment&, Construct *);

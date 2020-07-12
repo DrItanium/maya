@@ -66,7 +66,6 @@
 #include "Defrule.h"
 #include "Symbol.h"
 #include "Match.h"
-#include "Defrule.h"
 
 enum SalienceEvaluationType {
     WHEN_DEFINED,
@@ -80,8 +79,8 @@ constexpr auto MIN_DEFRULE_SALIENCE = -10000;
 /*******************/
 /* DATA STRUCTURES */
 /*******************/
-struct Defrule;
 struct PartialMatch;
+struct Defrule;
 struct Activation {
 public:
     using Ptr = std::shared_ptr<Activation>;
@@ -173,9 +172,9 @@ RegisterEnvironmentModule(AgendaModule, AGENDA_DATA, Agenda);
 /****************************************/
 /* GLOBAL EXTERNAL FUNCTION DEFINITIONS */
 /****************************************/
-
-void AddActivation(const Environment&, Defrule::Ptr , PartialMatch *);
-void ClearRuleFromAgenda(const Environment&, Defrule::Ptr );
+using DefrulePtr = std::shared_ptr<Defrule>;
+void AddActivation(const Environment&, DefrulePtr , PartialMatch *);
+void ClearRuleFromAgenda(const Environment&, DefrulePtr );
 Activation::Ptr GetNextActivation(const Environment&, Activation::Ptr );
 const char *ActivationRuleName(Activation::Ptr );
 void GetActivationBasisPPForm(const Environment&, char *, size_t, Activation::Ptr );
@@ -197,7 +196,7 @@ void SetSalienceEvaluationCommand(const Environment&theEnv, UDFContext *context,
 void GetSalienceEvaluationCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 void RefreshAgendaCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 void RefreshCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void Refresh(Defrule::Ptr );
+void Refresh(DefrulePtr );
 #if DEBUGGING_FUNCTIONS
 void AgendaCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 #endif

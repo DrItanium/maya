@@ -123,7 +123,7 @@ void BsaveCommand(
     fileName = GetFileName(context);
     if (fileName != nullptr) {
         if (Bsave(theEnv, fileName)) {
-            returnValue->lexemeValue = TrueSymbol(theEnv);
+            returnValue->contents = TrueSymbol(theEnv);
             return;
         }
     }
@@ -132,7 +132,7 @@ void BsaveCommand(
 #pragma unused(theEnv,context)
 #endif
 #endif
-    returnValue->lexemeValue = FalseSymbol(theEnv);
+    returnValue->contents = FalseSymbol(theEnv);
 }
 
 #if BLOAD_AND_BSAVE
@@ -445,6 +445,7 @@ void RestoreBloadCount(
 void MarkNeededItems(
         const Environment&theEnv,
         Expression *testPtr) {
+#if 0
     while (testPtr != nullptr) {
         switch (testPtr->type) {
             case SYMBOL_TYPE:
@@ -481,6 +482,7 @@ void MarkNeededItems(
 
         testPtr = testPtr->nextArg;
     }
+#endif
 }
 
 /******************************************************/

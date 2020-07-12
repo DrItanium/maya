@@ -141,6 +141,16 @@ public:
 };
 struct Fact;
 struct Instance;
+using ValueContainer = std::variant<std::monostate,
+            CLIPSLexeme::Ptr,
+            CLIPSFloat::Ptr,
+            CLIPSInteger::Ptr,
+            CLIPSVoid::Ptr,
+            Multifield::Ptr,
+            std::shared_ptr<Fact>,
+            std::shared_ptr<Instance>,
+            CLIPSExternalAddress::Ptr>;
+
 /**************/
 /* CLIPSValue */
 /**************/
@@ -149,6 +159,8 @@ public:
     using Self = CLIPSValue;
     using Ptr = std::shared_ptr<Self>;
 public:
+    ValueContainer contents;
+#if 0
     union {
         std::shared_ptr<TypeHeader> header; // does this work o_O????
         CLIPSLexeme::Ptr lexemeValue;
@@ -160,6 +172,7 @@ public:
         std::shared_ptr<Instance> instanceValue;
         CLIPSExternalAddress::Ptr externalAddressValue;
     };
+#endif
 };
 
 
@@ -172,8 +185,9 @@ public:
     using Ptr = std::shared_ptr<Self>;
 public:
     std::any supplementalInfo;
+    ValueContainer contents;
+#if 0
     union {
-        std::shared_ptr<void> value;
         std::shared_ptr<TypeHeader> header; // does this work o_O????
         CLIPSLexeme::Ptr lexemeValue;
         CLIPSFloat::Ptr floatValue;
@@ -184,6 +198,7 @@ public:
         std::shared_ptr<Instance> instanceValue;
         CLIPSExternalAddress::Ptr externalAddressValue;
     };
+#endif
     size_t begin;
     size_t range;
     Ptr next;

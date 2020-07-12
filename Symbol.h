@@ -145,12 +145,17 @@ struct symbolMatch {
     CLIPSLexeme *match;
     struct symbolMatch *next;
 };
+//#define IncrementLexemeCount(theValue) (((CLIPSLexeme *) theValue)->count++)
+//#define IncrementFloatCount(theValue) (((CLIPSFloat *) theValue)->count++)
+//#define IncrementIntegerCount(theValue) (((CLIPSInteger *) theValue)->count++)
+//#define IncrementBitMapCount(theValue) (((CLIPSBitMap *) theValue)->count++)
+//#define IncrementExternalAddressCount(theValue) (((CLIPSExternalAddress *) theValue)->count++)
 
-#define IncrementLexemeCount(theValue) (((CLIPSLexeme *) theValue)->count++)
-#define IncrementFloatCount(theValue) (((CLIPSFloat *) theValue)->count++)
-#define IncrementIntegerCount(theValue) (((CLIPSInteger *) theValue)->count++)
-#define IncrementBitMapCount(theValue) (((CLIPSBitMap *) theValue)->count++)
-#define IncrementExternalAddressCount(theValue) (((CLIPSExternalAddress *) theValue)->count++)
+#define IncrementLexemeCount(theValue) (theValue->retain())
+#define IncrementFloatCount(theValue) (theValue->retain())
+#define IncrementIntegerCount(theValue) (theValue->retain())
+#define IncrementBitMapCount(theValue) (theValue->retain())
+#define IncrementExternalAddressCount(theValue) (theValue->retain())
 
 /*==================*/
 /* ENVIRONMENT DATA */
