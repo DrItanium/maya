@@ -318,7 +318,7 @@ CLIPSLexeme::Ptr AddSymbol(
     /*==================================================*/
     for (auto& peek : SymbolData(theEnv)->SymbolTable[tally]) {
         std::string str (peek->contents);
-        if (peek->header.type == type && (str == contents)) {
+        if (peek->getType() == type && (str == contents)) {
             return peek;
         }
     }
@@ -328,7 +328,7 @@ CLIPSLexeme::Ptr AddSymbol(
     /* for this symbol table location.                  */
     /*==================================================*/
 
-    auto newEntry = getStruct<CLIPSLexeme>(theEnv);
+    auto newEntry = getStruct<CLIPSLexeme>(theEnv, type);
     SymbolData(theEnv)->SymbolTable[tally].emplace_back(newEntry);
 
 #if 0
@@ -342,7 +342,6 @@ CLIPSLexeme::Ptr AddSymbol(
     peek->permanent = false;
     peek->header.type = type;
 #endif
-    newEntry->header.type = type;
     newEntry->setIsPermanent(false);
     newEntry->setBucket((unsigned int)tally);
     newEntry->contents = contents;
@@ -484,7 +483,6 @@ CLIPSInteger::Ptr CreateInteger(
     newEntry->contents = value;
     newEntry->setBucket((unsigned int) tally);
     newEntry->setIsPermanent(false);
-    newEntry->header.type = INTEGER_TYPE;
 
     /*=================================================*/
     /* Add the integer to the list of ephemeral items. */

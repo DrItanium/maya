@@ -47,67 +47,72 @@ typedef void VoidCallFunctionWithArg(const Environment&, void *, void *);
 /* typeHeader */
 /**************/
 struct TypeHeader {
-    TypeHeader(unsigned short t = 0) : type(t) { }
-    unsigned short type;
+    TypeHeader(unsigned short t = 0) : _type(t) { }
+    constexpr auto getType() const noexcept { return _type; }
+private:
+    unsigned short _type;
 };
 
 /*************/
 /* clipsVoid */
 /*************/
-struct CLIPSVoid {
+struct CLIPSVoid : public TypeHeader {
 public:
     using Self = CLIPSVoid;
     using Ptr = std::shared_ptr<Self>;
 public:
-    CLIPSVoid() : header(VOID_TYPE) { }
-    TypeHeader header;
+    CLIPSVoid() : TypeHeader(VOID_TYPE) { }
 };
 
 /***************/
 /* CLIPSLexeme */
 /***************/
-struct CLIPSLexeme : public ReferenceCounted {
+struct CLIPSLexeme : public TypeHeader, public ReferenceCounted {
 public:
     using Self = CLIPSLexeme;
     using Ptr = std::shared_ptr<Self>;
 public:
-    TypeHeader header;
+    CLIPSLexeme(unsigned short type) : TypeHeader(type) { }
+public:
     std::string contents;
 };
 
 /**************/
 /* CLIPSFloat */
 /**************/
-struct CLIPSFloat : public ReferenceCounted {
+struct CLIPSFloat : public TypeHeader, public ReferenceCounted {
 public:
     using Self = CLIPSFloat;
     using Ptr = std::shared_ptr<Self>;
 public:
-    TypeHeader header;
+    CLIPSFloat() : TypeHeader(FLOAT_TYPE) { }
+public:
     double contents;
 };
 
 /****************/
 /* CLIPSInteger */
 /****************/
-struct CLIPSInteger : public ReferenceCounted {
+struct CLIPSInteger : public TypeHeader, public ReferenceCounted {
 public:
     using Self = CLIPSInteger;
     using Ptr = std::shared_ptr<Self>;
 public:
-    TypeHeader header;
+    CLIPSInteger() : TypeHeader(INTEGER_TYPE) { }
+public:
     long long contents;
 };
 
 /***************/
 /* CLIPSBitMap */
 /***************/
-struct CLIPSBitMap : public ReferenceCounted {
+struct CLIPSBitMap : public TypeHeader, public ReferenceCounted {
 public:
     using Self = CLIPSBitMap;
     using Ptr = std::shared_ptr<Self>;
 public:
-    TypeHeader header;
+    CLIPSBitMap(unsigned short type) : TypeHeader(type) { }
+public:
     const char *contents;
     unsigned short size;
 };
@@ -115,12 +120,13 @@ public:
 /************************/
 /* CLIPSExternalAddress */
 /************************/
-struct CLIPSExternalAddress : public ReferenceCounted {
+struct CLIPSExternalAddress : public TypeHeader, public ReferenceCounted {
 public:
     using Self = CLIPSExternalAddress;
     using Ptr = std::shared_ptr<Self>;
 public:
-    TypeHeader header;
+    CLIPSExternalAddress(unsigned short type) : TypeHeader(type) { }
+public:
     std::any contents;
     unsigned short type;
 };
@@ -128,12 +134,13 @@ public:
 /**************/
 /* multifield */
 /**************/
-struct Multifield {
+struct Multifield : public TypeHeader {
 public:
     using Self = Multifield;
     using Ptr = std::shared_ptr<Self>;
 public:
-    TypeHeader header;
+    Multifield() : TypeHeader(MULTIFIELD_TYPE) { }
+public:
     unsigned busyCount;
     auto length() const noexcept { return contents.size(); }
     std::vector<struct CLIPSValue> contents;
@@ -228,7 +235,7 @@ typedef void* EntityRecordGetNextFunction(void*, void*);
 /* EntityRecord */
 /****************/
 struct EntityRecord {
-    const char *name;
+    std::string name;
     unsigned int type: 13;
     bool copyToEvaluate: 1;
     bool bitMap: 1;
@@ -255,8 +262,7 @@ typedef bool PatternEntityRecordIsDeletedFunction(const Environment&, void*);
 /***********************/
 /* PatternEntityRecord */
 /***********************/
-struct PatternEntityRecord {
-    struct EntityRecord base;
+struct PatternEntityRecord : public EntityRecord {
     PatternEntityRecordDecrementBasisCountFunction* decrementBasisCount;
     PatternEntityRecordIncrementBasisCountFunction* incrementBasisCount;
     PatternEntityRecordMatchFunction* matchFunction;

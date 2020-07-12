@@ -87,7 +87,6 @@ Multifield::Ptr CreateUnmanagedMultifield( const Environment&theEnv, size_t size
     size_t newSize = size == 0 ? 1 : size;
     auto theSegment = getStruct<Multifield>(theEnv);
     theSegment->contents.reserve(newSize);
-    theSegment->header.type = MULTIFIELD_TYPE;
     theSegment->busyCount = 0;
     return theSegment;
 }
