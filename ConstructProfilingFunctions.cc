@@ -91,17 +91,19 @@ static void ProfileClearFunction(const Environment&, void *);
 /******************************************************/
 void ConstructProfilingFunctionDefinitions(
         const Environment&theEnv) {
+#if STUBBING_INACTIVE
     struct userDataRecord profileDataInfo = {0, CreateProfileData, DeleteProfileData};
+#endif
 
     //AllocateEnvironmentData(theEnv, PROFLFUN_DATA, sizeof(profileFunctionData));
     theEnv->allocateEnvironmentModule<profileFunctionData>();
 
+#if STUBBING_INACTIVE
     ProfileFunctionData(theEnv)->ProfileDataInfo = profileDataInfo;
 
     ProfileFunctionData(theEnv)->LastProfileInfo = NO_PROFILE;
     ProfileFunctionData(theEnv)->PercentThreshold = 0.0;
     ProfileFunctionData(theEnv)->OutputString = OUTPUT_STRING;
-
     AddUDF(theEnv, "profile", "v", 1, 1, "y", ProfileCommand);
     AddUDF(theEnv, "profile-info", "v", 0, 0, nullptr, ProfileInfoCommand);
     AddUDF(theEnv, "profile-reset", "v", 0, 0, nullptr, ProfileResetCommand);
@@ -112,8 +114,9 @@ void ConstructProfilingFunctionDefinitions(
     ProfileFunctionData(theEnv)->ProfileDataID = InstallUserDataRecord(theEnv, &ProfileFunctionData(theEnv)->ProfileDataInfo);
 
     AddClearFunction(theEnv, "profile", ProfileClearFunction, 0, nullptr);
+#endif
 }
-
+#if STUBBING_INACTIVE
 /**********************************/
 /* CreateProfileData: Allocates a */
 /*   profile user data structure. */
@@ -731,6 +734,6 @@ static void ProfileClearFunction(
         }
     }
 }
-
+#endif
 #endif /* PROFILING_FUNCTIONS */
 

@@ -266,7 +266,7 @@ add_library(clips
 		ProceduralFunctions.cc
 		ProceduralFunctionsParser.cc
 		PredicateFunctions.cc
-		#ConstructProfilingFunctions.cc
+		ConstructProfilingFunctions.cc
 		#Reorder.cc
 		#ReteUtility.cc
 		#Retract.cc

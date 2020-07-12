@@ -352,7 +352,7 @@
 /***************************************************/
 
 #ifndef PROFILING_FUNCTIONS
-#define PROFILING_FUNCTIONS 0
+#define PROFILING_FUNCTIONS 1
 #endif
 
 /********************************************/
