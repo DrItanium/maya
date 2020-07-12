@@ -229,6 +229,7 @@ void InitializeInstanceTable(
 void CleanupInstances(
         const Environment&theEnv,
         void *context) {
+#if STUBBING_INACTIVE
     IGARBAGE *gprv, *gtmp, *dump;
 
     if (InstanceData(theEnv)->MaintainGarbageInstances)
@@ -253,6 +254,7 @@ void CleanupInstances(
             gtmp = gtmp->nxt;
         }
     }
+#endif
 }
 #if STUBBING_INACTIVE
 /*******************************************************

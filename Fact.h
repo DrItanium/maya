@@ -70,7 +70,7 @@ public:
     using Ptr = std::shared_ptr<Self>;
 public:
     PatternEntity patternHeader;
-    TypeHeader& header() noexcept { return patternHeader.header; }
+    TypeHeader& header() noexcept { return patternHeader; }
     std::shared_ptr<Deftemplate> whichDeftemplate;
     std::list<std::any> list;
     long long factIndex;

@@ -82,6 +82,10 @@ struct defclassModule {
 };
 
 struct defclass {
+public:
+    using Self = defclass;
+    using Ptr = std::shared_ptr<Self>;
+public:
     ConstructHeader header;
     bool installed: 1;
     bool system: 1;
@@ -123,7 +127,9 @@ struct defclass {
 
 struct classLink {
     Defclass *cls;
+#if SSTUBBING_INACTIVE
     struct classLink *nxt;
+#endif
 };
 
 struct slotName {
@@ -141,18 +147,7 @@ struct instanceSlot {
     bool valueRequired: 1;
     bool override: 1;
     unsigned short type;
-    union {
-        void *value;
-        TypeHeader *header;
-        CLIPSLexeme *lexemeValue;
-        CLIPSFloat *floatValue;
-        CLIPSInteger *integerValue;
-        CLIPSVoid *voidValue;
-        Fact *factValue;
-        Instance *instanceValue;
-        Multifield *multifieldValue;
-        CLIPSExternalAddress *externalAddressValue;
-    };
+    ValueContainer contents;
 };
 
 struct slotDescriptor {
@@ -181,8 +176,12 @@ struct slotDescriptor {
 };
 
 struct Instance {
+public:
+    using Self = Instance;
+    using Ptr = std::shared_ptr<Self>;
+public:
     PatternEntity patternHeader;
-    inline TypeHeader& header() { return patternHeader.header; }
+    inline TypeHeader& header() { return patternHeader; }
     void *_partialMatchList;
     InstanceSlot *basisSlots;
     bool installed: 1;
@@ -190,13 +189,13 @@ struct Instance {
     bool initSlotsCalled: 1;
     bool initializeInProgress: 1;
     bool reteSynchronized: 1;
-    CLIPSLexeme *name;
+    CLIPSLexeme::Ptr name;
     unsigned hashTableIndex;
     unsigned busy;
-    Defclass *cls;
-    Instance *prvClass, *nxtClass,
-            *prvHash, *nxtHash,
-            *prvList, *nxtList;
+    Defclass::Ptr cls;
+    Instance::Ptr prvClass, nxtClass,
+                  prvHash, nxtHash,
+                  prvList, nxtList;
     InstanceSlot **slotAddresses,
             *slots;
     void retain();

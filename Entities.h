@@ -170,19 +170,6 @@ public:
     ValueContainer contents;
     void retain();
     void release();
-#if STUBBING_INACTIVE
-    union {
-        std::shared_ptr<TypeHeader> header; // does this work o_O????
-        CLIPSLexeme::Ptr lexemeValue;
-        CLIPSFloat::Ptr floatValue;
-        CLIPSInteger::Ptr integerValue;
-        CLIPSVoid::Ptr voidValue;
-        Multifield::Ptr multifieldValue;
-        std::shared_ptr<Fact> factValue;
-        std::shared_ptr<Instance> instanceValue;
-        CLIPSExternalAddress::Ptr externalAddressValue;
-    };
-#endif
 };
 
 
@@ -196,19 +183,6 @@ public:
 public:
     std::any supplementalInfo;
     ValueContainer contents;
-#if STUBBING_INACTIVE
-    union {
-        std::shared_ptr<TypeHeader> header; // does this work o_O????
-        CLIPSLexeme::Ptr lexemeValue;
-        CLIPSFloat::Ptr floatValue;
-        CLIPSInteger::Ptr integerValue;
-        CLIPSVoid::Ptr voidValue;
-        Multifield::Ptr multifieldValue;
-        std::shared_ptr<Fact> factValue;
-        std::shared_ptr<Instance> instanceValue;
-        CLIPSExternalAddress::Ptr externalAddressValue;
-    };
-#endif
     size_t begin;
     size_t range;
 };
@@ -220,7 +194,7 @@ struct Expression;
 struct UDFContext {
     Environment environment;
     std::shared_ptr<FunctionDefinition> theFunction;
-    unsigned int lastPosition;
+    unsigned int lastPosition = 0;
     std::shared_ptr<struct Expression> lastArg;
     UDFValue::Ptr returnValue;
 };
@@ -273,12 +247,14 @@ struct PatternEntityRecord : public EntityRecord {
 /*****************/
 /* PatternEntity */
 /*****************/
-struct PatternEntity {
-    TypeHeader header;
+struct PatternEntity : public TypeHeader {
+public:
+    PatternEntity(unsigned short type) : TypeHeader(type) { }
+public:
     std::shared_ptr<struct PatternEntityRecord> theInfo;
     std::any dependents;
-    unsigned busyCount;
-    unsigned long long timeTag;
+    unsigned busyCount = 0;
+    unsigned long long timeTag = 0;
 };
 
 #endif /* _H_entities */
