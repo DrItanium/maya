@@ -62,13 +62,12 @@ typedef struct defmodule Defmodule;
 typedef struct portItem PortItem;
 typedef struct defmoduleItemHeader DefmoduleItemHeader;
 typedef struct moduleItem ModuleItem;
-typedef struct constructHeader ConstructHeader;
 typedef struct moduleStackItem ModuleStackItem;
 
 typedef void *AllocateModuleFunction(const Environment&);
 typedef void FreeModuleFunction(const Environment&, void *);
 
-enum ConstructType {
+enum class ConstructType {
     DEFMODULE,
     DEFRULE,
     DEFTEMPLATE,
@@ -87,21 +86,25 @@ enum ConstructType {
 #include "UserData.h"
 #include "Utility.h"
 
-struct constructHeader {
+struct ConstructHeader {
+public:
+    using Self = ConstructHeader;
+    using Ptr = std::shared_ptr<Self>;
+public:
     ConstructType constructType;
-    CLIPSLexeme *name;
-    const char *ppForm;
-    DefmoduleItemHeader *whichModule;
-    unsigned long bsaveID;
-    ConstructHeader *next;
+    CLIPSLexeme::Ptr name;
+    std::string ppForm;
+    std::shared_ptr<DefmoduleItemHeader> whichModule;
+    unsigned long bsaveID = 0;
+    Ptr next;
     struct userData *usrData;
     Environment env;
 };
 
 struct defmoduleItemHeader {
-    Defmodule *theModule;
-    ConstructHeader *firstItem;
-    ConstructHeader *lastItem;
+    std::shared_ptr<Defmodule> theModule;
+    ConstructHeader::Ptr firstItem;
+    ConstructHeader::Ptr lastItem;
 };
 
 typedef ConstructHeader *FindConstructFunction(const Environment&, const char *);

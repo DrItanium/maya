@@ -38,7 +38,6 @@
 #define _H_object
 
 typedef struct defclassModule DEFCLASS_MODULE;
-typedef struct defclass Defclass;
 typedef struct packedClassLinks PACKED_CLASS_LINKS;
 typedef struct classLink CLASS_LINK;
 typedef struct slotName SLOT_NAME;
@@ -73,17 +72,18 @@ constexpr auto VALUE_NOT_REQUIRED = 2;
 #include "ObjectReteMatch.h"
 
 struct packedClassLinks {
-    unsigned long classCount;
-    Defclass **classArray;
+    unsigned long classCount = 0;
+    std::list<std::shared_ptr<struct Defclass>> classArray;
+    //Defclass **classArray;
 };
 
 struct defclassModule {
     struct defmoduleItemHeader header;
 };
 
-struct defclass {
+struct Defclass {
 public:
-    using Self = defclass;
+    using Self = Defclass;
     using Ptr = std::shared_ptr<Self>;
 public:
     ConstructHeader header;

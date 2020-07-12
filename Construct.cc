@@ -803,6 +803,7 @@ void SetExecutingConstruct(
 void DeinstallConstructHeader(
         const Environment&theEnv,
         ConstructHeader *theHeader) {
+#if STUBBING_INACTIVE
     ReleaseLexeme(theEnv, theHeader->name);
     if (theHeader->ppForm != nullptr) {
         rm(theEnv, (void *) theHeader->ppForm,
@@ -814,6 +815,7 @@ void DeinstallConstructHeader(
         ClearUserDataList(theEnv, theHeader->usrData);
         theHeader->usrData = nullptr;
     }
+#endif
 }
 
 /**************************************************/
@@ -825,6 +827,7 @@ void DeinstallConstructHeader(
 void DestroyConstructHeader(
         const Environment&theEnv,
         ConstructHeader *theHeader) {
+#if STUBBING_INACTIVE
     if (theHeader->ppForm != nullptr) {
         rm(theEnv, (void *) theHeader->ppForm,
            sizeof(char) * (strlen(theHeader->ppForm) + 1));
@@ -835,6 +838,7 @@ void DestroyConstructHeader(
         ClearUserDataList(theEnv, theHeader->usrData);
         theHeader->usrData = nullptr;
     }
+#endif
 }
 
 /*****************************************************/
