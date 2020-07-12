@@ -173,6 +173,8 @@ static AddUDFError DefineFunction(
         unsigned short maxArgs,
         const char *restrictions,
         void *context) {
+    return AddUDFError::AUE_CREATE_FUNCTION_STUBBED;
+#if 0
     FunctionDefinition *newFunction;
 
     newFunction = FindFunction(theEnv, name);
@@ -204,6 +206,7 @@ static AddUDFError DefineFunction(
     newFunction->context = context;
 
     return AUE_NO_ERROR;
+#endif
 }
 
 /********************************************/
@@ -469,6 +472,7 @@ static void InitializeFunctionHashTable(
     for (i = 0; i < SIZE_FUNCTION_HASH; i++) ExternalFunctionData(theEnv)->FunctionHashtable[i] = nullptr;
 }
 
+#if 0
 /****************************************************************/
 /* AddHashFunction: Adds a function to the function hash table. */
 /****************************************************************/
@@ -489,6 +493,7 @@ static void AddHashFunction(
     ExternalFunctionData(theEnv)->FunctionHashtable[hashValue] = newhash;
     newhash->next = temp;
 }
+#endif
 
 /*************************************************/
 /* GetMinimumArgs: Returns the minimum number of */
@@ -507,7 +512,7 @@ int GetMaximumArgs(
         FunctionDefinition *theFunction) {
     return theFunction->maxArgs;
 }
-
+#if 0
 /********************/
 /* AssignErrorValue */
 /********************/
@@ -535,7 +540,6 @@ void AssignErrorValue(
         context->returnValue->value = CreateExternalAddress(context->environment, nullptr, 0);
     } else { context->returnValue->value = context->environment->VoidConstant; }
 }
-
 /*********************/
 /* UDFArgumentCount: */
 /*********************/
@@ -550,6 +554,7 @@ unsigned int UDFArgumentCount(
 
     return count;
 }
+#endif
 
 /*********************/
 /* UDFFirstArgument: */
@@ -562,7 +567,7 @@ bool UDFFirstArgument(
     context->lastPosition = 1;
     return UDFNextArgument(context, expectedType, returnValue);
 }
-
+#if 0
 /********************/
 /* UDFNextArgument: */
 /********************/
@@ -756,6 +761,7 @@ bool UDFNextArgument(
 
     return false;
 }
+#endif
 
 /*******************/
 /* UDFNthArgument: */
