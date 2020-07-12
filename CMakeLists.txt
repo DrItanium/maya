@@ -275,7 +275,7 @@ add_library(clips
 		#BasicRuleCommands.cc
 		#RuleCommands.cc
 		#RuleConstraints.cc
-		#Defrule.cc
+		Defrule.cc
 		#RuleDelete.cc
 		#RuleLHSParsing.cc
 		#RuleParser.cc

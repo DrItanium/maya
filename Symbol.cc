@@ -135,6 +135,7 @@ void InitializeAtomTables(
 #pragma unused(bitmapTable)
 #pragma unused(externalAddressTable)
 #endif
+    /// @todo fix this so that we do not have failing code
 #if STUBBING_INACTIVE
     //AllocateEnvironmentData(theEnv, SYMBOL_DATA, sizeof(symbolData), DeallocateSymbolData);
     theEnv->allocateEnvironmentModule<symbolData>();

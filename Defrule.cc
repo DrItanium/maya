@@ -110,6 +110,7 @@ void InitializeDefrules(
     //AllocateEnvironmentData(theEnv, DEFRULE_DATA, sizeof(defruleData), DeallocateDefruleData);
     theEnv->allocateEnvironmentModule<defruleData>();
 
+#if STUBBING_INACTIVE
     InitializeEngine(theEnv);
     InitializeAgenda(theEnv);
     InitializePatterns(theEnv);
@@ -127,7 +128,6 @@ void InitializeDefrules(
 
     DefruleCommands(theEnv);
 
-#if STUBBING_INACTIVE
     DefruleData(theEnv)->DefruleConstruct =
             AddConstruct(theEnv, "defrule", "defrules",
                          ParseDefrule,

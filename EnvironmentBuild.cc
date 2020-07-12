@@ -296,7 +296,6 @@ static void InitializeEnvironment(
 
     InitExpressionData(theEnvironment);
 
-#if STUBBING_INACTIVE
     /*===================================*/
     /* Initialize the construct manager. */
     /*===================================*/
@@ -315,6 +314,7 @@ static void InitializeEnvironment(
 
     InitializeDefrules(theEnvironment);
 
+#if STUBBING_INACTIVE
     /*====================================*/
     /* Initialize the deffacts construct. */
     /*====================================*/
