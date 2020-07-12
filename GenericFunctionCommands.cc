@@ -179,7 +179,6 @@ void SetupGenericFunctions(
     //AllocateEnvironmentData(theEnv, DEFGENERIC_DATA, sizeof(defgenericData), DeallocateDefgenericData);
 #if STUBBING_INACTIVE
     DefgenericData(theEnv)->GenericEntityRecord = genericEntityRecord;
-#endif
 
     InstallPrimitive(theEnv, &DefgenericData(theEnv)->GenericEntityRecord, GCALL);
 
@@ -262,8 +261,9 @@ void SetupGenericFunctions(
     AddWatchItem(theEnv, "methods", 0, &DefgenericData(theEnv)->WatchMethods, 33,
                  DefmethodWatchAccess, DefmethodWatchPrint);
 #endif
+#endif
 }
-
+#if STUBBING_INACTIVE
 /*****************************************************/
 /* DeallocateDefgenericData: Deallocates environment */
 /*    data for the defgeneric construct.             */
@@ -1746,6 +1746,7 @@ void SetDefgenericPPForm(
         const char *thePPForm) {
     SetConstructPPForm(theEnv, &theDefgeneric->header, thePPForm);
 }
+#endif
 #endif
 
 #endif /* DEFGENERIC_CONSTRUCT */

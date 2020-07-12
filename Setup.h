@@ -171,7 +171,7 @@
 /************************************************/
 
 #ifndef DEFMODULE_CONSTRUCT
-#define DEFMODULE_CONSTRUCT 0
+#define DEFMODULE_CONSTRUCT 1
 #endif
 
 /****************************************************/
@@ -217,7 +217,7 @@
 /************************************************/
 
 #ifndef DEFGLOBAL_CONSTRUCT
-#define DEFGLOBAL_CONSTRUCT 0
+#define DEFGLOBAL_CONSTRUCT 1
 #endif
 
 /**********************************************/
@@ -226,7 +226,7 @@
 /**********************************************/
 
 #ifndef DEFFUNCTION_CONSTRUCT
-#define DEFFUNCTION_CONSTRUCT 0
+#define DEFFUNCTION_CONSTRUCT 1
 #endif
 
 /*********************************************/
@@ -235,7 +235,7 @@
 /*********************************************/
 
 #ifndef DEFGENERIC_CONSTRUCT
-#define DEFGENERIC_CONSTRUCT 0
+#define DEFGENERIC_CONSTRUCT 1
 #endif
 
 /*****************************************************************/
@@ -244,7 +244,7 @@
 /*****************************************************************/
 
 #ifndef DEFINSTANCES_CONSTRUCT
-#define DEFINSTANCES_CONSTRUCT      0
+#define DEFINSTANCES_CONSTRUCT      1
 #endif
 
 #if !DEFINSTANCES_CONSTRUCT
@@ -257,12 +257,9 @@
 /********************************************************************/
 
 #ifndef INSTANCE_SET_QUERIES
-#define INSTANCE_SET_QUERIES 0
+#define INSTANCE_SET_QUERIES 1
 #endif
 
-#if !INSTANCE_SET_QUERIES
-#warning "INSTANCE_SET_QUERIES Hard Disabled!"
-#endif
 
 /*******************************************************************/
 /* BLOAD/BSAVE_INSTANCES: Determines if the save/restore-instances */

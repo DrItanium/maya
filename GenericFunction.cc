@@ -105,7 +105,7 @@ static void DisplayGenericCore(const Environment&, Defgeneric *);
    =========================================
    ***************************************** */
 
-
+#if STUBBING_INACTIVE
 /***************************************************
   NAME         : ClearDefgenericsReady
   DESCRIPTION  : Determines if it is safe to
@@ -700,6 +700,6 @@ static void DisplayGenericCore(
 }
 
 #endif
-
+#endif
 #endif
 

@@ -815,6 +815,7 @@ void CloseAllBatchSources(
 bool BatchStar(
         const Environment&theEnv,
         const char *fileName) {
+#if STUBBING_INACTIVE
     int inchar;
     bool done = false;
     FILE *theFile;
@@ -904,5 +905,7 @@ bool BatchStar(
     DeleteString(theEnv, oldParsingFileName);
 
     return true;
+#endif
+    return false;
 }
 

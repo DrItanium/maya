@@ -218,9 +218,9 @@ add_library(clips
 		#FileRouter.cc
 		#Generate.cc
 		#GenericFunctionBinaryLoadSave.cc
-		#GenericFunctionCommands.cc
+		GenericFunctionCommands.cc
 		#GenericFunctionExecution.cc
-		#GenericFunction.cc
+		GenericFunction.cc
 		#GenericFunctionParser.cc
 		#DefglobalBinary.cc
 		#DefglobalBasicCommands.cc
