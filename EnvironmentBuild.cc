@@ -409,8 +409,8 @@ static void SystemFunctionDefinitions(
     IOFunctionDefinitions(theEnv);
 #endif
 
-#if STUBBING_INACTIVE
     PredicateFunctionDefinitions(theEnv);
+#if STUBBING_INACTIVE
     BasicMathFunctionDefinitions(theEnv);
     FileCommandDefinitions(theEnv);
     SortFunctionDefinitions(theEnv);
