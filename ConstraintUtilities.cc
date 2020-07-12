@@ -57,10 +57,9 @@
 /************************************************/
 struct constraintRecord *GetConstraintRecord(
         const Environment&theEnv) {
-    CONSTRAINT_RECORD *constraints;
     unsigned i;
 
-    constraints = get_struct(theEnv, constraintRecord);
+    auto constraints = get_struct(theEnv, constraintRecord);
 
     for (i = 0; i < sizeof(CONSTRAINT_RECORD); i++) { ((char *) constraints)[i] = '\0'; }
 

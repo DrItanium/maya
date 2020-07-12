@@ -73,7 +73,7 @@ enum StrategyType {
 
 constexpr auto DEFAULT_STRATEGY = DEPTH_STRATEGY;
 
-void PlaceActivation(const Environment&, Activation **, Activation *, struct SalienceGroup *);
+void PlaceActivation(const Environment&, Activation::Ptr *, Activation::Ptr , struct SalienceGroup *);
 StrategyType SetStrategy(const Environment&, StrategyType);
 StrategyType GetStrategy(const Environment&);
 void SetStrategyCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);

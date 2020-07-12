@@ -44,6 +44,7 @@ typedef struct multifieldMarker MultifieldMarker;
 
 #include "Entities.h"
 #include "Network.h"
+#include <any>
 
 struct PartialMatch;
 struct PatternNodeHeader;
@@ -76,9 +77,9 @@ struct PartialMatch {
     bool deleting: 1;
     unsigned short bcount;
     unsigned long hashValue;
-    void *owner;
-    void *marker;
-    void *dependents;
+    std::any owner;
+    std::any marker;
+    std::any dependents;
     PartialMatch *nextInMemory;
     PartialMatch *prevInMemory;
     PartialMatch *children;

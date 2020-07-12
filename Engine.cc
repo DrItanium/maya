@@ -179,7 +179,7 @@ long long Run(
     unsigned short i;
     PatternEntity *theMatchingItem;
     PartialMatch *theBasis = nullptr;
-    Activation *theActivation;
+    Activation::Ptr theActivation;
     const char *ruleFiring;
 #if PROFILING_FUNCTIONS
     struct profileFrameInfo profileFrame;
@@ -274,7 +274,7 @@ long long Run(
         /*===========================================*/
 
         DetachActivation(theEnv, theActivation);
-        theTM = AddTrackedMemory(theEnv, theActivation, sizeof(activation));
+        theTM = AddTrackedMemory(theEnv, theActivation, sizeof(Activation));
         ruleFiring = ActivationRuleName(theActivation);
         theBasis = (PartialMatch *) theActivation->getBasis();
         EngineData(theEnv)->ExecutingRule = theActivation->getRule();
@@ -496,7 +496,7 @@ long long Run(
         /* Determine the next activation to fire. */
         /*========================================*/
 
-        theActivation = (activation *) NextActivationToFire(theEnv);
+        theActivation = (Activation::Ptr ) NextActivationToFire(theEnv);
 
         /*==============================*/
         /* Check for a rule breakpoint. */
@@ -654,9 +654,9 @@ long long Run(
 /* NextActivationToFire: Returns the next activation which */
 /*   should be executed based on the current focus.        */
 /***********************************************************/
-Activation *NextActivationToFire(
+Activation::Ptr NextActivationToFire(
         const Environment&theEnv) {
-    struct activation *theActivation;
+    struct Activation::Ptr theActivation;
     Defmodule *theModule;
 
     /*====================================*/

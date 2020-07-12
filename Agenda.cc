@@ -89,13 +89,13 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void PrintActivation(const Environment&, const char *, Activation *);
+static void PrintActivation(const Environment&, const char *, Activation::Ptr );
 static void AgendaClearFunction(const Environment&, void *);
 static const char *SalienceEvaluationName(SalienceEvaluationType);
 static int EvaluateSalience(const Environment&, Defrule *);
 static struct SalienceGroup *ReuseOrCreateSalienceGroup(const Environment&, struct defruleModule *, int);
 static struct SalienceGroup *FindSalienceGroup(defruleModule *, int);
-static void RemoveActivationFromGroup(const Environment&, Activation *, struct defruleModule *);
+static void RemoveActivationFromGroup(const Environment&, Activation::Ptr , struct defruleModule *);
 
 /*************************************************/
 /* InitializeAgenda: Initializes the activations */
@@ -130,12 +130,11 @@ void AddActivation(
         const Environment&theEnv,
         Defrule *theRule,
         PartialMatch *binds) {
-    Activation *newActivation;
-    struct defruleModule *theModuleItem;
-    struct SalienceGroup *theGroup;
+    defruleModule *theModuleItem;
+    SalienceGroup *theGroup;
 
     /*=======================================*/
-    /* Focus on the module if the activation */
+    /* Focus on the module if the Activation::Ptr /
     /* is from an auto-focus rule.           */
     /*=======================================*/
 
@@ -149,8 +148,7 @@ void AddActivation(
     /* with the random conflict resolution strategy.         */
     /*=======================================================*/
 
-    newActivation = get_struct(theEnv, activation);
-    zeroMemory(newActivation);
+    auto newActivation = get_struct(theEnv, Activation);
     newActivation->setRule(theRule);
     newActivation->setBasis(binds);
     newActivation->setTimetag(AgendaData(theEnv)->newTimetag());
@@ -254,7 +252,7 @@ void ClearRuleFromAgenda(
         const Environment&theEnv,
         Defrule *theRule) {
     Defrule *tempRule;
-    struct activation *agendaPtr, *agendaNext;
+    struct Activation::Ptr agendaPtr, *agendaNext;
 
     /*============================================*/
     /* Get a pointer to the agenda for the module */
@@ -271,7 +269,7 @@ void ClearRuleFromAgenda(
         agendaNext = agendaPtr->getNext();
 
         /*========================================================*/
-        /* Check each disjunct of the rule against the activation */
+        /* Check each disjunct of the rule against the Activation::Ptr /
         /* to determine if the activation points to the rule. If  */
         /* it does, then remove the activation from the agenda.   */
         /*========================================================*/
@@ -295,9 +293,9 @@ void ClearRuleFromAgenda(
 /*   Agenda is returned. If its argument is not nullptr, the next */
 /*   activation after the argument is returned.                */
 /***************************************************************/
-Activation *GetNextActivation(
+Activation::Ptr GetNextActivation(
         const Environment&theEnv,
-        Activation *actPtr) {
+        Activation::Ptr actPtr) {
     if (actPtr == nullptr) {
         auto theModuleItem = (defruleModule *) GetModuleItem(theEnv, nullptr, DefruleData(theEnv)->DefruleModuleIndex);
         if (theModuleItem == nullptr) return nullptr;
@@ -314,12 +312,12 @@ Activation *GetNextActivation(
 /*   the rule associated with an activation. */
 /*********************************************/
 const char *ActivationRuleName(
-        Activation *actPtr) {
+        Activation::Ptr actPtr) {
     return actPtr->getRule()->header.name->contents;
 }
 
 void
-activation::getPPForm(StringBuilder* theSB) noexcept {
+Activation::getPPForm(StringBuilder* theSB) noexcept {
     auto theEnv = theRule->header.env;
     OpenStringBuilderDestination(theEnv, "ActPPForm", theSB);
     PrintActivation(theEnv, "ActPPForm", this);
@@ -334,7 +332,7 @@ void GetActivationBasisPPForm(
         const Environment&theEnv,
         char *buffer,
         size_t bufferLength,
-        Activation *theActivation) {
+        Activation::Ptr theActivation) {
     OpenStringDestination(theEnv, "ActPPForm", buffer, bufferLength);
     PrintPartialMatch(theEnv, "ActPPForm", theActivation->getBasis());
     CloseStringDestination(theEnv, "ActPPForm");
@@ -346,8 +344,8 @@ void GetActivationBasisPPForm(
 /********************************************/
 bool MoveActivationToTop(
         const Environment&theEnv,
-        Activation *theActivation) {
-    struct activation *prevPtr;
+        Activation::Ptr theActivation) {
+    struct Activation::Ptr prevPtr;
     struct defruleModule *theModuleItem;
 
     /*====================================*/
@@ -398,7 +396,7 @@ bool MoveActivationToTop(
 /*   activation from the agenda.           */
 /*******************************************/
 void DeleteActivation(
-        Activation *theActivation) {
+        Activation::Ptr theActivation) {
     RemoveActivation(theActivation->getRule()->header.env, theActivation, true, true);
 }
 
@@ -408,7 +406,7 @@ void DeleteActivation(
 /*************************************************/
 void DeleteAllActivations(
         Defmodule *theModule) {
-    struct activation *tempPtr, *theActivation;
+    struct Activation::Ptr tempPtr, *theActivation;
     struct SalienceGroup *theGroup, *tempGroup;
     const Environment&theEnv = theModule->header.env;
 
@@ -433,7 +431,7 @@ void DeleteAllActivations(
 /*******************************************************/
 bool DetachActivation(
         const Environment&theEnv,
-        Activation *theActivation) {
+        Activation::Ptr theActivation) {
     struct defruleModule *theModuleItem;
 
     /*============================*/
@@ -493,7 +491,7 @@ bool DetachActivation(
 static void PrintActivation(
         const Environment&theEnv,
         const char *logicalName,
-        Activation *theActivation) {
+        Activation::Ptr theActivation) {
     char printSpace[20];
 
     gensprintf(printSpace, "%-6d ", theActivation->getSalience());
@@ -525,7 +523,7 @@ void Agenda(
 /*******************************************************************/
 void RemoveActivation(
         const Environment&theEnv,
-        Activation *theActivation,
+        Activation::Ptr theActivation,
         bool updateAgenda,
         bool updateLinks) {
     struct defruleModule *theModuleItem;
@@ -590,7 +588,7 @@ void RemoveActivation(
 
     AgendaData(theEnv)->decrementActivationCount();
 
-    rtn_struct(theEnv, activation, theActivation);
+    rtn_struct(theEnv, Activation, theActivation);
 }
 
 /******************************/
@@ -598,7 +596,7 @@ void RemoveActivation(
 /******************************/
 static void RemoveActivationFromGroup(
         const Environment&theEnv,
-        Activation *theActivation,
+        Activation::Ptr theActivation,
         struct defruleModule *theRuleModule) {
     struct SalienceGroup *theGroup;
 
@@ -659,7 +657,7 @@ static void AgendaClearFunction(
 /*************************************************/
 void RemoveAllActivations(
         const Environment&theEnv) {
-    struct activation *tempPtr, *theActivation;
+    struct Activation::Ptr tempPtr, *theActivation;
     struct SalienceGroup *theGroup, *tempGroup;
 
     theActivation = GetDefruleModuleItem(theEnv, nullptr)->agenda;
@@ -704,7 +702,7 @@ void ReorderAllAgendas(
 /*******************************************************/
 void ReorderAgenda(
         Defmodule *theModule) {
-    struct activation *theActivation, *tempPtr;
+    struct Activation::Ptr theActivation, *tempPtr;
     struct defruleModule *theModuleItem;
     struct SalienceGroup *theGroup, *tempGroup;
     Environment theEnv;
@@ -878,7 +876,7 @@ void RefreshAllAgendas(
 /*************************************/
 void RefreshAgenda(
         Defmodule *theModule) {
-    Activation *theActivation;
+    Activation::Ptr theActivation;
     SalienceEvaluationType oldValue;
     Environment theEnv;
 

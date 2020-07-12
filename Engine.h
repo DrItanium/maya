@@ -95,7 +95,7 @@ struct focalModule {
 };
 
 typedef struct ruleFiredFunctionItem RuleFiredFunctionItem;
-typedef void RuleFiredFunction(const Environment&, Activation *, void *);
+typedef void RuleFiredFunction(const Environment&, Activation::Ptr , void *);
 
 struct ruleFiredFunctionItem {
     const char *name;
@@ -187,7 +187,7 @@ void PopFocusFunction(const Environment&theEnv, UDFContext *context, UDFValue *r
 Defmodule *PopFocus(const Environment&);
 bool GetHaltRules(const Environment&);
 void SetHaltRules(const Environment&, bool);
-Activation *NextActivationToFire(const Environment&);
+Activation::Ptr NextActivationToFire(const Environment&);
 
 #endif /* _H_engine */
 

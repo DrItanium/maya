@@ -413,7 +413,6 @@ void BloadandRefresh(
     char *buf;
     unsigned long objsmaxread, objsread;
     size_t space;
-    OutOfMemoryFunction *oldOutOfMemoryFunction;
 
     return;
 #if 0

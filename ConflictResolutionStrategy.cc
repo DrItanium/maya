@@ -75,14 +75,14 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static Activation *PlaceDepthActivation(Activation *, struct SalienceGroup *);
-static Activation *PlaceBreadthActivation(Activation *, struct SalienceGroup *);
-static Activation *PlaceLEXActivation(const Environment&, Activation *, struct SalienceGroup *);
-static Activation *PlaceMEAActivation(const Environment&, Activation *, struct SalienceGroup *);
-static Activation *PlaceComplexityActivation(Activation *, struct SalienceGroup *);
-static Activation *PlaceSimplicityActivation(Activation *, struct SalienceGroup *);
-static Activation *PlaceRandomActivation(Activation *, struct SalienceGroup *);
-static int ComparePartialMatches(const Environment&, Activation *, Activation *);
+static Activation::Ptr PlaceDepthActivation(Activation::Ptr , struct SalienceGroup *);
+static Activation::Ptr PlaceBreadthActivation(Activation::Ptr , struct SalienceGroup *);
+static Activation::Ptr PlaceLEXActivation(const Environment&, Activation::Ptr , struct SalienceGroup *);
+static Activation::Ptr PlaceMEAActivation(const Environment&, Activation::Ptr , struct SalienceGroup *);
+static Activation::Ptr PlaceComplexityActivation(Activation::Ptr , struct SalienceGroup *);
+static Activation::Ptr PlaceSimplicityActivation(Activation::Ptr , struct SalienceGroup *);
+static Activation::Ptr PlaceRandomActivation(Activation::Ptr , struct SalienceGroup *);
+static int ComparePartialMatches(const Environment&, Activation::Ptr , Activation::Ptr );
 static const char *GetStrategyName(StrategyType);
 static unsigned long long *SortPartialMatch(const Environment&, PartialMatch *);
 
@@ -92,10 +92,10 @@ static unsigned long long *SortPartialMatch(const Environment&, PartialMatch *);
 /******************************************************************/
 void PlaceActivation(
         const Environment&theEnv,
-        Activation **whichAgenda,
-        Activation *newActivation,
+        Activation::Ptr *whichAgenda,
+        Activation::Ptr newActivation,
         struct SalienceGroup *theGroup) {
-    Activation *placeAfter = nullptr;
+    Activation::Ptr placeAfter = nullptr;
 
     /*================================================*/
     /* Set the flag which indicates that a change has */
@@ -171,10 +171,10 @@ void PlaceActivation(
 /*    the new activation should be placed (or nullptr if the          */
 /*    activation should be placed at the beginning of the agenda). */
 /*******************************************************************/
-static Activation *PlaceDepthActivation(
-        Activation *newActivation,
+static Activation::Ptr PlaceDepthActivation(
+        Activation::Ptr newActivation,
         struct SalienceGroup *theGroup) {
-    Activation *lastAct, *actPtr;
+    Activation::Ptr lastAct, *actPtr;
     unsigned long long timetag;
 
     /*============================================*/
@@ -226,11 +226,11 @@ static Activation *PlaceDepthActivation(
 /*    the new activation should be placed (or nullptr if the          */
 /*    activation should be placed at the beginning of the agenda). */
 /*******************************************************************/
-static Activation *PlaceBreadthActivation(
-        Activation *newActivation,
+static Activation::Ptr PlaceBreadthActivation(
+        Activation::Ptr newActivation,
         struct SalienceGroup *theGroup) {
     unsigned long long timetag;
-    Activation *lastAct, *actPtr;
+    Activation::Ptr lastAct, *actPtr;
 
     /*============================================*/
     /* Set up initial information for the search. */
@@ -288,12 +288,12 @@ static Activation *PlaceBreadthActivation(
 /*    the new activation should be placed (or nullptr if the          */
 /*    activation should be placed at the beginning of the agenda). */
 /*******************************************************************/
-static Activation *PlaceLEXActivation(
+static Activation::Ptr PlaceLEXActivation(
         const Environment&theEnv,
-        Activation *newActivation,
+        Activation::Ptr newActivation,
         struct SalienceGroup *theGroup) {
     unsigned long long timetag;
-    Activation *lastAct, *actPtr;
+    Activation::Ptr lastAct, *actPtr;
     int flag;
 
     /*============================================*/
@@ -371,12 +371,12 @@ static Activation *PlaceLEXActivation(
 /*    the new activation should be placed (or nullptr if the          */
 /*    activation should be placed at the beginning of the agenda). */
 /*******************************************************************/
-static Activation *PlaceMEAActivation(
+static Activation::Ptr PlaceMEAActivation(
         const Environment&theEnv,
-        Activation *newActivation,
+        Activation::Ptr newActivation,
         struct SalienceGroup *theGroup) {
     unsigned long long timetag;
-    Activation *lastAct, *actPtr;
+    Activation::Ptr lastAct, *actPtr;
     int flag;
     unsigned long long cWhoset = 0, oWhoset = 0;
     bool cSet, oSet;
@@ -483,12 +483,12 @@ static Activation *PlaceMEAActivation(
 /*    new activation should be placed (or nullptr if the activation     */
 /*    should be placed at the beginning of the agenda).              */
 /*********************************************************************/
-static Activation *PlaceComplexityActivation(
-        Activation *newActivation,
+static Activation::Ptr PlaceComplexityActivation(
+        Activation::Ptr newActivation,
         struct SalienceGroup *theGroup) {
     unsigned int complexity;
     unsigned long long timetag;
-    Activation *lastAct, *actPtr;
+    Activation::Ptr lastAct, *actPtr;
 
     /*========================================*/
     /* Set up initial information for search. */
@@ -544,12 +544,12 @@ static Activation *PlaceComplexityActivation(
 /*    new activation should be placed (or nullptr if the activation     */
 /*    should be placed at the beginning of the agenda).              */
 /*********************************************************************/
-static Activation *PlaceSimplicityActivation(
-        Activation *newActivation,
+static Activation::Ptr PlaceSimplicityActivation(
+        Activation::Ptr newActivation,
         struct SalienceGroup *theGroup) {
     unsigned int complexity;
     unsigned long long timetag;
-    Activation *lastAct, *actPtr;
+    Activation::Ptr lastAct, *actPtr;
 
     /*============================================*/
     /* Set up initial information for the search. */
@@ -605,12 +605,12 @@ static Activation *PlaceSimplicityActivation(
 /*    the new activation should be placed (or nullptr if the          */
 /*    activation should be placed at the beginning of the agenda). */
 /*******************************************************************/
-static Activation *PlaceRandomActivation(
-        Activation *newActivation,
+static Activation::Ptr PlaceRandomActivation(
+        Activation::Ptr newActivation,
         struct SalienceGroup *theGroup) {
     int randomID;
     unsigned long long timetag;
-    Activation *lastAct, *actPtr;
+    Activation::Ptr lastAct, *actPtr;
 
     /*============================================*/
     /* Set up initial information for the search. */
@@ -718,8 +718,8 @@ static unsigned long long *SortPartialMatch(
 /**************************************************************************/
 static int ComparePartialMatches(
         const Environment&theEnv,
-        Activation *actPtr,
-        Activation *newActivation) {
+        Activation::Ptr actPtr,
+        Activation::Ptr newActivation) {
     unsigned cCount, oCount, mCount, i;
     unsigned long long *basis1, *basis2;
 

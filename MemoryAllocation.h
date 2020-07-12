@@ -62,22 +62,21 @@
 
 #include <cstring>
 
-struct memoryPtr;
-
-typedef bool OutOfMemoryFunction(const Environment&, size_t);
 #ifndef MEM_TABLE_SIZE
 #define MEM_TABLE_SIZE 0
 #endif
 
-struct memoryPtr {
-    struct memoryPtr *next;
-};
 
+template<typename T, typename ... Args>
+std::shared_ptr<T> getStruct(const Environment&, Args&& ... ctorArgs) {
+    return std::make_shared<T>(std::forward<Args>(ctorArgs)...);
+}
 /*
  * Debug case (routes all memory management through genalloc/genfree to take advantage of
  * platform, memory debugging aids)
  */
-#define get_struct(theEnv,type) ((struct type *) genalloc(theEnv,sizeof(struct type)))
+//#define get_struct(theEnv,type) ((struct type *) genalloc(theEnv,sizeof(struct type)))
+#define get_struct(theEnv, type) (getStruct<type>(theEnv))
 
 #define rtn_struct(theEnv,type,struct_ptr) (genfree(theEnv,struct_ptr,sizeof(struct type)))
 

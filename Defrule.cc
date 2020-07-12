@@ -158,7 +158,7 @@ static void DeallocateDefruleData(
         const Environment&theEnv) {
     struct defruleModule *theModuleItem;
     Defmodule *theModule;
-    Activation *theActivation, *tmpActivation;
+    Activation::Ptr theActivation, *tmpActivation;
     struct SalienceGroup *theGroup, *tmpGroup;
 
 #if BLOAD_AND_BSAVE
@@ -179,7 +179,7 @@ static void DeallocateDefruleData(
         while (theActivation != nullptr) {
             tmpActivation = theActivation->getNext();
 
-            rtn_struct(theEnv, activation, theActivation);
+            rtn_struct(theEnv, Activation, theActivation);
 
             theActivation = tmpActivation;
         }

@@ -62,8 +62,6 @@
 
 #define _H_agenda
 
-typedef struct activation Activation;
-
 #include "Environment.h"
 #include "Defrule.h"
 #include "Symbol.h"
@@ -82,50 +80,54 @@ constexpr auto MIN_DEFRULE_SALIENCE = -10000;
 /* DATA STRUCTURES */
 /*******************/
 
-struct activation {
+struct Activation {
+public:
+    using Ptr = std::shared_ptr<Activation>;
 private:
-    Defrule *theRule;
-    PartialMatch *basis;
+    std::shared_ptr<Defrule> theRule;
+    std::shared_ptr<PartialMatch> basis;
     int salience;
     unsigned long long timetag;
     int randomID;
-    activation *prev;
-    activation *next;
+    Ptr prev;
+    Ptr next;
 public:
     auto getRule() const noexcept { return theRule; }
-    void setRule(Defrule* value) noexcept { theRule = value; }
+    void setRule(std::shared_ptr<Defrule> value) noexcept { theRule = value; }
     auto getBasis() const noexcept { return basis; }
-    void setBasis(PartialMatch* value) noexcept { basis = value; }
+    void setBasis(std::shared_ptr<PartialMatch>value) noexcept { basis = value; }
     constexpr auto getSalience() const noexcept { return salience; }
     void setSalience(int value) noexcept { salience = value; }
     constexpr auto getTimetag() const noexcept { return timetag; }
     void setTimetag(unsigned long long value) noexcept { timetag = value; }
     constexpr auto getRandomID() const noexcept { return randomID; }
     void setRandomID(int value) noexcept { randomID = value; }
-    void setPrevious(activation* value) noexcept { prev = value; }
+    void setPrevious(Ptr value) noexcept { prev = value; }
     auto getPrevious() const noexcept { return prev; }
-    void setNext(activation* value) noexcept { next = value; }
+    void setNext(Ptr value) noexcept { next = value; }
     auto getNext() const noexcept { return next; }
     void getPPForm(StringBuilder*) noexcept;
 };
 
 struct SalienceGroup {
+public:
+    using Ptr = std::shared_ptr<SalienceGroup>;
 private:
     int salience;
-    activation *first;
-    activation *last;
-    SalienceGroup *next;
-    SalienceGroup *prev;
+    Activation::Ptr first;
+    Activation::Ptr last;
+    Ptr next;
+    Ptr prev;
 public:
     constexpr auto getSalience() const noexcept { return salience; }
     void setSalience(int value) noexcept { salience = value; }
-    void setFirst(activation* value) noexcept { first = value; }
+    void setFirst(Activation::Ptr value) noexcept { first = value; }
     auto getFirst() const noexcept { return first; }
-    void setLast(activation* value) noexcept { last = value; }
+    void setLast(Activation::Ptr value) noexcept { last = value; }
     auto getLast() const noexcept { return last; }
-    void setPrevious(SalienceGroup* value) noexcept { prev = value; }
+    void setPrevious(Ptr value) noexcept { prev = value; }
     auto getPrevious() const noexcept { return prev; }
-    void setNext(SalienceGroup* value) noexcept { next = value; }
+    void setNext(Ptr value) noexcept { next = value; }
     auto getNext() const noexcept { return next; }
 };
 
@@ -172,15 +174,15 @@ RegisterEnvironmentModule(AgendaModule, AGENDA_DATA, Agenda);
 
 void AddActivation(const Environment&, Defrule *, PartialMatch *);
 void ClearRuleFromAgenda(const Environment&, Defrule *);
-Activation *GetNextActivation(const Environment&, Activation *);
-const char *ActivationRuleName(Activation *);
-void GetActivationBasisPPForm(const Environment&, char *, size_t, Activation *);
-bool MoveActivationToTop(const Environment&, Activation *);
-void DeleteActivation(Activation *);
-bool DetachActivation(const Environment&, Activation *);
+Activation::Ptr GetNextActivation(const Environment&, Activation::Ptr );
+const char *ActivationRuleName(Activation::Ptr );
+void GetActivationBasisPPForm(const Environment&, char *, size_t, Activation::Ptr );
+bool MoveActivationToTop(const Environment&, Activation::Ptr );
+void DeleteActivation(Activation::Ptr );
+bool DetachActivation(const Environment&, Activation::Ptr );
 void DeleteAllActivations(Defmodule *);
 void Agenda(const Environment&, const char *, Defmodule *);
-void RemoveActivation(const Environment&, Activation *, bool, bool);
+void RemoveActivation(const Environment&, Activation::Ptr , bool, bool);
 void RemoveAllActivations(const Environment&);
 SalienceEvaluationType GetSalienceEvaluation(const Environment&);
 SalienceEvaluationType SetSalienceEvaluation(const Environment&, SalienceEvaluationType);

@@ -114,7 +114,7 @@ static void DeallocateDefruleBloadData(
     size_t space;
     unsigned long i;
     struct defruleModule *theModuleItem;
-    struct activation *theActivation, *tmpActivation;
+    struct Activation::Ptr theActivation, *tmpActivation;
     struct SalienceGroup *theGroup, *tmpGroup;
 
     for (i = 0; i < DefruleBinaryData(theEnv)->NumberOfJoins; i++) {
@@ -131,7 +131,7 @@ static void DeallocateDefruleBloadData(
         while (theActivation != nullptr) {
             tmpActivation = theActivation->getNext();
 
-            rtn_struct(theEnv, activation, theActivation);
+            rtn_struct(theEnv, Activation, theActivation);
 
             theActivation = tmpActivation;
         }

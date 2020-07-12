@@ -319,7 +319,7 @@ void Matches(
     long long alphaMatchCount = 0;
     long long betaMatchCount = 0;
     long long activations = 0;
-    Activation *agendaPtr;
+    Activation::Ptr agendaPtr;
     const Environment&theEnv = theDefrule->header.env;
 
     /*==========================*/
@@ -400,10 +400,10 @@ void Matches(
 
     for (agendaPtr = ((defruleModule *) topDisjunct->header.whichModule)->agenda;
          agendaPtr != nullptr;
-         agendaPtr = (activation *) GetNextActivation(theEnv, agendaPtr)) {
+         agendaPtr = (Activation::Ptr ) GetNextActivation(theEnv, agendaPtr)) {
         if (GetHaltExecution(theEnv)) return;
 
-        if (((activation *) agendaPtr)->getRule()->header.name == topDisjunct->header.name) {
+        if (((Activation::Ptr ) agendaPtr)->getRule()->header.name == topDisjunct->header.name) {
             activations++;
 
             if (output == VERBOSE) {

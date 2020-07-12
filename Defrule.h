@@ -111,8 +111,8 @@ struct defrule {
 
 struct defruleModule {
     struct defmoduleItemHeader header;
-    struct SalienceGroup *groupings;
-    struct activation *agenda;
+    SalienceGroup::Ptr groupings;
+    Activation::Ptr agenda;
 };
 
 #ifndef ALPHA_MEMORY_HASH_SIZE

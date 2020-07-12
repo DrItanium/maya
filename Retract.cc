@@ -136,7 +136,7 @@ void PosEntryRetractAlpha(
         /* Remove the beta match. */
 
         if ((joinPtr->ruleToActivate != nullptr) ?
-            (betaMatch->marker != nullptr) : false) { RemoveActivation(theEnv, (activation *) betaMatch->marker, true, true); }
+            (betaMatch->marker != nullptr) : false) { RemoveActivation(theEnv, (Activation::Ptr ) betaMatch->marker, true, true); }
 
         tempMatch = betaMatch->nextRightChild;
 
@@ -250,7 +250,7 @@ void PosEntryRetractBeta(
 
         if (betaMatch->blockList != nullptr) { NegEntryRetractAlpha(theEnv, betaMatch, operation); }
         else if ((((joinNode *) betaMatch->owner)->ruleToActivate != nullptr) ?
-                 (betaMatch->marker != nullptr) : false) { RemoveActivation(theEnv, (activation *) betaMatch->marker, true, true); }
+                 (betaMatch->marker != nullptr) : false) { RemoveActivation(theEnv, (Activation::Ptr ) betaMatch->marker, true, true); }
 
         if (betaMatch->rhsMemory) { UnlinkNonLeftLineage(theEnv, (joinNode *) betaMatch->owner, betaMatch, CLIPS_RHS); }
         else { UnlinkNonLeftLineage(theEnv, (joinNode *) betaMatch->owner, betaMatch, CLIPS_LHS); }
