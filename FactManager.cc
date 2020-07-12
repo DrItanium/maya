@@ -532,7 +532,7 @@ RetractError RetractDriver(
     for (theRetractFunction = FactData(theEnv)->ListOfRetractFunctions;
          theRetractFunction != nullptr;
          theRetractFunction = theRetractFunction->next) {
-        (*theRetractFunction->func)(theEnv, theFact, theRetractFunction->context);
+        (*theRetractFunction->func)(theEnv, theFact, nullptr);
     }
 
     /*============================*/
@@ -893,7 +893,7 @@ Fact *AssertDriver(
 
     for (theAssertFunction = FactData(theEnv)->ListOfAssertFunctions;
          theAssertFunction != nullptr;
-         theAssertFunction = theAssertFunction->next) { (*theAssertFunction->func)(theEnv, theFact, theAssertFunction->context); }
+         theAssertFunction = theAssertFunction->next) { (*theAssertFunction->func)(theEnv, theFact, nullptr); }
 
     /*==========================*/
     /* Print assert output if   */

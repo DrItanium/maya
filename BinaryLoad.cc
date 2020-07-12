@@ -222,7 +222,7 @@ bool Bload(
     ConstructData(theEnv)->ClearInProgress = true;
     for (bfPtr = BloadData(theEnv)->BeforeBloadFunctions;
          bfPtr != nullptr;
-         bfPtr = bfPtr->next) { (*bfPtr->func)(theEnv, bfPtr->context); }
+         bfPtr = bfPtr->next) { (*bfPtr->func)(theEnv, nullptr); }
 
     ConstructData(theEnv)->ClearInProgress = false;
 
@@ -371,7 +371,7 @@ bool Bload(
 
     for (bfPtr = BloadData(theEnv)->AfterBloadFunctions;
          bfPtr != nullptr;
-         bfPtr = bfPtr->next) { (*bfPtr->func)(theEnv, bfPtr->context); }
+         bfPtr = bfPtr->next) { (*bfPtr->func)(theEnv, nullptr); }
 
     /*=======================================*/
     /* Add a clear function to remove binary */
@@ -621,7 +621,7 @@ static bool ClearBload(
     for (bfPtr = BloadData(theEnv)->ClearBloadReadyFunctions;
          bfPtr != nullptr;
          bfPtr = bfPtr->next) {
-        ready = (bfPtr->func)(theEnv, bfPtr->context);
+        ready = (bfPtr->func)(theEnv, nullptr);
 
         if (!ready) {
             if (!error) {
@@ -691,7 +691,7 @@ static void AbortBload(
 
     for (bfPtr = BloadData(theEnv)->AbortBloadFunctions;
          bfPtr != nullptr;
-         bfPtr = bfPtr->next) { (*bfPtr->func)(theEnv, bfPtr->context); }
+         bfPtr = bfPtr->next) { (*bfPtr->func)(theEnv, nullptr); }
 }
 
 /********************************************/

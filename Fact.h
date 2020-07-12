@@ -68,7 +68,6 @@ struct modifyCallFunctionItem {
     ModifyCallFunction *func;
     int priority;
     ModifyCallFunctionItem *next;
-    void *context;
 };
 
 struct Fact {

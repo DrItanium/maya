@@ -96,7 +96,6 @@ struct saveCallFunctionItem {
     SaveCallFunction *func;
     int priority;
     SaveCallFunctionItem *next;
-    void *context;
 };
 typedef bool ConstructParseFunction(const Environment&, const char*);
 typedef CLIPSLexeme* ConstructGetConstructNameFunction(ConstructHeader*);

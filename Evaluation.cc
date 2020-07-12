@@ -192,7 +192,6 @@ bool EvaluateExpression(
             EvaluationData(theEnv)->CurrentExpression = problem;
 
             theUDFContext.environment = theEnv;
-            theUDFContext.context = fptr->context;
             theUDFContext.theFunction = fptr;
             theUDFContext.lastArg = problem->argList;
             theUDFContext.lastPosition = 1;

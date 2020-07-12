@@ -327,7 +327,7 @@ void CallCleanupFunctions(
 
     for (cleanupPtr = UtilityData(theEnv)->ListOfCleanupFunctions;
          cleanupPtr != nullptr;
-         cleanupPtr = cleanupPtr->next) { (*cleanupPtr->func)(theEnv, cleanupPtr->context); }
+         cleanupPtr = cleanupPtr->next) { (*cleanupPtr->func)(theEnv, nullptr); }
 }
 
 /**************************************************/
@@ -341,7 +341,7 @@ void CallPeriodicTasks(
     if (UtilityData(theEnv)->PeriodicFunctionsEnabled) {
         for (periodPtr = UtilityData(theEnv)->ListOfPeriodicFunctions;
              periodPtr != nullptr;
-             periodPtr = periodPtr->next) { (*periodPtr->func)(theEnv, periodPtr->context); }
+             periodPtr = periodPtr->next) { (*periodPtr->func)(theEnv, nullptr); }
     }
 }
 
@@ -385,14 +385,7 @@ bool AddPeriodicFunction(
 void *GetPeriodicFunctionContext(
         const Environment&theEnv,
         const char *name) {
-    struct voidCallFunctionItem *theItem;
-
-    theItem = GetVoidFunctionFromCallList(theEnv, name,
-                                          UtilityData(theEnv)->ListOfPeriodicFunctions);
-
-    if (theItem == nullptr) return nullptr;
-
-    return theItem->context;
+    return nullptr;
 }
 
 /*******************************************************/

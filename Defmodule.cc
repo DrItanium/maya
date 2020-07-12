@@ -286,7 +286,7 @@ Defmodule *SetCurrentModule(
         DefmoduleData(theEnv)->ModuleChangeIndex++;
         changeFunctions = DefmoduleData(theEnv)->AfterModuleChangeFunctions;
         while (changeFunctions != nullptr) {
-            (*changeFunctions->func)(theEnv, changeFunctions->context);
+            (*changeFunctions->func)(theEnv, nullptr);
             changeFunctions = changeFunctions->next;
         }
     }

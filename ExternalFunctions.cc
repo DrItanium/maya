@@ -447,7 +447,7 @@ void *GetUDFContext(
     for (fhPtr = ExternalFunctionData(theEnv)->FunctionHashtable[hashValue];
          fhPtr != nullptr;
          fhPtr = fhPtr->next) {
-        if (fhPtr->fdPtr->callFunctionName == findValue) { return fhPtr->fdPtr->context; }
+        if (fhPtr->fdPtr->callFunctionName == findValue) { return nullptr; }
     }
 
     return nullptr;

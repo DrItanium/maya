@@ -199,7 +199,7 @@ void WriteString(
     currentPtr = RouterData(theEnv)->ListOfRouters;
     while (currentPtr != nullptr) {
         if ((currentPtr->writeCallback != nullptr) ? QueryRouter(theEnv, logicalName, currentPtr) : false) {
-            (*currentPtr->writeCallback)(theEnv, logicalName, str, currentPtr->context);
+            (*currentPtr->writeCallback)(theEnv, logicalName, str, nullptr);
             return;
         }
         currentPtr = currentPtr->next;
@@ -269,7 +269,7 @@ int ReadRouter(
     currentPtr = RouterData(theEnv)->ListOfRouters;
     while (currentPtr != nullptr) {
         if ((currentPtr->readCallback != nullptr) ? QueryRouter(theEnv, logicalName, currentPtr) : false) {
-            inchar = (*currentPtr->readCallback)(theEnv, logicalName, currentPtr->context);
+            inchar = (*currentPtr->readCallback)(theEnv, logicalName, nullptr);
 
             if (inchar == '\n') {
                 if ((RouterData(theEnv)->LineCountRouter != nullptr) &&
@@ -342,7 +342,7 @@ int UnreadRouter(
                     (strcmp(logicalName, RouterData(theEnv)->LineCountRouter) == 0)) { DecrementLineCount(theEnv); }
             }
 
-            return (*currentPtr->unreadCallback)(theEnv, logicalName, ch, currentPtr->context);
+            return (*currentPtr->unreadCallback)(theEnv, logicalName, ch, nullptr);
         }
 
         currentPtr = currentPtr->next;
@@ -371,7 +371,7 @@ void ExitRouter(
         nextPtr = currentPtr->next;
         if (currentPtr->active) {
             if (currentPtr->exitCallback != nullptr) {
-                (*currentPtr->exitCallback)(theEnv, num, currentPtr->context);
+                (*currentPtr->exitCallback)(theEnv, num, nullptr);
             }
         }
         currentPtr = nextPtr;
@@ -527,7 +527,7 @@ static bool QueryRouter(
     /* if it recognizes the logical name.      */
     /*=========================================*/
 
-    return (*currentPtr->queryCallback)(theEnv, logicalName, currentPtr->context);
+    return (*currentPtr->queryCallback)(theEnv, logicalName, nullptr);
 
 }
 

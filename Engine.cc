@@ -265,7 +265,7 @@ long long Run(
         for (ruleFiresFunction = EngineData(theEnv)->ListOfBeforeRuleFiresFunctions;
              ruleFiresFunction != nullptr;
              ruleFiresFunction = ruleFiresFunction->next) {
-            (*ruleFiresFunction->func)(theEnv, theActivation, ruleFiresFunction->context);
+            (*ruleFiresFunction->func)(theEnv, theActivation, nullptr);
         }
 
         /*===========================================*/
@@ -381,7 +381,7 @@ long long Run(
 
         for (ruleFiresFunction = EngineData(theEnv)->ListOfAfterRuleFiresFunctions;
              ruleFiresFunction != nullptr;
-             ruleFiresFunction = ruleFiresFunction->next) { (*ruleFiresFunction->func)(theEnv, theActivation, ruleFiresFunction->context); }
+             ruleFiresFunction = ruleFiresFunction->next) { (*ruleFiresFunction->func)(theEnv, theActivation, nullptr); }
 
         /*=====================================*/
         /* Remove information for logical CEs. */
@@ -519,7 +519,7 @@ long long Run(
     if (rulesFired == 0) {
         for (ruleFiresFunction = EngineData(theEnv)->ListOfAfterRuleFiresFunctions;
              ruleFiresFunction != nullptr;
-             ruleFiresFunction = ruleFiresFunction->next) { (*ruleFiresFunction->func)(theEnv, nullptr, ruleFiresFunction->context); }
+             ruleFiresFunction = ruleFiresFunction->next) { (*ruleFiresFunction->func)(theEnv, nullptr, nullptr); }
     }
 
     /*======================================================*/

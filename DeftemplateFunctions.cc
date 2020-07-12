@@ -476,7 +476,7 @@ Fact *ReplaceFact(
         for (theModifyFunction = FactData(theEnv)->ListOfModifyFunctions;
              theModifyFunction != nullptr;
              theModifyFunction = theModifyFunction->next) {
-            (*theModifyFunction->func)(theEnv, oldFact, nullptr, theModifyFunction->context);
+            (*theModifyFunction->func)(theEnv, oldFact, nullptr, nullptr);
         }
     }
 
@@ -533,7 +533,7 @@ Fact *ReplaceFact(
         for (theModifyFunction = FactData(theEnv)->ListOfModifyFunctions;
              theModifyFunction != nullptr;
              theModifyFunction = theModifyFunction->next) {
-            (*theModifyFunction->func)(theEnv, nullptr, theFact, theModifyFunction->context);
+            (*theModifyFunction->func)(theEnv, nullptr, theFact, nullptr);
         }
     }
 

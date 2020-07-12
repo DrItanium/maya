@@ -91,7 +91,6 @@ struct router {
     const char *name;
     bool active;
     int priority;
-    void *context;
     RouterQueryFunction *queryCallback;
     RouterWriteFunction *writeCallback;
     RouterExitFunction *exitCallback;

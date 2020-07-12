@@ -218,7 +218,6 @@ struct Expression;
 /**************/
 struct UDFContext {
     Environment environment;
-    std::any context;
     std::shared_ptr<FunctionDefinition> theFunction;
     unsigned int lastPosition;
     std::shared_ptr<struct Expression> lastArg;

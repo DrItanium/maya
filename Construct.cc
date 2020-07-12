@@ -283,7 +283,7 @@ bool Save(
                 for (saveFunction = ConstructData(theEnv)->ListOfSaveFunctions;
                      saveFunction != nullptr;
                      saveFunction = saveFunction->next) {
-                    (*saveFunction->func)(theEnv, defmodulePtr, (char *) filePtr, saveFunction->context);
+                    (*saveFunction->func)(theEnv, defmodulePtr, (char *) filePtr, nullptr);
                 }
 
                 updated = true;
@@ -493,7 +493,7 @@ void Reset(
 
     for (resetPtr = ConstructData(theEnv)->ListOfResetFunctions;
          (resetPtr != nullptr) && !GetHaltExecution(theEnv);
-         resetPtr = resetPtr->next) { (*resetPtr->func)(theEnv, resetPtr->context); }
+         resetPtr = resetPtr->next) { (*resetPtr->func)(theEnv, nullptr); }
 
     /*============================================*/
     /* Set the current module to the MAIN module. */
@@ -633,7 +633,7 @@ bool Clear(
 
     for (theFunction = ConstructData(theEnv)->ListOfClearFunctions;
          theFunction != nullptr;
-         theFunction = theFunction->next) { (*theFunction->func)(theEnv, theFunction->context); }
+         theFunction = theFunction->next) { (*theFunction->func)(theEnv, nullptr); }
 
     /*================================*/
     /* Restore the old garbage frame. */
@@ -684,7 +684,7 @@ bool ClearReady(
     for (theFunction = ConstructData(theEnv)->ListOfClearReadyFunctions;
          theFunction != nullptr;
          theFunction = theFunction->next) {
-        if (!(*theFunction->func)(theEnv, theFunction->context)) { return false; }
+        if (!(*theFunction->func)(theEnv, nullptr)) { return false; }
     }
 
     return true;

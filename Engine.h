@@ -102,7 +102,6 @@ struct ruleFiredFunctionItem {
     RuleFiredFunction *func;
     int priority;
     RuleFiredFunctionItem *next;
-    void *context;
 };
 
 constexpr auto ENGINE_DATA = 18;

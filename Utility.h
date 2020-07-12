@@ -96,7 +96,6 @@ struct voidCallFunctionItem {
     VoidCallFunction *func;
     int priority;
     struct voidCallFunctionItem *next;
-    void *context;
 };
 
 struct boolCallFunctionItem {
@@ -104,7 +103,6 @@ struct boolCallFunctionItem {
     BoolCallFunction *func;
     int priority;
     struct boolCallFunctionItem *next;
-    void *context;
 };
 
 struct callFunctionItemWithArg {
@@ -112,7 +110,6 @@ struct callFunctionItemWithArg {
     VoidCallFunctionWithArg *func;
     int priority;
     struct callFunctionItemWithArg *next;
-    void *context;
 };
 
 struct trackedMemory {
