@@ -142,6 +142,7 @@ static bool                    EvaluateBadCall(const Environment&,void *,UDFValu
  ****************************************************/
 void InstallProcedurePrimitives(
         const Environment&theEnv) {
+#if STUBBING_INACTIVE
     EntityRecord procParameterInfo = {"PROC_PARAM", PROC_PARAM, 0, 1, 0, nullptr, nullptr, nullptr,
                                       (EntityEvaluationFunction *) RtnProcParam,
                                       nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr},
@@ -209,8 +210,9 @@ void InstallProcedurePrimitives(
        ============================================= */
     ProceduralPrimitiveData(theEnv)->NoParamValue = CreateUnmanagedMultifield(theEnv, 0L);
     RetainMultifield(theEnv, ProceduralPrimitiveData(theEnv)->NoParamValue);
+#endif
 }
-
+#if STUBBING_INACTIVE
 /**************************************************************/
 /* DeallocateProceduralPrimitiveData: Deallocates environment */
 /*    data for the procedural primitives functionality.       */
@@ -1364,3 +1366,4 @@ static bool EvaluateBadCall(
 
 #endif
 
+#endif

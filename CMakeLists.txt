@@ -262,7 +262,7 @@ add_library(clips
 		ParsingFunctions.cc
 		#Pattern.cc
 		PrettyPrint.cc
-		#ProceduralCodeSupportRoutines.cc
+		ProceduralCodeSupportRoutines.cc
 		ProceduralFunctions.cc
 		ProceduralFunctionsParser.cc
 		PredicateFunctions.cc

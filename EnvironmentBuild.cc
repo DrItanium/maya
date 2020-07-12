@@ -330,7 +330,6 @@ static void InitializeEnvironment(const Environment&theEnvironment) {
 
     InitializeDefmodules(theEnvironment);
 
-#if STUBBING_INACTIVE
     /*======================================================*/
     /* Register commands and functions for development use. */
     /*======================================================*/
@@ -350,7 +349,6 @@ static void InitializeEnvironment(const Environment&theEnvironment) {
     /* Issue a clear command. */
     /*========================*/
     Clear(theEnvironment);
-#endif
 
     /*=============================*/
     /* Initialization is complete. */
