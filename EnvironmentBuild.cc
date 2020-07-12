@@ -255,7 +255,6 @@ static void InitializeEnvironment(
 #if DEBUGGING_FUNCTIONS
     InitializeWatchData(theEnvironment);
 #endif
-#if STUBBING_INACTIVE
 
     /*===============================================*/
     /* Initialize the hash tables for atomic values. */
@@ -282,6 +281,7 @@ static void InitializeEnvironment(
     if (functions != nullptr) { InstallFunctionList(theEnvironment, functions); }
 
     SystemFunctionDefinitions(theEnvironment);
+#if STUBBING_INACTIVE
     UserFunctions(theEnvironment);
 
     /*====================================*/
