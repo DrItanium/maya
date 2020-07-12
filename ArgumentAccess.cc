@@ -78,7 +78,7 @@
 #include "SystemDependency.h"
 
 #include "ArgumentAccess.h"
-
+#if 0
 /*********************************************************************/
 /* GetLogicalName: Retrieves the nth argument passed to the function */
 /*   call currently being evaluated and determines if it is a valid  */
@@ -464,3 +464,4 @@ void IllegalLogicalNameMessage(
     WriteString(theEnv, STDERR, theFunction);
     WriteString(theEnv, STDERR, "' function.\n");
 }
+#endif

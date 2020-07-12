@@ -158,7 +158,7 @@ add_library(clips
 		PrintUtility.cc
 		Router.cc
 		#Analysis.cc
-		#ArgumentAccess.cc
+		ArgumentAccess.cc
 		#BinaryLoad.cc
 		#BasicMathFunctions.cc
 		#BinarySave.cc
