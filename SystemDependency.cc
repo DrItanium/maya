@@ -171,7 +171,6 @@ struct systemDependentData : public EnvironmentModule {
 #endif
     int (*BeforeOpenFunction)(const Environment&);
     int (*AfterOpenFunction)(const Environment&);
-    jmp_buf *jmpBuffer;
 };
 RegisterEnvironmentModule(systemDependentData, SYSTEM_DEPENDENT_DATA, SystemDependent);
 
@@ -271,18 +270,8 @@ void InitializeNonportableFeatures(
 void genexit(
         const Environment&theEnv,
         int num) {
-    if (SystemDependentData(theEnv)->jmpBuffer != nullptr) { longjmp(*SystemDependentData(theEnv)->jmpBuffer, 1); }
 
     exit(num);
-}
-
-/**************************************/
-/* SetJmpBuffer: */
-/**************************************/
-void SetJmpBuffer(
-        const Environment&theEnv,
-        jmp_buf *theJmpBuffer) {
-    SystemDependentData(theEnv)->jmpBuffer = theJmpBuffer;
 }
 
 /******************************************/
