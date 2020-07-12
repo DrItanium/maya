@@ -71,6 +71,10 @@ struct genericMatch {
 /* PartialMatch */
 /****************/
 struct PartialMatch {
+public:
+    using Self = PartialMatch;
+    using Ptr = std::shared_ptr<Self>;
+public:
     bool betaMemory: 1;
     bool busy: 1;
     bool rhsMemory: 1;

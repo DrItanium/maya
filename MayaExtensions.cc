@@ -55,7 +55,7 @@ void InstallMayaExtensions(const Environment&theEnv) {
     InstallFunctionalExtensions(theEnv);
 #endif
 }
-
+#if 0
 void
 LastFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret) {
     UDFValue theArg;
@@ -79,7 +79,6 @@ LastFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret) {
         ret->range = theArg.range;
     }
 }
-#if 0
 void
 Functionp(const Environment&theEnv, UDFContext *context, UDFValue *ret) {
     Expression theRef;
@@ -87,7 +86,6 @@ Functionp(const Environment&theEnv, UDFContext *context, UDFValue *ret) {
     ret->lexemeValue = CreateBoolean(theEnv, (UDFFirstArgument(context, LEXEME_BITS, &theArg) &&
                                            GetFunctionReference(theEnv, theArg.lexemeValue->contents, &theRef)));
 }
-#endif
 void
 EmptyFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret) {
     UDFValue theArg;
@@ -96,5 +94,6 @@ EmptyFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret) {
     }
     ret->lexemeValue = CreateBoolean(theEnv, theArg.range > 0);
 }
+#endif
 
 #endif // end MAYA_EXTENSIONS

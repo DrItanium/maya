@@ -107,7 +107,7 @@ static void TagNetworkTraverseJoins(const Environment&, unsigned long *, unsigne
 void PrintPartialMatch(
         const Environment&theEnv,
         const char *logicalName,
-        PartialMatch *list) {
+        PartialMatch::Ptr list) {
     PatternEntity *matchingItem;
     unsigned short i;
 

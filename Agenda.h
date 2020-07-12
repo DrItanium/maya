@@ -93,6 +93,7 @@ private:
     Ptr prev;
     Ptr next;
 public:
+    void printActivation(const Environment& theEnv, const std::string& logicalName);
     auto getRule() const noexcept { return theRule; }
     void setRule(std::shared_ptr<Defrule> value) noexcept { theRule = value; }
     auto getBasis() const noexcept { return basis; }
@@ -173,7 +174,8 @@ RegisterEnvironmentModule(AgendaModule, AGENDA_DATA, Agenda);
 /* GLOBAL EXTERNAL FUNCTION DEFINITIONS */
 /****************************************/
 using DefrulePtr = std::shared_ptr<Defrule>;
-void AddActivation(const Environment&, DefrulePtr , PartialMatch *);
+using PartialMatchPtr = std::shared_ptr<PartialMatch>;
+void AddActivation(const Environment& theEnv, DefrulePtr , PartialMatchPtr);
 void ClearRuleFromAgenda(const Environment&, DefrulePtr );
 Activation::Ptr GetNextActivation(const Environment&, Activation::Ptr );
 const char *ActivationRuleName(Activation::Ptr );

@@ -91,17 +91,18 @@ struct GenericCallFunctionItem {
 public:
     using Self = GenericCallFunctionItem;
     using Ptr = std::shared_ptr<Self>;
+    using Body = FunctionKind;
 public:
-    GenericCallFunctionItem(const std::string& name, int priority, FunctionKind body) : _name(name), _priority(priority), _body(body) { }
+    GenericCallFunctionItem(const std::string& name, int priority, Body body) : _name(name), _priority(priority), _body(body) { }
     auto getName() const noexcept { return _name; }
     constexpr auto getPriority() const noexcept { return _priority; }
-    FunctionKind getBody() const noexcept { return _body; }
+    Body getBody() const noexcept { return _body; }
     Ptr getNext() const noexcept { return _next; }
     void setNext(Ptr value) noexcept { _next = value; }
 private:
     std::string _name;
     int _priority;
-    FunctionKind _body;
+    Body _body;
     Ptr _next;
 };
 

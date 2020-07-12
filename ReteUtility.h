@@ -67,7 +67,7 @@
 constexpr auto NETWORK_ASSERT  = 0;
 constexpr auto NETWORK_RETRACT = 1;
 
-void PrintPartialMatch(const Environment&, const char *, PartialMatch *);
+void PrintPartialMatch(const Environment&, const char *, PartialMatch::Ptr);
 PartialMatch *CopyPartialMatch(const Environment&, PartialMatch *);
 PartialMatch *MergePartialMatches(const Environment&, PartialMatch *, PartialMatch *);
 long IncrementPseudoFactIndex();

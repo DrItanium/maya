@@ -18,9 +18,8 @@ struct FactPatternNode;
 #include "Scanner.h"
 #include "Symbol.h"
 #include "Reorder.h"
+#include "Utility.h"
 
-typedef void ModifyCallFunction(const Environment&, Fact::Ptr , Fact::Ptr , void *);
-typedef struct modifyCallFunctionItem ModifyCallFunctionItem;
 
 enum RetractError {
     RE_NO_ERROR = 0,
@@ -62,23 +61,16 @@ enum FactModifierError {
     FME_COULD_NOT_MODIFY_ERROR,
     FME_RULE_NETWORK_ERROR
 };
-
-struct modifyCallFunctionItem {
-    const char *name;
-    ModifyCallFunction *func;
-    int priority;
-    ModifyCallFunctionItem *next;
-};
+using FactPtr = std::shared_ptr<struct Fact>;
+using ModifyCallFunctionItem = GenericCallFunctionItem<std::function<void(const Environment&, FactPtr, FactPtr, void*)>>;
 
 struct Fact {
 public:
     using Self = Fact;
     using Ptr = std::shared_ptr<Self>;
 public:
-    union {
-        PatternEntity patternHeader;
-        TypeHeader header;
-    };
+    PatternEntity patternHeader;
+    TypeHeader& header() noexcept { return patternHeader.header; }
     std::shared_ptr<Deftemplate> whichDeftemplate;
     std::list<std::any> list;
     long long factIndex;
@@ -108,7 +100,7 @@ struct factModifier {
 constexpr auto FACTS_DATA = 3;
 
 struct factsData : public EnvironmentModule {
-    virtual ~factsData() override = default;
+    ~factsData() override = default;
     bool ChangeToFactList;
 #if DEBUGGING_FUNCTIONS
     bool WatchFacts;
@@ -222,13 +214,13 @@ PutSlotError FMPutSlotExternalAddress(FactModifier *, const char *, CLIPSExterna
 PutSlotError FMPutSlotMultifield(FactModifier *, const char *, Multifield *);
 FactModifierError FMError(const Environment&);
 
-bool AddModifyFunction(const Environment&, const char *, ModifyCallFunction *, int, void *);
+bool AddModifyFunction(const Environment&, const char *, typename ModifyCallFunctionItem::Body , int, void *);
 bool RemoveModifyFunction(const Environment&, const char *);
-ModifyCallFunctionItem *AddModifyFunctionToCallList(const Environment&, const char *, int,
-                                                    ModifyCallFunction *, ModifyCallFunctionItem *, void *);
-ModifyCallFunctionItem *RemoveModifyFunctionFromCallList(const Environment&, const char *,
-                                                         ModifyCallFunctionItem *, bool *);
-void DeallocateModifyCallList(const Environment&, ModifyCallFunctionItem *);
+ModifyCallFunctionItem::Ptr AddModifyFunctionToCallList(const Environment&, const char *, int,
+                                                    ModifyCallFunctionItem::Body, ModifyCallFunctionItem::Ptr, void *);
+ModifyCallFunctionItem::Ptr RemoveModifyFunctionFromCallList(const Environment&, const char *,
+                                                         ModifyCallFunctionItem::Ptr, bool *);
+void DeallocateModifyCallList(const Environment&, ModifyCallFunctionItem::Ptr);
 // factmanager end
 #if FACT_SET_QUERIES
 

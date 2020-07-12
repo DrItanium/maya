@@ -129,7 +129,7 @@ void InitializeAgenda(
 void AddActivation(
         const Environment&theEnv,
         Defrule::Ptr theRule,
-        PartialMatch *binds) {
+        PartialMatch::Ptr binds) {
     defruleModule *theModuleItem;
     SalienceGroup *theGroup;
 
@@ -192,6 +192,7 @@ void AddActivation(
     PlaceActivation(theEnv, &(theModuleItem->agenda), newActivation, theGroup);
 }
 
+#if 0
 /*******************************/
 /* ReuseOrCreateSalienceGroup: */
 /*******************************/
@@ -232,6 +233,7 @@ static struct SalienceGroup *ReuseOrCreateSalienceGroup(
 static struct SalienceGroup *FindSalienceGroup(
         struct defruleModule *theRuleModule,
         int salience) {
+
     struct SalienceGroup *theGroup;
 
     for (theGroup = theRuleModule->groupings;
@@ -244,6 +246,7 @@ static struct SalienceGroup *FindSalienceGroup(
 
     return nullptr;
 }
+#endif
 
 /***************************************************************/
 /* ClearRuleFromAgenda: Clears the agenda of a specified rule. */
@@ -252,7 +255,7 @@ void ClearRuleFromAgenda(
         const Environment&theEnv,
         Defrule::Ptr theRule) {
     Defrule::Ptr tempRule;
-    struct Activation::Ptr agendaPtr, *agendaNext;
+    Activation::Ptr agendaPtr, agendaNext;
 
     /*============================================*/
     /* Get a pointer to the agenda for the module */
@@ -320,7 +323,7 @@ void
 Activation::getPPForm(StringBuilder* theSB) noexcept {
     auto theEnv = theRule->header.env;
     OpenStringBuilderDestination(theEnv, "ActPPForm", theSB);
-    PrintActivation(theEnv, "ActPPForm", this);
+    printActivation(theEnv, "ActPPForm");
     CloseStringBuilderDestination(theEnv, "ActPPForm");
 }
 
@@ -345,7 +348,7 @@ void GetActivationBasisPPForm(
 bool MoveActivationToTop(
         const Environment&theEnv,
         Activation::Ptr theActivation) {
-    struct Activation::Ptr prevPtr;
+    Activation::Ptr prevPtr;
     struct defruleModule *theModuleItem;
 
     /*====================================*/
@@ -399,7 +402,7 @@ void DeleteActivation(
         Activation::Ptr theActivation) {
     RemoveActivation(theActivation->getRule()->header.env, theActivation, true, true);
 }
-
+#if 0
 /*************************************************/
 /* DeleteAllActivations: Removes all activations */
 /*   from the agenda of the specified module.    */
@@ -422,6 +425,7 @@ void DeleteAllActivations(
         theGroup = tempGroup;
     }
 }
+#endif
 
 /*******************************************************/
 /* DetachActivation: Detaches the specified activation */
@@ -481,7 +485,7 @@ bool DetachActivation(
 
     return true;
 }
-
+#if 0
 /****************************************************************************/
 /* PrintActivation: Prints an activation in a "pretty" format. Salience,    */
 /*   rule name, and the partial match which activated the rule are printed. */
@@ -498,6 +502,7 @@ static void PrintActivation(
     WriteString(theEnv, logicalName, ": ");
     PrintPartialMatch(theEnv, logicalName, theActivation->getBasis());
 }
+#endif
 
 /*****************************/
 /* Agenda: C access routine  */
@@ -513,7 +518,7 @@ void Agenda(
                     (PrintItemFunction *) PrintActivation,
                     nullptr);
 }
-
+#if 0
 /*******************************************************************/
 /* RemoveActivation: Returns an activation and its associated data */
 /*   structures to the Memory Manager. Links to other activations  */
@@ -562,7 +567,7 @@ void RemoveActivation(
             (!ConstructData(theEnv)->ClearReadyInProgress) &&
             (!ConstructData(theEnv)->ClearInProgress)) {
             WriteString(theEnv, STDOUT, "<== Activation ");
-            PrintActivation(theEnv, STDOUT, theActivation);
+            theActivation->printActivation(theEnv, STDOUT);
             WriteString(theEnv, STDOUT, "\n");
         }
 #endif
@@ -588,6 +593,7 @@ void RemoveActivation(
 
     rtn_struct(theEnv, Activation, theActivation);
 }
+#endif
 
 /******************************/
 /* RemoveActivationFromGroup: */
@@ -648,7 +654,7 @@ static void AgendaClearFunction(
         void *context) {
     AgendaData(theEnv)->setCurrentTimetag(1);
 }
-
+#if 0
 /*************************************************/
 /* RemoveAllActivations: Removes all activations */
 /*   from the agenda of the current module.      */
@@ -672,15 +678,7 @@ void RemoveAllActivations(
         theGroup = tempGroup;
     }
 }
-
-/**********************************************/
-/* GetAgendaChanged: Returns the value of the */
-/*   boolean flag which indicates whether any */
-/*   changes have been made to the agenda.    */
-
-/*****************************************************************/
-/* SetAgendaChanged: Sets the value of the boolean flag which    */
-/*   indicates whether any changes have been made to the agenda. */
+#endif
 
 /**********************/
 /* ReorderAllAgendas: */
@@ -693,14 +691,14 @@ void ReorderAllAgendas(
          theModule != nullptr;
          theModule = GetNextDefmodule(theEnv, theModule)) { ReorderAgenda(theModule); }
 }
-
+#if 0
 /*******************************************************/
 /* ReorderAgenda: Completely reorders the agenda based */
 /*   on the current conflict resolution strategy.      */
 /*******************************************************/
 void ReorderAgenda(
         Defmodule *theModule) {
-    struct Activation::Ptr theActivation, *tempPtr;
+    Activation::Ptr theActivation, tempPtr;
     struct defruleModule *theModuleItem;
     struct SalienceGroup *theGroup, *tempGroup;
     Environment theEnv;
@@ -740,10 +738,7 @@ void ReorderAgenda(
         theActivation = tempPtr;
     }
 }
-
-/****************************************************/
-/* GetNumberOfActivations: Returns the value of the */
-/*   total number of activations on all agendas.    */
+#endif
 
 /******************************************************/
 /* RefreshCommand: H/L Command for refreshing a rule. */
@@ -777,6 +772,7 @@ void RefreshCommand(
     Refresh(rulePtr);
 }
 
+#if 0
 /***********************************************************/
 /* Refresh: Refreshes a defrule. Activations of the rule   */
 /*   that have already been fired are added to the agenda. */
@@ -818,6 +814,7 @@ void Refresh(
         }
     }
 }
+#endif
 
 /**********************************************/
 /* RefreshAgendaCommand: H/L access routine   */
@@ -936,7 +933,7 @@ void RefreshAgenda(
 
     RestoreCurrentModule(theEnv);
 }
-
+#if 0
 /*********************************************************/
 /* SetSalienceEvaluationCommand: H/L Command for setting */
 /*   the salience evaluation behavior.                   */
@@ -998,6 +995,7 @@ void GetSalienceEvaluationCommand(
         UDFValue *returnValue) {
     returnValue->lexemeValue = CreateSymbol(theEnv, SalienceEvaluationName(GetSalienceEvaluation(theEnv)));
 }
+#endif
 
 /*****************************************************************/
 /* SalienceEvaluationName: Given the integer value corresponding */
@@ -1049,7 +1047,7 @@ SalienceEvaluationType SetSalienceEvaluation(
     AgendaData(theEnv)->setSalienceEvaluation(value);
     return ov;
 }
-
+#if 0
 /*****************************************************************/
 /* EvaluateSalience: Returns the salience value of the specified */
 /*   defrule. If salience evaluation is currently set to         */
@@ -1125,6 +1123,7 @@ static int EvaluateSalience(
     theDefrule->salience = (int) salience;
     return theDefrule->salience;
 }
+#endif
 
 #if DEBUGGING_FUNCTIONS
 
