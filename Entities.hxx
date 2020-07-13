@@ -173,7 +173,7 @@ using ValueContainer = std::variant<std::monostate,
 /**************/
 /* CLIPSValue */
 /**************/
-struct CLIPSValue {
+struct CLIPSValue : public ReferenceCountable {
 public:
     using Self = CLIPSValue;
     using Ptr = std::shared_ptr<Self>;

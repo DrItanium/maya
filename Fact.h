@@ -64,13 +64,11 @@ enum FactModifierError {
 using FactPtr = std::shared_ptr<struct Fact>;
 using ModifyCallFunctionItem = GenericCallFunctionItem<std::function<void(const Environment::Ptr&, FactPtr, FactPtr, void*)>>;
 
-struct Fact {
+struct Fact : public PatternEntity {
 public:
     using Self = Fact;
     using Ptr = std::shared_ptr<Self>;
 public:
-    PatternEntity patternHeader;
-    TypeHeader& header() noexcept { return patternHeader; }
     std::shared_ptr<Deftemplate> whichDeftemplate;
     std::list<std::any> list;
     long long factIndex;

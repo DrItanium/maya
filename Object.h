@@ -175,13 +175,11 @@ struct slotDescriptor {
     InstanceSlot sharedValue;
 };
 
-struct Instance {
+struct Instance : public PatternEntity {
 public:
     using Self = Instance;
     using Ptr = std::shared_ptr<Self>;
 public:
-    PatternEntity patternHeader;
-    inline TypeHeader& header() { return patternHeader; }
     void *_partialMatchList;
     InstanceSlot *basisSlots;
     bool installed: 1;
