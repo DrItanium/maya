@@ -195,6 +195,12 @@ struct symbolData : public EnvironmentModule {
     CLIPSBitMap **BitMapArray;
     CLIPSExternalAddress **ExternalAddressArray;
 #endif
+    CLIPSLexeme::Ptr createSymbol(const std::string& value);
+    CLIPSLexeme::Ptr createString(const std::string& value);
+    CLIPSLexeme::Ptr createInstanceName(const std::string& value);
+    CLIPSLexeme::Ptr createBoolean(bool value);
+    CLIPSInteger::Ptr createInteger(long long value);
+    CLIPSFloat::Ptr createFloat(double value);
 };
 RegisterEnvironmentModule(symbolData, SYMBOL_DATA, Symbol);
 
