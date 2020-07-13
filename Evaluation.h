@@ -140,22 +140,27 @@ static_assert(!BitwiseTest(0b010, 2));
 constexpr auto EVALUATION_DATA = 44;
 
 struct evaluationData : public EnvironmentModule {
+    evaluationData(Environment& parent) : EnvironmentModule(parent) {}
     std::shared_ptr<Expression> CurrentExpression;
-    bool EvaluationError;
-    bool HaltExecution;
-    int CurrentEvaluationDepth;
-    int numberOfAddressTypes;
+    bool EvaluationError = false;
+    bool HaltExecution = false;
+    int CurrentEvaluationDepth = 0;
+    size_t numberOfAddressTypes = 0;
     std::array<EntityRecord::Ptr, MAXIMUM_PRIMITIVES> PrimitivesArray;
+    /// @todo make this a std::list instead to remove hardcoded limits
     std::array<externalAddressType::Ptr, MAXIMUM_EXTERNAL_ADDRESS_TYPES> ExternalAddressTypes;
+    void installPrimitive(EntityRecord::Ptr record, int position);
+    size_t installExternalAddressType(const externalAddressType& newType);
+    void resetErrorFlags() noexcept;
+    void setEvaluationError(bool value) noexcept;
+    constexpr auto getEvaluationError() const noexcept { return EvaluationError; }
+    constexpr auto shouldHaltExecution() const noexcept { return HaltExecution; }
+    void haltExecution(bool value = true) noexcept { HaltExecution = value; }
 };
 RegisterEnvironmentModule(evaluationData, EVALUATION_DATA, Evaluation);
 
 void InitializeEvaluationData(const Environment::Ptr&);
 bool EvaluateExpression(const Environment::Ptr&, Expression *, UDFValue *);
-void SetEvaluationError(const Environment::Ptr&, bool);
-bool GetEvaluationError(const Environment::Ptr&);
-void SetHaltExecution(const Environment::Ptr&, bool);
-bool GetHaltExecution(const Environment::Ptr&);
 void ReturnValues(const Environment::Ptr&, UDFValue *, bool);
 void WriteUDFValue(const Environment::Ptr&, const char *, UDFValue *);
 void WriteCLIPSValue(const Environment::Ptr&, const char *, CLIPSValue *);
@@ -171,14 +176,11 @@ void RetainUDFV(const Environment::Ptr&, UDFValue *);
 void ReleaseUDFV(const Environment::Ptr&, UDFValue *);
 Expression *ConvertValueToExpression(const Environment::Ptr&, UDFValue *);
 unsigned long GetAtomicHashValue(unsigned short, void *, unsigned short);
-void InstallPrimitive(const Environment::Ptr&, EntityRecord *, int);
-int InstallExternalAddressType(const Environment::Ptr&, struct externalAddressType *);
 void TransferDataObjectValues(UDFValue *, UDFValue *);
 Expression *FunctionReferenceExpression(const Environment::Ptr&, const char *);
 bool GetFunctionReference(const Environment::Ptr&, const char *, Expression *);
 bool DOsEqual(UDFValue *, UDFValue *);
 bool EvaluateAndStoreInDataObject(const Environment::Ptr&, bool, Expression *, UDFValue *, bool);
-void ResetErrorFlags(const Environment::Ptr&);
 FunctionCallBuilder *CreateFunctionCallBuilder(const Environment::Ptr&, size_t);
 void FCBAppendUDFValue(FunctionCallBuilder *, UDFValue *);
 void FCBAppend(FunctionCallBuilder *, CLIPSValue *);

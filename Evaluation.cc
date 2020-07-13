@@ -131,16 +131,12 @@ void InitializeEvaluationData(
     InstallExternalAddressType(theEnv, &cPointer);
 }
 
-/*****************************************************/
-/* DeallocateEvaluationData: Deallocates environment */
-/*    data for evaluation data.                      */
-/*****************************************************/
-static void DeallocateEvaluationData(
-        const Environment::Ptr&theEnv) {
-    int i;
-
-    for (i = 0; i < EvaluationData(theEnv)->numberOfAddressTypes; i++) {
-        rtn_struct(theEnv, externalAddressType, EvaluationData(theEnv)->ExternalAddressTypes[i]);
+void
+evaluationData::installPrimitive(EntityRecord::Ptr record, int position) {
+    if (PrimitivesArray[position]) {
+        throw "Overwriting an already installed primitive";
+    } else {
+        PrimitivesArray[position] = record;
     }
 }
 
@@ -284,90 +280,34 @@ bool EvaluateExpression(
     return EvaluationData(theEnv)->EvaluationError;
 }
 #endif
-
-/******************************************/
-/* InstallPrimitive: Installs a primitive */
-/*   data type in the primitives array.   */
-/******************************************/
-void InstallPrimitive(
-        const Environment::Ptr&theEnv,
-        EntityRecord *thePrimitive,
-        int whichPosition) {
-    if (EvaluationData(theEnv)->PrimitivesArray[whichPosition] != nullptr) {
-        SystemError(theEnv, "EVALUATN", 5);
-        ExitRouter(theEnv, EXIT_FAILURE);
+size_t
+evaluationData::installExternalAddressType(const externalAddressType& newType) {
+    if (numberOfAddressTypes == MAXIMUM_EXTERNAL_ADDRESS_TYPES)  {
+        throw "Too many external address types defined";
     }
-
-    EvaluationData(theEnv)->PrimitivesArray[whichPosition] = thePrimitive;
-}
-
-/******************************************************/
-/* InstallExternalAddressType: Installs an external   */
-/*   address type in the external address type array. */
-/******************************************************/
-int InstallExternalAddressType(
-        const Environment::Ptr&theEnv,
-        struct externalAddressType *theAddressType) {
-    struct externalAddressType *copyEAT;
-
-    int rv = EvaluationData(theEnv)->numberOfAddressTypes;
-#if STUBBING_INACTIVE
-    if (EvaluationData(theEnv)->numberOfAddressTypes == MAXIMUM_EXTERNAL_ADDRESS_TYPES) {
-        SystemError(theEnv, "EVALUATN", 6);
-        ExitRouter(theEnv, EXIT_FAILURE);
-    }
-
-    copyEAT = (externalAddressType *) genalloc(theEnv, sizeof(externalAddressType));
-    memcpy(copyEAT, theAddressType, sizeof(externalAddressType));
-    EvaluationData(theEnv)->ExternalAddressTypes[EvaluationData(theEnv)->numberOfAddressTypes++] = copyEAT;
-#endif
-
-    return rv;
+    auto newPtr = std::make_shared<externalAddressType>(newType);
+    auto newIndex = numberOfAddressTypes;
+    ExternalAddressTypes[newIndex] = newPtr;
+    ++numberOfAddressTypes;
+    return newIndex;
 }
 
 /*******************/
 /* ResetErrorFlags */
 /*******************/
-void ResetErrorFlags(
-        const Environment::Ptr&theEnv) {
-    EvaluationData(theEnv)->EvaluationError = false;
-    EvaluationData(theEnv)->HaltExecution = false;
+void
+evaluationData::resetErrorFlags() noexcept {
+    EvaluationError = false;
+    HaltExecution = false;
+}
+void
+evaluationData::setEvaluationError(bool value) noexcept {
+   EvaluationError = value;
+   if (value) {
+       HaltExecution = true;
+   }
 }
 
-/******************************************************/
-/* SetEvaluationError: Sets the EvaluationError flag. */
-/******************************************************/
-void SetEvaluationError(
-        const Environment::Ptr&theEnv,
-        bool value) {
-    EvaluationData(theEnv)->EvaluationError = value;
-    if (value) { EvaluationData(theEnv)->HaltExecution = true; }
-}
-
-/*********************************************************/
-/* GetEvaluationError: Returns the EvaluationError flag. */
-/*********************************************************/
-bool GetEvaluationError(
-        const Environment::Ptr&theEnv) {
-    return (EvaluationData(theEnv)->EvaluationError);
-}
-
-/**************************************************/
-/* SetHaltExecution: Sets the HaltExecution flag. */
-/**************************************************/
-void SetHaltExecution(
-        const Environment::Ptr&theEnv,
-        bool value) {
-    EvaluationData(theEnv)->HaltExecution = value;
-}
-
-/*****************************************************/
-/* GetHaltExecution: Returns the HaltExecution flag. */
-/*****************************************************/
-bool GetHaltExecution(
-        const Environment::Ptr&theEnv) {
-    return (EvaluationData(theEnv)->HaltExecution);
-}
 /*****************************************************/
 /* ReturnValues: Returns a linked list of UDFValue */
 /*   structures to the pool of free memory.          */

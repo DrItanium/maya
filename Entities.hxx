@@ -231,6 +231,7 @@ public:
     bool copyToEvaluate: 1;
     bool bitMap: 1;
     bool addsToRuleComplexity: 1;
+    std::shared_ptr<struct userData> usrData;
     EntityPrintFunction shortPrintFunction;
     EntityPrintFunction longPrintFunction;
     EntityRecordDeleteFunction deleteFunction;
@@ -242,7 +243,6 @@ public:
     EntityRecordMarkNeededFunction markNeeded;
     EntityRecordInstallFunction install;
     EntityRecordDeinstallFunction deinstall;
-    std::shared_ptr<struct userData> usrData;
 };
 using PatternEntityRecordDecrementBasisCountFunction = EnvironmentPtrNoReturnFunction<std::any>;
 using PatternEntityRecordIncrementBasisCountFunction = EnvironmentPtrNoReturnFunction<std::any>;
