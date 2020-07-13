@@ -782,12 +782,6 @@ size_t HashBitMap(
 /*   SymbolTable entry. Adds the symbol to the      */
 /*   EphemeralSymbolList if the count becomes zero. */
 /****************************************************/
-void RetainLexeme(
-        const Environment&theEnv,
-        CLIPSLexeme *theValue) {
-    //theValue->count++;
-}
-/****************************************************/
 /* ReleaseLexeme: Decrements the count value for a  */
 /*   SymbolTable entry. Adds the symbol to the      */
 /*   EphemeralSymbolList if the count becomes zero. */
