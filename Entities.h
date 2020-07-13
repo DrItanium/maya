@@ -122,8 +122,7 @@ public:
     CLIPSBitMap(unsigned short type) : TypeHeader(type) { }
     size_t hash(size_t range) override;
 public:
-    const char *contents;
-    unsigned short size;
+    std::vector<bool> contents;
 };
 
 /************************/

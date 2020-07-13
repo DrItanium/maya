@@ -73,8 +73,7 @@ add_library(clips
 	Expression.h
 	ExtendedMathFunctions.h
 	ExternalFunctions.h
-	FactExtensions.h
-	Fact.h
+		Fact.h
 	File.h
 	Generate.h
 	GenericFunctionBinaryLoadSave.h
@@ -301,7 +300,6 @@ add_library(maya_extensions
 		#FunctionalExtensions.cpp
 		FunctionalExtensions.h
 		MayaExtensions.cc
-		FactExtensions.h
 		InstanceExtensions.h
 		ExternalAddressTracker.h
 		Problem.h
