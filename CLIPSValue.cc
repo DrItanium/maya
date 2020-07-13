@@ -10,26 +10,36 @@
 
 
 void
-CLIPSValue::retain() {
-    std::visit([](auto&& value){
+HoldsOntoGenericValue::retain() {
+    std::visit([](auto&& value) {
         using K = std::decay_t<decltype(value)>;
-        if constexpr (!std::is_same_v<K, std::monostate> &&
-                      !std::is_same_v<K, Fact::Ptr> &&
-                      !std::is_same_v<K, CLIPSVoid::Ptr>) {
+        if constexpr (std::is_same_v<K, std::monostate> || std::is_same_v<K, CLIPSVoid::Ptr>) {
+            // do nothing
+        } else {
             value->retain();
         }
     }, contents);
 }
-
 void
-CLIPSValue::release() {
-    std::visit([](auto&& value){
+HoldsOntoGenericValue::release() {
+    std::visit([](auto&& value) {
         using K = std::decay_t<decltype(value)>;
-        if constexpr (!std::is_same_v<K, std::monostate> &&
-                      !std::is_same_v<K, Fact::Ptr> &&
-                      !std::is_same_v<K, CLIPSVoid::Ptr>) {
+        if constexpr (std::is_same_v<K, std::monostate> || std::is_same_v<K, CLIPSVoid::Ptr>) {
+            // do nothing
+        } else {
             value->release();
         }
     }, contents);
+}
 
+bool
+HoldsOntoGenericValue::canRelease() const noexcept {
+    return std::visit([](auto&& value) {
+        using K = std::decay_t<decltype(value)>;
+        if constexpr (std::is_same_v<K, std::monostate> || std::is_same_v<K, CLIPSVoid::Ptr>) {
+            return false;
+        } else {
+            return value->canRelease();
+        }
+    }, contents);
 }

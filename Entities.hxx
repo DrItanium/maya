@@ -170,30 +170,32 @@ using ValueContainer = std::variant<std::monostate,
             std::shared_ptr<Instance>,
             CLIPSExternalAddress::Ptr>;
 
+struct HoldsOntoGenericValue : public ReferenceCountable {
+    ValueContainer contents;
+    void retain() override;
+    void release() override;
+    bool canRelease() const noexcept override;
+};
+
 /**************/
 /* CLIPSValue */
 /**************/
-struct CLIPSValue : public ReferenceCountable {
+struct CLIPSValue : public HoldsOntoGenericValue {
 public:
     using Self = CLIPSValue;
     using Ptr = std::shared_ptr<Self>;
-public:
-    ValueContainer contents;
-    void retain();
-    void release();
 };
 
 
 /************/
 /* UDFValue */
 /************/
-struct UDFValue {
+struct UDFValue : public HoldsOntoGenericValue {
 public:
     using Self = UDFValue;
     using Ptr = std::shared_ptr<Self>;
 public:
     std::any supplementalInfo;
-    ValueContainer contents;
     size_t begin;
     size_t range;
 };

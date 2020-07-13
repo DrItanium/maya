@@ -3,6 +3,9 @@
 //
 #include "Entities.hxx"
 #include "Environment.h"
+#include <type_traits>
+#include "Fact.h"
+#include "Object.h"
 
 
 //size_t hash(size_t range) override;
