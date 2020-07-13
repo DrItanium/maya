@@ -21,10 +21,8 @@
 /*************************************************************/
 
 #ifndef _H_entities
-
-#pragma once
-
 #define _H_entities
+
 #include <memory>
 #include <variant>
 #include <any>
@@ -33,6 +31,8 @@
 
 #include "Constants.h"
 #include "ReferenceCounted.h"
+#include "Hashable.h"
+#include "HoldsEnvironmentCallback.h"
 struct UDFValue;
 class Environment;
 using EnvironmentPtr = std::shared_ptr<Environment>;
@@ -47,14 +47,6 @@ using EntityBusyCountFunction = EnvironmentPtrNoReturnFunction<std::any>;
 using BoolCallFunction = EnvironmentPtrFunction<bool, std::any>;
 using VoidCallFunction = EnvironmentPtrNoReturnFunction<std::any>;
 using VoidCallFunctionWithArg = EnvironmentPtrNoReturnFunction<std::any, std::any>;
-class HoldsEnvironmentCallback {
-public:
-    HoldsEnvironmentCallback(Environment& parent);
-    Environment& getParent() noexcept { return _parent; }
-    const Environment& getParent() const noexcept { return _parent; }
-protected:
-    Environment& _parent;
-};
 /**************/
 /* typeHeader */
 /**************/
@@ -63,11 +55,6 @@ struct TypeHeader {
     constexpr auto getType() const noexcept { return _type; }
 private:
     unsigned short _type;
-};
-
-class Hashable {
-public:
-    virtual size_t hash(size_t) = 0;
 };
 
 /*************/

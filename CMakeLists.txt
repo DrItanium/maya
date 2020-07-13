@@ -278,7 +278,12 @@ add_library(clips
 		##DeftemplateUtilities.cc
 		#UserData.cc
 		#Watch.cc
-		CLIPSValue.cc Entities.cc)
+		Hashable.h
+		Hashable.cc
+		HoldsEnvironmentCallback.h
+		HoldsEnvironmentCallback.cc
+		CLIPSValue.cc
+		Entities.cc)
 add_library(maya_extensions
 		BoostExtensions.h
 		#BoostExtensions.cc
@@ -297,3 +302,5 @@ target_link_libraries(maya PUBLIC
 	clips
 	maya_extensions)
 target_include_directories(maya PUBLIC "${PROJECT_SRC_DIR}")
+target_include_directories(clips PUBLIC "${PROJECT_SRC_DIR}")
+target_include_directories(maya_extensions PUBLIC "${PROJECT_SRC_DIR}")
