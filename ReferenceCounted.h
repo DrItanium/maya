@@ -7,12 +7,20 @@
 
 #include <memory>
 #include <variant>
-
-class ReferenceCounted {
+class ReferenceCountable {
 public:
+    virtual ~ReferenceCountable() = default;
+    virtual void retain() = 0;
+    virtual void release() = 0;
+    virtual bool canRelease() const noexcept = 0;
+};
+class ReferenceCounted : public ReferenceCountable {
+public:
+    ~ReferenceCounted() override = default;
     constexpr auto getCount() const noexcept { return _count; }
-    void retain();
-    void release();
+    void retain() override;
+    void release() override;
+    bool canRelease() const noexcept override;
     constexpr auto isPermanent() const noexcept { return _permanent; }
     void setIsPermanent(bool value = true) noexcept { _permanent = value; }
     constexpr auto isMarkedEphemeral() const noexcept { return _markedEphemeral; }

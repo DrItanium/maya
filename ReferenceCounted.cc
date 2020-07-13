@@ -16,3 +16,8 @@ void
 ReferenceCounted::retain() {
     ++_count;
 }
+
+bool
+ReferenceCounted::canRelease() const noexcept {
+    return !_permanent && _count == 0;
+}

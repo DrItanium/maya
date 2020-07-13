@@ -134,7 +134,7 @@ add_library(clips
 		#Expression.cc
 		#FileUtilities.cc
 		#MemoryAllocation.cc
-		#ReferenceCounted.cc
+		ReferenceCounted.cc
 		#SystemDependency.cc
 		#UserFunctions.cc
 		#Utility.cc

@@ -142,18 +142,21 @@ public:
 /**************/
 /* multifield */
 /**************/
-struct Multifield : public TypeHeader {
+struct Multifield : public TypeHeader, public ReferenceCountable {
 public:
     using Self = Multifield;
     using Ptr = std::shared_ptr<Self>;
 public:
     Multifield() : TypeHeader(MULTIFIELD_TYPE) { }
+    ~Multifield() override = default;
+private:
+    unsigned _busyCount = 0;
 public:
-    unsigned busyCount;
     auto length() const noexcept { return contents.size(); }
     std::vector<struct CLIPSValue> contents;
-    void retain();
-    void release();
+    void retain() override;
+    void release() override;
+    bool canRelease() const noexcept override;
 };
 struct Fact;
 struct Instance;
@@ -199,21 +202,20 @@ struct Expression;
 /**************/
 /* udfContext */
 /**************/
-struct UDFContext {
+struct UDFContext : public HoldsEnvironmentCallback {
     UDFContext(Environment& parent);
-    Environment& environment;
     std::shared_ptr<FunctionDefinition> theFunction;
     unsigned int lastPosition = 0;
     std::shared_ptr<struct Expression> lastArg;
     UDFValue::Ptr returnValue;
 };
-
-typedef void EntityRecordPropagateDepthFunction(void*, void*);
-typedef void EntityRecordMarkNeededFunction(void*, void*);
-typedef void EntityRecordInstallFunction(void*, void*);
-typedef void EntityRecordDeinstallFunction(void*, void*);
-typedef bool EntityRecordDeleteFunction(void*, const EnvironmentPtr&);
-typedef void* EntityRecordGetNextFunction(void*, void*);
+using GenericEntityRecordFunction = std::function<void(std::any, std::any)>;
+using EntityRecordPropagateDepthFunction = GenericEntityRecordFunction ;
+using EntityRecordMarkNeededFunction = GenericEntityRecordFunction ;
+using EntityRecordInstallFunction = GenericEntityRecordFunction ;
+using EntityRecordDeinstallFunction = GenericEntityRecordFunction ;
+using EntityRecordDeleteFunction = std::function<bool(std::any, const EnvironmentPtr&)>;
+using EntityRecordGetNextFunction = std::function<std::any(std::any, std::any)>;
 /****************/
 /* EntityRecord */
 /****************/
@@ -225,15 +227,15 @@ struct EntityRecord {
     bool addsToRuleComplexity: 1;
     EntityPrintFunction shortPrintFunction;
     EntityPrintFunction longPrintFunction;
-    EntityRecordDeleteFunction* deleteFunction;
+    EntityRecordDeleteFunction deleteFunction;
     EntityEvaluationFunction evaluateFunction;
-    EntityRecordGetNextFunction* getNextFunction;
+    EntityRecordGetNextFunction getNextFunction;
     EntityBusyCountFunction decrementBusyCount;
     EntityBusyCountFunction incrementBusyCount;
-    EntityRecordPropagateDepthFunction* propagateDepth;
-    EntityRecordMarkNeededFunction* markNeeded;
-    EntityRecordInstallFunction* install;
-    EntityRecordDeinstallFunction* deinstall;
+    EntityRecordPropagateDepthFunction propagateDepth;
+    EntityRecordMarkNeededFunction markNeeded;
+    EntityRecordInstallFunction install;
+    EntityRecordDeinstallFunction deinstall;
     std::shared_ptr<struct userData> usrData;
 };
 using PatternEntityRecordDecrementBasisCountFunction = EnvironmentPtrNoReturnFunction<std::any>;
@@ -255,14 +257,20 @@ struct PatternEntityRecord : public EntityRecord {
 /*****************/
 /* PatternEntity */
 /*****************/
-struct PatternEntity : public TypeHeader {
+struct PatternEntity : public TypeHeader, public ReferenceCountable {
 public:
     PatternEntity(unsigned short type) : TypeHeader(type) { }
+    ~PatternEntity() override = default;
 public:
     std::shared_ptr<struct PatternEntityRecord> theInfo;
     std::any dependents;
-    unsigned busyCount = 0;
+private:
+    unsigned _busyCount = 0;
+public:
     unsigned long long timeTag = 0;
+    void retain() override;
+    void release() override;
+    bool canRelease() const noexcept override;
 };
 
 #endif /* _H_entities */

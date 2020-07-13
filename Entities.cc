@@ -63,4 +63,32 @@ CLIPSFloat::hash(size_t range) {
     }
 }
 
-UDFContext::UDFContext(Environment &parent) : environment(parent) {}
+UDFContext::UDFContext(Environment &parent) : HoldsEnvironmentCallback(parent) {}
+
+void
+Multifield::retain() {
+    ++_busyCount;
+}
+void
+Multifield::release() {
+    --_busyCount;
+}
+
+bool
+Multifield::canRelease() const noexcept {
+    return _busyCount == 0;
+}
+
+void
+PatternEntity::retain() {
+    ++_busyCount;
+}
+void
+PatternEntity::release() {
+    --_busyCount;
+}
+
+bool
+PatternEntity::canRelease() const noexcept {
+    return _busyCount == 0;
+}
