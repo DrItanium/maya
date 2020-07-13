@@ -215,7 +215,6 @@ CLIPSExternalAddress::Ptr CreateCExternalAddress(const Environment& theEnv, void
 CLIPSInteger::Ptr FindLongHN(const Environment& theEnv, long long value);
 size_t HashSymbol(const std::string &str, size_t maximum);
 size_t HashFloat(double, size_t);
-size_t HashInteger(long long, size_t);
 size_t HashBitMap(const char *, size_t, unsigned);
 size_t HashExternalAddress(void *, size_t);
 void RetainLexeme(const Environment&, CLIPSLexeme *);

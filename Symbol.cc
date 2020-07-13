@@ -461,9 +461,10 @@ CLIPSInteger::Ptr CreateInteger(
     /*==================================*/
     /* Get the hash value for the long. */
     /*==================================*/
-
-    auto tally = HashInteger(value, INTEGER_HASH_SIZE);
-    /*================================================*/
+    auto tmp = getStruct<CLIPSInteger>(theEnv);
+    tmp->contents = value;
+    auto tally = tmp->hash(INTEGER_HASH_SIZE);
+    /*================================================* /
     /* Search for the long in the list of entries for */
     /* this hash location. If the long is found, then */
     /* return the address of the long.                */
@@ -478,11 +479,10 @@ CLIPSInteger::Ptr CreateInteger(
     /* Add the long at the end of the list of entries */
     /* for this hash location.                        */
     /*================================================*/
-    auto newEntry = getStruct<CLIPSInteger>(theEnv);
-    SymbolData(theEnv)->IntegerTable[tally].emplace_back(newEntry);
-    newEntry->contents = value;
-    newEntry->setBucket((unsigned int) tally);
-    newEntry->setIsPermanent(false);
+    tmp->setBucket((unsigned int) tally);
+    tmp->setIsPermanent(false);
+
+    SymbolData(theEnv)->IntegerTable[tally].emplace_back(tmp);
 
     /*=================================================*/
     /* Add the integer to the list of ephemeral items. */
@@ -498,7 +498,7 @@ CLIPSInteger::Ptr CreateInteger(
     /* Return the address of the integer. */
     /*====================================*/
 
-    return newEntry;
+    return tmp;
 }
 /*****************************************************************/
 /* FindLongHN: Searches for the integer in the integer table and */
@@ -710,20 +710,6 @@ size_t HashFloat(
 #endif
 /******************************************************/
 /* HashInteger: Computes a hash value for an integer. */
-/******************************************************/
-size_t HashInteger(long long number, size_t range) {
-    size_t tally;
-
-#if WIN_MVC
-    if (number < 0)
-      { number = - number; }
-    tally = (((size_t) number) % range);
-#else
-    tally = (((size_t) llabs(number)) % range);
-#endif
-
-    return tally;
-}
 #if STUBBING_INACTIVE
 /****************************************/
 /* HashExternalAddress: Computes a hash */
