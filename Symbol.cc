@@ -500,26 +500,23 @@ CLIPSInteger::Ptr CreateInteger(
 
     return newEntry;
 }
-#if STUBBING_INACTIVE
 /*****************************************************************/
 /* FindLongHN: Searches for the integer in the integer table and */
 /*   returns a pointer to it if found, otherwise returns nullptr.   */
 /*****************************************************************/
-CLIPSInteger *FindLongHN(
+CLIPSInteger::Ptr FindLongHN(
         const Environment&theEnv,
         long long theLong) {
-    size_t tally;
-    CLIPSInteger *peek;
-
-    tally = HashInteger(theLong, INTEGER_HASH_SIZE);
-
-    for (peek = SymbolData(theEnv)->IntegerTable[tally];
-         peek != nullptr;
-         peek = peek->next) { if (peek->contents == theLong) return (peek); }
-
+    CLIPSInteger::Ptr peek;
+    peek->contents = theLong;
+    for (auto & curr : SymbolData(theEnv)->IntegerTable[peek->hash(INTEGER_HASH_SIZE)]) {
+        if (curr->contents == theLong) {
+            return curr;
+        }
+    }
     return nullptr;
 }
-
+#if STUBBING_INACTIVE
 /******************************************************************/
 /* AddBitMap: Searches for the bitmap in the hash table. If the   */
 /*   bitmap is already in the hash table, then the address of the */

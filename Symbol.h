@@ -212,7 +212,7 @@ CLIPSInteger::Ptr CreateInteger(const Environment& theEnv, long long value);
 void *AddBitMap(const Environment&, void *, unsigned short);
 CLIPSExternalAddress::Ptr CreateExternalAddress(const Environment& theEnv, void * ctx, unsigned short kind);
 CLIPSExternalAddress::Ptr CreateCExternalAddress(const Environment& theEnv, void * ctx);
-CLIPSInteger *FindLongHN(const Environment&, long long);
+CLIPSInteger::Ptr FindLongHN(const Environment& theEnv, long long value);
 size_t HashSymbol(const std::string &str, size_t maximum);
 size_t HashFloat(double, size_t);
 size_t HashInteger(long long, size_t);
