@@ -12,9 +12,7 @@ add_library(clips
 	BinaryLoad.h
 	BinarySave.h
 	ClassFunctions.h
-		ClassParser.h
-	ClassSlotParser.h
-	clips.h
+		clips.h
 	CommandLine.h
 	ConflictResolutionStrategy.h
 	Constants.h

@@ -265,6 +265,33 @@ bool SlotCardinality(Defclass *, const char *, CLIPSValue *);
 
 void SetupObjectSystem(const Environment&);
 void CreateSystemClasses(const Environment&, void *);
+
+
+bool ParseDefclass(const Environment&, const char *);
+
+#if DEFMODULE_CONSTRUCT
+void *CreateClassScopeMap(const Environment&, Defclass *);
+#endif
+
+#define MATCH_RLN            "pattern-match"
+#define REACTIVE_RLN         "reactive"
+#define NONREACTIVE_RLN      "non-reactive"
+
+
+struct tempSlotLink {
+private:
+    SlotDescriptor *desc;
+    tempSlotLink *nxt;
+public:
+    auto getDescription() const noexcept { return desc; }
+    void setDescription(SlotDescriptor* value) noexcept { desc = value; }
+    auto getNext() const noexcept { return nxt; }
+    void setNext(tempSlotLink* value) noexcept { nxt = value; }
+};
+using TEMP_SLOT_LINK  = tempSlotLink;
+
+TEMP_SLOT_LINK *ParseSlot(const Environment&, const char *, const char *, TEMP_SLOT_LINK *, PACKED_CLASS_LINKS *, bool);
+void DeleteSlots(const Environment&, TEMP_SLOT_LINK *);
 #endif
 
 

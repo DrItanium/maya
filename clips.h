@@ -106,7 +106,6 @@
 #endif
 
 #include "ClassFunctions.h"
-#include "ClassParser.h"
 #include "Definstances.h"
 #include "InstanceCommand.h"
 #include "InstanceSaveLoadCommands.h"

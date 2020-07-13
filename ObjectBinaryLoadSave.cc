@@ -59,7 +59,7 @@
 #include "BinarySave.h"
 #include "ClassCommands.h"
 #include "ClassFunctions.h"
-#include "ClassInitialization.h"
+#include "ClassFunctions.h.h"
 #include "Construct.h"
 #include "ConstraintBinaryLoadSave.h"
 #include "Environment.h"

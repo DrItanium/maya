@@ -78,7 +78,7 @@
 #endif
 
 #include "ClassCommands.h"
-#include "ClassInitialization.h"
+#include "ClassFunctions.h.h"
 #include "Constants.h"
 #include "Construct.h"
 #include "Construct.h"

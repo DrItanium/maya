@@ -76,7 +76,7 @@
 
 #include "ArgumentAccess.h"
 #include "ClassFunctions.h"
-#include "ClassInitialization.h"
+#include "ClassFunctions.h.h"
 #include "Environment.h"
 #include "InstanceFunctions.h"
 #include "MemoryAllocation.h"

@@ -74,7 +74,6 @@
 #include <cstdio>
 
 #include "ClassFunctions.h"
-#include "ClassParser.h"
 #include "Construct.h"
 #include "Construct.h"
 #include "Environment.h"
