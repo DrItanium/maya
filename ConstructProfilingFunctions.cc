@@ -54,7 +54,7 @@
 #if PROFILING_FUNCTIONS
 
 #include "ArgumentAccess.h"
-#include "ClassCommands.h"
+#include "ClassFunctions.h"
 #include "Deffunction.h"
 #include "Environment.h"
 #include "ExternalFunctions.h"

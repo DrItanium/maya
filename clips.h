@@ -105,8 +105,6 @@
 #include "GenericFunction.h"
 #endif
 
-#include "ClassCommands.h"
-#include "ClassExamination.h"
 #include "ClassFunctions.h"
 #include "ClassInfo.h"
 #include "ClassInitialization.h"

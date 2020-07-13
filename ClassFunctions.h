@@ -116,7 +116,60 @@ unsigned int HashClass(CLIPSLexeme *);
 constexpr auto DEFCLASS_DATA = 21;
 constexpr auto PRIMITIVE_CLASSES = 9;
 
-#include "ClassCommands.h"
+enum ClassDefaultsMode {
+    CONVENIENCE_MODE,
+    CONSERVATION_MODE
+};
+
+#include "Construct.h"
+#include "Defmodule.h"
+#include "Object.h"
+#include "Symbol.h"
+
+const char *DefclassName(Defclass *);
+const char *DefclassPPForm(Defclass *);
+struct defmoduleItemHeader
+*GetDefclassModule(const Environment&, Defclass *);
+const char *DefclassModule(Defclass *);
+CLIPSLexeme *GetDefclassNamePointer(Defclass *);
+void SetNextDefclass(Defclass *, Defclass *);
+void SetDefclassPPForm(const Environment&, Defclass *, char *);
+
+Defclass *FindDefclass(const Environment&, const char *);
+Defclass *FindDefclassInModule(const Environment&, const char *);
+Defclass *LookupDefclassByMdlOrScope(const Environment&, const char *);
+Defclass *LookupDefclassInScope(const Environment&, const char *);
+Defclass *LookupDefclassAnywhere(const Environment&, Defmodule *, const char *);
+bool DefclassInScope(const Environment&, Defclass *, Defmodule *);
+Defclass *GetNextDefclass(const Environment&, Defclass *);
+bool DefclassIsDeletable(Defclass *);
+
+void UndefclassCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+ClassDefaultsMode SetClassDefaultsMode(const Environment&, ClassDefaultsMode);
+ClassDefaultsMode GetClassDefaultsMode(const Environment&);
+void GetClassDefaultsModeCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SetClassDefaultsModeCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+
+#if DEBUGGING_FUNCTIONS
+void PPDefclassCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void ListDefclassesCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void ListDefclasses(const Environment&, const char *, Defmodule *);
+bool DefclassGetWatchInstances(Defclass *);
+void DefclassSetWatchInstances(Defclass *, bool);
+bool DefclassGetWatchSlots(Defclass *);
+void DefclassSetWatchSlots(Defclass *, bool);
+bool DefclassWatchAccess(const Environment&, int, bool, Expression *);
+bool DefclassWatchPrint(const Environment&, const char *, int, Expression *);
+#endif
+
+void GetDefclassListFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void GetDefclassList(const Environment&, CLIPSValue *, Defmodule *);
+bool Undefclass(Defclass *, const Environment&);
+bool HasSuperclass(Defclass *, Defclass *);
+
+CLIPSLexeme *CheckClassAndSlot(UDFContext *, const char *, Defclass **);
+
+void SaveDefclasses(const Environment&, Defmodule *, const char *, void * context = nullptr);
 
 struct defclassData : public EnvironmentModule {
     Construct *DefclassConstruct;
@@ -140,6 +193,41 @@ struct defclassData : public EnvironmentModule {
     int newSlotID = 2; // IS_A and NAME assigned 0 and 1
 };
 RegisterEnvironmentModule(defclassData, DEFCLASS_DATA, Defclass);
+
+#include "Entities.h"
+#include "Object.h"
+#include "ExternalFunctions.h"
+
+#if DEBUGGING_FUNCTIONS
+
+void BrowseClassesCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void BrowseClasses(Defclass *, const char *);
+void DescribeClassCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void DescribeClass(Defclass *, const char *);
+
+#endif /* DEBUGGING_FUNCTIONS */
+
+const char *GetCreateAccessorString(SlotDescriptor *);
+void GetDefclassModuleCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SuperclassPCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+bool SuperclassP(Defclass *, Defclass *);
+void SubclassPCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+bool SubclassP(Defclass *, Defclass *);
+void SlotExistPCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+bool SlotExistP(Defclass *, const char *, bool);
+void MessageHandlerExistPCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SlotWritablePCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+bool SlotWritableP(Defclass *, const char *);
+void SlotInitablePCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+bool SlotInitableP(Defclass *, const char *);
+void SlotPublicPCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+bool SlotPublicP(Defclass *, const char *);
+void SlotDirectAccessPCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+bool SlotDirectAccessP(Defclass *, const char *);
+void SlotDefaultValueCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+bool SlotDefaultValue(Defclass *, const char *, CLIPSValue *);
+void ClassExistPCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+int SlotDefaultP(const Environment&, Defclass *, const char *);
 
 #endif
 

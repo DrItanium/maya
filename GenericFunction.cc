@@ -69,7 +69,6 @@
 #include "BinaryLoad.h"
 #endif
 
-#include "ClassCommands.h"
 #include "ClassFunctions.h"
 
 #include "ArgumentAccess.h"

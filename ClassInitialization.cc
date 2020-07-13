@@ -73,8 +73,6 @@
 
 #include <cstdio>
 
-#include "ClassCommands.h"
-#include "ClassExamination.h"
 #include "ClassFunctions.h"
 #include "ClassInfo.h"
 #include "ClassParser.h"

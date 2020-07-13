@@ -75,7 +75,6 @@
 #include <cstring>
 
 #include "ArgumentAccess.h"
-#include "ClassCommands.h"
 #include "ClassFunctions.h"
 #include "ClassInitialization.h"
 #include "Environment.h"

@@ -88,10 +88,8 @@
 #if BLOAD_AND_BSAVE
 #include "BinaryLoad.h"
 #endif
-#include "ClassCommands.h"
+#include "ClassFunctions.h"
 #include "InstanceCommand.h"
-#include "Construct.h"
-#include "Construct.h"
 #include "Construct.h"
 #include "Environment.h"
 #include "Evaluation.h"
