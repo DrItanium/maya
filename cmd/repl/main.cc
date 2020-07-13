@@ -64,7 +64,7 @@ static void CatchCtrlC(int);
 /* LOCAL INTERNAL VARIABLE DEFINITIONS */
 /***************************************/
 
-static Environment mainEnv;
+static EnvironmentData::Ptr mainEnv;
 
 /****************************************/
 /* main: Starts execution of the expert */
@@ -73,27 +73,17 @@ static Environment mainEnv;
 int main(
         int argc,
         char *argv[]) {
-    mainEnv = EnvironmentData::create();
+    mainEnv = std::make_shared<EnvironmentData>();
 #if STUBBING_INACTIVE
 #if UNIX_V || LINUX || DARWIN || UNIX_7 || WIN_GCC || WIN_MVC
     signal(SIGINT, CatchCtrlC);
 #endif
 #endif
 
+#if STUBBING_INACTIVE
     RerouteStdin(mainEnv, argc, argv);
     CommandLoop(mainEnv);
-
-    /*==================================================================*/
-    /* Control does not normally return from the CommandLoop function.  */
-    /* However if you are embedding CLIPS, have replaced CommandLoop    */
-    /* with your own embedded calls that will return to this point, and */
-    /* are running software that helps detect memory leaks, you need to */
-    /* add function calls here to deallocate memory still being used by */
-    /* CLIPS. If you have a multi-threaded application, no environments */
-    /* can be currently executing.                                      */
-    /*==================================================================*/
-
-    //DestroyEnvironment(mainEnv);
+#endif
 
     return -1;
 }
