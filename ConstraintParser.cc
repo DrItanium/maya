@@ -48,8 +48,7 @@
 #include "Setup.h"
 
 #include "Constants.h"
-#include "ConstraintChecking.h"
-#include "ConstraintUtilities.h"
+#include "Constraint.h"
 #include "Environment.h"
 #include "Expression.h"
 #include "MemoryAllocation.h"
@@ -59,7 +58,6 @@
 #include "Scanner.h"
 #include "SystemDependency.h"
 
-#include "ConstraintParser.h"
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */

@@ -66,7 +66,7 @@
 
 #include "ArgumentAccess.h"
 #include "Construct.h"
-#include "ConstraintChecking.h"
+#include "Constraint.h"
 #include "Environment.h"
 #include "ExternalFunctions.h"
 #include "MemoryAllocation.h"

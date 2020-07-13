@@ -71,10 +71,7 @@
 
 #include "ClassCommands.h"
 #include "ClassFunctions.h"
-#include "ConstraintUtilities.h"
 #include "Constraint.h"
-#include "ConstraintChecking.h"
-#include "ConstraintOperations.h"
 #include "Drive.h"
 #include "Environment.h"
 #include "InstanceCommand.h"

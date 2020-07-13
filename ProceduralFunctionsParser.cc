@@ -56,9 +56,6 @@
 
 #include "ArgumentAccess.h"
 #include "Constraint.h"
-#include "ConstraintChecking.h"
-#include "ConstraintOperations.h"
-#include "ConstraintUtilities.h"
 #include "Environment.h"
 #include "Expression.h"
 #include "MemoryAllocation.h"

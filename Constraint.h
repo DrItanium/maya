@@ -62,6 +62,7 @@ struct constraintRecord;
 typedef struct constraintRecord CONSTRAINT_RECORD;
 
 #include "Evaluation.h"
+#include "Constraint.h"
 
 struct constraintRecord {
 private:
@@ -172,6 +173,94 @@ bool GetDynamicConstraintChecking(const Environment&);
 unsigned long HashConstraint(constraintRecord *);
 struct constraintRecord *AddConstraint(const Environment&, struct constraintRecord *);
 void RemoveConstraint(const Environment&, struct constraintRecord *);
+
+
+#define ConstraintIndex(theConstraint) (((! GetDynamicConstraintChecking(theEnv)) || (theConstraint == nullptr)) ? ULONG_MAX : (theConstraint->getBSaveID()))
+#define ConstraintPointer(i) (((i) == ULONG_MAX) ? nullptr : (CONSTRAINT_RECORD *) &ConstraintData(theEnv)->ConstraintArray[i])
+
+#if BLOAD_AND_BSAVE
+void WriteNeededConstraints(const Environment&, FILE *);
+#endif
+void ReadNeededConstraints(const Environment&);
+void ClearBloadedConstraints(const Environment&);
+
+#include "Constraint.h"
+#include "Evaluation.h"
+
+enum ConstraintViolationType {
+    NO_VIOLATION,
+    TYPE_VIOLATION,
+    RANGE_VIOLATION,
+    ALLOWED_VALUES_VIOLATION,
+    FUNCTION_RETURN_TYPE_VIOLATION,
+    CARDINALITY_VIOLATION,
+    ALLOWED_CLASSES_VIOLATION
+};
+
+bool CheckCardinalityConstraint(const Environment&, size_t, CONSTRAINT_RECORD *);
+bool CheckAllowedValuesConstraint(int, void *, CONSTRAINT_RECORD *);
+bool CheckAllowedClassesConstraint(const Environment&, int, void *, CONSTRAINT_RECORD *);
+ConstraintViolationType ConstraintCheckExpressionChain(const Environment&, Expression *,
+                                                       CONSTRAINT_RECORD *);
+void ConstraintViolationErrorMessage(const Environment&, const char *, const char *, bool,
+                                     unsigned short, CLIPSLexeme *, unsigned short,
+                                     ConstraintViolationType, CONSTRAINT_RECORD *, bool);
+ConstraintViolationType ConstraintCheckValue(const Environment&, int, void *, CONSTRAINT_RECORD *);
+ConstraintViolationType ConstraintCheckDataObject(const Environment&, UDFValue *, CONSTRAINT_RECORD *);
+ConstraintViolationType ConstraintCheckExpression(const Environment&, Expression *,
+                                                  CONSTRAINT_RECORD *);
+bool UnmatchableConstraint(constraintRecord *);
+#include "Evaluation.h"
+#include "Constraint.h"
+
+struct constraintRecord *IntersectConstraints(const Environment&, struct constraintRecord *, struct constraintRecord *);
+struct constraintRecord *UnionConstraints(const Environment&, struct constraintRecord *, struct constraintRecord *);
+void RemoveConstantFromConstraint(const Environment&, int, void *, CONSTRAINT_RECORD *);
+
+#include "Constraint.h"
+
+struct constraintParseRecord {
+    bool type: 1;
+    bool range: 1;
+    bool allowedSymbols: 1;
+    bool allowedStrings: 1;
+    bool allowedLexemes: 1;
+    bool allowedFloats: 1;
+    bool allowedIntegers: 1;
+    bool allowedNumbers: 1;
+    bool allowedValues: 1;
+    bool allowedClasses: 1;
+    bool allowedInstanceNames: 1;
+    bool cardinality: 1;
+};
+
+typedef struct constraintParseRecord CONSTRAINT_PARSE_RECORD;
+
+bool CheckConstraintParseConflicts(const Environment&, CONSTRAINT_RECORD *);
+void AttributeConflictErrorMessage(const Environment&, const char *, const char *);
+void InitializeConstraintParseRecord(CONSTRAINT_PARSE_RECORD *);
+bool StandardConstraint(const char *);
+bool ParseStandardConstraint(const Environment&, const char *, const char *,
+                             CONSTRAINT_RECORD *,
+                             CONSTRAINT_PARSE_RECORD *,
+                             bool);
+void OverlayConstraint(const Environment&, CONSTRAINT_PARSE_RECORD *,
+                       CONSTRAINT_RECORD *, CONSTRAINT_RECORD *);
+void OverlayConstraintParseRecord(CONSTRAINT_PARSE_RECORD *,
+                                  CONSTRAINT_PARSE_RECORD *);
+
+
+#include "Constraint.h"
+
+struct constraintRecord *GetConstraintRecord(const Environment&);
+int CompareNumbers(const Environment&, int, void *, int, void *);
+struct constraintRecord *CopyConstraintRecord(const Environment&, CONSTRAINT_RECORD *);
+bool SetConstraintType(int, CONSTRAINT_RECORD *);
+void SetAnyAllowedFlags(CONSTRAINT_RECORD *, bool);
+void SetAnyRestrictionFlags(CONSTRAINT_RECORD *, bool);
+CONSTRAINT_RECORD *FunctionCallToConstraintRecord(const Environment&, void *);
+CONSTRAINT_RECORD *ExpressionToConstraintRecord(const Environment&, Expression *);
+CONSTRAINT_RECORD *ArgumentTypeToConstraintRecord(const Environment&, unsigned);
 
 #endif
 

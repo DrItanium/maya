@@ -16,13 +16,8 @@ add_library(clips
 	CommandLine.h
 	ConflictResolutionStrategy.h
 	Constants.h
-	ConstraintBinaryLoadSave.h
-	ConstraintChecking.h
-	Constraint.h
-	ConstraintOperations.h
-	ConstraintParser.h
-	ConstraintUtilities.h
-	Construct.h
+		Constraint.h
+		Construct.h
 	ConstructProfilingFunctions.h
 	DefaultAttribute.h
 	DeffactsBasicCommands.h

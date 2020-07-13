@@ -38,8 +38,6 @@
 
 #include "Constants.h"
 #include "Constraint.h"
-#include "ConstraintChecking.h"
-#include "ConstraintUtilities.h"
 #include "Environment.h"
 #include "ExternalFunctions.h"
 #include "MemoryAllocation.h"

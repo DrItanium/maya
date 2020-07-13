@@ -56,9 +56,7 @@
 
 #include "ClassCommands.h"
 #include "ClassFunctions.h"
-#include "ConstraintChecking.h"
-#include "ConstraintParser.h"
-#include "ConstraintUtilities.h"
+#include "Constraint.h"
 #include "DefaultAttribute.h"
 #include "Environment.h"
 #include "InstanceFunctions.h"

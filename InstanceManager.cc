@@ -72,7 +72,7 @@
 #include "LogicalDependencies.h"
 #include "ClassCommands.h"
 #include "ClassFunctions.h"
-#include "ConstraintChecking.h"
+#include "Constraint.h"
 #include "Engine.h"
 #include "Environment.h"
 #include "ExternalFunctions.h"

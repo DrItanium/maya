@@ -68,7 +68,7 @@
 #include "InstanceCommand.h"
 #include "InstanceFunctions.h"
 
-#include "ConstraintChecking.h"
+#include "Constraint.h"
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */

@@ -56,8 +56,7 @@
 #endif
 #include "Constants.h"
 #include "Construct.h"
-#include "Construct.h"
-#include "ConstraintChecking.h"
+#include "Constraint.h"
 #include "ConstraintParser.h"
 #include "ConstraintUtilities.h"
 #include "DefaultAttribute.h"

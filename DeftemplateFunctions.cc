@@ -105,7 +105,7 @@
 #include "ArgumentAccess.h"
 #include "CommandLine.h"
 #include "Constants.h"
-#include "ConstraintChecking.h"
+#include "Constraint.h"
 #include "DefaultAttribute.h"
 #include "Environment.h"
 #include "Expression.h"

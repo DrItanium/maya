@@ -88,7 +88,7 @@
 
 #include "ArgumentAccess.h"
 #include "ClassFunctions.h"
-#include "ConstraintChecking.h"
+#include "Constraint.h"
 #include "Drive.h"
 #include "ObjectReteMatch.h"
 #include "Engine.h"

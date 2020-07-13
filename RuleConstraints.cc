@@ -40,9 +40,7 @@
 #include <cstdio>
 
 #include "Analysis.h"
-#include "ConstraintChecking.h"
-#include "ConstraintOperations.h"
-#include "ConstraintUtilities.h"
+#include "Constraint.h"
 #include "Environment.h"
 #include "ExternalFunctions.h"
 #include "ProceduralFunctionsParser.h"

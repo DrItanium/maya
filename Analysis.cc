@@ -42,9 +42,7 @@
 #include <cstdio>
 
 #include "Constants.h"
-#include "ConstraintChecking.h"
-#include "ConstraintUtilities.h"
-#include "ConstraintOperations.h"
+#include "Constraint.h"
 #include "Expression.h"
 #include "Generate.h"
 #include "MemoryAllocation.h"
