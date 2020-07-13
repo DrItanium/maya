@@ -145,124 +145,22 @@ extern void UserFunctions(const Environment&);
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void RemoveEnvironmentCleanupFunctions(const Environment&);
-static Environment CreateEnvironmentDriver();
 static void SystemFunctionDefinitions(const Environment&);
 static void InitializeEnvironment(const Environment&);
-
-/************************************************************/
-/* CreateEnvironment: Creates an environment data structure */
-/*   and initializes its content to zero/nullptr.              */
-/************************************************************/
-Environment CreateEnvironment() {
-    return CreateEnvironmentDriver();
+EnvironmentData::Ptr
+EnvironmentData::create() {
+    return std::make_shared<EnvironmentData>();
 }
-
-/*********************************************************/
-/* CreateEnvironmentDriver: Creates an environment data  */
-/*   structure and initializes its content to zero/nullptr. */
-/*********************************************************/
-Environment CreateEnvironmentDriver() {
-    Environment theEnvironment = std::make_shared<EnvironmentData>();
-    if (!theEnvironment) {
-        std::cout << "\n[ENVRNMNT5] Unable to create new environment.\n";
-        return nullptr;
-    }
-
-    /*=============================================*/
-    /* Allocate storage for the cleanup functions. */
-    /*=============================================*/
-    InitializeEnvironment(theEnvironment);
-    CleanCurrentGarbageFrame(theEnvironment, nullptr);
-
-    return theEnvironment;
+void
+EnvironmentData::install(std::function<void(EnvironmentData&)> body) {
+    body(*this);
 }
-
-/**********************************************/
-/* DestroyEnvironment: Destroys the specified */
-/*   environment returning all of its memory. */
-/**********************************************/
-bool DestroyEnvironment(Environment& theEnvironment) {
-    struct environmentCleanupFunction *cleanupPtr;
-    int i;
-    bool rv = true;
-    /// @todo fix this
-#if STUBBING_INACTIVE
-    const auto& theMemData = MemoryData(theEnvironment);
-
-
-    ReleaseMem(theEnvironment, -1);
-    for (i = 0; i < MAXIMUM_ENVIRONMENT_POSITIONS; i++) {
-        if (theEnvironment->cleanupFunctions[i] != nullptr) { (*theEnvironment->cleanupFunctions[i])(theEnvironment); }
-    }
-
-    free(theEnvironment->cleanupFunctions);
-
-    for (cleanupPtr = theEnvironment->listOfCleanupEnvironmentFunctions;
-         cleanupPtr != nullptr;
-         cleanupPtr = cleanupPtr->next) { (*cleanupPtr->func)(theEnvironment); }
-
-    RemoveEnvironmentCleanupFunctions(theEnvironment);
-
-    ReleaseMem(theEnvironment, -1);
-
-    if ((theMemData->MemoryAmount != 0) || (theMemData->MemoryCalls != 0)) {
-        std::cout << "\n[ENVRNMNT8] Environment data not fully deallocated.\n";
-        std::cout << "\n[ENVRNMNT8] MemoryAmount = " << theMemData->MemoryAmount << '\n';
-        std::cout << "\n[ENVRNMNT8] MemoryCalls = " << theMemData->MemoryCalls<< '\n';
-        rv = false;
-    }
-
-#if (MEM_TABLE_SIZE > 0)
-    free(theMemData->MemoryTable);
-#endif
-
-    for (i = 0; i < MAXIMUM_ENVIRONMENT_POSITIONS; i++) {
-        if (theEnvironment->theData[i] != nullptr) {
-            free(theEnvironment->theData[i]);
-            theEnvironment->theData[i] = nullptr;
-        }
-    }
-
-    free(theEnvironment->theData);
-
-    theEnvironment.reset();
-    //free(theEnvironment);
-#endif
-    return rv;
-}
-
-/**************************************************/
-/* RemoveEnvironmentCleanupFunctions: Removes the */
-/*   list of environment cleanup functions.       */
-/**************************************************/
-static void RemoveEnvironmentCleanupFunctions(
-        const Environment& theEnv) {
-    struct environmentCleanupFunction *nextPtr;
-#if STUBBING_INACTIVE
-    while (theEnv->listOfCleanupEnvironmentFunctions != nullptr) {
-        nextPtr = theEnv->listOfCleanupEnvironmentFunctions->next;
-        free(theEnv->listOfCleanupEnvironmentFunctions);
-        theEnv->listOfCleanupEnvironmentFunctions = nextPtr;
-    }
-#endif
-}
-
-/**************************************************/
-/* InitializeEnvironment: Performs initialization */
-/*   of the KB environment.                       */
-/**************************************************/
-static void InitializeEnvironment(const Environment&theEnvironment) {
-    /*================================================*/
-    /* Don't allow the initialization to occur twice. */
-    /*================================================*/
-
-    if (theEnvironment->initialized) return;
-
+EnvironmentData::EnvironmentData() {
+    /// @todo fix this code
     /*===================================================*/
     /* Initialize environment data for various features. */
     /*===================================================*/
-
+#if STUBBING_INACTIVE
     InitializeCommandLineData(theEnvironment);
     InitializeConstructData(theEnvironment);
     InitializeEvaluationData(theEnvironment);
@@ -300,7 +198,38 @@ static void InitializeEnvironment(const Environment&theEnvironment) {
     /* Register system and user defined functions. */
     /*=============================================*/
 
-    SystemFunctionDefinitions(theEnvironment);
+    ProceduralFunctionDefinitions(theEnvironment);
+    MiscFunctionDefinitions(theEnvironment);
+
+#if IO_FUNCTIONS
+    IOFunctionDefinitions(theEnvironment);
+#endif
+
+    PredicateFunctionDefinitions(theEnvironment);
+    BasicMathFunctionDefinitions(theEnvironment);
+    FileCommandDefinitions(theEnvironment);
+    SortFunctionDefinitions(theEnvironment);
+
+#if DEBUGGING_FUNCTIONS
+    WatchFunctionDefinitions(theEnvironment);
+#endif
+
+#if MULTIFIELD_FUNCTIONS
+    MultifieldFunctionDefinitions(theEnvironment);
+#endif
+
+#if STRING_FUNCTIONS
+    StringFunctionDefinitions(theEnvironment);
+#endif
+
+#if EXTENDED_MATH_FUNCTIONS
+    ExtendedMathFunctionDefinitions(theEnvironment);
+#endif
+
+#if PROFILING_FUNCTIONS
+    ConstructProfilingFunctionDefinitions(theEnvironment);
+#endif
+    ParseFunctionDefinitions(theEnvironment);
     UserFunctions(theEnvironment);
 
     /*====================================*/
@@ -404,51 +333,8 @@ static void InitializeEnvironment(const Environment&theEnvironment) {
     /* Issue a clear command. */
     /*========================*/
     Clear(theEnvironment);
+    /// allocate storage for cleanup
+    CleanCurrentGarbageFrame(theEnvironment, nullptr);
+#endif
 
-    /*=============================*/
-    /* Initialization is complete. */
-    /*=============================*/
-
-    theEnvironment->initialized = true;
 }
-
-/**************************************************/
-/* SystemFunctionDefinitions: Sets up definitions */
-/*   of system defined functions.                 */
-/**************************************************/
-static void SystemFunctionDefinitions(
-        const Environment&theEnv) {
-    ProceduralFunctionDefinitions(theEnv);
-    MiscFunctionDefinitions(theEnv);
-
-#if IO_FUNCTIONS
-    IOFunctionDefinitions(theEnv);
-#endif
-
-    PredicateFunctionDefinitions(theEnv);
-    BasicMathFunctionDefinitions(theEnv);
-    FileCommandDefinitions(theEnv);
-    SortFunctionDefinitions(theEnv);
-
-#if DEBUGGING_FUNCTIONS
-    WatchFunctionDefinitions(theEnv);
-#endif
-
-#if MULTIFIELD_FUNCTIONS
-    MultifieldFunctionDefinitions(theEnv);
-#endif
-
-#if STRING_FUNCTIONS
-    StringFunctionDefinitions(theEnv);
-#endif
-
-#if EXTENDED_MATH_FUNCTIONS
-    ExtendedMathFunctionDefinitions(theEnv);
-#endif
-
-#if PROFILING_FUNCTIONS
-    ConstructProfilingFunctionDefinitions(theEnv);
-#endif
-    ParseFunctionDefinitions(theEnv);
-}
-

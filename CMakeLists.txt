@@ -128,36 +128,36 @@ add_library(clips
 	Utility.h
 	Watch.h
 		#Agenda.cc
-		CommandLine.cc
+		#CommandLine.cc
 		Environment.cc
-		Evaluation.cc
-		Expression.cc
-		FileUtilities.cc
-		MemoryAllocation.cc
-		ReferenceCounted.cc
-		SystemDependency.cc
-		UserFunctions.cc
-		Utility.cc
-		PrintUtility.cc
-		Router.cc
+		#Evaluation.cc
+		#Expression.cc
+		#FileUtilities.cc
+		#MemoryAllocation.cc
+		#ReferenceCounted.cc
+		#SystemDependency.cc
+		#UserFunctions.cc
+		#Utility.cc
+		#PrintUtility.cc
+		#Router.cc
 		#Analysis.cc
-		ArgumentAccess.cc
+		#ArgumentAccess.cc
 		#BinaryLoad.cc
-		BasicMathFunctions.cc
+		#BasicMathFunctions.cc
 		#BinarySave.cc
 		#ClassCommands.cc
 		#ClassExamination.cc
 		#ClassFunctions.cc
 		#ClassInfo.cc
-		ClassInitialization.cc
+		#ClassInitialization.cc
 		#ClassParser.cc
 		#ClassSlotParser.cc
-		Construct.cc
-		Constraint.cc
+		#Construct.cc
+		#Constraint.cc
 		#ConflictResolutionStrategy.cc
 		#ConstructBinaryLoadSave.cc
 		#ConstructCommand.cc
-		ConstructParser.cc
+		#ConstructParser.cc
 		#ConstraintBinaryLoadSave.cc
 		#ConstraintChecking.cc
 		#ConstraintOperations.cc
@@ -167,21 +167,21 @@ add_library(clips
 		#Definstances.cc
 		#Developer.cc
 		#DeffactsBinarySaveLoad.cc
-		DeffactsBasicCommands.cc
-		Deffacts.cc
+		#DeffactsBasicCommands.cc
+		#Deffacts.cc
 		#DeffactsParser.cc
 		#DeffunctionBinaryLoadSave.cc
 		#DeffunctionExecution.cc
-		Deffunction.cc
+		#Deffunction.cc
 		#DeffunctionParser.cc
 		#DefinstancesBinaryLoadSave.cc
 		#Drive.cc
-		ExtendedMathFunctions.cc
+		#ExtendedMathFunctions.cc
 		#Engine.cc
 		#ExpressionBinary.cc
-		ExpressionOperations.cc
-		ExpressionParser.cc
-		ExternalFunctions.cc
+		#ExpressionOperations.cc
+		#ExpressionParser.cc
+		#ExternalFunctions.cc
 		#FactBinarySaveLoad.cc
 		#FactBuild.cc
 		#FactCommands.cc
@@ -197,87 +197,87 @@ add_library(clips
 		#FactQuery.cc
 		#FactReteAccessFunctions.cc
 		#FactRHSPatternParser.cc
-		File.cc
+		#File.cc
 		#FileRouter.cc
 		#Generate.cc
 		#GenericFunctionBinaryLoadSave.cc
-		GenericFunctionCommands.cc
+		#GenericFunctionCommands.cc
 		#GenericFunctionExecution.cc
-		GenericFunction.cc
+		#GenericFunction.cc
 		#GenericFunctionParser.cc
 		#DefglobalBinary.cc
 		#DefglobalBasicCommands.cc
 		#DefglobalCommands.cc
-		Defglobal.cc
+		#Defglobal.cc
 		#DefglobalParser.cc
 		#ImplicitSystemMethodsParsing.cc
 		#IncrementalReset.cc
 		#MultipleInheritanceParser.cc
 		#InstanceCommand.cc
 		#InstanceSaveLoadCommands.cc
-		InstanceFunctions.cc
+		#InstanceFunctions.cc
 		#InstanceManager.cc
 		#InstanceModifyAndDuplicate.cc
 		#InstanceMultifieldTypeSlot.cc
 		#InstanceParser.cc
 		#InstanceQuery.cc
 		#InstanceSetQueryParser.cc
-		IOFunctions.cc
+		#IOFunctions.cc
 		#LogicalDependencies.cc
-		MiscFunctions.cc
+		#MiscFunctions.cc
 		#DefmoduleBinarySaveLoad.cc
 		#DefModuleBasicCommands.cc
-		Defmodule.cc
+		#Defmodule.cc
 		#DefmoduleParser.cc
-		DefmoduleUtility.cc
+		#DefmoduleUtility.cc
 		#DefmessageHandlerCommands.cc
 		#DefmessageHandlerFunctions.cc
 		#DefmessageHandlerDispatch.cc
 		#DefmessageHandlerParser.cc
-		Multifield.cc
-		MultifieldFunctions.cc
+		#Multifield.cc
+		#MultifieldFunctions.cc
 		#ObjectBinaryLoadSave.cc
 		#ObjectReteBinarySaveLoad.cc
 		#ObjectPatternMatcher.cc
 		#InferenceEngineObjectAccessRoutines.cc
 		#InferenceEngineObjectParsingRoutines.cc
 		#ObjectReteMatch.cc
-		ParsingFunctions.cc
-		#Pattern.cc
-		PrettyPrint.cc
-		ProceduralCodeSupportRoutines.cc
-		ProceduralFunctions.cc
-		ProceduralFunctionsParser.cc
-		PredicateFunctions.cc
-		ConstructProfilingFunctions.cc
-		#Reorder.cc
-		#ReteUtility.cc
-		#Retract.cc
-		#RuleBinarySaveLoad.cc
-		#RuleBuild.cc
-		#BasicRuleCommands.cc
-		#RuleCommands.cc
-		#RuleConstraints.cc
-		Defrule.cc
-		#RuleDelete.cc
-		#RuleLHSParsing.cc
-		#RuleParser.cc
-		Scanner.cc
-		SortingFunctions.cc
-		StringFunctions.cc
-		StringRouter.cc
-		#SymbolBinarySave.cc
-		Symbol.cc
-		#DeftemplateBinarySaveLoad.cc
-		#DeftemplateBasicCommands.cc
-		Deftemplate.cc
-		#DeftemplateFunctions.cc
-		#DeftemplateLHS.cc
-		#DeftemplateParser.cc
-		#DeftemplateRHSParsing.cc
-		#DeftemplateUtilities.cc
-		UserData.cc
-		Watch.cc
+		#ParsingFunctions.cc
+		##Pattern.cc
+		#PrettyPrint.cc
+		#ProceduralCodeSupportRoutines.cc
+		#ProceduralFunctions.cc
+		#ProceduralFunctionsParser.cc
+		#PredicateFunctions.cc
+		#ConstructProfilingFunctions.cc
+		##Reorder.cc
+		##ReteUtility.cc
+		##Retract.cc
+		##RuleBinarySaveLoad.cc
+		##RuleBuild.cc
+		##BasicRuleCommands.cc
+		##RuleCommands.cc
+		##RuleConstraints.cc
+		#Defrule.cc
+		##RuleDelete.cc
+		##RuleLHSParsing.cc
+		##RuleParser.cc
+		#Scanner.cc
+		#SortingFunctions.cc
+		#StringFunctions.cc
+		#StringRouter.cc
+		##SymbolBinarySave.cc
+		#Symbol.cc
+		##DeftemplateBinarySaveLoad.cc
+		##DeftemplateBasicCommands.cc
+		#Deftemplate.cc
+		##DeftemplateFunctions.cc
+		##DeftemplateLHS.cc
+		##DeftemplateParser.cc
+		##DeftemplateRHSParsing.cc
+		##DeftemplateUtilities.cc
+		#UserData.cc
+		#Watch.cc
 		CLIPSValue.cc Entities.cc)
 add_library(maya_extensions
 		BoostExtensions.h

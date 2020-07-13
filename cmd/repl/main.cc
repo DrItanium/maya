@@ -73,7 +73,7 @@ static Environment mainEnv;
 int main(
         int argc,
         char *argv[]) {
-    mainEnv = CreateEnvironment();
+    mainEnv = EnvironmentData::create();
 #if STUBBING_INACTIVE
 #if UNIX_V || LINUX || DARWIN || UNIX_7 || WIN_GCC || WIN_MVC
     signal(SIGINT, CatchCtrlC);
@@ -93,7 +93,7 @@ int main(
     /* can be currently executing.                                      */
     /*==================================================================*/
 
-    DestroyEnvironment(mainEnv);
+    //DestroyEnvironment(mainEnv);
 
     return -1;
 }

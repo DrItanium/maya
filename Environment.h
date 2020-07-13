@@ -81,11 +81,14 @@ constexpr auto MAXIMUM_ENVIRONMENT_POSITIONS = 100;
 
 class EnvironmentModule {
 public:
-    EnvironmentModule() = default;
+    EnvironmentModule(EnvironmentData& callback) : _callback(callback) { }
     virtual ~EnvironmentModule() = default;
     // called when the (clear) function is invoked
     virtual void onClear() noexcept;
     virtual void onReset() noexcept;
+    EnvironmentData& getCallback() noexcept { return _callback; }
+protected:
+    struct EnvironmentData& _callback;
 };
 
 template<typename T>
@@ -144,12 +147,15 @@ public:
     using Self = EnvironmentData;
     using Ptr = std::shared_ptr<Self>;
 public:
-    bool initialized = false;
+    static Ptr create();
+public:
     /// @todo Make these symbol pointers shared_ptrs
     CLIPSLexeme::Ptr TrueSymbol = nullptr;
     CLIPSLexeme::Ptr FalseSymbol = nullptr;
     CLIPSVoid::Ptr VoidConstant = nullptr;
+    EnvironmentData();
     std::array<std::unique_ptr<EnvironmentModule>, MAXIMUM_ENVIRONMENT_POSITIONS> environmentModules;
+public:
     template<typename T>
     bool installEnvironmentModule(std::unique_ptr<T>&& module) noexcept {
         constexpr auto position = EnvironmentModuleIndex<T>;
@@ -177,10 +183,14 @@ public:
     }
     template<typename T, typename ... Args>
     bool allocateEnvironmentModule(Args&& ... args) noexcept {
-        auto ptr = std::make_unique<T>(std::forward<Args>(args)...);
+        auto ptr = std::make_unique<T>(*this, std::forward<Args>(args)...);
         return installEnvironmentModule(std::move(ptr));
     }
-
+    /**
+     * @brief Invokes the body of a passed function using this instance as the environment argument; Useful for installing modules into this environment
+     * @param body the function to invoke
+     */
+    void install(std::function<void(EnvironmentData&)> body);
 };
 
 
@@ -189,12 +199,10 @@ using Environment = EnvironmentData::Ptr;
 inline auto VoidConstant(const Environment& theEnv) noexcept { return theEnv->VoidConstant; }
 inline auto FalseSymbol(const Environment& theEnv) noexcept { return theEnv->FalseSymbol; }
 inline auto TrueSymbol(const Environment& theEnv) noexcept { return theEnv->TrueSymbol; }
-Environment CreateEnvironment();
 struct CLIPSFloat;
 struct CLIPSInteger;
 struct CLIPSBitMap;
 struct FunctionDefinition;
-bool DestroyEnvironment(Environment&);
 
 #endif /* _H_envrnmnt */
 
