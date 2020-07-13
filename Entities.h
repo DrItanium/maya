@@ -53,6 +53,11 @@ private:
     unsigned short _type;
 };
 
+class Hashable {
+public:
+    virtual size_t hash(size_t) = 0;
+};
+
 /*************/
 /* clipsVoid */
 /*************/
@@ -67,12 +72,13 @@ public:
 /***************/
 /* CLIPSLexeme */
 /***************/
-struct CLIPSLexeme : public TypeHeader, public ReferenceCounted {
+struct CLIPSLexeme : public TypeHeader, public ReferenceCounted, public Hashable {
 public:
     using Self = CLIPSLexeme;
     using Ptr = std::shared_ptr<Self>;
 public:
     CLIPSLexeme(unsigned short type) : TypeHeader(type) { }
+    size_t hash(size_t range) override;
 public:
     std::string contents;
 };
@@ -80,12 +86,13 @@ public:
 /**************/
 /* CLIPSFloat */
 /**************/
-struct CLIPSFloat : public TypeHeader, public ReferenceCounted {
+struct CLIPSFloat : public TypeHeader, public ReferenceCounted, public Hashable {
 public:
     using Self = CLIPSFloat;
     using Ptr = std::shared_ptr<Self>;
 public:
     CLIPSFloat() : TypeHeader(FLOAT_TYPE) { }
+    size_t hash(size_t range) override;
 public:
     double contents;
 };
@@ -93,12 +100,13 @@ public:
 /****************/
 /* CLIPSInteger */
 /****************/
-struct CLIPSInteger : public TypeHeader, public ReferenceCounted {
+struct CLIPSInteger : public TypeHeader, public ReferenceCounted, public Hashable {
 public:
     using Self = CLIPSInteger;
     using Ptr = std::shared_ptr<Self>;
 public:
     CLIPSInteger() : TypeHeader(INTEGER_TYPE) { }
+    size_t hash(size_t range) override;
 public:
     long long contents;
 };
@@ -106,12 +114,13 @@ public:
 /***************/
 /* CLIPSBitMap */
 /***************/
-struct CLIPSBitMap : public TypeHeader, public ReferenceCounted {
+struct CLIPSBitMap : public TypeHeader, public ReferenceCounted, public Hashable {
 public:
     using Self = CLIPSBitMap;
     using Ptr = std::shared_ptr<Self>;
 public:
     CLIPSBitMap(unsigned short type) : TypeHeader(type) { }
+    size_t hash(size_t range) override;
 public:
     const char *contents;
     unsigned short size;
@@ -120,12 +129,13 @@ public:
 /************************/
 /* CLIPSExternalAddress */
 /************************/
-struct CLIPSExternalAddress : public TypeHeader, public ReferenceCounted {
+struct CLIPSExternalAddress : public TypeHeader, public ReferenceCounted, public Hashable {
 public:
     using Self = CLIPSExternalAddress;
     using Ptr = std::shared_ptr<Self>;
 public:
     CLIPSExternalAddress(unsigned short type) : TypeHeader(type) { }
+    size_t hash(size_t range) override;
 public:
     std::any contents;
     unsigned short type;

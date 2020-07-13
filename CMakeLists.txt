@@ -294,7 +294,7 @@ add_library(clips
 		#DeftemplateUtilities.cc
 		UserData.cc
 		Watch.cc
-		CLIPSValue.cc)
+		CLIPSValue.cc Entities.cc)
 add_library(maya_extensions
 		BoostExtensions.h
 		#BoostExtensions.cc
