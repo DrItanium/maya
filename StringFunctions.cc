@@ -124,7 +124,7 @@ static void StrOrSymCatFunction(UDFContext *, UDFValue *, unsigned short);
 /*   the string manipulation functions.   */
 /******************************************/
 void StringFunctionDefinitions(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
 #if STUBBING_INACTIVE
     AddUDF(theEnv, "str-cat", "sy", 1, UNBOUNDED, "synld", StrCatFunction);
     AddUDF(theEnv, "sym-cat", "sy", 1, UNBOUNDED, "synld", SymCatFunction);
@@ -147,7 +147,7 @@ void StringFunctionDefinitions(
 /*   for the str-cat function.          */
 /****************************************/
 void StrCatFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     StrOrSymCatFunction(context, returnValue, STRING_TYPE);
@@ -158,7 +158,7 @@ void StrCatFunction(
 /*   for the sym-cat function.          */
 /****************************************/
 void SymCatFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     StrOrSymCatFunction(context, returnValue, SYMBOL_TYPE);
@@ -179,7 +179,7 @@ static void StrOrSymCatFunction(
     char *theString;
     CLIPSLexeme **arrayOfStrings;
     CLIPSLexeme *hashPtr;
-    const Environment&theEnv = context->environment;
+    const Environment::Ptr&theEnv = context->environment;
 
     /*===============================================*/
     /* Determine the number of arguments as create a */
@@ -279,7 +279,7 @@ static void StrOrSymCatFunction(
 /*   for the str-length function.          */
 /*******************************************/
 void StrLengthFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -302,7 +302,7 @@ void StrLengthFunction(
 /*   for the upcase function.           */
 /****************************************/
 void UpcaseFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -348,7 +348,7 @@ void UpcaseFunction(
 /*   for the lowcase function.           */
 /*****************************************/
 void LowcaseFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -394,7 +394,7 @@ void LowcaseFunction(
 /*   for the str-compare function.          */
 /********************************************/
 void StrCompareFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue arg1, arg2, arg3;
@@ -437,7 +437,7 @@ void StrCompareFunction(
 /*   for the sub-string function.          */
 /*******************************************/
 void SubStringFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -511,7 +511,7 @@ void SubStringFunction(
 /*   for the sub-index function.          */
 /******************************************/
 void StrIndexFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg1, theArg2;
@@ -554,7 +554,7 @@ void StrIndexFunction(
 /*   for the string-to-field function.       */
 /********************************************/
 void StringToFieldFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -582,7 +582,7 @@ void StringToFieldFunction(
 /* StringToField: Converts a string to an atomic data value. */
 /*************************************************************/
 void StringToField(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *theString,
         UDFValue *returnValue) {
     struct token theToken;
@@ -617,7 +617,7 @@ void StringToField(
 /*   for the str-replace function.        */
 /******************************************/
 void StrReplaceFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue initial, find, replace;
@@ -700,7 +700,7 @@ void StrReplaceFunction(
 /*   for the eval function.           */
 /**************************************/
 void EvalFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -725,7 +725,7 @@ void EvalFunction(
 /*   for the eval function. */
 /****************************/
 EvalError Eval(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *theString,
         CLIPSValue *returnValue) {
     Expression *top;
@@ -874,7 +874,7 @@ EvalError Eval(
 /*   for the build function.           */
 /***************************************/
 void BuildFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -899,7 +899,7 @@ void BuildFunction(
 /*   for the build function. */
 /*****************************/
 BuildError Build(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *theString) {
     const char *constructType;
     struct token theToken;

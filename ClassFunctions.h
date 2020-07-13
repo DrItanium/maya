@@ -80,44 +80,44 @@ constexpr auto NAME_ID = 1;
 
 constexpr auto SLOT_NAME_NOT_FOUND = USHRT_MAX;
 
-void IncrementDefclassBusyCount(const Environment&, Defclass *);
-void DecrementDefclassBusyCount(const Environment&, Defclass *);
-bool InstancesPurge(const Environment&, void *context = nullptr);
+void IncrementDefclassBusyCount(const Environment::Ptr&, Defclass *);
+void DecrementDefclassBusyCount(const Environment::Ptr&, Defclass *);
+bool InstancesPurge(const Environment::Ptr&, void *context = nullptr);
 
-void InitializeClasses(const Environment&);
+void InitializeClasses(const Environment::Ptr&);
 SlotDescriptor *FindClassSlot(Defclass *, CLIPSLexeme *);
-void ClassExistError(const Environment&, const char *, const char *);
-void DeleteClassLinks(const Environment&, CLASS_LINK *);
-void PrintClassName(const Environment&, const char *, Defclass *, bool, bool);
+void ClassExistError(const Environment::Ptr&, const char *, const char *);
+void DeleteClassLinks(const Environment::Ptr&, CLASS_LINK *);
+void PrintClassName(const Environment::Ptr&, const char *, Defclass *, bool, bool);
 
 #if DEBUGGING_FUNCTIONS
-void PrintPackedClassLinks(const Environment&, const char *, const char *, PACKED_CLASS_LINKS *);
+void PrintPackedClassLinks(const Environment::Ptr&, const char *, const char *, PACKED_CLASS_LINKS *);
 #endif
 
-void PutClassInTable(const Environment&, Defclass *);
-void RemoveClassFromTable(const Environment&, Defclass *);
-void AddClassLink(const Environment&, PACKED_CLASS_LINKS *, Defclass *, bool, unsigned int);
-void DeleteSubclassLink(const Environment&, Defclass *, Defclass *);
-void DeleteSuperclassLink(const Environment&, Defclass *, Defclass *);
-Defclass *NewClass(const Environment&, CLIPSLexeme *);
-void DeletePackedClassLinks(const Environment&, PACKED_CLASS_LINKS *, bool);
-void AssignClassID(const Environment&, Defclass *);
-SLOT_NAME *AddSlotName(const Environment&, CLIPSLexeme *, unsigned short, bool);
-void DeleteSlotName(const Environment&, SLOT_NAME *);
-void RemoveDefclass(const Environment&, Defclass *);
-void InstallClass(const Environment&, Defclass *, bool);
-void DestroyDefclass(const Environment&, Defclass *);
+void PutClassInTable(const Environment::Ptr&, Defclass *);
+void RemoveClassFromTable(const Environment::Ptr&, Defclass *);
+void AddClassLink(const Environment::Ptr&, PACKED_CLASS_LINKS *, Defclass *, bool, unsigned int);
+void DeleteSubclassLink(const Environment::Ptr&, Defclass *, Defclass *);
+void DeleteSuperclassLink(const Environment::Ptr&, Defclass *, Defclass *);
+Defclass *NewClass(const Environment::Ptr&, CLIPSLexeme *);
+void DeletePackedClassLinks(const Environment::Ptr&, PACKED_CLASS_LINKS *, bool);
+void AssignClassID(const Environment::Ptr&, Defclass *);
+SLOT_NAME *AddSlotName(const Environment::Ptr&, CLIPSLexeme *, unsigned short, bool);
+void DeleteSlotName(const Environment::Ptr&, SLOT_NAME *);
+void RemoveDefclass(const Environment::Ptr&, Defclass *);
+void InstallClass(const Environment::Ptr&, Defclass *, bool);
+void DestroyDefclass(const Environment::Ptr&, Defclass *);
 
 bool IsClassBeingUsed(Defclass *);
-bool RemoveAllUserClasses(const Environment&);
-bool DeleteClassUAG(const Environment&, Defclass *);
+bool RemoveAllUserClasses(const Environment::Ptr&);
+bool DeleteClassUAG(const Environment::Ptr&, Defclass *);
 void MarkBitMapSubclasses(char *, Defclass *, int);
 
-unsigned short FindSlotNameID(const Environment&, CLIPSLexeme *);
-CLIPSLexeme *FindIDSlotName(const Environment&, unsigned short);
-SLOT_NAME *FindIDSlotNameHash(const Environment&, unsigned short);
-int GetTraversalID(const Environment&);
-void ReleaseTraversalID(const Environment&);
+unsigned short FindSlotNameID(const Environment::Ptr&, CLIPSLexeme *);
+CLIPSLexeme *FindIDSlotName(const Environment::Ptr&, unsigned short);
+SLOT_NAME *FindIDSlotNameHash(const Environment::Ptr&, unsigned short);
+int GetTraversalID(const Environment::Ptr&);
+void ReleaseTraversalID(const Environment::Ptr&);
 unsigned int HashClass(CLIPSLexeme *);
 
 constexpr auto DEFCLASS_DATA = 21;
@@ -132,47 +132,47 @@ enum ClassDefaultsMode {
 const char *DefclassName(Defclass *);
 const char *DefclassPPForm(Defclass *);
 struct defmoduleItemHeader
-*GetDefclassModule(const Environment&, Defclass *);
+*GetDefclassModule(const Environment::Ptr&, Defclass *);
 const char *DefclassModule(Defclass *);
 CLIPSLexeme *GetDefclassNamePointer(Defclass *);
 void SetNextDefclass(Defclass *, Defclass *);
-void SetDefclassPPForm(const Environment&, Defclass *, char *);
+void SetDefclassPPForm(const Environment::Ptr&, Defclass *, char *);
 
-Defclass *FindDefclass(const Environment&, const char *);
-Defclass *FindDefclassInModule(const Environment&, const char *);
-Defclass *LookupDefclassByMdlOrScope(const Environment&, const char *);
-Defclass *LookupDefclassInScope(const Environment&, const char *);
-Defclass *LookupDefclassAnywhere(const Environment&, Defmodule *, const char *);
-bool DefclassInScope(const Environment&, Defclass *, Defmodule *);
-Defclass *GetNextDefclass(const Environment&, Defclass *);
+Defclass *FindDefclass(const Environment::Ptr&, const char *);
+Defclass *FindDefclassInModule(const Environment::Ptr&, const char *);
+Defclass *LookupDefclassByMdlOrScope(const Environment::Ptr&, const char *);
+Defclass *LookupDefclassInScope(const Environment::Ptr&, const char *);
+Defclass *LookupDefclassAnywhere(const Environment::Ptr&, Defmodule *, const char *);
+bool DefclassInScope(const Environment::Ptr&, Defclass *, Defmodule *);
+Defclass *GetNextDefclass(const Environment::Ptr&, Defclass *);
 bool DefclassIsDeletable(Defclass *);
 
-void UndefclassCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-ClassDefaultsMode SetClassDefaultsMode(const Environment&, ClassDefaultsMode);
-ClassDefaultsMode GetClassDefaultsMode(const Environment&);
-void GetClassDefaultsModeCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void SetClassDefaultsModeCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void UndefclassCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+ClassDefaultsMode SetClassDefaultsMode(const Environment::Ptr&, ClassDefaultsMode);
+ClassDefaultsMode GetClassDefaultsMode(const Environment::Ptr&);
+void GetClassDefaultsModeCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void SetClassDefaultsModeCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
 
 #if DEBUGGING_FUNCTIONS
-void PPDefclassCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void ListDefclassesCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void ListDefclasses(const Environment&, const char *, Defmodule *);
+void PPDefclassCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void ListDefclassesCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void ListDefclasses(const Environment::Ptr&, const char *, Defmodule *);
 bool DefclassGetWatchInstances(Defclass *);
 void DefclassSetWatchInstances(Defclass *, bool);
 bool DefclassGetWatchSlots(Defclass *);
 void DefclassSetWatchSlots(Defclass *, bool);
-bool DefclassWatchAccess(const Environment&, int, bool, Expression *);
-bool DefclassWatchPrint(const Environment&, const char *, int, Expression *);
+bool DefclassWatchAccess(const Environment::Ptr&, int, bool, Expression *);
+bool DefclassWatchPrint(const Environment::Ptr&, const char *, int, Expression *);
 #endif
 
-void GetDefclassListFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void GetDefclassList(const Environment&, CLIPSValue *, Defmodule *);
-bool Undefclass(Defclass *, const Environment&);
+void GetDefclassListFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void GetDefclassList(const Environment::Ptr&, CLIPSValue *, Defmodule *);
+bool Undefclass(Defclass *, const Environment::Ptr&);
 bool HasSuperclass(Defclass *, Defclass *);
 
 CLIPSLexeme *CheckClassAndSlot(UDFContext *, const char *, Defclass **);
 
-void SaveDefclasses(const Environment&, Defmodule *, const char *, void * context = nullptr);
+void SaveDefclasses(const Environment::Ptr&, Defmodule *, const char *, void * context = nullptr);
 
 struct defclassData : public EnvironmentModule {
     Construct *DefclassConstruct;
@@ -200,57 +200,57 @@ RegisterEnvironmentModule(defclassData, DEFCLASS_DATA, Defclass);
 
 #if DEBUGGING_FUNCTIONS
 
-void BrowseClassesCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void BrowseClassesCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
 void BrowseClasses(Defclass *, const char *);
-void DescribeClassCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void DescribeClassCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
 void DescribeClass(Defclass *, const char *);
 
 #endif /* DEBUGGING_FUNCTIONS */
 
 const char *GetCreateAccessorString(SlotDescriptor *);
-void GetDefclassModuleCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void SuperclassPCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void GetDefclassModuleCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void SuperclassPCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
 bool SuperclassP(Defclass *, Defclass *);
-void SubclassPCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SubclassPCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
 bool SubclassP(Defclass *, Defclass *);
-void SlotExistPCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SlotExistPCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
 bool SlotExistP(Defclass *, const char *, bool);
-void MessageHandlerExistPCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void SlotWritablePCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void MessageHandlerExistPCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void SlotWritablePCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
 bool SlotWritableP(Defclass *, const char *);
-void SlotInitablePCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SlotInitablePCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
 bool SlotInitableP(Defclass *, const char *);
-void SlotPublicPCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SlotPublicPCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
 bool SlotPublicP(Defclass *, const char *);
-void SlotDirectAccessPCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SlotDirectAccessPCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
 bool SlotDirectAccessP(Defclass *, const char *);
-void SlotDefaultValueCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SlotDefaultValueCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
 bool SlotDefaultValue(Defclass *, const char *, CLIPSValue *);
-void ClassExistPCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-int SlotDefaultP(const Environment&, Defclass *, const char *);
+void ClassExistPCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+int SlotDefaultP(const Environment::Ptr&, Defclass *, const char *);
 
 
-void ClassAbstractPCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void ClassReactivePCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void ClassAbstractPCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void ClassReactivePCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
 Defclass *ClassInfoFnxArgs(UDFContext *, const char *, bool *);
-void ClassSlotsCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void ClassSuperclassesCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void ClassSubclassesCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void GetDefmessageHandlersListCmd(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void SlotFacetsCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void SlotSourcesCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void SlotTypesCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void SlotAllowedValuesCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void SlotAllowedClassesCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void SlotRangeCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void SlotCardinalityCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void ClassSlotsCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void ClassSuperclassesCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void ClassSubclassesCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void GetDefmessageHandlersListCmd(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void SlotFacetsCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void SlotSourcesCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void SlotTypesCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void SlotAllowedValuesCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void SlotAllowedClassesCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void SlotRangeCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void SlotCardinalityCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
 bool ClassAbstractP(Defclass *);
 bool ClassReactiveP(Defclass *);
 void ClassSlots(Defclass *, CLIPSValue *, bool);
-void GetDefmessageHandlerList(const Environment&, Defclass *, CLIPSValue *, bool);
+void GetDefmessageHandlerList(const Environment::Ptr&, Defclass *, CLIPSValue *, bool);
 void ClassSuperclasses(Defclass *, CLIPSValue *, bool);
 void ClassSubclasses(Defclass *, CLIPSValue *, bool);
-void ClassSubclassAddresses(const Environment&, Defclass *, UDFValue *, bool);
+void ClassSubclassAddresses(const Environment::Ptr&, Defclass *, UDFValue *, bool);
 bool SlotFacets(Defclass *, const char *, CLIPSValue *);
 bool SlotSources(Defclass *, const char *, CLIPSValue *);
 bool SlotTypes(Defclass *, const char *, CLIPSValue *);
@@ -263,14 +263,14 @@ bool SlotCardinality(Defclass *, const char *, CLIPSValue *);
 #include "Object.h"
 
 
-void SetupObjectSystem(const Environment&);
-void CreateSystemClasses(const Environment&, void *);
+void SetupObjectSystem(const Environment::Ptr&);
+void CreateSystemClasses(const Environment::Ptr&, void *);
 
 
-bool ParseDefclass(const Environment&, const char *);
+bool ParseDefclass(const Environment::Ptr&, const char *);
 
 #if DEFMODULE_CONSTRUCT
-void *CreateClassScopeMap(const Environment&, Defclass *);
+void *CreateClassScopeMap(const Environment::Ptr&, Defclass *);
 #endif
 
 #define MATCH_RLN            "pattern-match"
@@ -290,8 +290,8 @@ public:
 };
 using TEMP_SLOT_LINK  = tempSlotLink;
 
-TEMP_SLOT_LINK *ParseSlot(const Environment&, const char *, const char *, TEMP_SLOT_LINK *, PACKED_CLASS_LINKS *, bool);
-void DeleteSlots(const Environment&, TEMP_SLOT_LINK *);
+TEMP_SLOT_LINK *ParseSlot(const Environment::Ptr&, const char *, const char *, TEMP_SLOT_LINK *, PACKED_CLASS_LINKS *, bool);
+void DeleteSlots(const Environment::Ptr&, TEMP_SLOT_LINK *);
 #endif
 
 

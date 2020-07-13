@@ -37,12 +37,12 @@
 #if !MAYA_EXTENSIONS
 void InstallMayaExtensions(void* environment) { }
 #else
-static void EmptyFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-static void Functionp(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+static void EmptyFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+static void Functionp(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
 //static void NextToken(Environment*, UDFContext* context, UDFValue* ret);
-static void LastFunction(const Environment&, UDFContext *context, UDFValue *ret);
+static void LastFunction(const Environment::Ptr&, UDFContext *context, UDFValue *ret);
 
-void InstallMayaExtensions(const Environment&theEnv) {
+void InstallMayaExtensions(const Environment::Ptr&theEnv) {
 #if STUBBING_INACTIVE
     AddUDF(theEnv, "empty$", "b", 1, 1, "m", EmptyFunction);
 //    AddUDF(theEnv, "functionp", "b", 1, 1, "y", Functionp);
@@ -59,7 +59,7 @@ void InstallMayaExtensions(const Environment&theEnv) {
 }
 #if STUBBING_INACTIVE
 void
-LastFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret) {
+LastFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret) {
     UDFValue theArg;
     Multifield *theList;
 
@@ -82,14 +82,14 @@ LastFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret) {
     }
 }
 void
-Functionp(const Environment&theEnv, UDFContext *context, UDFValue *ret) {
+Functionp(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret) {
     Expression theRef;
     UDFValue theArg;
     ret->lexemeValue = CreateBoolean(theEnv, (UDFFirstArgument(context, LEXEME_BITS, &theArg) &&
                                            GetFunctionReference(theEnv, theArg.lexemeValue->contents, &theRef)));
 }
 void
-EmptyFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret) {
+EmptyFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret) {
     UDFValue theArg;
     if (!UDFFirstArgument(context, MULTIFIELD_BIT, &theArg)) {
         return;

@@ -74,13 +74,13 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void AddHashFunction(const Environment&, FunctionDefinition *);
-static void InitializeFunctionHashTable(const Environment&);
-static void DeallocateExternalFunctionData(const Environment&);
-static bool RemoveHashFunction(const Environment&, FunctionDefinition *);
-static AddUDFError DefineFunction(const Environment&, const char *, unsigned, void (*)(const Environment&theEnv, UDFContext *context, UDFValue *ret),
+static void AddHashFunction(const Environment::Ptr&, FunctionDefinition *);
+static void InitializeFunctionHashTable(const Environment::Ptr&);
+static void DeallocateExternalFunctionData(const Environment::Ptr&);
+static bool RemoveHashFunction(const Environment::Ptr&, FunctionDefinition *);
+static AddUDFError DefineFunction(const Environment::Ptr&, const char *, unsigned, void (*)(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret),
                                   unsigned short, unsigned short, const char *, void *);
-static void PrintType(const Environment&, const char *, int, int *, const char *);
+static void PrintType(const Environment::Ptr&, const char *, int, int *, const char *);
 static void AssignErrorValue(UDFContext *);
 
 /*********************************************************/
@@ -88,7 +88,7 @@ static void AssignErrorValue(UDFContext *);
 /*    data for external functions.                       */
 /*********************************************************/
 void InitializeExternalFunctionData(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     auto ptr = std::make_unique<externalFunctionData>();
     theEnv->installEnvironmentModule(std::move(ptr));
     /// @todo move DeallocateExternalFunctionData to externalFunctionData's dtor
@@ -100,7 +100,7 @@ void InitializeExternalFunctionData(
 /*    data for external functions.                         */
 /***********************************************************/
 static void DeallocateExternalFunctionData(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     struct FunctionHash *fhPtr, *nextFHPtr;
     int i;
 
@@ -133,7 +133,7 @@ static void DeallocateExternalFunctionData(
 /* AddUDF: Used to define a system or user external */
 /*   function so that the KB can access it.         */
 /****************************************************/
-AddUDFError AddUDF(const Environment&theEnv, const char *name, const char *returnTypes, unsigned short minArgs, unsigned short maxArgs,
+AddUDFError AddUDF(const Environment::Ptr&theEnv, const char *name, const char *returnTypes, unsigned short minArgs, unsigned short maxArgs,
                    const char *argumentTypes, UserDefinedFunction *cFunctionPointer, void *context) {
     unsigned returnTypeBits;
     size_t i;
@@ -165,10 +165,10 @@ AddUDFError AddUDF(const Environment&theEnv, const char *name, const char *retur
 /*   restrictions to be attached to the function.            */
 /*************************************************************/
 static AddUDFError DefineFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *name,
         unsigned returnTypeBits,
-        void (*pointer)(const Environment&theEnv, UDFContext *context, UDFValue *ret),
+        void (*pointer)(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret),
         unsigned short minArgs,
         unsigned short maxArgs,
         const char *restrictions,
@@ -214,7 +214,7 @@ static AddUDFError DefineFunction(
 /*   definition from the list of functions. */
 /********************************************/
 bool RemoveUDF(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *functionName) {
     CLIPSLexeme *findValue;
     FunctionDefinition *fPtr, *lastPtr = nullptr;
@@ -248,7 +248,7 @@ bool RemoveUDF(
 /*   from the function hash table.        */
 /******************************************/
 static bool RemoveHashFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         FunctionDefinition *fdPtr) {
     struct FunctionHash *fhPtr, *lastPtr = nullptr;
     size_t hashValue;
@@ -283,9 +283,9 @@ static bool RemoveHashFunction(
 /*   parsing routines.                                                     */
 /***************************************************************************/
 bool AddFunctionParser(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *functionName,
-        Expression *(*fpPtr)(const Environment&, Expression *, const char *)) {
+        Expression *(*fpPtr)(const Environment::Ptr&, Expression *, const char *)) {
     FunctionDefinition *fdPtr;
 
     fdPtr = FindFunction(theEnv, functionName);
@@ -306,7 +306,7 @@ bool AddFunctionParser(
 /*   function (if it exists) from the function entry for a function. */
 /*********************************************************************/
 bool RemoveFunctionParser(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *functionName) {
     FunctionDefinition *fdPtr;
 
@@ -326,7 +326,7 @@ bool RemoveFunctionParser(
 /* i.e. can the function be a method for a generic function.     */
 /*****************************************************************/
 bool FuncSeqOvlFlags(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *functionName,
         bool seqp,
         bool ovlp) {
@@ -350,7 +350,7 @@ bool FuncSeqOvlFlags(
 /*   type for the nth parameter of a function. */
 /***********************************************/
 unsigned GetNthRestriction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         FunctionDefinition *theFunction,
         unsigned int position) {
     unsigned rv, df;
@@ -370,7 +370,7 @@ unsigned GetNthRestriction(
 /* GetFunctionList: Returns the ListOfFunctions. */
 /*************************************************/
 FunctionDefinition *GetFunctionList(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     return (ExternalFunctionData(theEnv)->ListOfFunctions);
 }
 
@@ -379,7 +379,7 @@ FunctionDefinition *GetFunctionList(
 /*   the function entries to the FunctionHashTable.           */
 /**************************************************************/
 void InstallFunctionList(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         FunctionDefinition *value) {
     int i;
     struct FunctionHash *fhPtr, *nextPtr;
@@ -410,7 +410,7 @@ void InstallFunctionList(
 /*   in the function list, otherwise returns nullptr.      */
 /********************************************************/
 FunctionDefinition *FindFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *functionName) {
     struct FunctionHash *fhPtr;
     size_t hashValue;
@@ -435,7 +435,7 @@ FunctionDefinition *FindFunction(
 /* GetUDFContext: Returns the context associated a UDF. */
 /********************************************************/
 void *GetUDFContext(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *functionName) {
     struct FunctionHash *fhPtr;
     size_t hashValue;
@@ -461,7 +461,7 @@ void *GetUDFContext(
 /*   the function hash table to nullptr.                    */
 /*********************************************************/
 static void InitializeFunctionHashTable(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     int i;
 
     ExternalFunctionData(theEnv)->FunctionHashtable = (FunctionHash **)
@@ -475,7 +475,7 @@ static void InitializeFunctionHashTable(
 /* AddHashFunction: Adds a function to the function hash table. */
 /****************************************************************/
 static void AddHashFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         FunctionDefinition *fdPtr) {
 #if STUBBING_INACTIVE
     struct FunctionHash *newhash, *temp;
@@ -576,7 +576,7 @@ bool UDFNextArgument(
 #if STUBBING_INACTIVE
     Expression *argPtr = context->lastArg;
     unsigned int argumentPosition = context->lastPosition;
-    const Environment&theEnv = context->environment;
+    const Environment::Ptr&theEnv = context->environment;
 
     if (argPtr == nullptr) {
         SetHaltExecution(theEnv, true);
@@ -797,7 +797,7 @@ void UDFInvalidArgumentMessage(
 /******************/
 void UDFThrowError(
         UDFContext *context) {
-    const Environment&theEnv = context->environment;
+    const Environment::Ptr&theEnv = context->environment;
 
     SetHaltExecution(theEnv, true);
     SetEvaluationError(theEnv, true);
@@ -814,7 +814,7 @@ std::string UDFContextFunctionName(UDFContext *context) {
 /* PrintType: */
 /**************/
 static void PrintType(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         int typeCount,
         int *typesPrinted,
@@ -837,7 +837,7 @@ static void PrintType(
 /* PrintTypesString */
 /********************/
 void PrintTypesString(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         unsigned expectedType,
         bool printCRLF) {

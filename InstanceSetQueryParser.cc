@@ -84,12 +84,12 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static Expression *ParseQueryRestrictions(const Environment&, Expression *, const char *, struct token *);
-static bool ReplaceClassNameWithReference(const Environment&, Expression *);
-static bool ParseQueryTestExpression(const Environment&, Expression *, const char *);
-static bool ParseQueryActionExpression(const Environment&, Expression *, const char *, Expression *, struct token *);
-static bool ReplaceInstanceVariables(const Environment&, Expression *, Expression *, bool, int);
-static bool ReplaceSlotReference(const Environment&, Expression *, Expression *,
+static Expression *ParseQueryRestrictions(const Environment::Ptr&, Expression *, const char *, struct token *);
+static bool ReplaceClassNameWithReference(const Environment::Ptr&, Expression *);
+static bool ParseQueryTestExpression(const Environment::Ptr&, Expression *, const char *);
+static bool ParseQueryActionExpression(const Environment::Ptr&, Expression *, const char *, Expression *, struct token *);
+static bool ReplaceInstanceVariables(const Environment::Ptr&, Expression *, Expression *, bool, int);
+static bool ReplaceSlotReference(const Environment::Ptr&, Expression *, Expression *,
                                  FunctionDefinition *, int);
 static bool IsQueryFunction(Expression *);
 
@@ -129,7 +129,7 @@ static bool IsQueryFunction(Expression *);
                  <class-2a> -> <class-2b> -> (QDS) -> ...
  ***********************************************************************/
 Expression *ParseQueryNoAction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *top,
         const char *readSource) {
     Expression *insQuerySetVars;
@@ -194,7 +194,7 @@ Expression *ParseQueryNoAction(
                  <class-2a> -> <class-2b> -> (QDS) -> ...
  ***********************************************************************/
 Expression *ParseQueryAction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *top,
         const char *readSource) {
     Expression *insQuerySetVars;
@@ -263,7 +263,7 @@ Expression *ParseQueryAction(
   NOTES        : Expects top != nullptr
  ***************************************************************/
 static Expression *ParseQueryRestrictions(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *top,
         const char *readSource,
         struct token *queryInputToken) {
@@ -366,7 +366,7 @@ static Expression *ParseQueryRestrictions(
                  modules for reference
  ***************************************************/
 static bool ReplaceClassNameWithReference(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *theExp) {
     const char *theClassName;
     Defclass *theDefclass;
@@ -399,7 +399,7 @@ static bool ReplaceClassNameWithReference(
   NOTES        : Expects top != nullptr
  *************************************************************/
 static bool ParseQueryTestExpression(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *top,
         const char *readSource) {
     Expression *qtest;
@@ -454,7 +454,7 @@ static bool ParseQueryTestExpression(
   NOTES        : Expects top != nullptr && top->argList != nullptr
  *************************************************************/
 static bool ParseQueryActionExpression(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *top,
         const char *readSource,
         Expression *insQuerySetVars,
@@ -531,7 +531,7 @@ static bool ParseQueryActionExpression(
                    where they do not conflict with instance-variable names.
  ***********************************************************************************/
 static bool ReplaceInstanceVariables(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *vlist,
         Expression *bexp,
         bool sdirect,
@@ -589,7 +589,7 @@ static bool ReplaceInstanceVariables(
   NOTES        : None
  *************************************************************************/
 static bool ReplaceSlotReference(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *vlist,
         Expression *theExp,
         FunctionDefinition *func,

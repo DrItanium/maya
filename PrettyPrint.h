@@ -55,21 +55,21 @@ struct prettyPrintData : public EnvironmentModule {
 };
 RegisterEnvironmentModule(prettyPrintData, PRETTY_PRINT_DATA, PrettyPrint);
 
-void InitializePrettyPrintData(const Environment&);
-void FlushPPBuffer(const Environment&);
-void DestroyPPBuffer(const Environment&);
-void SavePPBuffer(const Environment&, const char *);
-void PPBackup(const Environment&);
-char *CopyPPBuffer(const Environment&);
-char *GetPPBuffer(const Environment&);
-void PPCRAndIndent(const Environment&);
-void IncrementIndentDepth(const Environment&, size_t);
-void DecrementIndentDepth(const Environment&, size_t);
-void SetIndentDepth(const Environment&, size_t);
-void SetPPBufferStatus(const Environment&, bool);
-bool GetPPBufferStatus(const Environment&);
-bool SetPPBufferEnabled(const Environment&, bool);
-bool GetPPBufferEnabled(const Environment&);
+void InitializePrettyPrintData(const Environment::Ptr&);
+void FlushPPBuffer(const Environment::Ptr&);
+void DestroyPPBuffer(const Environment::Ptr&);
+void SavePPBuffer(const Environment::Ptr&, const char *);
+void PPBackup(const Environment::Ptr&);
+char *CopyPPBuffer(const Environment::Ptr&);
+char *GetPPBuffer(const Environment::Ptr&);
+void PPCRAndIndent(const Environment::Ptr&);
+void IncrementIndentDepth(const Environment::Ptr&, size_t);
+void DecrementIndentDepth(const Environment::Ptr&, size_t);
+void SetIndentDepth(const Environment::Ptr&, size_t);
+void SetPPBufferStatus(const Environment::Ptr&, bool);
+bool GetPPBufferStatus(const Environment::Ptr&);
+bool SetPPBufferEnabled(const Environment::Ptr&, bool);
+bool GetPPBufferEnabled(const Environment::Ptr&);
 
 #endif
 

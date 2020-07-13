@@ -75,12 +75,13 @@ constexpr auto COMMANDLINE_DATA = 40;
 #include <string>
 #include "Environment.h"
 #include "Expression.h"
-using EventFunction = std::function<void(const Environment&)>;
-using BeforeCommandExecutionFunction = std::function<bool(const Environment&)>;
-using AfterPromptFunction = std::function<void(const Environment&)>;
+using EventFunction = std::function<void(const Environment::Ptr&)>;
+using BeforeCommandExecutionFunction = std::function<bool(const Environment::Ptr&)>;
+using AfterPromptFunction = std::function<void(const Environment::Ptr&)>;
 
-struct commandLineData : public EnvironmentModule {
-    commandLineData(const std::string& banner, EventFunction callback);
+struct CommandLineModule : public EnvironmentModule {
+public:
+    CommandLineModule(Environment& envCallback, const std::string& banner, EventFunction callback);
     bool EvaluatingTopLevelCommand = false;
     bool HaltCommandLoopBatch = false;
     Expression::Ptr CurrentCommand;
@@ -93,35 +94,35 @@ struct commandLineData : public EnvironmentModule {
     BeforeCommandExecutionFunction BeforeCommandExecutionCallback;
     std::string getCommandString() const noexcept { return CommandString; }
 };
-RegisterEnvironmentModule(commandLineData, COMMANDLINE_DATA, CommandLine);
+RegisterEnvironmentModule(CommandLineModule, COMMANDLINE_DATA, CommandLine);
 
-void InitializeCommandLineData(const Environment&);
-bool ExpandCommandString(const Environment&, int);
-void FlushCommandString(const Environment&);
-void SetCommandString(const Environment&, const char *);
-void AppendCommandString(const Environment&, const char *);
-void InsertCommandString(const Environment&, const char *, unsigned);
-std::string GetCommandString(const Environment&);
+void InitializeCommandLineData(const Environment::Ptr&);
+bool ExpandCommandString(const Environment::Ptr&, int);
+void FlushCommandString(const Environment::Ptr&);
+void SetCommandString(const Environment::Ptr&, const char *);
+void AppendCommandString(const Environment::Ptr&, const char *);
+void InsertCommandString(const Environment::Ptr&, const char *, unsigned);
+std::string GetCommandString(const Environment::Ptr&);
 int CompleteCommand(const char *);
-void CommandLoop(const Environment&);
-void CommandLoopBatch(const Environment&);
-void CommandLoopBatchDriver(const Environment&);
-void PrintPrompt(const Environment&);
-void PrintBanner(const Environment&);
-void SetAfterPromptFunction(const Environment&, AfterPromptFunction *);
-void SetBeforeCommandExecutionFunction(const Environment&, BeforeCommandExecutionFunction *);
-bool RouteCommand(const Environment&, const char *, bool);
-EventFunction *SetEventFunction(const Environment&, EventFunction *);
-bool TopLevelCommand(const Environment&);
-void AppendNCommandString(const Environment&, const char *, unsigned);
-void SetNCommandString(const Environment&, const char *, unsigned);
-const char *GetCommandCompletionString(const Environment&, const char *, size_t);
-bool ExecuteIfCommandComplete(const Environment&);
-void CommandLoopOnceThenBatch(const Environment&);
-bool CommandCompleteAndNotEmpty(const Environment&);
-void SetHaltCommandLoopBatch(const Environment&, bool);
-bool GetHaltCommandLoopBatch(const Environment&);
-void RerouteStdin(const Environment&, int, char *[]);
+void CommandLoop(const Environment::Ptr&);
+void CommandLoopBatch(const Environment::Ptr&);
+void CommandLoopBatchDriver(const Environment::Ptr&);
+void PrintPrompt(const Environment::Ptr&);
+void PrintBanner(const Environment::Ptr&);
+void SetAfterPromptFunction(const Environment::Ptr&, AfterPromptFunction *);
+void SetBeforeCommandExecutionFunction(const Environment::Ptr&, BeforeCommandExecutionFunction *);
+bool RouteCommand(const Environment::Ptr&, const char *, bool);
+EventFunction *SetEventFunction(const Environment::Ptr&, EventFunction *);
+bool TopLevelCommand(const Environment::Ptr&);
+void AppendNCommandString(const Environment::Ptr&, const char *, unsigned);
+void SetNCommandString(const Environment::Ptr&, const char *, unsigned);
+const char *GetCommandCompletionString(const Environment::Ptr&, const char *, size_t);
+bool ExecuteIfCommandComplete(const Environment::Ptr&);
+void CommandLoopOnceThenBatch(const Environment::Ptr&);
+bool CommandCompleteAndNotEmpty(const Environment::Ptr&);
+void SetHaltCommandLoopBatch(const Environment::Ptr&, bool);
+bool GetHaltCommandLoopBatch(const Environment::Ptr&);
+void RerouteStdin(const Environment::Ptr&, int, char *[]);
 
 #endif
 

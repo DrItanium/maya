@@ -44,7 +44,7 @@
 
 #include "GenericFunction.h"
 
-void AddImplicitMethods(const Environment&, Defgeneric *);
+void AddImplicitMethods(const Environment::Ptr&, Defgeneric *);
 
 #endif /* DEFGENERIC_CONSTRUCT */
 

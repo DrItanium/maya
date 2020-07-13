@@ -95,10 +95,10 @@
 /***************************************/
 
 #if DEBUGGING_FUNCTIONS
-static void ConstructPrintWatch(const Environment&, const char *, Construct *,
+static void ConstructPrintWatch(const Environment::Ptr&, const char *, Construct *,
                                 ConstructHeader *,
                                 ConstructGetWatchFunction *);
-static bool ConstructWatchSupport(const Environment&, Construct *, const char *,
+static bool ConstructWatchSupport(const Environment::Ptr&, Construct *, const char *,
                                   const char *, Expression *, bool,
                                   bool, ConstructGetWatchFunction *,
                                   ConstructSetWatchFunction *);
@@ -124,7 +124,7 @@ void AddConstructToModule(
 /*   deleting a specific construct from a module.   */
 /****************************************************/
 bool DeleteNamedConstruct(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *constructName,
         Construct *constructClass) {
     ConstructHeader *constructPtr;
@@ -174,7 +174,7 @@ bool DeleteNamedConstruct(
 /*   for searching for a specified construct.           */
 /********************************************************/
 ConstructHeader *FindNamedConstructInModuleOrImports(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *constructName,
         Construct *constructClass) {
     ConstructHeader *theConstruct;
@@ -214,7 +214,7 @@ ConstructHeader *FindNamedConstructInModuleOrImports(
 /*   for searching for a specified construct.  */
 /***********************************************/
 ConstructHeader *FindNamedConstructInModule(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *constructName,
         Construct *constructClass) {
     ConstructHeader *theConstruct;
@@ -299,7 +299,7 @@ void UndefconstructCommand(
         UDFContext *context,
         const char *command,
         Construct *constructClass) {
-    const Environment&theEnv = context->environment;
+    const Environment::Ptr&theEnv = context->environment;
     const char *constructName;
     char buffer[80];
 
@@ -344,7 +344,7 @@ void PPConstructCommand(
         const char *command,
         Construct *constructClass,
         UDFValue *returnValue) {
-    const Environment&theEnv = context->environment;
+    const Environment::Ptr&theEnv = context->environment;
     const char *constructName;
     const char *logicalName;
     const char *ppForm;
@@ -395,7 +395,7 @@ void PPConstructCommand(
 /*   a construct using the logical name nil.          */
 /******************************************************/
 const char *PPConstructNil(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *constructName,
         Construct *constructClass) {
     ConstructHeader *constructPtr;
@@ -428,7 +428,7 @@ const char *PPConstructNil(
 /*   pretty printing a construct.  */
 /***********************************/
 bool PPConstruct(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *constructName,
         const char *logicalName,
         Construct *constructClass) {
@@ -473,7 +473,7 @@ CLIPSLexeme::Ptr GetConstructModuleCommand(
         const char *command,
         Construct *constructClass) {
 #if STUBBING_INACTIVE
-    const Environment&theEnv = context->environment;
+    const Environment::Ptr&theEnv = context->environment;
     const char *constructName;
     char buffer[80];
     Defmodule *constructModule;
@@ -512,7 +512,7 @@ CLIPSLexeme::Ptr GetConstructModuleCommand(
 /*   getting the module for a construct   */
 /******************************************/
 Defmodule *GetConstructModule(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *constructName,
         Construct *constructClass) {
     ConstructHeader *constructPtr;
@@ -549,7 +549,7 @@ Defmodule *GetConstructModule(
 /*   for deleting all constructs.       */
 /****************************************/
 bool UndefconstructAll(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Construct *constructClass) {
     ConstructHeader *currentConstruct, *nextConstruct;
     bool success = true;
@@ -605,7 +605,7 @@ bool UndefconstructAll(
 /*   for deleting a construct.       */
 /*************************************/
 bool Undefconstruct(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         ConstructHeader *theConstruct,
         Construct *constructClass) {
     GCBlock gcb;
@@ -661,7 +661,7 @@ bool Undefconstruct(
 /*   for saving a construct class. */
 /***********************************/
 void SaveConstruct(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defmodule *theModule,
         const char *logicalName,
         Construct *constructClass) {
@@ -739,7 +739,7 @@ void GetConstructListFunction(
     Defmodule *theModule;
     UDFValue result;
     unsigned int numArgs;
-    const Environment&theEnv = context->environment;
+    const Environment::Ptr&theEnv = context->environment;
 
     /*====================================*/
     /* If an argument was given, check to */
@@ -791,7 +791,7 @@ void GetConstructListFunction(
 /*   retrieving the constructs in a module. */
 /********************************************/
 void GetConstructList(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFValue *returnValue,
         Construct *constructClass,
         Defmodule *theModule) {
@@ -962,7 +962,7 @@ void ListConstructCommand(
     Defmodule *theModule;
     UDFValue result;
     unsigned int numArgs;
-    const Environment&theEnv = context->environment;
+    const Environment::Ptr&theEnv = context->environment;
 
     /*====================================*/
     /* If an argument was given, check to */
@@ -1013,7 +1013,7 @@ void ListConstructCommand(
 /*   listing the constructs in a module. */
 /*****************************************/
 void ListConstruct(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Construct *constructClass,
         const char *logicalName,
         Defmodule *theModule) {
@@ -1132,7 +1132,7 @@ const char *GetConstructPPForm(
 /*   items from a list of constructs.               */
 /****************************************************/
 ConstructHeader *GetNextConstructItem(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         ConstructHeader *theConstruct,
         unsigned moduleIndex) {
     struct defmoduleItemHeader *theModuleItem;
@@ -1156,7 +1156,7 @@ ConstructHeader *GetNextConstructItem(
 /*  is returned.                                       */
 /*******************************************************/
 struct defmoduleItemHeader *GetConstructModuleItemByIndex(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defmodule *theModule,
         unsigned moduleIndex) {
     if (theModule != nullptr) {
@@ -1174,7 +1174,7 @@ struct defmoduleItemHeader *GetConstructModuleItemByIndex(
 /*   the construct module item header.    */
 /******************************************/
 void FreeConstructHeaderModule(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct defmoduleItemHeader *theModuleItem,
         Construct *constructClass) {
     ConstructHeader *thisOne, *nextOne;
@@ -1193,8 +1193,8 @@ void FreeConstructHeaderModule(
 /*   all constructs of a specified type.      */
 /**********************************************/
 void DoForAllConstructs(
-        const Environment&theEnv,
-        void (*actionFunction)(const Environment&, ConstructHeader *, void *),
+        const Environment::Ptr&theEnv,
+        void (*actionFunction)(const Environment::Ptr&, ConstructHeader *, void *),
         unsigned moduleItemIndex,
         bool interruptable,
         void *userBuffer) {
@@ -1271,7 +1271,7 @@ void DoForAllConstructs(
 /*   all constructs of a specified type in a module.  */
 /******************************************************/
 void DoForAllConstructsInModule(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defmodule *theModule,
         ConstructActionFunction *actionFunction,
         unsigned moduleItemIndex,
@@ -1326,7 +1326,7 @@ void DoForAllConstructsInModule(
 /*   new construct belongs                           */
 /*****************************************************/
 void InitializeConstructHeader(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *constructNameString,
         ConstructType theType,
         ConstructHeader *theConstruct,
@@ -1353,7 +1353,7 @@ void InitializeConstructHeader(
 /*   print form and deletes the old one.         */
 /*************************************************/
 void SetConstructPPForm(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         ConstructHeader *theConstruct,
         const char *ppForm) {
     if (theConstruct->ppForm != nullptr) {
@@ -1370,7 +1370,7 @@ void SetConstructPPForm(
 /*   to the list-watch-items function for a construct */
 /******************************************************/
 bool ConstructPrintWatchAccess(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Construct *constructClass,
         const char *logName,
         Expression *argExprs,
@@ -1385,7 +1385,7 @@ bool ConstructPrintWatchAccess(
 /*   to the watch function for a construct        */
 /**************************************************/
 bool ConstructSetWatchAccess(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Construct *constructClass,
         bool newState,
         Expression *argExprs,
@@ -1400,7 +1400,7 @@ bool ConstructSetWatchAccess(
 /*   into watch and list-watch-items.                 */
 /******************************************************/
 static bool ConstructWatchSupport(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Construct *constructClass,
         const char *funcName,
         const char *logName,
@@ -1541,7 +1541,7 @@ static bool ConstructWatchSupport(
 /*   of a construct for list-watch-items         */
 /*************************************************/
 static void ConstructPrintWatch(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logName,
         Construct *constructClass,
         ConstructHeader *theConstruct,
@@ -1561,7 +1561,7 @@ static void ConstructPrintWatch(
 /*   look for construct in a non-imported module.    */
 /*****************************************************/
 ConstructHeader *LookupConstruct(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Construct *constructClass,
         const char *constructName,
         bool moduleNameAllowed) {
@@ -1610,7 +1610,7 @@ ConstructHeader *LookupConstruct(
 /*   whether constructs in general can be deleted.         */
 /***********************************************************/
 bool ConstructsDeletable(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
 #if (!BLOAD_AND_BSAVE)
 #if MAC_XCD
 #pragma unused(theEnv)

@@ -90,14 +90,14 @@ struct scannerData : public EnvironmentModule {
 };
 RegisterEnvironmentModule(scannerData, SCANNER_DATA, Scanner);
 
-void InitializeScannerData(const Environment&);
-void GetToken(const Environment&, const char *, struct token *);
+void InitializeScannerData(const Environment::Ptr&);
+void GetToken(const Environment::Ptr&, const char *, struct token *);
 void CopyToken(token *, struct token *);
-void ResetLineCount(const Environment&);
-long GetLineCount(const Environment&);
-long SetLineCount(const Environment&, long);
-void IncrementLineCount(const Environment&);
-void DecrementLineCount(const Environment&);
+void ResetLineCount(const Environment::Ptr&);
+long GetLineCount(const Environment::Ptr&);
+long SetLineCount(const Environment::Ptr&, long);
+void IncrementLineCount(const Environment::Ptr&);
+void DecrementLineCount(const Environment::Ptr&);
 unsigned short TokenTypeToType(TokenType);
 
 #endif /* _H_scanner */

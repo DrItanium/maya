@@ -66,7 +66,7 @@
 /* BasicMathFunctionDefinitions: Defines basic math functions. */
 /***************************************************************/
 void BasicMathFunctionDefinitions(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     if constexpr (STUBBING_INACTIVE) {
         AddUDF(theEnv, "+", "ld", 2, UNBOUNDED, "ld", AdditionFunction);
         AddUDF(theEnv, "*", "ld", 2, UNBOUNDED, "ld", MultiplicationFunction);
@@ -86,7 +86,7 @@ void BasicMathFunctionDefinitions(
 /*   routine for the + function.  */
 /**********************************/
 void AdditionFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     double ftotal = 0.0;
@@ -128,7 +128,7 @@ void AdditionFunction(
 /*   routine for the * function.        */
 /****************************************/
 void MultiplicationFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     double ftotal = 1.0;
@@ -170,7 +170,7 @@ void MultiplicationFunction(
 /*   routine for the - function.     */
 /*************************************/
 void SubtractionFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     double ftotal = 0.0;
@@ -226,7 +226,7 @@ void SubtractionFunction(
 /*   routine for the / function.   */
 /***********************************/
 void DivisionFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     double ftotal = 1.0;
@@ -281,7 +281,7 @@ void DivisionFunction(
 /*   for the div function.           */
 /*************************************/
 void DivFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     long long total = 1LL;
@@ -338,7 +338,7 @@ void DivFunction(
 /*   for the integer function.           */
 /*****************************************/
 void IntegerFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     /*======================================*/
@@ -360,7 +360,7 @@ void IntegerFunction(
 /*   for the float function.           */
 /***************************************/
 void FloatFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     /*======================================*/
@@ -382,7 +382,7 @@ void FloatFunction(
 /*   for the abs function.           */
 /*************************************/
 void AbsFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     /*======================================*/
@@ -409,7 +409,7 @@ void AbsFunction(
 /*   for the min function.           */
 /*************************************/
 void MinFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue nextPossible;
@@ -448,7 +448,7 @@ void MinFunction(
 /*   for the max function.           */
 /*************************************/
 void MaxFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue nextPossible;

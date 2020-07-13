@@ -125,43 +125,43 @@
    ***************************************** */
 
 static bool PatternParserFind(CLIPSLexeme *);
-static struct lhsParseNode *ObjectLHSParse(const Environment&, const char *, struct token *);
-static bool ReorderAndAnalyzeObjectPattern(const Environment&, struct lhsParseNode *);
+static struct lhsParseNode *ObjectLHSParse(const Environment::Ptr&, const char *, struct token *);
+static bool ReorderAndAnalyzeObjectPattern(const Environment::Ptr&, struct lhsParseNode *);
 static PatternNodeHeader
-*PlaceObjectPattern(const Environment&, struct lhsParseNode *);
+*PlaceObjectPattern(const Environment::Ptr&, struct lhsParseNode *);
 static OBJECT_PATTERN_NODE *FindObjectPatternNode(OBJECT_PATTERN_NODE *, struct lhsParseNode *,
                                                   OBJECT_PATTERN_NODE **, bool, bool);
-static OBJECT_PATTERN_NODE *CreateNewObjectPatternNode(const Environment&, struct lhsParseNode *, OBJECT_PATTERN_NODE *,
+static OBJECT_PATTERN_NODE *CreateNewObjectPatternNode(const Environment::Ptr&, struct lhsParseNode *, OBJECT_PATTERN_NODE *,
                                                        OBJECT_PATTERN_NODE *, bool, bool);
-static void DetachObjectPattern(const Environment&, PatternNodeHeader *);
-static void ClearObjectPatternMatches(const Environment&, OBJECT_ALPHA_NODE *);
-static void RemoveObjectPartialMatches(const Environment&, Instance *, PatternNodeHeader *);
-static bool CheckDuplicateSlots(const Environment&, struct lhsParseNode *, CLIPSLexeme *);
-static struct lhsParseNode *ParseClassRestriction(const Environment&, const char *, struct token *);
-static struct lhsParseNode *ParseNameRestriction(const Environment&, const char *, struct token *);
-static struct lhsParseNode *ParseSlotRestriction(const Environment&, const char *, struct token *, CONSTRAINT_RECORD *, bool);
-static CLASS_BITMAP *NewClassBitMap(const Environment&, unsigned short, bool);
-static void InitializeClassBitMap(const Environment&, CLASS_BITMAP *, bool);
-static void DeleteIntermediateClassBitMap(const Environment&, CLASS_BITMAP *);
-static void *CopyClassBitMap(const Environment&, void *);
-static void DeleteClassBitMap(const Environment&, void *);
-static void MarkBitMapClassesBusy(const Environment&, CLIPSBitMap *, int);
+static void DetachObjectPattern(const Environment::Ptr&, PatternNodeHeader *);
+static void ClearObjectPatternMatches(const Environment::Ptr&, OBJECT_ALPHA_NODE *);
+static void RemoveObjectPartialMatches(const Environment::Ptr&, Instance *, PatternNodeHeader *);
+static bool CheckDuplicateSlots(const Environment::Ptr&, struct lhsParseNode *, CLIPSLexeme *);
+static struct lhsParseNode *ParseClassRestriction(const Environment::Ptr&, const char *, struct token *);
+static struct lhsParseNode *ParseNameRestriction(const Environment::Ptr&, const char *, struct token *);
+static struct lhsParseNode *ParseSlotRestriction(const Environment::Ptr&, const char *, struct token *, CONSTRAINT_RECORD *, bool);
+static CLASS_BITMAP *NewClassBitMap(const Environment::Ptr&, unsigned short, bool);
+static void InitializeClassBitMap(const Environment::Ptr&, CLASS_BITMAP *, bool);
+static void DeleteIntermediateClassBitMap(const Environment::Ptr&, CLASS_BITMAP *);
+static void *CopyClassBitMap(const Environment::Ptr&, void *);
+static void DeleteClassBitMap(const Environment::Ptr&, void *);
+static void MarkBitMapClassesBusy(const Environment::Ptr&, CLIPSBitMap *, int);
 static bool EmptyClassBitMap(CLASS_BITMAP *);
 static bool IdenticalClassBitMap(CLASS_BITMAP *, CLASS_BITMAP *);
-static bool ProcessClassRestriction(const Environment&, CLASS_BITMAP *, struct lhsParseNode **, bool);
-static CONSTRAINT_RECORD *ProcessSlotRestriction(const Environment&, CLASS_BITMAP *, CLIPSLexeme *, bool *);
+static bool ProcessClassRestriction(const Environment::Ptr&, CLASS_BITMAP *, struct lhsParseNode **, bool);
+static CONSTRAINT_RECORD *ProcessSlotRestriction(const Environment::Ptr&, CLASS_BITMAP *, CLIPSLexeme *, bool *);
 static void IntersectClassBitMaps(CLASS_BITMAP *, CLASS_BITMAP *);
 static void UnionClassBitMaps(CLASS_BITMAP *, CLASS_BITMAP *);
-static CLASS_BITMAP *PackClassBitMap(const Environment&, CLASS_BITMAP *);
-static struct lhsParseNode *FilterObjectPattern(const Environment&, struct patternParser *,
+static CLASS_BITMAP *PackClassBitMap(const Environment::Ptr&, CLASS_BITMAP *);
+static struct lhsParseNode *FilterObjectPattern(const Environment::Ptr&, struct patternParser *,
                                                 struct lhsParseNode *, struct lhsParseNode **,
                                                 struct lhsParseNode **, struct lhsParseNode **);
-static CLIPSBitMap *FormSlotBitMap(const Environment&, struct lhsParseNode *);
-static struct lhsParseNode *RemoveSlotExistenceTests(const Environment&, struct lhsParseNode *, CLIPSBitMap **);
-static void MarkObjectPtnIncrementalReset(const Environment&, PatternNodeHeader *, bool);
-static void ObjectIncrementalReset(const Environment&);
+static CLIPSBitMap *FormSlotBitMap(const Environment::Ptr&, struct lhsParseNode *);
+static struct lhsParseNode *RemoveSlotExistenceTests(const Environment::Ptr&, struct lhsParseNode *, CLIPSBitMap **);
+static void MarkObjectPtnIncrementalReset(const Environment::Ptr&, PatternNodeHeader *, bool);
+static void ObjectIncrementalReset(const Environment::Ptr&);
 
-static Expression *ObjectMatchDelayParse(const Environment&, Expression *, const char *);
+static Expression *ObjectMatchDelayParse(const Environment::Ptr&, Expression *, const char *);
 
 /* =========================================
    *****************************************
@@ -181,7 +181,7 @@ static Expression *ObjectMatchDelayParse(const Environment&, Expression *, const
   NOTES        : None
  ********************************************************/
 void SetupObjectPatternStuff(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     struct patternParser *newPtr;
 
     if (ReservedPatternSymbol(theEnv, "object", nullptr)) {
@@ -277,7 +277,7 @@ static bool PatternParserFind(
                  <slot-constraint> ::= (<slot-name> <constraint>*)
  ************************************************************************************/
 static struct lhsParseNode *ObjectLHSParse(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource,
         struct token *lastToken) {
 #if MAC_XCD
@@ -432,7 +432,7 @@ static struct lhsParseNode *ObjectLHSParse(
                  already exist
  **************************************************************/
 static bool ReorderAndAnalyzeObjectPattern(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct lhsParseNode *topNode) {
     CLASS_BITMAP *clsset, *tmpset;
     Expression *rexp, *tmpmin, *tmpmax;
@@ -579,7 +579,7 @@ static bool ReorderAndAnalyzeObjectPattern(
   NOTES        : None
  *****************************************************/
 static PatternNodeHeader *PlaceObjectPattern(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct lhsParseNode *thePattern) {
     OBJECT_PATTERN_NODE *currentLevel, *lastLevel;
     struct lhsParseNode *tempPattern = nullptr;
@@ -810,7 +810,7 @@ static OBJECT_PATTERN_NODE *FindObjectPatternNode(
   NOTES        : None
  *****************************************************************/
 static OBJECT_PATTERN_NODE *CreateNewObjectPatternNode(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct lhsParseNode *thePattern,
         OBJECT_PATTERN_NODE *nodeSlotGroup,
         OBJECT_PATTERN_NODE *upperLevel,
@@ -952,7 +952,7 @@ static OBJECT_PATTERN_NODE *CreateNewObjectPatternNode(
   NOTES        : None
  ********************************************************/
 static void DetachObjectPattern(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         PatternNodeHeader *thePattern) {
     OBJECT_ALPHA_NODE *alphaPtr, *prv, *terminalPtr;
     OBJECT_PATTERN_NODE *patternPtr, *upperLevel;
@@ -1137,7 +1137,7 @@ static void DetachObjectPattern(
   NOTES        : Used when a pattern is removed
  ***************************************************/
 static void ClearObjectPatternMatches(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         OBJECT_ALPHA_NODE *alphaPtr) {
     Instance *ins;
     IGARBAGE *igrb;
@@ -1174,7 +1174,7 @@ static void ClearObjectPatternMatches(
   NOTES        : None
  ***************************************************/
 static void RemoveObjectPartialMatches(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Instance *ins,
         PatternNodeHeader *phead) {
     struct patternMatch *match_before, *match_ptr;
@@ -1216,7 +1216,7 @@ static void RemoveObjectPartialMatches(
   NOTES        : None
  ******************************************************/
 static bool CheckDuplicateSlots(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct lhsParseNode *nodeList,
         CLIPSLexeme *slotName) {
     while (nodeList != nullptr) {
@@ -1245,7 +1245,7 @@ static bool CheckDuplicateSlots(
   NOTES        : None
  **********************************************************/
 static struct lhsParseNode *ParseClassRestriction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource,
         struct token *theToken) {
     struct lhsParseNode *tmpNode;
@@ -1293,7 +1293,7 @@ static struct lhsParseNode *ParseClassRestriction(
   NOTES        : None
  **********************************************************/
 static struct lhsParseNode *ParseNameRestriction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource,
         struct token *theToken) {
     struct lhsParseNode *tmpNode;
@@ -1349,7 +1349,7 @@ static struct lhsParseNode *ParseNameRestriction(
   NOTES        : None
  ***************************************************/
 static struct lhsParseNode *ParseSlotRestriction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource,
         struct token *theToken,
         CONSTRAINT_RECORD *slotConstraints,
@@ -1399,7 +1399,7 @@ static struct lhsParseNode *ParseSlotRestriction(
   NOTES        : None
  ********************************************************/
 static CLASS_BITMAP *NewClassBitMap(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         unsigned short maxid,
         bool set) {
     CLASS_BITMAP *bmp;
@@ -1425,7 +1425,7 @@ static CLASS_BITMAP *NewClassBitMap(
   NOTES        : None
  ***********************************************************/
 static void InitializeClassBitMap(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CLASS_BITMAP *bmp,
         bool set) {
     unsigned short i, bytes;
@@ -1459,7 +1459,7 @@ static void InitializeClassBitMap(
   NOTES        : None
  ********************************************/
 static void DeleteIntermediateClassBitMap(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CLASS_BITMAP *bmp) {
     rm(theEnv, bmp, ClassBitMapSize(bmp));
 }
@@ -1477,7 +1477,7 @@ static void DeleteIntermediateClassBitMap(
                  to make duplicate copies of the bitmap
  ******************************************************/
 static void *CopyClassBitMap(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *gset) {
 #if MAC_XCD
 #pragma unused(theEnv)
@@ -1499,7 +1499,7 @@ static void *CopyClassBitMap(
   NOTES        : None
  **********************************************************/
 static void DeleteClassBitMap(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *gset) {
     if (gset == nullptr)
         return;
@@ -1518,7 +1518,7 @@ static void DeleteClassBitMap(
   NOTES        : None
  ***************************************************/
 static void MarkBitMapClassesBusy(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CLIPSBitMap *bmphn,
         int offset) {
     CLASS_BITMAP *bmp;
@@ -1601,7 +1601,7 @@ static bool IdenticalClassBitMap(
   NOTES        : None
  *****************************************************************/
 static bool ProcessClassRestriction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CLASS_BITMAP *clsset,
         struct lhsParseNode **classRestrictions,
         bool recursiveCall) {
@@ -1690,7 +1690,7 @@ static bool ProcessClassRestriction(
   NOTES        : None
  ****************************************************************/
 static CONSTRAINT_RECORD *ProcessSlotRestriction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CLASS_BITMAP *clsset,
         CLIPSLexeme *slotName,
         bool *multip) {
@@ -1775,7 +1775,7 @@ static void UnionClassBitMaps(
   NOTES        : None
  *****************************************************/
 static CLASS_BITMAP *PackClassBitMap(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CLASS_BITMAP *oldset) {
     unsigned short newmaxid;
     CLASS_BITMAP *newset;
@@ -1812,7 +1812,7 @@ static CLASS_BITMAP *PackClassBitMap(
   NOTES        : None
  *****************************************************************/
 static struct lhsParseNode *FilterObjectPattern(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct patternParser *selfPatternType,
         struct lhsParseNode *unfilteredSlots,
         struct lhsParseNode **bitmap_slot,
@@ -1875,7 +1875,7 @@ static struct lhsParseNode *FilterObjectPattern(
   NOTES        : None
  ***************************************************/
 static CLIPSBitMap *FormSlotBitMap(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct lhsParseNode *thePattern) {
     struct lhsParseNode *node;
     unsigned short maxSlotID = USHRT_MAX;
@@ -1938,7 +1938,7 @@ static CLIPSBitMap *FormSlotBitMap(
   NOTES        : None
  ****************************************************/
 static struct lhsParseNode *RemoveSlotExistenceTests(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct lhsParseNode *thePattern,
         CLIPSBitMap **bmp) {
     struct lhsParseNode *tempPattern = thePattern;
@@ -2100,7 +2100,7 @@ static struct lhsParseNode *RemoveSlotExistenceTests(
   NOTES        : None
  **************************************************************/
 static Expression *ObjectMatchDelayParse(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *top,
         const char *infile) {
     struct token tkn;
@@ -2134,7 +2134,7 @@ static Expression *ObjectMatchDelayParse(
                  by PlaceObjectPattern
  ***************************************************/
 static void MarkObjectPtnIncrementalReset(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         PatternNodeHeader *thePattern,
         bool value) {
 #if MAC_XCD
@@ -2159,7 +2159,7 @@ static void MarkObjectPtnIncrementalReset(
   NOTES        : None
  ***********************************************************/
 static void ObjectIncrementalReset(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     Instance *ins;
 
     for (ins = InstanceData(theEnv)->InstanceList; ins != nullptr; ins = ins->nxtList)

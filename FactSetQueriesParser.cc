@@ -89,12 +89,12 @@ constexpr auto FACT_SLOT_REF = ':';
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static Expression *ParseQueryRestrictions(const Environment&, Expression *, const char *, struct token *);
-static bool ReplaceTemplateNameWithReference(const Environment&, Expression *);
-static bool ParseQueryTestExpression(const Environment&, Expression *, const char *);
-static bool ParseQueryActionExpression(const Environment&, Expression *, const char *, Expression *, struct token *);
-static bool ReplaceFactVariables(const Environment&, Expression *, Expression *, bool, int);
-static bool ReplaceSlotReference(const Environment&, Expression *, Expression *,
+static Expression *ParseQueryRestrictions(const Environment::Ptr&, Expression *, const char *, struct token *);
+static bool ReplaceTemplateNameWithReference(const Environment::Ptr&, Expression *);
+static bool ParseQueryTestExpression(const Environment::Ptr&, Expression *, const char *);
+static bool ParseQueryActionExpression(const Environment::Ptr&, Expression *, const char *, Expression *, struct token *);
+static bool ReplaceFactVariables(const Environment::Ptr&, Expression *, Expression *, bool, int);
+static bool ReplaceSlotReference(const Environment::Ptr&, Expression *, Expression *,
                                  FunctionDefinition *, int);
 static bool IsQueryFunction(Expression *);
 
@@ -134,7 +134,7 @@ static bool IsQueryFunction(Expression *);
                  <template-2a> -> <template-2b> -> (QDS) -> ...
  ***********************************************************************/
 Expression *FactParseQueryNoAction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *top,
         const char *readSource) {
     Expression *factQuerySetVars;
@@ -203,7 +203,7 @@ Expression *FactParseQueryNoAction(
                  <template-2a> -> <template-2b> -> (QDS) -> ...
  ***********************************************************************/
 Expression *FactParseQueryAction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *top,
         const char *readSource) {
     Expression *factQuerySetVars;
@@ -276,7 +276,7 @@ Expression *FactParseQueryAction(
   NOTES        : Expects top != nullptr
  ***************************************************************/
 static Expression *ParseQueryRestrictions(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *top,
         const char *readSource,
         struct token *queryInputToken) {
@@ -388,7 +388,7 @@ static Expression *ParseQueryRestrictions(
                  modules for reference
  ***************************************************/
 static bool ReplaceTemplateNameWithReference(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *theExp) {
     const char *theTemplateName;
     void *theDeftemplate;
@@ -433,7 +433,7 @@ static bool ReplaceTemplateNameWithReference(
   NOTES        : Expects top != nullptr
  *************************************************************/
 static bool ParseQueryTestExpression(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *top,
         const char *readSource) {
     Expression *qtest;
@@ -495,7 +495,7 @@ static bool ParseQueryTestExpression(
   NOTES        : Expects top != nullptr && top->argList != nullptr
  *************************************************************/
 static bool ParseQueryActionExpression(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *top,
         const char *readSource,
         Expression *factQuerySetVars,
@@ -577,7 +577,7 @@ static bool ParseQueryActionExpression(
                    where they do not conflict with fact-variable names.
  ***********************************************************************************/
 static bool ReplaceFactVariables(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *vlist,
         Expression *bexp,
         bool sdirect,
@@ -635,7 +635,7 @@ static bool ReplaceFactVariables(
   NOTES        : None
  *************************************************************************/
 static bool ReplaceSlotReference(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *vlist,
         Expression *theExp,
         FunctionDefinition *func,

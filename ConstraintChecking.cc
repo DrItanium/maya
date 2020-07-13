@@ -74,11 +74,11 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static bool CheckRangeAgainstCardinalityConstraint(const Environment&, int, int, CONSTRAINT_RECORD *);
+static bool CheckRangeAgainstCardinalityConstraint(const Environment::Ptr&, int, int, CONSTRAINT_RECORD *);
 static bool CheckFunctionReturnType(unsigned, CONSTRAINT_RECORD *);
 static bool CheckTypeConstraint(int, CONSTRAINT_RECORD *);
-static bool CheckRangeConstraint(const Environment&, int, void *, CONSTRAINT_RECORD *);
-static void PrintRange(const Environment&, const char *, CONSTRAINT_RECORD *);
+static bool CheckRangeConstraint(const Environment::Ptr&, int, void *, CONSTRAINT_RECORD *);
+static void PrintRange(const Environment::Ptr&, const char *, CONSTRAINT_RECORD *);
 
 /******************************************************/
 /* CheckFunctionReturnType: Checks a functions return */
@@ -157,7 +157,7 @@ static bool CheckTypeConstraint(
 /*   for a constraint record.                           */
 /********************************************************/
 bool CheckCardinalityConstraint(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         size_t number,
         CONSTRAINT_RECORD *constraints) {
     /*=========================================*/
@@ -204,7 +204,7 @@ bool CheckCardinalityConstraint(
 /*   cardinality, otherwise false is returned.                   */
 /*****************************************************************/
 static bool CheckRangeAgainstCardinalityConstraint(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         int min,
         int max,
         CONSTRAINT_RECORD *constraints) {
@@ -330,7 +330,7 @@ bool CheckAllowedValuesConstraint(
 /*   false is returned.                                               */
 /**********************************************************************/
 bool CheckAllowedClassesConstraint(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         int type,
         void *vPtr,
         CONSTRAINT_RECORD *constraints) {
@@ -397,7 +397,7 @@ bool CheckAllowedClassesConstraint(
 /*   satisfies the range constraint of a constraint record.  */
 /*************************************************************/
 static bool CheckRangeConstraint(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         int type,
         void *vPtr,
         CONSTRAINT_RECORD *constraints) {
@@ -450,7 +450,7 @@ static bool CheckRangeConstraint(
 /*   error message for constraint violations.   */
 /************************************************/
 void ConstraintViolationErrorMessage(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *theWhat,
         const char *thePlace,
         bool command,
@@ -537,7 +537,7 @@ void ConstraintViolationErrorMessage(
 /*   For example, 8 to +00 (eight to positive infinity).            */
 /********************************************************************/
 static void PrintRange(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         CONSTRAINT_RECORD *theConstraint) {
     if (theConstraint->getMinValue()->value == SymbolData(theEnv)->NegativeInfinity) {
@@ -557,7 +557,7 @@ static void PrintRange(
 /*   the data object satisfies the constraint record.        */
 /*************************************************************/
 ConstraintViolationType ConstraintCheckDataObject(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFValue *theData,
         CONSTRAINT_RECORD *theConstraints) {
     size_t i; /* 6.04 Bug Fix */
@@ -589,7 +589,7 @@ ConstraintViolationType ConstraintCheckDataObject(
 /*   determines if the value satisfies the constraint record.   */
 /****************************************************************/
 ConstraintViolationType ConstraintCheckValue(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         int theType,
         void *theValue,
         CONSTRAINT_RECORD *theConstraints) {
@@ -613,7 +613,7 @@ ConstraintViolationType ConstraintCheckValue(
 /* links for constraint conflicts (argList is not followed).        */
 /********************************************************************/
 ConstraintViolationType ConstraintCheckExpressionChain(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *theExpression,
         CONSTRAINT_RECORD *theConstraints) {
     Expression *theExp;
@@ -662,7 +662,7 @@ ConstraintViolationType ConstraintCheckExpressionChain(
 /*   conflicts are found, otherwise non-zero.      */
 /***************************************************/
 ConstraintViolationType ConstraintCheckExpression(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *theExpression,
         CONSTRAINT_RECORD *theConstraints) {
     ConstraintViolationType rv = NO_VIOLATION;

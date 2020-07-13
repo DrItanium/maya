@@ -76,7 +76,7 @@ static struct joinNode *FindShareableJoin(joinLink *, struct joinNode *, bool, v
 static bool TestJoinForReuse(joinNode *, bool, bool,
                              bool, bool, Expression *, Expression *,
                              Expression *, Expression *);
-static struct joinNode *CreateNewJoin(const Environment&, Expression *, Expression *, struct joinNode *, void *,
+static struct joinNode *CreateNewJoin(const Environment::Ptr&, Expression *, Expression *, struct joinNode *, void *,
                                       bool, bool, bool, Expression *, Expression *);
 
 /****************************************************************/
@@ -84,7 +84,7 @@ static struct joinNode *CreateNewJoin(const Environment&, Expression *, Expressi
 /*   associated with a rule into the pattern and join networks. */
 /****************************************************************/
 struct joinNode *ConstructJoins(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         int logicalJoin,
         struct lhsParseNode *theLHS,
         int startDepth,
@@ -317,7 +317,7 @@ struct joinNode *ConstructJoins(
 /*   negated and is at the same not/and depth.                  */
 /****************************************************************/
 void AttachTestCEsToPatternCEs(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct lhsParseNode *theLHS) {
     struct lhsParseNode *lastNode, *tempNode, *lastLastNode;
 
@@ -972,7 +972,7 @@ static bool TestJoinForReuse(
 /* CreateNewJoin: Creates a new join and links it into the join network. */
 /*************************************************************************/
 static struct joinNode *CreateNewJoin(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *joinTest,
         Expression *secondaryJoinTest,
         struct joinNode *lhsEntryStruct,

@@ -38,16 +38,16 @@
 
 #define _H_rulecstr
 
-struct lhsParseNode *GetExpressionVarConstraints(const Environment&, struct lhsParseNode *);
-struct lhsParseNode *DeriveVariableConstraints(const Environment&, struct lhsParseNode *);
-bool ProcessConnectedConstraints(const Environment&, struct lhsParseNode *, struct lhsParseNode *, struct lhsParseNode *);
-void ConstraintReferenceErrorMessage(const Environment&,
+struct lhsParseNode *GetExpressionVarConstraints(const Environment::Ptr&, struct lhsParseNode *);
+struct lhsParseNode *DeriveVariableConstraints(const Environment::Ptr&, struct lhsParseNode *);
+bool ProcessConnectedConstraints(const Environment::Ptr&, struct lhsParseNode *, struct lhsParseNode *, struct lhsParseNode *);
+void ConstraintReferenceErrorMessage(const Environment::Ptr&,
                                      CLIPSLexeme *,
                                      struct lhsParseNode *,
                                      int, int,
                                      CLIPSLexeme *,
                                      int);
-bool CheckRHSForConstraintErrors(const Environment&, Expression *, struct lhsParseNode *);
+bool CheckRHSForConstraintErrors(const Environment::Ptr&, Expression *, struct lhsParseNode *);
 
 #endif /* _H_rulecstr */
 

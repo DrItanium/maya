@@ -111,14 +111,14 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void DeallocateConstructData(const Environment&);
+static void DeallocateConstructData(const Environment::Ptr&);
 
 /**************************************************/
 /* InitializeConstructData: Allocates environment */
 /*    data for constructs.                        */
 /**************************************************/
 void InitializeConstructData(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     theEnv->allocateEnvironmentModule<ConstructModule>();
     /// @todo DeallocateConstructData is ConstructModule's dtor
     //AllocateEnvironmentData(theEnv, CONSTRUCT_DATA, sizeof(ConstructModule), DeallocateConstructData);
@@ -129,7 +129,7 @@ void InitializeConstructData(
 /*    data for constructs.                          */
 /****************************************************/
 static void DeallocateConstructData(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     Construct *tmpPtr, *nextPtr;
 
     DeallocateSaveCallList(theEnv, ConstructData(theEnv)->ListOfSaveFunctions);
@@ -168,7 +168,7 @@ static void DeallocateConstructData(
 /*    error occurs to be changed.              */
 /***********************************************/
 ParserErrorFunction *SetParserErrorCallback(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         ParserErrorFunction *functionPtr,
         void *context) {
     ParserErrorFunction *tmpPtr;
@@ -184,7 +184,7 @@ ParserErrorFunction *SetParserErrorCallback(
 /*   type is in the ListOfConstructs.            */
 /*************************************************/
 Construct *FindConstruct(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *name) {
     Construct *currentPtr;
 
@@ -204,7 +204,7 @@ Construct *FindConstruct(
 /*   false.                                                */
 /***********************************************************/
 bool RemoveConstruct(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *name) {
     Construct *currentPtr, *lastPtr = nullptr;
 
@@ -228,7 +228,7 @@ bool RemoveConstruct(
 /* Save: C access routine for the save command. */
 /************************************************/
 bool Save(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *fileName) {
     struct saveCallFunctionItem *saveFunction;
     FILE *filePtr;
@@ -335,7 +335,7 @@ bool Save(
 /*   was successfully removed, otherwise false.        */
 /*******************************************************/
 bool RemoveSaveFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *name) {
     bool found;
 
@@ -351,7 +351,7 @@ bool RemoveSaveFunction(
 /*   value of WatchCompilations.  */
 /**********************************/
 void SetCompilationsWatch(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         bool value) {
     ConstructData(theEnv)->WatchCompilations = value;
 }
@@ -361,7 +361,7 @@ void SetCompilationsWatch(
 /*   value of WatchCompilations.     */
 /*************************************/
 bool GetCompilationsWatch(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     return ConstructData(theEnv)->WatchCompilations;
 }
 
@@ -370,7 +370,7 @@ bool GetCompilationsWatch(
 /*   value of PrintWhileLoading.  */
 /**********************************/
 void SetPrintWhileLoading(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         bool value) {
     ConstructData(theEnv)->PrintWhileLoading = value;
 }
@@ -380,7 +380,7 @@ void SetPrintWhileLoading(
 /*   value of PrintWhileLoading.     */
 /*************************************/
 bool GetPrintWhileLoading(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     return (ConstructData(theEnv)->PrintWhileLoading);
 }
 
@@ -389,7 +389,7 @@ bool GetPrintWhileLoading(
 /*   value of LoadInProgress.  */
 /*******************************/
 void SetLoadInProgress(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         bool value) {
     ConstructData(theEnv)->LoadInProgress = value;
 }
@@ -399,7 +399,7 @@ void SetLoadInProgress(
 /*   value of LoadInProgress.     */
 /**********************************/
 bool GetLoadInProgress(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     return (ConstructData(theEnv)->LoadInProgress);
 }
 
@@ -409,7 +409,7 @@ bool GetLoadInProgress(
 /*   the Construct Manager.          */
 /*************************************/
 void InitializeConstructs(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     AddUDF(theEnv, "clear", "v", 0, 0, nullptr, ClearCommand);
     AddUDF(theEnv, "reset", "v", 0, 0, nullptr, ResetCommand);
 
@@ -423,7 +423,7 @@ void InitializeConstructs(
 /*   for the clear command.           */
 /**************************************/
 void ClearCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Clear(theEnv);
@@ -434,7 +434,7 @@ void ClearCommand(
 /*   for the reset command.           */
 /**************************************/
 void ResetCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Reset(theEnv);
@@ -445,7 +445,7 @@ void ResetCommand(
 /*   for the reset command. */
 /****************************/
 void Reset(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
 #if STUBBING_INACTIVE
     struct voidCallFunctionItem *resetPtr;
     GCBlock gcb;
@@ -534,7 +534,7 @@ void Reset(
 /*  value of BeforeResetFunction.   */
 /************************************/
 BeforeResetFunction *SetBeforeResetFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         BeforeResetFunction *theFunction) {
     BeforeResetFunction *tempFunction;
 
@@ -548,7 +548,7 @@ BeforeResetFunction *SetBeforeResetFunction(
 /*   to ListOfResetFunctions.        */
 /*************************************/
 bool AddResetFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *name,
         VoidCallFunction *functionPtr,
         int priority,
@@ -566,7 +566,7 @@ bool AddResetFunction(
 /*   from the ListOfResetFunctions.        */
 /*******************************************/
 bool RemoveResetFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *name) {
     bool found = false;
 #if STUBBING_INACTIVE
@@ -582,7 +582,7 @@ bool RemoveResetFunction(
 /*   the number of clear ready locks.   */
 /****************************************/
 void IncrementClearReadyLocks(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     ConstructData(theEnv)->ClearReadyLocks++;
 }
 
@@ -591,7 +591,7 @@ void IncrementClearReadyLocks(
 /*   the number of clear locks.            */
 /*******************************************/
 void DecrementClearReadyLocks(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     if (ConstructData(theEnv)->ClearReadyLocks > 0) { ConstructData(theEnv)->ClearReadyLocks--; }
 }
 
@@ -599,7 +599,7 @@ void DecrementClearReadyLocks(
 /* Clear: C access routine for the clear command. */
 /**************************************************/
 bool Clear(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
 #if STUBBING_INACTIVE
     struct voidCallFunctionItem *theFunction;
     GCBlock gcb;
@@ -687,7 +687,7 @@ bool Clear(
 /*   the determination).                                 */
 /*********************************************************/
 bool ClearReady(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
 #if STUBBING_INACTIVE
     struct boolCallFunctionItem *theFunction;
 
@@ -707,7 +707,7 @@ bool ClearReady(
 /*   to ListOfClearReadyFunctions.        */
 /******************************************/
 bool AddClearReadyFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *name,
         BoolCallFunction *functionPtr,
         int priority,
@@ -725,7 +725,7 @@ bool AddClearReadyFunction(
 /*   from the ListOfClearReadyFunctions.        */
 /************************************************/
 bool RemoveClearReadyFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *name) {
     bool found = false;
 #if STUBBING_INACTIVE
@@ -742,7 +742,7 @@ bool RemoveClearReadyFunction(
 /*   to ListOfClearFunctions.        */
 /*************************************/
 bool AddClearFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *name,
         VoidCallFunction *functionPtr,
         int priority,
@@ -760,7 +760,7 @@ bool AddClearFunction(
 /*    from the ListOfClearFunctions.       */
 /*******************************************/
 bool RemoveClearFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *name) {
     bool found = false;
 #if STUBBING_INACTIVE
@@ -778,7 +778,7 @@ bool RemoveClearFunction(
 /*   otherwise false.                       */
 /********************************************/
 bool ExecutingConstruct(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     return ConstructData(theEnv)->Executing;
 }
 
@@ -789,7 +789,7 @@ bool ExecutingConstruct(
 /*   should not be performed.               */
 /********************************************/
 void SetExecutingConstruct(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         bool value) {
     ConstructData(theEnv)->Executing = value;
 }
@@ -801,7 +801,7 @@ void SetExecutingConstruct(
 /*   in the generic construct header).                 */
 /*******************************************************/
 void DeinstallConstructHeader(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         ConstructHeader *theHeader) {
 #if STUBBING_INACTIVE
     ReleaseLexeme(theEnv, theHeader->name);
@@ -825,7 +825,7 @@ void DeinstallConstructHeader(
 /*   header).                                     */
 /**************************************************/
 void DestroyConstructHeader(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         ConstructHeader *theHeader) {
 #if STUBBING_INACTIVE
     if (theHeader->ppForm != nullptr) {
@@ -846,7 +846,7 @@ void DestroyConstructHeader(
 /*   parsing function to the ListOfConstructs.       */
 /*****************************************************/
 Construct *AddConstruct(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *name,
         const char *pluralName,
         ConstructParseFunction* parseFunction,
@@ -899,7 +899,7 @@ Construct *AddConstruct(
 /*   to the ListOfSaveFunctions.    */
 /************************************/
 bool AddSaveFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *name,
         SaveCallFunction *functionPtr,
         int priority,
@@ -918,7 +918,7 @@ bool AddSaveFunction(
 /*   operations (e.g. clear, reset, and bload functions). */
 /**********************************************************/
 SaveCallFunctionItem *AddSaveFunctionToCallList(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *name,
         int priority,
         SaveCallFunction *func,
@@ -968,7 +968,7 @@ SaveCallFunctionItem *AddSaveFunctionToCallList(
 /*   (e.g. clear, reset, and bload functions).                    */
 /******************************************************************/
 struct saveCallFunctionItem *RemoveSaveFunctionFromCallList(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *name,
         struct saveCallFunctionItem *head,
         bool *found) {
@@ -1002,7 +1002,7 @@ struct saveCallFunctionItem *RemoveSaveFunctionFromCallList(
 /*   operations (e.g. clear, reset, and bload functions).    */
 /*************************************************************/
 void DeallocateSaveCallList(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct saveCallFunctionItem *theList) {
     struct saveCallFunctionItem *tmpPtr, *nextPtr;
 

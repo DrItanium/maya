@@ -91,23 +91,23 @@ struct profileFunctionData : public EnvironmentModule {
 };
 RegisterEnvironmentModule(profileFunctionData, PROFLFUN_DATA, ProfileFunction);
 
-void ConstructProfilingFunctionDefinitions(const Environment&);
-void ProfileCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void ProfileInfoCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void StartProfile(const Environment&, struct profileFrameInfo *,
+void ConstructProfilingFunctionDefinitions(const Environment::Ptr&);
+void ProfileCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void ProfileInfoCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void StartProfile(const Environment::Ptr&, struct profileFrameInfo *,
                   struct userData **, bool);
-void EndProfile(const Environment&, struct profileFrameInfo *);
-void ProfileResetCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void EndProfile(const Environment::Ptr&, struct profileFrameInfo *);
+void ProfileResetCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
 void ResetProfileInfo(constructProfileInfo *);
 
-void SetProfilePercentThresholdCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-double SetProfilePercentThreshold(const Environment&, double);
-void GetProfilePercentThresholdCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-double GetProfilePercentThreshold(const Environment&);
-bool Profile(const Environment&, const char *);
-void DeleteProfileData(const Environment&, void *);
-void *CreateProfileData(const Environment&);
-const char *SetProfileOutputString(const Environment&, const char *);
+void SetProfilePercentThresholdCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+double SetProfilePercentThreshold(const Environment::Ptr&, double);
+void GetProfilePercentThresholdCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+double GetProfilePercentThreshold(const Environment::Ptr&);
+bool Profile(const Environment::Ptr&, const char *);
+void DeleteProfileData(const Environment::Ptr&, void *);
+void *CreateProfileData(const Environment::Ptr&);
+const char *SetProfileOutputString(const Environment::Ptr&, const char *);
 
 #endif /* _H_proflfun */
 

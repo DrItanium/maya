@@ -109,28 +109,28 @@
 /***************************************/
 
 #if DEVELOPER
-static void                    ShowJoins(const Environment&,Defrule::Ptr );
+static void                    ShowJoins(const Environment::Ptr&,Defrule::Ptr );
 #endif
 #if DEBUGGING_FUNCTIONS
-static long long ListAlphaMatches(const Environment&, struct joinInformation *, Verbosity);
-static long long ListBetaMatches(const Environment&, struct joinInformation *, long, unsigned short, Verbosity);
-static void ListBetaJoinActivity(const Environment&, struct joinInformation *, long, long, int, UDFValue *);
-static unsigned short AlphaJoinCountDriver(const Environment&, struct joinNode *);
-static unsigned short BetaJoinCountDriver(const Environment&, struct joinNode *);
-static void AlphaJoinsDriver(const Environment&, struct joinNode *, unsigned short, struct joinInformation *);
+static long long ListAlphaMatches(const Environment::Ptr&, struct joinInformation *, Verbosity);
+static long long ListBetaMatches(const Environment::Ptr&, struct joinInformation *, long, unsigned short, Verbosity);
+static void ListBetaJoinActivity(const Environment::Ptr&, struct joinInformation *, long, long, int, UDFValue *);
+static unsigned short AlphaJoinCountDriver(const Environment::Ptr&, struct joinNode *);
+static unsigned short BetaJoinCountDriver(const Environment::Ptr&, struct joinNode *);
+static void AlphaJoinsDriver(const Environment::Ptr&, struct joinNode *, unsigned short, struct joinInformation *);
 static void
-BetaJoinsDriver(const Environment&, struct joinNode *, unsigned short, struct joinInformation *, struct betaMemory *, struct joinNode *);
-static int CountPatterns(const Environment&, struct joinNode *, bool);
-static const char *BetaHeaderString(const Environment&, struct joinInformation *, long, long);
-static const char *ActivityHeaderString(const Environment&, struct joinInformation *, long, long);
-static void JoinActivityReset(const Environment&, ConstructHeader *, void *);
+BetaJoinsDriver(const Environment::Ptr&, struct joinNode *, unsigned short, struct joinInformation *, struct betaMemory *, struct joinNode *);
+static int CountPatterns(const Environment::Ptr&, struct joinNode *, bool);
+static const char *BetaHeaderString(const Environment::Ptr&, struct joinInformation *, long, long);
+static const char *ActivityHeaderString(const Environment::Ptr&, struct joinInformation *, long, long);
+static void JoinActivityReset(const Environment::Ptr&, ConstructHeader *, void *);
 #endif
 
 /****************************************************************/
 /* DefruleCommands: Initializes defrule commands and functions. */
 /****************************************************************/
 void DefruleCommands(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     AddUDF(theEnv, "run", "v", 0, 1, "l", RunCommand);
     AddUDF(theEnv, "halt", "v", 0, 0, nullptr, HaltCommand);
     AddUDF(theEnv, "focus", "b", 1, UNBOUNDED, "y", FocusCommand);
@@ -174,7 +174,7 @@ void DefruleCommands(
 /*   for the get-beta-memory-resizing command. */
 /***********************************************/
 bool GetBetaMemoryResizing(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     return DefruleData(theEnv)->BetaMemoryResizingFlag;
 }
 
@@ -183,7 +183,7 @@ bool GetBetaMemoryResizing(
 /*   for the set-beta-memory-resizing command. */
 /***********************************************/
 bool SetBetaMemoryResizing(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         bool value) {
     bool ov;
 
@@ -199,7 +199,7 @@ bool SetBetaMemoryResizing(
 /*   for the set-beta-memory-resizing command.      */
 /****************************************************/
 void SetBetaMemoryResizingCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -221,7 +221,7 @@ void SetBetaMemoryResizingCommand(
 /*   for the get-beta-memory-resizing command.      */
 /****************************************************/
 void GetBetaMemoryResizingCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     returnValue->lexemeValue = CreateBoolean(theEnv, GetBetaMemoryResizing(theEnv));
@@ -232,7 +232,7 @@ void GetBetaMemoryResizingCommand(
 /*   for the get-focus function.          */
 /******************************************/
 void GetFocusFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Defmodule *rv;
@@ -252,7 +252,7 @@ void GetFocusFunction(
 /*   for the get-focus function. */
 /*********************************/
 Defmodule *GetFocus(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     if (EngineData(theEnv)->CurrentFocus == nullptr) return nullptr;
 
     return EngineData(theEnv)->CurrentFocus->theModule;
@@ -265,7 +265,7 @@ Defmodule *GetFocus(
 /*   for the matches command.           */
 /****************************************/
 void MatchesCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *ruleName, *argument;
@@ -320,7 +320,7 @@ void Matches(
     long long betaMatchCount = 0;
     long long activations = 0;
     Activation::Ptr agendaPtr;
-    const Environment&theEnv = theDefrule->header.env;
+    const Environment::Ptr&theEnv = theDefrule->header.env;
 
     /*==========================*/
     /* Set up the return value. */
@@ -430,7 +430,7 @@ void Matches(
 /*   alpha joins.                                   */
 /****************************************************/
 static unsigned short AlphaJoinCountDriver(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct joinNode *theJoin) {
     unsigned short alphaCount = 0;
 
@@ -449,7 +449,7 @@ static unsigned short AlphaJoinCountDriver(
 /*   joins associated with the specified rule. */
 /***********************************************/
 unsigned short AlphaJoinCount(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defrule::Ptr theDefrule) {
     return AlphaJoinCountDriver(theEnv, theDefrule->lastJoin->lastLevel);
 }
@@ -459,7 +459,7 @@ unsigned short AlphaJoinCount(
 /*   retrieve a rule's alpha joins.    */
 /***************************************/
 static void AlphaJoinsDriver(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct joinNode *theJoin,
         unsigned short alphaIndex,
         struct joinInformation *theInfo) {
@@ -481,7 +481,7 @@ static void AlphaJoinsDriver(
 /*   associated with the specified rule. */
 /*****************************************/
 void AlphaJoins(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defrule::Ptr theDefrule,
         unsigned short alphaCount,
         struct joinInformation *theInfo) {
@@ -494,7 +494,7 @@ void AlphaJoins(
 /*   beta joins.                                   */
 /****************************************************/
 static unsigned short BetaJoinCountDriver(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct joinNode *theJoin) {
     unsigned short betaCount = 0;
 
@@ -513,7 +513,7 @@ static unsigned short BetaJoinCountDriver(
 /*   joins associated with the specified rule. */
 /***********************************************/
 unsigned short BetaJoinCount(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defrule::Ptr theDefrule) {
     return BetaJoinCountDriver(theEnv, theDefrule->lastJoin->lastLevel);
 }
@@ -523,7 +523,7 @@ unsigned short BetaJoinCount(
 /*   retrieve a rule's beta joins.    */
 /**************************************/
 static void BetaJoinsDriver(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct joinNode *theJoin,
         unsigned short betaIndex,
         struct joinInformation *theJoinInfoArray,
@@ -584,7 +584,7 @@ static void BetaJoinsDriver(
 /*   associated with the specified rule. */
 /*****************************************/
 void BetaJoins(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defrule::Ptr theDefrule,
         unsigned short betaArraySize,
         struct joinInformation *theInfo) {
@@ -597,7 +597,7 @@ void BetaJoins(
 /*    array of the specified size.             */
 /***********************************************/
 struct joinInformation *CreateJoinArray(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         unsigned short size) {
     if (size == 0) return nullptr;
 
@@ -609,7 +609,7 @@ struct joinInformation *CreateJoinArray(
 /*    array of the specified size.         */
 /*******************************************/
 void FreeJoinArray(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct joinInformation *theArray,
         unsigned short size) {
     if (size == 0) return;
@@ -621,7 +621,7 @@ void FreeJoinArray(
 /* ListAlphaMatches: */
 /*********************/
 static long long ListAlphaMatches(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct joinInformation *theInfo,
         Verbosity output) {
     struct alphaMemoryHash *listOfHashNodes;
@@ -697,7 +697,7 @@ static long long ListAlphaMatches(
 /* BetaHeaderString */
 /********************/
 static const char *BetaHeaderString(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct joinInformation *infoArray,
         long joinIndex,
         long arraySize) {
@@ -808,7 +808,7 @@ static const char *BetaHeaderString(
 /* ListBetaMatches: */
 /********************/
 static long long ListBetaMatches(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct joinInformation *infoArray,
         long joinIndex,
         unsigned short arraySize,
@@ -849,7 +849,7 @@ static long long ListBetaMatches(
 /* CountPatterns: */
 /******************/
 static int CountPatterns(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct joinNode *theJoin,
         bool followRight) {
     int theCount = 0;
@@ -878,7 +878,7 @@ static int CountPatterns(
 /*   for the join-activity command.        */
 /*******************************************/
 void JoinActivityCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *ruleName, *argument;
@@ -919,7 +919,7 @@ void JoinActivityCommand(
 /*   for the join-activity command. */
 /************************************/
 void JoinActivity(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defrule::Ptr theRule,
         int output,
         UDFValue *returnValue) {
@@ -982,7 +982,7 @@ void JoinActivity(
 /* ActivityHeaderString */
 /************************/
 static const char *ActivityHeaderString(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct joinInformation *infoArray,
         long joinIndex,
         long arraySize) {
@@ -1046,7 +1046,7 @@ static const char *ActivityHeaderString(
 /* ListBetaJoinActivity: */
 /*************************/
 static void ListBetaJoinActivity(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct joinInformation *infoArray,
         long joinIndex,
         long arraySize,
@@ -1112,7 +1112,7 @@ static void ListBetaJoinActivity(
 /*   counts for each rule back to 0.         */
 /*********************************************/
 static void JoinActivityReset(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         ConstructHeader *theConstruct,
         void *buffer) {
 #if MAC_XCD
@@ -1138,7 +1138,7 @@ static void JoinActivityReset(
 /*   for the reset-join-activity command.       */
 /************************************************/
 void JoinActivityResetCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     DoForAllConstructs(theEnv,
@@ -1151,7 +1151,7 @@ void JoinActivityResetCommand(
 /*   for the timetag function.         */
 /***************************************/
 void TimetagFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -1175,7 +1175,7 @@ void TimetagFunction(
 /*   for the rule-complexity function.         */
 /***********************************************/
 void RuleComplexityCommand(
-  const Environment&theEnv,
+  const Environment::Ptr&theEnv,
   UDFContext *context,
   UDFValue *returnValue)
   {
@@ -1205,7 +1205,7 @@ void RuleComplexityCommand(
 /*   for the show-joins command.          */
 /******************************************/
 void ShowJoinsCommand(
-  const Environment&theEnv,
+  const Environment::Ptr&theEnv,
   UDFContext *context,
   UDFValue *returnValue)
   {
@@ -1232,7 +1232,7 @@ void ShowJoinsCommand(
 /*   for the show-joins command. */
 /*********************************/
 static void ShowJoins(
-  const Environment&theEnv,
+  const Environment::Ptr&theEnv,
   Defrule::Ptr theRule)
   {
    Defrule::Ptr rulePtr;
@@ -1378,7 +1378,7 @@ static void ShowJoins(
 /*   in each slot of the alpha hash table.            */
 /******************************************************/
 void ShowAlphaHashTable(
-  const Environment&theEnv,
+  const Environment::Ptr&theEnv,
   UDFContext *context,
   UDFValue *returnValue)
    {

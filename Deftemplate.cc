@@ -89,19 +89,19 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void *AllocateModule(const Environment&);
-static void ReturnModule(const Environment&, void *);
-static void ReturnDeftemplate(const Environment&, Deftemplate *);
-static void InitializeDeftemplateModules(const Environment&);
-static void DeallocateDeftemplateData(const Environment&);
-static void DestroyDeftemplateAction(const Environment&, ConstructHeader *, void *);
-static void DestroyDeftemplate(const Environment&, Deftemplate *);
+static void *AllocateModule(const Environment::Ptr&);
+static void ReturnModule(const Environment::Ptr&, void *);
+static void ReturnDeftemplate(const Environment::Ptr&, Deftemplate *);
+static void InitializeDeftemplateModules(const Environment::Ptr&);
+static void DeallocateDeftemplateData(const Environment::Ptr&);
+static void DestroyDeftemplateAction(const Environment::Ptr&, ConstructHeader *, void *);
+static void DestroyDeftemplate(const Environment::Ptr&, Deftemplate *);
 
 /******************************************************************/
 /* InitializeDeftemplates: Initializes the deftemplate construct. */
 /******************************************************************/
 void InitializeDeftemplates(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
 #if STUBBING_INACTIVE
     EntityRecord deftemplatePtrRecord =
             {"DEFTEMPLATE_PTR",
@@ -151,7 +151,7 @@ void InitializeDeftemplates(
 /*    data for the deftemplate construct.             */
 /******************************************************/
 static void DeallocateDeftemplateData(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     struct deftemplateModule *theModuleItem;
     Defmodule *theModule;
 #if BLOAD_AND_BSAVE
@@ -175,7 +175,7 @@ static void DeallocateDeftemplateData(
 /*   deftemplates as a result of DestroyEnvironment. */
 /*****************************************************/
 static void DestroyDeftemplateAction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         ConstructHeader *theConstruct,
         void *buffer) {
 #if MAC_XCD
@@ -194,7 +194,7 @@ static void DestroyDeftemplateAction(
 /*   construct for use with the defmodule construct.         */
 /*************************************************************/
 static void InitializeDeftemplateModules(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     DeftemplateData(theEnv)->DeftemplateModuleIndex = RegisterModuleItem(theEnv, "deftemplate",
                                                                          AllocateModule,
                                                                          ReturnModule,
@@ -214,7 +214,7 @@ static void InitializeDeftemplateModules(
 /* AllocateModule: Allocates a deftemplate module. */
 /***************************************************/
 static void *AllocateModule(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     return ((void *) get_struct(theEnv, deftemplateModule));
 }
 
@@ -222,7 +222,7 @@ static void *AllocateModule(
 /* ReturnModule: Deallocates a deftemplate module. */
 /*************************************************/
 static void ReturnModule(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *theItem) {
     FreeConstructHeaderModule(theEnv, (defmoduleItemHeader *) theItem, DeftemplateData(theEnv)->DeftemplateConstruct);
     rtn_struct(theEnv, deftemplateModule, theItem);
@@ -233,7 +233,7 @@ static void ReturnModule(
 /*  item for the specified deftemplate or defmodule.            */
 /****************************************************************/
 struct deftemplateModule *GetDeftemplateModuleItem(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defmodule *theModule) {
     return ((deftemplateModule *) GetConstructModuleItemByIndex(theEnv, theModule, DeftemplateData(theEnv)->DeftemplateModuleIndex));
 }
@@ -244,7 +244,7 @@ struct deftemplateModule *GetDeftemplateModuleItem(
 /*   to the deftemplate if  found, otherwise nullptr. */
 /***************************************************/
 Deftemplate *FindDeftemplate(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *deftemplateName) {
     return (Deftemplate *) FindNamedConstructInModuleOrImports(theEnv, deftemplateName, DeftemplateData(theEnv)->DeftemplateConstruct);
 }
@@ -255,7 +255,7 @@ Deftemplate *FindDeftemplate(
 /*   to the deftemplate if  found, otherwise nullptr.     */
 /*******************************************************/
 Deftemplate *FindDeftemplateInModule(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *deftemplateName) {
     return (Deftemplate *) FindNamedConstructInModule(theEnv, deftemplateName, DeftemplateData(theEnv)->DeftemplateConstruct);
 }
@@ -266,7 +266,7 @@ Deftemplate *FindDeftemplateInModule(
 /*   deftemplate following the deftemplate passed as an argument.      */
 /***********************************************************************/
 Deftemplate *GetNextDeftemplate(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Deftemplate *deftemplatePtr) {
     return (Deftemplate *) GetNextConstructItem(theEnv, &deftemplatePtr->header, DeftemplateData(theEnv)->DeftemplateModuleIndex);
 }
@@ -277,7 +277,7 @@ Deftemplate *GetNextDeftemplate(
 /**********************************************************/
 bool DeftemplateIsDeletable(
         Deftemplate *theDeftemplate) {
-    const Environment&theEnv = theDeftemplate->header.env;
+    const Environment::Ptr&theEnv = theDeftemplate->header.env;
 
     if (!ConstructsDeletable(theEnv)) { return false; }
 
@@ -291,7 +291,7 @@ bool DeftemplateIsDeletable(
 /*   with a deftemplate construct to the pool of free memory. */
 /**************************************************************/
 static void ReturnDeftemplate(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Deftemplate *theDeftemplate) {
     struct templateSlot *slotPtr;
 
@@ -338,7 +338,7 @@ static void ReturnDeftemplate(
 /*   with a deftemplate construct to the pool of free memory. */
 /**************************************************************/
 static void DestroyDeftemplate(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Deftemplate *theDeftemplate) {
     struct templateSlot *slotPtr, *nextSlot;
     if (theDeftemplate == nullptr) return;
@@ -367,7 +367,7 @@ static void DestroyDeftemplate(
 /*   a deftemplate to free memory.             */
 /***********************************************/
 void ReturnSlots(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct templateSlot *slotPtr) {
     struct templateSlot *nextSlot;
 
@@ -386,7 +386,7 @@ void ReturnSlots(
 /*   busy count of a deftemplate data structure. */
 /*************************************************/
 void DecrementDeftemplateBusyCount(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Deftemplate *theTemplate) {
     if (!ConstructData(theEnv)->ClearInProgress) theTemplate->busyCount--;
 }
@@ -396,7 +396,7 @@ void DecrementDeftemplateBusyCount(
 /*   busy count of a deftemplate data structure. */
 /*************************************************/
 void IncrementDeftemplateBusyCount(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Deftemplate *theTemplate) {
 #if MAC_XCD
 #pragma unused(theEnv)
@@ -425,7 +425,7 @@ Fact *GetNextFactInTemplate(
 /* CreateDeftemplateScopeMap: */
 /******************************/
 void *CreateDeftemplateScopeMap(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Deftemplate *theDeftemplate) {
     unsigned short scopeMapSize;
     char *scopeMap;

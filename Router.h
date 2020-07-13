@@ -74,11 +74,11 @@
 #include <cstdio>
 
 typedef struct router Router;
-typedef bool RouterQueryFunction(const Environment&, const char *, void *);
-typedef void RouterWriteFunction(const Environment&, const char *, const char *, void *);
-typedef void RouterExitFunction(const Environment&, int, void *);
-typedef int RouterReadFunction(const Environment&, const char *, void *);
-typedef int RouterUnreadFunction(const Environment&, const char *, int, void *);
+typedef bool RouterQueryFunction(const Environment::Ptr&, const char *, void *);
+typedef void RouterWriteFunction(const Environment::Ptr&, const char *, const char *, void *);
+typedef void RouterExitFunction(const Environment::Ptr&, int, void *);
+typedef int RouterReadFunction(const Environment::Ptr&, const char *, void *);
+typedef int RouterUnreadFunction(const Environment::Ptr&, const char *, int, void *);
 
 extern const char *STDOUT;
 extern const char *STDIN;
@@ -114,30 +114,30 @@ struct routerData : public EnvironmentModule {
 };
 RegisterEnvironmentModule(routerData, ROUTER_DATA, Router);
 
-void InitializeDefaultRouters(const Environment&);
-void WriteString(const Environment&, const std::string&, const std::string&);
-void Write(const Environment&, const char *);
-void Writeln(const Environment&, const char *);
-int ReadRouter(const Environment&, const char *);
-int UnreadRouter(const Environment&, const char *, int);
-void ExitRouter(const Environment&, int);
-void AbortExit(const Environment&);
-bool AddRouter(const Environment&, const char *, int,
+void InitializeDefaultRouters(const Environment::Ptr&);
+void WriteString(const Environment::Ptr&, const std::string&, const std::string&);
+void Write(const Environment::Ptr&, const char *);
+void Writeln(const Environment::Ptr&, const char *);
+int ReadRouter(const Environment::Ptr&, const char *);
+int UnreadRouter(const Environment::Ptr&, const char *, int);
+void ExitRouter(const Environment::Ptr&, int);
+void AbortExit(const Environment::Ptr&);
+bool AddRouter(const Environment::Ptr&, const char *, int,
                RouterQueryFunction *, RouterWriteFunction *,
                RouterReadFunction *, RouterUnreadFunction *,
                RouterExitFunction *, void *);
-bool DeleteRouter(const Environment&, const char *);
-bool QueryRouters(const Environment&, const char *);
-bool DeactivateRouter(const Environment&, const char *);
-bool ActivateRouter(const Environment&, const char *);
-void SetFastLoad(const Environment&, FILE *);
-void SetFastSave(const Environment&, FILE *);
-FILE *GetFastLoad(const Environment&);
-FILE *GetFastSave(const Environment&);
-void UnrecognizedRouterMessage(const Environment&, const char *);
-void PrintNRouter(const Environment&, const char *, const char *, unsigned long);
-size_t InputBufferCount(const Environment&);
-Router *FindRouter(const Environment&, const char *);
-bool PrintRouterExists(const Environment&, const char *);
+bool DeleteRouter(const Environment::Ptr&, const char *);
+bool QueryRouters(const Environment::Ptr&, const char *);
+bool DeactivateRouter(const Environment::Ptr&, const char *);
+bool ActivateRouter(const Environment::Ptr&, const char *);
+void SetFastLoad(const Environment::Ptr&, FILE *);
+void SetFastSave(const Environment::Ptr&, FILE *);
+FILE *GetFastLoad(const Environment::Ptr&);
+FILE *GetFastSave(const Environment::Ptr&);
+void UnrecognizedRouterMessage(const Environment::Ptr&, const char *);
+void PrintNRouter(const Environment::Ptr&, const char *, const char *, unsigned long);
+size_t InputBufferCount(const Environment::Ptr&);
+Router *FindRouter(const Environment::Ptr&, const char *);
+bool PrintRouterExists(const Environment::Ptr&, const char *);
 
 #endif /* _H_router */

@@ -76,38 +76,38 @@ struct multifieldBuilder {
     size_t bufferMaximum;
 };
 
-Multifield::Ptr CreateUnmanagedMultifield(const Environment&, size_t);
-void ReturnMultifield(const Environment&, Multifield *);
-void RetainMultifield(const Environment&, Multifield *);
-void ReleaseMultifield(const Environment&, Multifield *);
-void IncrementCLIPSValueMultifieldReferenceCount(const Environment&, Multifield *);
-void DecrementCLIPSValueMultifieldReferenceCount(const Environment&, Multifield *);
-Multifield *StringToMultifield(const Environment&, const char *);
-Multifield *CreateMultifield(const Environment&, size_t);
-void AddToMultifieldList(const Environment&, Multifield *);
-void FlushMultifields(const Environment&);
-void DuplicateMultifield(const Environment&, UDFValue *, UDFValue *);
-void WriteMultifield(const Environment&, const char *, Multifield *);
-void PrintMultifieldDriver(const Environment&, const char *, Multifield *, size_t, size_t, bool);
+Multifield::Ptr CreateUnmanagedMultifield(const Environment::Ptr&, size_t);
+void ReturnMultifield(const Environment::Ptr&, Multifield *);
+void RetainMultifield(const Environment::Ptr&, Multifield *);
+void ReleaseMultifield(const Environment::Ptr&, Multifield *);
+void IncrementCLIPSValueMultifieldReferenceCount(const Environment::Ptr&, Multifield *);
+void DecrementCLIPSValueMultifieldReferenceCount(const Environment::Ptr&, Multifield *);
+Multifield *StringToMultifield(const Environment::Ptr&, const char *);
+Multifield *CreateMultifield(const Environment::Ptr&, size_t);
+void AddToMultifieldList(const Environment::Ptr&, Multifield *);
+void FlushMultifields(const Environment::Ptr&);
+void DuplicateMultifield(const Environment::Ptr&, UDFValue *, UDFValue *);
+void WriteMultifield(const Environment::Ptr&, const char *, Multifield *);
+void PrintMultifieldDriver(const Environment::Ptr&, const char *, Multifield *, size_t, size_t, bool);
 bool MultifieldDOsEqual(UDFValue *, UDFValue *);
-void StoreInMultifield(const Environment&, UDFValue *, Expression::Ptr, bool);
-Multifield *CopyMultifield(const Environment&, Multifield *);
+void StoreInMultifield(const Environment::Ptr&, UDFValue *, Expression::Ptr, bool);
+Multifield *CopyMultifield(const Environment::Ptr&, Multifield *);
 bool MultifieldsEqual(Multifield *, Multifield *);
-Multifield *DOToMultifield(const Environment&, UDFValue *);
+Multifield *DOToMultifield(const Environment::Ptr&, UDFValue *);
 size_t HashMultifield(Multifield *, size_t);
-Multifield *GetMultifieldList(const Environment&);
-CLIPSLexeme *ImplodeMultifield(const Environment&, UDFValue *);
-void EphemerateMultifield(const Environment&, Multifield *);
-Multifield *ArrayToMultifield(const Environment&, CLIPSValue *, unsigned long);
-void NormalizeMultifield(const Environment&, UDFValue *);
+Multifield *GetMultifieldList(const Environment::Ptr&);
+CLIPSLexeme *ImplodeMultifield(const Environment::Ptr&, UDFValue *);
+void EphemerateMultifield(const Environment::Ptr&, Multifield *);
+Multifield *ArrayToMultifield(const Environment::Ptr&, CLIPSValue *, unsigned long);
+void NormalizeMultifield(const Environment::Ptr&, UDFValue *);
 void CLIPSToUDFValue(CLIPSValue *, UDFValue *);
-void UDFToCLIPSValue(const Environment&, UDFValue *, CLIPSValue *);
-MultifieldBuilder *CreateMultifieldBuilder(const Environment&, size_t);
+void UDFToCLIPSValue(const Environment::Ptr&, UDFValue *, CLIPSValue *);
+MultifieldBuilder *CreateMultifieldBuilder(const Environment::Ptr&, size_t);
 void MBReset(MultifieldBuilder *);
 void MBDispose(MultifieldBuilder *);
 void MBAppend(MultifieldBuilder *theMB, CLIPSValue *);
 Multifield *MBCreate(MultifieldBuilder *);
-Multifield *EmptyMultifield(const Environment&);
+Multifield *EmptyMultifield(const Environment::Ptr&);
 void MBAppendCLIPSInteger(MultifieldBuilder *, CLIPSInteger *);
 void MBAppendInteger(MultifieldBuilder *, long long);
 void MBAppendCLIPSFloat(MultifieldBuilder *, CLIPSFloat *);
@@ -126,33 +126,33 @@ void MBAppendUDFValue(MultifieldBuilder *theMB, UDFValue *);
 
 constexpr auto VALUE_NOT_FOUND = SIZE_MAX;
 
-void MultifieldFunctionDefinitions(const Environment&);
+void MultifieldFunctionDefinitions(const Environment::Ptr&);
 #if MULTIFIELD_FUNCTIONS
-void DeleteFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void ReplaceFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void DeleteMemberFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void ReplaceMemberFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void InsertFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void ExplodeFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void ImplodeFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void SubseqFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void FirstFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void RestFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void NthFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void SubsetpFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void MemberFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void MultifieldPrognFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void ForeachFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void GetMvPrognField(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void GetMvPrognIndex(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void DeleteFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void ReplaceFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void DeleteMemberFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void ReplaceMemberFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void InsertFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void ExplodeFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void ImplodeFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void SubseqFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void FirstFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void RestFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void NthFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void SubsetpFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void MemberFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void MultifieldPrognFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void ForeachFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void GetMvPrognField(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void GetMvPrognIndex(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
 bool FindDOsInSegment(UDFValue *, unsigned int, UDFValue *,
                       size_t *, size_t *, size_t *, unsigned int);
 #endif
-bool ReplaceMultiValueFieldSizet(const Environment&, UDFValue *, UDFValue *,
+bool ReplaceMultiValueFieldSizet(const Environment::Ptr&, UDFValue *, UDFValue *,
                                  size_t, size_t, UDFValue *, const char *);
-bool InsertMultiValueField(const Environment&, UDFValue *, UDFValue *,
+bool InsertMultiValueField(const Environment::Ptr&, UDFValue *, UDFValue *,
                            size_t, UDFValue *, const char *);
-void MVRangeError(const Environment&, long long, long long, size_t, const char *);
+void MVRangeError(const Environment::Ptr&, long long, long long, size_t, const char *);
 size_t FindValueInMultifield(UDFValue *, UDFValue *);
 
 #endif /* _H_multifld */

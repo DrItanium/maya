@@ -127,15 +127,15 @@ constexpr auto OVERRIDE_MSG_BIT      = 10;
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static SlotDescriptor *NewSlot(const Environment&, CLIPSLexeme *);
-static TEMP_SLOT_LINK *InsertSlot(const Environment&, const char *, TEMP_SLOT_LINK *, SlotDescriptor *);
-static int ParseSimpleFacet(const Environment&, const char *, SlotDescriptor *, char *, const char *, int, const char *,
+static SlotDescriptor *NewSlot(const Environment::Ptr&, CLIPSLexeme *);
+static TEMP_SLOT_LINK *InsertSlot(const Environment::Ptr&, const char *, TEMP_SLOT_LINK *, SlotDescriptor *);
+static int ParseSimpleFacet(const Environment::Ptr&, const char *, SlotDescriptor *, char *, const char *, int, const char *,
                             const char *, const char *, const char *, CLIPSLexeme **);
-static bool ParseDefaultFacet(const Environment&, const char *, char *, SlotDescriptor *);
-static void BuildCompositeFacets(const Environment&, SlotDescriptor *, PACKED_CLASS_LINKS *, const char *,
+static bool ParseDefaultFacet(const Environment::Ptr&, const char *, char *, SlotDescriptor *);
+static void BuildCompositeFacets(const Environment::Ptr&, SlotDescriptor *, PACKED_CLASS_LINKS *, const char *,
                                  CONSTRAINT_PARSE_RECORD *);
-static bool CheckForFacetConflicts(const Environment&, SlotDescriptor *, CONSTRAINT_PARSE_RECORD *);
-static bool EvaluateSlotDefaultValue(const Environment&, SlotDescriptor *, const char *);
+static bool CheckForFacetConflicts(const Environment::Ptr&, SlotDescriptor *, CONSTRAINT_PARSE_RECORD *);
+static bool EvaluateSlotDefaultValue(const Environment::Ptr&, SlotDescriptor *, const char *);
 
 /* =========================================
    *****************************************
@@ -163,7 +163,7 @@ static bool EvaluateSlotDefaultValue(const Environment&, SlotDescriptor *, const
   NOTES        : Assumes "(slot" has already been parsed.
  ************************************************************/
 TEMP_SLOT_LINK *ParseSlot(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource,
         const char *className,
         TEMP_SLOT_LINK *slist,
@@ -349,7 +349,7 @@ TEMP_SLOT_LINK *ParseSlot(
   NOTES        : None
  ***************************************************/
 void DeleteSlots(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         TEMP_SLOT_LINK *slots) {
     TEMP_SLOT_LINK *stmp;
 
@@ -389,7 +389,7 @@ void DeleteSlots(
                    put-<name> for slot accessors
  **************************************************************/
 static SlotDescriptor *NewSlot(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CLIPSLexeme *name) {
     SlotDescriptor *slot;
 
@@ -430,7 +430,7 @@ static SlotDescriptor *NewSlot(
   NOTES        : None
  **********************************************************/
 static TEMP_SLOT_LINK *InsertSlot(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *className,
         TEMP_SLOT_LINK *slist,
         SlotDescriptor *slot) {
@@ -498,7 +498,7 @@ static TEMP_SLOT_LINK *InsertSlot(
   NOTES        : None
  *****************************************************************/
 static int ParseSimpleFacet(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource,
         SlotDescriptor *slot,
         char *specbits,
@@ -579,7 +579,7 @@ static int ParseSimpleFacet(
                          (default-dynamic <expression>*)
  *************************************************************/
 static bool ParseDefaultFacet(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource,
         char *specbits,
         SlotDescriptor *slot) {
@@ -641,7 +641,7 @@ static bool ParseDefaultFacet(
   NOTES        : Assumes slot is composite
  *************************************************************************/
 static void BuildCompositeFacets(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         SlotDescriptor *sd,
         PACKED_CLASS_LINKS *preclist,
         const char *specbits,
@@ -718,7 +718,7 @@ static void BuildCompositeFacets(
   NOTES        : None
  ***************************************************/
 static bool CheckForFacetConflicts(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         SlotDescriptor *sd,
         CONSTRAINT_PARSE_RECORD *parsedConstraint) {
     if (sd->multiple == 0) {
@@ -766,7 +766,7 @@ static bool CheckForFacetConflicts(
                  DeleteSlots() will erase the slot expression
  ********************************************************************/
 static bool EvaluateSlotDefaultValue(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         SlotDescriptor *sd,
         const char *specbits) {
     UDFValue temp;

@@ -169,8 +169,8 @@ struct systemDependentData : public EnvironmentModule {
 #if (!WIN_MVC)
     FILE *BinaryFP;
 #endif
-    int (*BeforeOpenFunction)(const Environment&);
-    int (*AfterOpenFunction)(const Environment&);
+    int (*BeforeOpenFunction)(const Environment::Ptr&);
+    int (*AfterOpenFunction)(const Environment::Ptr&);
 };
 RegisterEnvironmentModule(systemDependentData, SYSTEM_DEPENDENT_DATA, SystemDependent);
 
@@ -179,7 +179,7 @@ RegisterEnvironmentModule(systemDependentData, SYSTEM_DEPENDENT_DATA, SystemDepe
 /*    data for system dependent routines.               */
 /********************************************************/
 void InitializeSystemDependentData(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     //AllocateEnvironmentData(theEnv, SYSTEM_DEPENDENT_DATA, sizeof(systemDependentData));
     theEnv->allocateEnvironmentModule<systemDependentData>();
 }
@@ -215,7 +215,7 @@ double gentime() {
 /*   representing a command to the operating system. */
 /*****************************************************/
 int gensystem(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *commandBuffer) {
     return system(commandBuffer);
 }
@@ -225,7 +225,7 @@ int gensystem(
 /*    a character from stdin.              */
 /*******************************************/
 int gengetchar(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     return (getc(stdin));
 }
 
@@ -234,7 +234,7 @@ int gengetchar(
 /*    a character from stdin.                  */
 /***********************************************/
 int genungetchar(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         int theChar) {
     return (ungetc(theChar, stdin));
 }
@@ -244,7 +244,7 @@ int genungetchar(
 /*   character string to a file (including stdout). */
 /****************************************************/
 void genprintfile(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         FILE *fptr,
         const char *str) {
     fprintf(fptr, "%s", str);
@@ -257,7 +257,7 @@ void genprintfile(
 /*   which allows execution to be halted.                  */
 /***********************************************************/
 void InitializeNonportableFeatures(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
 #if MAC_XCD
 #pragma unused(theEnv)
 #endif
@@ -268,7 +268,7 @@ void InitializeNonportableFeatures(
 /* genexit:  A generic exit function. */
 /**************************************/
 void genexit(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         int num) {
 
     exit(num);
@@ -368,7 +368,7 @@ char *gengetcwd(
 /*   0 if unsuccessful, and -1 if unavailable.   */
 /*************************************************/
 int genchdir(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *directory) {
     int rv = -1;
 
@@ -414,7 +414,7 @@ int genchdir(
 /* genremove: Generic function for removing a file. */
 /****************************************************/
 bool genremove(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *fileName) {
 #if WIN_MVC
     wchar_t *wfileName;
@@ -446,7 +446,7 @@ bool genremove(
 /* genrename: Generic function for renaming a file. */
 /****************************************************/
 bool genrename(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *oldFileName,
         const char *newFileName) {
 #if WIN_MVC
@@ -484,9 +484,9 @@ bool genrename(
 /* SetBeforeOpenFunction: Sets the */
 /*  value of BeforeOpenFunction.   */
 /***********************************/
-int (*SetBeforeOpenFunction(const Environment&theEnv,
-                            int (*theFunction)(const Environment&)))(const Environment&) {
-    int (*tempFunction)(const Environment&);
+int (*SetBeforeOpenFunction(const Environment::Ptr&theEnv,
+                            int (*theFunction)(const Environment::Ptr&)))(const Environment::Ptr&) {
+    int (*tempFunction)(const Environment::Ptr&);
 
     tempFunction = SystemDependentData(theEnv)->BeforeOpenFunction;
     SystemDependentData(theEnv)->BeforeOpenFunction = theFunction;
@@ -497,9 +497,9 @@ int (*SetBeforeOpenFunction(const Environment&theEnv,
 /* SetAfterOpenFunction: Sets the */
 /*  value of AfterOpenFunction.   */
 /**********************************/
-int (*SetAfterOpenFunction(const Environment&theEnv,
-                           int (*theFunction)(const Environment&)))(const Environment&) {
-    int (*tempFunction)(const Environment&);
+int (*SetAfterOpenFunction(const Environment::Ptr&theEnv,
+                           int (*theFunction)(const Environment::Ptr&)))(const Environment::Ptr&) {
+    int (*tempFunction)(const Environment::Ptr&);
 
     tempFunction = SystemDependentData(theEnv)->AfterOpenFunction;
     SystemDependentData(theEnv)->AfterOpenFunction = theFunction;
@@ -510,7 +510,7 @@ int (*SetAfterOpenFunction(const Environment&theEnv,
 /* GenOpen: Trap routine for opening a file. */
 /*********************************************/
 FILE *GenOpen(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *fileName,
         const char *accessType) {
     FILE *theFile;
@@ -582,7 +582,7 @@ FILE *GenOpen(
 /* GenClose: Trap routine for closing a file. */
 /**********************************************/
 int GenClose(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         FILE *theFile) {
     int rv;
 
@@ -595,7 +595,7 @@ int GenClose(
 /* GenFlush: Trap routine for flushing a file. */
 /***********************************************/
 int GenFlush(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         FILE *theFile) {
     int rv;
 
@@ -608,7 +608,7 @@ int GenFlush(
 /* GenRewind: Trap routine for rewinding a file. */
 /*************************************************/
 void GenRewind(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         FILE *theFile) {
     rewind(theFile);
 }
@@ -617,7 +617,7 @@ void GenRewind(
 /* GenTell: Trap routine for the ftell function. */
 /*************************************************/
 long long GenTell(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         FILE *theFile) {
     long long rv;
 
@@ -634,7 +634,7 @@ long long GenTell(
 /* GenSeek: Trap routine for the fseek function. */
 /*************************************************/
 int GenSeek(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         FILE *theFile,
         long offset,
         int whereFrom) {
@@ -648,7 +648,7 @@ int GenSeek(
 /*   pointer is stored in a global variable.                */
 /************************************************************/
 bool GenOpenReadBinary(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *funcName,
         const char *fileName) {
     if (SystemDependentData(theEnv)->BeforeOpenFunction != nullptr) { (*SystemDependentData(theEnv)->BeforeOpenFunction)(theEnv); }
@@ -680,7 +680,7 @@ bool GenOpenReadBinary(
 /*   code for reading from a file.             */
 /***********************************************/
 void GenReadBinary(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *dataPtr,
         size_t size) {
 #if WIN_MVC
@@ -708,7 +708,7 @@ void GenReadBinary(
 /*   code for seeking a position in a file.        */
 /***************************************************/
 void GetSeekCurBinary(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         long offset) {
 #if WIN_MVC
     _lseek(SystemDependentData(theEnv)->BinaryFileHandle,offset,SEEK_CUR);
@@ -724,7 +724,7 @@ void GetSeekCurBinary(
 /*   code for seeking a position in a file.        */
 /***************************************************/
 void GetSeekSetBinary(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         long offset) {
 #if WIN_MVC
     _lseek(SystemDependentData(theEnv)->BinaryFileHandle,offset,SEEK_SET);
@@ -740,7 +740,7 @@ void GetSeekSetBinary(
 /*   code for telling a position in a file.     */
 /************************************************/
 void GenTellBinary(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         long *offset) {
 #if WIN_MVC
     *offset = _lseek(SystemDependentData(theEnv)->BinaryFileHandle,0,SEEK_CUR);
@@ -756,7 +756,7 @@ void GenTellBinary(
 /*   specific code for closing a file.  */
 /****************************************/
 void GenCloseBinary(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     if (SystemDependentData(theEnv)->BeforeOpenFunction != nullptr) { (*SystemDependentData(theEnv)->BeforeOpenFunction)(theEnv); }
 
 #if WIN_MVC

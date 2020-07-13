@@ -68,7 +68,7 @@
 /*   deffacts keyword has been found.                       */
 /************************************************************/
 bool ParseDeffacts(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource) {
     CLIPSLexeme *deffactsName;
     Expression *temp;

@@ -107,9 +107,9 @@ private:
 };
 
 template<typename ReturnType>
-using NoExtraArgCallFunctionItem = GenericCallFunctionItem<std::function<ReturnType(const Environment&)>>;
+using NoExtraArgCallFunctionItem = GenericCallFunctionItem<std::function<ReturnType(const Environment::Ptr&)>>;
 template<typename ReturnType, typename ArgumentKind>
-using OneExtraArgCallFunctionItem = GenericCallFunctionItem<std::function<ReturnType(const Environment&, ArgumentKind)>>;
+using OneExtraArgCallFunctionItem = GenericCallFunctionItem<std::function<ReturnType(const Environment::Ptr&, ArgumentKind)>>;
 
 template<typename ReturnType>
 using OneExtraAnyArgCallFunctionItem = OneExtraArgCallFunctionItem<ReturnType, std::any>;
@@ -147,7 +147,7 @@ struct gcBlock {
 };
 
 struct stringBuilder {
-    stringBuilder(const Environment& env);
+    stringBuilder(const Environment::Ptr& env);
     ~stringBuilder() = default;
     stringBuilder(const stringBuilder&);
     void reset();
@@ -194,67 +194,67 @@ constexpr bool IsUTF8MultiByteContinuation(char ch) noexcept {
 }
 
 
-void InitializeUtilityData(const Environment&);
-bool AddCleanupFunction(const Environment&, const char *, VoidCallFunction *, int, void *context = nullptr);
-bool AddPeriodicFunction(const Environment&, const char *, VoidCallFunction *, int, void *context = nullptr);
-bool RemoveCleanupFunction(const Environment&, const char *);
-bool RemovePeriodicFunction(const Environment&, const char *);
-char *CopyString(const Environment&, const char *);
-void DeleteString(const Environment&, char *);
-const char *AppendStrings(const Environment&, const char *, const char *);
-const char *StringPrintForm(const Environment&, const char *);
-char *AppendToString(const Environment&, const char *, char *, size_t *, size_t *);
-char *InsertInString(const Environment&, const char *, size_t, char *, size_t *, size_t *);
-char *AppendNToString(const Environment&, const char *, char *, size_t, size_t *, size_t *);
-char *EnlargeString(const Environment&, size_t, char *, size_t *, size_t *);
-char *ExpandStringWithChar(const Environment&, int, char *, size_t *, size_t *, size_t);
-VoidCallFunctionItem *AddVoidFunctionToCallList(const Environment&, const char *, int, VoidCallFunction *,
+void InitializeUtilityData(const Environment::Ptr&);
+bool AddCleanupFunction(const Environment::Ptr&, const char *, VoidCallFunction *, int, void *context = nullptr);
+bool AddPeriodicFunction(const Environment::Ptr&, const char *, VoidCallFunction *, int, void *context = nullptr);
+bool RemoveCleanupFunction(const Environment::Ptr&, const char *);
+bool RemovePeriodicFunction(const Environment::Ptr&, const char *);
+char *CopyString(const Environment::Ptr&, const char *);
+void DeleteString(const Environment::Ptr&, char *);
+const char *AppendStrings(const Environment::Ptr&, const char *, const char *);
+const char *StringPrintForm(const Environment::Ptr&, const char *);
+char *AppendToString(const Environment::Ptr&, const char *, char *, size_t *, size_t *);
+char *InsertInString(const Environment::Ptr&, const char *, size_t, char *, size_t *, size_t *);
+char *AppendNToString(const Environment::Ptr&, const char *, char *, size_t, size_t *, size_t *);
+char *EnlargeString(const Environment::Ptr&, size_t, char *, size_t *, size_t *);
+char *ExpandStringWithChar(const Environment::Ptr&, int, char *, size_t *, size_t *, size_t);
+VoidCallFunctionItem *AddVoidFunctionToCallList(const Environment::Ptr&, const char *, int, VoidCallFunction *,
                                                 VoidCallFunctionItem *, void *context = nullptr);
-BoolCallFunctionItem *AddBoolFunctionToCallList(const Environment&, const char *, int, BoolCallFunction *,
+BoolCallFunctionItem *AddBoolFunctionToCallList(const Environment::Ptr&, const char *, int, BoolCallFunction *,
                                                 BoolCallFunctionItem *, void *context = nullptr);
-VoidCallFunctionItem *RemoveVoidFunctionFromCallList(const Environment&, const char *,
+VoidCallFunctionItem *RemoveVoidFunctionFromCallList(const Environment::Ptr&, const char *,
                                                      VoidCallFunctionItem *, bool *);
-BoolCallFunctionItem *RemoveBoolFunctionFromCallList(const Environment&, const char *,
+BoolCallFunctionItem *RemoveBoolFunctionFromCallList(const Environment::Ptr&, const char *,
                                                      BoolCallFunctionItem *, bool *);
-void DeallocateVoidCallList(const Environment&, VoidCallFunctionItem *);
-void DeallocateBoolCallList(const Environment&, BoolCallFunctionItem *);
-CallFunctionItemWithArg *AddFunctionToCallListWithArg(const Environment&, const char *, int,
+void DeallocateVoidCallList(const Environment::Ptr&, VoidCallFunctionItem *);
+void DeallocateBoolCallList(const Environment::Ptr&, BoolCallFunctionItem *);
+CallFunctionItemWithArg *AddFunctionToCallListWithArg(const Environment::Ptr&, const char *, int,
                                                       VoidCallFunctionWithArg *,
                                                       CallFunctionItemWithArg *, void *context = nullptr);
-CallFunctionItemWithArg *RemoveFunctionFromCallListWithArg(const Environment&, const char *,
+CallFunctionItemWithArg *RemoveFunctionFromCallListWithArg(const Environment::Ptr&, const char *,
                                                            struct callFunctionItemWithArg *,
                                                            bool *);
-void DeallocateCallListWithArg(const Environment&, struct callFunctionItemWithArg *);
-VoidCallFunctionItem *GetVoidFunctionFromCallList(const Environment&, const char *, VoidCallFunctionItem *);
-BoolCallFunctionItem *GetBoolFunctionFromCallList(const Environment&, const char *, BoolCallFunctionItem *);
-size_t ItemHashValue(const Environment&, unsigned short, void *, size_t);
-void YieldTime(const Environment&);
-bool EnablePeriodicFunctions(const Environment&, bool);
-bool EnableYieldFunction(const Environment&, bool);
-struct trackedMemory *AddTrackedMemory(const Environment&, void *, size_t);
-void RemoveTrackedMemory(const Environment&, struct trackedMemory *);
+void DeallocateCallListWithArg(const Environment::Ptr&, struct callFunctionItemWithArg *);
+VoidCallFunctionItem *GetVoidFunctionFromCallList(const Environment::Ptr&, const char *, VoidCallFunctionItem *);
+BoolCallFunctionItem *GetBoolFunctionFromCallList(const Environment::Ptr&, const char *, BoolCallFunctionItem *);
+size_t ItemHashValue(const Environment::Ptr&, unsigned short, void *, size_t);
+void YieldTime(const Environment::Ptr&);
+bool EnablePeriodicFunctions(const Environment::Ptr&, bool);
+bool EnableYieldFunction(const Environment::Ptr&, bool);
+struct trackedMemory *AddTrackedMemory(const Environment::Ptr&, void *, size_t);
+void RemoveTrackedMemory(const Environment::Ptr&, struct trackedMemory *);
 void UTF8Increment(const char *, size_t *);
 size_t UTF8Offset(const char *, size_t);
 size_t UTF8Length(const char *);
 size_t UTF8CharNum(const char *, size_t);
-void RestorePriorGarbageFrame(const Environment&, struct garbageFrame *, struct garbageFrame *, UDFValue *);
-void CallCleanupFunctions(const Environment&);
-void CallPeriodicTasks(const Environment&);
-void CleanCurrentGarbageFrame(const Environment&, UDFValue *);
-void GCBlockStart(const Environment&, GCBlock *);
-void GCBlockEnd(const Environment&, GCBlock *);
-void GCBlockEndUDF(const Environment&, GCBlock *, UDFValue *);
-bool CurrentGarbageFrameIsDirty(const Environment&);
-StringBuilder *CreateStringBuilder(const Environment&, size_t);
+void RestorePriorGarbageFrame(const Environment::Ptr&, struct garbageFrame *, struct garbageFrame *, UDFValue *);
+void CallCleanupFunctions(const Environment::Ptr&);
+void CallPeriodicTasks(const Environment::Ptr&);
+void CleanCurrentGarbageFrame(const Environment::Ptr&, UDFValue *);
+void GCBlockStart(const Environment::Ptr&, GCBlock *);
+void GCBlockEnd(const Environment::Ptr&, GCBlock *);
+void GCBlockEndUDF(const Environment::Ptr&, GCBlock *, UDFValue *);
+bool CurrentGarbageFrameIsDirty(const Environment::Ptr&);
+StringBuilder *CreateStringBuilder(const Environment::Ptr&, size_t);
 void SBDispose(StringBuilder *);
 void SBAppend(StringBuilder *, const char *);
 void SBAppendInteger(StringBuilder *, long long);
 void SBAppendFloat(StringBuilder *, double);
 void SBAddChar(StringBuilder *, int);
 void SBReset(StringBuilder *);
-void *GetPeriodicFunctionContext(const Environment&, const char *);
-void BufferedRead(const Environment&, void *, size_t);
-void FreeReadBuffer(const Environment&);
+void *GetPeriodicFunctionContext(const Environment::Ptr&, const char *);
+void BufferedRead(const Environment::Ptr&, void *, size_t);
+void FreeReadBuffer(const Environment::Ptr&);
 
 #endif /* _H_utility */
 

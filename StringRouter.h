@@ -79,14 +79,14 @@ RegisterEnvironmentModule(stringRouterData, STRING_ROUTER_DATA, StringRouter);
 /* I/O ROUTER DEFINITIONS */
 /**************************/
 
-void InitializeStringRouter(const Environment&);
-bool OpenStringSource(const Environment&, const char *, const char *, size_t);
-bool OpenTextSource(const Environment&, const char *, const char *, size_t, size_t);
-bool CloseStringSource(const Environment&, const char *);
-bool OpenStringDestination(const Environment&, const char *, char *, size_t);
-bool CloseStringDestination(const Environment&, const char *);
-bool OpenStringBuilderDestination(const Environment&, const char *, StringBuilder *);
-bool CloseStringBuilderDestination(const Environment&, const char *);
+void InitializeStringRouter(const Environment::Ptr&);
+bool OpenStringSource(const Environment::Ptr&, const char *, const char *, size_t);
+bool OpenTextSource(const Environment::Ptr&, const char *, const char *, size_t, size_t);
+bool CloseStringSource(const Environment::Ptr&, const char *);
+bool OpenStringDestination(const Environment::Ptr&, const char *, char *, size_t);
+bool CloseStringDestination(const Environment::Ptr&, const char *);
+bool OpenStringBuilderDestination(const Environment::Ptr&, const char *, StringBuilder *);
+bool CloseStringBuilderDestination(const Environment::Ptr&, const char *);
 
 #endif /* _H_strngrtr */
 

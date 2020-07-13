@@ -43,15 +43,15 @@
 #include "Expression.h"
 #include "Reorder.h"
 
-void ReplaceGetJNObjectValue(const Environment&, Expression *, struct lhsParseNode *, int);
-Expression *GenGetJNObjectValue(const Environment&, struct lhsParseNode *, int);
-Expression *ObjectJNVariableComparison(const Environment&, struct lhsParseNode *, struct lhsParseNode *, bool);
-Expression *GenObjectPNConstantCompare(const Environment&, struct lhsParseNode *);
-void ReplaceGetPNObjectValue(const Environment&, Expression *, struct lhsParseNode *);
-Expression *GenGetPNObjectValue(const Environment&, struct lhsParseNode *);
-Expression *ObjectPNVariableComparison(const Environment&, struct lhsParseNode *, struct lhsParseNode *);
-void GenObjectLengthTest(const Environment&, struct lhsParseNode *);
-void GenObjectZeroLengthTest(const Environment&, struct lhsParseNode *);
+void ReplaceGetJNObjectValue(const Environment::Ptr&, Expression *, struct lhsParseNode *, int);
+Expression *GenGetJNObjectValue(const Environment::Ptr&, struct lhsParseNode *, int);
+Expression *ObjectJNVariableComparison(const Environment::Ptr&, struct lhsParseNode *, struct lhsParseNode *, bool);
+Expression *GenObjectPNConstantCompare(const Environment::Ptr&, struct lhsParseNode *);
+void ReplaceGetPNObjectValue(const Environment::Ptr&, Expression *, struct lhsParseNode *);
+Expression *GenGetPNObjectValue(const Environment::Ptr&, struct lhsParseNode *);
+Expression *ObjectPNVariableComparison(const Environment::Ptr&, struct lhsParseNode *, struct lhsParseNode *);
+void GenObjectLengthTest(const Environment::Ptr&, struct lhsParseNode *);
+void GenObjectZeroLengthTest(const Environment::Ptr&, struct lhsParseNode *);
 
 
 #endif /* _H_objrtgen */

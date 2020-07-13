@@ -41,36 +41,36 @@
 
 #define _H_modulutl
 
-typedef void *GetNextItemFunction(const Environment&, void *);
-typedef void PrintItemFunction(const Environment&, const char *, void *);
+typedef void *GetNextItemFunction(const Environment::Ptr&, void *);
+typedef void PrintItemFunction(const Environment::Ptr&, const char *, void *);
 
 #include "Defmodule.h"
 #include "Symbol.h"
 #include "Scanner.h"
 
 unsigned FindModuleSeparator(const char *);
-CLIPSLexeme *ExtractModuleName(const Environment&, unsigned, const char *);
-CLIPSLexeme *ExtractConstructName(const Environment&, unsigned, const char *, unsigned);
-const char *ExtractModuleAndConstructName(const Environment&, const char *);
-ConstructHeader *FindImportedConstruct(const Environment&, const char *, Defmodule *,
+CLIPSLexeme *ExtractModuleName(const Environment::Ptr&, unsigned, const char *);
+CLIPSLexeme *ExtractConstructName(const Environment::Ptr&, unsigned, const char *, unsigned);
+const char *ExtractModuleAndConstructName(const Environment::Ptr&, const char *);
+ConstructHeader *FindImportedConstruct(const Environment::Ptr&, const char *, Defmodule *,
                                        const char *, unsigned int *, bool, Defmodule *);
-void AmbiguousReferenceErrorMessage(const Environment&, const char *, const char *);
-void MarkModulesAsUnvisited(const Environment&);
-bool AllImportedModulesVisited(const Environment&, Defmodule *);
-void ListItemsDriver(const Environment&,
+void AmbiguousReferenceErrorMessage(const Environment::Ptr&, const char *, const char *);
+void MarkModulesAsUnvisited(const Environment::Ptr&);
+bool AllImportedModulesVisited(const Environment::Ptr&, Defmodule *);
+void ListItemsDriver(const Environment::Ptr&,
                      const char *, Defmodule *,
                      const char *, const char *,
                      GetNextItemFunction *,
                      const char *(*)(void *),
                      PrintItemFunction *,
                      bool (*)(void *));
-long DoForAllModules(const Environment&,
+long DoForAllModules(const Environment::Ptr&,
                      void (*)(Defmodule *, void *),
                      int, void *);
-bool ConstructExported(const Environment&, const char *, CLIPSLexeme *, CLIPSLexeme *);
+bool ConstructExported(const Environment::Ptr&, const char *, CLIPSLexeme *, CLIPSLexeme *);
 
-void RemoveConstructFromModule(const Environment&, ConstructHeader *);
-CLIPSLexeme *GetConstructNameAndComment(const Environment&, const char *,
+void RemoveConstructFromModule(const Environment::Ptr&, ConstructHeader *);
+CLIPSLexeme *GetConstructNameAndComment(const Environment::Ptr&, const char *,
                                         struct token *, const char *,
                                         FindConstructFunction *,
                                         DeleteConstructFunction *,

@@ -41,7 +41,7 @@
 #include "Symbol.h"
 #include "Deftemplate.h"
 
-struct lhsParseNode *DeftemplateLHSParse(const Environment&, const char *, Deftemplate *);
+struct lhsParseNode *DeftemplateLHSParse(const Environment::Ptr&, const char *, Deftemplate *);
 
 #endif /* _H_tmpltlhs */
 

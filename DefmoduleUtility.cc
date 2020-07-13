@@ -59,7 +59,7 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static ConstructHeader *SearchImportedConstructModules(const Environment&, CLIPSLexeme *, Defmodule *,
+static ConstructHeader *SearchImportedConstructModules(const Environment::Ptr&, CLIPSLexeme *, Defmodule *,
                                                        struct moduleItem *, CLIPSLexeme *,
                                                        unsigned int *, bool, Defmodule *);
 
@@ -87,7 +87,7 @@ unsigned FindModuleSeparator(
 /*   cannot be extracted).                                         */
 /*******************************************************************/
 CLIPSLexeme *ExtractModuleName(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         unsigned thePosition,
         const char *theString) {
 #if STUBBING_INACTIVE
@@ -149,7 +149,7 @@ CLIPSLexeme *ExtractModuleName(
 /*   name cannot be extracted).                                     */
 /********************************************************************/
 CLIPSLexeme *ExtractConstructName(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         unsigned thePosition,
         const char *theString,
         unsigned returnType) {
@@ -222,7 +222,7 @@ CLIPSLexeme *ExtractConstructName(
 /*   the current module to the specified module.    */
 /****************************************************/
 const char *ExtractModuleAndConstructName(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *theName) {
 #if STUBBING_INACTIVE
     unsigned separatorPosition;
@@ -273,7 +273,7 @@ const char *ExtractModuleAndConstructName(
 /*   constructs for a specified construct.                  */
 /************************************************************/
 ConstructHeader *FindImportedConstruct(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *constructName,
         Defmodule *matchModule,
         const char *findName,
@@ -362,7 +362,7 @@ ConstructHeader *FindImportedConstruct(
 /*   imported from more than one module.                 */
 /*********************************************************/
 void AmbiguousReferenceErrorMessage(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *constructName,
         const char *findName) {
     WriteString(theEnv, STDERR, "Ambiguous reference to ");
@@ -378,7 +378,7 @@ void AmbiguousReferenceErrorMessage(
 /*   the visited flag of each module to false.      */
 /****************************************************/
 void MarkModulesAsUnvisited(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     Defmodule *theModule;
 
     DefmoduleData(theEnv)->CurrentModule->visitedFlag = false;
@@ -393,7 +393,7 @@ void MarkModulesAsUnvisited(
 /*   imports constructs for a specified construct.         */
 /***********************************************************/
 static ConstructHeader *SearchImportedConstructModules(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CLIPSLexeme *constructType,
         Defmodule *matchModule,
         struct moduleItem *theModuleItem,
@@ -548,7 +548,7 @@ static ConstructHeader *SearchImportedConstructModules(
 /*   is exported from the specified module.                   */
 /**************************************************************/
 bool ConstructExported(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *constructTypeStr,
         CLIPSLexeme *moduleName,
         CLIPSLexeme *findName) {
@@ -580,7 +580,7 @@ bool ConstructExported(
 /*   imported modules for a module have been visited.    */
 /*********************************************************/
 bool AllImportedModulesVisited(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defmodule *theModule) {
 #if STUBBING_INACTIVE
     struct portItem *theImportList;
@@ -606,7 +606,7 @@ bool AllImportedModulesVisited(
 /*   listing items in a module.        */
 /***************************************/
 void ListItemsDriver(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         Defmodule *theModule,
         const char *singleName,
@@ -685,7 +685,7 @@ void ListItemsDriver(
 /* DoForAllModules: Executes an action for all modules. */
 /********************************************************/
 long DoForAllModules(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void (*actionFunction)(Defmodule *, void *),
         int interruptable,
         void *userBuffer) {
@@ -734,7 +734,7 @@ long DoForAllModules(
 /*   construct from its module's list   */
 /****************************************/
 void RemoveConstructFromModule(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         ConstructHeader *theConstruct) {
     ConstructHeader *lastConstruct, *currentConstruct;
 
@@ -780,7 +780,7 @@ void RemoveConstructFromModule(
 /*   if no errors are detected, otherwise returns nullptr.  */
 /*********************************************************/
 CLIPSLexeme *GetConstructNameAndComment(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource,
         struct token *inputToken,
         const char *constructName,

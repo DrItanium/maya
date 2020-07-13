@@ -67,23 +67,23 @@
 
 #include "Evaluation.h"
 
-void DefruleBasicCommands(const Environment&);
-void UndefruleCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-bool Undefrule(Defrule::Ptr , const Environment&);
-void GetDefruleListFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void GetDefruleList(const Environment&, CLIPSValue *, Defmodule *);
-void DefruleModuleFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void DefruleBasicCommands(const Environment::Ptr&);
+void UndefruleCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+bool Undefrule(Defrule::Ptr , const Environment::Ptr&);
+void GetDefruleListFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void GetDefruleList(const Environment::Ptr&, CLIPSValue *, Defmodule *);
+void DefruleModuleFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
 #if DEBUGGING_FUNCTIONS
-void PPDefruleCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-bool PPDefrule(const Environment&, const char *, const char *);
-void ListDefrulesCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void ListDefrules(const Environment&, const char *, Defmodule *);
+void PPDefruleCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+bool PPDefrule(const Environment::Ptr&, const char *, const char *);
+void ListDefrulesCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void ListDefrules(const Environment::Ptr&, const char *, Defmodule *);
 bool DefruleGetWatchFirings(Defrule::Ptr );
 bool DefruleGetWatchActivations(Defrule::Ptr );
 void DefruleSetWatchFirings(Defrule::Ptr , bool);
 void DefruleSetWatchActivations(Defrule::Ptr , bool);
-bool DefruleWatchAccess(const Environment&, int, bool, Expression *);
-bool DefruleWatchPrint(const Environment&, const char *, int, Expression *);
+bool DefruleWatchAccess(const Environment::Ptr&, int, bool, Expression *);
+bool DefruleWatchPrint(const Environment::Ptr&, const char *, int, Expression *);
 #endif
 
 #endif /* _H_rulebsc */

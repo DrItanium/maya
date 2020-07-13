@@ -79,7 +79,7 @@ constexpr auto DELETE_OP      = 2;
 /***************************************/
 
 static Instance *CheckMultifieldSlotInstance(UDFContext *);
-static InstanceSlot *CheckMultifieldSlotModify(const Environment&, int, const char *, Instance *,
+static InstanceSlot *CheckMultifieldSlotModify(const Environment::Ptr&, int, const char *, Instance *,
                                                Expression *, long long *, long long *, UDFValue *);
 static void AssignSlotToDataObject(UDFValue *, InstanceSlot *);
 
@@ -99,7 +99,7 @@ static void AssignSlotToDataObject(UDFValue *, InstanceSlot *);
   NOTES        : None
  ***************************************************/
 void SetupInstanceMultifieldCommands(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     AddUDF(theEnv, "slot-direct-replace$", "b", 4, UNBOUNDED, "*;y;l;l", DirectMVReplaceCommand);
     AddUDF(theEnv, "slot-direct-insert$", "b", 3, UNBOUNDED, "*;y;l", DirectMVInsertCommand);
     AddUDF(theEnv, "slot-direct-delete$", "b", 3, 3, "l;y", DirectMVDeleteCommand);
@@ -122,7 +122,7 @@ void SetupInstanceMultifieldCommands(
                                  <range-begin> <range-end> <value>)
  ***********************************************************************************/
 void MVSlotReplaceCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue newval, newseg, oldseg;
@@ -223,7 +223,7 @@ void MVSlotReplaceCommand(
   NOTES        : H/L Syntax : (slot-insert$ <instance> <slot> <index> <value>)
  ***********************************************************************************/
 void MVSlotInsertCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue newval, newseg, oldseg;
@@ -275,7 +275,7 @@ void MVSlotInsertCommand(
                                  <range-begin> <range-end>)
  ***********************************************************************************/
 void MVSlotDeleteCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue newseg, oldseg;
@@ -361,7 +361,7 @@ void MVSlotDeleteCommand(
                                 <range-begin> <range-end> <value>)
  *****************************************************************/
 void DirectMVReplaceCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     InstanceSlot *sp;
@@ -462,7 +462,7 @@ void DirectMVReplaceCommand(
   NOTES        : H/L Syntax: (direct-slot-insert$ <slot> <index> <value>)
  ************************************************************************/
 void DirectMVInsertCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     InstanceSlot *sp;
@@ -514,7 +514,7 @@ void DirectMVInsertCommand(
                                 <range-begin> <range-end>)
  *****************************************************************/
 void DirectMVDeleteCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     InstanceSlot *sp;
@@ -610,7 +610,7 @@ static Instance *CheckMultifieldSlotInstance(
         UDFContext *context) {
     Instance *ins;
     UDFValue temp;
-    const Environment&theEnv = context->environment;
+    const Environment::Ptr&theEnv = context->environment;
 
     if (!UDFFirstArgument(context, INSTANCE_BITS | SYMBOL_BIT, &temp)) { return nullptr; }
 
@@ -658,7 +658,7 @@ static Instance *CheckMultifieldSlotInstance(
                    expressions deep - slot, index, and optional values
  *********************************************************************/
 static InstanceSlot *CheckMultifieldSlotModify(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         int code,
         const char *func,
         Instance *ins,

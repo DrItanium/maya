@@ -95,7 +95,7 @@ struct focalModule {
 };
 
 typedef struct ruleFiredFunctionItem RuleFiredFunctionItem;
-typedef void RuleFiredFunction(const Environment&, Activation::Ptr , void *);
+typedef void RuleFiredFunction(const Environment::Ptr&, Activation::Ptr , void *);
 
 struct ruleFiredFunctionItem {
     const char *name;
@@ -145,48 +145,48 @@ struct engineData : public EnvironmentModule {
 RegisterEnvironmentModule(engineData, ENGINE_DATA, Engine);
 
 constexpr auto MAX_PATTERNS_CHECKED = 64;
-long long Run(const Environment&, long long);
-bool AddAfterRuleFiresFunction(const Environment&, const char *,
+long long Run(const Environment::Ptr&, long long);
+bool AddAfterRuleFiresFunction(const Environment::Ptr&, const char *,
                                RuleFiredFunction *, int, void *);
-bool RemoveAfterRuleFiresFunction(const Environment&, const char *);
-bool AddBeforeRuleFiresFunction(const Environment&, const char *,
+bool RemoveAfterRuleFiresFunction(const Environment::Ptr&, const char *);
+bool AddBeforeRuleFiresFunction(const Environment::Ptr&, const char *,
                                 RuleFiredFunction *, int, void *);
-bool RemoveBeforeRuleFiresFunction(const Environment&, const char *);
-RuleFiredFunctionItem *AddRuleFiredFunctionToCallList(const Environment&, const char *, int, RuleFiredFunction *,
+bool RemoveBeforeRuleFiresFunction(const Environment::Ptr&, const char *);
+RuleFiredFunctionItem *AddRuleFiredFunctionToCallList(const Environment::Ptr&, const char *, int, RuleFiredFunction *,
                                                       RuleFiredFunctionItem *, void *);
-RuleFiredFunctionItem *RemoveRuleFiredFunctionFromCallList(const Environment&, const char *,
+RuleFiredFunctionItem *RemoveRuleFiredFunctionFromCallList(const Environment::Ptr&, const char *,
                                                            RuleFiredFunctionItem *, bool *);
-void DeallocateRuleFiredCallList(const Environment&, RuleFiredFunctionItem *);
-void InitializeEngine(const Environment&);
+void DeallocateRuleFiredCallList(const Environment::Ptr&, RuleFiredFunctionItem *);
+void InitializeEngine(const Environment::Ptr&);
 void SetBreak(Defrule::Ptr );
-void Halt(const Environment&);
+void Halt(const Environment::Ptr&);
 bool RemoveBreak(Defrule::Ptr );
-void RemoveAllBreakpoints(const Environment&);
-void ShowBreaks(const Environment&, const char *, Defmodule *);
+void RemoveAllBreakpoints(const Environment::Ptr&);
+void ShowBreaks(const Environment::Ptr&, const char *, Defmodule *);
 bool DefruleHasBreakpoint(Defrule::Ptr );
-void RunCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void SetBreakCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void RemoveBreakCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void ShowBreaksCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void HaltCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void FocusCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void ClearFocusStackCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void ClearFocusStack(const Environment&);
-FocalModule *GetNextFocus(const Environment&, FocalModule *);
+void RunCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void SetBreakCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void RemoveBreakCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void ShowBreaksCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void HaltCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void FocusCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void ClearFocusStackCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void ClearFocusStack(const Environment::Ptr&);
+FocalModule *GetNextFocus(const Environment::Ptr&, FocalModule *);
 const char *FocalModuleName(FocalModule *);
 Defmodule *FocalModuleModule(FocalModule *);
 void Focus(Defmodule *);
-bool GetFocusChanged(const Environment&);
-void SetFocusChanged(const Environment&, bool);
-void ListFocusStackCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void ListFocusStack(const Environment&, const char *);
-void GetFocusStackFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void GetFocusStack(const Environment&, CLIPSValue *);
-void PopFocusFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-Defmodule *PopFocus(const Environment&);
-bool GetHaltRules(const Environment&);
-void SetHaltRules(const Environment&, bool);
-Activation::Ptr NextActivationToFire(const Environment&);
+bool GetFocusChanged(const Environment::Ptr&);
+void SetFocusChanged(const Environment::Ptr&, bool);
+void ListFocusStackCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void ListFocusStack(const Environment::Ptr&, const char *);
+void GetFocusStackFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void GetFocusStack(const Environment::Ptr&, CLIPSValue *);
+void PopFocusFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+Defmodule *PopFocus(const Environment::Ptr&);
+bool GetHaltRules(const Environment::Ptr&);
+void SetHaltRules(const Environment::Ptr&, bool);
+Activation::Ptr NextActivationToFire(const Environment::Ptr&);
 
 #endif /* _H_engine */
 

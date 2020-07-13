@@ -68,8 +68,8 @@ RegisterEnvironmentModule(objectBinaryData, OBJECTBIN_DATA, ObjectBinary);
 #define DefclassPointer(i) (((i) == ULONG_MAX) ? nullptr : &ObjectBinaryData(theEnv)->DefclassArray[i])
 #define DefclassIndex(cls) (((cls) == nullptr) ? ULONG_MAX : ((ConstructHeader *) cls)->bsaveID)
 
-void SetupObjectsBload(const Environment&);
-void *BloadDefclassModuleReference(const Environment&, unsigned long);
+void SetupObjectsBload(const Environment::Ptr&);
+void *BloadDefclassModuleReference(const Environment::Ptr&, unsigned long);
 
 #endif /* _H_objbin */
 

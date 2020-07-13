@@ -53,8 +53,8 @@ struct definstancesBinaryData : public EnvironmentModule {
 };
 RegisterEnvironmentModule(definstancesBinaryData, DFINSBIN_DATA, DefinstancesBinary);
 
-void SetupDefinstancesBload(const Environment&);
-void *BloadDefinstancesModuleRef(const Environment&, unsigned long);
+void SetupDefinstancesBload(const Environment::Ptr&);
+void *BloadDefinstancesModuleRef(const Environment::Ptr&, unsigned long);
 
 #endif /* DEFINSTANCES_CONSTRUCT && (BLOAD_AND_BSAVE) */
 

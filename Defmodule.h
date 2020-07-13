@@ -64,8 +64,8 @@ typedef struct defmoduleItemHeader DefmoduleItemHeader;
 typedef struct moduleItem ModuleItem;
 typedef struct moduleStackItem ModuleStackItem;
 
-typedef void *AllocateModuleFunction(const Environment&);
-typedef void FreeModuleFunction(const Environment&, void *);
+typedef void *AllocateModuleFunction(const Environment::Ptr&);
+typedef void FreeModuleFunction(const Environment::Ptr&, void *);
 
 enum class ConstructType {
     DEFMODULE,
@@ -107,11 +107,11 @@ struct defmoduleItemHeader {
     ConstructHeader::Ptr lastItem;
 };
 
-typedef ConstructHeader *FindConstructFunction(const Environment&, const char *);
-typedef ConstructHeader *GetNextConstructFunction(const Environment&, ConstructHeader *);
+typedef ConstructHeader *FindConstructFunction(const Environment::Ptr&, const char *);
+typedef ConstructHeader *GetNextConstructFunction(const Environment::Ptr&, ConstructHeader *);
 typedef bool IsConstructDeletableFunction(ConstructHeader *);
-typedef bool DeleteConstructFunction(ConstructHeader *, const Environment&);
-typedef void FreeConstructFunction(const Environment&, ConstructHeader *);
+typedef bool DeleteConstructFunction(ConstructHeader *, const Environment::Ptr&);
+typedef void FreeConstructFunction(const Environment::Ptr&, ConstructHeader *);
 
 /**********************************************************************/
 /* defmodule                                                          */
@@ -189,13 +189,13 @@ public:
 /* next: A pointer to the next moduleItem data structure.             */
 /**********************************************************************/
 #if STUBBING_INACTIVE
-typedef void *AllocateModuleFunction(const Environment&);
-typedef void FreeModuleFunction(const Environment&, void *);
-typedef ConstructHeader *FindConstructFunction(const Environment&, const char *);
-typedef ConstructHeader *GetNextConstructFunction(const Environment&, ConstructHeader *);
+typedef void *AllocateModuleFunction(const Environment::Ptr&);
+typedef void FreeModuleFunction(const Environment::Ptr&, void *);
+typedef ConstructHeader *FindConstructFunction(const Environment::Ptr&, const char *);
+typedef ConstructHeader *GetNextConstructFunction(const Environment::Ptr&, ConstructHeader *);
 typedef bool IsConstructDeletableFunction(ConstructHeader *);
-typedef bool DeleteConstructFunction(ConstructHeader *, const Environment&);
-typedef void FreeConstructFunction(const Environment&, ConstructHeader *);
+typedef bool DeleteConstructFunction(ConstructHeader *, const Environment::Ptr&);
+typedef void FreeConstructFunction(const Environment::Ptr&, ConstructHeader *);
 #endif
 struct moduleItem {
 public:
@@ -206,7 +206,7 @@ public:
     unsigned moduleIndex;
     AllocateModuleFunction* allocateFunction;
     FreeModuleFunction* freeFunction;
-    void *(*bloadModuleReference)(const Environment&, unsigned long);
+    void *(*bloadModuleReference)(const Environment::Ptr&, unsigned long);
     FindConstructFunction *findFunction;
     Ptr next;
 };
@@ -247,36 +247,36 @@ struct defmoduleData : public EnvironmentModule {
 };
 RegisterEnvironmentModule(defmoduleData, DEFMODULE_DATA, Defmodule);
 
-void InitializeDefmodules(const Environment&);
-Defmodule *FindDefmodule(const Environment&, const char *);
+void InitializeDefmodules(const Environment::Ptr&);
+Defmodule *FindDefmodule(const Environment::Ptr&, const char *);
 const char *DefmoduleName(Defmodule *);
 const char *DefmodulePPForm(Defmodule *);
-Defmodule *GetNextDefmodule(const Environment&, Defmodule *);
-void RemoveAllDefmodules(const Environment&, void *);
+Defmodule *GetNextDefmodule(const Environment::Ptr&, Defmodule *);
+void RemoveAllDefmodules(const Environment::Ptr&, void *);
 int AllocateModuleStorage();
-unsigned RegisterModuleItem(const Environment&theEnv,
+unsigned RegisterModuleItem(const Environment::Ptr&theEnv,
                             const char *theItem,
                             AllocateModuleFunction *allocateFunction,
                             FreeModuleFunction *freeFunction,
-                            void *(*bloadModuleReference)(const Environment&, unsigned long),
+                            void *(*bloadModuleReference)(const Environment::Ptr&, unsigned long),
                             FindConstructFunction *findFunction);
-void *GetModuleItem(const Environment&, Defmodule *, unsigned);
-void SetModuleItem(const Environment&, Defmodule *, unsigned, void *);
-Defmodule *GetCurrentModule(const Environment&);
-Defmodule *SetCurrentModule(const Environment&, Defmodule *);
-void GetCurrentModuleCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void SetCurrentModuleCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-unsigned GetNumberOfModuleItems(const Environment&);
-void CreateMainModule(const Environment&, void *);
-void SetListOfDefmodules(const Environment&, Defmodule *);
-struct moduleItem *GetListOfModuleItems(const Environment&);
-struct moduleItem *FindModuleItem(const Environment&, const char *);
-void SaveCurrentModule(const Environment&);
-void RestoreCurrentModule(const Environment&);
-void AddAfterModuleChangeFunction(const Environment&, const char *, VoidCallFunction *, int, void *);
-void IllegalModuleSpecifierMessage(const Environment&);
-void AllocateDefmoduleGlobals(const Environment&);
-unsigned short GetNumberOfDefmodules(const Environment&);
+void *GetModuleItem(const Environment::Ptr&, Defmodule *, unsigned);
+void SetModuleItem(const Environment::Ptr&, Defmodule *, unsigned, void *);
+Defmodule *GetCurrentModule(const Environment::Ptr&);
+Defmodule *SetCurrentModule(const Environment::Ptr&, Defmodule *);
+void GetCurrentModuleCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void SetCurrentModuleCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+unsigned GetNumberOfModuleItems(const Environment::Ptr&);
+void CreateMainModule(const Environment::Ptr&, void *);
+void SetListOfDefmodules(const Environment::Ptr&, Defmodule *);
+struct moduleItem *GetListOfModuleItems(const Environment::Ptr&);
+struct moduleItem *FindModuleItem(const Environment::Ptr&, const char *);
+void SaveCurrentModule(const Environment::Ptr&);
+void RestoreCurrentModule(const Environment::Ptr&);
+void AddAfterModuleChangeFunction(const Environment::Ptr&, const char *, VoidCallFunction *, int, void *);
+void IllegalModuleSpecifierMessage(const Environment::Ptr&);
+void AllocateDefmoduleGlobals(const Environment::Ptr&);
+unsigned short GetNumberOfDefmodules(const Environment::Ptr&);
 
 #endif /* _H_moduldef */
 

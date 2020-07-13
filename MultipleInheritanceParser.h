@@ -39,9 +39,9 @@
 
 #include "Object.h"
 
-PACKED_CLASS_LINKS *ParseSuperclasses(const Environment&, const char *, CLIPSLexeme *);
-PACKED_CLASS_LINKS *FindPrecedenceList(const Environment&, Defclass *, PACKED_CLASS_LINKS *);
-void PackClassLinks(const Environment&, PACKED_CLASS_LINKS *, CLASS_LINK *);
+PACKED_CLASS_LINKS *ParseSuperclasses(const Environment::Ptr&, const char *, CLIPSLexeme *);
+PACKED_CLASS_LINKS *FindPrecedenceList(const Environment::Ptr&, Defclass *, PACKED_CLASS_LINKS *);
+void PackClassLinks(const Environment::Ptr&, PACKED_CLASS_LINKS *, CLASS_LINK *);
 
 #endif /* _H_inherpsr */
 

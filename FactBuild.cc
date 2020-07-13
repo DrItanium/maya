@@ -60,13 +60,13 @@
 
 static FactPatternNode *FindPatternNode(FactPatternNode *, struct lhsParseNode *,
                                                FactPatternNode **, bool, bool);
-static FactPatternNode *CreateNewPatternNode(const Environment&, struct lhsParseNode *, FactPatternNode *,
+static FactPatternNode *CreateNewPatternNode(const Environment::Ptr&, struct lhsParseNode *, FactPatternNode *,
                                                     FactPatternNode *, bool, bool);
-static void ClearPatternMatches(const Environment&, FactPatternNode *);
-static void DetachFactPattern(const Environment&, PatternNodeHeader *);
-static PatternNodeHeader *PlaceFactPattern(const Environment&, struct lhsParseNode *);
-static struct lhsParseNode *RemoveUnneededSlots(const Environment&, struct lhsParseNode *);
-static void FindAndSetDeftemplatePatternNetwork(const Environment&, FactPatternNode *, FactPatternNode *);
+static void ClearPatternMatches(const Environment::Ptr&, FactPatternNode *);
+static void DetachFactPattern(const Environment::Ptr&, PatternNodeHeader *);
+static PatternNodeHeader *PlaceFactPattern(const Environment::Ptr&, struct lhsParseNode *);
+static struct lhsParseNode *RemoveUnneededSlots(const Environment::Ptr&, struct lhsParseNode *);
+static void FindAndSetDeftemplatePatternNetwork(const Environment::Ptr&, FactPatternNode *, FactPatternNode *);
 
 /*********************************************************/
 /* InitializeFactPatterns: Adds fact patterns to the set */
@@ -74,7 +74,7 @@ static void FindAndSetDeftemplatePatternNetwork(const Environment&, FactPatternN
 /*   and pattern/join network integration routines.      */
 /*********************************************************/
 void InitializeFactPatterns(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     struct patternParser *newPtr;
 
     InitializeFactReteFunctions(theEnv);
@@ -114,7 +114,7 @@ void InitializeFactPatterns(
 /* PlaceFactPattern: Integrates a fact pattern into the fact pattern network. */
 /******************************************************************************/
 static PatternNodeHeader *PlaceFactPattern(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct lhsParseNode *thePattern) {
     struct lhsParseNode *tempPattern;
     FactPatternNode *currentLevel, *lastLevel;
@@ -361,7 +361,7 @@ static FactPatternNode *FindPatternNode(
 /*   data structure used to store them.                      */
 /*************************************************************/
 static struct lhsParseNode *RemoveUnneededSlots(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct lhsParseNode *thePattern) {
     struct lhsParseNode *tempPattern = thePattern;
     struct lhsParseNode *lastPattern = nullptr, *head = thePattern;
@@ -520,7 +520,7 @@ static struct lhsParseNode *RemoveUnneededSlots(
 /*   and initializes all of its values.             */
 /****************************************************/
 static FactPatternNode *CreateNewPatternNode(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct lhsParseNode *thePattern,
         FactPatternNode *nodeBeforeMatch,
         FactPatternNode *upperLevel,
@@ -649,7 +649,7 @@ static FactPatternNode *CreateNewPatternNode(
 /*                                                           */
 /*************************************************************/
 static void DetachFactPattern(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         PatternNodeHeader *thePattern) {
     FactPatternNode *patternPtr;
     FactPatternNode *upperLevel;
@@ -757,7 +757,7 @@ static void DetachFactPattern(
 /*   associated with a fact pattern network.                  */
 /**************************************************************/
 void DestroyFactPatternNetwork(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         FactPatternNode *thePattern) {
     FactPatternNode *patternPtr;
 
@@ -794,7 +794,7 @@ void DestroyFactPatternNetwork(
 /*   the appropriate one to modify.                        */
 /***********************************************************/
 static void FindAndSetDeftemplatePatternNetwork(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         FactPatternNode *rootNode,
         FactPatternNode *newRootNode) {
     Deftemplate *theDeftemplate;
@@ -861,7 +861,7 @@ static void FindAndSetDeftemplatePatternNetwork(
 /*   pointers need to be removed.                              */
 /***************************************************************/
 static void ClearPatternMatches(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         FactPatternNode *patternPtr) {
     Fact *theFact;
     struct patternMatch *lastMatch, *theMatch;

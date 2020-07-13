@@ -57,16 +57,16 @@
 #include "Deffacts.h"
 #include "Evaluation.h"
 
-void DeffactsBasicCommands(const Environment&);
-void UndeffactsCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-bool Undeffacts(Deffacts *, const Environment&);
-void GetDeffactsListFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void GetDeffactsList(const Environment&, CLIPSValue *, Defmodule *);
-void DeffactsModuleFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void PPDeffactsCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-bool PPDeffacts(const Environment&, const char *, const char *);
-void ListDeffactsCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void ListDeffacts(const Environment&, const char *, Defmodule *);
+void DeffactsBasicCommands(const Environment::Ptr&);
+void UndeffactsCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+bool Undeffacts(Deffacts *, const Environment::Ptr&);
+void GetDeffactsListFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void GetDeffactsList(const Environment::Ptr&, CLIPSValue *, Defmodule *);
+void DeffactsModuleFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void PPDeffactsCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+bool PPDeffacts(const Environment::Ptr&, const char *, const char *);
+void ListDeffactsCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void ListDeffacts(const Environment::Ptr&, const char *, Defmodule *);
 
 #endif /* _H_dffctbsc */
 

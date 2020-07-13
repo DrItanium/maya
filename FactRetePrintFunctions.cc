@@ -53,7 +53,7 @@
 /*   for the FactJNCompVars1 function. */
 /***************************************/
 void PrintFactJNCompVars1(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         void *theValue) {
 #if DEVELOPER
@@ -100,7 +100,7 @@ void PrintFactJNCompVars1(
 /*   for the FactJNCompVars2 function. */
 /***************************************/
 void PrintFactJNCompVars2(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         void *theValue) {
 #if DEVELOPER
@@ -159,7 +159,7 @@ void PrintFactJNCompVars2(
 /*   for the FactPNCompVars1 function. */
 /***************************************/
 void PrintFactPNCompVars1(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         void *theValue) {
 #if DEVELOPER
@@ -187,7 +187,7 @@ void PrintFactPNCompVars1(
 /*   for the FactSlotLength function. */
 /**************************************/
 void PrintFactSlotLength(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         void *theValue) {
 #if DEVELOPER
@@ -216,7 +216,7 @@ void PrintFactSlotLength(
 /*   for the FactJNGetvar1 function. */
 /*************************************/
 void PrintFactJNGetVar1(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         void *theValue) {
 #if DEVELOPER
@@ -255,7 +255,7 @@ void PrintFactJNGetVar1(
 /*   for the FactJNGetvar2 function. */
 /*************************************/
 void PrintFactJNGetVar2(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         void *theValue) {
 #if DEVELOPER
@@ -287,7 +287,7 @@ void PrintFactJNGetVar2(
 /*   for the FactJNGetVar3 function. */
 /*************************************/
 void PrintFactJNGetVar3(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         void *theValue) {
 #if DEVELOPER
@@ -329,7 +329,7 @@ void PrintFactJNGetVar3(
 /*   for the FactPNGetvar1 function. */
 /*************************************/
 void PrintFactPNGetVar1(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         void *theValue) {
 #if DEVELOPER
@@ -360,7 +360,7 @@ void PrintFactPNGetVar1(
 /*   for the FactPNGetvar2 function. */
 /*************************************/
 void PrintFactPNGetVar2(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         void *theValue) {
 #if DEVELOPER
@@ -384,7 +384,7 @@ void PrintFactPNGetVar2(
 /*   for the FactPNGetvar3 function. */
 /*************************************/
 void PrintFactPNGetVar3(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         void *theValue) {
 #if DEVELOPER
@@ -418,7 +418,7 @@ void PrintFactPNGetVar3(
 /*   for the FactPNConstant1 function. */
 /***************************************/
 void PrintFactPNConstant1(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         void *theValue) {
 #if DEVELOPER
@@ -449,7 +449,7 @@ void PrintFactPNConstant1(
 /*   for the FactPNConstant2 function. */
 /***************************************/
 void PrintFactPNConstant2(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         void *theValue) {
 #if DEVELOPER

@@ -68,18 +68,18 @@ struct procedureFunctionData : public EnvironmentModule {
 };
 RegisterEnvironmentModule(procedureFunctionData, PRCDRFUN_DATA, ProcedureFunction);
 
-void ProceduralFunctionDefinitions(const Environment&);
-void WhileFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void LoopForCountFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void GetLoopCount(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void IfFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void BindFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void PrognFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void ReturnFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void BreakFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void SwitchFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-bool GetBoundVariable(const Environment&, UDFValue *, CLIPSLexeme *);
-void FlushBindList(const Environment&, void *);
+void ProceduralFunctionDefinitions(const Environment::Ptr&);
+void WhileFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void LoopForCountFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void GetLoopCount(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void IfFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void BindFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void PrognFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void ReturnFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void BreakFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void SwitchFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+bool GetBoundVariable(const Environment::Ptr&, UDFValue *, CLIPSLexeme *);
+void FlushBindList(const Environment::Ptr&, void *);
 
 #endif /* _H_prcdrfun */
 

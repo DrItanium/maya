@@ -69,24 +69,24 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static bool ParsePortSpecifications(const Environment&,
+static bool ParsePortSpecifications(const Environment::Ptr&,
                                     const char *, struct token *,
                                     Defmodule *);
-static bool ParseImportSpec(const Environment&, const char *, struct token *,
+static bool ParseImportSpec(const Environment::Ptr&, const char *, struct token *,
                             Defmodule *);
-static bool ParseExportSpec(const Environment&, const char *, struct token *,
+static bool ParseExportSpec(const Environment::Ptr&, const char *, struct token *,
                             Defmodule *,
                             Defmodule *);
-static bool DeleteDefmodule(Defmodule *, const Environment&);
-static bool FindMultiImportConflict(const Environment&, Defmodule *);
-static void NotExportedErrorMessage(const Environment&, const char *, const char *, const char *);
+static bool DeleteDefmodule(Defmodule *, const Environment::Ptr&);
+static bool FindMultiImportConflict(const Environment::Ptr&, Defmodule *);
+static void NotExportedErrorMessage(const Environment::Ptr&, const char *, const char *, const char *);
 
 /******************************************/
 /* SetNumberOfDefmodules: Sets the number */
 /*   of defmodules currently defined.     */
 /******************************************/
 void SetNumberOfDefmodules(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         unsigned short value) {
     DefmoduleData(theEnv)->NumberOfDefmodules = value;
 }
@@ -97,7 +97,7 @@ void SetNumberOfDefmodules(
 /*   after a module change occurs.                  */
 /****************************************************/
 void AddAfterModuleDefinedFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *name,
         VoidCallFunction *func,
         int priority,
@@ -111,7 +111,7 @@ void AddAfterModuleDefinedFunction(
 /*   items that can be imported/exported by a module. */
 /******************************************************/
 void AddPortConstructItem(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *theName,
         TokenType theType) {
     struct portConstructItem *newItem;
@@ -129,7 +129,7 @@ void AddPortConstructItem(
 /*   the current environment.                         */
 /******************************************************/
 bool ParseDefmodule(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource) {
     CLIPSLexeme *defmoduleName;
     Defmodule *newDefmodule;
@@ -342,7 +342,7 @@ bool ParseDefmodule(
 /*************************************************************/
 static bool DeleteDefmodule(
         Defmodule *theDefmodule,
-        const Environment&allEnv) {
+        const Environment::Ptr&allEnv) {
     Environment theEnv;
 
     if (theDefmodule == nullptr) { theEnv = allEnv; }
@@ -358,7 +358,7 @@ static bool DeleteDefmodule(
 /*   specifications found in a defmodule construct.      */
 /*********************************************************/
 static bool ParsePortSpecifications(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource,
         struct token *theToken,
         Defmodule *theDefmodule) {
@@ -447,7 +447,7 @@ static bool ParsePortSpecifications(
 /*                   <construct-name> <names>*            */
 /**********************************************************/
 static bool ParseImportSpec(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource,
         struct token *theToken,
         Defmodule *newModule) {
@@ -592,7 +592,7 @@ static bool ParseImportSpec(
 /*   specification after the module name.                 */
 /**********************************************************/
 static bool ParseExportSpec(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource,
         struct token *theToken,
         Defmodule *newModule,
@@ -838,7 +838,7 @@ static bool ParseExportSpec(
 /*   and imported, otherwise false is returned.              */
 /*************************************************************/
 struct portConstructItem *ValidPortConstructItem(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *theName) {
     struct portConstructItem *theItem;
 
@@ -855,7 +855,7 @@ struct portConstructItem *ValidPortConstructItem(
 /*   (i.e. an ambiguous reference which is not allowed).   */
 /***********************************************************/
 static bool FindMultiImportConflict(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defmodule *theModule) {
     Defmodule *testModule;
     unsigned int count;
@@ -939,7 +939,7 @@ static bool FindMultiImportConflict(
 /*  named construct is not exported.                  */
 /******************************************************/
 static void NotExportedErrorMessage(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *theModule,
         const char *theConstruct,
         const char *theName) {
@@ -972,7 +972,7 @@ static void NotExportedErrorMessage(
 /*   is found, otherwise false is returned.                  */
 /*************************************************************/
 bool FindImportExportConflict(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *constructName,
         Defmodule *matchModule,
         const char *findName) {

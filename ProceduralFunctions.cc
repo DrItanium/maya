@@ -79,14 +79,14 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void DeallocateProceduralFunctionData(const Environment&);
+static void DeallocateProceduralFunctionData(const Environment::Ptr&);
 
 /**********************************************/
 /* ProceduralFunctionDefinitions: Initializes */
 /*   the procedural functions.                */
 /**********************************************/
 void ProceduralFunctionDefinitions(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     //AllocateEnvironmentData(theEnv, PRCDRFUN_DATA, sizeof(procedureFunctionData), DeallocateProceduralFunctionData);
     theEnv->allocateEnvironmentModule<procedureFunctionData>();
 #if STUBBING_INACTIVE
@@ -119,7 +119,7 @@ void ProceduralFunctionDefinitions(
 /*    data for procedural functions.                         */
 /*************************************************************/
 static void DeallocateProceduralFunctionData(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     UDFValue *nextPtr, *garbagePtr;
 
     garbagePtr = ProcedureFunctionData(theEnv)->BindList;
@@ -136,7 +136,7 @@ static void DeallocateProceduralFunctionData(
 /*   for the while function.           */
 /***************************************/
 void WhileFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theResult;
@@ -197,7 +197,7 @@ void WhileFunction(
 /*   for the loop-for-count function.       */
 /********************************************/
 void LoopForCountFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *loopResult) {
     UDFValue theArg;
@@ -262,7 +262,7 @@ void LoopForCountFunction(
 /* GetLoopCount: */
 /*****************/
 void GetLoopCount(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     long long depth;
@@ -285,7 +285,7 @@ void GetLoopCount(
 /*   for the if function.           */
 /************************************/
 void IfFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     unsigned int numArgs;
@@ -342,7 +342,7 @@ void IfFunction(
 /*   for the bind function.           */
 /**************************************/
 void BindFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue *theBind, *lastBind;
@@ -443,7 +443,7 @@ void BindFunction(
 /*   for a specified variable.             */
 /*******************************************/
 bool GetBoundVariable(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFValue *vPtr,
         CLIPSLexeme *varName) {
     UDFValue *bindPtr;
@@ -465,7 +465,7 @@ bool GetBoundVariable(
 /*   list of currently bound local variables.    */
 /*************************************************/
 void FlushBindList(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *context) {
     ReturnValues(theEnv, ProcedureFunctionData(theEnv)->BindList, true);
     ProcedureFunctionData(theEnv)->BindList = nullptr;
@@ -477,7 +477,7 @@ void FlushBindList(
 /*   for the progn function.           */
 /***************************************/
 void PrognFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Expression *argPtr;
@@ -509,7 +509,7 @@ void PrognFunction(
 /* ReturnFunction: H/L access routine for the return function. */
 /***************************************************************/
 void ReturnFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     if (!UDFHasNextArgument(context)) {
@@ -522,7 +522,7 @@ void ReturnFunction(
 /* BreakFunction: H/L access routine for the break function.   */
 /***************************************************************/
 void BreakFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     ProcedureFunctionData(theEnv)->BreakFlag = true;
@@ -532,7 +532,7 @@ void BreakFunction(
 /* SwitchFunction: H/L access routine for the switch function.   */
 /*****************************************************************/
 void SwitchFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue switch_val, case_val;

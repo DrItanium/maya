@@ -61,7 +61,7 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static struct dependency *DetachAssociatedDependencies(const Environment&, struct dependency *, void *);
+static struct dependency *DetachAssociatedDependencies(const Environment::Ptr&, struct dependency *, void *);
 
 /***********************************************************************/
 /* AddLogicalDependencies: Adds the logical dependency links between a */
@@ -79,7 +79,7 @@ static struct dependency *DetachAssociatedDependencies(const Environment&, struc
 /*   with the make-instance command.                                   */
 /***********************************************************************/
 bool AddLogicalDependencies(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         PatternEntity *theEntity,
         bool existingEntity) {
     PartialMatch *theBinds;
@@ -172,7 +172,7 @@ PartialMatch *FindLogicalBind(
 /*   entities.                                                       */
 /*********************************************************************/
 void RemoveEntityDependencies(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         PatternEntity *theEntity) {
     struct dependency *fdPtr, *nextPtr, *theList;
     PartialMatch *theBinds;
@@ -229,7 +229,7 @@ void RemoveEntityDependencies(
 /*   the partial match to the entity are not removed.               */
 /********************************************************************/
 void ReturnEntityDependencies(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         PatternEntity *theEntity) {
     struct dependency *fdPtr, *nextPtr;
 
@@ -252,7 +252,7 @@ void ReturnEntityDependencies(
 /*   the other direction.                                          */
 /*******************************************************************/
 static struct dependency *DetachAssociatedDependencies(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct dependency *theList,
         void *theEntity) {
     struct dependency *fdPtr, *nextPtr, *lastPtr = nullptr;
@@ -281,7 +281,7 @@ static struct dependency *DetachAssociatedDependencies(
 /*   links from the data entities which point back to the partial match.  */
 /**************************************************************************/
 void RemovePMDependencies(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         PartialMatch *theBinds) {
     struct dependency *fdPtr, *nextPtr, *theList;
     PatternEntity *theEntity;
@@ -309,7 +309,7 @@ void RemovePMDependencies(
 /*   from a partial match that point to any data entities.  */
 /************************************************************/
 void DestroyPMDependencies(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         PartialMatch *theBinds) {
     struct dependency *fdPtr, *nextPtr;
 
@@ -336,7 +336,7 @@ void DestroyPMDependencies(
 /*   will be deleted as a result of losing its logical support.         */
 /************************************************************************/
 void RemoveLogicalSupport(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         PartialMatch *theBinds) {
     struct dependency *dlPtr, *tempPtr, *theList;
     PatternEntity *theEntity;
@@ -411,7 +411,7 @@ void RemoveLogicalSupport(
 /*   lost their logical support.                                    */
 /********************************************************************/
 void ForceLogicalRetractions(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     struct dependency *tempPtr;
     PatternEntity *theEntity;
 
@@ -466,7 +466,7 @@ void ForceLogicalRetractions(
 /* Dependencies: C access routine for the dependencies command. */
 /****************************************************************/
 void Dependencies(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         PatternEntity *theEntity) {
     struct dependency *fdPtr;
 
@@ -498,7 +498,7 @@ void Dependencies(
 /* Dependents: C access routine for the dependents command. */
 /************************************************************/
 void Dependents(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         PatternEntity *theEntity) {
     PatternEntity *entityPtr = nullptr;
     struct patternParser *theParser = nullptr;
@@ -561,7 +561,7 @@ void Dependents(
 /*   for the dependencies command.           */
 /*********************************************/
 void DependenciesCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue item;
@@ -579,7 +579,7 @@ void DependenciesCommand(
 /*   for the dependents command.           */
 /*******************************************/
 void DependentsCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue item;

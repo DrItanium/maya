@@ -127,12 +127,12 @@ RegisterEnvironmentModule(defruleBinaryData, RULEBIN_DATA, DefruleBinary);
 #define BsaveJoinLinkIndex(linkPtr) ((linkPtr == nullptr) ? ULONG_MAX :  ((joinLink *) linkPtr)->bsaveID)
 #define BloadJoinLinkPointer(i) ((joinLink *) ((i == ULONG_MAX) ? nullptr : &DefruleBinaryData(theEnv)->LinkArray[i]))
 
-void DefruleBinarySetup(const Environment&);
-void UpdatePatternNodeHeader(const Environment&, PatternNodeHeader *,
+void DefruleBinarySetup(const Environment::Ptr&);
+void UpdatePatternNodeHeader(const Environment::Ptr&, PatternNodeHeader *,
                              struct bsavePatternNodeHeader *);
-void AssignBsavePatternHeaderValues(const Environment&, struct bsavePatternNodeHeader *,
+void AssignBsavePatternHeaderValues(const Environment::Ptr&, struct bsavePatternNodeHeader *,
                                     PatternNodeHeader *);
-void *BloadDefruleModuleReference(const Environment&, unsigned long);
+void *BloadDefruleModuleReference(const Environment::Ptr&, unsigned long);
 
 #endif /* _H_rulebin */
 

@@ -61,14 +61,14 @@
 /***************************************/
 
 #if DEBUGGING_FUNCTIONS
-static void PrintDefglobalValueForm(const Environment&, const char *, Defglobal *);
+static void PrintDefglobalValueForm(const Environment::Ptr&, const char *, Defglobal *);
 #endif
 
 /************************************************************/
 /* DefglobalCommandDefinitions: Defines defglobal commands. */
 /************************************************************/
 void DefglobalCommandDefinitions(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     AddUDF(theEnv, "set-reset-globals", "b", 1, 1, nullptr, SetResetGlobalsCommand);
     AddUDF(theEnv, "get-reset-globals", "b", 0, 0, nullptr, GetResetGlobalsCommand);
 
@@ -82,7 +82,7 @@ void DefglobalCommandDefinitions(
 /*   for the get-reset-globals command.         */
 /************************************************/
 void SetResetGlobalsCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     bool oldValue;
@@ -114,7 +114,7 @@ void SetResetGlobalsCommand(
 /*   for the set-reset-globals command. */
 /****************************************/
 bool SetResetGlobals(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         bool value) {
     bool ov;
 
@@ -128,7 +128,7 @@ bool SetResetGlobals(
 /*   for the get-reset-globals command.         */
 /************************************************/
 void GetResetGlobalsCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     returnValue->lexemeValue = CreateBoolean(theEnv, GetResetGlobals(theEnv));
@@ -139,7 +139,7 @@ void GetResetGlobalsCommand(
 /*   for the get-reset-globals command. */
 /****************************************/
 bool GetResetGlobals(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     return (DefglobalData(theEnv)->ResetGlobals);
 }
 
@@ -150,7 +150,7 @@ bool GetResetGlobals(
 /*   for the show-defglobals command.          */
 /***********************************************/
 void ShowDefglobalsCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Defmodule *theModule;
@@ -172,7 +172,7 @@ void ShowDefglobalsCommand(
 /*   for the show-defglobals command. */
 /**************************************/
 void ShowDefglobals(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         Defmodule *theModule) {
     ConstructHeader *constructPtr;
@@ -239,7 +239,7 @@ void ShowDefglobals(
 /*   ?*x* = 3                                        */
 /*****************************************************/
 static void PrintDefglobalValueForm(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         Defglobal *theGlobal) {
     WriteString(theEnv, logicalName, "?*");

@@ -80,15 +80,15 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static bool GetVariableDefinition(const Environment&, const char *, bool *, bool, struct token *);
-static void AddDefglobal(const Environment&, CLIPSLexeme *, UDFValue *, Expression *);
+static bool GetVariableDefinition(const Environment::Ptr&, const char *, bool *, bool, struct token *);
+static void AddDefglobal(const Environment::Ptr&, CLIPSLexeme *, UDFValue *, Expression *);
 
 /*********************************************************************/
 /* ParseDefglobal: Coordinates all actions necessary for the parsing */
 /*   and creation of a defglobal into the current environment.       */
 /*********************************************************************/
 bool ParseDefglobal(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource) {
     bool defglobalError = false;
 
@@ -199,7 +199,7 @@ bool ParseDefglobal(
 /*   flag is also set if an error occurs.                      */
 /***************************************************************/
 static bool GetVariableDefinition(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource,
         bool *defglobalError,
         bool tokenRead,
@@ -316,7 +316,7 @@ static bool GetVariableDefinition(
 /* AddDefglobal: Adds a defglobal to the current module. */
 /*********************************************************/
 static void AddDefglobal(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CLIPSLexeme *name,
         UDFValue *vPtr,
         Expression *ePtr) {
@@ -419,7 +419,7 @@ static void AddDefglobal(
 /*   can later be used to retrieve the global variable's value.  */
 /*****************************************************************/
 bool ReplaceGlobalVariable(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *ePtr) {
     Defglobal *theGlobal;
     unsigned int count;
@@ -469,7 +469,7 @@ bool ReplaceGlobalVariable(
 /*   symbolic reference to a global variable cannot be resolved. */
 /*****************************************************************/
 void GlobalReferenceErrorMessage(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *variableName) {
     PrintErrorID(theEnv, "GLOBLPSR", 1, true);
     WriteString(theEnv, STDERR, "\nGlobal variable ?*");

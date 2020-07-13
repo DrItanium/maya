@@ -60,18 +60,18 @@ RegisterEnvironmentModule(sortFunctionData,SORTFUN_DATA, SortFunction);
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void DoMergeSort(const Environment&, UDFValue *, UDFValue *, size_t,
+static void DoMergeSort(const Environment::Ptr&, UDFValue *, UDFValue *, size_t,
                         size_t, size_t, size_t,
-                        bool (*)(const Environment&, UDFValue *, UDFValue *));
-static bool DefaultCompareSwapFunction(const Environment&, UDFValue *, UDFValue *);
-static void DeallocateSortFunctionData(const Environment&);
+                        bool (*)(const Environment::Ptr&, UDFValue *, UDFValue *));
+static bool DefaultCompareSwapFunction(const Environment::Ptr&, UDFValue *, UDFValue *);
+static void DeallocateSortFunctionData(const Environment::Ptr&);
 
 /****************************************/
 /* SortFunctionDefinitions: Initializes */
 /*   the sorting functions.             */
 /****************************************/
 void SortFunctionDefinitions(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     //AllocateEnvironmentData(theEnv, SORTFUN_DATA, sizeof(sortFunctionData), DeallocateSortFunctionData);
     theEnv->allocateEnvironmentModule<sortFunctionData>();
     if constexpr (STUBBING_INACTIVE) {
@@ -84,7 +84,7 @@ void SortFunctionDefinitions(
 /*    data for the sort function.                      */
 /*******************************************************/
 static void DeallocateSortFunctionData(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     ReturnExpression(theEnv, SortFunctionData(theEnv)->SortComparisonFunction);
 }
 
@@ -92,7 +92,7 @@ static void DeallocateSortFunctionData(
 /* DefaultCompareSwapFunction:  */
 /********************************/
 static bool DefaultCompareSwapFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFValue *item1,
         UDFValue *item2) {
     UDFValue returnValue;
@@ -114,7 +114,7 @@ static bool DefaultCompareSwapFunction(
 /*   for the rest$ function.        */
 /************************************/
 void SortFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     unsigned argumentCount, i;
@@ -270,10 +270,10 @@ void SortFunction(
 /*   according to user specified criteria. */
 /*******************************************/
 void MergeSort(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         size_t listSize,
         UDFValue *theList,
-        bool (*swapFunction)(const Environment&, UDFValue *, UDFValue *)) {
+        bool (*swapFunction)(const Environment::Ptr&, UDFValue *, UDFValue *)) {
     UDFValue *tempList;
     size_t middle;
 
@@ -307,14 +307,14 @@ void MergeSort(
 /*   sort on an array of UDFValue structures.       */
 /******************************************************/
 static void DoMergeSort(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFValue *theList,
         UDFValue *tempList,
         size_t s1,
         size_t e1,
         size_t s2,
         size_t e2,
-        bool (*swapFunction)(const Environment&, UDFValue *, UDFValue *)) {
+        bool (*swapFunction)(const Environment::Ptr&, UDFValue *, UDFValue *)) {
     UDFValue temp;
     size_t middle, size;
     size_t c1, c2, mergePoint;

@@ -91,7 +91,7 @@ RegisterEnvironmentModule(messageHandlerData, MESSAGE_HANDLER_DATA, MessageHandl
 #define PRINT_STRING  "print"
 #define CREATE_STRING "create"
 
-void SetupMessageHandlers(const Environment&);
+void SetupMessageHandlers(const Environment::Ptr&);
 const char *DefmessageHandlerName(Defclass *, unsigned);
 const char *DefmessageHandlerType(Defclass *, unsigned);
 unsigned GetNextDefmessageHandler(Defclass *, unsigned);
@@ -103,16 +103,16 @@ void DefmessageHandlerSetWatch(Defclass *, unsigned, bool);
 #endif
 unsigned FindDefmessageHandler(Defclass *, const char *, const char *);
 bool DefmessageHandlerIsDeletable(Defclass *, unsigned);
-void UndefmessageHandlerCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-bool UndefmessageHandler(Defclass *, unsigned, const Environment&);
+void UndefmessageHandlerCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+bool UndefmessageHandler(Defclass *, unsigned, const Environment::Ptr&);
 #if DEBUGGING_FUNCTIONS
-void PPDefmessageHandlerCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void ListDefmessageHandlersCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void PreviewSendCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void PPDefmessageHandlerCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void ListDefmessageHandlersCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void PreviewSendCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
 const char *DefmessageHandlerPPForm(Defclass *, unsigned);
-void ListDefmessageHandlers(const Environment&, Defclass *, const char *, bool);
+void ListDefmessageHandlers(const Environment::Ptr&, Defclass *, const char *, bool);
 void PreviewSend(Defclass *, const char *, const char *);
-unsigned long DisplayHandlersInLinks(const Environment&, const char *, PACKED_CLASS_LINKS *, unsigned int);
+unsigned long DisplayHandlersInLinks(const Environment::Ptr&, const char *, PACKED_CLASS_LINKS *, unsigned int);
 #endif
 
 #endif /* _H_msgcom */

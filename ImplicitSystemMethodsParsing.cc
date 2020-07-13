@@ -75,10 +75,10 @@
    =========================================
    ***************************************** */
 
-static void FormMethodsFromRestrictions(const Environment&, Defgeneric *, FunctionDefinition *, Expression *);
-static RESTRICTION *ParseRestrictionType(const Environment&, unsigned);
-static Expression *GenTypeExpression(const Environment&, Expression *, int, int, const char *);
-static Expression *ParseRestrictionCreateTypes(const Environment&, CONSTRAINT_RECORD *);
+static void FormMethodsFromRestrictions(const Environment::Ptr&, Defgeneric *, FunctionDefinition *, Expression *);
+static RESTRICTION *ParseRestrictionType(const Environment::Ptr&, unsigned);
+static Expression *GenTypeExpression(const Environment::Ptr&, Expression *, int, int, const char *);
+static Expression *ParseRestrictionCreateTypes(const Environment::Ptr&, CONSTRAINT_RECORD *);
 
 /* =========================================
    *****************************************
@@ -97,7 +97,7 @@ static Expression *ParseRestrictionCreateTypes(const Environment&, CONSTRAINT_RE
                  Assumes no other methods already present
  ********************************************************/
 void AddImplicitMethods(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defgeneric *gfunc) {
     FunctionDefinition *sysfunc;
     Expression action;
@@ -131,7 +131,7 @@ void AddImplicitMethods(
   NOTES        : None
  **********************************************************************/
 static void FormMethodsFromRestrictions(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defgeneric *gfunc,
         FunctionDefinition *sysfunc,
         Expression *actions) {
@@ -283,7 +283,7 @@ static void FormMethodsFromRestrictions(
 /* ParseRestrictionCreateTypes */
 /*******************************/
 static Expression *ParseRestrictionCreateTypes(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CONSTRAINT_RECORD *rv) {
     Expression *types = nullptr;
 
@@ -339,7 +339,7 @@ static Expression *ParseRestrictionCreateTypes(
   NOTES        : None
  *******************************************************************/
 static RESTRICTION *ParseRestrictionType(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         unsigned code) {
     RESTRICTION *rptr;
     CONSTRAINT_RECORD *rv;
@@ -377,7 +377,7 @@ static RESTRICTION *ParseRestrictionType(
                  to classes
  ***************************************************/
 static Expression *GenTypeExpression(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *top,
         int nonCOOLCode,
         int primitiveCode,

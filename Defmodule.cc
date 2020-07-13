@@ -80,15 +80,15 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void ReturnDefmodule(const Environment&, Defmodule *, bool);
-static void DeallocateDefmoduleData(const Environment&);
+static void ReturnDefmodule(const Environment::Ptr&, Defmodule *, bool);
+static void DeallocateDefmoduleData(const Environment::Ptr&);
 
 /************************************************/
 /* AllocateDefmoduleGlobals: Initializes global */
 /*   variables used by the defmodule construct. */
 /************************************************/
 void AllocateDefmoduleGlobals(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     //AllocateEnvironmentData(theEnv, DEFMODULE_DATA, sizeof(defmoduleData));
     theEnv->allocateEnvironmentModule<defmoduleData>();
     /// @todo DeallocateDefmoduleData is the dtor for defmoduleData
@@ -103,7 +103,7 @@ void AllocateDefmoduleGlobals(
 /*    data for the defmodule construct.             */
 /****************************************************/
 static void DeallocateDefmoduleData(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     struct moduleStackItem *tmpMSPtr, *nextMSPtr;
     struct moduleItem *tmpMIPtr, *nextMIPtr;
     Defmodule *tmpDMPtr, *nextDMPtr;
@@ -167,7 +167,7 @@ static void DeallocateDefmoduleData(
 /* InitializeDefmodules: Initializes the defmodule construct. */
 /**************************************************************/
 void InitializeDefmodules(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
 #if STUBBING_INACTIVE
     DefmoduleBasicCommands(theEnv);
 
@@ -191,11 +191,11 @@ void InitializeDefmodules(
 /*   which can be placed within a module.             */
 /******************************************************/
 unsigned
-RegisterModuleItem(const Environment&theEnv,
+RegisterModuleItem(const Environment::Ptr&theEnv,
                    const char *theItem,
                    AllocateModuleFunction *allocateFunction,
                    FreeModuleFunction *freeFunction,
-                   void *(*bloadModuleReference)(const Environment&, unsigned long),
+                   void *(*bloadModuleReference)(const Environment::Ptr&, unsigned long),
                    FindConstructFunction *findFunction) {
     struct moduleItem *newModuleItem;
 
@@ -223,7 +223,7 @@ RegisterModuleItem(const Environment&theEnv,
 /* GetListOfModuleItems: Returns the list of module items. */
 /***********************************************************/
 struct moduleItem *GetListOfModuleItems(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     return (DefmoduleData(theEnv)->ListOfModuleItems);
 }
 
@@ -231,7 +231,7 @@ struct moduleItem *GetListOfModuleItems(
 /* GetNumberOfModuleItems: Returns the number of module items. */
 /***************************************************************/
 unsigned GetNumberOfModuleItems(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     return DefmoduleData(theEnv)->NumberOfModuleItems;
 }
 #if STUBBING_INACTIVE
@@ -240,7 +240,7 @@ unsigned GetNumberOfModuleItems(
 /*   corresponding to the specified name.               */
 /********************************************************/
 struct moduleItem *FindModuleItem(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *theName) {
     struct moduleItem *theModuleItem;
 
@@ -256,7 +256,7 @@ struct moduleItem *FindModuleItem(
 /*   to the current module.            */
 /***************************************/
 Defmodule *GetCurrentModule(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     return DefmoduleData(theEnv)->CurrentModule;
 }
 #endif
@@ -265,7 +265,7 @@ Defmodule *GetCurrentModule(
 /* SetCurrentModule: Sets the value of the current module. */
 /***********************************************************/
 Defmodule *SetCurrentModule(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defmodule *newModule) {
 #if STUBBING_INACTIVE
     struct voidCallFunctionItem *changeFunctions;
@@ -312,7 +312,7 @@ Defmodule *SetCurrentModule(
 /*   functions                                          */
 /********************************************************/
 void SaveCurrentModule(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     auto tmp = get_struct(theEnv, moduleStackItem);
     tmp->changeFlag = DefmoduleData(theEnv)->CallModuleChangeFunctions;
     DefmoduleData(theEnv)->CallModuleChangeFunctions = false;
@@ -326,7 +326,7 @@ void SaveCurrentModule(
 /*   ability of SetCurrentModule() to call changed        */
 /*   functions to previous state                          */
 /**********************************************************/
-void RestoreCurrentModule(const Environment&theEnv) {
+void RestoreCurrentModule(const Environment::Ptr&theEnv) {
     auto tmp = DefmoduleData(theEnv)->ModuleStack;
     DefmoduleData(theEnv)->ModuleStack = tmp->next;
     DefmoduleData(theEnv)->CallModuleChangeFunctions = tmp->changeFlag;
@@ -341,7 +341,7 @@ void RestoreCurrentModule(const Environment&theEnv) {
 /*   is returned.                                            */
 /*************************************************************/
 void *GetModuleItem(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defmodule *theModule,
         unsigned moduleItemIndex) {
     if (theModule == nullptr) {
@@ -361,7 +361,7 @@ void *GetModuleItem(
 /*   is returned.                                           */
 /************************************************************/
 void SetModuleItem(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defmodule *theModule,
         unsigned moduleItemIndex,
         void *newValue) {
@@ -378,7 +378,7 @@ void SetModuleItem(
 /* CreateMainModule: Creates the default MAIN module. */
 /******************************************************/
 void CreateMainModule(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *context) {
     Defmodule *newDefmodule;
     struct moduleItem *theItem;
@@ -448,7 +448,7 @@ void CreateMainModule(
 /*   when bloading a binary file to install the list of defmodules.  */
 /*********************************************************************/
 void SetListOfDefmodules(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defmodule *defmodulePtr) {
     DefmoduleData(theEnv)->ListOfDefmodules = defmodulePtr;
     DefmoduleData(theEnv)->LastDefmodule = DefmoduleData(theEnv)->ListOfDefmodules;
@@ -468,7 +468,7 @@ void SetListOfDefmodules(
 /*   defmodule following the defmodule passed as an argument.      */
 /*******************************************************************/
 Defmodule *GetNextDefmodule(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defmodule *defmodulePtr) {
 #if STUBBING_INACTIVE
     if (defmodulePtr == nullptr) { return DefmoduleData(theEnv)->ListOfDefmodules; }
@@ -501,7 +501,7 @@ const char *DefmodulePPForm(
 /*   from the current environment.             */
 /***********************************************/
 void RemoveAllDefmodules(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *context) {
     Defmodule *nextDefmodule;
 
@@ -520,7 +520,7 @@ void RemoveAllDefmodules(
 /*   with a defmodule construct to the pool of free memory. */
 /************************************************************/
 static void ReturnDefmodule(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defmodule *theDefmodule,
         bool environmentClear) {
     unsigned int i;
@@ -620,7 +620,7 @@ static void ReturnDefmodule(
 /*   to the defmodule if found, otherwise nullptr. */
 /************************************************/
 Defmodule *FindDefmodule(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *defmoduleName) {
 #if STUBBING_INACTIVE
     Defmodule *defmodulePtr;
@@ -643,7 +643,7 @@ Defmodule *FindDefmodule(
 /*   for the get-current-module command.         */
 /*************************************************/
 void GetCurrentModuleCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
 #if STUBBING_INACTIVE
@@ -666,7 +666,7 @@ void GetCurrentModuleCommand(
 /*   for the set-current-module command.         */
 /*************************************************/
 void SetCurrentModuleCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -715,7 +715,7 @@ void SetCurrentModuleCommand(
 /*   a module change occurs.                     */
 /*************************************************/
 void AddAfterModuleChangeFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *name,
         VoidCallFunction *func,
         int priority,
@@ -729,7 +729,7 @@ void AddAfterModuleChangeFunction(
 /*   for the illegal use of a module specifier. */
 /************************************************/
 void IllegalModuleSpecifierMessage(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     PrintErrorID(theEnv, "MODULDEF", 1, true);
     WriteString(theEnv, STDERR, "Illegal use of the module specifier.\n");
 }
@@ -739,7 +739,7 @@ void IllegalModuleSpecifierMessage(
 /*   of defmodules currently defined.        */
 /*********************************************/
 unsigned short GetNumberOfDefmodules(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
 #if DEFMODULE_CONSTRUCT
     return DefmoduleData(theEnv)->NumberOfDefmodules;
 #else

@@ -77,19 +77,19 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void MarkNetworkForIncrementalReset(const Environment&, Defrule::Ptr , bool);
-static void MarkJoinsForIncrementalReset(const Environment&, struct joinNode *, bool);
-static void CheckForPrimableJoins(const Environment&, Defrule::Ptr , struct joinNode *);
-static void PrimeJoinFromLeftMemory(const Environment&, struct joinNode *);
-static void PrimeJoinFromRightMemory(const Environment&, struct joinNode *);
-static void MarkPatternForIncrementalReset(const Environment&, unsigned short,
+static void MarkNetworkForIncrementalReset(const Environment::Ptr&, Defrule::Ptr , bool);
+static void MarkJoinsForIncrementalReset(const Environment::Ptr&, struct joinNode *, bool);
+static void CheckForPrimableJoins(const Environment::Ptr&, Defrule::Ptr , struct joinNode *);
+static void PrimeJoinFromLeftMemory(const Environment::Ptr&, struct joinNode *);
+static void PrimeJoinFromRightMemory(const Environment::Ptr&, struct joinNode *);
+static void MarkPatternForIncrementalReset(const Environment::Ptr&, unsigned short,
                                            PatternNodeHeader *, bool);
 
 /**************************************************************/
 /* IncrementalReset: Incrementally resets the specified rule. */
 /**************************************************************/
 void IncrementalReset(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defrule::Ptr tempRule) {
     Defrule::Ptr tempPtr;
     struct patternParser *theParser;
@@ -148,7 +148,7 @@ void IncrementalReset(
 /*   incremental reset.                                               */
 /**********************************************************************/
 static void MarkNetworkForIncrementalReset(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defrule::Ptr tempRule,
         bool value) {
     /*============================================*/
@@ -166,7 +166,7 @@ static void MarkNetworkForIncrementalReset(
 /*   incremental reset.                                               */
 /**********************************************************************/
 static void MarkJoinsForIncrementalReset(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct joinNode *joinPtr,
         bool value) {
     PatternNodeHeader *patternPtr;
@@ -208,7 +208,7 @@ static void MarkJoinsForIncrementalReset(
 /*   PrimeJoin is used to update joins which meet these criteria.              */
 /*******************************************************************************/
 static void CheckForPrimableJoins(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defrule::Ptr tempRule,
         struct joinNode *joinPtr) {
     /*========================================*/
@@ -259,7 +259,7 @@ static void CheckForPrimableJoins(
 /*   entry pattern node has not been marked for initialization.             */
 /****************************************************************************/
 static void PrimeJoinFromLeftMemory(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct joinNode *joinPtr) {
     PartialMatch *theList, *linker;
     struct alphaMemoryHash *listOfHashNodes;
@@ -356,7 +356,7 @@ static void PrimeJoinFromLeftMemory(
 /*   entry pattern node has not been marked for initialization.             */
 /****************************************************************************/
 static void PrimeJoinFromRightMemory(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct joinNode *joinPtr) {
     PartialMatch *theList, *linker;
     unsigned long b;
@@ -442,7 +442,7 @@ static void PrimeJoinFromRightMemory(
 /*   nodes both before and after an incremental reset.               */
 /*********************************************************************/
 static void MarkPatternForIncrementalReset(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         unsigned short rhsType,
         PatternNodeHeader *theHeader,
         bool value) {

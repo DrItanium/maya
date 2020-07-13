@@ -50,8 +50,8 @@
 #include "Symbol.h"
 #include "Deftemplate.h"
 
-bool ParseDeftemplate(const Environment&, const char *);
-void InstallDeftemplate(const Environment&, Deftemplate *);
+bool ParseDeftemplate(const Environment::Ptr&, const char *);
+void InstallDeftemplate(const Environment::Ptr&, Deftemplate *);
 
 #endif /* _H_tmpltpsr */
 

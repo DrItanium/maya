@@ -73,24 +73,24 @@ constexpr auto BSAVE_PATTERNS     = 1;
 /***************************************/
 
 #if BLOAD_AND_BSAVE
-static void BsaveDriver(const Environment&, int, FILE *, FactPatternNode *);
-static void BsaveFind(const Environment&);
-static void BsaveStorage(const Environment&, FILE *);
-static void BsaveFactPatterns(const Environment&, FILE *);
-static void BsavePatternNode(const Environment&, FactPatternNode *, FILE *);
+static void BsaveDriver(const Environment::Ptr&, int, FILE *, FactPatternNode *);
+static void BsaveFind(const Environment::Ptr&);
+static void BsaveStorage(const Environment::Ptr&, FILE *);
+static void BsaveFactPatterns(const Environment::Ptr&, FILE *);
+static void BsavePatternNode(const Environment::Ptr&, FactPatternNode *, FILE *);
 #endif
-static void BloadStorage(const Environment&);
-static void BloadBinaryItem(const Environment&);
-static void UpdateFactPatterns(const Environment&, void *, unsigned long);
-static void ClearBload(const Environment&);
-static void DeallocateFactBloadData(const Environment&);
+static void BloadStorage(const Environment::Ptr&);
+static void BloadBinaryItem(const Environment::Ptr&);
+static void UpdateFactPatterns(const Environment::Ptr&, void *, unsigned long);
+static void ClearBload(const Environment::Ptr&);
+static void DeallocateFactBloadData(const Environment::Ptr&);
 
 /*****************************************************/
 /* FactBinarySetup: Initializes the binary load/save */
 /*   feature for the fact pattern network.           */
 /*****************************************************/
 void FactBinarySetup(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     theEnv->allocateEnvironmentModule<factBinaryData>();
     //AllocateEnvironmentData(theEnv, FACTBIN_DATA, sizeof(factBinaryData), DeallocateFactBloadData);
 
@@ -107,7 +107,7 @@ void FactBinarySetup(
 /*    data for the fact bsave functionality.        */
 /****************************************************/
 static void DeallocateFactBloadData(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     size_t space;
     unsigned long i;
 
@@ -127,7 +127,7 @@ static void DeallocateFactBloadData(
 /*   pattern network in the current environment.         */
 /*********************************************************/
 static void BsaveFind(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     Deftemplate *theDeftemplate;
     Defmodule *theModule;
 
@@ -180,7 +180,7 @@ static void BsaveFind(
 /*   and saving the data structures to a file.            */
 /**********************************************************/
 static void BsaveDriver(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         int action,
         FILE *fp,
         FactPatternNode *thePattern) {
@@ -213,7 +213,7 @@ static void BsaveDriver(
 /*   FactPatternNode data structures to the binary file  */
 /*********************************************************/
 static void BsaveStorage(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         FILE *fp) {
     size_t space;
 
@@ -227,7 +227,7 @@ static void BsaveStorage(
 /*    data structures to the binary file.            */
 /*****************************************************/
 static void BsaveFactPatterns(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         FILE *fp) {
     size_t space;
     Deftemplate *theDeftemplate;
@@ -277,7 +277,7 @@ static void BsaveFactPatterns(
 /*   node to the binary image save file.              */
 /******************************************************/
 static void BsavePatternNode(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         FactPatternNode *thePattern,
         FILE *fp) {
     struct bsaveFactPatternNode tempNode;
@@ -303,7 +303,7 @@ static void BsavePatternNode(
 /*   the FactPatternNodes used by this binary image. */
 /*****************************************************/
 static void BloadStorage(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     size_t space;
 
     /*=========================================*/
@@ -333,7 +333,7 @@ static void BloadStorage(
 /*   data structures used by this binary image.             */
 /************************************************************/
 static void BloadBinaryItem(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     size_t space;
     unsigned long i;
 
@@ -369,7 +369,7 @@ static void BloadBinaryItem(
 /*   the FactPatternNode structure.              */
 /*************************************************/
 static void UpdateFactPatterns(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *buf,
         unsigned long obji) {
     struct bsaveFactPatternNode *bp;
@@ -395,7 +395,7 @@ static void UpdateFactPatterns(
 /*   when a binary load is in effect.              */
 /***************************************************/
 static void ClearBload(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     size_t space;
     unsigned long i;
 

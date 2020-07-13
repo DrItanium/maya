@@ -98,7 +98,7 @@
 /*    data for print utility routines.               */
 /*****************************************************/
 void InitializePrintUtilityData(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     theEnv->allocateEnvironmentModule<printUtilityData>();
 }
 
@@ -106,7 +106,7 @@ void InitializePrintUtilityData(
 /* WriteFloat: Controls printout of floating point numbers. */
 /************************************************************/
 void WriteFloat(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *fileid,
         double number) {
 
@@ -118,7 +118,7 @@ void WriteFloat(
 /* WriteInteger: Controls printout of integers. */
 /************************************************/
 void WriteInteger(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         long long number) {
     char printBuffer[32];
@@ -132,7 +132,7 @@ void WriteInteger(
 /*   of unsigned integers.                 */
 /*******************************************/
 void PrintUnsignedInteger(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         unsigned long long number) {
     char printBuffer[32];
@@ -145,7 +145,7 @@ void PrintUnsignedInteger(
 /* PrintAtom: Prints an atomic value. */
 /**************************************/
 void PrintAtom(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         unsigned short type,
         void *value) {
@@ -221,7 +221,7 @@ void PrintAtom(
 /*   such as list-defrules.                               */
 /**********************************************************/
 void PrintTally(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         unsigned long long count,
         const char *singular,
@@ -243,7 +243,7 @@ void PrintTally(
 /*   error ID for an error message.         */
 /********************************************/
 void PrintErrorID(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *module,
         int errorID,
         bool printCR) {
@@ -280,7 +280,7 @@ void PrintErrorID(
 /*   warning ID for a warning message.        */
 /**********************************************/
 void PrintWarningID(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *module,
         int warningID,
         bool printCR) {
@@ -319,7 +319,7 @@ void PrintWarningID(
 /*  when an "item" can not be found.               */
 /***************************************************/
 void CantFindItemErrorMessage(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *itemType,
         const char *itemName,
         bool useQuotes) {
@@ -338,7 +338,7 @@ void CantFindItemErrorMessage(
 /*  message when an "item" can not be found.         */
 /*****************************************************/
 void CantFindItemInFunctionErrorMessage(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *itemType,
         const char *itemName,
         const char *func,
@@ -360,7 +360,7 @@ void CantFindItemInFunctionErrorMessage(
 /*  when an "item" can not be deleted.               */
 /*****************************************************/
 void CantDeleteItemErrorMessage(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *itemType,
         const char *itemName) {
     PrintErrorID(theEnv, "PRNTUTIL", 4, false);
@@ -376,7 +376,7 @@ void CantDeleteItemErrorMessage(
 /*  when an "item" has already been parsed.         */
 /****************************************************/
 void AlreadyParsedErrorMessage(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *itemType,
         const char *itemName) {
     PrintErrorID(theEnv, "PRNTUTIL", 5, true);
@@ -394,7 +394,7 @@ void AlreadyParsedErrorMessage(
 /* SyntaxErrorMessage: Generalized syntax error message. */
 /*********************************************************/
 void SyntaxErrorMessage(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *location) {
     PrintErrorID(theEnv, "PRNTUTIL", 2, true);
     WriteString(theEnv, STDERR, "Syntax Error");
@@ -413,7 +413,7 @@ void SyntaxErrorMessage(
 /*  which can not access local variables.           */
 /****************************************************/
 void LocalVariableErrorMessage(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *byWhat) {
     PrintErrorID(theEnv, "PRNTUTIL", 6, true);
     WriteString(theEnv, STDERR, "Local variables can not be accessed by ");
@@ -426,7 +426,7 @@ void LocalVariableErrorMessage(
 /*   for major internal errors.           */
 /******************************************/
 void SystemError(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *module,
         int errorID) {
     PrintErrorID(theEnv, "PRNTUTIL", 3, true);
@@ -451,7 +451,7 @@ void SystemError(
 /*   for when a function attempts to divide by zero.   */
 /*******************************************************/
 void DivideByZeroErrorMessage(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *functionName) {
     PrintErrorID(theEnv, "PRNTUTIL", 7, false);
     WriteString(theEnv, STDERR, "Attempt to divide by zero in '");
@@ -464,7 +464,7 @@ void DivideByZeroErrorMessage(
 /*   message for an integer under or overflow.          */
 /********************************************************/
 void ArgumentOverUnderflowErrorMessage(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *functionName,
         bool error) {
     if (error) {
@@ -484,7 +484,7 @@ void ArgumentOverUnderflowErrorMessage(
 /* FloatToString: Converts number to KB string format. */
 /*******************************************************/
 std::string FloatToString(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         double value) {
     char floatString[40];
     int i;
@@ -510,7 +510,7 @@ std::string FloatToString(
 /* LongIntegerToString: Converts long integer to KB string format. */
 /*******************************************************************/
 std::string LongIntegerToString(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         long long value) {
     char buffer[50];
 
@@ -524,7 +524,7 @@ std::string LongIntegerToString(
 /* DataObjectToString: Converts a UDFValue to KB string format. */
 /******************************************************************/
 const char *DataObjectToString(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFValue *theDO) {
     CLIPSLexeme *thePtr;
     const char *theString;
@@ -640,7 +640,7 @@ const char *DataObjectToString(
 /*   occur during the evaluation of a salience value.       */
 /************************************************************/
 void SalienceInformationError(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *constructType,
         const char *constructName) {
     PrintErrorID(theEnv, "PRNTUTIL", 8, true);
@@ -661,7 +661,7 @@ void SalienceInformationError(
 /*   and maximum salience values.                         */
 /**********************************************************/
 void SalienceRangeError(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         int min,
         int max) {
     PrintErrorID(theEnv, "PRNTUTIL", 9, true);
@@ -677,7 +677,7 @@ void SalienceRangeError(
 /*   a rule's salience does not evaluate to an integer.        */
 /***************************************************************/
 void SalienceNonIntegerError(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     PrintErrorID(theEnv, "PRNTUTIL", 10, true);
     WriteString(theEnv, STDERR, "Salience value must be an integer value.\n");
 }
@@ -687,7 +687,7 @@ void SalienceNonIntegerError(
 /*  when a fact has been retracted.                 */
 /****************************************************/
 void FactRetractedErrorMessage(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Fact *theFact) {
     char tempBuffer[20];
 
@@ -704,7 +704,7 @@ void FactRetractedErrorMessage(
 /*   has been retracted.                            */
 /****************************************************/
 void FactVarSlotErrorMessage1(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Fact *theFact,
         const char *varSlot) {
     char tempBuffer[20];
@@ -725,7 +725,7 @@ void FactVarSlotErrorMessage1(
 /*   slot.                                          */
 /****************************************************/
 void FactVarSlotErrorMessage2(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Fact *theFact,
         const char *varSlot) {
     char tempBuffer[20];
@@ -746,7 +746,7 @@ void FactVarSlotErrorMessage2(
 /*   slot.                                            */
 /******************************************************/
 void InvalidVarSlotErrorMessage(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *varSlot) {
     PrintErrorID(theEnv, "PRNTUTIL", 14, false);
 
@@ -761,7 +761,7 @@ void InvalidVarSlotErrorMessage(
 /*   that has been deleted.                            */
 /*******************************************************/
 void InstanceVarSlotErrorMessage1(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Instance *theInstance,
         const char *varSlot) {
     PrintErrorID(theEnv, "PRNTUTIL", 15, false);
@@ -779,7 +779,7 @@ void InstanceVarSlotErrorMessage1(
 /*   an invalid slot.                           */
 /************************************************/
 void InstanceVarSlotErrorMessage2(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Instance *theInstance,
         const char *varSlot) {
     PrintErrorID(theEnv, "PRNTUTIL", 16, false);
@@ -798,7 +798,7 @@ void InstanceVarSlotErrorMessage2(
 /*   name and the function name.                   */
 /***************************************************/
 void SlotExistError(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *sname,
         const char *func) {
     PrintErrorID(theEnv, "INSFUN", 3, false);

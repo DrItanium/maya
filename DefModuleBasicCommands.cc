@@ -65,16 +65,16 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void ClearDefmodules(const Environment&, void *);
+static void ClearDefmodules(const Environment::Ptr&, void *);
 #if DEFMODULE_CONSTRUCT
-static void SaveDefmodules(const Environment&, Defmodule *, const char *, void *);
+static void SaveDefmodules(const Environment::Ptr&, Defmodule *, const char *, void *);
 #endif
 
 /*****************************************************************/
 /* DefmoduleBasicCommands: Initializes basic defmodule commands. */
 /*****************************************************************/
 void DefmoduleBasicCommands(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     AddClearFunction(theEnv, "defmodule", ClearDefmodules, 2000, nullptr);
 
 #if DEFMODULE_CONSTRUCT
@@ -99,7 +99,7 @@ void DefmoduleBasicCommands(
 /*   the clear command. Creates the MAIN module.         */
 /*********************************************************/
 static void ClearDefmodules(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *context) {
 #if (BLOAD_AND_BSAVE)
     if (Bloaded(theEnv)) return;
@@ -117,7 +117,7 @@ static void ClearDefmodules(
 /*   for use with the save command.       */
 /******************************************/
 static void SaveDefmodules(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defmodule *theModule,
         const char *logicalName,
         void *context) {
@@ -135,7 +135,7 @@ static void SaveDefmodules(
 /*   for the get-defmodule-list function.       */
 /************************************************/
 void GetDefmoduleListFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     CLIPSValue result;
@@ -149,7 +149,7 @@ void GetDefmoduleListFunction(
 /*   for the get-defmodule-list function. */
 /******************************************/
 void GetDefmoduleList(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CLIPSValue *returnValue) {
     Defmodule *theConstruct;
     unsigned long count = 0;
@@ -194,7 +194,7 @@ void GetDefmoduleList(
 /*   for the ppdefmodule command.           */
 /********************************************/
 void PPDefmoduleCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *defmoduleName;
@@ -234,7 +234,7 @@ void PPDefmoduleCommand(
 /*   the ppdefmodule command.           */
 /****************************************/
 const char *PPDefmoduleNil(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *defmoduleName) {
     Defmodule *defmodulePtr;
 
@@ -254,7 +254,7 @@ const char *PPDefmoduleNil(
 /*   the ppdefmodule command.        */
 /*************************************/
 bool PPDefmodule(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *defmoduleName,
         const char *logicalName) {
     Defmodule *defmodulePtr;
@@ -276,7 +276,7 @@ bool PPDefmodule(
 /*   for the list-defmodules command.          */
 /***********************************************/
 void ListDefmodulesCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     ListDefmodules(theEnv, STDOUT);
@@ -287,7 +287,7 @@ void ListDefmodulesCommand(
 /*   for the list-defmodules command. */
 /**************************************/
 void ListDefmodules(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName) {
     Defmodule *theModule;
     unsigned int count = 0;

@@ -70,7 +70,7 @@
 /*             ::= (<symbol> <constraint>+)    */
 /***********************************************/
 struct lhsParseNode *SequenceRestrictionParse(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource,
         struct token *theToken) {
     struct lhsParseNode *topNode;
@@ -170,7 +170,7 @@ bool FactPatternParserFind(
 /*  both deftemplate and ordered fact patterns.       */
 /******************************************************/
 struct lhsParseNode *FactPatternParse(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource,
         struct token *theToken) {
     Deftemplate *theDeftemplate;

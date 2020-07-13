@@ -99,7 +99,7 @@
 /*   none of the function has been parsed yet.     */
 /***************************************************/
 Expression *Function0Parse(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName) {
     struct token theToken;
     Expression *top;
@@ -128,7 +128,7 @@ Expression *Function0Parse(
 /*   opening left parenthesis has already been parsed. */
 /*******************************************************/
 Expression *Function1Parse(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName) {
     struct token theToken;
     Expression *top;
@@ -158,7 +158,7 @@ Expression *Function1Parse(
 /*   have already been parsed.                      */
 /****************************************************/
 Expression *Function2Parse(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         const char *name) {
     FunctionDefinition *theFunction;
@@ -340,7 +340,7 @@ Expression *Function2Parse(
                    being treated as a special expansion operator)
  **********************************************************************/
 bool ReplaceSequenceExpansionOps(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *actions,
         Expression *fcallexp,
         void *expcall,
@@ -402,7 +402,7 @@ bool ReplaceSequenceExpansionOps(
 /*   for the break/return functions.             */
 /*************************************************/
 void PushRtnBrkContexts(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
 #if STUBBING_INACTIVE
     SavedContexts *svtmp;
 
@@ -419,7 +419,7 @@ void PushRtnBrkContexts(
 /*   for the break/return functions.               */
 /***************************************************/
 void PopRtnBrkContexts(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     SavedContexts *svtmp;
 #if STUBBING_INACTIVE
     ExpressionData(theEnv)->ReturnContext = ExpressionData(theEnv)->svContexts->rtn;
@@ -461,7 +461,7 @@ bool RestrictionExists(
 /*   true is returned, otherwise false is returned.              */
 /*****************************************************************/
 FunctionArgumentsError CheckExpressionAgainstRestrictions(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *theExpression,
         FunctionDefinition *theFunction,
         const char *functionName) {
@@ -549,7 +549,7 @@ FunctionArgumentsError CheckExpressionAgainstRestrictions(
 /*   the arguments for a function call expression.     */
 /*******************************************************/
 Expression *CollectArguments(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *top,
         const char *logicalName) {
     bool errorFlag;
@@ -591,7 +591,7 @@ Expression *CollectArguments(
 /*   a function call expression.            */
 /********************************************/
 Expression *ArgumentParse(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         bool *errorFlag) {
     Expression *top;
@@ -646,7 +646,7 @@ Expression *ArgumentParse(
 /*   or variable (local or global).                         */
 /************************************************************/
 Expression *ParseAtomOrExpression(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         struct token *useToken) {
     struct token theToken, *thisToken;
@@ -684,7 +684,7 @@ Expression *ParseAtomOrExpression(
 /*   for example to parse the RHS of a rule. */
 /*********************************************/
 Expression *GroupActions(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         struct token *theToken,
         bool readFirstToken,
@@ -794,7 +794,7 @@ Expression *GroupActions(
 /* PopulateRestriction: */
 /************************/
 void PopulateRestriction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         unsigned *restriction,
         unsigned defaultRestriction,
         const std::string &restrictionString,
@@ -908,7 +908,7 @@ void PopulateRestriction(
 /*    into a set of constant expressions.  */
 /*******************************************/
 Expression *ParseConstantArguments(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *argstr,
         bool *error) {
     Expression *top = nullptr, *bot = nullptr, *tmp;
@@ -978,7 +978,7 @@ Expression *ParseConstantArguments(
 /* RemoveUnneededProgn: */
 /************************/
 Expression *RemoveUnneededProgn(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *theExpression) {
     FunctionDefinition *fptr;
     Expression *temp;

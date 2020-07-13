@@ -55,6 +55,7 @@ typedef struct savedContexts SavedContexts;
 #include "Construct.h"
 #include "ExternalFunctions.h"
 #include "Scanner.h"
+#include "Environment.h"
 
 /******************************/
 /* Expression Data Structures */
@@ -130,71 +131,71 @@ RegisterEnvironmentModule(ExpressionModule, EXPRESSION_DATA, Expression);
 /* Global Functions */
 /********************/
 
-void ReturnExpression(const Environment&, Expression *);
-void ExpressionInstall(const Environment&, Expression *);
-void ExpressionDeinstall(const Environment&, Expression *);
-Expression *PackExpression(const Environment&, Expression *);
-void ReturnPackedExpression(const Environment&, Expression *);
-void InitExpressionData(const Environment&);
-void InitExpressionPointers(const Environment&);
-bool SetSequenceOperatorRecognition(const Environment&, bool);
-bool GetSequenceOperatorRecognition(const Environment&);
-Expression *AddHashedExpression(const Environment&, Expression *);
-void RemoveHashedExpression(const Environment&, Expression *);
+void ReturnExpression(const Environment::Ptr&, Expression *);
+void ExpressionInstall(const Environment::Ptr&, Expression *);
+void ExpressionDeinstall(const Environment::Ptr&, Expression *);
+Expression *PackExpression(const Environment::Ptr&, Expression *);
+void ReturnPackedExpression(const Environment::Ptr&, Expression *);
+void InitExpressionData(const Environment::Ptr&);
+void InitExpressionPointers(const Environment::Ptr&);
+bool SetSequenceOperatorRecognition(const Environment::Ptr&, bool);
+bool GetSequenceOperatorRecognition(const Environment::Ptr&);
+Expression *AddHashedExpression(const Environment::Ptr&, Expression *);
+void RemoveHashedExpression(const Environment::Ptr&, Expression *);
 #if BLOAD_AND_BSAVE
-unsigned long HashedExpressionIndex(const Environment&, Expression *);
+unsigned long HashedExpressionIndex(const Environment::Ptr&, Expression *);
 #endif
 #define ExpressionPointer(i) ((Expression*) (((i) == ULONG_MAX) ? nullptr : &ExpressionData(theEnv)->ExpressionArray[i]))
 #define HashedExpressionPointer(i) ExpressionPointer(i)
 
-void AllocateExpressions(const Environment&);
-void RefreshExpressions(const Environment&);
-void ClearBloadedExpressions(const Environment&);
-void FindHashedExpressions(const Environment&);
-void BsaveHashedExpressions(const Environment&, FILE *);
-void BsaveConstructExpressions(const Environment&, FILE *);
-void BsaveExpression(const Environment&, Expression *, FILE *);
+void AllocateExpressions(const Environment::Ptr&);
+void RefreshExpressions(const Environment::Ptr&);
+void ClearBloadedExpressions(const Environment::Ptr&);
+void FindHashedExpressions(const Environment::Ptr&);
+void BsaveHashedExpressions(const Environment::Ptr&, FILE *);
+void BsaveConstructExpressions(const Environment::Ptr&, FILE *);
+void BsaveExpression(const Environment::Ptr&, Expression *, FILE *);
 
 bool ConstantExpression(Expression*);
-void PrintExpression(const Environment&, const char *, Expression *);
+void PrintExpression(const Environment::Ptr&, const char *, Expression *);
 unsigned long ExpressionSize(Expression *);
 unsigned short CountArguments(Expression *);
-Expression *CopyExpression(const Environment&, Expression *);
+Expression *CopyExpression(const Environment::Ptr&, Expression *);
 bool ExpressionContainsVariables(Expression *, bool);
 bool IdenticalExpression(Expression *, Expression *);
-Expression *GenConstant(const Environment&, unsigned short, void *);
-bool CheckArgumentAgainstRestriction(const Environment&, Expression *, unsigned);
+Expression *GenConstant(const Environment::Ptr&, unsigned short, void *);
+bool CheckArgumentAgainstRestriction(const Environment::Ptr&, Expression *, unsigned);
 bool ConstantType(int);
-Expression *CombineExpressions(const Environment&, Expression *, Expression *);
+Expression *CombineExpressions(const Environment::Ptr&, Expression *, Expression *);
 Expression *AppendExpressions(Expression *, Expression *);
-Expression *NegateExpression(const Environment&, Expression *);
+Expression *NegateExpression(const Environment::Ptr&, Expression *);
 enum FunctionArgumentsError{
     FAE_NO_ERROR = 0,
     FAE_COUNT_ERROR,
     FAE_TYPE_ERROR
 };
 
-Expression *Function0Parse(const Environment&, const char *);
-Expression *Function1Parse(const Environment&, const char *);
-Expression *Function2Parse(const Environment&, const char *, const char *);
-void PushRtnBrkContexts(const Environment&);
-void PopRtnBrkContexts(const Environment&);
-bool ReplaceSequenceExpansionOps(const Environment&, Expression *, Expression *,
+Expression *Function0Parse(const Environment::Ptr&, const char *);
+Expression *Function1Parse(const Environment::Ptr&, const char *);
+Expression *Function2Parse(const Environment::Ptr&, const char *, const char *);
+void PushRtnBrkContexts(const Environment::Ptr&);
+void PopRtnBrkContexts(const Environment::Ptr&);
+bool ReplaceSequenceExpansionOps(const Environment::Ptr&, Expression *, Expression *,
                                  void *, void *);
-Expression *CollectArguments(const Environment&, Expression *, const char *);
-Expression *ArgumentParse(const Environment&, const char *, bool *);
-Expression *ParseAtomOrExpression(const Environment&, const char *, struct token *);
-Expression *ParseConstantArguments(const Environment&, const char *, bool *);
-Expression *GroupActions(const Environment&, const char *, struct token *,
+Expression *CollectArguments(const Environment::Ptr&, Expression *, const char *);
+Expression *ArgumentParse(const Environment::Ptr&, const char *, bool *);
+Expression *ParseAtomOrExpression(const Environment::Ptr&, const char *, struct token *);
+Expression *ParseConstantArguments(const Environment::Ptr&, const char *, bool *);
+Expression *GroupActions(const Environment::Ptr&, const char *, struct token *,
                           bool, const char *, bool);
-Expression *RemoveUnneededProgn(const Environment&, Expression *);
-void PopulateRestriction(const Environment& theEnv,
+Expression *RemoveUnneededProgn(const Environment::Ptr&, Expression *);
+void PopulateRestriction(const Environment::Ptr& theEnv,
                          unsigned * restriction,
                          unsigned defaultRestriction,
                          const std::string &restrictionString,
                          unsigned int position);
 
-FunctionArgumentsError CheckExpressionAgainstRestrictions(const Environment&, Expression *,
+FunctionArgumentsError CheckExpressionAgainstRestrictions(const Environment::Ptr&, Expression *,
                                                           FunctionDefinition *, const char *);
 
 bool RestrictionExists(const char *, int);

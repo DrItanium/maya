@@ -60,9 +60,9 @@ struct bsavePortItem {
 
 #define ModulePointer(i) ((Defmodule *) (&DefmoduleData(theEnv)->DefmoduleArray[i]))
 
-void DefmoduleBinarySetup(const Environment&);
+void DefmoduleBinarySetup(const Environment::Ptr&);
 void UpdateDefmoduleItemHeader
-        (const Environment&, struct bsaveDefmoduleItemHeader *,
+        (const Environment::Ptr&, struct bsaveDefmoduleItemHeader *,
          struct defmoduleItemHeader *, size_t, void *);
 
 #if BLOAD_AND_BSAVE

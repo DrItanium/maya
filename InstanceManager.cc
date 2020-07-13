@@ -106,20 +106,20 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static Instance *NewInstance(const Environment&);
-static Instance *InstanceLocationInfo(const Environment&, Defclass *, CLIPSLexeme *, Instance **,
+static Instance *NewInstance(const Environment::Ptr&);
+static Instance *InstanceLocationInfo(const Environment::Ptr&, Defclass *, CLIPSLexeme *, Instance **,
                                       unsigned *);
-static void InstallInstance(const Environment&, Instance *, bool);
-static void BuildDefaultSlots(const Environment&, bool);
-static bool CoreInitializeInstance(const Environment&, Instance *, Expression *);
-static bool CoreInitializeInstanceCV(const Environment&, Instance *, CLIPSValue *);
-static bool InsertSlotOverrides(const Environment&, Instance *, Expression *);
-static bool InsertSlotOverridesCV(const Environment&, Instance *, CLIPSValue *);
-static void EvaluateClassDefaults(const Environment&, Instance *);
-static bool IMModifySlots(const Environment&, Instance *, CLIPSValue *);
+static void InstallInstance(const Environment::Ptr&, Instance *, bool);
+static void BuildDefaultSlots(const Environment::Ptr&, bool);
+static bool CoreInitializeInstance(const Environment::Ptr&, Instance *, Expression *);
+static bool CoreInitializeInstanceCV(const Environment::Ptr&, Instance *, CLIPSValue *);
+static bool InsertSlotOverrides(const Environment::Ptr&, Instance *, Expression *);
+static bool InsertSlotOverridesCV(const Environment::Ptr&, Instance *, CLIPSValue *);
+static void EvaluateClassDefaults(const Environment::Ptr&, Instance *);
+static bool IMModifySlots(const Environment::Ptr&, Instance *, CLIPSValue *);
 
 #if DEBUGGING_FUNCTIONS
-static void PrintInstanceWatch(const Environment&, const char *, Instance *);
+static void PrintInstanceWatch(const Environment::Ptr&, const char *, Instance *);
 #endif
 
 /* =========================================
@@ -139,7 +139,7 @@ static void PrintInstanceWatch(const Environment&, const char *, Instance *);
                     <slot-override>*)
  ***********************************************************/
 void InitializeInstanceCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Instance *ins;
@@ -165,7 +165,7 @@ void InitializeInstanceCommand(
                  is specified.
  ****************************************************************/
 void MakeInstanceCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     CLIPSLexeme *iname;
@@ -242,7 +242,7 @@ void MakeInstanceCommand(
                  name.
  ***************************************************/
 CLIPSLexeme *GetFullInstanceName(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Instance *ins) {
     if (ins == &InstanceData(theEnv)->DummyInstance) { return CreateInstanceName(theEnv, "Dummy Instance"); }
 
@@ -267,7 +267,7 @@ CLIPSLexeme *GetFullInstanceName(
   NOTES        : None
  ***************************************************/
 Instance *BuildInstance(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CLIPSLexeme *iname,
         Defclass *cls,
         bool initMessage) {
@@ -448,7 +448,7 @@ Instance *BuildInstance(
   NOTES        : H/L Syntax: (init-slots <instance>)
  *****************************************************************************/
 void InitSlotsCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     EvaluationData(theEnv)->EvaluationError = false;
@@ -481,7 +481,7 @@ void InitSlotsCommand(
                    instance was garbage collected).
  ******************************************************/
 UnmakeInstanceError QuashInstance(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Instance *ins) {
     int iflag;
     IGARBAGE *gptr;
@@ -601,7 +601,7 @@ UnmakeInstanceError QuashInstance(
                     <slot-override>*)
  ****************************************************/
 void InactiveInitializeInstance(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     bool ov;
@@ -625,7 +625,7 @@ void InactiveInitializeInstance(
                     <slot-override>*)
  **************************************************************/
 void InactiveMakeInstance(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     bool ov;
@@ -650,7 +650,7 @@ void InactiveMakeInstance(
   NOTES        : None
  ********************************************************/
 static Instance *NewInstance(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     Instance *instance;
 
     instance = get_struct(theEnv, Instance);
@@ -699,7 +699,7 @@ static Instance *NewInstance(
                  of module.
  *****************************************************************/
 static Instance *InstanceLocationInfo(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defclass *cls,
         CLIPSLexeme *iname,
         Instance **prv,
@@ -753,7 +753,7 @@ static Instance *InstanceLocationInfo(
                    by PutSlotValue
  ********************************************************/
 static void InstallInstance(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Instance *ins,
         bool set) {
     if (set) {
@@ -800,7 +800,7 @@ static void InstallInstance(
                  stored in a global variable
  ****************************************************************/
 static void BuildDefaultSlots(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         bool initMessage) {
     unsigned i, j;
     unsigned scnt;
@@ -865,7 +865,7 @@ static void BuildDefaultSlots(
   NOTES        : None
  *******************************************************************/
 static bool CoreInitializeInstance(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Instance *ins,
         Expression *ovrexp) {
     UDFValue temp;
@@ -932,7 +932,7 @@ static bool CoreInitializeInstance(
   NOTES        : None
  *******************************************************************/
 static bool CoreInitializeInstanceCV(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Instance *ins,
         CLIPSValue *overrides) {
     UDFValue temp;
@@ -1002,7 +1002,7 @@ static bool CoreInitializeInstanceCV(
                     simply copies the slot value-expression
  **********************************************************/
 static bool InsertSlotOverrides(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Instance *ins,
         Expression *slot_exp) {
     InstanceSlot *slot;
@@ -1064,7 +1064,7 @@ static bool InsertSlotOverrides(
                     simply copies the slot value-expression
  **********************************************************/
 static bool InsertSlotOverridesCV(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Instance *ins,
         CLIPSValue *overrides) {
     unsigned int i;
@@ -1101,7 +1101,7 @@ static bool InsertSlotOverridesCV(
   NOTES        : None
  *****************************************************************************/
 static void EvaluateClassDefaults(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Instance *ins) {
     InstanceSlot *slot;
     UDFValue temp, junk;
@@ -1167,7 +1167,7 @@ static void EvaluateClassDefaults(
   NOTES        : None
  ***************************************************/
 static void PrintInstanceWatch(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *traceString,
         Instance *theInstance) {
     if (ConstructData(theEnv)->ClearReadyInProgress ||
@@ -1184,7 +1184,7 @@ static void PrintInstanceWatch(
 /* CreateInstanceBuilder: */
 /**************************/
 InstanceBuilder *CreateInstanceBuilder(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *defclassName) {
     InstanceBuilder *theIB;
     Defclass *theDefclass;
@@ -1644,7 +1644,7 @@ InstanceBuilderError IBSetDefclass(
 /* IBError: */
 /************/
 InstanceBuilderError IBError(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     return InstanceData(theEnv)->instanceBuilderError;
 }
 
@@ -1652,7 +1652,7 @@ InstanceBuilderError IBError(
 /* CreateInstanceModifier: */
 /***************************/
 InstanceModifier *CreateInstanceModifier(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Instance *oldInstance) {
     InstanceModifier *theIM;
     unsigned int i;
@@ -2039,7 +2039,7 @@ Instance *IMModify(
 /* IMModifySlots */
 /*****************/
 static bool IMModifySlots(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Instance *theInstance,
         CLIPSValue *overrides) {
     UDFValue temp, junk;
@@ -2069,7 +2069,7 @@ static bool IMModifySlots(
 /**************/
 void IMDispose(
         InstanceModifier *theIM) {
-    const Environment&theEnv = theIM->imEnv;
+    const Environment::Ptr&theEnv = theIM->imEnv;
     unsigned int i;
 
     /*========================*/
@@ -2225,7 +2225,7 @@ InstanceModifierError IMSetInstance(
 /* IMError: */
 /************/
 InstanceModifierError IMError(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     return InstanceData(theEnv)->instanceModifierError;
 }
 

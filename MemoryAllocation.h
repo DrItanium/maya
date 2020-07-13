@@ -68,7 +68,7 @@
 
 
 template<typename T, typename ... Args>
-std::shared_ptr<T> getStruct(const Environment&, Args&& ... ctorArgs) {
+std::shared_ptr<T> getStruct(const Environment::Ptr&, Args&& ... ctorArgs) {
     return std::make_shared<T>(std::forward<Args>(ctorArgs)...);
 }
 /*
@@ -93,12 +93,12 @@ std::shared_ptr<T> getStruct(const Environment&, Args&& ... ctorArgs) {
 #define GenCopyMemory(type, cnt, dst, src) \
    memcpy((void *) (dst),(void *) (src),sizeof(type) * (size_t) (cnt))
 
-void *genalloc(const Environment&, size_t);
-void genfree(const Environment&, void *, size_t);
-void *genrealloc(const Environment&, void *, size_t, size_t);
-void *gm1(const Environment&, size_t);
-void *gm2(const Environment&, size_t);
-void rm(const Environment&, void *, size_t);
+void *genalloc(const Environment::Ptr&, size_t);
+void genfree(const Environment::Ptr&, void *, size_t);
+void *genrealloc(const Environment::Ptr&, void *, size_t, size_t);
+void *gm1(const Environment::Ptr&, size_t);
+void *gm2(const Environment::Ptr&, size_t);
+void rm(const Environment::Ptr&, void *, size_t);
 
 #endif /* _H_memalloc */
 

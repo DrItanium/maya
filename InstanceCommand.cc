@@ -118,13 +118,13 @@
 /***************************************/
 
 #if DEBUGGING_FUNCTIONS
-static unsigned long ListInstancesInModule(const Environment&, int, const char *, const char *, bool, bool);
-static unsigned long TabulateInstances(const Environment&, int, const char *, Defclass *, bool, bool);
+static unsigned long ListInstancesInModule(const Environment::Ptr&, int, const char *, const char *, bool, bool);
+static unsigned long TabulateInstances(const Environment::Ptr&, int, const char *, Defclass *, bool, bool);
 #endif
 
-static void PrintInstance(const Environment&, const char *, Instance *, const char *);
-static InstanceSlot *FindISlotByName(const Environment&, Instance *, const char *);
-static void DeallocateInstanceData(const Environment&);
+static void PrintInstance(const Environment::Ptr&, const char *, Instance *, const char *);
+static InstanceSlot *FindISlotByName(const Environment::Ptr&, Instance *, const char *);
+static void DeallocateInstanceData(const Environment::Ptr&);
 
 /* =========================================
    *****************************************
@@ -142,23 +142,23 @@ static void DeallocateInstanceData(const Environment&);
   NOTES        : None
  *********************************************************/
 void SetupInstances(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     PatternEntityRecord instanceInfo = {{"INSTANCE_ADDRESS_TYPE",
                                                 INSTANCE_ADDRESS_TYPE, 0, 0, 0,
                                                 (EntityPrintFunction *) PrintInstanceName,
                                                 (EntityPrintFunction *) PrintInstanceLongForm,
-                                                (bool (*)(void *, const Environment&)) UnmakeInstanceCallback,
+                                                (bool (*)(void *, const Environment::Ptr&)) UnmakeInstanceCallback,
                                                 nullptr,
                                                 (void *(*)(void *, void *)) GetNextInstance,
                                                 (EntityBusyCountFunction *) DecrementInstanceCallback,
                                                 (EntityBusyCountFunction *) IncrementInstanceCallback,
                                                 nullptr, nullptr, nullptr, nullptr, nullptr
                                                },
-                                               (void (*)(const Environment&, void *)) DecrementObjectBasisCount,
-                                               (void (*)(const Environment&, void *)) IncrementObjectBasisCount,
-                                               (void (*)(const Environment&, void *)) MatchObjectFunction,
-                                               (bool (*)(const Environment&, void *)) NetworkSynchronized,
-                                               (bool (*)(const Environment&, void *)) InstanceIsDeleted
+                                               (void (*)(const Environment::Ptr&, void *)) DecrementObjectBasisCount,
+                                               (void (*)(const Environment::Ptr&, void *)) IncrementObjectBasisCount,
+                                               (void (*)(const Environment::Ptr&, void *)) MatchObjectFunction,
+                                               (bool (*)(const Environment::Ptr&, void *)) NetworkSynchronized,
+                                               (bool (*)(const Environment::Ptr&, void *)) InstanceIsDeleted
     };
 
     Instance dummyInstance = {{{{INSTANCE_ADDRESS_TYPE}, nullptr, nullptr, 0, 0L}},
@@ -225,7 +225,7 @@ void SetupInstances(
 /*    environment data for instances.  */
 /***************************************/
 static void DeallocateInstanceData(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     Instance *tmpIPtr, *nextIPtr;
     long i;
     InstanceSlot *sp;
@@ -307,7 +307,7 @@ UnmakeInstanceError DeleteInstance(
     UnmakeInstanceError success;
 
     if (theInstance != nullptr) {
-        const Environment&theEnv = theInstance->cls->header.env;
+        const Environment::Ptr&theEnv = theInstance->cls->header.env;
 
         /*=====================================*/
         /* If embedded, clear the error flags. */
@@ -335,7 +335,7 @@ UnmakeInstanceError DeleteInstance(
   NOTES        : C interface for deleting instances
  *******************************************************************/
 UnmakeInstanceError DeleteAllInstances(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     Instance *ins, *itmp;
     GCBlock gcb;
     UnmakeInstanceError success = UIE_NO_ERROR, rv;
@@ -366,7 +366,7 @@ UnmakeInstanceError DeleteAllInstances(
 /**************************/
 bool UnmakeInstanceCallback(
         Instance *theInstance,
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     return (UnmakeInstance(theInstance) == UIE_NO_ERROR);
 }
 
@@ -379,7 +379,7 @@ bool UnmakeInstanceCallback(
   NOTES        : C interface for deleting instances
  *******************************************************************/
 UnmakeInstanceError UnmakeAllInstances(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     UnmakeInstanceError success = UIE_NO_ERROR;
     bool svmaintain;
     GCBlock gcb;
@@ -429,7 +429,7 @@ UnmakeInstanceError UnmakeInstance(
     UnmakeInstanceError success = UIE_NO_ERROR;
     bool svmaintain;
     GCBlock gcb;
-    const Environment&theEnv = theInstance->cls->header.env;
+    const Environment::Ptr&theEnv = theInstance->cls->header.env;
 
     if (theInstance == nullptr) {
         InstanceData(theEnv)->unmakeInstanceError = UIE_nullptr_POINTER_ERROR;
@@ -476,7 +476,7 @@ UnmakeInstanceError UnmakeInstance(
   NOTES        : H/L Syntax : (instances [<class-name> [inherit]])
  *******************************************************************/
 void InstancesCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     bool inheritFlag = false;
@@ -532,7 +532,7 @@ void InstancesCommand(
   NOTES        : H/L Syntax : (ppinstance <instance>)
  ********************************************************/
 void PPInstanceCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Instance *ins;
@@ -560,7 +560,7 @@ void PPInstanceCommand(
   NOTES        : None
  **************************************************************/
 void Instances(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         Defmodule *theModule,
         const char *className,
@@ -628,7 +628,7 @@ void Instances(
   NOTES        : None
  *********************************************************/
 Instance *MakeInstance(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *mkstr) {
     const char *router = "***MKINS***";
     GCBlock gcb;
@@ -714,7 +714,7 @@ Instance *MakeInstance(
 /* GetMakeInstanceError */
 /************************/
 MakeInstanceError GetMakeInstanceError(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     return InstanceData(theEnv)->makeInstanceError;
 }
 
@@ -731,7 +731,7 @@ MakeInstanceError GetMakeInstanceError(
   NOTES        : None
  ***************************************************************/
 Instance *CreateRawInstance(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defclass *theDefclass,
         const char *instanceName) {
     return BuildInstance(theEnv, CreateInstanceName(theEnv, instanceName), theDefclass, false);
@@ -746,7 +746,7 @@ Instance *CreateRawInstance(
   NOTES        : None
  ***************************************************************************/
 Instance *FindInstance(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defmodule *theModule,
         const char *iname,
         bool searchImports) {
@@ -789,7 +789,7 @@ GetSlotError DirectGetSlot(
         const char *sname,
         CLIPSValue *returnValue) {
     InstanceSlot *sp;
-    const Environment&theEnv = theInstance->cls->header.env;
+    const Environment::Ptr&theEnv = theInstance->cls->header.env;
 
     if ((theInstance == nullptr) || (sname == nullptr) || (returnValue == nullptr)) { return GSE_nullptr_POINTER_ERROR; }
 
@@ -1097,7 +1097,7 @@ Defclass *InstanceClass(
   NOTES        : None
  ***************************************************/
 unsigned long GetGlobalNumberOfInstances(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     return (InstanceData(theEnv)->GlobalNumberOfInstances);
 }
 
@@ -1112,7 +1112,7 @@ unsigned long GetGlobalNumberOfInstances(
   NOTES        : None
  ***************************************************/
 Instance *GetNextInstance(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Instance *theInstance) {
     if (theInstance == nullptr) { return InstanceData(theEnv)->InstanceList; }
 
@@ -1135,7 +1135,7 @@ Instance *GetNextInstance(
   NOTES        : None
  ***************************************************/
 Instance *GetNextInstanceInScope(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Instance *theInstance) {
     if (theInstance == nullptr) { theInstance = InstanceData(theEnv)->InstanceList; }
     else if (theInstance->garbage) { return nullptr; }
@@ -1252,7 +1252,7 @@ void InstancePPForm(
                    if you have generic functions installed
  *********************************************************/
 void ClassCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Instance *ins;
@@ -1312,7 +1312,7 @@ void ClassCommand(
   NOTES        : Does nothing. Provided so it can be overridden.
  ******************************************************/
 void CreateInstanceHandler(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
 #if MAC_XCD
@@ -1335,7 +1335,7 @@ void CreateInstanceHandler(
                    only be called by a handler
  ******************************************************/
 void DeleteInstanceCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     if (CheckCurrentMessage(theEnv, "delete-instance", true)) {
@@ -1354,7 +1354,7 @@ void DeleteInstanceCommand(
   NOTES        : Syntax: (unmake-instance <instance-expression>+ | *)
  ********************************************************************/
 void UnmakeInstanceCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -1413,7 +1413,7 @@ void UnmakeInstanceCommand(
   NOTES        : H/L Syntax : (symbol-to-instance-name <symbol>)
  *****************************************************************/
 void SymbolToInstanceNameFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     if (!UDFFirstArgument(context, SYMBOL_BIT, returnValue)) { return; }
@@ -1431,7 +1431,7 @@ void SymbolToInstanceNameFunction(
   NOTES        : H/L Syntax : (instance-name-to-symbol <iname>)
  *****************************************************************/
 void InstanceNameToSymbolFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     if (!UDFFirstArgument(context, INSTANCE_NAME_BIT | SYMBOL_BIT, returnValue)) { return; }
@@ -1448,7 +1448,7 @@ void InstanceNameToSymbolFunction(
   NOTES        : H/L Syntax : (instance-address [<module-name>] <instance-name>)
  *********************************************************************************/
 void InstanceAddressCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Instance *ins;
@@ -1509,7 +1509,7 @@ void InstanceAddressCommand(
   NOTES        : H/L Syntax : (instance-name <instance>)
  ***************************************************************/
 void InstanceNameCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Instance *ins;
@@ -1545,7 +1545,7 @@ void InstanceNameCommand(
   NOTES        : H/L Syntax : (instance-addressp <arg>)
  **************************************************************/
 void InstanceAddressPCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -1565,7 +1565,7 @@ void InstanceAddressPCommand(
   NOTES        : H/L Syntax : (instance-namep <arg>)
  **************************************************************/
 void InstanceNamePCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -1586,7 +1586,7 @@ void InstanceNamePCommand(
   NOTES        : H/L Syntax : (instancep <arg>)
  *****************************************************************/
 void InstancePCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -1605,7 +1605,7 @@ void InstancePCommand(
   NOTES        : H/L Syntax : (instance-existp <arg>)
  ********************************************************/
 void InstanceExistPCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -1653,7 +1653,7 @@ void InstanceExistPCommand(
                  are up to date
  ***************************************************/
 static unsigned long ListInstancesInModule(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         int id,
         const char *logicalName,
         const char *className,
@@ -1730,7 +1730,7 @@ static unsigned long ListInstancesInModule(
   NOTES        : None
  ******************************************************/
 static unsigned long TabulateInstances(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         int id,
         const char *logicalName,
         Defclass *cls,
@@ -1779,7 +1779,7 @@ static unsigned long TabulateInstances(
   NOTES        : Assumes instance is valid
  ***************************************************/
 static void PrintInstance(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         Instance *ins,
         const char *separator) {
@@ -1816,7 +1816,7 @@ static void PrintInstance(
   NOTES        : None
  ***************************************************/
 static InstanceSlot *FindISlotByName(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Instance *theInstance,
         const char *sname) {
     CLIPSLexeme *ssym;

@@ -62,18 +62,18 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static Expression *ParseAssertSlotValues(const Environment&, const char *, struct token *, struct templateSlot *, bool *, bool);
-static Expression *ReorderAssertSlotValues(const Environment&, struct templateSlot *, Expression *, bool *);
-static Expression *GetSlotAssertValues(const Environment&, struct templateSlot *, Expression *, bool *);
+static Expression *ParseAssertSlotValues(const Environment::Ptr&, const char *, struct token *, struct templateSlot *, bool *, bool);
+static Expression *ReorderAssertSlotValues(const Environment::Ptr&, struct templateSlot *, Expression *, bool *);
+static Expression *GetSlotAssertValues(const Environment::Ptr&, struct templateSlot *, Expression *, bool *);
 static Expression *FindAssertSlotItem(templateSlot *, Expression *);
-static struct templateSlot *ParseSlotLabel(const Environment&, const char *, struct token *, Deftemplate *, bool *, TokenType);
+static struct templateSlot *ParseSlotLabel(const Environment::Ptr&, const char *, struct token *, Deftemplate *, bool *, TokenType);
 
 /******************************************************************/
 /* ParseAssertTemplate: Parses and builds the list of values that */
 /*   are used for an assert of a fact with a deftemplate.         */
 /******************************************************************/
 Expression *ParseAssertTemplate(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource,
         struct token *theToken,
         bool *error,
@@ -169,7 +169,7 @@ Expression *ParseAssertTemplate(
 /*   Checks for opening left parenthesis and a valid slot name. */
 /****************************************************************/
 static struct templateSlot *ParseSlotLabel(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *inputSource,
         struct token *tempToken,
         Deftemplate *theDeftemplate,
@@ -243,7 +243,7 @@ static struct templateSlot *ParseSlotLabel(
 /* ParseAssertSlotValues: Gets a single assert slot value for a template. */
 /**************************************************************************/
 static Expression *ParseAssertSlotValues(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *inputSource,
         struct token *tempToken,
         struct templateSlot *slotPtr,
@@ -386,7 +386,7 @@ static Expression *ParseAssertSlotValues(
 /*   to the order of the values described by the deftemplate.            */
 /*************************************************************************/
 static Expression *ReorderAssertSlotValues(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct templateSlot *slotPtr,
         Expression *firstSlot,
         bool *error) {
@@ -441,7 +441,7 @@ static Expression *ReorderAssertSlotValues(
 /*   default value will be used.                               */
 /***************************************************************/
 static Expression *GetSlotAssertValues(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct templateSlot *slotPtr,
         Expression *firstSlot,
         bool *error) {

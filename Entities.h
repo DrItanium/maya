@@ -29,19 +29,21 @@
 #include <variant>
 #include <any>
 #include <vector>
+#include <functional>
 
 #include "Constants.h"
 #include "ReferenceCounted.h"
-using Environment = std::shared_ptr<struct EnvironmentData>;
 struct UDFValue;
-typedef void EntityPrintFunction(const Environment&, const char *, void *);
-typedef bool EntityEvaluationFunction(const Environment&, void *, std::shared_ptr<UDFValue>);
-typedef void EntityBusyCountFunction(const Environment&, void *);
+class Environment;
+using EnvironmentPtr = std::shared_ptr<Environment>;
+using EntityPrintFunction = std::function<void(const EnvironmentPtr&, const std::string&, std::any)>;
+using EntityEvaluationFunction = std::function<bool(const EnvironmentPtr&, std::any, std::shared_ptr<UDFValue>)>;
+using EntityBusyCountFunction = std::function<void(const EnvironmentPtr&, std::any)>;
 
 
-typedef bool BoolCallFunction(const Environment&, void *);
-typedef void VoidCallFunction(const Environment&, void *);
-typedef void VoidCallFunctionWithArg(const Environment&, void *, void *);
+typedef bool BoolCallFunction(const EnvironmentPtr&, void *);
+typedef void VoidCallFunction(const EnvironmentPtr&, void *);
+typedef void VoidCallFunctionWithArg(const EnvironmentPtr&, void *, void *);
 
 /**************/
 /* typeHeader */
@@ -201,7 +203,8 @@ struct Expression;
 /* udfContext */
 /**************/
 struct UDFContext {
-    Environment environment;
+    UDFContext(Environment& parent);
+    Environment& environment;
     std::shared_ptr<FunctionDefinition> theFunction;
     unsigned int lastPosition = 0;
     std::shared_ptr<struct Expression> lastArg;
@@ -212,7 +215,7 @@ typedef void EntityRecordPropagateDepthFunction(void*, void*);
 typedef void EntityRecordMarkNeededFunction(void*, void*);
 typedef void EntityRecordInstallFunction(void*, void*);
 typedef void EntityRecordDeinstallFunction(void*, void*);
-typedef bool EntityRecordDeleteFunction(void*, const Environment&);
+typedef bool EntityRecordDeleteFunction(void*, const EnvironmentPtr&);
 typedef void* EntityRecordGetNextFunction(void*, void*);
 /****************/
 /* EntityRecord */
@@ -237,11 +240,11 @@ struct EntityRecord {
     std::shared_ptr<struct userData> usrData;
 };
 
-typedef void PatternEntityRecordDecrementBasisCountFunction(const Environment&, void*);
-typedef void PatternEntityRecordIncrementBasisCountFunction(const Environment&, void*);
-typedef void PatternEntityRecordMatchFunction(const Environment&, void*);
-typedef bool PatternEntityRecordSynchronizedFunction(const Environment&, void*);
-typedef bool PatternEntityRecordIsDeletedFunction(const Environment&, void*);
+typedef void PatternEntityRecordDecrementBasisCountFunction(const EnvironmentPtr&, void*);
+typedef void PatternEntityRecordIncrementBasisCountFunction(const EnvironmentPtr&, void*);
+typedef void PatternEntityRecordMatchFunction(const EnvironmentPtr&, void*);
+typedef bool PatternEntityRecordSynchronizedFunction(const EnvironmentPtr&, void*);
+typedef bool PatternEntityRecordIsDeletedFunction(const EnvironmentPtr&, void*);
 /***********************/
 /* PatternEntityRecord */
 /***********************/

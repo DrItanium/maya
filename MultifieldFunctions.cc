@@ -114,11 +114,11 @@ typedef struct fieldVarStack {
 #if MULTIFIELD_FUNCTIONS
 static bool MVRangeCheck(size_t, size_t, size_t *, unsigned int);
 static void MultifieldPrognDriver(UDFContext *, UDFValue *, const char *);
-static Expression *MultifieldPrognParser(const Environment&, Expression *, const char *);
-static Expression *ForeachParser(const Environment&, Expression *, const char *);
-static void ReplaceMvPrognFieldVars(const Environment&, CLIPSLexeme *, Expression *, int);
+static Expression *MultifieldPrognParser(const Environment::Ptr&, Expression *, const char *);
+static Expression *ForeachParser(const Environment::Ptr&, Expression *, const char *);
+static void ReplaceMvPrognFieldVars(const Environment::Ptr&, CLIPSLexeme *, Expression *, int);
 #endif /* MULTIFIELD_FUNCTIONS */
-static void MVRangeErrorSizet(const Environment&, size_t, size_t, size_t, const char *);
+static void MVRangeErrorSizet(const Environment::Ptr&, size_t, size_t, size_t, const char *);
 
 /***************************************/
 /* LOCAL INTERNAL VARIABLE DEFINITIONS */
@@ -138,7 +138,7 @@ RegisterEnvironmentModule(multiFunctionData, MULTIFUN_DATA, MultiFunction);
 /*   the multifield functions.                */
 /**********************************************/
 void MultifieldFunctionDefinitions(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     theEnv->allocateEnvironmentModule<multiFunctionData>();
 if constexpr (STUBBING_INACTIVE) {
     AddUDF(theEnv, "first$", "m", 1, 1, "m", FirstFunction);
@@ -171,7 +171,7 @@ if constexpr (STUBBING_INACTIVE) {
 /*   for the delete$ function.          */
 /****************************************/
 void DeleteFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue value1, value2, value3;
@@ -244,7 +244,7 @@ void DeleteFunction(
 /*   for the replace$ function.          */
 /*****************************************/
 void ReplaceFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue value1, value2, value3, value4;
@@ -337,7 +337,7 @@ void ReplaceFunction(
 /*   for the delete-member$ function.         */
 /**********************************************/
 void DeleteMemberFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue resultValue, valueSought;
@@ -402,7 +402,7 @@ void DeleteMemberFunction(
 /*   for the replace-member$ function.         */
 /***********************************************/
 void ReplaceMemberFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue resultValue, replVal, *delVals, tmpVal;
@@ -467,7 +467,7 @@ void ReplaceMemberFunction(
 /*   for the insert$ function.          */
 /****************************************/
 void InsertFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue value1, value2, value3;
@@ -522,7 +522,7 @@ void InsertFunction(
 /*   for the explode$ function.          */
 /*****************************************/
 void ExplodeFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue value;
@@ -559,7 +559,7 @@ void ExplodeFunction(
 /*   for the implode$ function.          */
 /*****************************************/
 void ImplodeFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -582,7 +582,7 @@ void ImplodeFunction(
 /*   for the subseq$ function.          */
 /****************************************/
 void SubseqFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -652,7 +652,7 @@ void SubseqFunction(
 /*   for the first$ function.          */
 /***************************************/
 void FirstFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -681,7 +681,7 @@ void FirstFunction(
 /*   for the rest$ function.          */
 /**************************************/
 void RestFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -715,7 +715,7 @@ void RestFunction(
 /*   for the nth$ function.          */
 /*************************************/
 void NthFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue value1, value2;
@@ -763,7 +763,7 @@ void NthFunction(
  */
 
 void SubsetpFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue item1, item2;
@@ -808,7 +808,7 @@ void SubsetpFunction(
 /*   for the member$ function.        */
 /**************************************/
 void MemberFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue item1, item2;
@@ -976,7 +976,7 @@ static bool MVRangeCheck(
 /* MultifieldPrognParser: Parses the progn$ function. */
 /******************************************************/
 static Expression *MultifieldPrognParser(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *top,
         const char *infile) {
     struct BindInfo *oldBindList, *newBindList, *prev;
@@ -1086,7 +1086,7 @@ static Expression *MultifieldPrognParser(
 /* ForeachParser: Parses the foreach function. */
 /***********************************************/
 static Expression *ForeachParser(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *top,
         const char *infile) {
     struct BindInfo *oldBindList, *newBindList, *prev;
@@ -1165,7 +1165,7 @@ static Expression *ForeachParser(
 /*   references found in the progn$ function. */
 /**********************************************/
 static void ReplaceMvPrognFieldVars(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CLIPSLexeme *fieldVar,
         Expression *theExp,
         int depth) {
@@ -1202,7 +1202,7 @@ static void ReplaceMvPrognFieldVars(
 /*   routine for the progn$ function.    */
 /*****************************************/
 void MultifieldPrognFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     MultifieldPrognDriver(context, returnValue, "progn$");
@@ -1213,7 +1213,7 @@ void MultifieldPrognFunction(
 /*   for the foreach function.         */
 /***************************************/
 void ForeachFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     MultifieldPrognDriver(context, returnValue, "foreach");
@@ -1232,7 +1232,7 @@ static void MultifieldPrognDriver(
     size_t i, end;
     FIELD_VAR_STACK *tmpField;
     GCBlock gcb;
-    const Environment&theEnv = context->environment;
+    const Environment::Ptr&theEnv = context->environment;
 
     tmpField = get_struct(theEnv, fieldVarStack);
     tmpField->type = SYMBOL_TYPE;
@@ -1294,7 +1294,7 @@ static void MultifieldPrognDriver(
 /* GetMvPrognField */
 /*******************/
 void GetMvPrognField(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     long long depth;
@@ -1313,7 +1313,7 @@ void GetMvPrognField(
 /* GetMvPrognIndex */
 /*******************/
 void GetMvPrognIndex(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     long long depth;
@@ -1333,7 +1333,7 @@ void GetMvPrognIndex(
 
 #if STUBBING_INACTIVE
 bool ReplaceMultiValueFieldSizet(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFValue *dst,
         UDFValue *src,
         size_t rb,
@@ -1409,7 +1409,7 @@ bool ReplaceMultiValueFieldSizet(
                  src is guaranteed to be a multi-field variable or nullptr
  **************************************************************************/
 bool InsertMultiValueField(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFValue *dst,
         UDFValue *src,
         size_t theIndex,
@@ -1478,7 +1478,7 @@ bool InsertMultiValueField(
   NOTES        : None
  ******************************************************/
 void MVRangeError(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         long long brb,
         long long bre,
         size_t max,
@@ -1504,7 +1504,7 @@ void MVRangeError(
 }
 
 static void MVRangeErrorSizet(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         size_t brb,
         size_t bre,
         size_t max,

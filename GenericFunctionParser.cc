@@ -113,25 +113,25 @@ constexpr auto PARAMETER_ERROR = USHRT_MAX;
    =========================================
    ***************************************** */
 
-static bool ValidGenericName(const Environment&, const char *);
-static CLIPSLexeme *ParseMethodNameAndIndex(const Environment&, const char *, unsigned short *, struct token *);
+static bool ValidGenericName(const Environment::Ptr&, const char *);
+static CLIPSLexeme *ParseMethodNameAndIndex(const Environment::Ptr&, const char *, unsigned short *, struct token *);
 
 #if DEBUGGING_FUNCTIONS
-static void CreateDefaultGenericPPForm(const Environment&, Defgeneric *);
+static void CreateDefaultGenericPPForm(const Environment::Ptr&, Defgeneric *);
 #endif
 
-static unsigned short ParseMethodParameters(const Environment&, const char *, Expression **, CLIPSLexeme **, struct token *);
-static RESTRICTION *ParseRestriction(const Environment&, const char *);
-static void ReplaceCurrentArgRefs(const Environment&, Expression *);
-static bool DuplicateParameters(const Environment&, Expression *, Expression **, CLIPSLexeme *);
-static Expression *AddParameter(const Environment&, Expression *, Expression *, CLIPSLexeme *, RESTRICTION *);
-static Expression *ValidType(const Environment&, CLIPSLexeme *);
-static bool RedundantClasses(const Environment&, void *, void *);
-static Defgeneric *AddGeneric(const Environment&, CLIPSLexeme *, bool *);
-static Defmethod *AddGenericMethod(const Environment&, Defgeneric *, int, unsigned short);
+static unsigned short ParseMethodParameters(const Environment::Ptr&, const char *, Expression **, CLIPSLexeme **, struct token *);
+static RESTRICTION *ParseRestriction(const Environment::Ptr&, const char *);
+static void ReplaceCurrentArgRefs(const Environment::Ptr&, Expression *);
+static bool DuplicateParameters(const Environment::Ptr&, Expression *, Expression **, CLIPSLexeme *);
+static Expression *AddParameter(const Environment::Ptr&, Expression *, Expression *, CLIPSLexeme *, RESTRICTION *);
+static Expression *ValidType(const Environment::Ptr&, CLIPSLexeme *);
+static bool RedundantClasses(const Environment::Ptr&, void *, void *);
+static Defgeneric *AddGeneric(const Environment::Ptr&, CLIPSLexeme *, bool *);
+static Defmethod *AddGenericMethod(const Environment::Ptr&, Defgeneric *, int, unsigned short);
 static int RestrictionsCompare(Expression *, int, int, int, Defmethod *);
 static int TypeListCompare(RESTRICTION *, RESTRICTION *);
-static Defgeneric *NewGeneric(const Environment&, CLIPSLexeme *);
+static Defgeneric *NewGeneric(const Environment::Ptr&, CLIPSLexeme *);
 
 /* =========================================
    *****************************************
@@ -149,7 +149,7 @@ static Defgeneric *NewGeneric(const Environment&, CLIPSLexeme *);
                  (defgeneric <name> [<comment>])
  ***************************************************************************/
 bool ParseDefgeneric(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource) {
     CLIPSLexeme *gname;
     Defgeneric *gfunc;
@@ -215,7 +215,7 @@ bool ParseDefgeneric(
                                    ($?<name> <type>* [<restriction-query>])
  ***************************************************************************/
 bool ParseDefmethod(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource) {
     CLIPSLexeme *gname;
     unsigned short rcnt;
@@ -416,7 +416,7 @@ bool ParseDefmethod(
                    should be the values obtained from FindMethod...().
  ************************************************************************/
 Defmethod *AddMethod(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defgeneric *gfunc,
         Defmethod *meth,
         int mposn,
@@ -524,7 +524,7 @@ Defmethod *AddMethod(
   NOTES        : None
  *****************************************************/
 void PackRestrictionTypes(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         RESTRICTION *rptr,
         Expression *types) {
     Expression *tmp;
@@ -552,7 +552,7 @@ void PackRestrictionTypes(
   NOTES        : None
  ***************************************************/
 void DeleteTempRestricts(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *phead) {
     Expression *ptmp;
     RESTRICTION *rtmp;
@@ -634,7 +634,7 @@ Defmethod *FindMethodByRestrictions(
                  another module
  ***********************************************************/
 static bool ValidGenericName(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *theDefgenericName) {
     Defgeneric *theDefgeneric;
 #if DEFFUNCTION_CONSTRUCT
@@ -728,7 +728,7 @@ static bool ValidGenericName(
   NOTES        : None
  ***************************************************/
 static void CreateDefaultGenericPPForm(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defgeneric *gfunc) {
     const char *moduleName, *genericName;
     char *buf;
@@ -754,7 +754,7 @@ static void CreateDefaultGenericPPForm(
   NOTES        : Assumes "(defmethod " already parsed
  *******************************************************/
 static CLIPSLexeme *ParseMethodNameAndIndex(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource,
         unsigned short *theIndex,
         struct token *genericInputToken) {
@@ -811,7 +811,7 @@ static CLIPSLexeme *ParseMethodNameAndIndex(
                  Assumes first opening parenthesis has been scanned
  ************************************************************************/
 static unsigned short ParseMethodParameters(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource,
         Expression **params,
         CLIPSLexeme **wildcard,
@@ -912,7 +912,7 @@ static unsigned short ParseMethodParameters(
                  H/L Syntax: <type>* [<query>])
  ************************************************************/
 static RESTRICTION *ParseRestriction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource) {
     Expression *types = nullptr, *new_types,
             *typesbot, *tmp, *tmp2,
@@ -1013,7 +1013,7 @@ static RESTRICTION *ParseRestriction(
   NOTES        : None
  *****************************************************************/
 static void ReplaceCurrentArgRefs(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *query) {
     while (query != nullptr) {
         if ((query->type != SF_VARIABLE) ? false :
@@ -1041,7 +1041,7 @@ static void ReplaceCurrentArgRefs(
   NOTES        : Assumes all parameter list nodes are WORDS
  **********************************************************/
 static bool DuplicateParameters(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *head,
         Expression **prv,
         CLIPSLexeme *name) {
@@ -1075,7 +1075,7 @@ static bool DuplicateParameters(
   NOTES        : None
  *****************************************************************/
 static Expression *AddParameter(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *phead,
         Expression *pprv,
         CLIPSLexeme *pname,
@@ -1105,7 +1105,7 @@ static Expression *AddParameter(
   NOTES        : None
  *************************************************************/
 static Expression *ValidType(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CLIPSLexeme *tname) {
     Defclass *cls;
 
@@ -1135,7 +1135,7 @@ static Expression *ValidType(
   NOTES        : None
  *************************************************************/
 static bool RedundantClasses(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *c1,
         void *c2) {
     const char *tname;
@@ -1169,7 +1169,7 @@ static bool RedundantClasses(
   NOTES        : None
  *********************************************************/
 static Defgeneric *AddGeneric(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CLIPSLexeme *name,
         bool *newGeneric) {
     Defgeneric *gfunc;
@@ -1209,7 +1209,7 @@ static Defgeneric *AddGeneric(
   NOTES        : None
  **********************************************************************/
 static Defmethod *AddGenericMethod(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defgeneric *gfunc,
         int mposn,
         unsigned short mi) {
@@ -1399,7 +1399,7 @@ static int TypeListCompare(
   NOTES        : None
  ***************************************************/
 static Defgeneric *NewGeneric(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CLIPSLexeme *gname) {
     Defgeneric *ngen;
 

@@ -93,7 +93,7 @@ private:
     Ptr prev;
     Ptr next;
 public:
-    void printActivation(const Environment& theEnv, const std::string& logicalName);
+    void printActivation(const Environment::Ptr& theEnv, const std::string& logicalName);
     auto getRule() const noexcept { return theRule; }
     void setRule(std::shared_ptr<Defrule> value) noexcept { theRule = value; }
     auto getBasis() const noexcept { return basis; }
@@ -175,32 +175,32 @@ RegisterEnvironmentModule(AgendaModule, AGENDA_DATA, Agenda);
 /****************************************/
 using DefrulePtr = std::shared_ptr<Defrule>;
 using PartialMatchPtr = std::shared_ptr<PartialMatch>;
-void AddActivation(const Environment& theEnv, DefrulePtr , PartialMatchPtr);
-void ClearRuleFromAgenda(const Environment&, DefrulePtr );
-Activation::Ptr GetNextActivation(const Environment&, Activation::Ptr );
+void AddActivation(const Environment::Ptr& theEnv, DefrulePtr , PartialMatchPtr);
+void ClearRuleFromAgenda(const Environment::Ptr&, DefrulePtr );
+Activation::Ptr GetNextActivation(const Environment::Ptr&, Activation::Ptr );
 const char *ActivationRuleName(Activation::Ptr );
-void GetActivationBasisPPForm(const Environment&, char *, size_t, Activation::Ptr );
-bool MoveActivationToTop(const Environment&, Activation::Ptr );
+void GetActivationBasisPPForm(const Environment::Ptr&, char *, size_t, Activation::Ptr );
+bool MoveActivationToTop(const Environment::Ptr&, Activation::Ptr );
 void DeleteActivation(Activation::Ptr );
-bool DetachActivation(const Environment&, Activation::Ptr );
+bool DetachActivation(const Environment::Ptr&, Activation::Ptr );
 void DeleteAllActivations(Defmodule *);
-void Agenda(const Environment&, const char *, Defmodule *);
-void RemoveActivation(const Environment&, Activation::Ptr , bool, bool);
-void RemoveAllActivations(const Environment&);
-SalienceEvaluationType GetSalienceEvaluation(const Environment&);
-SalienceEvaluationType SetSalienceEvaluation(const Environment&, SalienceEvaluationType);
+void Agenda(const Environment::Ptr&, const char *, Defmodule *);
+void RemoveActivation(const Environment::Ptr&, Activation::Ptr , bool, bool);
+void RemoveAllActivations(const Environment::Ptr&);
+SalienceEvaluationType GetSalienceEvaluation(const Environment::Ptr&);
+SalienceEvaluationType SetSalienceEvaluation(const Environment::Ptr&, SalienceEvaluationType);
 void RefreshAgenda(Defmodule *);
-void RefreshAllAgendas(const Environment&);
+void RefreshAllAgendas(const Environment::Ptr&);
 void ReorderAgenda(Defmodule *);
-void ReorderAllAgendas(const Environment&);
-void InitializeAgenda(const Environment&);
-void SetSalienceEvaluationCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void GetSalienceEvaluationCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void RefreshAgendaCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void RefreshCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void ReorderAllAgendas(const Environment::Ptr&);
+void InitializeAgenda(const Environment::Ptr&);
+void SetSalienceEvaluationCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void GetSalienceEvaluationCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void RefreshAgendaCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void RefreshCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
 void Refresh(DefrulePtr );
 #if DEBUGGING_FUNCTIONS
-void AgendaCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void AgendaCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
 #endif
 
 #endif

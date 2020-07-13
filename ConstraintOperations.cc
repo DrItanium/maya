@@ -51,37 +51,37 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void IntersectNumericExpressions(const Environment&,
+static void IntersectNumericExpressions(const Environment::Ptr&,
                                         CONSTRAINT_RECORD *,
                                         CONSTRAINT_RECORD *,
                                         CONSTRAINT_RECORD *, bool);
-static void IntersectAllowedValueExpressions(const Environment&,
+static void IntersectAllowedValueExpressions(const Environment::Ptr&,
                                              CONSTRAINT_RECORD *,
                                              CONSTRAINT_RECORD *,
                                              CONSTRAINT_RECORD *);
-static void IntersectAllowedClassExpressions(const Environment&,
+static void IntersectAllowedClassExpressions(const Environment::Ptr&,
                                              CONSTRAINT_RECORD *,
                                              CONSTRAINT_RECORD *,
                                              CONSTRAINT_RECORD *);
 static bool FindItemInExpression(int, void *, bool, Expression *);
 static void UpdateRestrictionFlags(CONSTRAINT_RECORD *);
-static void UnionRangeMinMaxValueWithList(const Environment&,
+static void UnionRangeMinMaxValueWithList(const Environment::Ptr&,
                                           Expression *,
                                           Expression *,
                                           Expression **,
                                           Expression **);
-static void UnionNumericExpressions(const Environment&,
+static void UnionNumericExpressions(const Environment::Ptr&,
                                     CONSTRAINT_RECORD *,
                                     CONSTRAINT_RECORD *,
                                     CONSTRAINT_RECORD *, bool);
-static Expression *AddToUnionList(const Environment&,
+static Expression *AddToUnionList(const Environment::Ptr&,
                                    Expression *, Expression *,
                                    CONSTRAINT_RECORD *);
-static void UnionAllowedValueExpressions(const Environment&,
+static void UnionAllowedValueExpressions(const Environment::Ptr&,
                                          CONSTRAINT_RECORD *,
                                          CONSTRAINT_RECORD *,
                                          CONSTRAINT_RECORD *);
-static void UnionAllowedClassExpressions(const Environment&,
+static void UnionAllowedClassExpressions(const Environment::Ptr&,
                                          CONSTRAINT_RECORD *,
                                          CONSTRAINT_RECORD *,
                                          CONSTRAINT_RECORD *);
@@ -92,7 +92,7 @@ static bool RestrictionOnType(int, CONSTRAINT_RECORD *);
 /*   is the intersection of two other constraint records.     */
 /**************************************************************/
 struct constraintRecord *IntersectConstraints(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CONSTRAINT_RECORD *c1,
         CONSTRAINT_RECORD *c2) {
     struct constraintRecord *rv;
@@ -221,7 +221,7 @@ struct constraintRecord *IntersectConstraints(
 /*   intersection of two allowed-values lists.   */
 /*************************************************/
 static void IntersectAllowedValueExpressions(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CONSTRAINT_RECORD *constraint1,
         CONSTRAINT_RECORD *constraint2,
         CONSTRAINT_RECORD *newConstraint) {
@@ -279,7 +279,7 @@ static void IntersectAllowedValueExpressions(
 /*   intersection of two allowed-classes lists.  */
 /*************************************************/
 static void IntersectAllowedClassExpressions(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CONSTRAINT_RECORD *constraint1,
         CONSTRAINT_RECORD *constraint2,
         CONSTRAINT_RECORD *newConstraint) {
@@ -337,7 +337,7 @@ static void IntersectAllowedClassExpressions(
 /*   of two range or two min/max-fields constraints.     */
 /*********************************************************/
 static void IntersectNumericExpressions(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CONSTRAINT_RECORD *constraint1,
         CONSTRAINT_RECORD *constraint2,
         CONSTRAINT_RECORD *newConstraint,
@@ -582,7 +582,7 @@ static bool RestrictionOnType(
 /*   is the union of two other constraint records.        */
 /**********************************************************/
 struct constraintRecord *UnionConstraints(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CONSTRAINT_RECORD *c1,
         CONSTRAINT_RECORD *c2) {
     struct constraintRecord *rv;
@@ -692,7 +692,7 @@ struct constraintRecord *UnionConstraints(
 /*   two range or two min/max-fields constraints. */
 /**************************************************/
 static void UnionNumericExpressions(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CONSTRAINT_RECORD *constraint1,
         CONSTRAINT_RECORD *constraint2,
         CONSTRAINT_RECORD *newConstraint,
@@ -800,7 +800,7 @@ static void UnionNumericExpressions(
 /*   pair of values with a list of such values.          */
 /*********************************************************/
 static void UnionRangeMinMaxValueWithList(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *addmin,
         Expression *addmax,
         Expression **theMinList,
@@ -939,7 +939,7 @@ static void UnionRangeMinMaxValueWithList(
 /*   of two sets of allowed-classes expressions.   */
 /***************************************************/
 static void UnionAllowedClassExpressions(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CONSTRAINT_RECORD *constraint1,
         CONSTRAINT_RECORD *constraint2,
         CONSTRAINT_RECORD *newConstraint) {
@@ -956,7 +956,7 @@ static void UnionAllowedClassExpressions(
 /*   of two sets of allowed value expressions.     */
 /***************************************************/
 static void UnionAllowedValueExpressions(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CONSTRAINT_RECORD *constraint1,
         CONSTRAINT_RECORD *constraint2,
         CONSTRAINT_RECORD *newConstraint) {
@@ -974,7 +974,7 @@ static void UnionAllowedValueExpressions(
 /*   value added satisfies the constraints for the list.    */
 /************************************************************/
 static Expression *AddToUnionList(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *theList1,
         Expression *theHead,
         CONSTRAINT_RECORD *theConstraint) {
@@ -1032,7 +1032,7 @@ static Expression *AddToUnionList(
 /*   restriction list of a constraint record.       */
 /****************************************************/
 void RemoveConstantFromConstraint(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         int theType,
         void *theValue,
         CONSTRAINT_RECORD *theConstraint) {

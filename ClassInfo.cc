@@ -86,7 +86,7 @@
 static void SlotInfoSupportFunction(UDFContext *, UDFValue *, const char *, bool (*)(Defclass *, const char *, CLIPSValue *));
 static unsigned CountSubclasses(Defclass *, bool, int);
 static unsigned StoreSubclasses(Multifield *, unsigned, Defclass *, int, int, bool);
-static SlotDescriptor *SlotInfoSlot(const Environment&, UDFValue *, Defclass *, const char *, const char *);
+static SlotDescriptor *SlotInfoSlot(const Environment::Ptr&, UDFValue *, Defclass *, const char *, const char *);
 
 /*********************************************************************
   NAME         : ClassAbstractPCommand
@@ -97,7 +97,7 @@ static SlotDescriptor *SlotInfoSlot(const Environment&, UDFValue *, Defclass *, 
   NOTES        : Syntax: (class-abstractp <class>)
  *********************************************************************/
 void ClassAbstractPCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -127,7 +127,7 @@ void ClassAbstractPCommand(
   NOTES        : Syntax: (class-reactivep <class>)
  *****************************************************************/
 void ClassReactivePCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -166,7 +166,7 @@ Defclass *ClassInfoFnxArgs(
         bool *inhp) {
     Defclass *clsptr;
     UDFValue theArg;
-    const Environment&theEnv = context->environment;
+    const Environment::Ptr&theEnv = context->environment;
 
     *inhp = false;
 
@@ -203,7 +203,7 @@ Defclass *ClassInfoFnxArgs(
   NOTES        : Syntax: (class-slots <class> [inherit])
  ********************************************************************/
 void ClassSlotsCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     bool inhp;
@@ -230,7 +230,7 @@ void ClassSlotsCommand(
   NOTES        : Syntax: (class-superclasses <class> [inherit])
  ************************************************************************/
 void ClassSuperclassesCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     bool inhp;
@@ -257,7 +257,7 @@ void ClassSuperclassesCommand(
   NOTES        : Syntax: (class-subclasses <class> [inherit])
  ************************************************************************/
 void ClassSubclassesCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     bool inhp;
@@ -284,7 +284,7 @@ void ClassSubclassesCommand(
   NOTES        : Syntax: (get-defmessage-handler-list <class> [inherit])
  ***********************************************************************/
 void GetDefmessageHandlersListCmd(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     bool inhp;
@@ -310,49 +310,49 @@ void GetDefmessageHandlersListCmd(
  Slot Information Access Functions
  *********************************/
 void SlotFacetsCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     SlotInfoSupportFunction(context, returnValue, "slot-facets", SlotFacets);
 }
 
 void SlotSourcesCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     SlotInfoSupportFunction(context, returnValue, "slot-sources", SlotSources);
 }
 
 void SlotTypesCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     SlotInfoSupportFunction(context, returnValue, "slot-types", SlotTypes);
 }
 
 void SlotAllowedValuesCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     SlotInfoSupportFunction(context, returnValue, "slot-allowed-values", SlotAllowedValues);
 }
 
 void SlotAllowedClassesCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     SlotInfoSupportFunction(context, returnValue, "slot-allowed-classes", SlotAllowedClasses);
 }
 
 void SlotRangeCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     SlotInfoSupportFunction(context, returnValue, "slot-range", SlotRange);
 }
 
 void SlotCardinalityCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     SlotInfoSupportFunction(context, returnValue, "slot-cardinality", SlotCardinality);
@@ -404,7 +404,7 @@ void ClassSlots(
         bool inhp) {
     size_t size;
     unsigned i;
-    const Environment&theEnv = theDefclass->header.env;
+    const Environment::Ptr&theEnv = theDefclass->header.env;
 
     size = inhp ? theDefclass->instanceSlotCount : theDefclass->slotCount;
 
@@ -439,7 +439,7 @@ void ClassSlots(
   NOTES        : None
  ************************************************************************/
 void GetDefmessageHandlerList(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defclass *theDefclass,
         CLIPSValue *returnValue,
         bool inhp) {
@@ -512,7 +512,7 @@ void ClassSuperclasses(
     PACKED_CLASS_LINKS *plinks;
     unsigned offset;
     unsigned long i, j;
-    const Environment&theEnv = theDefclass->header.env;
+    const Environment::Ptr&theEnv = theDefclass->header.env;
 
     if (inhp) {
         plinks = &theDefclass->allSuperclasses;
@@ -549,7 +549,7 @@ void ClassSubclasses(
         bool inhp) {
     unsigned i;
     int id;
-    const Environment&theEnv = theDefclass->header.env;
+    const Environment::Ptr&theEnv = theDefclass->header.env;
 
     if ((id = GetTraversalID(theEnv)) == -1) { return; }
 
@@ -580,7 +580,7 @@ void ClassSubclasses(
   NOTES        : None
  **************************************************************************/
 void ClassSubclassAddresses(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defclass *theDefclass,
         UDFValue *returnValue,
         bool inhp) {
@@ -627,7 +627,7 @@ bool SlotFacets(
         CLIPSValue *returnValue) {
     SlotDescriptor *sp;
     UDFValue result;
-    const Environment&theEnv = theDefclass->header.env;
+    const Environment::Ptr&theEnv = theDefclass->header.env;
 
     if ((sp = SlotInfoSlot(theEnv, &result, theDefclass, sname, "slot-facets")) == nullptr) {
         NormalizeMultifield(theEnv, &result);
@@ -697,7 +697,7 @@ bool SlotSources(
     CLASS_LINK *ctop, *ctmp;
     Defclass *cls;
     UDFValue result;
-    const Environment&theEnv = theDefclass->header.env;
+    const Environment::Ptr&theEnv = theDefclass->header.env;
 
     if ((sp = SlotInfoSlot(theEnv, &result, theDefclass, sname, "slot-sources")) == nullptr) {
         NormalizeMultifield(theEnv, &result);
@@ -745,7 +745,7 @@ bool SlotTypes(
     char typemap[2];
     unsigned msize;
     UDFValue result;
-    const Environment&theEnv = theDefclass->header.env;
+    const Environment::Ptr&theEnv = theDefclass->header.env;
 
     if ((sp = SlotInfoSlot(theEnv, &result, theDefclass, sname, "slot-types")) == nullptr) {
         NormalizeMultifield(theEnv, &result);
@@ -820,7 +820,7 @@ bool SlotAllowedValues(
     SlotDescriptor *sp;
     Expression *theExp;
     UDFValue result;
-    const Environment&theEnv = theDefclass->header.env;
+    const Environment::Ptr&theEnv = theDefclass->header.env;
 
     if ((sp = SlotInfoSlot(theEnv, &result, theDefclass, sname, "slot-allowed-values")) == nullptr) {
         NormalizeMultifield(theEnv, &result);
@@ -856,7 +856,7 @@ bool SlotAllowedClasses(
     SlotDescriptor *sp;
     Expression *theExp;
     UDFValue result;
-    const Environment&theEnv = theDefclass->header.env;
+    const Environment::Ptr&theEnv = theDefclass->header.env;
 
     if ((sp = SlotInfoSlot(theEnv, &result, theDefclass, sname, "slot-allowed-classes")) == nullptr) {
         NormalizeMultifield(theEnv, &result);
@@ -888,7 +888,7 @@ bool SlotRange(
         CLIPSValue *returnValue) {
     SlotDescriptor *sp;
     UDFValue result;
-    const Environment&theEnv = theDefclass->header.env;
+    const Environment::Ptr&theEnv = theDefclass->header.env;
 
     if ((sp = SlotInfoSlot(theEnv, &result, theDefclass, sname, "slot-range")) == nullptr) {
         NormalizeMultifield(theEnv, &result);
@@ -916,7 +916,7 @@ bool SlotCardinality(
         CLIPSValue *returnValue) {
     SlotDescriptor *sp;
     UDFValue result;
-    const Environment&theEnv = theDefclass->header.env;
+    const Environment::Ptr&theEnv = theDefclass->header.env;
 
     if ((sp = SlotInfoSlot(theEnv, &result, theDefclass, sname, "slot-cardinality")) == nullptr) {
         NormalizeMultifield(theEnv, &result);
@@ -1062,7 +1062,7 @@ static unsigned StoreSubclasses(
   NOTES        : None
  *********************************************************/
 static SlotDescriptor *SlotInfoSlot(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFValue *returnValue,
         Defclass *cls,
         const char *sname,

@@ -52,17 +52,17 @@
 #include "Expression.h"
 #include "GenericFunction.h"
 
-void GenericDispatch(const Environment&, Defgeneric *, Defmethod *, Defmethod *, Expression *, UDFValue *);
-void UnboundMethodErr(const Environment&, const char *);
-bool IsMethodApplicable(const Environment&, Defmethod *);
+void GenericDispatch(const Environment::Ptr&, Defgeneric *, Defmethod *, Defmethod *, Expression *, UDFValue *);
+void UnboundMethodErr(const Environment::Ptr&, const char *);
+bool IsMethodApplicable(const Environment::Ptr&, Defmethod *);
 
-bool NextMethodP(const Environment&);
-void NextMethodPCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void CallNextMethod(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void CallSpecificMethod(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void OverrideNextMethod(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+bool NextMethodP(const Environment::Ptr&);
+void NextMethodPCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void CallNextMethod(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void CallSpecificMethod(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void OverrideNextMethod(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
 
-void GetGenericCurrentArgument(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void GetGenericCurrentArgument(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
 
 #endif /* DEFGENERIC_CONSTRUCT */
 

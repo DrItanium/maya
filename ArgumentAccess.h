@@ -58,15 +58,15 @@
 const char *GetLogicalName(UDFContext *, const char *);
 const char *GetFileName(UDFContext *);
 const char *GetConstructName(UDFContext *, const char *, const char *);
-void ExpectedCountError(const Environment&, const char *, int, unsigned int);
-void OpenErrorMessage(const Environment&, const char *, const char *);
-bool CheckFunctionArgCount(const Environment&, FunctionDefinition *, int);
-void ExpectedTypeError0(const Environment&, const char *, unsigned int);
-void ExpectedTypeError1(const Environment&, const char *, unsigned int, const char *);
-void ExpectedTypeError2(const Environment&, const char *, unsigned int);
+void ExpectedCountError(const Environment::Ptr&, const char *, int, unsigned int);
+void OpenErrorMessage(const Environment::Ptr&, const char *, const char *);
+bool CheckFunctionArgCount(const Environment::Ptr&, FunctionDefinition *, int);
+void ExpectedTypeError0(const Environment::Ptr&, const char *, unsigned int);
+void ExpectedTypeError1(const Environment::Ptr&, const char *, unsigned int, const char *);
+void ExpectedTypeError2(const Environment::Ptr&, const char *, unsigned int);
 Defmodule *GetModuleName(UDFContext *, unsigned int, bool *);
 void *GetFactOrInstanceArgument(UDFContext *, unsigned int, UDFValue *);
-void IllegalLogicalNameMessage(const Environment&, const char *);
+void IllegalLogicalNameMessage(const Environment::Ptr&, const char *);
 
 #endif
 

@@ -65,9 +65,9 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void RemoveIntranetworkLink(const Environment&, struct joinNode *);
-static void DetachJoins(const Environment&, struct joinNode *, bool);
-static void DetachJoinsDriver(const Environment&, Defrule::Ptr , bool);
+static void RemoveIntranetworkLink(const Environment::Ptr&, struct joinNode *);
+static void DetachJoins(const Environment::Ptr&, struct joinNode *, bool);
+static void DetachJoinsDriver(const Environment::Ptr&, Defrule::Ptr , bool);
 
 /**********************************************************************/
 /* ReturnDefrule: Returns a defrule data structure and its associated */
@@ -77,7 +77,7 @@ static void DetachJoinsDriver(const Environment&, Defrule::Ptr , bool);
 /*   are only deallocated for the first disjunct).                    */
 /**********************************************************************/
 void ReturnDefrule(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defrule::Ptr theDefrule) {
     bool first = true;
     Defrule::Ptr nextPtr, *tmpPtr;
@@ -182,7 +182,7 @@ void ReturnDefrule(
 /*   as a result of DestroyEnvironment.                 */
 /********************************************************/
 void DestroyDefrule(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defrule::Ptr theDefrule) {
     Defrule::Ptr nextDisjunct;
     bool first = true;
@@ -227,7 +227,7 @@ void DestroyDefrule(
 /* DetachJoinsDriver: */
 /**********************/
 static void DetachJoinsDriver(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defrule::Ptr theRule,
         bool destroy) {
     struct joinNode *join;
@@ -263,7 +263,7 @@ static void DetachJoinsDriver(
 /*   are not shared by other rules.                                   */
 /**********************************************************************/
 static void DetachJoins(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct joinNode *join,
         bool destroy) {
     struct joinNode *prevJoin, *rightJoin;
@@ -453,7 +453,7 @@ static void DetachJoins(
 /*   any other joins, it is removed using the function DetachPattern.  */
 /***********************************************************************/
 static void RemoveIntranetworkLink(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct joinNode *join) {
     PatternNodeHeader *patternPtr;
     struct joinNode *joinPtr, *lastJoin;

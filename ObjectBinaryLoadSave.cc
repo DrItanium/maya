@@ -174,35 +174,35 @@ typedef struct handlerBsaveInfo {
 
 #if BLOAD_AND_BSAVE
 
-static void BsaveObjectsFind(const Environment&);
-static void MarkDefclassItems(const Environment&, ConstructHeader *, void *);
-static void BsaveObjectsExpressions(const Environment&, FILE *);
-static void BsaveDefaultSlotExpressions(const Environment&, ConstructHeader *, void *);
-static void BsaveHandlerActionExpressions(const Environment&, ConstructHeader *, void *);
-static void BsaveStorageObjects(const Environment&, FILE *);
-static void BsaveObjects(const Environment&, FILE *);
-static void BsaveDefclass(const Environment&, ConstructHeader *, void *);
-static void BsaveClassLinks(const Environment&, ConstructHeader *, void *);
-static void BsaveSlots(const Environment&, ConstructHeader *, void *);
-static void BsaveTemplateSlots(const Environment&, ConstructHeader *, void *);
-static void BsaveSlotMap(const Environment&, ConstructHeader *, void *);
-static void BsaveHandlers(const Environment&, ConstructHeader *, void *);
-static void BsaveHandlerMap(const Environment&, ConstructHeader *, void *);
+static void BsaveObjectsFind(const Environment::Ptr&);
+static void MarkDefclassItems(const Environment::Ptr&, ConstructHeader *, void *);
+static void BsaveObjectsExpressions(const Environment::Ptr&, FILE *);
+static void BsaveDefaultSlotExpressions(const Environment::Ptr&, ConstructHeader *, void *);
+static void BsaveHandlerActionExpressions(const Environment::Ptr&, ConstructHeader *, void *);
+static void BsaveStorageObjects(const Environment::Ptr&, FILE *);
+static void BsaveObjects(const Environment::Ptr&, FILE *);
+static void BsaveDefclass(const Environment::Ptr&, ConstructHeader *, void *);
+static void BsaveClassLinks(const Environment::Ptr&, ConstructHeader *, void *);
+static void BsaveSlots(const Environment::Ptr&, ConstructHeader *, void *);
+static void BsaveTemplateSlots(const Environment::Ptr&, ConstructHeader *, void *);
+static void BsaveSlotMap(const Environment::Ptr&, ConstructHeader *, void *);
+static void BsaveHandlers(const Environment::Ptr&, ConstructHeader *, void *);
+static void BsaveHandlerMap(const Environment::Ptr&, ConstructHeader *, void *);
 
 #endif
 
-static void BloadStorageObjects(const Environment&);
-static void BloadObjects(const Environment&);
-static void UpdatePrimitiveClassesMap(const Environment&);
-static void UpdateDefclassModule(const Environment&, void *, unsigned long);
-static void UpdateDefclass(const Environment&, void *, unsigned long);
-static void UpdateLink(const Environment&, void *, unsigned long);
-static void UpdateSlot(const Environment&, void *, unsigned long);
-static void UpdateSlotName(const Environment&, void *, unsigned long);
-static void UpdateTemplateSlot(const Environment&, void *, unsigned long);
-static void UpdateHandler(const Environment&, void *, unsigned long);
-static void ClearBloadObjects(const Environment&);
-static void DeallocateObjectBinaryData(const Environment&);
+static void BloadStorageObjects(const Environment::Ptr&);
+static void BloadObjects(const Environment::Ptr&);
+static void UpdatePrimitiveClassesMap(const Environment::Ptr&);
+static void UpdateDefclassModule(const Environment::Ptr&, void *, unsigned long);
+static void UpdateDefclass(const Environment::Ptr&, void *, unsigned long);
+static void UpdateLink(const Environment::Ptr&, void *, unsigned long);
+static void UpdateSlot(const Environment::Ptr&, void *, unsigned long);
+static void UpdateSlotName(const Environment::Ptr&, void *, unsigned long);
+static void UpdateTemplateSlot(const Environment::Ptr&, void *, unsigned long);
+static void UpdateHandler(const Environment::Ptr&, void *, unsigned long);
+static void ClearBloadObjects(const Environment::Ptr&);
+static void DeallocateObjectBinaryData(const Environment::Ptr&);
 
 /* =========================================
    *****************************************
@@ -221,7 +221,7 @@ static void DeallocateObjectBinaryData(const Environment&);
   NOTES        : None
  ***********************************************************/
 void SetupObjectsBload(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     //AllocateEnvironmentData(theEnv, OBJECTBIN_DATA, sizeof(objectBinaryData), DeallocateObjectBinaryData);
     theEnv->allocateEnvironmentModule<objectBinaryData>();
 
@@ -241,7 +241,7 @@ void SetupObjectsBload(
 /*    data for object binary functionality.            */
 /*******************************************************/
 static void DeallocateObjectBinaryData(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     size_t space;
     unsigned long i;
 
@@ -304,7 +304,7 @@ static void DeallocateObjectBinaryData(
   NOTES        : None
  ***************************************************/
 void *BloadDefclassModuleReference(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         unsigned long theIndex) {
     return ((void *) &ObjectBinaryData(theEnv)->ModuleArray[theIndex]);
 }
@@ -332,7 +332,7 @@ void *BloadDefclassModuleReference(
                    will be bsaved in order of binary list)
  ***************************************************************************/
 static void BsaveObjectsFind(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     unsigned i;
     SLOT_NAME *snp;
 
@@ -391,7 +391,7 @@ static void BsaveObjectsFind(
   NOTES        : None
  ***************************************************/
 static void MarkDefclassItems(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         ConstructHeader *theDefclass,
         void *buf) {
 #if MAC_XCD
@@ -463,7 +463,7 @@ static void MarkDefclassItems(
   NOTES        : None
  ***************************************************/
 static void BsaveObjectsExpressions(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         FILE *fp) {
     if ((ObjectBinaryData(theEnv)->ClassCount == 0L) && (ObjectBinaryData(theEnv)->HandlerCount == 0L))
         return;
@@ -492,7 +492,7 @@ static void BsaveObjectsExpressions(
   NOTES        : None
  ***************************************************/
 static void BsaveDefaultSlotExpressions(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         ConstructHeader *theDefclass,
         void *buf) {
     Defclass *cls = (Defclass *) theDefclass;
@@ -528,7 +528,7 @@ static void BsaveDefaultSlotExpressions(
   NOTES        : None
  ***************************************************/
 static void BsaveHandlerActionExpressions(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         ConstructHeader *theDefclass,
         void *buf) {
     Defclass *cls = (Defclass *) theDefclass;
@@ -555,7 +555,7 @@ static void BsaveHandlerActionExpressions(
   NOTES        : None
  *************************************************************************************/
 static void BsaveStorageObjects(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         FILE *fp) {
     size_t space;
     long maxClassID;// TBD unsigned short
@@ -590,7 +590,7 @@ static void BsaveStorageObjects(
   NOTES        : None
  *************************************************************************************/
 static void BsaveObjects(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         FILE *fp) {
     size_t space;
     Defmodule *theModule;
@@ -706,7 +706,7 @@ static void BsaveObjects(
   NOTES        : None
  ***************************************************/
 static void BsaveDefclass(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         ConstructHeader *theDefclass,
         void *buf) {
     Defclass *cls = (Defclass *) theDefclass;
@@ -783,7 +783,7 @@ static void BsaveDefclass(
   NOTES        : None
  ***************************************************/
 static void BsaveClassLinks(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         ConstructHeader *theDefclass,
         void *buf) {
     Defclass *cls = (Defclass *) theDefclass;
@@ -816,7 +816,7 @@ static void BsaveClassLinks(
   NOTES        : None
  ***************************************************/
 static void BsaveSlots(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         ConstructHeader *theDefclass,
         void *buf) {
     Defclass *cls = (Defclass *) theDefclass;
@@ -868,7 +868,7 @@ static void BsaveSlots(
   NOTES        : None
  **************************************************************/
 static void BsaveTemplateSlots(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         ConstructHeader *theDefclass,
         void *buf) {
     Defclass *cls = (Defclass *) theDefclass;
@@ -894,7 +894,7 @@ static void BsaveTemplateSlots(
   NOTES        : None
  ***************************************************************/
 static void BsaveSlotMap(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         ConstructHeader *theDefclass,
         void *buf) {
     Defclass *cls = (Defclass *) theDefclass;
@@ -917,7 +917,7 @@ static void BsaveSlotMap(
   NOTES        : None
  ************************************************************/
 static void BsaveHandlers(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         ConstructHeader *theDefclass,
         void *buf) {
     Defclass *cls = (Defclass *) theDefclass;
@@ -955,7 +955,7 @@ static void BsaveHandlers(
   NOTES        : None
  ****************************************************************/
 static void BsaveHandlerMap(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         ConstructHeader *theDefclass,
         void *buf) {
     Defclass *cls = (Defclass *) theDefclass;
@@ -985,7 +985,7 @@ static void BsaveHandlerMap(
                  Bload fails if there are still classes in the system!!
  ***********************************************************************/
 static void BloadStorageObjects(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     size_t space;
     unsigned long counts[9];
 
@@ -1056,7 +1056,7 @@ static void BloadStorageObjects(
   NOTES        : Assumes all loading is finished
  **************************************************************/
 static void BloadObjects(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     size_t space;
 
     GenReadBinary(theEnv, &space, sizeof(size_t));
@@ -1097,7 +1097,7 @@ static void BloadObjects(
                  codes in the source file CONSTANT.H
  ***************************************************/
 static void UpdatePrimitiveClassesMap(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     unsigned i;
 
     for (i = 0; i < OBJECT_TYPE_CODE; i++)
@@ -1108,7 +1108,7 @@ static void UpdatePrimitiveClassesMap(
   Refresh update routines for bsaved COOL structures
  *********************************************************/
 static void UpdateDefclassModule(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *buf,
         unsigned long obji) {
     BSAVE_DEFCLASS_MODULE *bdptr;
@@ -1119,7 +1119,7 @@ static void UpdateDefclassModule(
 }
 
 static void UpdateDefclass(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *buf,
         unsigned long obji) {
     BSAVE_DEFCLASS *bcls;
@@ -1172,7 +1172,7 @@ static void UpdateDefclass(
 }
 
 static void UpdateLink(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *buf,
         unsigned long obji) {
     unsigned long *blink;
@@ -1182,7 +1182,7 @@ static void UpdateLink(
 }
 
 static void UpdateSlot(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *buf,
         unsigned long obji) {
     SlotDescriptor *sp;
@@ -1228,7 +1228,7 @@ static void UpdateSlot(
 }
 
 static void UpdateSlotName(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *buf,
         unsigned long obji) {
     SLOT_NAME *snp;
@@ -1247,14 +1247,14 @@ static void UpdateSlotName(
 }
 
 static void UpdateTemplateSlot(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *buf,
         unsigned long obji) {
     ObjectBinaryData(theEnv)->TmpslotArray[obji] = SlotPointer(*(long *) buf);
 }
 
 static void UpdateHandler(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *buf,
         unsigned long obji) {
     DefmessageHandler *hnd;
@@ -1294,7 +1294,7 @@ static void UpdateHandler(
   NOTES        : None
  ***************************************************************/
 static void ClearBloadObjects(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     unsigned long i;
     size_t space;
 

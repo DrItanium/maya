@@ -79,18 +79,18 @@ constexpr auto CONSTRUCTS_CODE = 2;
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static bool OutputProfileInfo(const Environment&, const char *, struct constructProfileInfo *,
+static bool OutputProfileInfo(const Environment::Ptr&, const char *, struct constructProfileInfo *,
                               const char *, const char *, const char *, const char **);
-static void OutputUserFunctionsInfo(const Environment&);
-static void OutputConstructsCodeInfo(const Environment&);
-static void ProfileClearFunction(const Environment&, void *);
+static void OutputUserFunctionsInfo(const Environment::Ptr&);
+static void OutputConstructsCodeInfo(const Environment::Ptr&);
+static void ProfileClearFunction(const Environment::Ptr&, void *);
 
 /******************************************************/
 /* ConstructProfilingFunctionDefinitions: Initializes */
 /*   the construct profiling functions.               */
 /******************************************************/
 void ConstructProfilingFunctionDefinitions(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
 #if STUBBING_INACTIVE
     struct userDataRecord profileDataInfo = {0, CreateProfileData, DeleteProfileData};
 #endif
@@ -122,7 +122,7 @@ void ConstructProfilingFunctionDefinitions(
 /*   profile user data structure. */
 /**********************************/
 void *CreateProfileData(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     struct constructProfileInfo *theInfo;
 
     theInfo = (constructProfileInfo *)
@@ -141,7 +141,7 @@ void *CreateProfileData(
 /* DeleteProfileData:          */
 /**************************************/
 void DeleteProfileData(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *theData) {
     genfree(theEnv, theData, sizeof(constructProfileInfo));
 }
@@ -151,7 +151,7 @@ void DeleteProfileData(
 /*   for the profile command.         */
 /**************************************/
 void ProfileCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *argument;
@@ -173,7 +173,7 @@ void ProfileCommand(
 /*   for the profile command. */
 /******************************/
 bool Profile(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *argument) {
     /*======================================================*/
     /* If the argument is the symbol "user-functions", then */
@@ -223,7 +223,7 @@ bool Profile(
 /*   for the profile-info command.        */
 /******************************************/
 void ProfileInfoCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     char buffer[512];
@@ -274,7 +274,7 @@ void ProfileInfoCommand(
 /*   to profile a construct or function.      */
 /**********************************************/
 void StartProfile(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct profileFrameInfo *theFrame,
         struct userData **theList,
         bool checkFlag) {
@@ -316,7 +316,7 @@ void StartProfile(
 /*   to profile a construct or function.   */
 /*******************************************/
 void EndProfile(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct profileFrameInfo *theFrame) {
     double endTime, addTime;
 
@@ -343,7 +343,7 @@ void EndProfile(
 /*   line of profile information.         */
 /******************************************/
 static bool OutputProfileInfo(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *itemName,
         struct constructProfileInfo *profileInfo,
         const char *printPrefixBefore,
@@ -402,7 +402,7 @@ static bool OutputProfileInfo(
 /*   for the profile-reset command.        */
 /*******************************************/
 void ProfileResetCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     FunctionDefinition *theFunction;
@@ -507,7 +507,7 @@ void ResetProfileInfo(
 /* OutputUserFunctionsInfo: */
 /****************************/
 static void OutputUserFunctionsInfo(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     FunctionDefinition *theFunction;
     int i;
 
@@ -536,7 +536,7 @@ static void OutputUserFunctionsInfo(
 /* OutputConstructsCodeInfo: */
 /*****************************/
 static void OutputConstructsCodeInfo(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
 #if DEFFUNCTION_CONSTRUCT
     Deffunction *theDeffunction;
 #endif
@@ -639,7 +639,7 @@ static void OutputConstructsCodeInfo(
 /*   for the set-profile-percent-threshold command.      */
 /*********************************************************/
 void SetProfilePercentThresholdCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theValue;
@@ -660,7 +660,7 @@ void SetProfilePercentThresholdCommand(
 /*   the set-profile-percent-threshold command.     */
 /****************************************************/
 double SetProfilePercentThreshold(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         double value) {
     double oldPercentThreshhold;
 
@@ -678,7 +678,7 @@ double SetProfilePercentThreshold(
 /*   for the get-profile-percent-threshold command.      */
 /*********************************************************/
 void GetProfilePercentThresholdCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     returnValue->floatValue = CreateFloat(theEnv, ProfileFunctionData(theEnv)->PercentThreshold);
@@ -689,7 +689,7 @@ void GetProfilePercentThresholdCommand(
 /*   the get-profile-percent-threshold command.     */
 /****************************************************/
 double GetProfilePercentThreshold(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     return (ProfileFunctionData(theEnv)->PercentThreshold);
 }
 
@@ -697,7 +697,7 @@ double GetProfilePercentThreshold(
 /* SetProfileOutputString: Sets the output string global. */
 /**********************************************************/
 const char *SetProfileOutputString(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *value) {
     const char *oldOutputString;
 
@@ -715,7 +715,7 @@ const char *SetProfileOutputString(
 /*   clear command. Removes user data attached to user functions. */
 /******************************************************************/
 static void ProfileClearFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *context) {
     FunctionDefinition *theFunction;
     int i;

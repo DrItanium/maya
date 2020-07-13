@@ -82,16 +82,16 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static struct templateSlot *SlotDeclarations(const Environment&, const char *, struct token *);
-static struct templateSlot *ParseSlot(const Environment&, const char *, struct token *, struct templateSlot *);
-static struct templateSlot *DefinedSlots(const Environment&, const char *, CLIPSLexeme *, bool, struct token *);
-static bool ParseFacetAttribute(const Environment&, const char *, struct templateSlot *, bool);
+static struct templateSlot *SlotDeclarations(const Environment::Ptr&, const char *, struct token *);
+static struct templateSlot *ParseSlot(const Environment::Ptr&, const char *, struct token *, struct templateSlot *);
+static struct templateSlot *DefinedSlots(const Environment::Ptr&, const char *, CLIPSLexeme *, bool, struct token *);
+static bool ParseFacetAttribute(const Environment::Ptr&, const char *, struct templateSlot *, bool);
 
 /*******************************************************/
 /* ParseDeftemplate: Parses the deftemplate construct. */
 /*******************************************************/
 bool ParseDeftemplate(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource) {
     CLIPSLexeme *deftemplateName;
     Deftemplate *newDeftemplate;
@@ -220,7 +220,7 @@ bool ParseDeftemplate(
 /*   the hash table.                                          */
 /**************************************************************/
 void InstallDeftemplate(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Deftemplate *theDeftemplate) {
     struct templateSlot *slotPtr;
     Expression *tempExpr;
@@ -245,7 +245,7 @@ void InstallDeftemplate(
 /* SlotDeclarations: Parses the slot declarations of a deftemplate. */
 /********************************************************************/
 static struct templateSlot *SlotDeclarations(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource,
         struct token *inputToken) {
     struct templateSlot *newSlot, *slotList = nullptr, *lastSlot = nullptr;
@@ -320,7 +320,7 @@ static struct templateSlot *SlotDeclarations(
 /* ParseSlot: Parses a single slot of a deftemplate. */
 /*****************************************************/
 static struct templateSlot *ParseSlot(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource,
         struct token *inputToken,
         struct templateSlot *slotList) {
@@ -423,7 +423,7 @@ static struct templateSlot *ParseSlot(
 /* DefinedSlots: Parses a field or multifield slot attribute. */
 /**************************************************************/
 static struct templateSlot *DefinedSlots(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource,
         CLIPSLexeme *slotName,
         bool multifieldSlot,
@@ -602,7 +602,7 @@ static struct templateSlot *DefinedSlots(
 /* ParseFacetAttribute: Parses the type attribute. */
 /***************************************************/
 static bool ParseFacetAttribute(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource,
         struct templateSlot *theSlot,
         bool multifacet) {

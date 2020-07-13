@@ -86,17 +86,17 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void ResetDefrules(const Environment&, void *);
-static void ResetDefrulesPrime(const Environment&, void *);
-static void SaveDefrules(const Environment&, Defmodule *, const char *, void *);
-static bool ClearDefrulesReady(const Environment&, void *);
-static void ClearDefrules(const Environment&, void *);
+static void ResetDefrules(const Environment::Ptr&, void *);
+static void ResetDefrulesPrime(const Environment::Ptr&, void *);
+static void SaveDefrules(const Environment::Ptr&, Defmodule *, const char *, void *);
+static bool ClearDefrulesReady(const Environment::Ptr&, void *);
+static void ClearDefrules(const Environment::Ptr&, void *);
 
 /*************************************************************/
 /* DefruleBasicCommands: Initializes basic defrule commands. */
 /*************************************************************/
 void DefruleBasicCommands(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     AddResetFunction(theEnv, "defrule", ResetDefrules, 70);
     AddResetFunction(theEnv, "defrule", ResetDefrulesPrime, 10);
     AddSaveFunction(theEnv, "defrule", SaveDefrules, 0);
@@ -131,7 +131,7 @@ void DefruleBasicCommands(
 /*   cleared.                                        */
 /*****************************************************/
 static void ResetDefrules(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *context) {
     Defmodule *theModule;
     struct joinLink *theLink;
@@ -173,7 +173,7 @@ static void ResetDefrules(
 /* ResetDefrulesPrime: */
 /***********************/
 static void ResetDefrulesPrime(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *context) {
     struct joinLink *theLink;
     PartialMatch *notParent;
@@ -206,7 +206,7 @@ static void ResetDefrulesPrime(
 /* ClearDefrulesReady: Indicates whether defrules can be cleared. */
 /******************************************************************/
 static bool ClearDefrulesReady(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *context) {
     if (EngineData(theEnv)->ExecutingRule != nullptr) return false;
 
@@ -224,7 +224,7 @@ static bool ClearDefrulesReady(
 /* ClearDefrules: Pushes the MAIN module as the current focus. */
 /***************************************************************/
 static void ClearDefrules(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *context) {
     Defmodule *theModule;
 
@@ -238,7 +238,7 @@ static void ClearDefrules(
 /*   for use with the save command.   */
 /**************************************/
 static void SaveDefrules(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defmodule *theModule,
         const char *logicalName,
         void *context) {
@@ -250,7 +250,7 @@ static void SaveDefrules(
 /*   for the undefrule command.           */
 /******************************************/
 void UndefruleCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UndefconstructCommand(context, "undefrule", DefruleData(theEnv)->DefruleConstruct);
@@ -262,7 +262,7 @@ void UndefruleCommand(
 /********************************/
 bool Undefrule(
         Defrule::Ptr theDefrule,
-        const Environment&allEnv) {
+        const Environment::Ptr&allEnv) {
     Environment theEnv;
 
     if (theDefrule == nullptr) {
@@ -279,7 +279,7 @@ bool Undefrule(
 /*   for the get-defrule-list function.         */
 /************************************************/
 void GetDefruleListFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     GetConstructListFunction(context, returnValue, DefruleData(theEnv)->DefruleConstruct);
@@ -290,7 +290,7 @@ void GetDefruleListFunction(
 /*   for the get-defrule-list function. */
 /****************************************/
 void GetDefruleList(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CLIPSValue *returnValue,
         Defmodule *theModule) {
     UDFValue result;
@@ -305,7 +305,7 @@ void GetDefruleList(
 /*   for the defrule-module function.        */
 /*********************************************/
 void DefruleModuleFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     returnValue->value = GetConstructModuleCommand(context, "defrule-module", DefruleData(theEnv)->DefruleConstruct);
@@ -318,7 +318,7 @@ void DefruleModuleFunction(
 /*   for the ppdefrule command.           */
 /******************************************/
 void PPDefruleCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     PPConstructCommand(context, "ppdefrule", DefruleData(theEnv)->DefruleConstruct, returnValue);
@@ -329,7 +329,7 @@ void PPDefruleCommand(
 /*   the ppdefrule command.        */
 /***********************************/
 bool PPDefrule(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *defruleName,
         const char *logicalName) {
     return (PPConstruct(theEnv, defruleName, logicalName, DefruleData(theEnv)->DefruleConstruct));
@@ -340,7 +340,7 @@ bool PPDefrule(
 /*   for the list-defrules command.          */
 /*********************************************/
 void ListDefrulesCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     ListConstructCommand(context, DefruleData(theEnv)->DefruleConstruct);
@@ -351,7 +351,7 @@ void ListDefrulesCommand(
 /*   for the list-defrules command. */
 /************************************/
 void ListDefrules(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         Defmodule *theModule) {
     ListConstruct(theEnv, DefruleData(theEnv)->DefruleConstruct, logicalName, theModule);
@@ -424,7 +424,7 @@ void DefruleSetWatchFirings(
 /*   associated with rules (activations and rule firings).         */
 /*******************************************************************/
 bool DefruleWatchAccess(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         int code,
         bool newState,
         Expression *argExprs) {
@@ -443,7 +443,7 @@ bool DefruleWatchAccess(
 /*   have their watch flag set via the list-watch-items command. */
 /*****************************************************************/
 bool DefruleWatchPrint(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logName,
         int code,
         Expression *argExprs) {

@@ -50,22 +50,22 @@
 /***************************************/
 
 #if BLOAD_AND_BSAVE
-static void BsaveFind(const Environment&);
-static void BsaveStorage(const Environment&, FILE *);
-static void BsaveBinaryItem(const Environment&, FILE *);
+static void BsaveFind(const Environment::Ptr&);
+static void BsaveStorage(const Environment::Ptr&, FILE *);
+static void BsaveBinaryItem(const Environment::Ptr&, FILE *);
 #endif
-static void BloadStorage(const Environment&);
-static void BloadBinaryItem(const Environment&);
-static void UpdateDefmodule(const Environment&, void *, unsigned long);
-static void UpdatePortItem(const Environment&, void *, unsigned long);
-static void ClearBload(const Environment&);
+static void BloadStorage(const Environment::Ptr&);
+static void BloadBinaryItem(const Environment::Ptr&);
+static void UpdateDefmodule(const Environment::Ptr&, void *, unsigned long);
+static void UpdatePortItem(const Environment::Ptr&, void *, unsigned long);
+static void ClearBload(const Environment::Ptr&);
 
 /*********************************************/
 /* DefmoduleBinarySetup: Installs the binary */
 /*   save/load feature for defmodules.       */
 /*********************************************/
 void DefmoduleBinarySetup(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     AddBeforeBloadFunction(theEnv, "defmodule", RemoveAllDefmodules, 2000, nullptr);
 
 #if BLOAD_AND_BSAVE
@@ -84,7 +84,7 @@ void DefmoduleBinarySetup(
 /*   item headers for the loaded binary image.                */
 /**************************************************************/
 void UpdateDefmoduleItemHeader(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct bsaveDefmoduleItemHeader *theBsaveHeader,
         struct defmoduleItemHeader *theHeader,
         size_t itemSize,
@@ -130,7 +130,7 @@ void AssignBsaveDefmdlItemHdrVals(
 /*   in the current environment.                          */
 /**********************************************************/
 static void BsaveFind(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     Defmodule *defmodulePtr;
     struct portItem *theList;
 
@@ -210,7 +210,7 @@ static void BsaveFind(
 /*    all defmodule structures to the binary file.       */
 /*********************************************************/
 static void BsaveStorage(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         FILE *fp) {
     size_t space;
 
@@ -225,7 +225,7 @@ static void BsaveStorage(
 /*   structures to the binary file.          */
 /*********************************************/
 static void BsaveBinaryItem(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         FILE *fp) {
     size_t space;
     Defmodule *defmodulePtr;
@@ -341,7 +341,7 @@ static void BsaveBinaryItem(
 /*   defmodules and port items used by this binary image. */
 /**********************************************************/
 static void BloadStorage(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     size_t space;
 
     /*=======================================*/
@@ -385,7 +385,7 @@ static void BloadStorage(
 /*   defmodules used by this binary image.  */
 /********************************************/
 static void BloadBinaryItem(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     size_t space;
 
     GenReadBinary(theEnv, &space, sizeof(size_t));
@@ -403,7 +403,7 @@ static void BloadBinaryItem(
 /*   for defmodule data structure.        */
 /******************************************/
 static void UpdateDefmodule(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *buf,
         unsigned long obji) {
     struct bsaveDefmodule *bdp;
@@ -449,7 +449,7 @@ static void UpdateDefmodule(
 /*   for port item data structure.       */
 /*****************************************/
 static void UpdatePortItem(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *buf,
         unsigned long obji) {
     struct bsavePortItem *bdp;
@@ -481,7 +481,7 @@ static void UpdatePortItem(
 /*   when a binary load is in effect.  */
 /***************************************/
 static void ClearBload(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     unsigned long i;
     size_t space;
     struct portItem *theList;

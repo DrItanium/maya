@@ -89,15 +89,15 @@ RegisterEnvironmentModule(instanceQueryData, INSTANCE_QUERY_DATA, InstanceQuery)
 
 #define QUERY_DELIMITER_STRING     "(QDS)"
 
-void SetupQuery(const Environment&);
-void GetQueryInstance(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void GetQueryInstanceSlot(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void AnyInstances(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void QueryFindInstance(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void QueryFindAllInstances(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void QueryDoForInstance(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void QueryDoForAllInstances(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void DelayedQueryDoForAllInstances(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SetupQuery(const Environment::Ptr&);
+void GetQueryInstance(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void GetQueryInstanceSlot(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void AnyInstances(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void QueryFindInstance(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void QueryFindAllInstances(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void QueryDoForInstance(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void QueryDoForAllInstances(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void DelayedQueryDoForAllInstances(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
 
 #endif /* INSTANCE_SET_QUERIES */
 

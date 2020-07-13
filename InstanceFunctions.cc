@@ -117,9 +117,9 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static Instance *FindImportedInstance(const Environment&, Defmodule *, Defmodule *, Instance *);
+static Instance *FindImportedInstance(const Environment::Ptr&, Defmodule *, Defmodule *, Instance *);
 
-static void NetworkModifyForSharedSlot(const Environment&, int, Defclass *, SlotDescriptor *);
+static void NetworkModifyForSharedSlot(const Environment::Ptr&, int, Defclass *, SlotDescriptor *);
 
 /* =========================================
    *****************************************
@@ -132,7 +132,7 @@ static void NetworkModifyForSharedSlot(const Environment&, int, Defclass *, Slot
 /*   number of references to a specified instance. */
 /***************************************************/
 void IncrementInstanceCallback(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Instance *theInstance) {
 #if MAC_XCD
 #pragma unused(theEnv)
@@ -147,7 +147,7 @@ void IncrementInstanceCallback(
 /*   number of references to a specified instance. */
 /***************************************************/
 void DecrementInstanceCallback(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Instance *theInstance) {
 #if MAC_XCD
 #pragma unused(theEnv)
@@ -205,7 +205,7 @@ Instance::release() {
   NOTES        : None
  ***************************************************/
 void InitializeInstanceTable(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     int i;
 
     InstanceData(theEnv)->InstanceTable = (Instance **)
@@ -226,7 +226,7 @@ void InitializeInstanceTable(
   NOTES        : None
  *******************************************************/
 void CleanupInstances(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *context) {
 #if STUBBING_INACTIVE
     IGARBAGE *gprv, *gtmp, *dump;
@@ -287,7 +287,7 @@ unsigned HashInstance(
   NOTES        : None
  ***************************************************/
 void DestroyAllInstances(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *context) {
     Instance *iptr;
     bool svmaintain;
@@ -322,7 +322,7 @@ void DestroyAllInstances(
                  Instance class busy count decremented
  ******************************************************/
 void RemoveInstanceData(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Instance *ins) {
     long i;
     InstanceSlot *sp;
@@ -364,7 +364,7 @@ void RemoveInstanceData(
                  all modules.
  ***************************************************************************/
 Instance *FindInstanceBySymbol(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CLIPSLexeme *moduleAndInstanceName) {
     unsigned modulePosition;
     bool searchImports;
@@ -438,7 +438,7 @@ Instance *FindInstanceBySymbol(
                  instance's module name has been specified.
  ***************************************************/
 Instance *FindInstanceInModule(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CLIPSLexeme *instanceName,
         Defmodule *theModule,
         Defmodule *currentModule,
@@ -493,7 +493,7 @@ Instance *FindInstanceInModule(
   NOTES        : None
  ********************************************************************/
 InstanceSlot *FindInstanceSlot(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Instance *ins,
         CLIPSLexeme *sname) {
     int i;
@@ -514,7 +514,7 @@ InstanceSlot *FindInstanceSlot(
                  the slot map array.
  ********************************************************************/
 int FindInstanceTemplateSlot(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defclass *cls,
         CLIPSLexeme *sname) {
     unsigned short sid;
@@ -548,7 +548,7 @@ int FindInstanceTemplateSlot(
   NOTES        : None
  *******************************************************/
 PutSlotError PutSlotValue(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Instance *ins,
         InstanceSlot *sp,
         UDFValue *val,
@@ -580,7 +580,7 @@ PutSlotError PutSlotValue(
   NOTES        : None
  *******************************************************/
 PutSlotError DirectPutSlotValue(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Instance *ins,
         InstanceSlot *sp,
         UDFValue *val,
@@ -747,7 +747,7 @@ PutSlotError DirectPutSlotValue(
   NOTES        : Examines all fields of a multi-field
  *******************************************************************/
 PutSlotError ValidSlotValue(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFValue *val,
         SlotDescriptor *sd,
         Instance *ins,
@@ -836,7 +836,7 @@ Instance *CheckInstance(
         UDFContext *context) {
     Instance *ins;
     UDFValue temp;
-    const Environment&theEnv = context->environment;
+    const Environment::Ptr&theEnv = context->environment;
 
     UDFFirstArgument(context, ANY_TYPE_BITS, &temp);
     if (temp.header->type == INSTANCE_ADDRESS_TYPE) {
@@ -882,7 +882,7 @@ Instance *CheckInstance(
   NOTES        : None
  ***************************************************/
 void NoInstanceError(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *iname,
         const char *func) {
     PrintErrorID(theEnv, "INSFUN", 2, false);
@@ -905,7 +905,7 @@ void NoInstanceError(
   NOTES        : None
  ***************************************************/
 void StaleInstanceAddress(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *func,
         int whichArg) {
     PrintErrorID(theEnv, "INSFUN", 4, false);
@@ -930,7 +930,7 @@ void StaleInstanceAddress(
   NOTES        : Used by interfaces to update instance windows
  **********************************************************************/
 bool GetInstancesChanged(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     return InstanceData(theEnv)->ChangesToInstances;
 }
 
@@ -943,7 +943,7 @@ bool GetInstancesChanged(
   NOTES        : None
  *******************************************************/
 void SetInstancesChanged(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         bool changed) {
     InstanceData(theEnv)->ChangesToInstances = changed;
 }
@@ -962,7 +962,7 @@ void SetInstancesChanged(
   NOTES        : None
  *******************************************************************/
 void PrintSlot(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logName,
         SlotDescriptor *sd,
         Instance *ins,
@@ -998,7 +998,7 @@ void PrintSlot(
   NOTES        : None
  *****************************************************/
 void PrintInstanceNameAndClass(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         Instance *theInstance,
         bool linefeedFlag) {
@@ -1020,7 +1020,7 @@ void PrintInstanceNameAndClass(
   NOTES        : None
  ***************************************************/
 void PrintInstanceName(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logName,
         Instance *theInstance) {
     if (theInstance->garbage) {
@@ -1045,7 +1045,7 @@ void PrintInstanceName(
   NOTES        : None
  ***************************************************/
 void PrintInstanceLongForm(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logName,
         Instance *theInstance) {
     if (PrintUtilityData(theEnv)->InstanceAddressesToNames) {
@@ -1090,7 +1090,7 @@ void PrintInstanceLongForm(
                  is deleted.
  ***************************************************/
 void DecrementObjectBasisCount(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Instance *theInstance) {
     long i;
 
@@ -1131,7 +1131,7 @@ void DecrementObjectBasisCount(
   NOTES        : None
  ***************************************************/
 void IncrementObjectBasisCount(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Instance *theInstance) {
     long i;
 
@@ -1160,7 +1160,7 @@ void IncrementObjectBasisCount(
   NOTES        : None
  ***************************************************/
 void MatchObjectFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Instance *theInstance) {
     ObjectNetworkAction(theEnv, OBJECT_ASSERT, theInstance, -1);
 }
@@ -1178,7 +1178,7 @@ void MatchObjectFunction(
   NOTES        : None
  ***************************************************/
 bool NetworkSynchronized(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Instance *theInstance) {
 #if MAC_XCD
 #pragma unused(theEnv)
@@ -1198,7 +1198,7 @@ bool NetworkSynchronized(
   NOTES        : None
  ***************************************************/
 bool InstanceIsDeleted(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Instance *theInstance) {
 #if MAC_XCD
 #pragma unused(theEnv)
@@ -1231,7 +1231,7 @@ bool InstanceIsDeleted(
   NOTES        : None
  *****************************************************/
 static Instance *FindImportedInstance(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defmodule *theModule,
         Defmodule *currentModule,
         Instance *startInstance) {
@@ -1288,7 +1288,7 @@ static Instance *FindImportedInstance(
                  established
  *****************************************************/
 static void NetworkModifyForSharedSlot(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         int sharedTraversalID,
         Defclass *cls,
         SlotDescriptor *sd) {

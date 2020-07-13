@@ -91,35 +91,35 @@ constexpr auto INSTANCE_TABLE_HASH_SIZE = 8191;
 
 void RetainInstance(Instance *);
 void ReleaseInstance(Instance *);
-void IncrementInstanceCallback(const Environment&, Instance *);
-void DecrementInstanceCallback(const Environment&, Instance *);
-void InitializeInstanceTable(const Environment&);
-void CleanupInstances(const Environment&, void *);
+void IncrementInstanceCallback(const Environment::Ptr&, Instance *);
+void DecrementInstanceCallback(const Environment::Ptr&, Instance *);
+void InitializeInstanceTable(const Environment::Ptr&);
+void CleanupInstances(const Environment::Ptr&, void *);
 unsigned HashInstance(CLIPSLexeme *);
-void DestroyAllInstances(const Environment&, void *);
-void RemoveInstanceData(const Environment&, Instance *);
-Instance *FindInstanceBySymbol(const Environment&, CLIPSLexeme *);
-Instance *FindInstanceInModule(const Environment&, CLIPSLexeme *, Defmodule *,
+void DestroyAllInstances(const Environment::Ptr&, void *);
+void RemoveInstanceData(const Environment::Ptr&, Instance *);
+Instance *FindInstanceBySymbol(const Environment::Ptr&, CLIPSLexeme *);
+Instance *FindInstanceInModule(const Environment::Ptr&, CLIPSLexeme *, Defmodule *,
                                Defmodule *, bool);
-InstanceSlot *FindInstanceSlot(const Environment&, Instance *, CLIPSLexeme *);
-int FindInstanceTemplateSlot(const Environment&, Defclass *, CLIPSLexeme *);
-PutSlotError PutSlotValue(const Environment&, Instance *, InstanceSlot *, UDFValue *, UDFValue *, const char *);
-PutSlotError DirectPutSlotValue(const Environment&, Instance *, InstanceSlot *, UDFValue *, UDFValue *);
-PutSlotError ValidSlotValue(const Environment&, UDFValue *, SlotDescriptor *, Instance *, const char *);
+InstanceSlot *FindInstanceSlot(const Environment::Ptr&, Instance *, CLIPSLexeme *);
+int FindInstanceTemplateSlot(const Environment::Ptr&, Defclass *, CLIPSLexeme *);
+PutSlotError PutSlotValue(const Environment::Ptr&, Instance *, InstanceSlot *, UDFValue *, UDFValue *, const char *);
+PutSlotError DirectPutSlotValue(const Environment::Ptr&, Instance *, InstanceSlot *, UDFValue *, UDFValue *);
+PutSlotError ValidSlotValue(const Environment::Ptr&, UDFValue *, SlotDescriptor *, Instance *, const char *);
 Instance *CheckInstance(UDFContext *);
-void NoInstanceError(const Environment&, const char *, const char *);
-void StaleInstanceAddress(const Environment&, const char *, int);
-bool GetInstancesChanged(const Environment&);
-void SetInstancesChanged(const Environment&, bool);
-void PrintSlot(const Environment&, const char *, SlotDescriptor *, Instance *, const char *);
-void PrintInstanceNameAndClass(const Environment&, const char *, Instance *, bool);
-void PrintInstanceName(const Environment&, const char *, Instance *);
-void PrintInstanceLongForm(const Environment&, const char *, Instance *);
-void DecrementObjectBasisCount(const Environment&, Instance *);
-void IncrementObjectBasisCount(const Environment&, Instance *);
-void MatchObjectFunction(const Environment&, Instance *);
-bool NetworkSynchronized(const Environment&, Instance *);
-bool InstanceIsDeleted(const Environment&, Instance *);
+void NoInstanceError(const Environment::Ptr&, const char *, const char *);
+void StaleInstanceAddress(const Environment::Ptr&, const char *, int);
+bool GetInstancesChanged(const Environment::Ptr&);
+void SetInstancesChanged(const Environment::Ptr&, bool);
+void PrintSlot(const Environment::Ptr&, const char *, SlotDescriptor *, Instance *, const char *);
+void PrintInstanceNameAndClass(const Environment::Ptr&, const char *, Instance *, bool);
+void PrintInstanceName(const Environment::Ptr&, const char *, Instance *);
+void PrintInstanceLongForm(const Environment::Ptr&, const char *, Instance *);
+void DecrementObjectBasisCount(const Environment::Ptr&, Instance *);
+void IncrementObjectBasisCount(const Environment::Ptr&, Instance *);
+void MatchObjectFunction(const Environment::Ptr&, Instance *);
+bool NetworkSynchronized(const Environment::Ptr&, Instance *);
+bool InstanceIsDeleted(const Environment::Ptr&, Instance *);
 
 #endif /* _H_insfun */
 

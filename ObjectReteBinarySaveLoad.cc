@@ -113,19 +113,19 @@ typedef struct bsaveClassAlphaLink {
 /***************************************/
 
 #if BLOAD_AND_BSAVE
-static void BsaveObjectPatternsFind(const Environment&);
-static void MarkDefclassItems(const Environment&, struct constructHeader *, void *);
-static void BsaveStorageObjectPatterns(const Environment&, FILE *);
-static void BsaveObjectPatterns(const Environment&, FILE *);
-static void BsaveAlphaLinks(const Environment&, struct constructHeader *, void *);
+static void BsaveObjectPatternsFind(const Environment::Ptr&);
+static void MarkDefclassItems(const Environment::Ptr&, struct constructHeader *, void *);
+static void BsaveStorageObjectPatterns(const Environment::Ptr&, FILE *);
+static void BsaveObjectPatterns(const Environment::Ptr&, FILE *);
+static void BsaveAlphaLinks(const Environment::Ptr&, struct constructHeader *, void *);
 #endif
-static void BloadStorageObjectPatterns(const Environment&);
-static void BloadObjectPatterns(const Environment&);
-static void UpdateAlpha(const Environment&, void *, unsigned long);
-static void UpdatePattern(const Environment&, void *, unsigned long);
-static void UpdateLink(const Environment&, void *, unsigned long);
-static void ClearBloadObjectPatterns(const Environment&);
-static void DeallocateObjectReteBinaryData(const Environment&);
+static void BloadStorageObjectPatterns(const Environment::Ptr&);
+static void BloadObjectPatterns(const Environment::Ptr&);
+static void UpdateAlpha(const Environment::Ptr&, void *, unsigned long);
+static void UpdatePattern(const Environment::Ptr&, void *, unsigned long);
+static void UpdateLink(const Environment::Ptr&, void *, unsigned long);
+static void ClearBloadObjectPatterns(const Environment::Ptr&);
+static void DeallocateObjectReteBinaryData(const Environment::Ptr&);
 
 /* =========================================
    *****************************************
@@ -144,7 +144,7 @@ static void DeallocateObjectReteBinaryData(const Environment&);
   NOTES        : None
  ***********************************************************/
 void SetupObjectPatternsBload(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     //AllocateEnvironmentData(theEnv, OBJECTRETEBIN_DATA, sizeof(objectReteBinaryData), DeallocateObjectReteBinaryData);
     theEnv->allocateEnvironmentModule<objectReteBinaryData>();
 
@@ -161,7 +161,7 @@ void SetupObjectPatternsBload(
 /*    data for object rete binary functionality.           */
 /***********************************************************/
 static void DeallocateObjectReteBinaryData(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
 #if (BLOAD_AND_BSAVE)
     size_t space;
     unsigned long i;
@@ -203,7 +203,7 @@ static void DeallocateObjectReteBinaryData(
   NOTES        : None
  ***************************************************/
 static void BsaveObjectPatternsFind(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     OBJECT_ALPHA_NODE *alphaPtr;
     OBJECT_PATTERN_NODE *patternPtr;
 
@@ -251,7 +251,7 @@ static void BsaveObjectPatternsFind(
   NOTES        : None
  ***************************************************/
 static void MarkDefclassItems(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct constructHeader *theDefclass,
         void *buf) {
 #if MAC_XCD
@@ -277,7 +277,7 @@ static void MarkDefclassItems(
   NOTES        : None
  ****************************************************/
 static void BsaveStorageObjectPatterns(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         FILE *fp) {
     size_t space;
 
@@ -300,7 +300,7 @@ static void BsaveStorageObjectPatterns(
                  alignment of structues on bload
  ***************************************************/
 static void BsaveObjectPatterns(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         FILE *fp) {
     size_t space;
     OBJECT_ALPHA_NODE *alphaPtr;
@@ -382,7 +382,7 @@ static void BsaveObjectPatterns(
   NOTES        : None
  ***************************************************/
 static void BsaveAlphaLinks(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct constructHeader *theDefclass,
         void *buf) {
     Defclass *cls = (Defclass *) theDefclass;
@@ -414,7 +414,7 @@ static void BsaveAlphaLinks(
   NOTES        : None
  ***************************************************/
 static void BloadStorageObjectPatterns(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     size_t space;
     unsigned long counts[3];
 
@@ -457,7 +457,7 @@ static void BloadStorageObjectPatterns(
   NOTES        : Assumes storage allocated previously
  ****************************************************/
 static void BloadObjectPatterns(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     size_t space;
     unsigned long i;
 
@@ -504,7 +504,7 @@ static void BloadObjectPatterns(
   NOTES        : None
  ***************************************************/
 static void UpdateAlpha(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *buf,
         unsigned long obji) {
     BSAVE_OBJECT_ALPHA_NODE *bap;
@@ -542,7 +542,7 @@ static void UpdateAlpha(
   NOTES        : None
  ***************************************************/
 static void UpdatePattern(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *buf,
         unsigned long obji) {
     BSAVE_OBJECT_PATTERN_NODE *bop;
@@ -582,7 +582,7 @@ static void UpdatePattern(
   NOTES        : None
  ***************************************************/
 static void UpdateLink(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *buf,
         unsigned long obji) {
     BSAVE_CLASS_ALPHA_LINK *bal;
@@ -607,7 +607,7 @@ static void UpdateLink(
   NOTES        : None
  ***************************************************/
 static void ClearBloadObjectPatterns(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     size_t space;
     unsigned long i;
 

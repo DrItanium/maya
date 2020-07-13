@@ -75,15 +75,15 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static WatchItemRecord *ValidWatchItem(const Environment&, const char *, bool *);
-static void DeallocateWatchData(const Environment&);
+static WatchItemRecord *ValidWatchItem(const Environment::Ptr&, const char *, bool *);
+static void DeallocateWatchData(const Environment::Ptr&);
 
 /**********************************************/
 /* InitializeWatchData: Allocates environment */
 /*    data for watch items.                   */
 /**********************************************/
 void InitializeWatchData(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     //AllocateEnvironmentData(theEnv, WATCH_DATA, sizeof(watchData), DeallocateWatchData);
     theEnv->allocateEnvironmentModule<watchData>();
 }
@@ -93,7 +93,7 @@ void InitializeWatchData(
 /*    data for watch items.                     */
 /************************************************/
 static void DeallocateWatchData(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     WatchItemRecord *tmpPtr, *nextPtr;
 
     tmpPtr = WatchData(theEnv)->ListOfWatchItems;
@@ -111,7 +111,7 @@ static void DeallocateWatchData(
 /*   otherwise returns true.                                 */
 /*************************************************************/
 bool AddWatchItem(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *name,
         int code,
         bool *flag,
@@ -170,7 +170,7 @@ bool AddWatchItem(
 /* Watch: C access routine for the watch command. */
 /**************************************************/
 void Watch(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         WatchItem item) {
     switch (item) {
         case ALL:
@@ -239,7 +239,7 @@ void Watch(
 /* Unwatch: C access routine for the watch command. */
 /****************************************************/
 void Unwatch(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         WatchItem item) {
     switch (item) {
         case ALL:
@@ -309,7 +309,7 @@ void Unwatch(
 /*   for the specified watch item.        */
 /******************************************/
 bool GetWatchState(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         WatchItem item) {
     switch (item) {
         case ALL:
@@ -366,7 +366,7 @@ bool GetWatchState(
 /*   for the specified watch item.        */
 /******************************************/
 void SetWatchState(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         WatchItem item,
         bool newState) {
     switch (item) {
@@ -436,7 +436,7 @@ void SetWatchState(
 /* WatchString: C access routine for the watch command. */
 /********************************************************/
 bool WatchString(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *itemName) {
     return SetWatchItem(theEnv, itemName, true, nullptr);
 }
@@ -445,7 +445,7 @@ bool WatchString(
 /* UnwatchString: C access routine for the unwatch command. */
 /************************************************************/
 bool UnwatchString(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *itemName) {
     return SetWatchItem(theEnv, itemName, false, nullptr);
 }
@@ -455,7 +455,7 @@ bool UnwatchString(
 /*   on or off. Returns true if the item was set, otherwise false.  */
 /********************************************************************/
 bool SetWatchItem(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *itemName,
         bool newState,
         Expression *argExprs) {
@@ -533,7 +533,7 @@ bool SetWatchItem(
 /*   items, otherwise -1 is returned.                           */
 /****************************************************************/
 int GetWatchItem(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *itemName) {
     WatchItemRecord *wPtr;
 
@@ -552,7 +552,7 @@ int GetWatchItem(
 /*   in the list of watch items, otherwise returns false.      */
 /***************************************************************/
 static WatchItemRecord *ValidWatchItem(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *itemName,
         bool *recognized) {
     WatchItemRecord *wPtr;
@@ -576,7 +576,7 @@ static WatchItemRecord *ValidWatchItem(
 /*   does not exist, then nullptr is returned.                  */
 /*************************************************************/
 const char *GetNthWatchName(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         int whichItem) {
     int i;
     WatchItemRecord *wPtr;
@@ -594,7 +594,7 @@ const char *GetNthWatchName(
 /*   item does not exist, then -1 is returned.                 */
 /***************************************************************/
 int GetNthWatchValue(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         int whichItem) {
     int i;
     WatchItemRecord *wPtr;
@@ -611,7 +611,7 @@ int GetNthWatchValue(
 /*   for the watch command.           */
 /**************************************/
 void WatchCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theValue;
@@ -657,7 +657,7 @@ void WatchCommand(
 /*   for the unwatch command.           */
 /****************************************/
 void UnwatchCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theValue;
@@ -703,7 +703,7 @@ void UnwatchCommand(
 /*   for the list-watch-items command.          */
 /************************************************/
 void ListWatchItemsCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     WatchItemRecord *wPtr;
@@ -769,7 +769,7 @@ void ListWatchItemsCommand(
 /*   for the get-watch-item command.       */
 /*******************************************/
 void GetWatchItemCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theValue;
@@ -804,7 +804,7 @@ void GetWatchItemCommand(
 /* WatchFunctionDefinitions: Initializes the watch commands. */
 /*************************************************************/
 void WatchFunctionDefinitions(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
 #if STUBBING_INACTIVE
     AddUDF(theEnv, "watch", "v", 1, UNBOUNDED, "*;y", WatchCommand);
     AddUDF(theEnv, "unwatch", "v", 1, UNBOUNDED, "*;y", UnwatchCommand);

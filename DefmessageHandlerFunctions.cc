@@ -74,8 +74,8 @@
 /***************************************/
 
 #if DEBUGGING_FUNCTIONS
-static HANDLER_LINK *DisplayPrimaryCore(const Environment&, const char *, HANDLER_LINK *, int);
-static void PrintPreviewHandler(const Environment&, const char *, HANDLER_LINK *, int, const char *);
+static HANDLER_LINK *DisplayPrimaryCore(const Environment::Ptr&, const char *, HANDLER_LINK *, int);
+static void PrintPreviewHandler(const Environment::Ptr&, const char *, HANDLER_LINK *, int, const char *);
 #endif
 
 /* =========================================
@@ -95,7 +95,7 @@ static void PrintPreviewHandler(const Environment&, const char *, HANDLER_LINK *
   NOTES        : None
  ********************************************************/
 void UnboundHandlerErr(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logName) {
     WriteString(theEnv, logName, "message-handler ");
     PrintHandler(theEnv, logName, MessageHandlerData(theEnv)->CurrentCore->hnd, true, true);
@@ -110,7 +110,7 @@ void UnboundHandlerErr(
   NOTES        : None
  *****************************************************************/
 void PrintNoHandlerError(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *msg) {
     PrintErrorID(theEnv, "MSGFUN", 1, false);
     WriteString(theEnv, STDERR, "No applicable primary message-handlers found for '");
@@ -129,7 +129,7 @@ void PrintNoHandlerError(
   NOTES        : Uses ProcParamArraySize and CurrentCore globals
  ***************************************************************/
 bool CheckHandlerArgCount(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     DefmessageHandler *hnd;
 
     hnd = MessageHandlerData(theEnv)->CurrentCore->hnd;
@@ -175,7 +175,7 @@ bool CheckHandlerArgCount(
   NOTES        : None
  ***************************************************/
 void SlotAccessViolationError(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *slotName,
         Instance *theInstance,
         Defclass *theDefclass) {
@@ -208,7 +208,7 @@ void SlotAccessViolationError(
   NOTES        : None
  ***************************************************/
 void SlotVisibilityViolationError(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         SlotDescriptor *sd,
         Defclass *theDefclass,
         bool printCR) {
@@ -244,7 +244,7 @@ void SlotVisibilityViolationError(
   NOTES        : Does not check to see if handler already exists
  *******************************************************************************/
 void NewSystemHandler(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *cname,
         const char *mname,
         const char *fname,
@@ -280,7 +280,7 @@ void NewSystemHandler(
   NOTES        : Assumes handler does not exist
  ***************************************************/
 DefmessageHandler *InsertHandlerHeader(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defclass *cls,
         CLIPSLexeme *mname,
         unsigned mtype) {
@@ -385,7 +385,7 @@ bool HandlersExecuting(
                    will fail
  **********************************************************************/
 bool DeleteHandler(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defclass *cls,
         CLIPSLexeme *mname,
         int mtype,
@@ -465,7 +465,7 @@ bool DeleteHandler(
                    busy count != 0 for any reason
  ***************************************************/
 void DeallocateMarkedHandlers(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defclass *cls) {
     unsigned short count;
     DefmessageHandler *hnd, *nhnd;
@@ -544,7 +544,7 @@ void DeallocateMarkedHandlers(
   NOTES        : None
  *****************************************************/
 unsigned short HandlerType(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *where,
         bool whereIsFunction,
         const char *str) {
@@ -580,7 +580,7 @@ unsigned short HandlerType(
   NOTES        : None
  *****************************************************************/
 bool CheckCurrentMessage(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *func,
         bool ins_reqd) {
     UDFValue *activeMsgArg;
@@ -624,7 +624,7 @@ bool CheckCurrentMessage(
   NOTES        : None
  ***************************************************/
 void PrintHandler(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logName,
         DefmessageHandler *theHandler,
         bool useQuotes,
@@ -773,7 +773,7 @@ int FindHandlerNameGroup(
   NOTES        : None
  ***************************************************/
 void HandlerDeleteError(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *cname) {
     PrintErrorID(theEnv, "MSGFUN", 8, false);
     WriteString(theEnv, STDERR, "Unable to delete message-handler(s) from class '");
@@ -803,7 +803,7 @@ void HandlerDeleteError(
                  Assumes (partial) core is not empty
  ********************************************************************/
 void DisplayCore(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         HANDLER_LINK *core,
         int sdepth) {
@@ -843,7 +843,7 @@ void DisplayCore(
   NOTES        : None
  ******************************************************************/
 HANDLER_LINK *FindPreviewApplicableHandlers(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defclass *cls,
         CLIPSLexeme *mname) {
     unsigned int i;
@@ -870,7 +870,7 @@ HANDLER_LINK *FindPreviewApplicableHandlers(
                    and CurrentMessageName
  ***********************************************************/
 void WatchMessage(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logName,
         const char *tstring) {
     if (ConstructData(theEnv)->ClearReadyInProgress ||
@@ -898,7 +898,7 @@ void WatchMessage(
                    and CurrentMessageName
  ***********************************************************/
 void WatchHandler(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logName,
         HANDLER_LINK *hndl,
         const char *tstring) {
@@ -947,7 +947,7 @@ void WatchHandler(
                  Assumes (partial) core is not empty
  ********************************************************************/
 static HANDLER_LINK *DisplayPrimaryCore(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         HANDLER_LINK *core,
         int pdepth) {
@@ -974,7 +974,7 @@ static HANDLER_LINK *DisplayPrimaryCore(
   NOTES        : None
  ***************************************************/
 static void PrintPreviewHandler(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         HANDLER_LINK *cptr,
         int sdepth,

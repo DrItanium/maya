@@ -79,8 +79,8 @@ enum WatchItem {
     FOCUS
 };
 
-typedef bool WatchAccessFunction(const Environment&, int, bool, Expression*);
-typedef bool WatchPrintFunction(const Environment&, const char*, int, Expression*);
+typedef bool WatchAccessFunction(const Environment::Ptr&, int, bool, Expression*);
+typedef bool WatchPrintFunction(const Environment::Ptr&, const char*, int, Expression*);
 struct watchItemRecord {
     const char *name;
     bool *flag;
@@ -95,30 +95,30 @@ struct watchData : public EnvironmentModule {
 };
 RegisterEnvironmentModule(watchData, WATCH_DATA, Watch);
 
-void Watch(const Environment&, WatchItem);
-void Unwatch(const Environment&, WatchItem);
+void Watch(const Environment::Ptr&, WatchItem);
+void Unwatch(const Environment::Ptr&, WatchItem);
 
-bool WatchString(const Environment&, const char *);
-bool UnwatchString(const Environment&, const char *);
-void InitializeWatchData(const Environment&);
-bool SetWatchItem(const Environment&, const char *, bool, Expression *);
-int GetWatchItem(const Environment&, const char *);
-bool AddWatchItem(const Environment& theEnv,
+bool WatchString(const Environment::Ptr&, const char *);
+bool UnwatchString(const Environment::Ptr&, const char *);
+void InitializeWatchData(const Environment::Ptr&);
+bool SetWatchItem(const Environment::Ptr&, const char *, bool, Expression *);
+int GetWatchItem(const Environment::Ptr&, const char *);
+bool AddWatchItem(const Environment::Ptr& theEnv,
                   const char* name,
                   int code,
                   bool* flag,
                   int priority,
                   WatchAccessFunction accessFunc,
                   WatchPrintFunction printFunc);
-const char *GetNthWatchName(const Environment&, int);
-int GetNthWatchValue(const Environment&, int);
-void WatchCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void UnwatchCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void ListWatchItemsCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void WatchFunctionDefinitions(const Environment&);
-void GetWatchItemCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-bool GetWatchState(const Environment&, WatchItem);
-void SetWatchState(const Environment&, WatchItem, bool);
+const char *GetNthWatchName(const Environment::Ptr&, int);
+int GetNthWatchValue(const Environment::Ptr&, int);
+void WatchCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void UnwatchCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void ListWatchItemsCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void WatchFunctionDefinitions(const Environment::Ptr&);
+void GetWatchItemCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+bool GetWatchState(const Environment::Ptr&, WatchItem);
+void SetWatchState(const Environment::Ptr&, WatchItem, bool);
 
 #endif /* _H_watch */
 

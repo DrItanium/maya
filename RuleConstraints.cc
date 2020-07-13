@@ -55,15 +55,15 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static bool CheckForUnmatchableConstraints(const Environment&, struct lhsParseNode *, unsigned short);
-static bool MultifieldCardinalityViolation(const Environment&, struct lhsParseNode *);
-static struct lhsParseNode *UnionVariableConstraints(const Environment&, struct lhsParseNode *,
+static bool CheckForUnmatchableConstraints(const Environment::Ptr&, struct lhsParseNode *, unsigned short);
+static bool MultifieldCardinalityViolation(const Environment::Ptr&, struct lhsParseNode *);
+static struct lhsParseNode *UnionVariableConstraints(const Environment::Ptr&, struct lhsParseNode *,
                                                      struct lhsParseNode *);
-static struct lhsParseNode *AddToVariableConstraints(const Environment&, struct lhsParseNode *,
+static struct lhsParseNode *AddToVariableConstraints(const Environment::Ptr&, struct lhsParseNode *,
                                                      struct lhsParseNode *);
-static void ConstraintConflictMessage(const Environment&, CLIPSLexeme *,
+static void ConstraintConflictMessage(const Environment::Ptr&, CLIPSLexeme *,
                                       unsigned short, unsigned short, CLIPSLexeme *);
-static bool CheckArgumentForConstraintError(const Environment&, Expression *, Expression *,
+static bool CheckArgumentForConstraintError(const Environment::Ptr&, Expression *, Expression *,
                                             unsigned int, FunctionDefinition *,
                                             struct lhsParseNode *);
 
@@ -73,7 +73,7 @@ static bool CheckArgumentForConstraintError(const Environment&, Expression *, Ex
 /*   there are unmatchable constraints, otherwise false.   */
 /***********************************************************/
 static bool CheckForUnmatchableConstraints(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct lhsParseNode *theNode,
         unsigned short whichCE) {
     if (UnmatchableConstraint(theNode->constraints)) {
@@ -91,7 +91,7 @@ static bool CheckForUnmatchableConstraints(
 /*   value from matching the pattern constraint.      */
 /******************************************************/
 static void ConstraintConflictMessage(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CLIPSLexeme *variableName,
         unsigned short thePattern,
         unsigned short theField,
@@ -143,7 +143,7 @@ static void ConstraintConflictMessage(
 /*   violation has occurred for a LHS CE node.                 */
 /***************************************************************/
 static bool MultifieldCardinalityViolation(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct lhsParseNode *theNode) {
     struct lhsParseNode *tmpNode;
     Expression *tmpMax;
@@ -254,7 +254,7 @@ static bool MultifieldCardinalityViolation(
 /*   violations.                                   */
 /***************************************************/
 bool ProcessConnectedConstraints(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct lhsParseNode *theNode,
         struct lhsParseNode *multifieldHeader,
         struct lhsParseNode *patternHead) {
@@ -378,7 +378,7 @@ bool ProcessConnectedConstraints(
 /*   that occur within an expression.             */
 /**************************************************/
 void ConstraintReferenceErrorMessage(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CLIPSLexeme *theVariable,
         struct lhsParseNode *theExpression,
         int whichArgument,
@@ -445,7 +445,7 @@ void ConstraintReferenceErrorMessage(
 /*   variable are intersected with the new constraints. */
 /********************************************************/
 static struct lhsParseNode *AddToVariableConstraints(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct lhsParseNode *oldList,
         struct lhsParseNode *newItems) {
     CONSTRAINT_RECORD *newConstraints;
@@ -514,7 +514,7 @@ static struct lhsParseNode *AddToVariableConstraints(
 /*   thus not included in the unioned list.                */
 /***********************************************************/
 static struct lhsParseNode *UnionVariableConstraints(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct lhsParseNode *list1,
         struct lhsParseNode *list2) {
     struct lhsParseNode *list3 = nullptr, *trace, *temp;
@@ -580,7 +580,7 @@ static struct lhsParseNode *UnionVariableConstraints(
 /*   expects numeric arguments.                                  */
 /*****************************************************************/
 struct lhsParseNode *GetExpressionVarConstraints(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct lhsParseNode *theExpression) {
     struct lhsParseNode *list1 = nullptr, *list2;
 
@@ -610,7 +610,7 @@ struct lhsParseNode *GetExpressionVarConstraints(
 /*   single connected constraint.              */
 /***********************************************/
 struct lhsParseNode *DeriveVariableConstraints(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct lhsParseNode *theNode) {
     struct lhsParseNode *orNode, *andNode;
     struct lhsParseNode *list1, *list2, *list3 = nullptr;
@@ -649,7 +649,7 @@ struct lhsParseNode *DeriveVariableConstraints(
 /*   RHS of a rule for constraint errors.  */
 /*******************************************/
 bool CheckRHSForConstraintErrors(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *expressionList,
         struct lhsParseNode *theLHS) {
     FunctionDefinition *theFunction;
@@ -693,7 +693,7 @@ bool CheckRHSForConstraintErrors(
 /*   Returns true if an error is detected, otherwise false.  */
 /*************************************************************/
 static bool CheckArgumentForConstraintError(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *expressionList,
         Expression *lastOne,
         unsigned int i,

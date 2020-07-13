@@ -77,21 +77,21 @@
 
 static Activation::Ptr PlaceDepthActivation(Activation::Ptr , struct SalienceGroup *);
 static Activation::Ptr PlaceBreadthActivation(Activation::Ptr , struct SalienceGroup *);
-static Activation::Ptr PlaceLEXActivation(const Environment&, Activation::Ptr , struct SalienceGroup *);
-static Activation::Ptr PlaceMEAActivation(const Environment&, Activation::Ptr , struct SalienceGroup *);
+static Activation::Ptr PlaceLEXActivation(const Environment::Ptr&, Activation::Ptr , struct SalienceGroup *);
+static Activation::Ptr PlaceMEAActivation(const Environment::Ptr&, Activation::Ptr , struct SalienceGroup *);
 static Activation::Ptr PlaceComplexityActivation(Activation::Ptr , struct SalienceGroup *);
 static Activation::Ptr PlaceSimplicityActivation(Activation::Ptr , struct SalienceGroup *);
 static Activation::Ptr PlaceRandomActivation(Activation::Ptr , struct SalienceGroup *);
-static int ComparePartialMatches(const Environment&, Activation::Ptr , Activation::Ptr );
+static int ComparePartialMatches(const Environment::Ptr&, Activation::Ptr , Activation::Ptr );
 static const char *GetStrategyName(StrategyType);
-static unsigned long long *SortPartialMatch(const Environment&, PartialMatch *);
+static unsigned long long *SortPartialMatch(const Environment::Ptr&, PartialMatch *);
 
 /******************************************************************/
 /* PlaceActivation: Coordinates placement of an activation on the */
 /*   Agenda based on the current conflict resolution strategy.    */
 /******************************************************************/
 void PlaceActivation(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Activation::Ptr *whichAgenda,
         Activation::Ptr newActivation,
         struct SalienceGroup *theGroup) {
@@ -289,7 +289,7 @@ static Activation::Ptr PlaceBreadthActivation(
 /*    activation should be placed at the beginning of the agenda). */
 /*******************************************************************/
 static Activation::Ptr PlaceLEXActivation(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Activation::Ptr newActivation,
         struct SalienceGroup *theGroup) {
     unsigned long long timetag;
@@ -372,7 +372,7 @@ static Activation::Ptr PlaceLEXActivation(
 /*    activation should be placed at the beginning of the agenda). */
 /*******************************************************************/
 static Activation::Ptr PlaceMEAActivation(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Activation::Ptr newActivation,
         struct SalienceGroup *theGroup) {
     unsigned long long timetag;
@@ -664,7 +664,7 @@ static Activation::Ptr PlaceRandomActivation(
 /*    in ascending order from a partial match.           */
 /*********************************************************/
 static unsigned long long *SortPartialMatch(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         PartialMatch *binds) {
     unsigned long long *nbinds;
     unsigned long long temp;
@@ -717,7 +717,7 @@ static unsigned long long *SortPartialMatch(
 /*   for both the lex and mea strategies.                                 */
 /**************************************************************************/
 static int ComparePartialMatches(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Activation::Ptr actPtr,
         Activation::Ptr newActivation) {
     unsigned cCount, oCount, mCount, i;
@@ -801,7 +801,7 @@ static int ComparePartialMatches(
 /*   for the set-strategy command. */
 /***********************************/
 StrategyType SetStrategy(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         StrategyType value) {
     auto oldStrategy = AgendaData(theEnv)->getStrategy();
     AgendaData(theEnv)->setStrategy(value);
@@ -816,7 +816,7 @@ StrategyType SetStrategy(
 /*   for the get-strategy command. */
 /***********************************/
 StrategyType GetStrategy(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     return AgendaData(theEnv)->getStrategy();
 }
 
@@ -825,7 +825,7 @@ StrategyType GetStrategy(
 /*   for the get-strategy command.          */
 /********************************************/
 void GetStrategyCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     returnValue->lexemeValue = CreateSymbol(theEnv, GetStrategyName(GetStrategy(theEnv)));
@@ -836,7 +836,7 @@ void GetStrategyCommand(
 /*   for the set-strategy command.          */
 /********************************************/
 void SetStrategyCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;

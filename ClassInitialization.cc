@@ -113,16 +113,16 @@
    =========================================
    ***************************************** */
 
-static void SetupDefclasses(const Environment&);
-static void DeallocateDefclassData(const Environment&);
+static void SetupDefclasses(const Environment::Ptr&);
+static void DeallocateDefclassData(const Environment::Ptr&);
 
-static void DestroyDefclassAction(const Environment&, ConstructHeader *, void *);
-static Defclass *AddSystemClass(const Environment&, const char *, Defclass *);
-static void *AllocateModule(const Environment&);
-static void ReturnModule(const Environment&, void *);
+static void DestroyDefclassAction(const Environment::Ptr&, ConstructHeader *, void *);
+static Defclass *AddSystemClass(const Environment::Ptr&, const char *, Defclass *);
+static void *AllocateModule(const Environment::Ptr&);
+static void ReturnModule(const Environment::Ptr&, void *);
 
 #if DEFMODULE_CONSTRUCT
-static void UpdateDefclassesScope(const Environment&, void *);
+static void UpdateDefclassesScope(const Environment::Ptr&, void *);
 #endif
 
 /* =========================================
@@ -141,7 +141,7 @@ static void UpdateDefclassesScope(const Environment&, void *);
   NOTES        : Order of setup calls is important
  **********************************************************/
 void SetupObjectSystem(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
 #if STUBBING_INACTIVE
     EntityRecord defclassEntityRecord = {"DEFCLASS_PTR", DEFCLASS_PTR, 1, 0, 0,
                                          nullptr, nullptr, nullptr, nullptr, nullptr,
@@ -188,7 +188,7 @@ void SetupObjectSystem(
 /*    data for the defclass construct.             */
 /***************************************************/
 static void DeallocateDefclassData(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     SLOT_NAME *tmpSNPPtr, *nextSNPPtr;
     int i;
     struct defclassModule *theModuleItem;
@@ -256,7 +256,7 @@ static void DeallocateDefclassData(
 /*   as a result of DestroyEnvironment.                  */
 /*********************************************************/
 static void DestroyDefclassAction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         ConstructHeader *theConstruct,
         void *buffer) {
 #if MAC_XCD
@@ -287,7 +287,7 @@ static void DestroyDefclassAction(
                 WARNING!!: Assumes no classes exist yet!
  ***************************************************************/
 void CreateSystemClasses(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *context) {
 #if STUBBING_INACTIVE
     Defclass *user, *any, *primitive, *number, *lexeme, *address, *instance;
@@ -380,7 +380,7 @@ void CreateSystemClasses(
   NOTES        : None
  *********************************************************/
 static void SetupDefclasses(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
 #if STUBBING_INACTIVE
     InstallPrimitive(theEnv, &DefclassData(theEnv)->DefclassEntityRecord, DEFCLASS_PTR);
 
@@ -481,7 +481,7 @@ static void SetupDefclasses(
                   of caller)
  *********************************************************/
 static Defclass *AddSystemClass(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *name,
         Defclass *parent) {
     Defclass *sys;
@@ -531,7 +531,7 @@ static Defclass *AddSystemClass(
   NOTES        : None
  *****************************************************/
 static void *AllocateModule(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     return (void *) get_struct(theEnv, defclassModule);
 }
 
@@ -545,7 +545,7 @@ static void *AllocateModule(
   NOTES        : None
  ***************************************************/
 static void ReturnModule(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *theItem) {
     FreeConstructHeaderModule(theEnv, (defmoduleItemHeader *) theItem, DefclassData(theEnv)->DefclassConstruct);
     DeleteSlotName(theEnv, FindIDSlotNameHash(theEnv, ISA_ID));
@@ -566,7 +566,7 @@ static void ReturnModule(
   NOTES        : None
  ***************************************************/
 static void UpdateDefclassesScope(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *context) {
     unsigned i;
     Defclass *theDefclass;

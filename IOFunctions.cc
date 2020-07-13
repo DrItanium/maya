@@ -160,12 +160,12 @@ RegisterEnvironmentModule(IOFunctionModule, IO_FUNCTION_DATA, IOFunction);
 /****************************************/
 
 #if IO_FUNCTIONS
-static void ReadTokenFromStdin(const Environment&, struct token *);
+static void ReadTokenFromStdin(const Environment::Ptr&, struct token *);
 static const char *ControlStringCheck(UDFContext *, unsigned int);
 static char FindFormatFlag(const char *, size_t *, char *, size_t);
 static const char *PrintFormatFlag(UDFContext *, const char *, unsigned int, int);
-static char *FillBuffer(const Environment&, const char *, size_t *, size_t *);
-static void ReadNumber(const Environment&, const char *, struct token *, bool);
+static char *FillBuffer(const Environment::Ptr&, const char *, size_t *, size_t *);
+static void ReadNumber(const Environment::Ptr&, const char *, struct token *, bool);
 static void PrintDriver(UDFContext *, const char *, bool);
 #endif
 
@@ -174,7 +174,7 @@ static void PrintDriver(UDFContext *, const char *, bool);
 /*   the I/O functions.               */
 /**************************************/
 void IOFunctionDefinitions(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     if constexpr (IO_FUNCTIONS) {
         theEnv->allocateEnvironmentModule<IOFunctionModule>(CreateSymbol(theEnv, setlocale(LC_ALL, nullptr)));
         IncrementLexemeCount(IOFunctionData(theEnv)->locale);
@@ -216,7 +216,7 @@ void IOFunctionDefinitions(
 /*   for the printout function.           */
 /******************************************/
 void PrintoutFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *logicalName;
@@ -255,7 +255,7 @@ void PrintoutFunction(
 /*   for the print function.         */
 /*************************************/
 void PrintFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     PrintDriver(context, STDOUT, false);
@@ -266,7 +266,7 @@ void PrintFunction(
 /*   for the println function.         */
 /*************************************/
 void PrintlnFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     PrintDriver(context, STDOUT, true);
@@ -280,7 +280,7 @@ static void PrintDriver(
         const char *logicalName,
         bool endCRLF) {
     UDFValue theArg;
-    const Environment&theEnv = context->environment;
+    const Environment::Ptr&theEnv = context->environment;
 
     /*==============================*/
     /* Print each of the arguments. */
@@ -323,7 +323,7 @@ static void PrintDriver(
 /*   crlf is treated just as '\n' or '\r\n'.         */
 /*****************************************************/
 bool SetFullCRLF(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         bool value) {
     bool oldValue = IOFunctionData(theEnv)->useFullCRLF;
 
@@ -336,7 +336,7 @@ bool SetFullCRLF(
 /* ReadFunction: H/L access routine for the read function.   */
 /*************************************************************/
 void ReadFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     struct token theToken;
@@ -403,7 +403,7 @@ void ReadFunction(
 /*   function to read a token from standard input.      */
 /********************************************************/
 static void ReadTokenFromStdin(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct token *theToken) {
     char *inputString;
     size_t inputStringSize;
@@ -497,7 +497,7 @@ static void ReadTokenFromStdin(
 /* OpenFunction: H/L access routine for the open function.   */
 /*************************************************************/
 void OpenFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *fileName, *logicalName, *accessMode = nullptr;
@@ -591,7 +591,7 @@ void OpenFunction(
 /* CloseFunction: H/L access routine for the close function. */
 /*************************************************************/
 void CloseFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *logicalName;
@@ -633,7 +633,7 @@ void CloseFunction(
 /* FlushFunction: H/L access routine for the flush function. */
 /*************************************************************/
 void FlushFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *logicalName;
@@ -675,7 +675,7 @@ void FlushFunction(
 /* RewindFunction: H/L access routine for the rewind function. */
 /***************************************************************/
 void RewindFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *logicalName;
@@ -718,7 +718,7 @@ void RewindFunction(
 /* TellFunction: H/L access routine for the tell function. */
 /***********************************************************/
 void TellFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *logicalName;
@@ -763,7 +763,7 @@ void TellFunction(
 /* SeekFunction: H/L access routine for the seek function. */
 /***********************************************************/
 void SeekFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *logicalName;
@@ -837,7 +837,7 @@ void SeekFunction(
 /*   for the get-char function.        */
 /***************************************/
 void GetCharFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *logicalName;
@@ -899,7 +899,7 @@ void GetCharFunction(
 /*   for the unget-char function.        */
 /*****************************************/
 void UngetCharFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     unsigned int numberOfArguments;
@@ -959,7 +959,7 @@ void UngetCharFunction(
 /*   for the put-char function.        */
 /***************************************/
 void PutCharFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     unsigned int numberOfArguments;
@@ -1016,7 +1016,7 @@ void PutCharFunction(
 /*   for the remove function.           */
 /****************************************/
 void RemoveFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *theFileName;
@@ -1043,7 +1043,7 @@ void RemoveFunction(
 /*   for the rename function.           */
 /****************************************/
 void RenameFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *oldFileName, *newFileName;
@@ -1075,7 +1075,7 @@ void RenameFunction(
 /*   for the chdir function.         */
 /*************************************/
 void ChdirFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *theFileName;
@@ -1133,7 +1133,7 @@ void ChdirFunction(
 /*   for the format function.           */
 /****************************************/
 void FormatFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     unsigned int argCount;
@@ -1251,7 +1251,7 @@ static const char *ControlStringCheck(
     size_t i;
     unsigned int per_count;
     char formatFlag;
-    const Environment&theEnv = context->environment;
+    const Environment::Ptr&theEnv = context->environment;
 
     if (!UDFNthArgument(context, 2, STRING_BIT, &t_ptr)) { return nullptr; }
 
@@ -1397,7 +1397,7 @@ static const char *PrintFormatFlag(
     char *printBuffer;
     size_t theLength;
     CLIPSLexeme *oldLocale;
-    const Environment&theEnv = context->environment;
+    const Environment::Ptr&theEnv = context->environment;
 
     /*=================*/
     /* String argument */
@@ -1479,7 +1479,7 @@ static const char *PrintFormatFlag(
 /*   for the readline function.           */
 /******************************************/
 void ReadlineFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     char *buffer;
@@ -1544,7 +1544,7 @@ void ReadlineFunction(
 /*   or end-of-file character is read.                       */
 /*************************************************************/
 static char *FillBuffer(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         size_t *currentPosition,
         size_t *maximumSize) {
@@ -1582,7 +1582,7 @@ static char *FillBuffer(
 /*   for the set-locale function.        */
 /*****************************************/
 void SetLocaleFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -1623,7 +1623,7 @@ void SetLocaleFunction(
 /*   for the read-number function.        */
 /******************************************/
 void ReadNumberFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     struct token theToken;
@@ -1693,7 +1693,7 @@ void ReadNumberFunction(
 /*   read-number function to read a number. */
 /********************************************/
 static void ReadNumber(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         struct token *theToken,
         bool isStdin) {

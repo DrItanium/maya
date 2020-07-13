@@ -37,8 +37,8 @@ struct userData {
 
 typedef struct userData USER_DATA;
 typedef struct userData *USER_DATA_PTR;
-typedef void* CreateUserDataFunction(const Environment&);
-typedef void DeleteUserDataFunction(const Environment&, void*);
+typedef void* CreateUserDataFunction(const Environment::Ptr&);
+typedef void DeleteUserDataFunction(const Environment::Ptr&, void*);
 struct userDataRecord {
     unsigned char dataID;
     CreateUserDataFunction* createUserData;
@@ -57,12 +57,12 @@ struct userDataData : public EnvironmentModule{
 };
 RegisterEnvironmentModule(userDataData, USER_DATA_DATA, UserData);
 
-void InitializeUserDataData(const Environment&);
-unsigned char InstallUserDataRecord(const Environment&, userDataRecord *);
-userData *FetchUserData(const Environment&, unsigned char, userData **);
+void InitializeUserDataData(const Environment::Ptr&);
+unsigned char InstallUserDataRecord(const Environment::Ptr&, userDataRecord *);
+userData *FetchUserData(const Environment::Ptr&, unsigned char, userData **);
 userData *TestUserData(unsigned char, userData *);
-void ClearUserDataList(const Environment&, userData *);
-userData *DeleteUserData(const Environment&, unsigned char, userData *);
+void ClearUserDataList(const Environment::Ptr&, userData *);
+userData *DeleteUserData(const Environment::Ptr&, unsigned char, userData *);
 
 #endif
 

@@ -130,30 +130,30 @@ RegisterEnvironmentModule(defgenericData, DEFGENERIC_DATA,Defgeneric);
 #define SaveBusyCount(gfunc)    (DefgenericData(theEnv)->OldGenericBusySave = gfunc->busy)
 #define RestoreBusyCount(gfunc) (gfunc->busy = DefgenericData(theEnv)->OldGenericBusySave)
 
-bool ClearDefgenericsReady(const Environment&, void *);
-void *AllocateDefgenericModule(const Environment&);
-void FreeDefgenericModule(const Environment&, void *);
+bool ClearDefgenericsReady(const Environment::Ptr&, void *);
+void *AllocateDefgenericModule(const Environment::Ptr&);
+void FreeDefgenericModule(const Environment::Ptr&, void *);
 
-bool ClearDefmethods(const Environment&);
-bool RemoveAllExplicitMethods(const Environment&, Defgeneric *);
-void RemoveDefgeneric(const Environment&, Defgeneric *);
-bool ClearDefgenerics(const Environment&);
-void MethodAlterError(const Environment&, Defgeneric *);
-void DeleteMethodInfo(const Environment&, Defgeneric *, Defmethod *);
-void DestroyMethodInfo(const Environment&, Defgeneric *, Defmethod *);
+bool ClearDefmethods(const Environment::Ptr&);
+bool RemoveAllExplicitMethods(const Environment::Ptr&, Defgeneric *);
+void RemoveDefgeneric(const Environment::Ptr&, Defgeneric *);
+bool ClearDefgenerics(const Environment::Ptr&);
+void MethodAlterError(const Environment::Ptr&, Defgeneric *);
+void DeleteMethodInfo(const Environment::Ptr&, Defgeneric *, Defmethod *);
+void DestroyMethodInfo(const Environment::Ptr&, Defgeneric *, Defmethod *);
 bool MethodsExecuting(Defgeneric *);
 
 unsigned short FindMethodByIndex(Defgeneric *, unsigned short);
 #if DEBUGGING_FUNCTIONS || PROFILING_FUNCTIONS
-void PrintMethod(const Environment&, Defmethod *, StringBuilder *);
+void PrintMethod(const Environment::Ptr&, Defmethod *, StringBuilder *);
 #endif
 #if DEBUGGING_FUNCTIONS
-void PreviewGeneric(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void PreviewGeneric(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
 #endif
-Defgeneric *CheckGenericExists(const Environment&, const char *, const char *);
-unsigned short CheckMethodExists(const Environment&, const char *, Defgeneric *, unsigned short);
+Defgeneric *CheckGenericExists(const Environment::Ptr&, const char *, const char *);
+unsigned short CheckMethodExists(const Environment::Ptr&, const char *, Defgeneric *, unsigned short);
 
-void PrintGenericName(const Environment&, const char *, Defgeneric *);
+void PrintGenericName(const Environment::Ptr&, const char *, Defgeneric *);
 
 #endif /* _H_genrcfun */
 

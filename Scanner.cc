@@ -63,17 +63,17 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static CLIPSLexeme *ScanSymbol(const Environment&, const char *, int, TokenType *);
-static CLIPSLexeme *ScanString(const Environment&, const char *);
-static void ScanNumber(const Environment&, const char *, struct token *);
-static void DeallocateScannerData(const Environment&);
+static CLIPSLexeme *ScanSymbol(const Environment::Ptr&, const char *, int, TokenType *);
+static CLIPSLexeme *ScanString(const Environment::Ptr&, const char *);
+static void ScanNumber(const Environment::Ptr&, const char *, struct token *);
+static void DeallocateScannerData(const Environment::Ptr&);
 
 /************************************************/
 /* InitializeScannerData: Allocates environment */
 /*    data for scanner routines.                */
 /************************************************/
 void InitializeScannerData(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     //AllocateEnvironmentData(theEnv, SCANNER_DATA, sizeof(scannerData), DeallocateScannerData);
     theEnv->allocateEnvironmentModule<scannerData>();
 }
@@ -83,7 +83,7 @@ void InitializeScannerData(
 /*    data for scanner routines.                  */
 /**************************************************/
 static void DeallocateScannerData(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     if (ScannerData(theEnv)->GlobalMax != 0) { genfree(theEnv, ScannerData(theEnv)->GlobalString, ScannerData(theEnv)->GlobalMax); }
 }
 
@@ -96,7 +96,7 @@ static void DeallocateScannerData(
 /*   and the pretty print representation.                              */
 /***********************************************************************/
 void GetToken(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         struct token *theToken) {
 #if STUBBING_INACTIVE
@@ -365,7 +365,7 @@ void GetToken(
 /* ScanSymbol: Scans a symbol token. */
 /*************************************/
 static CLIPSLexeme *ScanSymbol(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         int count,
         TokenType *type) {
@@ -433,7 +433,7 @@ static CLIPSLexeme *ScanSymbol(
 /* ScanString: Scans a string token. */
 /*************************************/
 static CLIPSLexeme *ScanString(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName) {
     int inchar;
     size_t pos = 0;
@@ -478,7 +478,7 @@ static CLIPSLexeme *ScanString(
 /* ScanNumber: Scans a numeric token. */
 /**************************************/
 static void ScanNumber(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         struct token *theToken) {
 #if STUBBING_INACTIVE
@@ -716,7 +716,7 @@ void CopyToken(
 /*   line count to zero.                */
 /****************************************/
 void ResetLineCount(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     ScannerData(theEnv)->LineCount = 0;
 }
 
@@ -724,7 +724,7 @@ void ResetLineCount(
 /* GetLineCount: Returns the scanner's line count. */
 /***************************************************/
 long GetLineCount(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     return (ScannerData(theEnv)->LineCount);
 }
 
@@ -733,7 +733,7 @@ long GetLineCount(
 /*   and returns the previous value.           */
 /***********************************************/
 long SetLineCount(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         long value) {
     long oldValue;
 
@@ -749,7 +749,7 @@ long SetLineCount(
 /*   the scanner's line count.    */
 /**********************************/
 void IncrementLineCount(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     ScannerData(theEnv)->LineCount++;
 }
 
@@ -758,7 +758,7 @@ void IncrementLineCount(
 /*   the scanner's line count.    */
 /**********************************/
 void DecrementLineCount(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     ScannerData(theEnv)->LineCount--;
 }
 

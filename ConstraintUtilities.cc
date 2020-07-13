@@ -56,7 +56,7 @@
 /*   the values of a constraint record.         */
 /************************************************/
 struct constraintRecord *GetConstraintRecord(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
 #if STUBBING_INACTIVE
     unsigned i;
 
@@ -129,7 +129,7 @@ void SetAnyAllowedFlags(
 /* CopyConstraintRecord: Copies a constraint record. */
 /*****************************************************/
 struct constraintRecord *CopyConstraintRecord(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CONSTRAINT_RECORD *sourceConstraint) {
     CONSTRAINT_RECORD *theConstraint;
 
@@ -298,7 +298,7 @@ bool SetConstraintType(
 /*   than, less than or equal).                              */
 /*************************************************************/
 int CompareNumbers(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         int type1,
         void *vptr1,
         int type2,
@@ -382,7 +382,7 @@ int CompareNumbers(
 /*   allowed types SYMBOL_TYPE and allow-values BLUE.                */
 /****************************************************************/
 CONSTRAINT_RECORD *ExpressionToConstraintRecord(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *theExpression) {
     CONSTRAINT_RECORD *rv;
 
@@ -472,7 +472,7 @@ CONSTRAINT_RECORD *ExpressionToConstraintRecord(
 /*   record with allowed types INTEGER_TYPE and FLOAT_TYPE.      */
 /*******************************************************/
 CONSTRAINT_RECORD *FunctionCallToConstraintRecord(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *theFunction) {
     return ArgumentTypeToConstraintRecord(theEnv, UnknownFunctionType(theFunction));
 }
@@ -482,7 +482,7 @@ CONSTRAINT_RECORD *FunctionCallToConstraintRecord(
 /*   new argument type codes for 6.4.        */
 /*********************************************/
 CONSTRAINT_RECORD *ArgumentTypeToConstraintRecord(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         unsigned bitTypes) {
     CONSTRAINT_RECORD *rv;
 

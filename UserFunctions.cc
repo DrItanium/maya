@@ -51,7 +51,7 @@
 #include "clips.h"
 #include "MayaExtensions.h"
 
-void UserFunctions(const Environment&);
+void UserFunctions(const Environment::Ptr&);
 
 /*********************************************************/
 /* UserFunctions: Informs the expert system environment  */
@@ -62,7 +62,7 @@ void UserFunctions(const Environment&);
 /*   this function can be deleted from this file and     */
 /*   included in another file.                           */
 /*********************************************************/
-void UserFunctions(const Environment&theEnv) {
+void UserFunctions(const Environment::Ptr&theEnv) {
 #if STUBBING_INACTIVE
     InstallMayaExtensions(theEnv);
 #endif

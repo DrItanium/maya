@@ -75,13 +75,13 @@
 
 #if DEVELOPER
 
-static void                    PrintOPNLevel(const Environment&,OBJECT_PATTERN_NODE *,char *,int);
+static void                    PrintOPNLevel(const Environment::Ptr&,OBJECT_PATTERN_NODE *,char *,int);
 
 /**************************************************/
 /* DeveloperCommands: Sets up developer commands. */
 /**************************************************/
 void DeveloperCommands(
-const Environment&theEnv)
+const Environment::Ptr&theEnv)
 {
 AddUDF(theEnv,"primitives-info","v",0,0,nullptr,PrimitiveTablesInfoCommand,"PrimitiveTablesInfoCommand",nullptr);
 AddUDF(theEnv,"primitives-usage","v",0,0,nullptr,PrimitiveTablesUsageCommand,"PrimitiveTablesUsageCommand",nullptr);
@@ -104,7 +104,7 @@ AddUDF(theEnv,"instance-table-usage","v",0,0,nullptr,InstanceTableUsageCommand,"
 /*   symbol, float, integer, and bitmap tables.       */
 /******************************************************/
 void PrimitiveTablesInfoCommand(
-const Environment&theEnv,
+const Environment::Ptr&theEnv,
 UDFContext *context,
 UDFValue *returnValue)
 {
@@ -185,7 +185,7 @@ WriteString(theEnv,STDOUT,"\n");
 /*   the symbol, float, integer, and bitmap tables.      */
 /*********************************************************/
 void PrimitiveTablesUsageCommand(
-const Environment&theEnv,
+const Environment::Ptr&theEnv,
 UDFContext *context,
 UDFValue *returnValue)
 {
@@ -277,7 +277,7 @@ for (i = 0; i < COUNT_SIZE; i++)
 /*   the facts for atom value integrity.              */
 /******************************************************/
 void ValidateFactIntegrityCommand(
-const Environment&theEnv,
+const Environment::Ptr&theEnv,
 UDFContext *context,
 UDFValue *returnValue)
 {
@@ -350,7 +350,7 @@ returnValue->lexemeValue = TrueSymbol(theEnv);
 /*   fact pattern network for a specified deftemplate.       */
 /*************************************************************/
 void ShowFactPatternNetworkCommand(
-const Environment&theEnv,
+const Environment::Ptr&theEnv,
 UDFContext *context,
 UDFValue *returnValue)
 {
@@ -423,7 +423,7 @@ SIDE EFFECTS : Object pattern network displayed
 NOTES        : None
 ***************************************************/
 void PrintObjectPatternNetworkCommand(
-const Environment&theEnv,
+const Environment::Ptr&theEnv,
 UDFContext *context,
 UDFValue *returnValue)
 {
@@ -445,7 +445,7 @@ SIDE EFFECTS : Pattern nodes recursively printed
 NOTES        : None
 **********************************************************/
 static void PrintOPNLevel(
-const Environment&theEnv,
+const Environment::Ptr&theEnv,
 OBJECT_PATTERN_NODE *pptr,
 char *indentbuf,
 int ilen)
@@ -528,7 +528,7 @@ while (pptr != nullptr)
 /*   the instances in the instance hash table.         */
 /*******************************************************/
 void InstanceTableUsageCommand(
-const Environment&theEnv,
+const Environment::Ptr&theEnv,
 UDFContext *context,
 UDFValue *returnValue)
 {
@@ -581,7 +581,7 @@ for (i = 0; i < COUNT_SIZE; i++)
 /* ExamineMemory: */
 /******************/
 static void ExamineMemory(
-const Environment&theEnv,
+const Environment::Ptr&theEnv,
 struct joinNode *theJoin,
 struct betaMemory *theMemory)
 {
@@ -598,7 +598,7 @@ if (theMemory->size > 10000)
 /* TraverseBetaMemories: */
 /*************************/
 static void TraverseBetaMemories(
-const Environment&theEnv,
+const Environment::Ptr&theEnv,
 struct joinNode *theJoin)
 {
 if (theJoin == nullptr)
@@ -622,7 +622,7 @@ if ((theJoin->joinFromTheRight) &&
 /* ValidateRuleBetaMemoriesAction: */
 /***********************************/
 static void ValidateRuleBetaMemoriesAction(
-const Environment&theEnv,
+const Environment::Ptr&theEnv,
 ConstructHeader *theConstruct,
 void *buffer)
 {
@@ -643,7 +643,7 @@ for (rulePtr = (Defrule::Ptr ) theConstruct;
 /* ValidateBetaMemoriesCommand */
 /*******************************/
 void ValidateBetaMemoriesCommand(
-const Environment&theEnv,
+const Environment::Ptr&theEnv,
 UDFContext *context,
 UDFValue *returnValue)
 {

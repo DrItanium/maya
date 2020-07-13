@@ -77,31 +77,31 @@ constexpr auto MAX_BLOCK_SIZE = 10240;
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static Expression *StandardLoadFact(const Environment&, const char *, struct token *);
-static Deftemplate **GetSaveFactsDeftemplateNames(const Environment&, const char *, Expression *, SaveScope,
+static Expression *StandardLoadFact(const Environment::Ptr&, const char *, struct token *);
+static Deftemplate **GetSaveFactsDeftemplateNames(const Environment::Ptr&, const char *, Expression *, SaveScope,
                                                   unsigned int *, bool *);
 
-static bool VerifyBinaryHeader(const Environment&, const char *);
+static bool VerifyBinaryHeader(const Environment::Ptr&, const char *);
 
-static long MarkFacts(const Environment&, SaveScope, Deftemplate **, unsigned int, size_t *);
-static void MarkSingleFact(const Environment&, Fact *, size_t *);
-static void MarkNeededAtom(const Environment&, CLIPSValue *, size_t *);
-static void WriteBinaryHeader(const Environment&, FILE *);
-static long SaveBinaryFacts(const Environment&, FILE *, SaveScope, Deftemplate **, unsigned int count, size_t *);
-static void SaveSingleFactBinary(const Environment&theEnv, FILE *, Fact *);
-static void SaveAtomBinary(const Environment&, CLIPSValue *, FILE *);
-static bool LoadSingleBinaryFact(const Environment&);
-static Deftemplate *BloadFactsCreateImpliedDeftemplate(const Environment&, CLIPSLexeme *);
-static void BinaryLoadFactError(const Environment&, Deftemplate *);
-static void CreateSlotValue(const Environment&, UDFValue *, struct bsaveSlotValueAtom *, unsigned long, bool);
-static void *GetBinaryAtomValue(const Environment&, struct bsaveSlotValueAtom *);
+static long MarkFacts(const Environment::Ptr&, SaveScope, Deftemplate **, unsigned int, size_t *);
+static void MarkSingleFact(const Environment::Ptr&, Fact *, size_t *);
+static void MarkNeededAtom(const Environment::Ptr&, CLIPSValue *, size_t *);
+static void WriteBinaryHeader(const Environment::Ptr&, FILE *);
+static long SaveBinaryFacts(const Environment::Ptr&, FILE *, SaveScope, Deftemplate **, unsigned int count, size_t *);
+static void SaveSingleFactBinary(const Environment::Ptr&theEnv, FILE *, Fact *);
+static void SaveAtomBinary(const Environment::Ptr&, CLIPSValue *, FILE *);
+static bool LoadSingleBinaryFact(const Environment::Ptr&);
+static Deftemplate *BloadFactsCreateImpliedDeftemplate(const Environment::Ptr&, CLIPSLexeme *);
+static void BinaryLoadFactError(const Environment::Ptr&, Deftemplate *);
+static void CreateSlotValue(const Environment::Ptr&, UDFValue *, struct bsaveSlotValueAtom *, unsigned long, bool);
+static void *GetBinaryAtomValue(const Environment::Ptr&, struct bsaveSlotValueAtom *);
 
 /********************************************************/
 /* FactFileCommandDefinitions: Initializes save-facts,  */
 /*   load-facts, bsave-facts, and bload-facts commands. */
 /********************************************************/
 void FactFileCommandDefinitions(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     AddUDF(theEnv, "save-facts", "l", 1, UNBOUNDED, "y;sy", SaveFactsCommand);
     AddUDF(theEnv, "load-facts", "l", 1, 1, "sy", LoadFactsCommand);
 
@@ -114,7 +114,7 @@ void FactFileCommandDefinitions(
 /*   for the save-facts command.          */
 /******************************************/
 void SaveFactsCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *fileName;
@@ -183,7 +183,7 @@ void SaveFactsCommand(
 /* SaveFacts: C access routine for the save-facts command. */
 /***********************************************************/
 long SaveFacts(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *fileName,
         SaveScope saveCode) {
     return SaveFactsDriver(theEnv, fileName, saveCode, nullptr);
@@ -193,7 +193,7 @@ long SaveFacts(
 /* SaveFactsDriver: C access routine for the save-facts command. */
 /*****************************************************************/
 long SaveFactsDriver(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *fileName,
         SaveScope saveCode,
         Expression *theList) {
@@ -332,7 +332,7 @@ long SaveFactsDriver(
 /*   names for saving specific facts with the save-facts command.  */
 /*******************************************************************/
 static Deftemplate **GetSaveFactsDeftemplateNames(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *functionName,
         Expression *theList,
         SaveScope saveCode,
@@ -452,7 +452,7 @@ static Deftemplate **GetSaveFactsDeftemplateNames(
 /*   for the load-facts command.          */
 /******************************************/
 void LoadFactsCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *fileName;
@@ -479,7 +479,7 @@ void LoadFactsCommand(
 /* LoadFacts: C access routine for the load-facts command. */
 /***********************************************************/
 long LoadFacts(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *fileName) {
     FILE *filePtr;
     struct token theToken;
@@ -570,7 +570,7 @@ long LoadFacts(
 /* LoadFactsFromString: C access routine. */
 /******************************************/
 long LoadFactsFromString(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *theString,
         size_t theMax) {
     const char *theStrRouter = "*** load-facts-from-string ***";
@@ -626,7 +626,7 @@ long LoadFactsFromString(
 /* StandardLoadFact: Loads a single fact from the specified logical name. */
 /**************************************************************************/
 static Expression *StandardLoadFact(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         struct token *theToken) {
     bool error = false;
@@ -659,7 +659,7 @@ static Expression *StandardLoadFact(
 /*   for the bload-facts command.             */
 /**********************************************/
 void BinaryLoadFactsCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *fileName;
@@ -686,7 +686,7 @@ void BinaryLoadFactsCommand(
 /* BinaryLoadFacts: C access routine for the bload-facts command. */
 /******************************************************************/
 long BinaryLoadFacts(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *fileName) {
     GCBlock gcb;
     long i;
@@ -783,7 +783,7 @@ long BinaryLoadFacts(
 /* VerifyBinaryHeader: */
 /***********************/
 static bool VerifyBinaryHeader(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *theFile) {
     char buf[20];
 
@@ -812,7 +812,7 @@ static bool VerifyBinaryHeader(
 /* LoadSingleBinaryFact */
 /************************/
 static bool LoadSingleBinaryFact(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     CLIPSLexeme *deftemplateName;
     unsigned short slotCount;
     Deftemplate *theDeftemplate;
@@ -954,7 +954,7 @@ static bool LoadSingleBinaryFact(
 /* BloadFactsCreateImpliedDeftemplate */
 /**************************************/
 static Deftemplate *BloadFactsCreateImpliedDeftemplate(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CLIPSLexeme *deftemplateName) {
 
 #if BLOAD_AND_BSAVE
@@ -988,7 +988,7 @@ static Deftemplate *BloadFactsCreateImpliedDeftemplate(
   NOTES        : None
  ***************************************************/
 static void CreateSlotValue(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFValue *returnValue,
         struct bsaveSlotValueAtom *bsaValues,
         unsigned long valueCount,
@@ -1007,7 +1007,7 @@ static void CreateSlotValue(
 /* GetBinaryAtomValue */
 /**********************/
 static void *GetBinaryAtomValue(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct bsaveSlotValueAtom *ba) {
     switch (ba->type) {
         case SYMBOL_TYPE:
@@ -1043,7 +1043,7 @@ static void *GetBinaryAtomValue(
 /* BinaryLoadFactError */
 /***********************/
 static void BinaryLoadFactError(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Deftemplate *theDeftemplate) {
     PrintErrorID(theEnv, "FACTFILE", 3, false);
     WriteString(theEnv, STDERR, "Function 'bload-facts' is unable to load fact of deftemplate '");
@@ -1056,7 +1056,7 @@ static void BinaryLoadFactError(
 /*   for the bsave-facts command.             */
 /**********************************************/
 void BinarySaveFactsCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *fileName;
@@ -1125,7 +1125,7 @@ void BinarySaveFactsCommand(
 /* BinarySaveFacts: C access routine for the bsave-facts command. */
 /******************************************************************/
 long BinarySaveFacts(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *file,
         SaveScope saveCode) {
     return BinarySaveFactsDriver(theEnv, file, saveCode, nullptr);
@@ -1135,7 +1135,7 @@ long BinarySaveFacts(
 /* BinarySaveFactsDriver: */
 /**************************/
 long BinarySaveFactsDriver(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *fileName,
         SaveScope saveCode,
         Expression *theList) {
@@ -1213,7 +1213,7 @@ long BinarySaveFactsDriver(
 /* MarkFacts */
 /*************/
 static long MarkFacts(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         SaveScope saveCode,
         Deftemplate **deftemplateArray,
         unsigned int count,
@@ -1284,7 +1284,7 @@ static long MarkFacts(
 /* MarkSingleFact */
 /******************/
 static void MarkSingleFact(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Fact *theFact,
         size_t *neededSpace) {
     TemplateSlot *sp;
@@ -1331,7 +1331,7 @@ static void MarkSingleFact(
 /* MarkNeededAtom */
 /******************/
 static void MarkNeededAtom(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CLIPSValue *theValue,
         size_t *neededSpace) {
     *neededSpace += sizeof(bsaveSlotValueAtom);
@@ -1367,7 +1367,7 @@ static void MarkNeededAtom(
 /* WriteBinaryHeader */
 /*********************/
 static void WriteBinaryHeader(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         FILE *filePtr) {
     fwrite(BINARY_FACTS_PREFIX_ID,
            (STD_SIZE) (strlen(BINARY_FACTS_PREFIX_ID) + 1), 1, filePtr);
@@ -1379,7 +1379,7 @@ static void WriteBinaryHeader(
 /* SaveBinaryFacts */
 /*******************/
 static long SaveBinaryFacts(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         FILE *filePtr,
         SaveScope saveCode,
         Deftemplate **deftemplateArray,
@@ -1451,7 +1451,7 @@ static long SaveBinaryFacts(
 /* SaveSingleFactBinary */
 /************************/
 static void SaveSingleFactBinary(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         FILE *filePtr,
         Fact *theFact) {
     unsigned long nameIndex;
@@ -1555,7 +1555,7 @@ static void SaveSingleFactBinary(
 /* SaveAtomBinary */
 /******************/
 static void SaveAtomBinary(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CLIPSValue *theValue,
         FILE *bsaveFP) {
     struct bsaveSlotValueAtom bsa;

@@ -55,9 +55,9 @@
 
 #include "Evaluation.h"
 
-void ParseFunctionDefinitions(const Environment&);
-void CheckSyntaxFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-bool CheckSyntax(const Environment&, const char *, UDFValue *);
+void ParseFunctionDefinitions(const Environment::Ptr&);
+void CheckSyntaxFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+bool CheckSyntax(const Environment::Ptr&, const char *, UDFValue *);
 
 #endif /* _H_parsefun */
 

@@ -62,7 +62,7 @@
 /* CheckArgumentAgainstRestriction: */
 /************************************/
 bool CheckArgumentAgainstRestriction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *theExpression,
         unsigned theRestriction) {
     CONSTRAINT_RECORD *cr1, *cr2, *cr3;
@@ -214,7 +214,7 @@ unsigned short CountArguments(
 /* CopyExpresssion: Copies an expression. */
 /******************************************/
 Expression *CopyExpression(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *original) {
     Expression *topLevel, *next, *last;
 
@@ -286,7 +286,7 @@ unsigned long ExpressionSize(
 /*   value of type string, symbol, or number.   */
 /************************************************/
 Expression *GenConstant(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         unsigned short type,
         void *value) {
     Expression *top;
@@ -304,7 +304,7 @@ Expression *GenConstant(
 /* PrintExpression: Pretty prints an expression. */
 /*************************************************/
 void PrintExpression(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *fileid,
         Expression *theExpression) {
     Expression *oldExpression;
@@ -357,7 +357,7 @@ void PrintExpression(
 /*   expressions to the list of arguments for the other and expression). */
 /*************************************************************************/
 Expression *CombineExpressions(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *expr1,
         Expression *expr2) {
     Expression *tempPtr;
@@ -452,7 +452,7 @@ Expression *CombineExpressions(
 /* NegateExpression: */
 /*********************/
 Expression *NegateExpression(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *theExpression) {
     Expression *tempPtr;
 

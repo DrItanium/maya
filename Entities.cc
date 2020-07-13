@@ -2,6 +2,7 @@
 // Created by jwscoggins on 7/12/20.
 //
 #include "Entities.h"
+#include "Environment.h"
 
 
 //size_t hash(size_t range) override;
@@ -61,3 +62,5 @@ CLIPSFloat::hash(size_t range) {
         return tally % range;
     }
 }
+
+UDFContext::UDFContext(Environment &parent) : environment(parent) {}

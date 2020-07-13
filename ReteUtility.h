@@ -67,43 +67,43 @@
 constexpr auto NETWORK_ASSERT  = 0;
 constexpr auto NETWORK_RETRACT = 1;
 
-void PrintPartialMatch(const Environment&, const char *, PartialMatch::Ptr);
-PartialMatch *CopyPartialMatch(const Environment&, PartialMatch *);
-PartialMatch *MergePartialMatches(const Environment&, PartialMatch *, PartialMatch *);
+void PrintPartialMatch(const Environment::Ptr&, const char *, PartialMatch::Ptr);
+PartialMatch *CopyPartialMatch(const Environment::Ptr&, PartialMatch *);
+PartialMatch *MergePartialMatches(const Environment::Ptr&, PartialMatch *, PartialMatch *);
 long IncrementPseudoFactIndex();
-PartialMatch *GetAlphaMemory(const Environment&, PatternNodeHeader *, unsigned long);
+PartialMatch *GetAlphaMemory(const Environment::Ptr&, PatternNodeHeader *, unsigned long);
 PartialMatch *GetLeftBetaMemory(joinNode *, unsigned long);
 PartialMatch *GetRightBetaMemory(joinNode *, unsigned long);
-void ReturnLeftMemory(const Environment&, struct joinNode *);
-void ReturnRightMemory(const Environment&, struct joinNode *);
-void DestroyBetaMemory(const Environment&, struct joinNode *, int);
-void FlushBetaMemory(const Environment&, struct joinNode *, int);
+void ReturnLeftMemory(const Environment::Ptr&, struct joinNode *);
+void ReturnRightMemory(const Environment::Ptr&, struct joinNode *);
+void DestroyBetaMemory(const Environment::Ptr&, struct joinNode *, int);
+void FlushBetaMemory(const Environment::Ptr&, struct joinNode *, int);
 bool BetaMemoryNotEmpty(joinNode *);
-void RemoveAlphaMemoryMatches(const Environment&, PatternNodeHeader *, PartialMatch *,
+void RemoveAlphaMemoryMatches(const Environment::Ptr&, PatternNodeHeader *, PartialMatch *,
                               struct alphaMatch *);
-void DestroyAlphaMemory(const Environment&, PatternNodeHeader *, bool);
-void FlushAlphaMemory(const Environment&, PatternNodeHeader *);
-void FlushAlphaBetaMemory(const Environment&, PartialMatch *);
-void DestroyAlphaBetaMemory(const Environment&, PartialMatch *);
+void DestroyAlphaMemory(const Environment::Ptr&, PatternNodeHeader *, bool);
+void FlushAlphaMemory(const Environment::Ptr&, PatternNodeHeader *);
+void FlushAlphaBetaMemory(const Environment::Ptr&, PartialMatch *);
+void DestroyAlphaBetaMemory(const Environment::Ptr&, PartialMatch *);
 int GetPatternNumberFromJoin(joinNode *);
-struct multifieldMarker *CopyMultifieldMarkers(const Environment&, struct multifieldMarker *);
-PartialMatch *CreateAlphaMatch(const Environment&, void *, struct multifieldMarker *,
+struct multifieldMarker *CopyMultifieldMarkers(const Environment::Ptr&, struct multifieldMarker *);
+PartialMatch *CreateAlphaMatch(const Environment::Ptr&, void *, struct multifieldMarker *,
                                       PatternNodeHeader *, unsigned long);
-void TraceErrorToRule(const Environment&, struct joinNode *, const char *);
-void InitializePatternHeader(const Environment&, PatternNodeHeader *);
-void MarkRuleNetwork(const Environment&, bool);
-void TagRuleNetwork(const Environment&, unsigned long *, unsigned long *, unsigned long *, unsigned long *);
+void TraceErrorToRule(const Environment::Ptr&, struct joinNode *, const char *);
+void InitializePatternHeader(const Environment::Ptr&, PatternNodeHeader *);
+void MarkRuleNetwork(const Environment::Ptr&, bool);
+void TagRuleNetwork(const Environment::Ptr&, unsigned long *, unsigned long *, unsigned long *, unsigned long *);
 bool FindEntityInPartialMatch(PatternEntity *, PartialMatch *);
-unsigned long ComputeRightHashValue(const Environment&, PatternNodeHeader *);
-void UpdateBetaPMLinks(const Environment&, PartialMatch *, PartialMatch *, PartialMatch *,
+unsigned long ComputeRightHashValue(const Environment::Ptr&, PatternNodeHeader *);
+void UpdateBetaPMLinks(const Environment::Ptr&, PartialMatch *, PartialMatch *, PartialMatch *,
                        struct joinNode *, unsigned long, int);
-void UnlinkBetaPMFromNodeAndLineage(const Environment&, struct joinNode *, PartialMatch *, int);
-void UnlinkNonLeftLineage(const Environment&, struct joinNode *, PartialMatch *, int);
-PartialMatch *CreateEmptyPartialMatch(const Environment&);
+void UnlinkBetaPMFromNodeAndLineage(const Environment::Ptr&, struct joinNode *, PartialMatch *, int);
+void UnlinkNonLeftLineage(const Environment::Ptr&, struct joinNode *, PartialMatch *, int);
+PartialMatch *CreateEmptyPartialMatch(const Environment::Ptr&);
 void MarkRuleJoins(joinNode *, bool);
 void AddBlockedLink(PartialMatch *, PartialMatch *);
 void RemoveBlockedLink(PartialMatch *);
-unsigned long PrintBetaMemory(const Environment&, const char *, struct betaMemory *, bool, const char *, Verbosity);
+unsigned long PrintBetaMemory(const Environment::Ptr&, const char *, struct betaMemory *, bool, const char *, Verbosity);
 
 #endif /* _H_reteutil */
 

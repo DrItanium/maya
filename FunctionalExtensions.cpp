@@ -29,19 +29,19 @@
 using String = const std::string &;
 
 #if FUNCTIONAL_EXTENSIONS
-void MapFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void FilterFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void ExistsFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void NotExistsFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void FunctionError(const Environment&, int, FunctionCallBuilderError, String) noexcept;
-void LeftShift(const Environment&theEnv, UDFContext *context, UDFValue *ret) noexcept;
-void RightShift(const Environment&theEnv, UDFContext *context, UDFValue *ret) noexcept;
-void BitwiseOr(const Environment&theEnv, UDFContext *context, UDFValue *ret) noexcept;
-void BitwiseAnd(const Environment&theEnv, UDFContext *context, UDFValue *ret) noexcept;
-void BitwiseNot(const Environment&theEnv, UDFContext *context, UDFValue *ret) noexcept;
+void MapFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void FilterFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void ExistsFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void NotExistsFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void FunctionError(const Environment::Ptr&, int, FunctionCallBuilderError, String) noexcept;
+void LeftShift(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret) noexcept;
+void RightShift(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret) noexcept;
+void BitwiseOr(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret) noexcept;
+void BitwiseAnd(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret) noexcept;
+void BitwiseNot(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret) noexcept;
 #endif
 
-void InstallFunctionalExtensions(const Environment&theEnv) {
+void InstallFunctionalExtensions(const Environment::Ptr&theEnv) {
 #if FUNCTIONAL_EXTENSIONS
     AddUDF(theEnv, "map$", "m", 1, UNBOUNDED, "*;y;*", MapFunction);
     AddUDF(theEnv, "filter$", "m", 1, UNBOUNDED, "*;y;*", FilterFunction);
@@ -57,7 +57,7 @@ void InstallFunctionalExtensions(const Environment&theEnv) {
 
 #if FUNCTIONAL_EXTENSIONS
 void
-BitwiseNot(const Environment&theEnv, UDFContext *context, UDFValue *ret) noexcept {
+BitwiseNot(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret) noexcept {
     UDFValue invert;
     if (!UDFFirstArgument(context, INTEGER_BIT, &invert)) {
         ret->lexemeValue = FalseSymbol(theEnv);
@@ -66,7 +66,7 @@ BitwiseNot(const Environment&theEnv, UDFContext *context, UDFValue *ret) noexcep
     }
 }
 void
-LeftShift(const Environment&theEnv, UDFContext *context, UDFValue *ret) noexcept {
+LeftShift(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret) noexcept {
     UDFValue shift, by;
     if (!UDFFirstArgument(context, INTEGER_BIT, &shift)) {
         ret->lexemeValue = FalseSymbol(theEnv);
@@ -78,7 +78,7 @@ LeftShift(const Environment&theEnv, UDFContext *context, UDFValue *ret) noexcept
 }
 
 void
-BitwiseAnd(const Environment&theEnv, UDFContext *context, UDFValue *ret) noexcept {
+BitwiseAnd(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret) noexcept {
     UDFValue shift, by;
     if (!UDFFirstArgument(context, INTEGER_BIT, &shift)) {
         ret->lexemeValue = FalseSymbol(theEnv);
@@ -90,7 +90,7 @@ BitwiseAnd(const Environment&theEnv, UDFContext *context, UDFValue *ret) noexcep
 }
 
 void
-BitwiseOr(const Environment&theEnv, UDFContext *context, UDFValue *ret) noexcept {
+BitwiseOr(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret) noexcept {
     UDFValue shift, by;
     if (!UDFFirstArgument(context, INTEGER_BIT, &shift)) {
         ret->lexemeValue = FalseSymbol(theEnv);
@@ -101,7 +101,7 @@ BitwiseOr(const Environment&theEnv, UDFContext *context, UDFValue *ret) noexcept
     }
 }
 void
-RightShift(const Environment&theEnv, UDFContext *context, UDFValue *ret) noexcept {
+RightShift(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret) noexcept {
     UDFValue shift, by;
     if (!UDFFirstArgument(context, INTEGER_BIT, &shift)) {
         ret->lexemeValue = FalseSymbol(theEnv);
@@ -112,7 +112,7 @@ RightShift(const Environment&theEnv, UDFContext *context, UDFValue *ret) noexcep
     }
 }
 void
-FunctionError(const Environment&theEnv, int code, FunctionCallBuilderError err, String func) noexcept {
+FunctionError(const Environment::Ptr&theEnv, int code, FunctionCallBuilderError err, String func) noexcept {
     PrintErrorID(theEnv, "FUNCTIONAL", code, false);
     switch (err) {
         case FunctionCallBuilderError::FCBE_PROCESSING_ERROR:
@@ -147,7 +147,7 @@ FunctionError(const Environment&theEnv, int code, FunctionCallBuilderError err, 
 
 }
 void
-MapFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret) {
+MapFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret) {
     UDFValue func, curr;
     if (!UDFFirstArgument(context, LEXEME_BITS, &func)) {
         ret->lexemeValue = FalseSymbol(theEnv);
@@ -175,7 +175,7 @@ MapFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret) {
 }
 
 void
-FilterFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret) {
+FilterFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret) {
     UDFValue func, curr;
     if (!UDFFirstArgument(context, LEXEME_BITS, &func)) {
         ret->lexemeValue = FalseSymbol(theEnv);
@@ -205,7 +205,7 @@ FilterFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret) {
 }
 
 void
-ExistsFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret) {
+ExistsFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret) {
     UDFValue func, curr;
     if (!UDFFirstArgument(context, LEXEME_BITS, &func)) {
         ret->lexemeValue = FalseSymbol(theEnv);
@@ -235,7 +235,7 @@ ExistsFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret) {
 }
 
 void
-NotExistsFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret) {
+NotExistsFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret) {
     UDFValue func, curr;
     if (!UDFFirstArgument(context, LEXEME_BITS, &func)) {
         ret->lexemeValue = FalseSymbol(theEnv);
@@ -265,7 +265,7 @@ NotExistsFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret) 
 }
 
 namespace maya {
-    FunctionCallBuilder::FunctionCallBuilder(const Environment&theEnv, size_t size) : _builder(CreateFunctionCallBuilder(theEnv, size)) {}
+    FunctionCallBuilder::FunctionCallBuilder(const Environment::Ptr&theEnv, size_t size) : _builder(CreateFunctionCallBuilder(theEnv, size)) {}
     FunctionCallBuilder::~FunctionCallBuilder() {
         FCBDispose(_builder);
         _builder = nullptr;
@@ -293,7 +293,7 @@ namespace maya {
     void FunctionCallBuilder::append(FunctionCallBuilder::String sym, TreatLexemeAsInstanceName) noexcept {
         FCBAppendInstanceName(_builder, sym.c_str());
     }
-    MultifieldBuilder::MultifieldBuilder(const Environment&theEnv, size_t size) : _builder(CreateMultifieldBuilder(theEnv, size)) {}
+    MultifieldBuilder::MultifieldBuilder(const Environment::Ptr&theEnv, size_t size) : _builder(CreateMultifieldBuilder(theEnv, size)) {}
     MultifieldBuilder::~MultifieldBuilder() { MBDispose(_builder); }
     void MultifieldBuilder::append(UDFValue *value) noexcept { MBAppendUDFValue(_builder, value); }
     void MultifieldBuilder::append(CLIPSValue *value) noexcept { MBAppend(_builder, value); }

@@ -63,18 +63,18 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static struct lhsParseNode *RuleBodyParse(const Environment&, const char *, struct token *, const char *, bool *);
-static void DeclarationParse(const Environment&, const char *, const char *, bool *);
-static struct lhsParseNode *LHSPattern(const Environment&, const char *, TokenType, const char *, bool *, bool,
+static struct lhsParseNode *RuleBodyParse(const Environment::Ptr&, const char *, struct token *, const char *, bool *);
+static void DeclarationParse(const Environment::Ptr&, const char *, const char *, bool *);
+static struct lhsParseNode *LHSPattern(const Environment::Ptr&, const char *, TokenType, const char *, bool *, bool,
                                        struct token *, const char *);
-static struct lhsParseNode *ConnectedPatternParse(const Environment&, const char *, struct token *, bool *);
-static struct lhsParseNode *GroupPatterns(const Environment&, const char *, TokenType, const char *, bool *);
-static struct lhsParseNode *TestPattern(const Environment&, const char *, bool *);
-static struct lhsParseNode *AssignmentParse(const Environment&, const char *, CLIPSLexeme *, bool *);
+static struct lhsParseNode *ConnectedPatternParse(const Environment::Ptr&, const char *, struct token *, bool *);
+static struct lhsParseNode *GroupPatterns(const Environment::Ptr&, const char *, TokenType, const char *, bool *);
+static struct lhsParseNode *TestPattern(const Environment::Ptr&, const char *, bool *);
+static struct lhsParseNode *AssignmentParse(const Environment::Ptr&, const char *, CLIPSLexeme *, bool *);
 static void TagLHSLogicalNodes(lhsParseNode *);
-static struct lhsParseNode *SimplePatternParse(const Environment&, const char *, struct token *, bool *);
-static void ParseSalience(const Environment&, const char *, const char *, bool *);
-static void ParseAutoFocus(const Environment&, const char *, bool *);
+static struct lhsParseNode *SimplePatternParse(const Environment::Ptr&, const char *, struct token *, bool *);
+static void ParseSalience(const Environment::Ptr&, const char *, const char *, bool *);
+static void ParseAutoFocus(const Environment::Ptr&, const char *, bool *);
 
 /*******************************************************************/
 /* ParseRuleLHS: Coordinates all the actions necessary for parsing */
@@ -82,7 +82,7 @@ static void ParseAutoFocus(const Environment&, const char *, bool *);
 /*   conditional elements to conform with the KB Rete topology.    */
 /*******************************************************************/
 struct lhsParseNode *ParseRuleLHS(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource,
         struct token *theToken,
         const char *ruleName,
@@ -139,7 +139,7 @@ struct lhsParseNode *ParseRuleLHS(
 /*                 =>                                    */
 /*********************************************************/
 static struct lhsParseNode *RuleBodyParse(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource,
         struct token *theToken,
         const char *ruleName,
@@ -209,7 +209,7 @@ static struct lhsParseNode *RuleBodyParse(
 /* <rule-property> ::= (auto-focus TRUE | FALSE)        */
 /********************************************************/
 static void DeclarationParse(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource,
         const char *ruleName,
         bool *error) {
@@ -348,7 +348,7 @@ static void DeclarationParse(
 /*   declaration once the salience keyword has been parsed. */
 /************************************************************/
 static void ParseSalience(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource,
         const char *ruleName,
         bool *error) {
@@ -414,7 +414,7 @@ static void ParseSalience(
 /*   declaration once the auto-focus keyword has been parsed. */
 /**************************************************************/
 static void ParseAutoFocus(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource,
         bool *error) {
     struct token theToken;
@@ -459,7 +459,7 @@ static void ParseAutoFocus(
 /*                           <forall-CE> | <exists-CE>           */
 /*****************************************************************/
 static struct lhsParseNode *LHSPattern(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource,
         TokenType terminator,
         const char *terminatorString,
@@ -599,7 +599,7 @@ static struct lhsParseNode *LHSPattern(
 /*                           <conditional-element>+)                 */
 /*********************************************************************/
 static struct lhsParseNode *ConnectedPatternParse(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource,
         struct token *theToken,
         bool *error) {
@@ -817,7 +817,7 @@ static struct lhsParseNode *ConnectedPatternParse(
 /*   conditional elements together.            */
 /***********************************************/
 static struct lhsParseNode *GroupPatterns(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource,
         TokenType terminator,
         const char *terminatorString,
@@ -886,7 +886,7 @@ static struct lhsParseNode *GroupPatterns(
 /* <test-CE> ::= (test <function-call>)                       */
 /**************************************************************/
 static struct lhsParseNode *TestPattern(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource,
         bool *error) {
     struct lhsParseNode *theNode;
@@ -936,7 +936,7 @@ static struct lhsParseNode *TestPattern(
 /* <assigned-pattern-CE> ::= ?<variable-symbol> <- <pattern-CE> */
 /****************************************************************/
 static struct lhsParseNode *AssignmentParse(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource,
         CLIPSLexeme *factAddress,
         bool *error) {
@@ -1029,7 +1029,7 @@ static void TagLHSLogicalNodes(
 /*                  <template-pattern-CE>                  */
 /***********************************************************/
 static struct lhsParseNode *SimplePatternParse(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource,
         struct token *theToken,
         bool *error) {

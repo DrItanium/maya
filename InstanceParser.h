@@ -50,9 +50,9 @@
 
 #include "Expression.h"
 
-Expression *ParseInitializeInstance(const Environment&, Expression *, const char *);
-Expression *ParseSlotOverrides(const Environment&, const char *, bool *);
-Expression *ParseSimpleInstance(const Environment&, Expression *, const char *);
+Expression *ParseInitializeInstance(const Environment::Ptr&, Expression *, const char *);
+Expression *ParseSlotOverrides(const Environment::Ptr&, const char *, bool *);
+Expression *ParseSimpleInstance(const Environment::Ptr&, Expression *, const char *);
 
 #endif /* _H_inspsr */
 

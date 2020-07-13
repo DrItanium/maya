@@ -106,39 +106,39 @@
 #include <setjmp.h>
 
 double gentime();
-int gensystem(const Environment&, const char *);
-bool GenOpenReadBinary(const Environment&, const char *, const char *);
-void GetSeekCurBinary(const Environment&, long);
-void GetSeekSetBinary(const Environment&, long);
-void GenTellBinary(const Environment&, long *);
-void GenCloseBinary(const Environment&);
-void GenReadBinary(const Environment&, void *, size_t);
-FILE *GenOpen(const Environment&, const char *, const char *);
-int GenClose(const Environment&, FILE *);
-int GenFlush(const Environment&, FILE *);
-void GenRewind(const Environment&, FILE *);
-long long GenTell(const Environment&, FILE *);
-int GenSeek(const Environment&, FILE *, long, int);
-void genexit(const Environment&, int);
+int gensystem(const Environment::Ptr&, const char *);
+bool GenOpenReadBinary(const Environment::Ptr&, const char *, const char *);
+void GetSeekCurBinary(const Environment::Ptr&, long);
+void GetSeekSetBinary(const Environment::Ptr&, long);
+void GenTellBinary(const Environment::Ptr&, long *);
+void GenCloseBinary(const Environment::Ptr&);
+void GenReadBinary(const Environment::Ptr&, void *, size_t);
+FILE *GenOpen(const Environment::Ptr&, const char *, const char *);
+int GenClose(const Environment::Ptr&, FILE *);
+int GenFlush(const Environment::Ptr&, FILE *);
+void GenRewind(const Environment::Ptr&, FILE *);
+long long GenTell(const Environment::Ptr&, FILE *);
+int GenSeek(const Environment::Ptr&, FILE *, long, int);
+void genexit(const Environment::Ptr&, int);
 int genrand();
 void genseed(unsigned int);
-bool genremove(const Environment&, const char *);
-bool genrename(const Environment&, const char *, const char *);
+bool genremove(const Environment::Ptr&, const char *);
+bool genrename(const Environment::Ptr&, const char *, const char *);
 char *gengetcwd(char *, int);
 void GenWrite(void *, size_t, FILE *);
-int (*SetBeforeOpenFunction(const Environment&, int (*)(const Environment&)))(const Environment&);
-int (*SetAfterOpenFunction(const Environment&, int (*)(const Environment&)))(const Environment&);
+int (*SetBeforeOpenFunction(const Environment::Ptr&, int (*)(const Environment::Ptr&)))(const Environment::Ptr&);
+int (*SetAfterOpenFunction(const Environment::Ptr&, int (*)(const Environment::Ptr&)))(const Environment::Ptr&);
 int gensprintf(char *, const char *, ...);
 char *genstrcpy(char *, const char *);
 char *genstrncpy(char *, const char *, size_t);
 char *genstrcat(char *, const char *);
 char *genstrncat(char *, const char *, size_t);
-int genchdir(const Environment&, const char *);
-void genprintfile(const Environment&, FILE *, const char *);
-int gengetchar(const Environment&);
-int genungetchar(const Environment&, int);
-void InitializeSystemDependentData(const Environment&);
-void InitializeNonportableFeatures(const Environment&);
+int genchdir(const Environment::Ptr&, const char *);
+void genprintfile(const Environment::Ptr&, FILE *, const char *);
+int gengetchar(const Environment::Ptr&);
+int genungetchar(const Environment::Ptr&, int);
+void InitializeSystemDependentData(const Environment::Ptr&);
+void InitializeNonportableFeatures(const Environment::Ptr&);
 
 #endif /* _H_sysdep */
 

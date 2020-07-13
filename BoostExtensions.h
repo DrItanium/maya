@@ -24,6 +24,6 @@
 #define __MAYA_BOOST_H__
 
 #include "clips.h"
-void InstallBoostExtensions(const Environment&theEnv);
+void InstallBoostExtensions(const Environment::Ptr&theEnv);
 
 #endif

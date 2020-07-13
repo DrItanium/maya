@@ -191,8 +191,8 @@ struct objectReteData : public EnvironmentModule {
 };
 RegisterEnvironmentModule(objectReteData, OBJECT_RETE_DATA, ObjectRete);
 
-void InstallObjectPrimitives(const Environment&);
-bool ObjectCmpConstantFunction(const Environment&, void *, UDFValue *);
+void InstallObjectPrimitives(const Environment::Ptr&);
+bool ObjectCmpConstantFunction(const Environment::Ptr&, void *, UDFValue *);
 
 #endif /* _H_objrtfnx */
 

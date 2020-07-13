@@ -56,12 +56,12 @@ struct portConstructItem {
     struct portConstructItem *next;
 };
 
-void SetNumberOfDefmodules(const Environment&, unsigned short);
-void AddAfterModuleDefinedFunction(const Environment&, const char *, VoidCallFunction *, int, void *);
-bool ParseDefmodule(const Environment&, const char *);
-void AddPortConstructItem(const Environment&, const char *, TokenType);
-struct portConstructItem *ValidPortConstructItem(const Environment&, const char *);
-bool FindImportExportConflict(const Environment&, const char *, Defmodule *, const char *);
+void SetNumberOfDefmodules(const Environment::Ptr&, unsigned short);
+void AddAfterModuleDefinedFunction(const Environment::Ptr&, const char *, VoidCallFunction *, int, void *);
+bool ParseDefmodule(const Environment::Ptr&, const char *);
+void AddPortConstructItem(const Environment::Ptr&, const char *, TokenType);
+struct portConstructItem *ValidPortConstructItem(const Environment::Ptr&, const char *);
+bool FindImportExportConflict(const Environment::Ptr&, const char *, Defmodule *, const char *);
 
 #endif /* _H_modulpsr */
 

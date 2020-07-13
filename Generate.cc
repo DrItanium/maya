@@ -70,22 +70,22 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void ExtractAnds(const Environment&, lhsParseNode *, bool,
+static void ExtractAnds(const Environment::Ptr&, lhsParseNode *, bool,
                         Expression **, Expression **, Expression **,
                         Expression **, nandFrame *);
-static void ExtractFieldTest(const Environment&, lhsParseNode *, bool,
+static void ExtractFieldTest(const Environment::Ptr&, lhsParseNode *, bool,
                              Expression **, Expression **, Expression **,
                              Expression **, nandFrame *);
-static Expression *GetfieldReplace(const Environment&, lhsParseNode *);
-static Expression *GenPNConstant(const Environment&, lhsParseNode *);
-static Expression *GenJNConstant(const Environment&, lhsParseNode *, bool);
-static Expression *GenJNColon(const Environment&, lhsParseNode *, bool, nandFrame *);
-static Expression *GenPNColon(const Environment&, lhsParseNode *);
-static Expression *GenJNEq(const Environment&, lhsParseNode *, bool, nandFrame *);
-static Expression *GenPNEq(const Environment&, lhsParseNode *);
-static Expression *GenJNVariableComparison(const Environment&, lhsParseNode *,
+static Expression *GetfieldReplace(const Environment::Ptr&, lhsParseNode *);
+static Expression *GenPNConstant(const Environment::Ptr&, lhsParseNode *);
+static Expression *GenJNConstant(const Environment::Ptr&, lhsParseNode *, bool);
+static Expression *GenJNColon(const Environment::Ptr&, lhsParseNode *, bool, nandFrame *);
+static Expression *GenPNColon(const Environment::Ptr&, lhsParseNode *);
+static Expression *GenJNEq(const Environment::Ptr&, lhsParseNode *, bool, nandFrame *);
+static Expression *GenPNEq(const Environment::Ptr&, lhsParseNode *);
+static Expression *GenJNVariableComparison(const Environment::Ptr&, lhsParseNode *,
                                             lhsParseNode *, bool);
-static Expression *GenPNVariableComparison(const Environment&, lhsParseNode *,
+static Expression *GenPNVariableComparison(const Environment::Ptr&, lhsParseNode *,
                                             lhsParseNode *);
 static bool AllVariablesInPattern(lhsParseNode *,
                                   int);
@@ -97,7 +97,7 @@ static bool AllVariablesInExpression(lhsParseNode *,
 /*   expressions for a field constraint.               */
 /*******************************************************/
 void FieldConversion(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         lhsParseNode *theField,
         lhsParseNode *thePattern,
         nandFrame *theNandFrames) {
@@ -289,7 +289,7 @@ void FieldConversion(
 /*   for testing conditions in the pattern and join network.                */
 /****************************************************************************/
 static void ExtractAnds(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         lhsParseNode *andField,
         bool testInPatternNetwork,
         Expression **patternNetTest,
@@ -354,7 +354,7 @@ static void ExtractAnds(
 /*   performed in the join network).                                    */
 /************************************************************************/
 static void ExtractFieldTest(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         lhsParseNode *theField,
         bool testInPatternNetwork,
         Expression **patternNetTest,
@@ -428,7 +428,7 @@ static void ExtractFieldTest(
 /*  the data entity for equality or inequality.          */
 /*********************************************************/
 static Expression *GenPNConstant(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         lhsParseNode *theField) {
     Expression *top;
 
@@ -463,7 +463,7 @@ static Expression *GenPNConstant(
 /*  data entity for equality or inequality.                 */
 /************************************************************/
 static Expression *GenJNConstant(
-        const Environment& theEnv,
+        const Environment::Ptr& theEnv,
         lhsParseNode *theField,
         bool isNand) {
     Expression *top;
@@ -504,7 +504,7 @@ static Expression *GenJNConstant(
 /*  predicate field constraint (the : constraint).    */
 /******************************************************/
 static Expression *GenJNColon(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         lhsParseNode *theField,
         bool isNand,
         nandFrame *theNandFrames) {
@@ -538,7 +538,7 @@ static Expression *GenJNColon(
 /*  a predicate field constraint (the : constraint).  */
 /******************************************************/
 static Expression *GenPNColon(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         lhsParseNode *theField) {
     Expression *top, *conversion;
 
@@ -570,7 +570,7 @@ static Expression *GenPNColon(
 /*  return value field constraint (the = constraint). */
 /******************************************************/
 static Expression *GenJNEq(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         lhsParseNode *theField,
         bool isNand,
         nandFrame *theNandFrames) {
@@ -607,7 +607,7 @@ static Expression *GenJNEq(
 /*  return value field constraint (the = constraint).  */
 /*******************************************************/
 static Expression *GenPNEq(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         lhsParseNode *theField) {
     Expression *top, *conversion;
 
@@ -640,7 +640,7 @@ static Expression *GenPNEq(
 /*   taken through the join network for not/and CE group.               */
 /************************************************************************/
 void AddNandUnification(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         lhsParseNode *nodeList,
         nandFrame *theNandFrames) {
 
@@ -690,7 +690,7 @@ void AddNandUnification(
 /*   join network or the activation of the rule).                  */
 /*******************************************************************/
 Expression *GetvarReplace(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         lhsParseNode *nodeList,
         bool isNand,
         nandFrame *theNandFrames) {
@@ -766,7 +766,7 @@ Expression *GetvarReplace(
 /*   from information stored in the pattern network).                 */
 /**********************************************************************/
 static Expression *GetfieldReplace(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         lhsParseNode *nodeList) {
     Expression *newList;
 
@@ -815,7 +815,7 @@ static Expression *GetfieldReplace(
 /*   comparing two variables found in different patterns.     */
 /**************************************************************/
 static Expression *GenJNVariableComparison(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         lhsParseNode *selfNode,
         lhsParseNode *referringNode,
         bool isNand) {
@@ -861,7 +861,7 @@ static Expression *GenJNVariableComparison(
 /*   for comparing two variables found in the same pattern.  */
 /*************************************************************/
 static Expression *GenPNVariableComparison(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         lhsParseNode *selfNode,
         lhsParseNode *referringNode) {
     if (selfNode->patternType->genComparePNValuesFunction != nullptr) {

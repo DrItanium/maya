@@ -52,9 +52,9 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void ReadNeededBitMaps(const Environment&);
+static void ReadNeededBitMaps(const Environment::Ptr&);
 #if BLOAD_AND_BSAVE || BSAVE_INSTANCES
-static void WriteNeededBitMaps(const Environment&, FILE *);
+static void WriteNeededBitMaps(const Environment::Ptr&, FILE *);
 #endif
 
 #if BLOAD_AND_BSAVE || BSAVE_INSTANCES
@@ -65,7 +65,7 @@ static void WriteNeededBitMaps(const Environment&, FILE *);
 /*   this binary image to the binary file.    */
 /**********************************************/
 void WriteNeededAtomicValues(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         FILE *fp) {
     WriteNeededSymbols(theEnv, fp);
     WriteNeededFloats(theEnv, fp);
@@ -79,7 +79,7 @@ void WriteNeededAtomicValues(
 /*   the binary image being saved.                      */
 /********************************************************/
 void InitAtomicValueNeededFlags(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     unsigned long i;
     CLIPSLexeme *symbolPtr, **symbolArray;
     CLIPSFloat *floatPtr, **floatArray;
@@ -148,7 +148,7 @@ void InitAtomicValueNeededFlags(
 /*   table needed for this binary image in the binary save file. */
 /*****************************************************************/
 void WriteNeededSymbols(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         FILE *fp) {
     unsigned long i;
     size_t length;
@@ -218,7 +218,7 @@ void WriteNeededSymbols(
 /*   table needed for this binary image in the binary save file. */
 /*****************************************************************/
 void WriteNeededFloats(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         FILE *fp) {
     int i;
     CLIPSFloat **floatArray;
@@ -264,7 +264,7 @@ void WriteNeededFloats(
 /*   table needed for this binary image in the binary save file.  */
 /******************************************************************/
 void WriteNeededIntegers(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         FILE *fp) {
     int i;
     CLIPSInteger **integerArray;
@@ -312,7 +312,7 @@ void WriteNeededIntegers(
 /*   table needed for this binary image in the binary save file. */
 /*****************************************************************/
 static void WriteNeededBitMaps(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         FILE *fp) {
     int i;
     CLIPSBitMap **bitMapArray;
@@ -369,7 +369,7 @@ static void WriteNeededBitMaps(
 /*   this binary image from the binary file. */
 /*********************************************/
 void ReadNeededAtomicValues(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     ReadNeededSymbols(theEnv);
     ReadNeededFloats(theEnv);
     ReadNeededIntegers(theEnv);
@@ -381,7 +381,7 @@ void ReadNeededAtomicValues(
 /*   used by the binary image.             */
 /*******************************************/
 void ReadNeededSymbols(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     char *symbolNames, *namePtr;
     unsigned long space;
     unsigned short *types;
@@ -437,7 +437,7 @@ void ReadNeededSymbols(
 /*   used by the binary image.           */
 /*****************************************/
 void ReadNeededFloats(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     double *floatValues;
     unsigned long i;
 
@@ -478,7 +478,7 @@ void ReadNeededFloats(
 /*   used by the binary image.               */
 /*********************************************/
 void ReadNeededIntegers(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     long long *integerValues;
     unsigned long i;
 
@@ -521,7 +521,7 @@ void ReadNeededIntegers(
 /*   used by the binary image.             */
 /*******************************************/
 static void ReadNeededBitMaps(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     char *bitMapStorage, *bitMapPtr;
     unsigned long space;
     unsigned long i;
@@ -572,7 +572,7 @@ static void ReadNeededBitMaps(
 /*   in refreshing expressions and other data structures. */
 /**********************************************************/
 void FreeAtomicValueStorage(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     if (SymbolData(theEnv)->SymbolArray != nullptr)
         rm(theEnv, SymbolData(theEnv)->SymbolArray, sizeof(CLIPSLexeme *) * SymbolData(theEnv)->NumberOfSymbols);
     if (SymbolData(theEnv)->FloatArray != nullptr)

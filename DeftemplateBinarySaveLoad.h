@@ -90,8 +90,8 @@ RegisterEnvironmentModule(deftemplateBinaryData, TMPLTBIN_DATA, DeftemplateBinar
 #include "tmpltdef.h"
 #endif
 
-void DeftemplateBinarySetup(const Environment&);
-void *BloadDeftemplateModuleReference(const Environment&, unsigned long);
+void DeftemplateBinarySetup(const Environment::Ptr&);
+void *BloadDeftemplateModuleReference(const Environment::Ptr&, unsigned long);
 
 #endif /* _H_tmpltbin */
 

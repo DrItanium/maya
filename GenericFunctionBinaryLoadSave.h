@@ -57,8 +57,8 @@ RegisterEnvironmentModule(defgenericBinaryData, GENRCBIN_DATA, DefgenericBinary)
 
 #define GenericPointer(i) (((i) == ULONG_MAX) ? nullptr : &DefgenericBinaryData(theEnv)->DefgenericArray[i])
 
-void SetupGenericsBload(const Environment&);
-void *BloadDefgenericModuleReference(const Environment&, unsigned long);
+void SetupGenericsBload(const Environment::Ptr&);
+void *BloadDefgenericModuleReference(const Environment::Ptr&, unsigned long);
 
 #endif /* _H_genrcbin */
 

@@ -65,21 +65,21 @@
 #include "Evaluation.h"
 #include "Deftemplate.h"
 
-void DeftemplateBasicCommands(const Environment&);
-void UndeftemplateCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-bool Undeftemplate(Deftemplate *, const Environment&);
-void GetDeftemplateListFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void GetDeftemplateList(const Environment&, CLIPSValue *, Defmodule *);
-void DeftemplateModuleFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void DeftemplateBasicCommands(const Environment::Ptr&);
+void UndeftemplateCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+bool Undeftemplate(Deftemplate *, const Environment::Ptr&);
+void GetDeftemplateListFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void GetDeftemplateList(const Environment::Ptr&, CLIPSValue *, Defmodule *);
+void DeftemplateModuleFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
 #if DEBUGGING_FUNCTIONS
-void PPDeftemplateCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-bool PPDeftemplate(const Environment&, const char *, const char *);
-void ListDeftemplatesCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void ListDeftemplates(const Environment&, const char *, Defmodule *);
+void PPDeftemplateCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+bool PPDeftemplate(const Environment::Ptr&, const char *, const char *);
+void ListDeftemplatesCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void ListDeftemplates(const Environment::Ptr&, const char *, Defmodule *);
 bool DeftemplateGetWatch(Deftemplate *);
 void DeftemplateSetWatch(Deftemplate *, bool);
-bool DeftemplateWatchAccess(const Environment&, int, bool, Expression *);
-bool DeftemplateWatchPrint(const Environment&, const char *, int, Expression *);
+bool DeftemplateWatchAccess(const Environment::Ptr&, int, bool, Expression *);
+bool DeftemplateWatchPrint(const Environment::Ptr&, const char *, int, Expression *);
 #endif
 
 #endif /* _H_tmpltbsc */

@@ -74,7 +74,7 @@ typedef struct ProcParamStack {
 
     unsigned int ParamArraySize;
     UDFValue *WildcardValue;
-    void (*UnboundErrFunc)(const Environment&, const char *);
+    void (*UnboundErrFunc)(const Environment::Ptr&, const char *);
     struct ProcParamStack *nxt;
 } PROC_PARAM_STACK;
 
@@ -91,7 +91,7 @@ struct proceduralPrimitiveData : public EnvironmentModule {
     PROC_PARAM_STACK *pstack;
     UDFValue *WildcardValue;
     UDFValue *LocalVarArray;
-    void (*ProcUnboundErrFunc)(const Environment&, const char *);
+    void (*ProcUnboundErrFunc)(const Environment::Ptr&, const char *);
     EntityRecord ProcParameterInfo;
     EntityRecord ProcWildInfo;
     EntityRecord ProcGetInfo;
@@ -106,32 +106,32 @@ struct proceduralPrimitiveData : public EnvironmentModule {
 };
 RegisterEnvironmentModule(proceduralPrimitiveData, PROCEDURAL_PRIMITIVE_DATA, ProceduralPrimitive);
 
-void InstallProcedurePrimitives(const Environment&);
+void InstallProcedurePrimitives(const Environment::Ptr&);
 
-Expression *ParseProcParameters(const Environment&, const char *, struct token *, Expression *,
+Expression *ParseProcParameters(const Environment::Ptr&, const char *, struct token *, Expression *,
                                 CLIPSLexeme **, unsigned short *, unsigned short *, bool *,
-                                bool (*)(const Environment&, const char *));
-Expression *ParseProcActions(const Environment&, const char *, const char *, struct token *, Expression *, CLIPSLexeme *,
-                             int (*)(const Environment&, Expression *, void *),
-                             int (*)(const Environment&, Expression *, void *),
+                                bool (*)(const Environment::Ptr&, const char *));
+Expression *ParseProcActions(const Environment::Ptr&, const char *, const char *, struct token *, Expression *, CLIPSLexeme *,
+                             int (*)(const Environment::Ptr&, Expression *, void *),
+                             int (*)(const Environment::Ptr&, Expression *, void *),
                              unsigned short *, void *);
-int ReplaceProcVars(const Environment&, const char *, Expression *, Expression *, CLIPSLexeme *,
-                    int (*)(const Environment&, Expression *, void *), void *);
+int ReplaceProcVars(const Environment::Ptr&, const char *, Expression *, Expression *, CLIPSLexeme *,
+                    int (*)(const Environment::Ptr&, Expression *, void *), void *);
 #if DEFGENERIC_CONSTRUCT
-Expression *GenProcWildcardReference(const Environment&, int);
+Expression *GenProcWildcardReference(const Environment::Ptr&, int);
 #endif
 
-void PushProcParameters(const Environment&, Expression *, unsigned int, const char *, const char *, void (*)(const Environment&, const char *));
-void PopProcParameters(const Environment&);
+void PushProcParameters(const Environment::Ptr&, Expression *, unsigned int, const char *, const char *, void (*)(const Environment::Ptr&, const char *));
+void PopProcParameters(const Environment::Ptr&);
 
 #if DEFGENERIC_CONSTRUCT
-Expression *GetProcParamExpressions(const Environment&);
+Expression *GetProcParamExpressions(const Environment::Ptr&);
 #endif
 
-void EvaluateProcActions(const Environment&, Defmodule *, Expression *, unsigned short,
-                         UDFValue *, void (*)(const Environment&, const char *));
-void PrintProcParamArray(const Environment&, const char *);
-void GrabProcWildargs(const Environment&, UDFValue *, unsigned int);
+void EvaluateProcActions(const Environment::Ptr&, Defmodule *, Expression *, unsigned short,
+                         UDFValue *, void (*)(const Environment::Ptr&, const char *));
+void PrintProcParamArray(const Environment::Ptr&, const char *);
+void GrabProcWildargs(const Environment::Ptr&, UDFValue *, unsigned int);
 
 #endif /* _H_prccode */
 

@@ -64,7 +64,7 @@ static void CatchCtrlC(int);
 /* LOCAL INTERNAL VARIABLE DEFINITIONS */
 /***************************************/
 
-static EnvironmentData::Ptr mainEnv;
+static Environment::Ptr mainEnv;
 
 /****************************************/
 /* main: Starts execution of the expert */
@@ -73,7 +73,7 @@ static EnvironmentData::Ptr mainEnv;
 int main(
         int argc,
         char *argv[]) {
-    mainEnv = std::make_shared<EnvironmentData>();
+    mainEnv = std::make_shared<Environment>();
 #if STUBBING_INACTIVE
 #if UNIX_V || LINUX || DARWIN || UNIX_7 || WIN_GCC || WIN_MVC
     signal(SIGINT, CatchCtrlC);

@@ -77,10 +77,10 @@
    =========================================
    ***************************************** */
 
-static void UnboundDeffunctionErr(const Environment&, const char *);
+static void UnboundDeffunctionErr(const Environment::Ptr&, const char *);
 
 #if DEBUGGING_FUNCTIONS
-static void WatchDeffunction(const Environment&, const char *);
+static void WatchDeffunction(const Environment::Ptr&, const char *);
 #endif
 
 /* =========================================
@@ -101,7 +101,7 @@ static void WatchDeffunction(const Environment&, const char *);
   NOTES        : Used in EvaluateExpression(theEnv,)
  ****************************************************/
 void CallDeffunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Deffunction *dptr,
         Expression *args,
         UDFValue *returnValue) {
@@ -192,7 +192,7 @@ void CallDeffunction(
   NOTES        : None
  *******************************************************/
 static void UnboundDeffunctionErr(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logName) {
     WriteString(theEnv, logName, "deffunction '");
     WriteString(theEnv, logName, DeffunctionName(DeffunctionData(theEnv)->ExecutingDeffunction));
@@ -214,7 +214,7 @@ static void UnboundDeffunctionErr(
   NOTES        : None
  ***************************************************/
 static void WatchDeffunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *tstring) {
     if (ConstructData(theEnv)->ClearReadyInProgress ||
         ConstructData(theEnv)->ClearInProgress) { return; }

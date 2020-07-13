@@ -48,14 +48,14 @@
 #include "Match.h"
 #include "Network.h"
 
-void NetworkAssert(const Environment&, PartialMatch *, struct joinNode *);
-bool EvaluateJoinExpression(const Environment&, Expression *, struct joinNode *);
-void NetworkAssertLeft(const Environment&, PartialMatch *, struct joinNode *, int);
-void NetworkAssertRight(const Environment&, PartialMatch *, struct joinNode *, int);
-void PPDrive(const Environment&, PartialMatch *, PartialMatch *, struct joinNode *, int);
-unsigned long BetaMemoryHashValue(const Environment&, Expression *, PartialMatch *, PartialMatch *, struct joinNode *);
-bool EvaluateSecondaryNetworkTest(const Environment&, PartialMatch *, struct joinNode *);
-void EPMDrive(const Environment&, PartialMatch *, struct joinNode *, int);
+void NetworkAssert(const Environment::Ptr&, PartialMatch *, struct joinNode *);
+bool EvaluateJoinExpression(const Environment::Ptr&, Expression *, struct joinNode *);
+void NetworkAssertLeft(const Environment::Ptr&, PartialMatch *, struct joinNode *, int);
+void NetworkAssertRight(const Environment::Ptr&, PartialMatch *, struct joinNode *, int);
+void PPDrive(const Environment::Ptr&, PartialMatch *, PartialMatch *, struct joinNode *, int);
+unsigned long BetaMemoryHashValue(const Environment::Ptr&, Expression *, PartialMatch *, PartialMatch *, struct joinNode *);
+bool EvaluateSecondaryNetworkTest(const Environment::Ptr&, PartialMatch *, struct joinNode *);
+void EPMDrive(const Environment::Ptr&, PartialMatch *, struct joinNode *, int);
 
 #endif /* _H_drive */
 

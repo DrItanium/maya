@@ -84,7 +84,7 @@
 /***************************************/
 
 #if DEBUGGING_FUNCTIONS
-static void SaveDefclass(const Environment&, ConstructHeader *, void *);
+static void SaveDefclass(const Environment::Ptr&, ConstructHeader *, void *);
 #endif
 static const char *GetClassDefaultsModeName(ClassDefaultsMode);
 
@@ -104,7 +104,7 @@ static const char *GetClassDefaultsModeName(ClassDefaultsMode);
   NOTES        : None
  ******************************************************************/
 Defclass *FindDefclass( // TBD Needs to look in imported
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *classAndModuleName) {
     CLIPSLexeme *classSymbol = nullptr;
     Defclass *cls;
@@ -144,7 +144,7 @@ Defclass *FindDefclass( // TBD Needs to look in imported
   NOTES        : None
  ******************************************************************/
 Defclass *FindDefclassInModule(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *classAndModuleName) {
     CLIPSLexeme *classSymbol = nullptr;
     Defclass *cls;
@@ -185,7 +185,7 @@ Defclass *FindDefclassInModule(
                  name are ever in the same scope
  ***************************************************/
 Defclass *LookupDefclassByMdlOrScope(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *classAndModuleName) {
     Defclass *cls;
     const char *className;
@@ -227,7 +227,7 @@ Defclass *LookupDefclassByMdlOrScope(
                  name are ever in the same scope
  ****************************************************/
 Defclass *LookupDefclassInScope(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *className) {
     Defclass *cls;
     CLIPSLexeme *classSymbol;
@@ -258,7 +258,7 @@ Defclass *LookupDefclassInScope(
                  exist as do the other lookup functions
  ******************************************************/
 Defclass *LookupDefclassAnywhere(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defmodule *theModule,
         const char *className) {
     CLIPSLexeme *classSymbol;
@@ -289,7 +289,7 @@ Defclass *LookupDefclassAnywhere(
   NOTES        : None
  ***************************************************/
 bool DefclassInScope(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defclass *theDefclass,
         Defmodule *theModule) {
 #if DEFMODULE_CONSTRUCT
@@ -320,7 +320,7 @@ bool DefclassInScope(
                     is returned.
  ***********************************************************/
 Defclass *GetNextDefclass(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defclass *theDefclass) {
     return (Defclass *) GetNextConstructItem(theEnv, &theDefclass->header,
                                              DefclassData(theEnv)->DefclassModuleIndex);
@@ -357,7 +357,7 @@ bool DefclassIsDeletable(
   NOTES        : Syntax : (undefclass <class-name> | *)
  *************************************************************/
 void UndefclassCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UndefconstructCommand(context, "undefclass", DefclassData(theEnv)->DefclassConstruct);
@@ -373,7 +373,7 @@ void UndefclassCommand(
  ********************************************************/
 bool Undefclass(
         Defclass *theDefclass,
-        const Environment&allEnv) {
+        const Environment::Ptr&allEnv) {
     bool success;
     GCBlock gcb;
 
@@ -408,7 +408,7 @@ bool Undefclass(
   NOTES        : Syntax : (ppdefclass <class-name>)
  *********************************************************/
 void PPDefclassCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     PPConstructCommand(context, "ppdefclass", DefclassData(theEnv)->DefclassConstruct, returnValue);
@@ -423,7 +423,7 @@ void PPDefclassCommand(
   NOTES        : H/L Interface
  ***************************************************/
 void ListDefclassesCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     ListConstructCommand(context, DefclassData(theEnv)->DefclassConstruct);
@@ -439,7 +439,7 @@ void ListDefclassesCommand(
   NOTES        : C Interface
  ***************************************************/
 void ListDefclasses(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         Defmodule *theModule) {
     ListConstruct(theEnv, DefclassData(theEnv)->DefclassConstruct, logicalName, theModule);
@@ -529,7 +529,7 @@ void DefclassSetWatchSlots(
   NOTES        : Accessory function for AddWatchItem()
  ******************************************************************/
 bool DefclassWatchAccess(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         int code,
         bool newState,
         Expression *argExprs) {
@@ -558,7 +558,7 @@ bool DefclassWatchAccess(
   NOTES        : Accessory function for AddWatchItem()
  ***********************************************************************/
 bool DefclassWatchPrint(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logName,
         int code,
         Expression *argExprs) {
@@ -584,7 +584,7 @@ bool DefclassWatchPrint(
   NOTES        : None
  *********************************************************/
 void GetDefclassListFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     GetConstructListFunction(context, returnValue, DefclassData(theEnv)->DefclassConstruct);
@@ -602,7 +602,7 @@ void GetDefclassListFunction(
   NOTES        : External C access
  ***************************************************************/
 void GetDefclassList(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CLIPSValue *returnValue,
         Defmodule *theModule) {
     UDFValue result;
@@ -648,7 +648,7 @@ CLIPSLexeme *CheckClassAndSlot(
         const char *func,
         Defclass **cls) {
     UDFValue theArg;
-    const Environment&theEnv = context->environment;
+    const Environment::Ptr&theEnv = context->environment;
 
     if (!UDFFirstArgument(context, SYMBOL_BIT, &theArg))
         return nullptr;
@@ -675,7 +675,7 @@ CLIPSLexeme *CheckClassAndSlot(
   NOTES        : None
  ***************************************************/
 void SaveDefclasses(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defmodule *theModule,
         const char *logName,
         void *context) {
@@ -710,7 +710,7 @@ void SaveDefclasses(
   NOTES        : None
  ***************************************************/
 static void SaveDefclass(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         ConstructHeader *theConstruct,
         void *userBuffer) {
     const char *logName = (const char *) userBuffer;
@@ -741,7 +741,7 @@ static void SaveDefclass(
 /*    of the class defaults mode.           */
 /********************************************/
 ClassDefaultsMode SetClassDefaultsMode(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         ClassDefaultsMode value) {
     ClassDefaultsMode ov;
 
@@ -755,7 +755,7 @@ ClassDefaultsMode SetClassDefaultsMode(
 /*    value of the class defaults mode. */
 /****************************************/
 ClassDefaultsMode GetClassDefaultsMode(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     return DefclassData(theEnv)->ClassDefaultsModeValue;
 }
 
@@ -764,7 +764,7 @@ ClassDefaultsMode GetClassDefaultsMode(
 /*   for the get-class-defaults-mode command.      */
 /***************************************************/
 void GetClassDefaultsModeCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     returnValue->lexemeValue = CreateSymbol(theEnv, GetClassDefaultsModeName(GetClassDefaultsMode(theEnv)));
@@ -775,7 +775,7 @@ void GetClassDefaultsModeCommand(
 /*   for the set-class-defaults-mode command.      */
 /***************************************************/
 void SetClassDefaultsModeCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -866,7 +866,7 @@ const char *DefclassPPForm(
 }
 
 struct defmoduleItemHeader *GetDefclassModule(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defclass *theClass) {
     return GetConstructModuleItem(&theClass->header);
 }
@@ -877,7 +877,7 @@ const char *DefclassModule(
 }
 
 void SetDefclassPPForm(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defclass *theClass,
         char *thePPForm) {
     SetConstructPPForm(theEnv, &theClass->header, thePPForm);

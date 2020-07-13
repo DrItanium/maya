@@ -89,13 +89,13 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void PrintActivation(const Environment&, const char *, Activation::Ptr );
-static void AgendaClearFunction(const Environment&, void *);
+static void PrintActivation(const Environment::Ptr&, const char *, Activation::Ptr );
+static void AgendaClearFunction(const Environment::Ptr&, void *);
 static const char *SalienceEvaluationName(SalienceEvaluationType);
-static int EvaluateSalience(const Environment&, Defrule::Ptr );
-static struct SalienceGroup *ReuseOrCreateSalienceGroup(const Environment&, struct defruleModule *, int);
+static int EvaluateSalience(const Environment::Ptr&, Defrule::Ptr );
+static struct SalienceGroup *ReuseOrCreateSalienceGroup(const Environment::Ptr&, struct defruleModule *, int);
 static struct SalienceGroup *FindSalienceGroup(defruleModule *, int);
-static void RemoveActivationFromGroup(const Environment&, Activation::Ptr , struct defruleModule *);
+static void RemoveActivationFromGroup(const Environment::Ptr&, Activation::Ptr , struct defruleModule *);
 
 /*************************************************/
 /* InitializeAgenda: Initializes the activations */
@@ -103,7 +103,7 @@ static void RemoveActivationFromGroup(const Environment&, Activation::Ptr , stru
 /*   manipulating the agenda.                    */
 /*************************************************/
 void InitializeAgenda(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     theEnv->allocateEnvironmentModule<AgendaModule>();
     AddClearFunction(theEnv, "agenda", AgendaClearFunction, 0, nullptr);
 #if DEBUGGING_FUNCTIONS
@@ -127,7 +127,7 @@ void InitializeAgenda(
 /*   patterns on the LHS of a rule have been satisfied.          */
 /*****************************************************************/
 void AddActivation(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defrule::Ptr theRule,
         PartialMatch::Ptr binds) {
     defruleModule *theModuleItem;
@@ -197,7 +197,7 @@ void AddActivation(
 /* ReuseOrCreateSalienceGroup: */
 /*******************************/
 static struct SalienceGroup *ReuseOrCreateSalienceGroup(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct defruleModule *theRuleModule,
         int salience) {
     struct SalienceGroup *theGroup, *lastGroup, *newGroup;
@@ -252,7 +252,7 @@ static struct SalienceGroup *FindSalienceGroup(
 /* ClearRuleFromAgenda: Clears the agenda of a specified rule. */
 /***************************************************************/
 void ClearRuleFromAgenda(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defrule::Ptr theRule) {
     Defrule::Ptr tempRule;
     Activation::Ptr agendaPtr, agendaNext;
@@ -297,7 +297,7 @@ void ClearRuleFromAgenda(
 /*   activation after the argument is returned.                */
 /***************************************************************/
 Activation::Ptr GetNextActivation(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Activation::Ptr actPtr) {
     if (actPtr == nullptr) {
         auto theModuleItem = (defruleModule *) GetModuleItem(theEnv, nullptr, DefruleData(theEnv)->DefruleModuleIndex);
@@ -332,7 +332,7 @@ Activation::getPPForm(StringBuilder* theSB) noexcept {
 /*   print representation of an activation's basis. */
 /****************************************************/
 void GetActivationBasisPPForm(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         char *buffer,
         size_t bufferLength,
         Activation::Ptr theActivation) {
@@ -346,7 +346,7 @@ void GetActivationBasisPPForm(
 /*   activation to the top of the agenda.   */
 /********************************************/
 bool MoveActivationToTop(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Activation::Ptr theActivation) {
     Activation::Ptr prevPtr;
     struct defruleModule *theModuleItem;
@@ -409,7 +409,7 @@ void DeleteActivation(
 /*************************************************/
 void DeleteAllActivations(
         Defmodule *theModule) {
-    const Environment& theEnv = theModule->header.env;
+    const Environment::Ptr& theEnv = theModule->header.env;
 
     auto theActivation = GetDefruleModuleItem(theEnv, nullptr)->agenda;
     while (theActivation != nullptr) {
@@ -432,7 +432,7 @@ void DeleteAllActivations(
 /*   from the list of activations on the Agenda.       */
 /*******************************************************/
 bool DetachActivation(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Activation::Ptr theActivation) {
     struct defruleModule *theModuleItem;
 
@@ -491,7 +491,7 @@ bool DetachActivation(
 /*   rule name, and the partial match which activated the rule are printed. */
 /****************************************************************************/
 static void PrintActivation(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         Activation::Ptr theActivation) {
     char printSpace[20];
@@ -509,7 +509,7 @@ static void PrintActivation(
 /*   for the agenda command. */
 /*****************************/
 void Agenda(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         Defmodule *theModule) {
     ListItemsDriver(theEnv, logicalName, theModule, "activation", "activations",
@@ -525,7 +525,7 @@ void Agenda(
 /*   and partial matches may also be updated.                      */
 /*******************************************************************/
 void RemoveActivation(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Activation::Ptr theActivation,
         bool updateAgenda,
         bool updateLinks) {
@@ -599,7 +599,7 @@ void RemoveActivation(
 /* RemoveActivationFromGroup: */
 /******************************/
 static void RemoveActivationFromGroup(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Activation::Ptr theActivation,
         struct defruleModule *theRuleModule) {
     struct SalienceGroup *theGroup;
@@ -650,7 +650,7 @@ static void RemoveActivationFromGroup(
 /*   clear command. Resets the current time tag to zero.      */
 /**************************************************************/
 static void AgendaClearFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *context) {
     AgendaData(theEnv)->setCurrentTimetag(1);
 }
@@ -660,7 +660,7 @@ static void AgendaClearFunction(
 /*   from the agenda of the current module.      */
 /*************************************************/
 void RemoveAllActivations(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     Activation::Ptr tempPtr, theActivation;
     struct SalienceGroup *theGroup, *tempGroup;
 
@@ -684,7 +684,7 @@ void RemoveAllActivations(
 /* ReorderAllAgendas: */
 /**********************/
 void ReorderAllAgendas(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     Defmodule *theModule;
 
     for (theModule = GetNextDefmodule(theEnv, nullptr);
@@ -745,7 +745,7 @@ void ReorderAgenda(
 /*   Syntax: (refresh <defrule-name>)                 */
 /******************************************************/
 void RefreshCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     /*===========================*/
@@ -782,7 +782,7 @@ void Refresh(
     Defrule::Ptr rulePtr;
     PartialMatch *listOfMatches;
     unsigned long b;
-    const Environment&theEnv = theRule->header.env;
+    const Environment::Ptr&theEnv = theRule->header.env;
 
     /*====================================*/
     /* Refresh each disjunct of the rule. */
@@ -821,7 +821,7 @@ void Refresh(
 /*   for the refresh-agenda command.          */
 /**********************************************/
 void RefreshAgendaCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     unsigned int numArgs;
@@ -857,7 +857,7 @@ void RefreshAgendaCommand(
 /* RefreshAllAgendas: */
 /**********************/
 void RefreshAllAgendas(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     Defmodule *theModule;
 
     for (theModule = GetNextDefmodule(theEnv, nullptr);
@@ -940,7 +940,7 @@ void RefreshAgenda(
 /*   Syntax: (set-salience-evaluation-behavior <symbol>) */
 /*********************************************************/
 void SetSalienceEvaluationCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue value;
@@ -990,7 +990,7 @@ void SetSalienceEvaluationCommand(
 /*   Syntax: (get-salience-evaluation-behavior)          */
 /*********************************************************/
 void GetSalienceEvaluationCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     returnValue->lexemeValue = CreateSymbol(theEnv, SalienceEvaluationName(GetSalienceEvaluation(theEnv)));
@@ -1030,7 +1030,7 @@ static const char *SalienceEvaluationName(
 /*  when activated, or every cycle).                   */
 /*******************************************************/
 SalienceEvaluationType GetSalienceEvaluation(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     return AgendaData(theEnv)->getSalienceEvaluation();
 }
 
@@ -1039,7 +1039,7 @@ SalienceEvaluationType GetSalienceEvaluation(
 /*   the current type of salience evaluation. */
 /**********************************************/
 SalienceEvaluationType SetSalienceEvaluation(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         SalienceEvaluationType value) {
     SalienceEvaluationType ov;
 
@@ -1057,7 +1057,7 @@ SalienceEvaluationType SetSalienceEvaluation(
 /*   rule's current salience, and it is then returned.           */
 /*****************************************************************/
 static int EvaluateSalience(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defrule::Ptr theDefrule) {
     UDFValue salienceValue;
     long long salience;
@@ -1133,7 +1133,7 @@ static int EvaluateSalience(
 /*   Syntax: (agenda)                          */
 /***********************************************/
 void AgendaCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     unsigned int numArgs;

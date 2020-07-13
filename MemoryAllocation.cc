@@ -69,7 +69,7 @@
 /* genalloc: A generic memory allocation function. */
 /***************************************************/
 void *genalloc(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         size_t size) {
     return nullptr;
 }
@@ -78,7 +78,7 @@ void *genalloc(
 /* genfree: A generic memory deallocation function. */
 /****************************************************/
 void genfree(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *waste,
         size_t size) {
 }
@@ -87,7 +87,7 @@ void genfree(
 /* genrealloc: Simple (i.e. dumb) version of realloc. */
 /******************************************************/
 void *genrealloc(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *oldaddr,
         size_t oldsz,
         size_t newsz) {
@@ -98,7 +98,7 @@ void *genrealloc(
 /* gm1: Allocates memory and sets all bytes to zero. */
 /*****************************************************/
 void *gm1(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         size_t size) {
     return nullptr;
 }
@@ -107,7 +107,7 @@ void *gm1(
 /* gm2: Allocates memory and does not initialize it. */
 /*****************************************************/
 void *gm2(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         size_t size) {
     return nullptr;
 }
@@ -117,7 +117,7 @@ void *gm2(
 /*   maintained pool of free memory.    */
 /****************************************/
 void rm(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *str,
         size_t size) {
     /// @todo eliminate this

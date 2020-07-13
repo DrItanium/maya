@@ -57,8 +57,8 @@ struct deffactsBinaryData : public EnvironmentModule {
 };
 RegisterEnvironmentModule(deffactsBinaryData, DFFCTBIN_DATA, DeffactsBinary);
 
-void DeffactsBinarySetup(const Environment&);
-void *BloadDeffactsModuleReference(const Environment&, unsigned long);
+void DeffactsBinarySetup(const Environment::Ptr&);
+void *BloadDeffactsModuleReference(const Environment::Ptr&, unsigned long);
 
 #endif /* _H_dffctbin */
 

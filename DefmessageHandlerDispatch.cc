@@ -98,10 +98,10 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static bool PerformMessage(const Environment&, UDFValue *, Expression *, CLIPSLexeme *);
-static HANDLER_LINK *FindApplicableHandlers(const Environment&, Defclass *, CLIPSLexeme *);
-static void CallHandlers(const Environment&, UDFValue *);
-static void EarlySlotBindError(const Environment&, Instance *, Defclass *, unsigned);
+static bool PerformMessage(const Environment::Ptr&, UDFValue *, Expression *, CLIPSLexeme *);
+static HANDLER_LINK *FindApplicableHandlers(const Environment::Ptr&, Defclass *, CLIPSLexeme *);
+static void CallHandlers(const Environment::Ptr&, UDFValue *);
+static void EarlySlotBindError(const Environment::Ptr&, Instance *, Defclass *, unsigned);
 
 /* =========================================
    *****************************************
@@ -124,7 +124,7 @@ static void EarlySlotBindError(const Environment&, Instance *, Defclass *, unsig
   NOTES        : None
  *****************************************************/
 bool DirectMessage(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CLIPSLexeme *msg,
         Instance *ins,
         UDFValue *resultbuf,
@@ -158,7 +158,7 @@ bool DirectMessage(
   NOTES        : None
  ***************************************************/
 void Send(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CLIPSValue *idata,
         const char *msg,
         const char *args,
@@ -215,7 +215,7 @@ void Send(
   NOTES        : None
  *****************************************************/
 void DestroyHandlerLinks(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         HANDLER_LINK *mhead) {
     HANDLER_LINK *tmp;
 
@@ -239,7 +239,7 @@ void DestroyHandlerLinks(
   NOTES        : H/L Syntax : (send <instance> <hnd> <args>*)
  ***********************************************************************/
 void SendCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Expression args;
@@ -276,7 +276,7 @@ void SendCommand(
                  the call frame of the message
  ***************************************************/
 UDFValue *GetNthMessageArgument(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         int n) {
     return (&ProceduralPrimitiveData(theEnv)->ProcParamArray[n]);
 }
@@ -285,7 +285,7 @@ UDFValue *GetNthMessageArgument(
 /* NextHandlerAvailableFunction */
 /********************************/
 void NextHandlerAvailableFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     returnValue->lexemeValue = CreateBoolean(theEnv, NextHandlerAvailable(theEnv));
@@ -303,7 +303,7 @@ void NextHandlerAvailableFunction(
   NOTES        : H/L Syntax: (next-handlerp)
  *****************************************************/
 bool NextHandlerAvailable(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     if (MessageHandlerData(theEnv)->CurrentCore == nullptr) { return false; }
 
     if (MessageHandlerData(theEnv)->CurrentCore->hnd->type == MAROUND) {
@@ -342,7 +342,7 @@ bool NextHandlerAvailable(
                     (override-next-handler <arg> ...)
  ********************************************************/
 void CallNextHandler(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Expression args;
@@ -461,7 +461,7 @@ void CallNextHandler(
   NOTES        : None
  *************************************************************************/
 void FindApplicableOfName(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defclass *cls,
         HANDLER_LINK *tops[4],
         HANDLER_LINK *bots[4],
@@ -512,7 +512,7 @@ void FindApplicableOfName(
   NOTES        : None
  *************************************************************************/
 HANDLER_LINK *JoinHandlerLinks(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         HANDLER_LINK *tops[4],
         HANDLER_LINK *bots[4],
         CLIPSLexeme *mname) {
@@ -556,7 +556,7 @@ HANDLER_LINK *JoinHandlerLinks(
   NOTES        : None
  ***************************************************/
 void PrintHandlerSlotGetFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         void *theValue) {
 #if DEVELOPER
@@ -606,7 +606,7 @@ void PrintHandlerSlotGetFunction(
                   overrode the original slot)
  ***************************************************/
 bool HandlerSlotGetFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *theValue,
         UDFValue *theResult) {
     HANDLER_SLOT_REFERENCE *theReference;
@@ -667,7 +667,7 @@ bool HandlerSlotGetFunction(
   NOTES        : None
  ***************************************************/
 void PrintHandlerSlotPutFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         void *theValue) {
 #if DEVELOPER
@@ -723,7 +723,7 @@ void PrintHandlerSlotPutFunction(
                   overrode the original slot)
  ***************************************************/
 bool HandlerSlotPutFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *theValue,
         UDFValue *theResult) {
     HANDLER_SLOT_REFERENCE *theReference;
@@ -809,7 +809,7 @@ bool HandlerSlotPutFunction(
   NOTES        : H/L Syntax: (get <slot>)
  *****************************************************/
 void DynamicHandlerGetSlot(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     InstanceSlot *sp;
@@ -855,7 +855,7 @@ void DynamicHandlerGetSlot(
   NOTES        : H/L Syntax: (put <slot> <value>*)
  ***********************************************************/
 void DynamicHandlerPutSlot(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     InstanceSlot *sp;
@@ -924,7 +924,7 @@ void DynamicHandlerPutSlot(
                  to an instance of that class.
  *****************************************************/
 static bool PerformMessage(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFValue *returnValue,
         Expression *args,
         CLIPSLexeme *mname) {
@@ -1124,7 +1124,7 @@ static bool PerformMessage(
                  The number of arguments is in ProcParamArraySize
  *****************************************************************************/
 static HANDLER_LINK *FindApplicableHandlers(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defclass *cls,
         CLIPSLexeme *mname) {
     unsigned int i;
@@ -1158,7 +1158,7 @@ static HANDLER_LINK *FindApplicableHandlers(
                  pointing to the first handler to be executed.
  ***************************************************************/
 static void CallHandlers(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFValue *returnValue) {
     HANDLER_LINK *oldCurrent = nullptr, *oldNext = nullptr;  /* prevents warning */
     UDFValue temp;
@@ -1308,7 +1308,7 @@ static void CallHandlers(
   NOTES        : None
  ********************************************************/
 static void EarlySlotBindError(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Instance *theInstance,
         Defclass *theDefclass,
         unsigned slotID) {

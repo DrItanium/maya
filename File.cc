@@ -97,14 +97,14 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void DeallocateFileCommandData(const Environment&);
+static void DeallocateFileCommandData(const Environment::Ptr&);
 
 /***************************************/
 /* FileCommandDefinitions: Initializes */
 /*   file commands.                    */
 /***************************************/
 void FileCommandDefinitions(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     theEnv->allocateEnvironmentModule<fileCommandData>();
     //AllocateEnvironmentData(theEnv, FILECOM_DATA, sizeof(fileCommandData), DeallocateFileCommandData);
 if constexpr (STUBBING_INACTIVE) {
@@ -134,7 +134,7 @@ if constexpr (STUBBING_INACTIVE) {
 /*    data for file commands.                         */
 /******************************************************/
 static void DeallocateFileCommandData(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     struct batchEntry *theEntry, *nextEntry;
 
     theEntry = FileCommandData(theEnv)->TopOfBatchList;
@@ -173,7 +173,7 @@ static void DeallocateFileCommandData(
 /*   for the dribble-on command.          */
 /******************************************/
 void DribbleOnCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *fileName;
@@ -191,7 +191,7 @@ void DribbleOnCommand(
 /*   for the dribble-off command.          */
 /*******************************************/
 void DribbleOffCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     returnValue->lexemeValue = CreateBoolean(theEnv, DribbleOff(theEnv));
@@ -204,7 +204,7 @@ void DribbleOffCommand(
 /*   for the batch command.           */
 /**************************************/
 void BatchCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *fileName;
@@ -222,7 +222,7 @@ void BatchCommand(
 /*   for the batch* command.              */
 /******************************************/
 void BatchStarCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *fileName;
@@ -239,7 +239,7 @@ void BatchStarCommand(
 /* LoadCommand: H/L access routine for the load command.   */
 /***********************************************************/
 void LoadCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *theFileName;
@@ -269,7 +269,7 @@ void LoadCommand(
 /* LoadStarCommand: H/L access routine for the load* command.   */
 /****************************************************************/
 void LoadStarCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *theFileName;
@@ -295,7 +295,7 @@ void LoadStarCommand(
 /* SaveCommand: H/L access routine for the save command. */
 /*********************************************************/
 void SaveCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *theFileName;

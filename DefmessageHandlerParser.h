@@ -59,8 +59,8 @@
 
 #include "Object.h"
 
-bool ParseDefmessageHandler(const Environment&, const char *);
-void CreateGetAndPutHandlers(const Environment&, SlotDescriptor *);
+bool ParseDefmessageHandler(const Environment::Ptr&, const char *);
+void CreateGetAndPutHandlers(const Environment::Ptr&, SlotDescriptor *);
 
 
 #endif /* _H_msgpsr */

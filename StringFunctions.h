@@ -74,21 +74,21 @@ enum BuildError {
     BE_PARSING_ERROR,
 } ;
 
-BuildError Build(const Environment&, const char *);
-EvalError Eval(const Environment&, const char *, CLIPSValue *);
-void StringFunctionDefinitions(const Environment&);
-void StrCatFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void SymCatFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void StrLengthFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void UpcaseFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void LowcaseFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void StrCompareFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void SubStringFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void StrIndexFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void EvalFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void BuildFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void StringToFieldFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void StringToField(const Environment&, const char *, UDFValue *);
-void StrReplaceFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+BuildError Build(const Environment::Ptr&, const char *);
+EvalError Eval(const Environment::Ptr&, const char *, CLIPSValue *);
+void StringFunctionDefinitions(const Environment::Ptr&);
+void StrCatFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void SymCatFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void StrLengthFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void UpcaseFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void LowcaseFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void StrCompareFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void SubStringFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void StrIndexFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void EvalFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void BuildFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void StringToFieldFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void StringToField(const Environment::Ptr&, const char *, UDFValue *);
+void StrReplaceFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
 
 #endif /* _H_strngfun */

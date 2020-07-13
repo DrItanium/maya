@@ -151,17 +151,17 @@ RegisterEnvironmentModule(defruleData, DEFRULE_DATA, Defrule);
     nullptr : \
     ((theJoin)->rightSideEntryStructure))
 
-void InitializeDefrules(const Environment&);
-Defrule::Ptr FindDefrule(const Environment&, const char *);
-Defrule::Ptr FindDefruleInModule(const Environment&, const char *);
-Defrule::Ptr GetNextDefrule(const Environment&, Defrule::Ptr );
-struct defruleModule *GetDefruleModuleItem(const Environment&, Defmodule *);
+void InitializeDefrules(const Environment::Ptr&);
+Defrule::Ptr FindDefrule(const Environment::Ptr&, const char *);
+Defrule::Ptr FindDefruleInModule(const Environment::Ptr&, const char *);
+Defrule::Ptr GetNextDefrule(const Environment::Ptr&, Defrule::Ptr );
+struct defruleModule *GetDefruleModuleItem(const Environment::Ptr&, Defmodule *);
 bool DefruleIsDeletable(Defrule::Ptr );
 #if BLOAD_AND_BSAVE
-void AddBetaMemoriesToJoin(const Environment&, struct joinNode *);
+void AddBetaMemoriesToJoin(const Environment::Ptr&, struct joinNode *);
 #endif
-long GetDisjunctCount(const Environment&, Defrule::Ptr );
-Defrule::Ptr GetNthDisjunct(const Environment&, Defrule::Ptr , long);
+long GetDisjunctCount(const Environment::Ptr&, Defrule::Ptr );
+Defrule::Ptr GetNthDisjunct(const Environment::Ptr&, Defrule::Ptr , long);
 const char *DefruleModule(Defrule::Ptr );
 const char *DefruleName(Defrule::Ptr );
 const char *DefrulePPForm(Defrule::Ptr );

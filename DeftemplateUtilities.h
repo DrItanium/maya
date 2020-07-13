@@ -60,17 +60,17 @@
 #include "Fact.h"
 #include "Symbol.h"
 
-void InvalidDeftemplateSlotMessage(const Environment&, const char *, const char *, bool);
-void SingleFieldSlotCardinalityError(const Environment&, const char *);
-void MultiIntoSingleFieldSlotError(const Environment&, struct templateSlot *, Deftemplate *);
-void CheckTemplateFact(const Environment&, Fact *);
-bool CheckRHSSlotTypes(const Environment&, Expression *, struct templateSlot *, const char *);
+void InvalidDeftemplateSlotMessage(const Environment::Ptr&, const char *, const char *, bool);
+void SingleFieldSlotCardinalityError(const Environment::Ptr&, const char *);
+void MultiIntoSingleFieldSlotError(const Environment::Ptr&, struct templateSlot *, Deftemplate *);
+void CheckTemplateFact(const Environment::Ptr&, Fact *);
+bool CheckRHSSlotTypes(const Environment::Ptr&, Expression *, struct templateSlot *, const char *);
 struct templateSlot *GetNthSlot(Deftemplate *, long long);
 int FindSlotPosition(Deftemplate *, CLIPSLexeme *);
-void PrintTemplateFact(const Environment&, const char *, Fact *, bool, bool, const char *);
-void UpdateDeftemplateScope(const Environment&);
+void PrintTemplateFact(const Environment::Ptr&, const char *, Fact *, bool, bool, const char *);
+void UpdateDeftemplateScope(const Environment::Ptr&);
 struct templateSlot *FindSlot(Deftemplate *, CLIPSLexeme *, unsigned short *);
-Deftemplate *CreateImpliedDeftemplate(const Environment&, CLIPSLexeme *, bool);
+Deftemplate *CreateImpliedDeftemplate(const Environment::Ptr&, CLIPSLexeme *, bool);
 
 #endif /* _H_tmpltutl */
 

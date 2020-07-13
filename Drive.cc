@@ -73,15 +73,15 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void EmptyDrive(const Environment&, struct joinNode *, PartialMatch *, int);
-static void JoinNetErrorMessage(const Environment&, struct joinNode *);
+static void EmptyDrive(const Environment::Ptr&, struct joinNode *, PartialMatch *, int);
+static void JoinNetErrorMessage(const Environment::Ptr&, struct joinNode *);
 
 /************************************************/
 /* NetworkAssert: Primary routine for filtering */
 /*   a partial match through the join network.  */
 /************************************************/
 void NetworkAssert(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         PartialMatch *binds,
         struct joinNode *join) {
     /*=========================================================*/
@@ -115,7 +115,7 @@ void NetworkAssert(
 /*   the RHS of a join.                              */
 /*****************************************************/
 void NetworkAssertRight(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         PartialMatch *rhsBinds,
         struct joinNode *join,
         int operation) {
@@ -293,7 +293,7 @@ void NetworkAssertRight(
 /*   entering through the left side of a join.      */
 /****************************************************/
 void NetworkAssertLeft(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         PartialMatch *lhsBinds,
         struct joinNode *join,
         int operation) {
@@ -536,7 +536,7 @@ void NetworkAssertLeft(
 /*   than if EvaluateExpression was used directly.     */
 /*******************************************************/
 bool EvaluateJoinExpression(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *joinExpr,
         struct joinNode *joinPtr) {
     UDFValue theResult;
@@ -651,7 +651,7 @@ bool EvaluateJoinExpression(
 /* EvaluateSecondaryNetworkTest: */
 /*********************************/
 bool EvaluateSecondaryNetworkTest(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         PartialMatch *leftMatch,
         struct joinNode *joinPtr) {
     bool joinExpr;
@@ -685,7 +685,7 @@ bool EvaluateSecondaryNetworkTest(
 /* BetaMemoryHashValue: */
 /************************/
 unsigned long BetaMemoryHashValue(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Expression *hashExpr,
         PartialMatch *lbinds,
         PartialMatch *rbinds,
@@ -808,7 +808,7 @@ unsigned long BetaMemoryHashValue(
 /*   which the merge took place.                                   */
 /*******************************************************************/
 void PPDrive(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         PartialMatch *lhsBinds,
         PartialMatch *rhsBinds,
         struct joinNode *join,
@@ -871,7 +871,7 @@ void PPDrive(
 /*   that is the first CE of a rule.                                   */
 /***********************************************************************/
 void EPMDrive(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         PartialMatch *parent,
         struct joinNode *join,
         int operation) {
@@ -899,7 +899,7 @@ void EPMDrive(
 /*   a rule (i.e. a join that cannot be entered from the LHS). */
 /***************************************************************/
 static void EmptyDrive(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct joinNode *join,
         PartialMatch *rhsBinds,
         int operation) {
@@ -1055,7 +1055,7 @@ static void EmptyDrive(
 /*   was being evaluated.                                           */
 /********************************************************************/
 static void JoinNetErrorMessage(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct joinNode *joinPtr) {
     PrintErrorID(theEnv, "DRIVE", 1, true);
     WriteString(theEnv, STDERR, "This error occurred in the join network.\n");

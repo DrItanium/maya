@@ -60,24 +60,24 @@
 /***************************************/
 
 #if BLOAD_AND_BSAVE
-static void BsaveFind(const Environment&);
-static void BsaveStorage(const Environment&, FILE *);
-static void BsaveBinaryItem(const Environment&, FILE *);
+static void BsaveFind(const Environment::Ptr&);
+static void BsaveStorage(const Environment::Ptr&, FILE *);
+static void BsaveBinaryItem(const Environment::Ptr&, FILE *);
 #endif
-static void BloadStorage(const Environment&);
-static void BloadBinaryItem(const Environment&);
-static void UpdateDeftemplateModule(const Environment&, void *, unsigned long);
-static void UpdateDeftemplate(const Environment&, void *, unsigned long);
-static void UpdateDeftemplateSlot(const Environment&, void *, unsigned long);
-static void ClearBload(const Environment&);
-static void DeallocateDeftemplateBloadData(const Environment&);
+static void BloadStorage(const Environment::Ptr&);
+static void BloadBinaryItem(const Environment::Ptr&);
+static void UpdateDeftemplateModule(const Environment::Ptr&, void *, unsigned long);
+static void UpdateDeftemplate(const Environment::Ptr&, void *, unsigned long);
+static void UpdateDeftemplateSlot(const Environment::Ptr&, void *, unsigned long);
+static void ClearBload(const Environment::Ptr&);
+static void DeallocateDeftemplateBloadData(const Environment::Ptr&);
 
 /***********************************************/
 /* DeftemplateBinarySetup: Installs the binary */
 /*   save/load feature for deftemplates.       */
 /***********************************************/
 void DeftemplateBinarySetup(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     //AllocateEnvironmentData(theEnv, TMPLTBIN_DATA, sizeof(deftemplateBinaryData), DeallocateDeftemplateBloadData);
     theEnv->allocateEnvironmentModule<deftemplateBinaryData>();
 #if BLOAD_AND_BSAVE
@@ -93,7 +93,7 @@ void DeftemplateBinarySetup(
 /*    data for the deftemplate bsave functionality.        */
 /***********************************************************/
 static void DeallocateDeftemplateBloadData(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     size_t space;
 
     space = DeftemplateBinaryData(theEnv)->NumberOfTemplateModules * sizeof(deftemplateModule);
@@ -114,7 +114,7 @@ static void DeallocateDeftemplateBloadData(
 /*   current environment.                                     */
 /**************************************************************/
 static void BsaveFind(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     Deftemplate *theDeftemplate;
     struct templateSlot *theSlot;
     Defmodule *theModule;
@@ -189,7 +189,7 @@ static void BsaveFind(
 /*    all deftemplate structures to the binary file.     */
 /*********************************************************/
 static void BsaveStorage(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         FILE *fp) {
     size_t space;
 
@@ -213,7 +213,7 @@ static void BsaveStorage(
 /*   structures to the binary file.            */
 /***********************************************/
 static void BsaveBinaryItem(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         FILE *fp) {
     size_t space;
     Deftemplate *theDeftemplate;
@@ -332,7 +332,7 @@ static void BsaveBinaryItem(
 /*   the deftemplates used by this binary image.    */
 /****************************************************/
 static void BloadStorage(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     size_t space;
 
     /*=========================================================*/
@@ -393,7 +393,7 @@ static void BloadStorage(
 /*   constructs used by this binary image.              */
 /********************************************************/
 static void BloadBinaryItem(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     size_t space;
 
     /*======================================================*/
@@ -434,7 +434,7 @@ static void BloadBinaryItem(
 /*   for deftemplateModule data structures.       */
 /**************************************************/
 static void UpdateDeftemplateModule(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *buf,
         unsigned long obji) {
     struct bsaveDeftemplateModule *bdmPtr;
@@ -450,7 +450,7 @@ static void UpdateDeftemplateModule(
 /*   for deftemplate data structures.       */
 /********************************************/
 static void UpdateDeftemplate(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *buf,
         unsigned long obji) {
     Deftemplate *theDeftemplate;
@@ -486,7 +486,7 @@ static void UpdateDeftemplate(
 /*   for templateSlot data structures.          */
 /************************************************/
 static void UpdateDeftemplateSlot(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *buf,
         unsigned long obji) {
     struct templateSlot *theSlot;
@@ -515,7 +515,7 @@ static void UpdateDeftemplateSlot(
 /*   when a binary load is in effect.    */
 /*****************************************/
 static void ClearBload(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     size_t space;
     unsigned long i;
 
@@ -567,7 +567,7 @@ static void ClearBload(
 /*   module pointer for use with the bload function.        */
 /************************************************************/
 void *BloadDeftemplateModuleReference(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         unsigned long theIndex) {
     return ((void *) &DeftemplateBinaryData(theEnv)->ModuleArray[theIndex]);
 }

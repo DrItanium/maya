@@ -94,14 +94,14 @@ const char *STDWRN = "stdwrn";
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static bool QueryRouter(const Environment&, const char *, struct router *);
-static void DeallocateRouterData(const Environment&);
+static bool QueryRouter(const Environment::Ptr&, const char *, struct router *);
+static void DeallocateRouterData(const Environment::Ptr&);
 
 /*********************************************************/
 /* InitializeDefaultRouters: Initializes output streams. */
 /*********************************************************/
 void InitializeDefaultRouters(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     //AllocateEnvironmentData(theEnv, ROUTER_DATA, sizeof(routerData), DeallocateRouterData);
     theEnv->allocateEnvironmentModule<routerData>();
 
@@ -119,7 +119,7 @@ void InitializeDefaultRouters(
 /*    data for I/O routers.                      */
 /*************************************************/
 static void DeallocateRouterData(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     struct router *tmpPtr, *nextPtr;
 
     tmpPtr = RouterData(theEnv)->ListOfRouters;
@@ -135,7 +135,7 @@ static void DeallocateRouterData(
 /* PrintRouterExists */
 /*********************/
 bool PrintRouterExists(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName) {
     struct router *currentPtr;
 
@@ -154,7 +154,7 @@ bool PrintRouterExists(
 /* Write: Generic print function. */
 /**********************************/
 void Write(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *str) {
     WriteString(theEnv, STDOUT, str);
 }
@@ -163,7 +163,7 @@ void Write(
 /* Writeln: Generic print function. */
 /************************************/
 void Writeln(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *str) {
     WriteString(theEnv, STDOUT, str);
     WriteString(theEnv, STDOUT, "\n");
@@ -173,7 +173,7 @@ void Writeln(
 /* WriteString: Generic print function. */
 /****************************************/
 void WriteString(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const std::string& logicalName,
         const std::string& str) {
 #if STUBBING_INACTIVE
@@ -218,7 +218,7 @@ void WriteString(
 /* ReadRouter: Generic get character function. */
 /***********************************************/
 int ReadRouter(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName) {
     struct router *currentPtr;
     int inchar;
@@ -295,7 +295,7 @@ int ReadRouter(
 /* UnreadRouter: Generic unget character function. */
 /***************************************************/
 int UnreadRouter(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         int ch) {
     struct router *currentPtr;
@@ -363,7 +363,7 @@ int UnreadRouter(
 /*   all of the router exit functions.      */
 /********************************************/
 void ExitRouter(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         int num) {
     struct router *currentPtr, *nextPtr;
 
@@ -388,14 +388,14 @@ void ExitRouter(
 /*   after calling all closing routers.     */
 /********************************************/
 void AbortExit(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     RouterData(theEnv)->Abort = true;
 }
 /*********************************************************/
 /* AddRouter: Adds an I/O router to the list of routers. */
 /*********************************************************/
 bool AddRouter(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *routerName,
         int priority,
         RouterQueryFunction *queryFunction,
@@ -463,7 +463,7 @@ bool AddRouter(
 /* DeleteRouter: Removes an I/O router from the list of routers. */
 /*****************************************************************/
 bool DeleteRouter(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *routerName) {
     struct router *currentPtr, *lastPtr;
 
@@ -493,7 +493,7 @@ bool DeleteRouter(
 /* QueryRouters: Determines if any router recognizes a logical name. */
 /*********************************************************************/
 bool QueryRouters(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName) {
     struct router *currentPtr;
 
@@ -511,7 +511,7 @@ bool QueryRouters(
 /*    recognizes a logical name.                */
 /************************************************/
 static bool QueryRouter(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         struct router *currentPtr) {
     /*===================================================*/
@@ -539,7 +539,7 @@ static bool QueryRouter(
 /* DeactivateRouter: Deactivates a specific router. */
 /*******************************************************/
 bool DeactivateRouter(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *routerName) {
     struct router *currentPtr;
 
@@ -560,7 +560,7 @@ bool DeactivateRouter(
 /* ActivateRouter: Activates a specific router. */
 /************************************************/
 bool ActivateRouter(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *routerName) {
     struct router *currentPtr;
 
@@ -581,7 +581,7 @@ bool ActivateRouter(
 /* FindRouter: Locates the named router. */
 /*****************************************/
 Router *FindRouter(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *routerName) {
     Router *currentPtr;
 
@@ -598,7 +598,7 @@ Router *FindRouter(
 /* SetFastLoad: Used to bypass router system for loads. */
 /********************************************************/
 void SetFastLoad(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         FILE *filePtr) {
     RouterData(theEnv)->FastLoadFilePtr = filePtr;
 }
@@ -607,7 +607,7 @@ void SetFastLoad(
 /* SetFastSave: Used to bypass router system for saves. */
 /********************************************************/
 void SetFastSave(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         FILE *filePtr) {
     RouterData(theEnv)->FastSaveFilePtr = filePtr;
 }
@@ -616,7 +616,7 @@ void SetFastSave(
 /* GetFastLoad: Returns the "fast load" file pointer. */
 /******************************************************/
 FILE *GetFastLoad(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     return (RouterData(theEnv)->FastLoadFilePtr);
 }
 
@@ -624,7 +624,7 @@ FILE *GetFastLoad(
 /* GetFastSave: Returns the "fast save" file pointer. */
 /******************************************************/
 FILE *GetFastSave(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     return (RouterData(theEnv)->FastSaveFilePtr);
 }
 
@@ -633,7 +633,7 @@ FILE *GetFastSave(
 /*   for an unrecognized router name.                */
 /*****************************************************/
 void UnrecognizedRouterMessage(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName) {
     PrintErrorID(theEnv, "ROUTER", 1, false);
     WriteString(theEnv, STDERR, "Logical name '");
@@ -645,7 +645,7 @@ void UnrecognizedRouterMessage(
 /* PrintNRouter: Generic print function. */
 /*****************************************/
 void PrintNRouter(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         const char *str,
         unsigned long length) {
@@ -662,6 +662,6 @@ void PrintNRouter(
 /* InputBufferCount: */
 /*********************/
 size_t InputBufferCount(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     return RouterData(theEnv)->CommandBufferInputCount;
 }

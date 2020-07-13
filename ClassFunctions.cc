@@ -116,7 +116,7 @@ constexpr auto PUT_PREFIX_LENGTH  = 4;
 
 static unsigned int HashSlotName(CLIPSLexeme *);
 
-static void DeassignClassID(const Environment&, unsigned short);
+static void DeassignClassID(const Environment::Ptr&, unsigned short);
 
 /* =========================================
    *****************************************
@@ -133,7 +133,7 @@ static void DeassignClassID(const Environment&, unsigned short);
   NOTES        : None
  ***************************************************/
 void IncrementDefclassBusyCount(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defclass *theDefclass) {
 #if MAC_XCD
 #pragma unused(theEnv)
@@ -154,7 +154,7 @@ void IncrementDefclassBusyCount(
                  a no-op on a clear
  ***************************************************/
 void DecrementDefclassBusyCount(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defclass *theDefclass) {
     if (!ConstructData(theEnv)->ClearInProgress) { theDefclass->busy--; }
 }
@@ -169,7 +169,7 @@ void DecrementDefclassBusyCount(
   NOTES        : None
  ****************************************************/
 bool InstancesPurge(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         void *context) {
     DestroyAllInstances(theEnv, nullptr);
     CleanupInstances(theEnv, nullptr);
@@ -188,7 +188,7 @@ bool InstancesPurge(
   NOTES        : None
  ***************************************************/
 void InitializeClasses(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     int i;
 
     DefclassData(theEnv)->ClassTable =
@@ -233,7 +233,7 @@ SlotDescriptor *FindClassSlot(
   NOTES        : None
  ***************************************************************/
 void ClassExistError(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *func,
         const char *cname) {
     PrintErrorID(theEnv, "CLASSFUN", 1, false);
@@ -254,7 +254,7 @@ void ClassExistError(
   NOTES        : None
  *********************************************/
 void DeleteClassLinks(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CLASS_LINK *clink) {
     CLASS_LINK *ctmp;
 
@@ -277,7 +277,7 @@ void DeleteClassLinks(
   NOTES        : None
  ******************************************************/
 void PrintClassName(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         Defclass *theDefclass,
         bool useQuotes,
@@ -309,7 +309,7 @@ void PrintClassName(
   NOTES        : None
  ***************************************************/
 void PrintPackedClassLinks(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logicalName,
         const char *title,
         PACKED_CLASS_LINKS *plinks) {
@@ -334,7 +334,7 @@ void PrintPackedClassLinks(
   NOTES        : None
  *******************************************************/
 void PutClassInTable(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defclass *cls) {
     cls->hashTableIndex = HashClass(GetDefclassNamePointer(cls));
     cls->nxtHash = DefclassData(theEnv)->ClassTable[cls->hashTableIndex];
@@ -350,7 +350,7 @@ void PutClassInTable(
   NOTES        : None
  *********************************************************/
 void RemoveClassFromTable(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defclass *cls) {
     Defclass *prvhsh, *hshptr;
 
@@ -384,7 +384,7 @@ void RemoveClassFromTable(
                  be deallocated
  ***************************************************/
 void AddClassLink(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         PACKED_CLASS_LINKS *src,
         Defclass *cls,
         bool append,
@@ -421,7 +421,7 @@ void AddClassLink(
   NOTES        : None
  ***************************************************/
 void DeleteSubclassLink(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defclass *sclass,
         Defclass *cls) {
     unsigned long deletedIndex;
@@ -461,7 +461,7 @@ void DeleteSubclassLink(
   NOTES        : None
  ***************************************************/
 void DeleteSuperclassLink(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defclass *sclass,
         Defclass *cls) {
     unsigned long deletedIndex;
@@ -498,7 +498,7 @@ void DeleteSuperclassLink(
   NOTES        : None
  **************************************************************/
 Defclass *NewClass(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CLIPSLexeme *className) {
     Defclass *cls;
 
@@ -554,7 +554,7 @@ Defclass *NewClass(
   NOTES        : None
  ***************************************************/
 void DeletePackedClassLinks(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         PACKED_CLASS_LINKS *plp,
         bool deleteTop) {
     if (plp->classCount > 0) {
@@ -577,7 +577,7 @@ void DeletePackedClassLinks(
   NOTES        : None
  ***************************************************/
 void AssignClassID(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defclass *cls) {
     unsigned short i;
     /// @todo reimplement
@@ -611,7 +611,7 @@ void AssignClassID(
   NOTES        : None
  *********************************************************/
 SLOT_NAME *AddSlotName(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CLIPSLexeme *slotName,
         unsigned short newid,
         bool usenewid) {
@@ -664,7 +664,7 @@ SLOT_NAME *AddSlotName(
   NOTES        : None
  ***************************************************/
 void DeleteSlotName(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         SLOT_NAME *slotName) {
     SLOT_NAME *snp, *prv;
 
@@ -703,7 +703,7 @@ void DeleteSlotName(
                    counts are 0 and all handlers' busy counts are 0!
  *******************************************************************/
 void RemoveDefclass(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defclass *cls) {
     DefmessageHandler *hnd;
     unsigned long i;
@@ -789,7 +789,7 @@ void RemoveDefclass(
   NOTES        :
  *******************************************************************/
 void DestroyDefclass(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defclass *cls) {
     long i;
     CLASS_ALPHA_LINK *currentAlphaLink;
@@ -863,7 +863,7 @@ void DestroyDefclass(
   NOTES        : None
  ***************************************************/
 void InstallClass(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defclass *cls,
         bool set) {
     SlotDescriptor *slot;
@@ -947,7 +947,7 @@ bool IsClassBeingUsed(
   NOTES        : None
  ***************************************************/
 bool RemoveAllUserClasses(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     Defclass *userClasses, *ctmp;
     bool success = true;
 
@@ -989,7 +989,7 @@ bool RemoveAllUserClasses(
   NOTES        : None
  ****************************************************/
 bool DeleteClassUAG(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defclass *cls) {
     unsigned long subCount;
 
@@ -1053,7 +1053,7 @@ void MarkBitMapSubclasses(
                  matching uses this).
  ***************************************************/
 unsigned short FindSlotNameID(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CLIPSLexeme *slotName) {
     SLOT_NAME *snp;
 
@@ -1073,7 +1073,7 @@ unsigned short FindSlotNameID(
   NOTES        : None
  ***************************************************/
 CLIPSLexeme *FindIDSlotName(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         unsigned short id) {
     SLOT_NAME *snp;
 
@@ -1091,7 +1091,7 @@ CLIPSLexeme *FindIDSlotName(
   NOTES        : None
  ***************************************************/
 SLOT_NAME *FindIDSlotNameHash(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         unsigned short id) {
     unsigned short i;
     SLOT_NAME *snp;
@@ -1120,7 +1120,7 @@ SLOT_NAME *FindIDSlotNameHash(
                   class is only visited once
  ***************************************************/
 int GetTraversalID(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     unsigned i;
     Defclass *cls;
 
@@ -1150,7 +1150,7 @@ int GetTraversalID(
                    call to GetTraversalID()
  ***************************************************/
 void ReleaseTraversalID(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     DefclassData(theEnv)->CTID--;
 }
 
@@ -1214,7 +1214,7 @@ static unsigned int HashSlotName(
   NOTES        : None
  ***************************************************/
 static void DeassignClassID(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         unsigned short id) {
     unsigned short i;
     bool reallocReqd;

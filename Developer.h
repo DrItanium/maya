@@ -46,17 +46,17 @@
 
 #define _H_developr
 
-void DeveloperCommands(const Environment&);
-void PrimitiveTablesInfoCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void PrimitiveTablesUsageCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void DeveloperCommands(const Environment::Ptr&);
+void PrimitiveTablesInfoCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void PrimitiveTablesUsageCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
 
 #if DEFTEMPLATE_CONSTRUCT
-void ShowFactPatternNetworkCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void ValidateFactIntegrityCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void ShowFactPatternNetworkCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void ValidateFactIntegrityCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
 #endif
-void PrintObjectPatternNetworkCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void InstanceTableUsageCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void ValidateBetaMemoriesCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void PrintObjectPatternNetworkCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void InstanceTableUsageCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void ValidateBetaMemoriesCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
 
 #endif /* _H_developr */
 

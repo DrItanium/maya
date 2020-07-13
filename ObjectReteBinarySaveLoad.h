@@ -64,7 +64,7 @@ RegisterEnvironmentModule(objectReteBinaryData, OBJECTRETEBIN_DATA, ObjectReteBi
 
 #define ClassAlphaPointer(i)   ((i == ULONG_MAX) ? nullptr : (CLASS_ALPHA_LINK *) &ObjectReteBinaryData(theEnv)->AlphaLinkArray[i])
 
-void SetupObjectPatternsBload(const Environment&);
+void SetupObjectPatternsBload(const Environment::Ptr&);
 
 #endif /* _H_objrtbin */
 

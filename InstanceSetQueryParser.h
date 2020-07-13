@@ -52,8 +52,8 @@
 
 #include "Expression.h"
 
-Expression *ParseQueryNoAction(const Environment&, Expression *, const char *);
-Expression *ParseQueryAction(const Environment&, Expression *, const char *);
+Expression *ParseQueryNoAction(const Environment::Ptr&, Expression *, const char *);
+Expression *ParseQueryAction(const Environment::Ptr&, Expression *, const char *);
 
 #endif /* INSTANCE_SET_QUERIES */
 

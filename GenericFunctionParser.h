@@ -63,12 +63,12 @@
 
 #include "GenericFunction.h"
 
-bool ParseDefgeneric(const Environment&, const char *);
-bool ParseDefmethod(const Environment&, const char *);
-Defmethod *AddMethod(const Environment&, Defgeneric *, Defmethod *, int, unsigned short, Expression *,
+bool ParseDefgeneric(const Environment::Ptr&, const char *);
+bool ParseDefmethod(const Environment::Ptr&, const char *);
+Defmethod *AddMethod(const Environment::Ptr&, Defgeneric *, Defmethod *, int, unsigned short, Expression *,
                      unsigned short, unsigned short, CLIPSLexeme *, Expression *, char *, bool);
-void PackRestrictionTypes(const Environment&, RESTRICTION *, Expression *);
-void DeleteTempRestricts(const Environment&, Expression *);
+void PackRestrictionTypes(const Environment::Ptr&, RESTRICTION *, Expression *);
+void DeleteTempRestricts(const Environment::Ptr&, Expression *);
 Defmethod *FindMethodByRestrictions(Defgeneric *, Expression *, int,
                                     CLIPSLexeme *, int *);
 

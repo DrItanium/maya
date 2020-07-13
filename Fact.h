@@ -62,7 +62,7 @@ enum FactModifierError {
     FME_RULE_NETWORK_ERROR
 };
 using FactPtr = std::shared_ptr<struct Fact>;
-using ModifyCallFunctionItem = GenericCallFunctionItem<std::function<void(const Environment&, FactPtr, FactPtr, void*)>>;
+using ModifyCallFunctionItem = GenericCallFunctionItem<std::function<void(const Environment::Ptr&, FactPtr, FactPtr, void*)>>;
 
 struct Fact {
 public:
@@ -131,51 +131,51 @@ struct factsData : public EnvironmentModule {
 RegisterEnvironmentModule(factsData, FACTS_DATA, Fact);
 
 Fact::Ptr Assert(Fact::Ptr );
-AssertStringError GetAssertStringError(const Environment&);
+AssertStringError GetAssertStringError(const Environment::Ptr&);
 Fact::Ptr AssertDriver(Fact::Ptr , long long, Fact::Ptr , Fact::Ptr , char *);
-Fact::Ptr AssertString(const Environment&, const char *);
+Fact::Ptr AssertString(const Environment::Ptr&, const char *);
 Fact::Ptr CreateFact(Deftemplate *);
 void ReleaseFact(Fact::Ptr );
-void DecrementFactCallback(const Environment&, Fact::Ptr );
+void DecrementFactCallback(const Environment::Ptr&, Fact::Ptr );
 long long FactIndex(Fact::Ptr );
 GetSlotError GetFactSlot(Fact::Ptr , const char *, CLIPSValue *);
-void PrintFactWithIdentifier(const Environment&, const char *, Fact::Ptr , const char *);
-void PrintFact(const Environment&, const char *, Fact::Ptr , bool, bool, const char *);
-void PrintFactIdentifierInLongForm(const Environment&, const char *, Fact::Ptr );
+void PrintFactWithIdentifier(const Environment::Ptr&, const char *, Fact::Ptr , const char *);
+void PrintFact(const Environment::Ptr&, const char *, Fact::Ptr , bool, bool, const char *);
+void PrintFactIdentifierInLongForm(const Environment::Ptr&, const char *, Fact::Ptr );
 RetractError Retract(Fact::Ptr );
-RetractError RetractDriver(const Environment&, Fact::Ptr , bool, char *);
-RetractError RetractAllFacts(const Environment&);
-Fact::Ptr CreateFactBySize(const Environment&, size_t);
-void FactInstall(const Environment&, Fact::Ptr );
-void FactDeinstall(const Environment&, Fact::Ptr );
-Fact::Ptr GetNextFact(const Environment&, Fact::Ptr );
-Fact::Ptr GetNextFactInScope(const Environment&, Fact::Ptr );
+RetractError RetractDriver(const Environment::Ptr&, Fact::Ptr , bool, char *);
+RetractError RetractAllFacts(const Environment::Ptr&);
+Fact::Ptr CreateFactBySize(const Environment::Ptr&, size_t);
+void FactInstall(const Environment::Ptr&, Fact::Ptr );
+void FactDeinstall(const Environment::Ptr&, Fact::Ptr );
+Fact::Ptr GetNextFact(const Environment::Ptr&, Fact::Ptr );
+Fact::Ptr GetNextFactInScope(const Environment::Ptr&, Fact::Ptr );
 void FactPPForm(Fact::Ptr , StringBuilder *, bool);
-bool GetFactListChanged(const Environment&);
-void SetFactListChanged(const Environment&, bool);
-unsigned long GetNumberOfFacts(const Environment&);
-void InitializeFacts(const Environment&);
-Fact::Ptr FindIndexedFact(const Environment&, long long);
+bool GetFactListChanged(const Environment::Ptr&);
+void SetFactListChanged(const Environment::Ptr&, bool);
+unsigned long GetNumberOfFacts(const Environment::Ptr&);
+void InitializeFacts(const Environment::Ptr&);
+Fact::Ptr FindIndexedFact(const Environment::Ptr&, long long);
 void RetainFact(Fact::Ptr );
-void IncrementFactCallback(const Environment&, Fact::Ptr );
-void PrintFactIdentifier(const Environment&, const char *, Fact::Ptr );
-void DecrementFactBasisCount(const Environment&, Fact::Ptr );
-void IncrementFactBasisCount(const Environment&, Fact::Ptr );
-bool FactIsDeleted(const Environment&, Fact::Ptr );
-void ReturnFact(const Environment&, Fact::Ptr );
-void MatchFactFunction(const Environment&, Fact::Ptr );
+void IncrementFactCallback(const Environment::Ptr&, Fact::Ptr );
+void PrintFactIdentifier(const Environment::Ptr&, const char *, Fact::Ptr );
+void DecrementFactBasisCount(const Environment::Ptr&, Fact::Ptr );
+void IncrementFactBasisCount(const Environment::Ptr&, Fact::Ptr );
+bool FactIsDeleted(const Environment::Ptr&, Fact::Ptr );
+void ReturnFact(const Environment::Ptr&, Fact::Ptr );
+void MatchFactFunction(const Environment::Ptr&, Fact::Ptr );
 bool PutFactSlot(Fact::Ptr , const char *, CLIPSValue *);
 bool AssignFactSlotDefaults(Fact::Ptr );
-bool CopyFactSlotValues(const Environment&, Fact::Ptr , Fact::Ptr );
-bool DeftemplateSlotDefault(const Environment&, Deftemplate *,
+bool CopyFactSlotValues(const Environment::Ptr&, Fact::Ptr , Fact::Ptr );
+bool DeftemplateSlotDefault(const Environment::Ptr&, Deftemplate *,
                             struct templateSlot *, UDFValue *, bool);
-bool AddAssertFunction(const Environment&, const char *,
+bool AddAssertFunction(const Environment::Ptr&, const char *,
                        VoidCallFunctionWithArg *, int, void *);
-bool RemoveAssertFunction(const Environment&, const char *);
-bool AddRetractFunction(const Environment&, const char *,
+bool RemoveAssertFunction(const Environment::Ptr&, const char *);
+bool AddRetractFunction(const Environment::Ptr&, const char *,
                         VoidCallFunctionWithArg *, int, void *);
-bool RemoveRetractFunction(const Environment&, const char *);
-FactBuilder *CreateFactBuilder(const Environment&, const char *);
+bool RemoveRetractFunction(const Environment::Ptr&, const char *);
+FactBuilder *CreateFactBuilder(const Environment::Ptr&, const char *);
 PutSlotError FBPutSlot(FactBuilder *, const char *, CLIPSValue *);
 Fact::Ptr FBAssert(FactBuilder *);
 void FBDispose(FactBuilder *);
@@ -193,8 +193,8 @@ PutSlotError FBPutSlotFact(FactBuilder *, const char *, Fact::Ptr );
 PutSlotError FBPutSlotInstance(FactBuilder *, const char *, Instance *);
 PutSlotError FBPutSlotCLIPSExternalAddress(FactBuilder *, const char *, CLIPSExternalAddress *);
 PutSlotError FBPutSlotMultifield(FactBuilder *, const char *, Multifield *);
-FactBuilderError FBError(const Environment&);
-FactModifier *CreateFactModifier(const Environment&, Fact::Ptr );
+FactBuilderError FBError(const Environment::Ptr&);
+FactModifier *CreateFactModifier(const Environment::Ptr&, Fact::Ptr );
 PutSlotError FMPutSlot(FactModifier *, const char *, CLIPSValue *);
 Fact::Ptr FMModify(FactModifier *);
 void FMDispose(FactModifier *);
@@ -212,15 +212,15 @@ PutSlotError FMPutSlotFact(FactModifier *, const char *, Fact::Ptr );
 PutSlotError FMPutSlotInstance(FactModifier *, const char *, Instance *);
 PutSlotError FMPutSlotExternalAddress(FactModifier *, const char *, CLIPSExternalAddress *);
 PutSlotError FMPutSlotMultifield(FactModifier *, const char *, Multifield *);
-FactModifierError FMError(const Environment&);
+FactModifierError FMError(const Environment::Ptr&);
 
-bool AddModifyFunction(const Environment&, const char *, typename ModifyCallFunctionItem::Body , int, void *);
-bool RemoveModifyFunction(const Environment&, const char *);
-ModifyCallFunctionItem::Ptr AddModifyFunctionToCallList(const Environment&, const char *, int,
+bool AddModifyFunction(const Environment::Ptr&, const char *, typename ModifyCallFunctionItem::Body , int, void *);
+bool RemoveModifyFunction(const Environment::Ptr&, const char *);
+ModifyCallFunctionItem::Ptr AddModifyFunctionToCallList(const Environment::Ptr&, const char *, int,
                                                     ModifyCallFunctionItem::Body, ModifyCallFunctionItem::Ptr, void *);
-ModifyCallFunctionItem::Ptr RemoveModifyFunctionFromCallList(const Environment&, const char *,
+ModifyCallFunctionItem::Ptr RemoveModifyFunctionFromCallList(const Environment::Ptr&, const char *,
                                                          ModifyCallFunctionItem::Ptr, bool *);
-void DeallocateModifyCallList(const Environment&, ModifyCallFunctionItem::Ptr);
+void DeallocateModifyCallList(const Environment::Ptr&, ModifyCallFunctionItem::Ptr);
 // factmanager end
 #if FACT_SET_QUERIES
 
@@ -259,60 +259,60 @@ RegisterEnvironmentModule(factQueryData, FACT_QUERY_DATA,FactQuery);
 
 #define QUERY_DELIMITER_STRING     "(QDS)"
 
-void SetupFactQuery(const Environment&);
-void GetQueryFact(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void GetQueryFactSlot(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void AnyFacts(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void QueryFindFact(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void QueryFindAllFacts(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void QueryDoForFact(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void QueryDoForAllFacts(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void DelayedQueryDoForAllFacts(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SetupFactQuery(const Environment::Ptr&);
+void GetQueryFact(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void GetQueryFactSlot(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void AnyFacts(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void QueryFindFact(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void QueryFindAllFacts(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void QueryDoForFact(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void QueryDoForAllFacts(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void DelayedQueryDoForAllFacts(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
 
-Expression *FactParseQueryNoAction(const Environment&, Expression *, const char *);
-Expression *FactParseQueryAction(const Environment&, Expression *, const char *);
+Expression *FactParseQueryNoAction(const Environment::Ptr&, Expression *, const char *);
+Expression *FactParseQueryAction(const Environment::Ptr&, Expression *, const char *);
 #endif /* FACT_SET_QUERIES */
 
-bool FactPNGetVar1(const Environment&, void *, UDFValue *);
-bool FactPNGetVar2(const Environment&, void *, UDFValue *);
-bool FactPNGetVar3(const Environment&, void *, UDFValue *);
-bool FactJNGetVar1(const Environment&, void *, UDFValue *);
-bool FactJNGetVar2(const Environment&, void *, UDFValue *);
-bool FactJNGetVar3(const Environment&, void *, UDFValue *);
-bool FactSlotLength(const Environment&, void *, UDFValue *);
-bool FactJNCompVars1(const Environment&, void *, UDFValue *);
-bool FactJNCompVars2(const Environment&, void *, UDFValue *);
-bool FactPNCompVars1(const Environment&, void *, UDFValue *);
-bool FactPNConstant1(const Environment&, void *, UDFValue *);
-bool FactPNConstant2(const Environment&, void *, UDFValue *);
-bool FactStoreMultifield(const Environment&, void *, UDFValue *);
-size_t AdjustFieldPosition(const Environment&, struct multifieldMarker *,
+bool FactPNGetVar1(const Environment::Ptr&, void *, UDFValue *);
+bool FactPNGetVar2(const Environment::Ptr&, void *, UDFValue *);
+bool FactPNGetVar3(const Environment::Ptr&, void *, UDFValue *);
+bool FactJNGetVar1(const Environment::Ptr&, void *, UDFValue *);
+bool FactJNGetVar2(const Environment::Ptr&, void *, UDFValue *);
+bool FactJNGetVar3(const Environment::Ptr&, void *, UDFValue *);
+bool FactSlotLength(const Environment::Ptr&, void *, UDFValue *);
+bool FactJNCompVars1(const Environment::Ptr&, void *, UDFValue *);
+bool FactJNCompVars2(const Environment::Ptr&, void *, UDFValue *);
+bool FactPNCompVars1(const Environment::Ptr&, void *, UDFValue *);
+bool FactPNConstant1(const Environment::Ptr&, void *, UDFValue *);
+bool FactPNConstant2(const Environment::Ptr&, void *, UDFValue *);
+bool FactStoreMultifield(const Environment::Ptr&, void *, UDFValue *);
+size_t AdjustFieldPosition(const Environment::Ptr&, struct multifieldMarker *,
                            unsigned short, unsigned short, size_t *);
-Expression *BuildRHSAssert(const Environment&, const char *, struct token *, bool *, bool, bool, const char *);
-Expression *GetAssertArgument(const Environment&, const char *, struct token *, bool *, TokenType, bool, bool *);
-Expression *GetRHSPattern(const Environment&, const char *, struct token *, bool *, bool,
+Expression *BuildRHSAssert(const Environment::Ptr&, const char *, struct token *, bool *, bool, bool, const char *);
+Expression *GetAssertArgument(const Environment::Ptr&, const char *, struct token *, bool *, TokenType, bool, bool *);
+Expression *GetRHSPattern(const Environment::Ptr&, const char *, struct token *, bool *, bool,
                            bool, bool, TokenType);
-Fact::Ptr StringToFact(const Environment&, const char *);
+Fact::Ptr StringToFact(const Environment::Ptr&, const char *);
 
-void PrintFactJNCompVars1(const Environment&, const char *, void *);
-void PrintFactJNCompVars2(const Environment&, const char *, void *);
-void PrintFactPNCompVars1(const Environment&, const char *, void *);
-void PrintFactJNGetVar1(const Environment&, const char *, void *);
-void PrintFactJNGetVar2(const Environment&, const char *, void *);
-void PrintFactJNGetVar3(const Environment&, const char *, void *);
-void PrintFactPNGetVar1(const Environment&, const char *, void *);
-void PrintFactPNGetVar2(const Environment&, const char *, void *);
-void PrintFactPNGetVar3(const Environment&, const char *, void *);
-void PrintFactSlotLength(const Environment&, const char *, void *);
-void PrintFactPNConstant1(const Environment&, const char *, void *);
-void PrintFactPNConstant2(const Environment&, const char *, void *);
+void PrintFactJNCompVars1(const Environment::Ptr&, const char *, void *);
+void PrintFactJNCompVars2(const Environment::Ptr&, const char *, void *);
+void PrintFactPNCompVars1(const Environment::Ptr&, const char *, void *);
+void PrintFactJNGetVar1(const Environment::Ptr&, const char *, void *);
+void PrintFactJNGetVar2(const Environment::Ptr&, const char *, void *);
+void PrintFactJNGetVar3(const Environment::Ptr&, const char *, void *);
+void PrintFactPNGetVar1(const Environment::Ptr&, const char *, void *);
+void PrintFactPNGetVar2(const Environment::Ptr&, const char *, void *);
+void PrintFactPNGetVar3(const Environment::Ptr&, const char *, void *);
+void PrintFactSlotLength(const Environment::Ptr&, const char *, void *);
+void PrintFactPNConstant1(const Environment::Ptr&, const char *, void *);
+void PrintFactPNConstant2(const Environment::Ptr&, const char *, void *);
 
-void FactPatternMatch(const Environment&, Fact::Ptr ,
+void FactPatternMatch(const Environment::Ptr&, Fact::Ptr ,
                       FactPatternNode *, size_t, size_t,
                       struct multifieldMarker *,
                       struct multifieldMarker *);
-void MarkFactPatternForIncrementalReset(const Environment&, PatternNodeHeader *, bool);
-void FactsIncrementalReset(const Environment&);
+void MarkFactPatternForIncrementalReset(const Environment::Ptr&, PatternNodeHeader *, bool);
+void FactsIncrementalReset(const Environment::Ptr&);
 
 constexpr auto FACTBIN_DATA = 62;
 
@@ -322,7 +322,7 @@ struct factBinaryData : public EnvironmentModule{
 };
 RegisterEnvironmentModule(factBinaryData, FACTBIN_DATA, FactBinary);
 
-void FactBinarySetup(const Environment&);
+void FactBinarySetup(const Environment::Ptr&);
 
 #define BsaveFactPatternIndex(patPtr) ((patPtr == nullptr) ? ULONG_MAX : ((FactPatternNode *) patPtr)->bsaveID)
 #define BloadFactPatternPointer(i) ((FactPatternNode *) ((i == ULONG_MAX) ? nullptr : &FactBinaryData(theEnv)->FactPatternArray[i]))
@@ -340,36 +340,36 @@ struct FactPatternNode {
     FactPatternNode *rightNode;
 };
 
-void InitializeFactPatterns(const Environment&);
-void DestroyFactPatternNetwork(const Environment&, FactPatternNode *);
+void InitializeFactPatterns(const Environment::Ptr&);
+void DestroyFactPatternNetwork(const Environment::Ptr&, FactPatternNode *);
 #if DEFTEMPLATE_CONSTRUCT
 
-void FactCommandDefinitions(const Environment&);
-void AssertCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void RetractCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void AssertStringFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void FactsCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void Facts(const Environment&, const char *, Defmodule *, long long, long long, long long);
-void SetFactDuplicationCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void GetFactDuplicationCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void FactIndexFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void FactCommandDefinitions(const Environment::Ptr&);
+void AssertCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void RetractCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void AssertStringFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void FactsCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void Facts(const Environment::Ptr&, const char *, Defmodule *, long long, long long, long long);
+void SetFactDuplicationCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void GetFactDuplicationCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void FactIndexFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
 
 #endif /* DEFTEMPLATE_CONSTRUCT */
 
-void FactFileCommandDefinitions(const Environment&);
-void SaveFactsCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void LoadFactsCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-long SaveFacts(const Environment&, const char *, SaveScope);
-long SaveFactsDriver(const Environment&, const char *, SaveScope, Expression *);
-long LoadFacts(const Environment&, const char *);
-long LoadFactsFromString(const Environment&, const char *, size_t);
-void BinarySaveFactsCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void BinaryLoadFactsCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-long BinarySaveFacts(const Environment&, const char *, SaveScope);
-long BinarySaveFactsDriver(const Environment&, const char *, SaveScope, Expression *);
-long BinaryLoadFacts(const Environment&, const char *);
+void FactFileCommandDefinitions(const Environment::Ptr&);
+void SaveFactsCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void LoadFactsCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+long SaveFacts(const Environment::Ptr&, const char *, SaveScope);
+long SaveFactsDriver(const Environment::Ptr&, const char *, SaveScope, Expression *);
+long LoadFacts(const Environment::Ptr&, const char *);
+long LoadFactsFromString(const Environment::Ptr&, const char *, size_t);
+void BinarySaveFactsCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void BinaryLoadFactsCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+long BinarySaveFacts(const Environment::Ptr&, const char *, SaveScope);
+long BinarySaveFactsDriver(const Environment::Ptr&, const char *, SaveScope, Expression *);
+long BinaryLoadFacts(const Environment::Ptr&, const char *);
 
-void FactFunctionDefinitions(const Environment&);
+void FactFunctionDefinitions(const Environment::Ptr&);
 /**********************************************************/
 /* factGetVarPN1Call: This structure is used to store the */
 /*   arguments to the most general extraction routine for */
@@ -531,33 +531,33 @@ struct factCheckLengthPNCall {
 /* GLOBAL EXTERNAL FUNCTION DEFINITIONS */
 /****************************************/
 
-void InitializeFactReteFunctions(const Environment&);
-Expression *FactPNVariableComparison(const Environment&, struct lhsParseNode *,
+void InitializeFactReteFunctions(const Environment::Ptr&);
+Expression *FactPNVariableComparison(const Environment::Ptr&, struct lhsParseNode *,
                                       struct lhsParseNode *);
-Expression *FactJNVariableComparison(const Environment&, struct lhsParseNode *,
+Expression *FactJNVariableComparison(const Environment::Ptr&, struct lhsParseNode *,
                                       struct lhsParseNode *, bool);
-void FactReplaceGetvar(const Environment&, Expression *, struct lhsParseNode *, int);
-void FactReplaceGetfield(const Environment&, Expression *, struct lhsParseNode *);
-Expression *FactGenPNConstant(const Environment&, struct lhsParseNode *);
-Expression *FactGenGetfield(const Environment&, struct lhsParseNode *);
-Expression *FactGenGetvar(const Environment&, struct lhsParseNode *, int);
-Expression *FactGenCheckLength(const Environment&, struct lhsParseNode *);
-Expression *FactGenCheckZeroLength(const Environment&, unsigned short);
-void FactRelationFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void FactReplaceGetvar(const Environment::Ptr&, Expression *, struct lhsParseNode *, int);
+void FactReplaceGetfield(const Environment::Ptr&, Expression *, struct lhsParseNode *);
+Expression *FactGenPNConstant(const Environment::Ptr&, struct lhsParseNode *);
+Expression *FactGenGetfield(const Environment::Ptr&, struct lhsParseNode *);
+Expression *FactGenGetvar(const Environment::Ptr&, struct lhsParseNode *, int);
+Expression *FactGenCheckLength(const Environment::Ptr&, struct lhsParseNode *);
+Expression *FactGenCheckZeroLength(const Environment::Ptr&, unsigned short);
+void FactRelationFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
 CLIPSLexeme *FactRelation(Fact::Ptr );
 Deftemplate *FactDeftemplate(Fact::Ptr );
-void FactExistpFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void FactExistpFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
 bool FactExistp(Fact::Ptr );
-void FactSlotValueFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void FactSlotValue(const Environment&, Fact::Ptr , const char *, CLIPSValue *);
-void FactSlotNamesFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void FactSlotValueFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void FactSlotValue(const Environment::Ptr&, Fact::Ptr , const char *, CLIPSValue *);
+void FactSlotNamesFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
 void FactSlotNames(Fact::Ptr , CLIPSValue *);
-void GetFactListFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void GetFactList(const Environment&, CLIPSValue *, Defmodule *);
-void PPFactFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void GetFactListFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void GetFactList(const Environment::Ptr&, CLIPSValue *, Defmodule *);
+void PPFactFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
 void PPFact(Fact::Ptr , const char *, bool);
 Fact::Ptr GetFactAddressOrIndexArgument(UDFContext *, bool);
-void FactAddresspFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void FactAddresspFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
 
 struct factHashEntry {
     Fact::Ptr theFact;
@@ -566,18 +566,18 @@ struct factHashEntry {
 
 constexpr auto SIZE_FACT_HASH = 16231;
 
-void AddHashedFact(const Environment&, Fact::Ptr , size_t);
-bool RemoveHashedFact(const Environment&, Fact::Ptr );
-size_t HandleFactDuplication(const Environment&, Fact::Ptr , Fact::Ptr *, long long);
-bool GetFactDuplication(const Environment&);
-bool SetFactDuplication(const Environment&, bool);
-void InitializeFactHashTable(const Environment&);
-void ShowFactHashTableCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void AddHashedFact(const Environment::Ptr&, Fact::Ptr , size_t);
+bool RemoveHashedFact(const Environment::Ptr&, Fact::Ptr );
+size_t HandleFactDuplication(const Environment::Ptr&, Fact::Ptr , Fact::Ptr *, long long);
+bool GetFactDuplication(const Environment::Ptr&);
+bool SetFactDuplication(const Environment::Ptr&, bool);
+void InitializeFactHashTable(const Environment::Ptr&);
+void ShowFactHashTableCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
 size_t HashFact(Fact::Ptr );
-bool FactWillBeAsserted(const Environment&, Fact::Ptr );
+bool FactWillBeAsserted(const Environment::Ptr&, Fact::Ptr );
 
 bool FactPatternParserFind(CLIPSLexeme *);
-struct lhsParseNode *FactPatternParse(const Environment&, const char *, struct token *);
-struct lhsParseNode *SequenceRestrictionParse(const Environment&, const char *, struct token *);
+struct lhsParseNode *FactPatternParse(const Environment::Ptr&, const char *, struct token *);
+struct lhsParseNode *SequenceRestrictionParse(const Environment::Ptr&, const char *, struct token *);
 
 #endif //MAYA_FACT_H

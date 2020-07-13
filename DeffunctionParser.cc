@@ -96,8 +96,8 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static bool ValidDeffunctionName(const Environment&, const char *);
-static Deffunction *AddDeffunction(const Environment&, CLIPSLexeme *, Expression *, unsigned short, unsigned short, unsigned short, bool);
+static bool ValidDeffunctionName(const Environment::Ptr&, const char *);
+static Deffunction *AddDeffunction(const Environment::Ptr&, CLIPSLexeme *, Expression *, unsigned short, unsigned short, unsigned short, bool);
 
 /***************************************************************************
   NAME         : ParseDeffunction
@@ -111,7 +111,7 @@ static Deffunction *AddDeffunction(const Environment&, CLIPSLexeme *, Expression
                     <action>*)
  ***************************************************************************/
 bool ParseDeffunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource) {
     CLIPSLexeme *deffunctionName;
     Expression *actions;
@@ -286,7 +286,7 @@ bool ParseDeffunction(
                  another module
  ************************************************************/
 static bool ValidDeffunctionName(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *theDeffunctionName) {
     Deffunction *theDeffunction;
 #if DEFGENERIC_CONSTRUCT
@@ -382,7 +382,7 @@ static bool ValidDeffunctionName(
   NOTES        : Assumes deffunction is not executing
  ****************************************************/
 static Deffunction *AddDeffunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         CLIPSLexeme *name,
         Expression *actions,
         unsigned short min,

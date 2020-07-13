@@ -63,17 +63,17 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static struct lhsParseNode *GetLHSSlots(const Environment&, const char *, struct token *, Deftemplate *, bool *);
-static struct lhsParseNode *GetSingleLHSSlot(const Environment&, const char *, struct token *,
+static struct lhsParseNode *GetLHSSlots(const Environment::Ptr&, const char *, struct token *, Deftemplate *, bool *);
+static struct lhsParseNode *GetSingleLHSSlot(const Environment::Ptr&, const char *, struct token *,
                                              struct templateSlot *, bool *, unsigned short);
-static bool MultiplyDefinedLHSSlots(const Environment&, struct lhsParseNode *, CLIPSLexeme *);
+static bool MultiplyDefinedLHSSlots(const Environment::Ptr&, struct lhsParseNode *, CLIPSLexeme *);
 
 /*********************************************/
 /* DeftemplateLHSParse: Parses a LHS pattern */
 /*   that uses the deftemplate format.       */
 /*********************************************/
 struct lhsParseNode *DeftemplateLHSParse(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource,
         Deftemplate *theDeftemplate) {
     struct lhsParseNode *head, *firstSlot;
@@ -132,7 +132,7 @@ struct lhsParseNode *DeftemplateLHSParse(
 /*   values used in a LHS pattern.        */
 /******************************************/
 static struct lhsParseNode *GetLHSSlots(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource,
         struct token *tempToken,
         Deftemplate *theDeftemplate,
@@ -237,7 +237,7 @@ static struct lhsParseNode *GetLHSSlots(
 /*   to be associated with a slot name.              */
 /*****************************************************/
 static struct lhsParseNode *GetSingleLHSSlot(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *readSource,
         struct token *tempToken,
         struct templateSlot *slotPtr,
@@ -336,7 +336,7 @@ static struct lhsParseNode *GetSingleLHSSlot(
 /*   was used more than once in a LHS pattern.        */
 /******************************************************/
 static bool MultiplyDefinedLHSSlots(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         struct lhsParseNode *theSlots,
         CLIPSLexeme *slotName) {
     for (;

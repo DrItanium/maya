@@ -73,22 +73,23 @@
 #include <tuple>
 #include <iostream>
 #include <list>
-#include "Entities.h"
+
+#include "Setup.h"
 
 
 constexpr auto USER_ENVIRONMENT_DATA = 70;
 constexpr auto MAXIMUM_ENVIRONMENT_POSITIONS = 100;
-
+class Environment;
 class EnvironmentModule {
 public:
-    EnvironmentModule(EnvironmentData& callback) : _callback(callback) { }
+    EnvironmentModule(Environment& parent) : _parent(parent) { }
     virtual ~EnvironmentModule() = default;
     // called when the (clear) function is invoked
     virtual void onClear() noexcept;
     virtual void onReset() noexcept;
-    EnvironmentData& getCallback() noexcept { return _callback; }
+    Environment& getParent() noexcept { return _parent; }
 protected:
-    struct EnvironmentData& _callback;
+    struct Environment& _parent;
 };
 
 template<typename T>
@@ -136,24 +137,24 @@ EnvironmentModuleIndexToType< pos >& operator=(EnvironmentModuleIndexToType< pos
 public: \
 using type = actual_type ; \
 }; \
-inline decltype(auto) declAccessorPrefix ## Data (const Environment& theEnv) { \
+inline decltype(auto) declAccessorPrefix ## Data (const Environment::Ptr& theEnv) { \
     return theEnv->getEnvironmentModule<pos>(); \
 }
 
-struct CLIPSLexeme;
-struct CLIPSVoid;
-struct EnvironmentData {
+class Environment {
 public:
-    using Self = EnvironmentData;
+    using Self = Environment;
     using Ptr = std::shared_ptr<Self>;
 public:
     static Ptr create();
 public:
     /// @todo Make these symbol pointers shared_ptrs
+#if STUBBING_INACTIVE
     CLIPSLexeme::Ptr TrueSymbol = nullptr;
     CLIPSLexeme::Ptr FalseSymbol = nullptr;
     CLIPSVoid::Ptr VoidConstant = nullptr;
-    EnvironmentData();
+#endif
+    Environment();
     std::array<std::unique_ptr<EnvironmentModule>, MAXIMUM_ENVIRONMENT_POSITIONS> environmentModules;
 public:
     template<typename T>
@@ -190,19 +191,14 @@ public:
      * @brief Invokes the body of a passed function using this instance as the environment argument; Useful for installing modules into this environment
      * @param body the function to invoke
      */
-    void install(std::function<void(EnvironmentData&)> body);
+    void install(std::function<void(Environment&)> body);
 };
 
-
-using Environment = EnvironmentData::Ptr;
-
-inline auto VoidConstant(const Environment& theEnv) noexcept { return theEnv->VoidConstant; }
-inline auto FalseSymbol(const Environment& theEnv) noexcept { return theEnv->FalseSymbol; }
-inline auto TrueSymbol(const Environment& theEnv) noexcept { return theEnv->TrueSymbol; }
-struct CLIPSFloat;
-struct CLIPSInteger;
-struct CLIPSBitMap;
-struct FunctionDefinition;
+#if STUBBING_INACTIVE
+inline auto VoidConstant(const Environment::Ptr& theEnv) noexcept { return theEnv->VoidConstant; }
+inline auto FalseSymbol(const Environment::Ptr& theEnv) noexcept { return theEnv->FalseSymbol; }
+inline auto TrueSymbol(const Environment::Ptr& theEnv) noexcept { return theEnv->TrueSymbol; }
+#endif
 
 #endif /* _H_envrnmnt */
 

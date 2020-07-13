@@ -139,23 +139,23 @@ EnvironmentModule::onReset() noexcept {
 /* GLOBAL EXTERNAL FUNCTION DEFINITIONS */
 /****************************************/
 
-extern void UserFunctions(const Environment&);
+extern void UserFunctions(const Environment::Ptr&);
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void SystemFunctionDefinitions(const Environment&);
-static void InitializeEnvironment(const Environment&);
-EnvironmentData::Ptr
-EnvironmentData::create() {
-    return std::make_shared<EnvironmentData>();
+static void SystemFunctionDefinitions(const Environment::Ptr&);
+static void InitializeEnvironment(const Environment::Ptr&);
+Environment::Ptr
+Environment::create() {
+    return std::make_shared<Environment>();
 }
 void
-EnvironmentData::install(std::function<void(EnvironmentData&)> body) {
+Environment::install(std::function<void(Environment&)> body) {
     body(*this);
 }
-EnvironmentData::EnvironmentData() {
+Environment::Environment() {
     /// @todo fix this code
     /*===================================================*/
     /* Initialize environment data for various features. */

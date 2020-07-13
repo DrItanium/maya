@@ -46,7 +46,7 @@
 
 #if DEFFUNCTION_CONSTRUCT
 
-bool ParseDeffunction(const Environment&, const char *);
+bool ParseDeffunction(const Environment::Ptr&, const char *);
 
 #endif /* DEFFUNCTION_CONSTRUCT */
 

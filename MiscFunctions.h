@@ -84,40 +84,40 @@
 
 #define _H_miscfun
 
-void MiscFunctionDefinitions(const Environment&);
-void ExitCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void CreateFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void SetgenFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void GensymFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void GensymStarFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void RandomFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void SeedFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void LengthFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void OptionsCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void OperatingSystemFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void ExpandFuncCall(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void DummyExpandFuncMultifield(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void CauseEvaluationError(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void SetSORCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void GetSORCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void GetFunctionRestrictions(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void AproposCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void GensymStar(const Environment&, UDFValue *);
-void GetFunctionListFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void FuncallFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void NewFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void CallFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void TimerFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void TimeFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void SystemCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void LocalTimeFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void GMTimeFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void GetErrorFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void ClearErrorValue(const Environment&);
-void ClearErrorFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void SetErrorFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
-void SetErrorValue(const Environment&, TypeHeader *);
-void VoidFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void MiscFunctionDefinitions(const Environment::Ptr&);
+void ExitCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void CreateFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void SetgenFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void GensymFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void GensymStarFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void RandomFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void SeedFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void LengthFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void OptionsCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void OperatingSystemFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void ExpandFuncCall(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void DummyExpandFuncMultifield(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void CauseEvaluationError(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void SetSORCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void GetSORCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void GetFunctionRestrictions(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void AproposCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void GensymStar(const Environment::Ptr&, UDFValue *);
+void GetFunctionListFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void FuncallFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void NewFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void CallFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void TimerFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void TimeFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void SystemCommand(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void LocalTimeFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void GMTimeFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void GetErrorFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void ClearErrorValue(const Environment::Ptr&);
+void ClearErrorFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void SetErrorFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
+void SetErrorValue(const Environment::Ptr&, TypeHeader *);
+void VoidFunction(const Environment::Ptr&theEnv, UDFContext *context, UDFValue *ret);
 
 #endif /* _H_miscfun */
 

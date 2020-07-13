@@ -59,7 +59,7 @@
 
 #include "Defrule.h"
 
-void IncrementalReset(const Environment&, Defrule::Ptr );
+void IncrementalReset(const Environment::Ptr&, Defrule::Ptr );
 
 #endif /* _H_incrrset */
 

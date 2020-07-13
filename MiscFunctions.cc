@@ -149,16 +149,16 @@ RegisterEnvironmentModule(miscFunctionData, MISCFUN_DATA, MiscFunction);
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void ExpandFuncMultifield(const Environment&, UDFValue *, Expression *,
+static void ExpandFuncMultifield(const Environment::Ptr&, UDFValue *, Expression *,
                                  Expression **, void *);
-static int FindLanguageType(const Environment&, const char *);
-static void ConvertTime(const Environment&, UDFValue *, struct tm *);
+static int FindLanguageType(const Environment::Ptr&, const char *);
+static void ConvertTime(const Environment::Ptr&, UDFValue *, struct tm *);
 
 /*****************************************************************/
 /* MiscFunctionDefinitions: Initializes miscellaneous functions. */
 /*****************************************************************/
 void MiscFunctionDefinitions(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     theEnv->allocateEnvironmentModule<miscFunctionData>();
     //AllocateEnvironmentData(theEnv, MISCFUN_DATA, sizeof(miscFunctionData));
     MiscFunctionData(theEnv)->GensymNumber = 1;
@@ -210,7 +210,7 @@ void MiscFunctionDefinitions(
 /* ExitCommand: H/L command for exiting the program. */
 /*****************************************************/
 void ExitCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     unsigned int argCnt;
@@ -235,7 +235,7 @@ void ExitCommand(
 /* CreateFunction: H/L access routine for the create$ function.   */
 /******************************************************************/
 void CreateFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     StoreInMultifield(theEnv, returnValue, GetFirstArgument(), true);
@@ -245,7 +245,7 @@ void CreateFunction(
 /* SetgenFunction: H/L access routine for the setgen function.   */
 /*****************************************************************/
 void SetgenFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     long long theLong;
@@ -280,7 +280,7 @@ void SetgenFunction(
 /*   for the gensym function.           */
 /****************************************/
 void GensymFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     char genstring[128];
@@ -305,7 +305,7 @@ void GensymFunction(
 /*   the gensym* function.                      */
 /************************************************/
 void GensymStarFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     /*====================*/
@@ -320,7 +320,7 @@ void GensymStarFunction(
 /*   the gensym* function.          */
 /************************************/
 void GensymStar(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFValue *returnValue) {
     char genstring[128];
 
@@ -348,7 +348,7 @@ void GensymStar(
 /*   the random function.                   */
 /********************************************/
 void RandomFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     unsigned int argCount;
@@ -399,7 +399,7 @@ void RandomFunction(
 /*   the seed function.                   */
 /******************************************/
 void SeedFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theValue;
@@ -422,7 +422,7 @@ void SeedFunction(
 /*   the length$ function.                  */
 /********************************************/
 void LengthFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -445,7 +445,7 @@ void LengthFunction(
 /*   for the apropos command.           */
 /****************************************/
 void AproposCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     const char *argument;
@@ -489,7 +489,7 @@ void AproposCommand(
 /*   for the options command.           */
 /****************************************/
 void OptionsCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     /*=======================*/
@@ -591,7 +591,7 @@ void OptionsCommand(
 /*   for the operating system function.        */
 /***********************************************/
 void OperatingSystemFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
 #if GENERIC
@@ -629,7 +629,7 @@ void OperatingSystemFunction(
   NOTES        : None
  *******************************************************************/
 void ExpandFuncCall(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Expression *newargexp, *fcallexp;
@@ -692,7 +692,7 @@ void ExpandFuncCall(
   NOTES        : None
  **********************************************************************/
 void DummyExpandFuncMultifield(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     returnValue->lexemeValue = FalseSymbol(theEnv);
@@ -721,7 +721,7 @@ void DummyExpandFuncMultifield(
                  SURE THAT THE Expression PASSED IS SAFE TO CHANGE!!
  **********************************************************************/
 static void ExpandFuncMultifield(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFValue *returnValue,
         Expression *theExp,
         Expression **sto,
@@ -787,7 +787,7 @@ static void ExpandFuncMultifield(
   NOTES        : None
  ****************************************************************/
 void CauseEvaluationError(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     SetEvaluationError(theEnv, true);
@@ -799,7 +799,7 @@ void CauseEvaluationError(
 /*   get-sequence-operator-recognition command. */
 /************************************************/
 void GetSORCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     returnValue->lexemeValue = CreateBoolean(theEnv, GetSequenceOperatorRecognition(theEnv));
@@ -810,7 +810,7 @@ void GetSORCommand(
 /*   set-sequence-operator-recognition command. */
 /************************************************/
 void SetSORCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -829,7 +829,7 @@ void SetSORCommand(
   NOTES        : None
  ********************************************************************/
 void GetFunctionRestrictions(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -888,7 +888,7 @@ void GetFunctionRestrictions(
 /*   for the get-function-list function.         */
 /*************************************************/
 void GetFunctionListFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     FunctionDefinition *theFunction;
@@ -916,7 +916,7 @@ void GetFunctionListFunction(
 /*   for the funcall function.         */
 /***************************************/
 void FuncallFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     size_t j;
@@ -1055,7 +1055,7 @@ void FuncallFunction(
 /*   for the new function.         */
 /***********************************/
 void NewFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     int theType;
@@ -1102,7 +1102,7 @@ void NewFunction(
 /*   for the new function.          */
 /************************************/
 void CallFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     int theType;
@@ -1175,7 +1175,7 @@ void CallFunction(
 /* FindLanguageType: */
 /*********************/
 static int FindLanguageType(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *languageName) {
     int theType;
 
@@ -1191,7 +1191,7 @@ static int FindLanguageType(
 /*   for the time function.         */
 /************************************/
 void TimeFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     /*==================*/
@@ -1206,7 +1206,7 @@ void TimeFunction(
 /*   time for local-time and gm-time.   */
 /****************************************/
 static void ConvertTime(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFValue *returnValue,
         struct tm *info) {
     returnValue->begin = 0;
@@ -1262,7 +1262,7 @@ static void ConvertTime(
 /*   for the local-time function.        */
 /*****************************************/
 void LocalTimeFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     time_t rawtime;
@@ -1283,7 +1283,7 @@ void LocalTimeFunction(
 /*   for the gm-time function.        */
 /**************************************/
 void GMTimeFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     time_t rawtime;
@@ -1304,7 +1304,7 @@ void GMTimeFunction(
 /*   for the timer function.           */
 /***************************************/
 void TimerFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     double startTime;
@@ -1323,7 +1323,7 @@ void TimerFunction(
 /*   for the system function.          */
 /***************************************/
 void SystemCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     char *commandBuffer = nullptr;
@@ -1366,7 +1366,7 @@ void SystemCommand(
 /*   for the geterror function.         */
 /****************************************/
 void GetErrorFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     CLIPSToUDFValue(&MiscFunctionData(theEnv)->errorCode, returnValue);
@@ -1376,7 +1376,7 @@ void GetErrorFunction(
 /* SetErrorValue */
 /*****************/
 void SetErrorValue(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         TypeHeader *theValue) {
     Release(theEnv, MiscFunctionData(theEnv)->errorCode.header);
 
@@ -1390,7 +1390,7 @@ void SetErrorValue(
 /* ClearErrorValue */
 /*******************/
 void ClearErrorValue(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     Release(theEnv, MiscFunctionData(theEnv)->errorCode.header);
     MiscFunctionData(theEnv)->errorCode.lexemeValue = FalseSymbol(theEnv);
     Retain(theEnv, MiscFunctionData(theEnv)->errorCode.header);
@@ -1401,7 +1401,7 @@ void ClearErrorValue(
 /*   for the clear-error function.        */
 /******************************************/
 void ClearErrorFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     CLIPSToUDFValue(&MiscFunctionData(theEnv)->errorCode, returnValue);
@@ -1413,7 +1413,7 @@ void ClearErrorFunction(
 /*   for the set-error function.        */
 /****************************************/
 void SetErrorFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     CLIPSValue cv;
@@ -1431,7 +1431,7 @@ void SetErrorFunction(
 /*   for the void function.         */
 /************************************/
 void VoidFunction(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     returnValue->voidValue = VoidConstant(theEnv);

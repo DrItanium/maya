@@ -88,14 +88,14 @@
    =========================================
    ***************************************** */
 
-static Defmethod *FindApplicableMethod(const Environment&, Defgeneric *, Defmethod *);
+static Defmethod *FindApplicableMethod(const Environment::Ptr&, Defgeneric *, Defmethod *);
 
 #if DEBUGGING_FUNCTIONS
-static void WatchGeneric(const Environment&, const char *);
-static void WatchMethod(const Environment&, const char *);
+static void WatchGeneric(const Environment::Ptr&, const char *);
+static void WatchMethod(const Environment::Ptr&, const char *);
 #endif
 
-static Defclass *DetermineRestrictionClass(const Environment&, UDFValue *);
+static Defclass *DetermineRestrictionClass(const Environment::Ptr&, UDFValue *);
 
 /* =========================================
    *****************************************
@@ -133,7 +133,7 @@ static Defclass *DetermineRestrictionClass(const Environment&, UDFValue *);
                     executed multiple times per generic function call.
  ***********************************************************************************/
 void GenericDispatch(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defgeneric *gfunc,
         Defmethod *prevmeth,
         Defmethod *meth,
@@ -260,7 +260,7 @@ void GenericDispatch(
   NOTES        : None
  *******************************************************/
 void UnboundMethodErr(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *logName) {
     WriteString(theEnv, logName, "generic function '");
     WriteString(theEnv, logName, DefgenericName(DefgenericData(theEnv)->CurrentGeneric));
@@ -281,7 +281,7 @@ void UnboundMethodErr(
   NOTES        : Uses globals ProcParamArraySize and ProcParamArray
  ***********************************************************************/
 bool IsMethodApplicable(
-        const Environment& theEnv,
+        const Environment::Ptr& theEnv,
         Defmethod *meth) {
     UDFValue temp;
     RESTRICTION *rp;
@@ -342,7 +342,7 @@ bool IsMethodApplicable(
   NOTES        : H/L Syntax: (next-methodp)
  ***************************************************/
 bool NextMethodP(
-        const Environment&theEnv) {
+        const Environment::Ptr&theEnv) {
     Defmethod *meth;
 
     if (DefgenericData(theEnv)->CurrentMethod == nullptr) { return false; }
@@ -355,7 +355,7 @@ bool NextMethodP(
 }
 
 void NextMethodPCommand(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     returnValue->lexemeValue = CreateBoolean(theEnv, NextMethodP(theEnv));
@@ -373,7 +373,7 @@ void NextMethodPCommand(
   NOTES        : H/L Syntax: (call-next-method)
  ****************************************************/
 void CallNextMethod(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     Defmethod *oldMethod;
@@ -447,7 +447,7 @@ void CallNextMethod(
                                 <generic-function> <method-index> <args>)
  **************************************************************************/
 void CallSpecificMethod(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     UDFValue theArg;
@@ -482,7 +482,7 @@ void CallSpecificMethod(
   NOTES        : H/L Syntax: (override-next-method <args>)
  ***********************************************************************/
 void OverrideNextMethod(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     returnValue->lexemeValue = FalseSymbol(theEnv);
@@ -509,7 +509,7 @@ void OverrideNextMethod(
   NOTES        : Useful for queries in wildcard restrictions
  ***********************************************************/
 void GetGenericCurrentArgument(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFContext *context,
         UDFValue *returnValue) {
     returnValue->value = DefgenericData(theEnv)->GenericCurrentArgument->value;
@@ -537,7 +537,7 @@ void GetGenericCurrentArgument(
   NOTES        : None
  ************************************************************/
 static Defmethod *FindApplicableMethod(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         Defgeneric *gfunc,
         Defmethod *meth) {
     if (meth != nullptr)
@@ -566,7 +566,7 @@ static Defmethod *FindApplicableMethod(
                    ProcParamArray for other trace info
  **********************************************************************/
 static void WatchGeneric(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *tstring) {
     if (ConstructData(theEnv)->ClearReadyInProgress ||
         ConstructData(theEnv)->ClearInProgress) { return; }
@@ -598,7 +598,7 @@ static void WatchGeneric(
                    other trace info
  **********************************************************************/
 static void WatchMethod(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         const char *tstring) {
     if (ConstructData(theEnv)->ClearReadyInProgress ||
         ConstructData(theEnv)->ClearInProgress) { return; }
@@ -634,7 +634,7 @@ static void WatchMethod(
   NOTES        : None
  ***************************************************/
 static Defclass *DetermineRestrictionClass(
-        const Environment&theEnv,
+        const Environment::Ptr&theEnv,
         UDFValue *dobj) {
     Instance *ins;
     Defclass *cls;
