@@ -75,21 +75,19 @@
 #include <list>
 
 #include "Setup.h"
+#include "HoldsEnvironmentCallback.h"
 
 
 constexpr auto USER_ENVIRONMENT_DATA = 70;
 constexpr auto MAXIMUM_ENVIRONMENT_POSITIONS = 100;
 class Environment;
-class EnvironmentModule {
+class EnvironmentModule : public HoldsEnvironmentCallback {
 public:
-    EnvironmentModule(Environment& parent) : _parent(parent) { }
+    EnvironmentModule(Environment& parent) : HoldsEnvironmentCallback(parent) { }
     virtual ~EnvironmentModule() = default;
     // called when the (clear) function is invoked
     virtual void onClear() noexcept;
     virtual void onReset() noexcept;
-    Environment& getParent() noexcept { return _parent; }
-protected:
-    struct Environment& _parent;
 };
 
 template<typename T>
