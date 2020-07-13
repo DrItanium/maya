@@ -59,6 +59,13 @@
 #include "Object.h"
 #include "Scanner.h"
 #include "Environment.h"
+#include "Entities.h"
+#include "ExternalFunctions.h"
+#include "Construct.h"
+#include "Defmodule.h"
+#include "Object.h"
+#include "Symbol.h"
+#include "Evaluation.h"
 
 #define TestTraversalID(traversalRecord, id) TestBitMap(traversalRecord,id)
 #define SetTraversalID(traversalRecord, id) SetBitMap(traversalRecord,id)
@@ -121,10 +128,6 @@ enum ClassDefaultsMode {
     CONSERVATION_MODE
 };
 
-#include "Construct.h"
-#include "Defmodule.h"
-#include "Object.h"
-#include "Symbol.h"
 
 const char *DefclassName(Defclass *);
 const char *DefclassPPForm(Defclass *);
@@ -194,9 +197,6 @@ struct defclassData : public EnvironmentModule {
 };
 RegisterEnvironmentModule(defclassData, DEFCLASS_DATA, Defclass);
 
-#include "Entities.h"
-#include "Object.h"
-#include "ExternalFunctions.h"
 
 #if DEBUGGING_FUNCTIONS
 
@@ -229,6 +229,42 @@ bool SlotDefaultValue(Defclass *, const char *, CLIPSValue *);
 void ClassExistPCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
 int SlotDefaultP(const Environment&, Defclass *, const char *);
 
+
+void ClassAbstractPCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void ClassReactivePCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+Defclass *ClassInfoFnxArgs(UDFContext *, const char *, bool *);
+void ClassSlotsCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void ClassSuperclassesCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void ClassSubclassesCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void GetDefmessageHandlersListCmd(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SlotFacetsCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SlotSourcesCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SlotTypesCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SlotAllowedValuesCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SlotAllowedClassesCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SlotRangeCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void SlotCardinalityCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+bool ClassAbstractP(Defclass *);
+bool ClassReactiveP(Defclass *);
+void ClassSlots(Defclass *, CLIPSValue *, bool);
+void GetDefmessageHandlerList(const Environment&, Defclass *, CLIPSValue *, bool);
+void ClassSuperclasses(Defclass *, CLIPSValue *, bool);
+void ClassSubclasses(Defclass *, CLIPSValue *, bool);
+void ClassSubclassAddresses(const Environment&, Defclass *, UDFValue *, bool);
+bool SlotFacets(Defclass *, const char *, CLIPSValue *);
+bool SlotSources(Defclass *, const char *, CLIPSValue *);
+bool SlotTypes(Defclass *, const char *, CLIPSValue *);
+bool SlotAllowedValues(Defclass *, const char *, CLIPSValue *);
+bool SlotAllowedClasses(Defclass *, const char *, CLIPSValue *);
+bool SlotRange(Defclass *, const char *, CLIPSValue *);
+bool SlotCardinality(Defclass *, const char *, CLIPSValue *);
+
+#include "Construct.h"
+#include "Object.h"
+
+
+void SetupObjectSystem(const Environment&);
+void CreateSystemClasses(const Environment&, void *);
 #endif
 
 

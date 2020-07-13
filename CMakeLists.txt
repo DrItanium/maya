@@ -11,12 +11,8 @@ add_library(clips
 	BasicRuleCommands.h
 	BinaryLoad.h
 	BinarySave.h
-	ClassCommands.h
-	ClassExamination.h
 	ClassFunctions.h
-	ClassInfo.h
-	ClassInitialization.h
-	ClassParser.h
+		ClassParser.h
 	ClassSlotParser.h
 	clips.h
 	CommandLine.h

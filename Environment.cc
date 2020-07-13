@@ -115,7 +115,7 @@
 #include "Deftemplate.h"
 #endif
 
-#include "ClassInitialization.h"
+#include "ClassFunctions.h"
 
 #if DEVELOPER
 #include "developr.h"

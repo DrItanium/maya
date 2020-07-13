@@ -74,7 +74,6 @@
 #include <cstdio>
 
 #include "ClassFunctions.h"
-#include "ClassInfo.h"
 #include "ClassParser.h"
 #include "Construct.h"
 #include "Construct.h"
@@ -99,7 +98,6 @@
 #include "InferenceEngineObjectAccessRotuines.h"
 #include "ObjectReteMatch.h"
 
-#include "ClassInitialization.h"
 #include "ReferenceCounted.h"
 
 /* =========================================
