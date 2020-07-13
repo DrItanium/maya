@@ -222,6 +222,10 @@ using EntityRecordGetNextFunction = std::function<std::any(std::any, std::any)>;
 /* EntityRecord */
 /****************/
 struct EntityRecord {
+public:
+    using Self = EntityRecord;
+    using Ptr = std::shared_ptr<Self>;
+public:
     std::string name;
     unsigned int type: 13;
     bool copyToEvaluate: 1;
@@ -268,11 +272,14 @@ public:
     std::any dependents;
 private:
     unsigned _busyCount = 0;
+    unsigned long long _timeTag = 0;
 public:
-    unsigned long long timeTag = 0;
     void retain() override;
     void release() override;
     bool canRelease() const noexcept override;
+    constexpr auto getBusyCount() const noexcept { return _busyCount; }
+    constexpr auto getTimeTag() const noexcept { return _timeTag; }
+    void setTimetag(unsigned long long value) noexcept { _timeTag = value; }
 };
 
 #endif /* _H_entities */

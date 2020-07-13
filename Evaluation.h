@@ -99,6 +99,10 @@ constexpr auto C_POINTER_EXTERNAL_ADDRESS = 0;
 constexpr auto PARAMETERS_UNBOUNDED = USHRT_MAX;
 
 struct externalAddressType {
+public:
+    using Self = externalAddressType;
+    using Ptr = std::shared_ptr<Self>;
+public:
     const char *name;
     void (*shortPrintFunction)(const Environment::Ptr&, const char *, void *);
     void (*longPrintFunction)(const Environment::Ptr&, const char *, void *);
@@ -136,13 +140,13 @@ static_assert(!BitwiseTest(0b010, 2));
 constexpr auto EVALUATION_DATA = 44;
 
 struct evaluationData : public EnvironmentModule {
-    Expression *CurrentExpression;
+    std::shared_ptr<Expression> CurrentExpression;
     bool EvaluationError;
     bool HaltExecution;
     int CurrentEvaluationDepth;
     int numberOfAddressTypes;
-    EntityRecord *PrimitivesArray[MAXIMUM_PRIMITIVES];
-    struct externalAddressType *ExternalAddressTypes[MAXIMUM_EXTERNAL_ADDRESS_TYPES];
+    std::array<EntityRecord::Ptr, MAXIMUM_PRIMITIVES> PrimitivesArray;
+    std::array<externalAddressType::Ptr, MAXIMUM_EXTERNAL_ADDRESS_TYPES> ExternalAddressTypes;
 };
 RegisterEnvironmentModule(evaluationData, EVALUATION_DATA, Evaluation);
 
