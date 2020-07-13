@@ -146,7 +146,6 @@ add_library(clips
 		#Agenda.cc
 		CommandLine.cc
 		Environment.cc
-		EnvironmentBuild.cc
 		Evaluation.cc
 		Expression.cc
 		FileUtilities.cc

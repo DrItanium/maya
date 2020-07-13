@@ -85,6 +85,7 @@ public:
     virtual ~EnvironmentModule() = default;
     // called when the (clear) function is invoked
     virtual void onClear() noexcept;
+    virtual void onReset() noexcept;
 };
 
 template<typename T>
@@ -184,6 +185,7 @@ public:
 
 
 using Environment = EnvironmentData::Ptr;
+
 inline auto VoidConstant(const Environment& theEnv) noexcept { return theEnv->VoidConstant; }
 inline auto FalseSymbol(const Environment& theEnv) noexcept { return theEnv->FalseSymbol; }
 inline auto TrueSymbol(const Environment& theEnv) noexcept { return theEnv->TrueSymbol; }
