@@ -168,6 +168,7 @@ void SetupObjectSystem(
     IncrementLexemeCount(DefclassData(theEnv)->NAME_SYMBOL);
 
     SetupDefclasses(theEnv);
+#if STUBBING_INACTIVE
     SetupInstances(theEnv);
     SetupMessageHandlers(theEnv);
 
@@ -184,6 +185,7 @@ void SetupObjectSystem(
 #endif
 
     SetupObjectPatternStuff(theEnv);
+#endif
 }
 #if STUBBING_INACTIVE
 /***************************************************/
@@ -271,7 +273,7 @@ static void DestroyDefclassAction(
 
     DestroyDefclass(theEnv, theDefclass);
 }
-
+#endif
 /***************************************************************
   NAME         : CreateSystemClasses
   DESCRIPTION  : Creates the built-in system classes
@@ -292,6 +294,7 @@ static void DestroyDefclassAction(
 void CreateSystemClasses(
         const Environment&theEnv,
         void *context) {
+#if STUBBING_INACTIVE
     Defclass *user, *any, *primitive, *number, *lexeme, *address, *instance;
 
     /* ===================================
@@ -364,8 +367,8 @@ void CreateSystemClasses(
          any != nullptr;
          any = GetNextDefclass(theEnv, any))
         AssignClassID(theEnv, any);
+#endif
 }
-
 /* =========================================
    *****************************************
           INTERNALLY VISIBLE FUNCTIONS
@@ -383,6 +386,7 @@ void CreateSystemClasses(
  *********************************************************/
 static void SetupDefclasses(
         const Environment&theEnv) {
+#if STUBBING_INACTIVE
     InstallPrimitive(theEnv, &DefclassData(theEnv)->DefclassEntityRecord, DEFCLASS_PTR);
 
     DefclassData(theEnv)->DefclassModuleIndex =
@@ -460,8 +464,10 @@ static void SetupDefclasses(
     AddWatchItem(theEnv, "instances", 0, &DefclassData(theEnv)->WatchInstances, 75, DefclassWatchAccess, DefclassWatchPrint);
     AddWatchItem(theEnv, "slots", 1, &DefclassData(theEnv)->WatchSlots, 74, DefclassWatchAccess, DefclassWatchPrint);
 #endif
+#endif
 }
 
+#if STUBBING_INACTIVE
 /*********************************************************
   NAME         : AddSystemClass
   DESCRIPTION  : Performs all necessary allocations
