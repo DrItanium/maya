@@ -71,7 +71,6 @@
 
 #if DEFGLOBAL_CONSTRUCT
 #include "Defglobal.h"
-#include "DefglobalParser.h"
 #endif
 
 constexpr auto PRCDRPSR_DATA = 12;

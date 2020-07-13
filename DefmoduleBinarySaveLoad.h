@@ -37,7 +37,7 @@
 #include "Defmodule.h"
 #include "DefmoduleBinarySaveLoad.h"
 #include "Construct.h"
-
+#if BSAVE_AND_BLOAD
 struct bsaveDefmodule {
     struct bsaveConstructHeader header;
     unsigned long importList;
@@ -70,7 +70,7 @@ void AssignBsaveDefmdlItemHdrVals
         (bsaveDefmoduleItemHeader *,
          struct defmoduleItemHeader *);
 #endif
-
+#endif
 #endif /* _H_modulbin */
 
 

@@ -75,9 +75,6 @@
 #include "MemoryAllocation.h"
 #include "Constants.h"
 #include "Environment.h"
-#if DEFGLOBAL_CONSTRUCT
-#include "DefglobalParser.h"
-#endif
 #include "Expression.h"
 #include "Multifield.h"
 #include "Object.h"

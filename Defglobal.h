@@ -66,11 +66,16 @@
 typedef struct defglobal Defglobal;
 
 #include "Construct.h"
+#include "DefmoduleBinarySaveLoad.h"
+#include "Construct.h"
+#include "Defglobal.h"
 #include "Construct.h"
 #include "Evaluation.h"
 #include "Expression.h"
 #include "Defmodule.h"
 #include "Symbol.h"
+#include "Evaluation.h"
+#include "Defglobal.h"
 
 constexpr auto DEFGLOBAL_DATA = 1;
 
@@ -135,6 +140,60 @@ const char *DefglobalModule(Defglobal *);
 const char *DefglobalName(Defglobal *);
 const char *DefglobalPPForm(Defglobal *);
 
+
+void DefglobalBasicCommands(const Environment&);
+void UndefglobalCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+bool Undefglobal(Defglobal *, const Environment&);
+void GetDefglobalListFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void GetDefglobalList(const Environment&, CLIPSValue *, Defmodule *);
+void DefglobalModuleFunction(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void PPDefglobalCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+bool PPDefglobal(const Environment&, const char *, const char *);
+void ListDefglobalsCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+#if DEBUGGING_FUNCTIONS
+bool DefglobalGetWatch(Defglobal *);
+void ListDefglobals(const Environment&, const char *, Defmodule *);
+void DefglobalSetWatch(Defglobal *, bool);
+#endif
+void ResetDefglobals(const Environment&, void *);
+
+#if BBLOAD_AND_BSAVE
+struct bsaveDefglobal {
+    struct bsaveConstructHeader header;
+    unsigned long initial;
+};
+
+struct bsaveDefglobalModule {
+    struct bsaveDefmoduleItemHeader header;
+};
+
+constexpr auto GLOBLBIN_DATA = 60;
+
+struct defglobalBinaryData : public EnvironmentModule {
+    Defglobal *DefglobalArray;
+    unsigned long NumberOfDefglobals;
+    struct defglobalModule *ModuleArray;
+    unsigned long NumberOfDefglobalModules;
+};
+RegisterEnvironmentModule(defglobalBinaryData, GLOBLBIN_DATA, DefglobalBinary);
+
+#define DefglobalPointer(i) (&DefglobalBinaryData(theEnv)->DefglobalArray[i])
+
+void DefglobalBinarySetup(const Environment&);
+void *BloadDefglobalModuleReference(const Environment&, unsigned long);
+#endif
+void DefglobalCommandDefinitions(const Environment&);
+void SetResetGlobalsCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+bool SetResetGlobals(const Environment&, bool);
+void GetResetGlobalsCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+bool GetResetGlobals(const Environment&);
+void ShowDefglobalsCommand(const Environment&theEnv, UDFContext *context, UDFValue *ret);
+void ShowDefglobals(const Environment&, const char *, Defmodule *);
+#include "Expression.h"
+
+bool ParseDefglobal(const Environment&, const char *);
+bool ReplaceGlobalVariable(const Environment&, Expression *);
+void GlobalReferenceErrorMessage(const Environment&, const char *);
 #endif /* _H_globldef */
 
 

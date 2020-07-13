@@ -28,12 +28,8 @@ add_library(clips
 	DeffunctionExecution.h
 	Deffunction.h
 	DeffunctionParser.h
-	DefglobalBasicCommands.h
-	DefglobalBinary.h
-	DefglobalCommands.h
-	Defglobal.h
-	DefglobalParser.h
-	DefinstancesBinaryLoadSave.h
+		Defglobal.h
+		DefinstancesBinaryLoadSave.h
 	Definstances.h
 	DefmessageHandlerCommands.h
 	DefmessageHandlerDispatch.h

@@ -76,9 +76,6 @@
 #endif
 #include "CommandLine.h"
 #include "Environment.h"
-#include "DefglobalBasicCommands.h"
-#include "DefglobalCommands.h"
-#include "DefglobalParser.h"
 #include "MemoryAllocation.h"
 #include "DefmoduleParser.h"
 #include "DefmoduleUtility.h"

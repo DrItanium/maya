@@ -92,8 +92,6 @@
 
 #if DEFGLOBAL_CONSTRUCT
 #include "Defglobal.h"
-#include "DefglobalBasicCommands.h"
-#include "DefglobalCommands.h"
 #endif
 
 #if DEFFUNCTION_CONSTRUCT
