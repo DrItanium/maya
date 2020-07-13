@@ -128,16 +128,16 @@ struct defclassData : public EnvironmentModule {
     unsigned short MaxClassID;
     unsigned short AvailClassID;
     SLOT_NAME **SlotNameTable;
-    CLIPSLexeme *ISA_SYMBOL;
-    CLIPSLexeme *NAME_SYMBOL;
+    CLIPSLexeme::Ptr ISA_SYMBOL;
+    CLIPSLexeme::Ptr NAME_SYMBOL;
 #if DEBUGGING_FUNCTIONS
     bool WatchInstances;
     bool WatchSlots;
 #endif
-    unsigned short CTID;
+    unsigned short CTID = 0;
     struct token ObjectParseToken;
-    ClassDefaultsMode ClassDefaultsModeValue;
-    int newSlotID;
+    ClassDefaultsMode ClassDefaultsModeValue = CONVENIENCE_MODE;
+    int newSlotID = 2; // IS_A and NAME assigned 0 and 1
 };
 RegisterEnvironmentModule(defclassData, DEFCLASS_DATA, Defclass);
 

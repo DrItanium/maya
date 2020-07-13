@@ -161,8 +161,7 @@ void SetupObjectSystem(
 
 #if STUBBING_INACTIVE
     DefclassData(theEnv)->DefclassEntityRecord = defclassEntityRecord;
-    DefclassData(theEnv)->newSlotID = 2; // IS_A and NAME assigned 0 and 1
-    DefclassData(theEnv)->ClassDefaultsModeValue = CONVENIENCE_MODE;
+#endif
     DefclassData(theEnv)->ISA_SYMBOL = CreateSymbol(theEnv, SUPERCLASS_RLN);
     IncrementLexemeCount(DefclassData(theEnv)->ISA_SYMBOL);
     DefclassData(theEnv)->NAME_SYMBOL = CreateSymbol(theEnv, NAME_RLN);
@@ -185,7 +184,6 @@ void SetupObjectSystem(
 #endif
 
     SetupObjectPatternStuff(theEnv);
-#endif
 }
 #if STUBBING_INACTIVE
 /***************************************************/
