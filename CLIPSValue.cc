@@ -2,7 +2,7 @@
 // Created by jwscoggins on 7/12/20.
 //
 
-#include "Entities.h"
+#include "Entities.hxx"
 #include "Fact.h"
 #include "Object.h"
 #include <variant>

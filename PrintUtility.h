@@ -72,7 +72,7 @@
 
 #include <cstdio>
 
-#include "Entities.h"
+#include "Entities.hxx"
 
 constexpr auto PRINT_UTILITY_DATA = 53;
 

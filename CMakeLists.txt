@@ -52,7 +52,7 @@ add_library(clips
 	Developer.h
 	Drive.h
 	Engine.h
-	Entities.h
+		Entities.hxx
 	Environment.h
 	Evaluation.h
 	Expression.h

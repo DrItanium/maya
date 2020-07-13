@@ -32,7 +32,7 @@
 #define _H_network
 
 
-#include "Entities.h"
+#include "Entities.hxx"
 #include "Match.h"
 #include "Defrule.h"
 

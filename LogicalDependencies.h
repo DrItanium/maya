@@ -50,7 +50,7 @@ struct dependency {
     struct dependency *next;
 };
 
-#include "Entities.h"
+#include "Entities.hxx"
 #include "Match.h"
 
 bool AddLogicalDependencies(const Environment::Ptr&, PatternEntity *, bool);

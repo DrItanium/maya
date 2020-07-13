@@ -82,7 +82,7 @@ enum class ConstructType {
 };
 
 #include <cstdio>
-#include "Entities.h"
+#include "Entities.hxx"
 #include "UserData.h"
 #include "Utility.h"
 

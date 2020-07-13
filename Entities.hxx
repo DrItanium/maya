@@ -36,15 +36,25 @@
 struct UDFValue;
 class Environment;
 using EnvironmentPtr = std::shared_ptr<Environment>;
-using EntityPrintFunction = std::function<void(const EnvironmentPtr&, const std::string&, std::any)>;
-using EntityEvaluationFunction = std::function<bool(const EnvironmentPtr&, std::any, std::shared_ptr<UDFValue>)>;
-using EntityBusyCountFunction = std::function<void(const EnvironmentPtr&, std::any)>;
+template<typename R, typename ... Ts>
+using EnvironmentPtrFunction = std::function<R(const EnvironmentPtr&, Ts...)>;
+template<typename ... Ts>
+using EnvironmentPtrNoReturnFunction = EnvironmentPtrFunction<void, Ts...>;
+using EntityPrintFunction = EnvironmentPtrNoReturnFunction<const std::string&, std::any>;
+using EntityEvaluationFunction = EnvironmentPtrFunction<bool, std::any, std::shared_ptr<UDFValue>>;
+using EntityBusyCountFunction = EnvironmentPtrNoReturnFunction<std::any>;
 
-
-typedef bool BoolCallFunction(const EnvironmentPtr&, void *);
-typedef void VoidCallFunction(const EnvironmentPtr&, void *);
-typedef void VoidCallFunctionWithArg(const EnvironmentPtr&, void *, void *);
-
+using BoolCallFunction = EnvironmentPtrFunction<bool, std::any>;
+using VoidCallFunction = EnvironmentPtrNoReturnFunction<std::any>;
+using VoidCallFunctionWithArg = EnvironmentPtrNoReturnFunction<std::any, std::any>;
+class HoldsEnvironmentCallback {
+public:
+    HoldsEnvironmentCallback(Environment& parent);
+    Environment& getParent() noexcept { return _parent; }
+    const Environment& getParent() const noexcept { return _parent; }
+protected:
+    Environment& _parent;
+};
 /**************/
 /* typeHeader */
 /**************/
@@ -226,34 +236,33 @@ struct EntityRecord {
     bool copyToEvaluate: 1;
     bool bitMap: 1;
     bool addsToRuleComplexity: 1;
-    std::shared_ptr<EntityPrintFunction> shortPrintFunction;
-    std::shared_ptr<EntityPrintFunction> longPrintFunction;
-    std::shared_ptr<EntityRecordDeleteFunction> deleteFunction;
-    std::shared_ptr<EntityEvaluationFunction> evaluateFunction;
-    std::shared_ptr<EntityRecordGetNextFunction> getNextFunction;
-    std::shared_ptr<EntityBusyCountFunction> decrementBusyCount;
-    std::shared_ptr<EntityBusyCountFunction> incrementBusyCount;
-    std::shared_ptr<EntityRecordPropagateDepthFunction> propagateDepth;
-    std::shared_ptr<EntityRecordMarkNeededFunction> markNeeded;
-    std::shared_ptr<EntityRecordInstallFunction> install;
-    std::shared_ptr<EntityRecordDeinstallFunction> deinstall;
+    EntityPrintFunction shortPrintFunction;
+    EntityPrintFunction longPrintFunction;
+    EntityRecordDeleteFunction* deleteFunction;
+    EntityEvaluationFunction evaluateFunction;
+    EntityRecordGetNextFunction* getNextFunction;
+    EntityBusyCountFunction decrementBusyCount;
+    EntityBusyCountFunction incrementBusyCount;
+    EntityRecordPropagateDepthFunction* propagateDepth;
+    EntityRecordMarkNeededFunction* markNeeded;
+    EntityRecordInstallFunction* install;
+    EntityRecordDeinstallFunction* deinstall;
     std::shared_ptr<struct userData> usrData;
 };
-
-typedef void PatternEntityRecordDecrementBasisCountFunction(const EnvironmentPtr&, void*);
-typedef void PatternEntityRecordIncrementBasisCountFunction(const EnvironmentPtr&, void*);
-typedef void PatternEntityRecordMatchFunction(const EnvironmentPtr&, void*);
-typedef bool PatternEntityRecordSynchronizedFunction(const EnvironmentPtr&, void*);
-typedef bool PatternEntityRecordIsDeletedFunction(const EnvironmentPtr&, void*);
+using PatternEntityRecordDecrementBasisCountFunction = EnvironmentPtrNoReturnFunction<std::any>;
+using PatternEntityRecordIncrementBasisCountFunction = EnvironmentPtrNoReturnFunction<std::any>;
+using PatternEntityRecordMatchFunction = EnvironmentPtrNoReturnFunction<std::any>;
+using PatternEntityRecordSynchronizedFunction = EnvironmentPtrFunction<bool, std::any>;
+using PatternEntityRecordIsDeletedFunction = EnvironmentPtrFunction<bool, std::any>;
 /***********************/
 /* PatternEntityRecord */
 /***********************/
 struct PatternEntityRecord : public EntityRecord {
-    PatternEntityRecordDecrementBasisCountFunction* decrementBasisCount;
-    PatternEntityRecordIncrementBasisCountFunction* incrementBasisCount;
-    PatternEntityRecordMatchFunction* matchFunction;
-    PatternEntityRecordSynchronizedFunction* synchronized;
-    PatternEntityRecordIsDeletedFunction* isDeleted;
+    PatternEntityRecordDecrementBasisCountFunction decrementBasisCount;
+    PatternEntityRecordIncrementBasisCountFunction incrementBasisCount;
+    PatternEntityRecordMatchFunction matchFunction;
+    PatternEntityRecordSynchronizedFunction synchronized;
+    PatternEntityRecordIsDeletedFunction isDeleted;
 };
 
 /*****************/

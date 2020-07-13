@@ -67,7 +67,7 @@
 #include <cstdio>
 #include <cstdlib>
 
-#include "Entities.h"
+#include "Entities.hxx"
 
 typedef struct batchEntry BatchEntry;
 

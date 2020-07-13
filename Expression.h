@@ -51,7 +51,7 @@ struct ExpressionHashNode;
 typedef struct savedContexts SavedContexts;
 
 #include <cstdio>
-#include "Entities.h"
+#include "Entities.hxx"
 #include "Construct.h"
 #include "ExternalFunctions.h"
 #include "Scanner.h"

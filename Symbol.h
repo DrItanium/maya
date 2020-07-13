@@ -89,7 +89,7 @@
 #include <string>
 #include <list>
 
-#include "Entities.h"
+#include "Entities.hxx"
 
 
 #ifndef SYMBOL_HASH_SIZE

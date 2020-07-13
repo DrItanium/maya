@@ -71,7 +71,7 @@
 #define _H_evaluatn
 
 #include "Constants.h"
-#include "Entities.h"
+#include "Entities.hxx"
 #include "Environment.h"
 
 typedef struct functionCallBuilder FunctionCallBuilder;

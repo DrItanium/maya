@@ -11,7 +11,7 @@ typedef struct factHashEntry FactHashEntry;
 struct FactPatternNode;
 #include "Setup.h"
 #include "Network.h"
-#include "Entities.h"
+#include "Entities.hxx"
 #include "Deftemplate.h"
 #include "Expression.h"
 #include "Evaluation.h"

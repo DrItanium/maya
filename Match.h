@@ -42,7 +42,7 @@ typedef struct patternMatch PatternMatch;
 typedef struct alphaMatch AlphaMatch;
 typedef struct multifieldMarker MultifieldMarker;
 
-#include "Entities.h"
+#include "Entities.hxx"
 #include "Network.h"
 #include <any>
 

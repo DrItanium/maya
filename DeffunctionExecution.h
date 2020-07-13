@@ -44,7 +44,7 @@
 
 #if DEFFUNCTION_CONSTRUCT
 
-#include "Entities.h"
+#include "Entities.hxx"
 #include "Deffunction.h"
 
 void CallDeffunction(const Environment::Ptr&, Deffunction *, Expression *, UDFValue *);

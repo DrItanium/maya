@@ -77,7 +77,7 @@
 
 typedef struct construct Construct;
 
-#include "Entities.h"
+#include "Entities.hxx"
 #include "UserData.h"
 #include "Defmodule.h"
 #include "Utility.h"
