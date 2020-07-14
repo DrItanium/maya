@@ -137,7 +137,11 @@ using type = actual_type ; \
 }; \
 inline decltype(auto) declAccessorPrefix ## Data (const Environment::Ptr& theEnv) { \
     return theEnv->getEnvironmentModule<pos>(); \
+} \
+inline decltype(auto) declAccessorPrefix ## Data(Environment& theEnv) { \
+    return theEnv.getEnvironmentModule<pos>(); \
 }
+
 
 class Environment {
 public:

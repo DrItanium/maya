@@ -72,72 +72,128 @@
 #define _H_router
 
 #include <cstdio>
+#include <string>
+#include <memory>
+#include <list>
+#include <map>
 
-typedef struct router Router;
-typedef bool RouterQueryFunction(const Environment::Ptr&, const char *, void *);
-typedef void RouterWriteFunction(const Environment::Ptr&, const char *, const char *, void *);
-typedef void RouterExitFunction(const Environment::Ptr&, int, void *);
-typedef int RouterReadFunction(const Environment::Ptr&, const char *, void *);
-typedef int RouterUnreadFunction(const Environment::Ptr&, const char *, int, void *);
 
-extern const char *STDOUT;
-extern const char *STDIN;
-extern const char *STDERR;
-extern const char *STDWRN;
+const std::string& STDOUT() noexcept;
+const std::string& STDIN() noexcept;
+const std::string& STDERR() noexcept;
+const std::string& STDWRN() noexcept;
 
 constexpr auto ROUTER_DATA = 46;
-
-struct router {
-    const char *name;
-    bool active;
-    int priority;
-    RouterQueryFunction *queryCallback;
-    RouterWriteFunction *writeCallback;
-    RouterExitFunction *exitCallback;
-    RouterReadFunction *readCallback;
-    RouterUnreadFunction *unreadCallback;
-    Router *next;
+class Router {
+public:
+    using Self = Router;
+    using Ptr = std::shared_ptr<Self>;
+public:
+    Router(Environment& callback, const std::string& name, int priority);
+    virtual ~Router() = default;
+    std::string getName() const noexcept { return _name; }
+    constexpr auto isActive() const noexcept { return _active; }
+    void activate() noexcept { _active = true; }
+    void deactivate() noexcept { _active = false; }
+    constexpr auto getPriority() const noexcept { return _priority; }
+    virtual bool query(const std::string& logicalName) = 0;
+    virtual void write(const std::string& logicalName, const std::string& value) = 0;
+    virtual void onExit(int exitCode) = 0;
+    virtual int read(const std::string& logicalName) = 0;
+    virtual int unread(const std::string& logicalName, int value) = 0;
+    virtual bool canWriteTo() const noexcept = 0;
+    virtual bool canQuery() const noexcept = 0;
+    bool respondsTo(const std::string& logicalName) noexcept;
+protected:
+    Environment& _parent;
+private:
+    std::string _name;
+    bool _active = true;
+    int _priority = 0;
+};
+struct LambdaRouter : public Router {
+public:
+    using QueryFunction = std::function<bool(const Environment::Ptr&, const std::string&)>;
+    using WriteFunction = std::function<void(const Environment::Ptr&, const std::string&, const std::string&)>;
+    using ExitFunction = std::function<void(const Environment::Ptr&, int)>;
+    using ReadFunction = std::function<int(const Environment::Ptr&, const std::string&)>;
+    using UnreadFunction = std::function<int(const Environment::Ptr&, const std::string&, int)>;
+public:
+    LambdaRouter(Environment& callback, const std::string& name, int priority, QueryFunction queryFn = nullptr,
+           WriteFunction writeFn = nullptr, ReadFunction readFn = nullptr,
+           UnreadFunction unreadFn = nullptr, ExitFunction exitFn = nullptr);
+    ~LambdaRouter() override = default;
+    bool query(const std::string& logicalName) override;
+    void write(const std::string& logicalName, const std::string& value) override;
+    void onExit(int exitCode) override;
+    int read(const std::string& logicalName) override;
+    int unread(const std::string& logicalName, int value) override;
+    bool canWriteTo() const noexcept override {
+        return _writeCallback.operator bool();
+    }
+    bool canQuery() const noexcept override {
+        return _queryCallback.operator bool();
+    }
+private:
+    QueryFunction _queryCallback;
+    WriteFunction _writeCallback;
+    ExitFunction _exitCallback;
+    ReadFunction _readCallback;
+    UnreadFunction _unreadCallback;
 };
 
-struct routerData : public EnvironmentModule {
-    size_t CommandBufferInputCount;
-    size_t InputUngets;
-    bool AwaitingInput;
-    const char *LineCountRouter;
-    const char *FastCharGetRouter;
-    const char *FastCharGetString;
-    long FastCharGetIndex;
-    struct router *ListOfRouters;
+struct RouterModule : public EnvironmentModule {
+public:
+    static void install(Environment& theEnv);
+public:
+    RouterModule(Environment& parent) : EnvironmentModule(parent) {}
+    ~RouterModule() override = default;
+    size_t _commandBufferInputCount = 0;
+    size_t _inputUngets = 0;
+    bool _awaitingInput = true;
+    std::string _lineCountRouter;
+    std::string _fastCharGetRouter;
+    std::string _fastCharGetString;
+    long _fastCharGetIndex = 0;
+    std::list<Router::Ptr> _listOfRouters;
+#if 0
     FILE *FastLoadFilePtr;
     FILE *FastSaveFilePtr;
-    bool Abort;
+#endif
+    bool _abort = false;
+private:
+    bool insertRouter(Router::Ptr router);
+public:
+    bool addRouter(std::function<Router::Ptr(Environment&)> makerFunction);
+    bool addRouter(const std::string& name, int priority,
+            LambdaRouter::QueryFunction queryFn = nullptr,
+            LambdaRouter::WriteFunction writeFn = nullptr,
+            LambdaRouter::ReadFunction readFn = nullptr,
+            LambdaRouter::UnreadFunction unreadFn = nullptr,
+            LambdaRouter::ExitFunction exitFn = nullptr);
+    void exit(int code);
+    int read(const std::string& logicalName);
+    int unread(const std::string& logicalName, int toUnread);
+    void writeString(const std::string& logicalName, const std::string& str);
+    /**
+     * @brief Write the given string to STDOUT
+     * @param str the string to output to the stdout router
+     */
+    void write(const std::string& str);
+    /**
+     * @brief write the given string + a newline to the STDOUT router
+     * @param str the string to printout out
+     */
+    void writeLine(const std::string& str);
+    bool destroy(const std::string& logicalName);
+    bool query(const std::string& logicalName);
+    bool deactivate(const std::string& logicalName);
+    bool activate(const std::string& logicalName);
+    Router::Ptr find(const std::string& logicalName);
+    bool printRouterExists(const std::string& logicalName);
+    void unrecognizedRouterMessage(const std::string& logicalName);
+    void abortExit() noexcept;
 };
-RegisterEnvironmentModule(routerData, ROUTER_DATA, Router);
-
-void InitializeDefaultRouters(const Environment::Ptr&);
-void WriteString(const Environment::Ptr&, const std::string&, const std::string&);
-void Write(const Environment::Ptr&, const char *);
-void Writeln(const Environment::Ptr&, const char *);
-int ReadRouter(const Environment::Ptr&, const char *);
-int UnreadRouter(const Environment::Ptr&, const char *, int);
-void ExitRouter(const Environment::Ptr&, int);
-void AbortExit(const Environment::Ptr&);
-bool AddRouter(const Environment::Ptr&, const char *, int,
-               RouterQueryFunction *, RouterWriteFunction *,
-               RouterReadFunction *, RouterUnreadFunction *,
-               RouterExitFunction *, void *);
-bool DeleteRouter(const Environment::Ptr&, const char *);
-bool QueryRouters(const Environment::Ptr&, const char *);
-bool DeactivateRouter(const Environment::Ptr&, const char *);
-bool ActivateRouter(const Environment::Ptr&, const char *);
-void SetFastLoad(const Environment::Ptr&, FILE *);
-void SetFastSave(const Environment::Ptr&, FILE *);
-FILE *GetFastLoad(const Environment::Ptr&);
-FILE *GetFastSave(const Environment::Ptr&);
-void UnrecognizedRouterMessage(const Environment::Ptr&, const char *);
-void PrintNRouter(const Environment::Ptr&, const char *, const char *, unsigned long);
-size_t InputBufferCount(const Environment::Ptr&);
-Router *FindRouter(const Environment::Ptr&, const char *);
-bool PrintRouterExists(const Environment::Ptr&, const char *);
+RegisterEnvironmentModule(RouterModule, ROUTER_DATA, Router);
 
 #endif /* _H_router */

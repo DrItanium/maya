@@ -85,10 +85,23 @@
 /* STRING DEFINITIONS */
 /**********************/
 
-const char *STDIN = "stdin";
-const char *STDOUT = "stdout";
-const char *STDERR = "stderr";
-const char *STDWRN = "stdwrn";
+const std::string& STDOUT() noexcept {
+    static std::string contents = "stdout";
+    return contents;
+}
+const std::string& STDIN() noexcept {
+    static std::string contents = "stdin";
+    return contents;
+}
+
+const std::string& STDERR() noexcept {
+    static std::string contents = "stderr";
+    return contents;
+}
+const std::string& STDWRN() noexcept {
+    static std::string contents = "stdwrn";
+    return contents;
+}
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
@@ -100,54 +113,51 @@ static void DeallocateRouterData(const Environment::Ptr&);
 /*********************************************************/
 /* InitializeDefaultRouters: Initializes output streams. */
 /*********************************************************/
-void InitializeDefaultRouters(
-        const Environment::Ptr&theEnv) {
+void
+RouterModule::install(Environment &theEnv) {
+    theEnv.allocateEnvironmentModule<RouterModule>();
+    //const auto& routerModule = RouterData(theEnv);
 #if STUBBING_INACTIVE
-    //AllocateEnvironmentData(theEnv, ROUTER_DATA, sizeof(routerData), DeallocateRouterData);
-    theEnv->allocateEnvironmentModule<routerData>();
-
-    RouterData(theEnv)->CommandBufferInputCount = 0;
-    RouterData(theEnv)->InputUngets = 0;
-    RouterData(theEnv)->AwaitingInput = true;
     InitializeFileRouter(theEnv);
     InitializeStringRouter(theEnv);
 #endif
 }
-
-/*************************************************/
-/* DeallocateRouterData: Deallocates environment */
-/*    data for I/O routers.                      */
-/*************************************************/
-static void DeallocateRouterData(
-        const Environment::Ptr&theEnv) {
-    struct router *tmpPtr, *nextPtr;
-
-    tmpPtr = RouterData(theEnv)->ListOfRouters;
-    while (tmpPtr != nullptr) {
-        nextPtr = tmpPtr->next;
-        genfree(theEnv, (void *) tmpPtr->name, strlen(tmpPtr->name) + 1);
-        rtn_struct(theEnv, router, tmpPtr);
-        tmpPtr = nextPtr;
+bool
+RouterModule::printRouterExists(const std::string &logicalName) {
+    for (const auto& router : _listOfRouters) {
+        if (router->canWriteTo() && router->respondsTo(logicalName)) {
+            return true;
+        }
     }
+    return false;
 }
 
-/*********************/
-/* PrintRouterExists */
-/*********************/
-bool PrintRouterExists(
-        const Environment::Ptr&theEnv,
-        const char *logicalName) {
-    struct router *currentPtr;
+bool
+Router::respondsTo(const std::string &str) noexcept {
+#if 0
+    /*===================================================*/
+    /* If the router is inactive, then it can't respond. */
+    /*===================================================*/
 
-    if (((char *) RouterData(theEnv)->FastSaveFilePtr) == logicalName) { return true; }
+    if (!currentPtr->active) { return false; }
 
-    currentPtr = RouterData(theEnv)->ListOfRouters;
-    while (currentPtr != nullptr) {
-        if ((currentPtr->writeCallback != nullptr) ? QueryRouter(theEnv, logicalName, currentPtr) : false) { return true; }
-        currentPtr = currentPtr->next;
+    /*=============================================================*/
+    /* If the router has no query function, then it can't respond. */
+    /*=============================================================*/
+
+    if (currentPtr->queryCallback == nullptr) return false;
+
+    /*=========================================*/
+    /* Call the router's query function to see */
+    /* if it recognizes the logical name.      */
+    /*=========================================*/
+
+    return (*currentPtr->queryCallback)(theEnv, logicalName, nullptr);
+#endif
+    if (!_active || !canQuery()) {
+        return false;
     }
-
-    return false;
+    return query(str);
 }
 
 /**********************************/
@@ -156,7 +166,7 @@ bool PrintRouterExists(
 void Write(
         const Environment::Ptr&theEnv,
         const char *str) {
-    WriteString(theEnv, STDOUT, str);
+    //WriteString(theEnv, STDOUT, str);
 }
 
 /************************************/
@@ -165,8 +175,8 @@ void Write(
 void Writeln(
         const Environment::Ptr&theEnv,
         const char *str) {
-    WriteString(theEnv, STDOUT, str);
-    WriteString(theEnv, STDOUT, "\n");
+    //WriteString(theEnv, STDOUT, str);
+    //WriteString(theEnv, STDOUT, "\n");
 }
 
 /****************************************/
@@ -220,6 +230,7 @@ void WriteString(
 int ReadRouter(
         const Environment::Ptr&theEnv,
         const char *logicalName) {
+#if STUBBING_INACTIVE
     struct router *currentPtr;
     int inchar;
 
@@ -288,6 +299,7 @@ int ReadRouter(
     /*=====================================================*/
 
     UnrecognizedRouterMessage(theEnv, logicalName);
+#endif
     return (-1);
 }
 
@@ -298,6 +310,7 @@ int UnreadRouter(
         const Environment::Ptr&theEnv,
         const char *logicalName,
         int ch) {
+#if STUBBING_INACTIVE
     struct router *currentPtr;
 
     /*===================================================*/
@@ -355,6 +368,7 @@ int UnreadRouter(
     /*=====================================================*/
 
     UnrecognizedRouterMessage(theEnv, logicalName);
+#endif
     return -1;
 }
 
@@ -365,6 +379,7 @@ int UnreadRouter(
 void ExitRouter(
         const Environment::Ptr&theEnv,
         int num) {
+#if STUBBING_INACTIVE
     struct router *currentPtr, *nextPtr;
 
     RouterData(theEnv)->Abort = false;
@@ -381,29 +396,31 @@ void ExitRouter(
 
     if (RouterData(theEnv)->Abort) return;
     genexit(theEnv, num);
+#endif
 }
 
 /********************************************/
 /* AbortExit: Forces ExitRouter to terminate */
 /*   after calling all closing routers.     */
 /********************************************/
-void AbortExit(
-        const Environment::Ptr&theEnv) {
-    RouterData(theEnv)->Abort = true;
+void
+RouterModule::abortExit() noexcept {
+    _abort = true;
 }
 /*********************************************************/
 /* AddRouter: Adds an I/O router to the list of routers. */
 /*********************************************************/
-bool AddRouter(
-        const Environment::Ptr&theEnv,
-        const char *routerName,
-        int priority,
-        RouterQueryFunction *queryFunction,
-        RouterWriteFunction *writeFunction,
-        RouterReadFunction *readFunction,
-        RouterUnreadFunction *unreadFunction,
-        RouterExitFunction *exitFunction,
-        void *context) {
+bool
+RouterModule::addRouter(std::function<Router::Ptr (Environment &)> makerFunction) {
+    return insertRouter(makerFunction(_parent));
+}
+bool
+RouterModule::addRouter(const std::string &name, int priority, LambdaRouter::QueryFunction queryFn, LambdaRouter::WriteFunction writeFn, LambdaRouter::ReadFunction readFn, LambdaRouter::UnreadFunction unreadFn, LambdaRouter::ExitFunction exitFn) {
+    return insertRouter(std::make_shared<LambdaRouter>(_parent, name, priority, queryFn, writeFn, readFn, unreadFn, exitFn));
+}
+bool
+RouterModule::insertRouter(Router::Ptr router) {
+   /// @todo implement this
 #if STUBBING_INACTIVE
     struct router *newPtr, *lastPtr, *currentPtr;
     char *nameCopy;
@@ -457,6 +474,7 @@ bool AddRouter(
     return true;
 #endif
     return false;
+    return false;
 }
 
 /*****************************************************************/
@@ -465,6 +483,7 @@ bool AddRouter(
 bool DeleteRouter(
         const Environment::Ptr&theEnv,
         const char *routerName) {
+#if STUBBING_INACTIVE
     struct router *currentPtr, *lastPtr;
 
     currentPtr = RouterData(theEnv)->ListOfRouters;
@@ -485,7 +504,7 @@ bool DeleteRouter(
         lastPtr = currentPtr;
         currentPtr = currentPtr->next;
     }
-
+#endif
     return false;
 }
 
@@ -495,6 +514,7 @@ bool DeleteRouter(
 bool QueryRouters(
         const Environment::Ptr&theEnv,
         const char *logicalName) {
+#if STUBBING_INACTIVE
     struct router *currentPtr;
 
     currentPtr = RouterData(theEnv)->ListOfRouters;
@@ -502,18 +522,21 @@ bool QueryRouters(
         if (QueryRouter(theEnv, logicalName, currentPtr)) return true;
         currentPtr = currentPtr->next;
     }
-
+#endif
     return false;
 }
+bool
+RouterModule::query(const std::string &logicalName) {
 
+}
 /************************************************/
 /* QueryRouter: Determines if a specific router */
 /*    recognizes a logical name.                */
 /************************************************/
-static bool QueryRouter(
-        const Environment::Ptr&theEnv,
+static bool QueryRouter( const Environment::Ptr&theEnv,
         const char *logicalName,
         struct router *currentPtr) {
+#if STUBBING_INACTIVE
     /*===================================================*/
     /* If the router is inactive, then it can't respond. */
     /*===================================================*/
@@ -532,6 +555,8 @@ static bool QueryRouter(
     /*=========================================*/
 
     return (*currentPtr->queryCallback)(theEnv, logicalName, nullptr);
+#endif
+    return false;
 
 }
 
@@ -541,6 +566,7 @@ static bool QueryRouter(
 bool DeactivateRouter(
         const Environment::Ptr&theEnv,
         const char *routerName) {
+#if STUBBING_INACTIVE
     struct router *currentPtr;
 
     currentPtr = RouterData(theEnv)->ListOfRouters;
@@ -552,7 +578,7 @@ bool DeactivateRouter(
         }
         currentPtr = currentPtr->next;
     }
-
+#endif
     return false;
 }
 
@@ -562,6 +588,7 @@ bool DeactivateRouter(
 bool ActivateRouter(
         const Environment::Ptr&theEnv,
         const char *routerName) {
+#if STUBBING_INACTIVE
     struct router *currentPtr;
 
     currentPtr = RouterData(theEnv)->ListOfRouters;
@@ -573,6 +600,7 @@ bool ActivateRouter(
         }
         currentPtr = currentPtr->next;
     }
+#endif
 
     return false;
 }
@@ -583,6 +611,7 @@ bool ActivateRouter(
 Router *FindRouter(
         const Environment::Ptr&theEnv,
         const char *routerName) {
+#if STUBBING_INACTIVE
     Router *currentPtr;
 
     for (currentPtr = RouterData(theEnv)->ListOfRouters;
@@ -590,42 +619,8 @@ Router *FindRouter(
          currentPtr = currentPtr->next) {
         if (strcmp(currentPtr->name, routerName) == 0) { return currentPtr; }
     }
-
+#endif
     return nullptr;
-}
-
-/********************************************************/
-/* SetFastLoad: Used to bypass router system for loads. */
-/********************************************************/
-void SetFastLoad(
-        const Environment::Ptr&theEnv,
-        FILE *filePtr) {
-    RouterData(theEnv)->FastLoadFilePtr = filePtr;
-}
-
-/********************************************************/
-/* SetFastSave: Used to bypass router system for saves. */
-/********************************************************/
-void SetFastSave(
-        const Environment::Ptr&theEnv,
-        FILE *filePtr) {
-    RouterData(theEnv)->FastSaveFilePtr = filePtr;
-}
-
-/******************************************************/
-/* GetFastLoad: Returns the "fast load" file pointer. */
-/******************************************************/
-FILE *GetFastLoad(
-        const Environment::Ptr&theEnv) {
-    return (RouterData(theEnv)->FastLoadFilePtr);
-}
-
-/******************************************************/
-/* GetFastSave: Returns the "fast save" file pointer. */
-/******************************************************/
-FILE *GetFastSave(
-        const Environment::Ptr&theEnv) {
-    return (RouterData(theEnv)->FastSaveFilePtr);
 }
 
 /*****************************************************/
@@ -635,10 +630,12 @@ FILE *GetFastSave(
 void UnrecognizedRouterMessage(
         const Environment::Ptr&theEnv,
         const char *logicalName) {
+#if STUBBING_INACTIVE
     PrintErrorID(theEnv, "ROUTER", 1, false);
     WriteString(theEnv, STDERR, "Logical name '");
     WriteString(theEnv, STDERR, logicalName);
     WriteString(theEnv, STDERR, "' was not recognized by any routers.\n");
+#endif
 }
 
 /*****************************************/
@@ -658,10 +655,3 @@ void PrintNRouter(
     genfree(theEnv, tempStr, length + 1);
 }
 
-/*********************/
-/* InputBufferCount: */
-/*********************/
-size_t InputBufferCount(
-        const Environment::Ptr&theEnv) {
-    return RouterData(theEnv)->CommandBufferInputCount;
-}
