@@ -77,6 +77,7 @@ public:
             std::shared_ptr<struct ConstructHeader>,
             std::shared_ptr<FunctionDefinition>> contents;
     std::list<Ptr> _argList;
+    size_t size() const noexcept;
 };
 
 #define arg_list argList

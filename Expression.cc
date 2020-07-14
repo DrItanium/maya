@@ -1828,24 +1828,6 @@ bool ConstantExpression(
 }
 #endif
 
-/******************************************/
-/* ConstantType: Returns true if the type */
-/*   is a constant, otherwise false.      */
-/******************************************/
-bool ConstantType(
-        int theType) {
-    switch (theType) {
-        case SYMBOL_TYPE:
-        case STRING_TYPE:
-        case INTEGER_TYPE:
-        case FLOAT_TYPE:
-        case INSTANCE_NAME_TYPE:
-        case INSTANCE_ADDRESS_TYPE:
-            return true;
-    }
-
-    return false;
-}
 /*****************************************************************************/
 /* IdenticalExpression: Determines if two expressions are identical. Returns */
 /*   true if the expressions are identical, otherwise false is returned.     */
@@ -1964,22 +1946,13 @@ bool ExpressionContainsVariables(
     return false;
 }
 #endif
-/*****************************************/
-/* ExpressionSize: Returns the number of */
-/*   structures stored in an expression. */
-/*****************************************/
-unsigned long ExpressionSize(
-        Expression *testPtr) {
-    unsigned long size = 0;
-#if STUBBING_INACTIVE
-
-    while (testPtr != nullptr) {
-        size++;
-        if (testPtr->argList != nullptr) { size += ExpressionSize(testPtr->argList); }
-        testPtr = testPtr->nextArg;
+size_t
+Expression::size() const noexcept {
+    size_t count = 1; // self
+    for (const auto& expr : _argList) {
+        count += expr->size();
     }
-#endif
-    return size;
+    return count;
 }
 #if STUBBING_INACTIVE
 
