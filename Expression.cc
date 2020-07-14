@@ -225,7 +225,7 @@ static unsigned long ListToPacked(
     return count;
 }
 
-
+#if STUBBING_INACTIVE
 /***************************************************
   NAME         : FindHashedExpression
   DESCRIPTION  : Determines if a given expression
@@ -388,6 +388,7 @@ unsigned long HashedExpressionIndex(
 }
 
 #endif /* (BLOAD_AND_BSAVE) */
+#endif
 
 // from Expression Parser
 #if STUBBING_INACTIVE
