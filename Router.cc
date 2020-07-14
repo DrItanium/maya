@@ -134,269 +134,84 @@ RouterModule::printRouterExists(const std::string &logicalName) {
 
 bool
 Router::respondsTo(const std::string &str) noexcept {
-#if 0
-    /*===================================================*/
-    /* If the router is inactive, then it can't respond. */
-    /*===================================================*/
-
-    if (!currentPtr->active) { return false; }
-
-    /*=============================================================*/
-    /* If the router has no query function, then it can't respond. */
-    /*=============================================================*/
-
-    if (currentPtr->queryCallback == nullptr) return false;
-
-    /*=========================================*/
-    /* Call the router's query function to see */
-    /* if it recognizes the logical name.      */
-    /*=========================================*/
-
-    return (*currentPtr->queryCallback)(theEnv, logicalName, nullptr);
-#endif
-    if (!_active || !canQuery()) {
-        return false;
-    }
-    return query(str);
+    return _active && canQuery() && query(str);
 }
-
-/**********************************/
-/* Write: Generic print function. */
-/**********************************/
-void Write(
-        const Environment::Ptr&theEnv,
-        const char *str) {
-    //WriteString(theEnv, STDOUT, str);
-}
-
-/************************************/
-/* Writeln: Generic print function. */
-/************************************/
-void Writeln(
-        const Environment::Ptr&theEnv,
-        const char *str) {
-    //WriteString(theEnv, STDOUT, str);
-    //WriteString(theEnv, STDOUT, "\n");
-}
-
-/****************************************/
-/* WriteString: Generic print function. */
-/****************************************/
-void WriteString(
-        const Environment::Ptr&theEnv,
-        const std::string& logicalName,
-        const std::string& str) {
-#if STUBBING_INACTIVE
-    router *currentPtr;
-    if (str == nullptr) return;
-
-    /*===================================================*/
-    /* If the "fast save" option is being used, then the */
-    /* logical name is actually a pointer to a file and  */
-    /* fprintf can be called directly to bypass querying */
-    /* all of the routers.                               */
-    /*===================================================*/
-
-    if (((char *) RouterData(theEnv)->FastSaveFilePtr) == logicalName) {
-        fprintf(RouterData(theEnv)->FastSaveFilePtr, "%s", str);
+void
+RouterModule::writeString(const std::string &logicalName, const std::string &str) {
+    if (str.empty()) {
         return;
     }
-
-    /*==============================================*/
-    /* Search through the list of routers until one */
-    /* is found that will handle the print request. */
-    /*==============================================*/
-
-    currentPtr = RouterData(theEnv)->ListOfRouters;
-    while (currentPtr != nullptr) {
-        if ((currentPtr->writeCallback != nullptr) ? QueryRouter(theEnv, logicalName, currentPtr) : false) {
-            (*currentPtr->writeCallback)(theEnv, logicalName, str, nullptr);
+    for (auto router : _listOfRouters) {
+        if (router->canWriteTo() && router->respondsTo(str)) {
+            router->write(logicalName, str);
             return;
         }
-        currentPtr = currentPtr->next;
     }
-
-    /*=====================================================*/
-    /* The logical name was not recognized by any routers. */
-    /*=====================================================*/
-
-    if (strcmp(STDERR, logicalName) != 0) { UnrecognizedRouterMessage(theEnv, logicalName); }
-#endif
+    if (logicalName != STDERR()) {
+        unrecognizedRouterMessage(logicalName);
+    }
+}
+void
+RouterModule::write(const std::string &str) {
+    writeString(STDOUT(), str);
 }
 
-/***********************************************/
-/* ReadRouter: Generic get character function. */
-/***********************************************/
-int ReadRouter(
-        const Environment::Ptr&theEnv,
-        const char *logicalName) {
-#if STUBBING_INACTIVE
-    struct router *currentPtr;
-    int inchar;
-
-    /*===================================================*/
-    /* If the "fast load" option is being used, then the */
-    /* logical name is actually a pointer to a file and  */
-    /* getc can be called directly to bypass querying    */
-    /* all of the routers.                               */
-    /*===================================================*/
-
-    if (((char *) RouterData(theEnv)->FastLoadFilePtr) == logicalName) {
-        inchar = getc(RouterData(theEnv)->FastLoadFilePtr);
-
-        if (inchar == '\n') {
-            if (((char *) RouterData(theEnv)->FastLoadFilePtr) == RouterData(theEnv)->LineCountRouter) { IncrementLineCount(theEnv); }
-        }
-
-        /* if (inchar == '\r') return('\n'); */
-
-        return (inchar);
-    }
-
-    /*===============================================*/
-    /* If the "fast string get" option is being used */
-    /* for the specified logical name, then bypass   */
-    /* the router system and extract the character   */
-    /* directly from the fast get string.            */
-    /*===============================================*/
-
-    if (RouterData(theEnv)->FastCharGetRouter == logicalName) {
-        inchar = (unsigned char) RouterData(theEnv)->FastCharGetString[RouterData(theEnv)->FastCharGetIndex];
-
-        RouterData(theEnv)->FastCharGetIndex++;
-
-        if (inchar == '\0') return (EOF);
-
-        if (inchar == '\n') {
-            if (RouterData(theEnv)->FastCharGetRouter == RouterData(theEnv)->LineCountRouter) { IncrementLineCount(theEnv); }
-        }
-
-        return (inchar);
-    }
-
-    /*==============================================*/
-    /* Search through the list of routers until one */
-    /* is found that will handle the getc request.  */
-    /*==============================================*/
-
-    currentPtr = RouterData(theEnv)->ListOfRouters;
-    while (currentPtr != nullptr) {
-        if ((currentPtr->readCallback != nullptr) ? QueryRouter(theEnv, logicalName, currentPtr) : false) {
-            inchar = (*currentPtr->readCallback)(theEnv, logicalName, nullptr);
-
+void
+RouterModule::writeLine(const std::string &str) {
+    writeString(STDOUT(), str);
+    writeString(STDOUT(), "\n");
+}
+int
+RouterModule::read(const std::string& logicalName) {
+    for (auto& router : _listOfRouters) {
+        if (router->canRead() && router->respondsTo(logicalName)) {
+            auto inchar = router->read(logicalName);
             if (inchar == '\n') {
-                if ((RouterData(theEnv)->LineCountRouter != nullptr) &&
-                    (strcmp(logicalName, RouterData(theEnv)->LineCountRouter) == 0)) { IncrementLineCount(theEnv); }
+                if (!_lineCountRouter.empty() && (logicalName == _lineCountRouter)) {
+                    _parent.incrementLineCount();
+                }
             }
-
-            return (inchar);
+            return inchar;
         }
-        currentPtr = currentPtr->next;
     }
-
-    /*=====================================================*/
-    /* The logical name was not recognized by any routers. */
-    /*=====================================================*/
-
-    UnrecognizedRouterMessage(theEnv, logicalName);
-#endif
-    return (-1);
+    unrecognizedRouterMessage(logicalName);
+    return -1;
 }
 
 /***************************************************/
 /* UnreadRouter: Generic unget character function. */
 /***************************************************/
-int UnreadRouter(
-        const Environment::Ptr&theEnv,
-        const char *logicalName,
-        int ch) {
-#if STUBBING_INACTIVE
-    struct router *currentPtr;
-
-    /*===================================================*/
-    /* If the "fast load" option is being used, then the */
-    /* logical name is actually a pointer to a file and  */
-    /* ungetc can be called directly to bypass querying  */
-    /* all of the routers.                               */
-    /*===================================================*/
-
-    if (((char *) RouterData(theEnv)->FastLoadFilePtr) == logicalName) {
-        if (ch == '\n') {
-            if (((char *) RouterData(theEnv)->FastLoadFilePtr) == RouterData(theEnv)->LineCountRouter) { DecrementLineCount(theEnv); }
-        }
-
-        return ungetc(ch, RouterData(theEnv)->FastLoadFilePtr);
-    }
-
-    /*===============================================*/
-    /* If the "fast string get" option is being used */
-    /* for the specified logical name, then bypass   */
-    /* the router system and unget the character     */
-    /* directly from the fast get string.            */
-    /*===============================================*/
-
-    if (RouterData(theEnv)->FastCharGetRouter == logicalName) {
-        if (ch == '\n') {
-            if (RouterData(theEnv)->FastCharGetRouter == RouterData(theEnv)->LineCountRouter) { DecrementLineCount(theEnv); }
-        }
-
-        if (RouterData(theEnv)->FastCharGetIndex > 0) RouterData(theEnv)->FastCharGetIndex--;
-        return ch;
-    }
-
-    /*===============================================*/
-    /* Search through the list of routers until one  */
-    /* is found that will handle the ungetc request. */
-    /*===============================================*/
-
-    currentPtr = RouterData(theEnv)->ListOfRouters;
-    while (currentPtr != nullptr) {
-        if ((currentPtr->unreadCallback != nullptr) ? QueryRouter(theEnv, logicalName, currentPtr) : false) {
-            if (ch == '\n') {
-                if ((RouterData(theEnv)->LineCountRouter != nullptr) &&
-                    (strcmp(logicalName, RouterData(theEnv)->LineCountRouter) == 0)) { DecrementLineCount(theEnv); }
+int
+RouterModule::unread(const std::string &logicalName, int toUnread) {
+    for (auto& router : _listOfRouters) {
+        if (router->canUnread() && router->respondsTo(logicalName)) {
+            if (toUnread == '\n') {
+                if (!_lineCountRouter.empty() && (logicalName == _lineCountRouter)) {
+                    _parent.decrementLineCount();
+                }
             }
-
-            return (*currentPtr->unreadCallback)(theEnv, logicalName, ch, nullptr);
+            return router->unread(logicalName, toUnread);
         }
-
-        currentPtr = currentPtr->next;
     }
-
-    /*=====================================================*/
-    /* The logical name was not recognized by any routers. */
-    /*=====================================================*/
-
-    UnrecognizedRouterMessage(theEnv, logicalName);
-#endif
+    // the logical name was not recognized by any routers
+    unrecognizedRouterMessage(logicalName);
     return -1;
 }
-
-/********************************************/
-/* ExitRouter: Generic exit function. Calls */
-/*   all of the router exit functions.      */
-/********************************************/
-void ExitRouter(
-        const Environment::Ptr&theEnv,
-        int num) {
-#if STUBBING_INACTIVE
-    struct router *currentPtr, *nextPtr;
-
-    RouterData(theEnv)->Abort = false;
-    currentPtr = RouterData(theEnv)->ListOfRouters;
-    while (currentPtr != nullptr) {
-        nextPtr = currentPtr->next;
-        if (currentPtr->active) {
-            if (currentPtr->exitCallback != nullptr) {
-                (*currentPtr->exitCallback)(theEnv, num, nullptr);
+void
+RouterModule::exit(int code) {
+    _abort = false;
+    for (auto& router : _listOfRouters) {
+        if (router->isActive()) {
+            if (router->canExit()) {
+                router->onExit(code);
             }
         }
-        currentPtr = nextPtr;
     }
-
-    if (RouterData(theEnv)->Abort) return;
-    genexit(theEnv, num);
-#endif
+    if (_abort) {
+        return;
+    }
+    /// @todo reimplement as C++ code
+    //genexit(theEnv, num);
 }
 
 /********************************************/
@@ -474,152 +289,57 @@ RouterModule::insertRouter(Router::Ptr router) {
     return true;
 #endif
     return false;
-    return false;
 }
-
-/*****************************************************************/
-/* DeleteRouter: Removes an I/O router from the list of routers. */
-/*****************************************************************/
-bool DeleteRouter(
-        const Environment::Ptr&theEnv,
-        const char *routerName) {
-#if STUBBING_INACTIVE
-    struct router *currentPtr, *lastPtr;
-
-    currentPtr = RouterData(theEnv)->ListOfRouters;
-    lastPtr = nullptr;
-
-    while (currentPtr != nullptr) {
-        if (strcmp(currentPtr->name, routerName) == 0) {
-            genfree(theEnv, (void *) currentPtr->name, strlen(currentPtr->name) + 1);
-            if (lastPtr == nullptr) {
-                RouterData(theEnv)->ListOfRouters = currentPtr->next;
-                rm(theEnv, currentPtr, sizeof(router));
-                return true;
-            }
-            lastPtr->next = currentPtr->next;
-            rm(theEnv, currentPtr, sizeof(router));
-            return true;
+bool
+RouterModule::destroy(const std::string &logicalName) {
+    for (auto pos = _listOfRouters.begin(); pos != _listOfRouters.end(); ++pos) {
+        auto router = *pos; // this will go out of scope and cause the shared pointer to reclaim
+        if (router->getName() == logicalName) {
+           // need to purge it out
+           _listOfRouters.erase(pos);
+           return true;
         }
-        lastPtr = currentPtr;
-        currentPtr = currentPtr->next;
     }
-#endif
-    return false;
-}
-
-/*********************************************************************/
-/* QueryRouters: Determines if any router recognizes a logical name. */
-/*********************************************************************/
-bool QueryRouters(
-        const Environment::Ptr&theEnv,
-        const char *logicalName) {
-#if STUBBING_INACTIVE
-    struct router *currentPtr;
-
-    currentPtr = RouterData(theEnv)->ListOfRouters;
-    while (currentPtr != nullptr) {
-        if (QueryRouter(theEnv, logicalName, currentPtr)) return true;
-        currentPtr = currentPtr->next;
-    }
-#endif
     return false;
 }
 bool
 RouterModule::query(const std::string &logicalName) {
-
-}
-/************************************************/
-/* QueryRouter: Determines if a specific router */
-/*    recognizes a logical name.                */
-/************************************************/
-static bool QueryRouter( const Environment::Ptr&theEnv,
-        const char *logicalName,
-        struct router *currentPtr) {
-#if STUBBING_INACTIVE
-    /*===================================================*/
-    /* If the router is inactive, then it can't respond. */
-    /*===================================================*/
-
-    if (!currentPtr->active) { return false; }
-
-    /*=============================================================*/
-    /* If the router has no query function, then it can't respond. */
-    /*=============================================================*/
-
-    if (currentPtr->queryCallback == nullptr) return false;
-
-    /*=========================================*/
-    /* Call the router's query function to see */
-    /* if it recognizes the logical name.      */
-    /*=========================================*/
-
-    return (*currentPtr->queryCallback)(theEnv, logicalName, nullptr);
-#endif
-    return false;
-
-}
-
-/*******************************************************/
-/* DeactivateRouter: Deactivates a specific router. */
-/*******************************************************/
-bool DeactivateRouter(
-        const Environment::Ptr&theEnv,
-        const char *routerName) {
-#if STUBBING_INACTIVE
-    struct router *currentPtr;
-
-    currentPtr = RouterData(theEnv)->ListOfRouters;
-
-    while (currentPtr != nullptr) {
-        if (strcmp(currentPtr->name, routerName) == 0) {
-            currentPtr->active = false;
+    for (auto& router : _listOfRouters) {
+        if (router->respondsTo(logicalName)) {
             return true;
         }
-        currentPtr = currentPtr->next;
     }
-#endif
     return false;
 }
 
-/************************************************/
-/* ActivateRouter: Activates a specific router. */
-/************************************************/
-bool ActivateRouter(
-        const Environment::Ptr&theEnv,
-        const char *routerName) {
-#if STUBBING_INACTIVE
-    struct router *currentPtr;
-
-    currentPtr = RouterData(theEnv)->ListOfRouters;
-
-    while (currentPtr != nullptr) {
-        if (strcmp(currentPtr->name, routerName) == 0) {
-            currentPtr->active = true;
+bool
+RouterModule::deactivate(const std::string &logicalName) {
+    for (auto& element : _listOfRouters) {
+        if (element->getName() == logicalName) {
+            element->deactivate();
             return true;
         }
-        currentPtr = currentPtr->next;
     }
-#endif
-
     return false;
 }
 
-/*****************************************/
-/* FindRouter: Locates the named router. */
-/*****************************************/
-Router *FindRouter(
-        const Environment::Ptr&theEnv,
-        const char *routerName) {
-#if STUBBING_INACTIVE
-    Router *currentPtr;
-
-    for (currentPtr = RouterData(theEnv)->ListOfRouters;
-         currentPtr != nullptr;
-         currentPtr = currentPtr->next) {
-        if (strcmp(currentPtr->name, routerName) == 0) { return currentPtr; }
+bool
+RouterModule::activate(const std::string &logicalName) {
+    for (auto& element : _listOfRouters) {
+        if (element->getName() == logicalName) {
+            element->activate();
+            return true;
+        }
     }
-#endif
+    return false;
+}
+Router::Ptr
+RouterModule::find(const std::string& logicalName) {
+    for (auto& element : _listOfRouters) {
+        if (element->getName() == logicalName) {
+            return element;
+        }
+    }
     return nullptr;
 }
 
@@ -627,31 +347,10 @@ Router *FindRouter(
 /* UnrecognizedRouterMessage: Standard error message */
 /*   for an unrecognized router name.                */
 /*****************************************************/
-void UnrecognizedRouterMessage(
-        const Environment::Ptr&theEnv,
-        const char *logicalName) {
-#if STUBBING_INACTIVE
-    PrintErrorID(theEnv, "ROUTER", 1, false);
-    WriteString(theEnv, STDERR, "Logical name '");
-    WriteString(theEnv, STDERR, logicalName);
-    WriteString(theEnv, STDERR, "' was not recognized by any routers.\n");
-#endif
+void
+RouterModule::unrecognizedRouterMessage(const std::string& logicalName) {
+    _parent.printErrorID("ROUTER", 1, false);
+    writeStrings(STDERR(), "Logical name '", logicalName, "' was not recognized by any routers.\n");
 }
 
-/*****************************************/
-/* PrintNRouter: Generic print function. */
-/*****************************************/
-void PrintNRouter(
-        const Environment::Ptr&theEnv,
-        const char *logicalName,
-        const char *str,
-        unsigned long length) {
-    char *tempStr;
-
-    tempStr = (char *) genalloc(theEnv, length + 1);
-    genstrncpy(tempStr, str, length);
-    tempStr[length] = 0;
-    WriteString(theEnv, logicalName, tempStr);
-    genfree(theEnv, tempStr, length + 1);
-}
 

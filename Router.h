@@ -103,6 +103,9 @@ public:
     virtual int unread(const std::string& logicalName, int value) = 0;
     virtual bool canWriteTo() const noexcept = 0;
     virtual bool canQuery() const noexcept = 0;
+    virtual bool canRead() const noexcept = 0;
+    virtual bool canUnread() const noexcept = 0;
+    virtual bool canExit() const noexcept = 0;
     bool respondsTo(const std::string& logicalName) noexcept;
 protected:
     Environment& _parent;
@@ -113,27 +116,52 @@ private:
 };
 struct LambdaRouter : public Router {
 public:
-    using QueryFunction = std::function<bool(const Environment::Ptr&, const std::string&)>;
-    using WriteFunction = std::function<void(const Environment::Ptr&, const std::string&, const std::string&)>;
-    using ExitFunction = std::function<void(const Environment::Ptr&, int)>;
-    using ReadFunction = std::function<int(const Environment::Ptr&, const std::string&)>;
-    using UnreadFunction = std::function<int(const Environment::Ptr&, const std::string&, int)>;
+    using QueryFunction = std::function<bool(Environment&, const std::string&)>;
+    using WriteFunction = std::function<void(Environment&, const std::string&, const std::string&)>;
+    using ExitFunction = std::function<void(Environment&, int)>;
+    using ReadFunction = std::function<int(Environment&, const std::string&)>;
+    using UnreadFunction = std::function<int(Environment&, const std::string&, int)>;
 public:
     LambdaRouter(Environment& callback, const std::string& name, int priority, QueryFunction queryFn = nullptr,
            WriteFunction writeFn = nullptr, ReadFunction readFn = nullptr,
            UnreadFunction unreadFn = nullptr, ExitFunction exitFn = nullptr);
     ~LambdaRouter() override = default;
-    bool query(const std::string& logicalName) override;
-    void write(const std::string& logicalName, const std::string& value) override;
-    void onExit(int exitCode) override;
-    int read(const std::string& logicalName) override;
-    int unread(const std::string& logicalName, int value) override;
-    bool canWriteTo() const noexcept override {
-        return _writeCallback.operator bool();
+    bool query(const std::string& logicalName) override {
+       if (_queryCallback)  {
+           return _queryCallback(_parent, logicalName);
+       } else {
+           return false;
+       }
     }
-    bool canQuery() const noexcept override {
-        return _queryCallback.operator bool();
+    void write(const std::string& logicalName, const std::string& value) override {
+        if (_writeCallback) {
+            _writeCallback(_parent, logicalName, value);
+        }
     }
+    void onExit(int exitCode) override {
+        if (_exitCallback) {
+            _exitCallback(_parent, exitCode);
+        }
+    }
+    int read(const std::string& logicalName) override {
+        if (_readCallback) {
+            return _readCallback(_parent, logicalName);
+        } else {
+            return -1;
+        }
+    }
+    int unread(const std::string& logicalName, int value) override {
+       if (_unreadCallback) {
+          return  _unreadCallback(_parent, logicalName, value);
+       } else {
+           return -1;
+       }
+    }
+    bool canWriteTo() const noexcept override { return _writeCallback.operator bool(); }
+    bool canQuery() const noexcept override { return _queryCallback.operator bool(); }
+    bool canExit() const noexcept override { return _exitCallback.operator bool(); }
+    bool canRead() const noexcept override { return _readCallback.operator bool(); }
+    bool canUnread() const noexcept override { return _unreadCallback.operator bool(); }
 private:
     QueryFunction _queryCallback;
     WriteFunction _writeCallback;
@@ -152,14 +180,7 @@ public:
     size_t _inputUngets = 0;
     bool _awaitingInput = true;
     std::string _lineCountRouter;
-    std::string _fastCharGetRouter;
-    std::string _fastCharGetString;
-    long _fastCharGetIndex = 0;
     std::list<Router::Ptr> _listOfRouters;
-#if 0
-    FILE *FastLoadFilePtr;
-    FILE *FastSaveFilePtr;
-#endif
     bool _abort = false;
 private:
     bool insertRouter(Router::Ptr router);
@@ -175,6 +196,10 @@ public:
     int read(const std::string& logicalName);
     int unread(const std::string& logicalName, int toUnread);
     void writeString(const std::string& logicalName, const std::string& str);
+    template<typename ... Strs>
+    void writeStrings(const std::string& logicalName, Strs&& ... strings) {
+        (writeString(logicalName, strings), ...);
+    }
     /**
      * @brief Write the given string to STDOUT
      * @param str the string to output to the stdout router

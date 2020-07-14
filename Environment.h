@@ -194,6 +194,10 @@ public:
      * @param body the function to invoke
      */
     void install(std::function<void(Environment&)> body);
+public:
+    void printErrorID(const std::string& module, int errorID, bool printCR);
+    void incrementLineCount() noexcept;
+    void decrementLineCount() noexcept;
 };
 
 #if STUBBING_INACTIVE
