@@ -206,8 +206,8 @@ constexpr size_t countToBitmapSize(size_t size) {
 
 constexpr auto EVALUATION_DATA = 44;
 
-struct evaluationData : public EnvironmentModule {
-    evaluationData(Environment& parent) : EnvironmentModule(parent) {}
+struct EvaluationModule : public EnvironmentModule {
+    EvaluationModule(Environment& parent) : EnvironmentModule(parent) {}
     std::shared_ptr<Expression> CurrentExpression;
     bool EvaluationError = false;
     bool HaltExecution = false;
@@ -224,7 +224,7 @@ struct evaluationData : public EnvironmentModule {
     constexpr auto shouldHaltExecution() const noexcept { return HaltExecution; }
     void haltExecution(bool value = true) noexcept { HaltExecution = value; }
 };
-RegisterEnvironmentModule(evaluationData, EVALUATION_DATA, Evaluation);
+RegisterEnvironmentModule(EvaluationModule, EVALUATION_DATA, Evaluation);
 
 void InitializeEvaluationData(const Environment::Ptr&);
 bool EvaluateExpression(const Environment::Ptr&, Expression *, UDFValue *);

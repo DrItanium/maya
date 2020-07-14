@@ -33,6 +33,7 @@
 #include "ReferenceCounted.h"
 #include "Hashable.h"
 #include "HoldsEnvironmentCallback.h"
+#include "IORouterAware.h"
 struct UDFValue;
 class Environment;
 using EnvironmentPtr = std::shared_ptr<Environment>;
@@ -60,27 +61,33 @@ private:
 /*************/
 /* clipsVoid */
 /*************/
-struct CLIPSVoid : public TypeHeader, public ReferenceCountable {
+struct CLIPSVoid : public TypeHeader, public ReferenceCountable, public IORouterAware {
 public:
     using Self = CLIPSVoid;
     using Ptr = std::shared_ptr<Self>;
 public:
     CLIPSVoid() : TypeHeader(VOID_TYPE) { }
+    ~CLIPSVoid() override = default;
     void release() override { }
     void retain() override { }
     bool canRelease() const noexcept { return false; }
+    void write(const EnvironmentPtr&, const std::string&) override {
+        // do nothing
+    }
 };
 
 /***************/
 /* CLIPSLexeme */
 /***************/
-struct CLIPSLexeme : public TypeHeader, public ReferenceCounted, public Hashable {
+struct CLIPSLexeme : public TypeHeader, public ReferenceCounted, public Hashable, public IORouterAware {
 public:
     using Self = CLIPSLexeme;
     using Ptr = std::shared_ptr<Self>;
 public:
     CLIPSLexeme(unsigned short type) : TypeHeader(type) { }
+    ~CLIPSLexeme() override = default;
     size_t hash(size_t range) override;
+    void write(const EnvironmentPtr& theEnv, const std::string& logicalName) override;
 public:
     std::string contents;
 };
@@ -88,13 +95,15 @@ public:
 /**************/
 /* CLIPSFloat */
 /**************/
-struct CLIPSFloat : public TypeHeader, public ReferenceCounted, public Hashable {
+struct CLIPSFloat : public TypeHeader, public ReferenceCounted, public Hashable, public IORouterAware {
 public:
     using Self = CLIPSFloat;
     using Ptr = std::shared_ptr<Self>;
 public:
     CLIPSFloat() : TypeHeader(FLOAT_TYPE) { }
+    ~CLIPSFloat() override = default;
     size_t hash(size_t range) override;
+    void write(const EnvironmentPtr& theEnv, const std::string& logicalName) override;
 public:
     double contents;
 };
@@ -102,13 +111,15 @@ public:
 /****************/
 /* CLIPSInteger */
 /****************/
-struct CLIPSInteger : public TypeHeader, public ReferenceCounted, public Hashable {
+struct CLIPSInteger : public TypeHeader, public ReferenceCounted, public Hashable, public IORouterAware {
 public:
     using Self = CLIPSInteger;
     using Ptr = std::shared_ptr<Self>;
 public:
     CLIPSInteger() : TypeHeader(INTEGER_TYPE) { }
+    ~CLIPSInteger() override = default;
     size_t hash(size_t range) override;
+    void write(const EnvironmentPtr& theEnv, const std::string& logicalName) override;
 public:
     long long contents;
 };

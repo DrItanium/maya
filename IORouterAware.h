@@ -10,6 +10,11 @@ using EnvironmentPtr = std::shared_ptr<struct Environment>;
 class IORouterAware {
 public:
     virtual ~IORouterAware() = default;
+    /**
+     * @brief Emit the contents of this object to a router
+     * @param theEnv the environment pointer that this object is a part of
+     * @param logicalName the logical name to write to
+     */
     virtual void write(const EnvironmentPtr& theEnv, const std::string& logicalName) = 0;
 };
 

@@ -125,17 +125,17 @@ void InitializeEvaluationData(
         const Environment::Ptr&theEnv) {
 #if STUBBING_INACTIVE
     struct externalAddressType cPointer = {"C", PrintCAddress, PrintCAddress, nullptr, NewCAddress, nullptr};
-    /// @todo move deallocate evaluation data into the dtor of evaluationData
-    //AllocateEnvironmentData(theEnv, EVALUATION_DATA, sizeof(evaluationData), DeallocateEvaluationData);
+    /// @todo move deallocate evaluation data into the dtor of EvaluationModule
+    //AllocateEnvironmentData(theEnv, EVALUATION_DATA, sizeof(EvaluationModule), DeallocateEvaluationData);
     theEnv->allocateEnvironmentModule<>()
-    auto ptr = std::make_unique<evaluationData>();
+    auto ptr = std::make_unique<EvaluationModule>();
     theEnv->installEnvironmentModule(std::move(ptr));
     InstallExternalAddressType(theEnv, &cPointer);
 #endif
 }
 
 void
-evaluationData::installPrimitive(EntityRecord::Ptr record, int position) {
+EvaluationModule::installPrimitive(EntityRecord::Ptr record, int position) {
     if (PrimitivesArray[position]) {
         throw "Overwriting an already installed primitive";
     } else {
@@ -284,7 +284,7 @@ bool EvaluateExpression(
 }
 #endif
 size_t
-evaluationData::installExternalAddressType(const externalAddressType& newType) {
+EvaluationModule::installExternalAddressType(const externalAddressType& newType) {
     if (numberOfAddressTypes == MAXIMUM_EXTERNAL_ADDRESS_TYPES)  {
         throw "Too many external address types defined";
     }
@@ -299,12 +299,12 @@ evaluationData::installExternalAddressType(const externalAddressType& newType) {
 /* ResetErrorFlags */
 /*******************/
 void
-evaluationData::resetErrorFlags() noexcept {
+EvaluationModule::resetErrorFlags() noexcept {
     EvaluationError = false;
     HaltExecution = false;
 }
 void
-evaluationData::setEvaluationError(bool value) noexcept {
+EvaluationModule::setEvaluationError(bool value) noexcept {
    EvaluationError = value;
    if (value) {
        HaltExecution = true;
@@ -396,11 +396,6 @@ void SetMultifieldErrorValue(
     returnValue->begin = 0;
     returnValue->range = 0;
 }
-
-
-
-
-
 #endif
 
 /*****************************************/

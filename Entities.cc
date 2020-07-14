@@ -6,6 +6,7 @@
 #include <type_traits>
 #include "Fact.h"
 #include "Object.h"
+#include <sstream>
 
 
 //size_t hash(size_t range) override;
@@ -105,5 +106,27 @@ operator==(const UDFValue& a, const UDFValue& b) {
    return a.getValue() == b.getValue();
 }
 #endif
+
+void
+CLIPSLexeme::write(const EnvironmentPtr &theEnv, const std::string &logicalName) {
+    theEnv->writeString(logicalName, contents);
+}
+
+void
+CLIPSFloat::write(const EnvironmentPtr &theEnv, const std::string &logicalName) {
+    std::stringstream converter;
+    converter << contents;
+    auto target = converter.str();
+    theEnv->writeString(logicalName, target);
+}
+
+
+void
+CLIPSInteger::write(const EnvironmentPtr &theEnv, const std::string &logicalName) {
+    std::stringstream converter;
+    converter << contents;
+    auto target = converter.str();
+    theEnv->writeString(logicalName, target);
+}
 
 

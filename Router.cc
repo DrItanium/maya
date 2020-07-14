@@ -353,4 +353,7 @@ RouterModule::unrecognizedRouterMessage(const std::string& logicalName) {
     writeStrings(STDERR(), "Logical name '", logicalName, "' was not recognized by any routers.\n");
 }
 
-
+void
+Environment::writeString(const std::string &logicalName, const std::string &string) {
+    getEnvironmentModule<RouterModule>()->writeString(logicalName, string);
+}

@@ -180,9 +180,16 @@ public:
             std::cout << "\n[ENVRNMNT2] Environment data position " << position << " exceeds the maximum allowed.\n";
             throw 44;
         } else {
-            auto& thing = environmentModules[position];
-            return (std::unique_ptr<EnvironmentModuleType<position>>&)thing;
+            if (auto& thing = environmentModules[position]; !thing) {
+                throw "Unallocated environment module requested!";
+            } else {
+                return (std::unique_ptr<EnvironmentModuleType<position>> &) thing;
+            }
         }
+    }
+    template<typename T>
+    decltype(auto) getEnvironmentModule() {
+        return getEnvironmentModule<EnvironmentModuleIndex<T>>();
     }
     template<typename T, typename ... Args>
     bool allocateEnvironmentModule(Args&& ... args) noexcept {
@@ -198,6 +205,7 @@ public:
     void printErrorID(const std::string& module, int errorID, bool printCR);
     void incrementLineCount() noexcept;
     void decrementLineCount() noexcept;
+    void writeString(const std::string& logicalName, const std::string& string);
 };
 
 #if STUBBING_INACTIVE
