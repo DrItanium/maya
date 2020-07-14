@@ -4,148 +4,140 @@ project(maya VERSION 6.40)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 add_library(clips
-		Agenda.h
-		Analysis.h
-		ArgumentAccess.h
-		BasicMathFunctions.h
-		BasicRuleCommands.h
-		BinaryLoad.h
-		BinarySave.h
-		ClassFunctions.h
-		clips.h
-		CommandLine.h
-		ConflictResolutionStrategy.h
-		Constants.h
-		Constraint.h
-		Construct.h
-		ConstructProfilingFunctions.h
-		DefaultAttribute.h
-		DeffactsBasicCommands.h
-		DeffactsBinarySaveLoad.h
-		Deffacts.h
-		DeffactsParser.h
-		DeffunctionBinaryLoadSave.h
-		DeffunctionExecution.h
-		Deffunction.h
-		DeffunctionParser.h
-		Defglobal.h
-		DefinstancesBinaryLoadSave.h
-		Definstances.h
-		DefmessageHandlerCommands.h
-		DefmessageHandlerDispatch.h
-		DefmessageHandlerFunctions.h
-		DefmessageHandlerParser.h
-		DefModuleBasicCommands.h
-		DefmoduleBinarySaveLoad.h
-		Defmodule.h
-		DefmoduleParser.h
-		DefmoduleUtility.h
-		Defrule.h
-		DeftemplateBasicCommands.h
-		DeftemplateBinarySaveLoad.h
-		DeftemplateFunctions.h
-		Deftemplate.h
-		DeftemplateLHS.h
-		DeftemplateParser.h
-		DeftemplateRHSParsing.h
-		DeftemplateUtilities.h
-		Developer.h
-		Drive.h
-		Engine.h
-		Entities.hxx
-		Environment.h
-		Evaluation.h
-		Expression.h
-		ExtendedMathFunctions.h
-		ExternalFunctions.h
-		Fact.h
-		File.h
-		Generate.h
-		GenericFunctionBinaryLoadSave.h
-		GenericFunctionCommands.h
-		GenericFunctionExecution.h
-		GenericFunction.h
-		GenericFunctionParser.h
-		ImplicitSystemMethodsParsing.h
-		IncrementalReset.h
-		InferenceEngineObjectAccessRotuines.h
-		InferenceEngineObjectParsingRoutines.h
-		InstanceCommand.h
-		InstanceFunctions.h
-		InstanceManager.h
-		InstanceModifyAndDuplicate.h
-		InstanceMultifieldTypeSlot.h
-		InstanceParser.h
-		InstanceQuery.h
-		InstanceSaveLoadCommands.h
-		InstanceSetQueryParser.h
-		IOFunctions.h
-		LogicalDependencies.h
-		Match.h
-		MayaExtensions.h
-		MayaSetup.h
-		MemoryAllocation.h
-		MiscFunctions.h
-		Multifield.h
-		MultipleInheritanceParser.h
-		Network.h
-		ObjectBinaryLoadSave.h
-		Object.h
-		ObjectPatternMatcher.h
-		ObjectReteBinarySaveLoad.h
-		ObjectReteMatch.h
+		IORouterAware.h
 		OperatingSystemShim.h
-		ParsingFunctions.h
-		Pattern.h
 		Platform.h
-		PredicateFunctions.h
-		PrettyPrint.h
-		PrintUtility.h
-		ProceduralCodeSupportRoutines.h
-		ProceduralFunctions.h
-		ProceduralFunctionsParser.h
-		ReferenceCounted.h
-		Reorder.h
-		ReteUtility.h
-		Retract.h
-		Router.h
-		RuleBinarySaveLoad.h
-		RuleBuild.h
-		RuleCommands.h
-		RuleConstraints.h
-		RuleDelete.h
-		RuleLHSParsing.h
-		RuleParser.h
-		Scanner.h
 		Setup.h
-		SortingFunctions.h
-		StringFunctions.h
-		StringRouter.h
-		Symbol.h
-		SystemDependency.h
-		UserData.h
-		UserSetup.h
-		Utility.h
-		Watch.h
-		Environment.cc
-		Evaluation.cc
-		ReferenceCounted.cc
-		Hashable.h
-		Hashable.cc
-		HoldsEnvironmentCallback.h
-		HoldsEnvironmentCallback.cc
-		CLIPSValue.cc
-		Entities.cc
+		Entities.hxx Entities.cc CLIPSValue.cc
+		Environment.h Environment.cc
+		Evaluation.h Evaluation.cc
+		Expression.h Expression.cc
+		Router.h Router.cc
+		ReferenceCounted.h ReferenceCounted.cc
+		Hashable.h Hashable.cc
+		HoldsEnvironmentCallback.h HoldsEnvironmentCallback.cc
+		#Agenda.h
+		#Analysis.h
+		#ArgumentAccess.h
+		#BasicMathFunctions.h
+		#BasicRuleCommands.h
+		#BinaryLoad.h
+		#BinarySave.h
+		#ClassFunctions.h
+		#clips.h
+		#CommandLine.h
+		#ConflictResolutionStrategy.h
+		#Constants.h
+		#Constraint.h
+		#Construct.h
+		#ConstructProfilingFunctions.h
+		#DefaultAttribute.h
+		#DeffactsBasicCommands.h
+		#DeffactsBinarySaveLoad.h
+		#Deffacts.h
+		#DeffactsParser.h
+		#DeffunctionBinaryLoadSave.h
+		#DeffunctionExecution.h
+		#Deffunction.h
+		#DeffunctionParser.h
+		#Defglobal.h
+		#DefinstancesBinaryLoadSave.h
+		#Definstances.h
+		#DefmessageHandlerCommands.h
+		#DefmessageHandlerDispatch.h
+		#DefmessageHandlerFunctions.h
+		#DefmessageHandlerParser.h
+		#DefModuleBasicCommands.h
+		#DefmoduleBinarySaveLoad.h
+		#Defmodule.h
+		#DefmoduleParser.h
+		#DefmoduleUtility.h
+		#Defrule.h
+		#DeftemplateBasicCommands.h
+		#DeftemplateBinarySaveLoad.h
+		#DeftemplateFunctions.h
+		#Deftemplate.h
+		#DeftemplateLHS.h
+		#DeftemplateParser.h
+		#DeftemplateRHSParsing.h
+		#DeftemplateUtilities.h
+		#Developer.h
+		#Drive.h
+		#Engine.h
+		#ExtendedMathFunctions.h
+		#ExternalFunctions.h
+		#Fact.h
+		#File.h
+		#Generate.h
+		#GenericFunctionBinaryLoadSave.h
+		#GenericFunctionCommands.h
+		#GenericFunctionExecution.h
+		#GenericFunction.h
+		#GenericFunctionParser.h
+		#ImplicitSystemMethodsParsing.h
+		#IncrementalReset.h
+		#InferenceEngineObjectAccessRotuines.h
+		#InferenceEngineObjectParsingRoutines.h
+		#InstanceCommand.h
+		#InstanceFunctions.h
+		#InstanceManager.h
+		#InstanceModifyAndDuplicate.h
+		#InstanceMultifieldTypeSlot.h
+		#InstanceParser.h
+		#InstanceQuery.h
+		#InstanceSaveLoadCommands.h
+		#InstanceSetQueryParser.h
+		#IOFunctions.h
+		#LogicalDependencies.h
+		#Match.h
+		#MayaExtensions.h
+		#MayaSetup.h
+		#MemoryAllocation.h
+		#MiscFunctions.h
+		#Multifield.h
+		#MultipleInheritanceParser.h
+		#Network.h
+		#ObjectBinaryLoadSave.h
+		#Object.h
+		#ObjectPatternMatcher.h
+		#ObjectReteBinarySaveLoad.h
+		#ObjectReteMatch.h
+		#ParsingFunctions.h
+		#Pattern.h
+		#PredicateFunctions.h
+		#PrettyPrint.h
+		#PrintUtility.h
+		#ProceduralCodeSupportRoutines.h
+		#ProceduralFunctions.h
+		#ProceduralFunctionsParser.h
+		#Reorder.h
+		#ReteUtility.h
+		#Retract.h
+		#RuleBinarySaveLoad.h
+		#RuleBuild.h
+		#RuleCommands.h
+		#RuleConstraints.h
+		#RuleDelete.h
+		#RuleLHSParsing.h
+		#RuleParser.h
+		#Scanner.h
+		#SortingFunctions.h
+		#StringFunctions.h
+		#StringRouter.h
+		#Symbol.h
+		#SystemDependency.h
+		#UserData.h
+		#UserSetup.h
+		#Utility.h
+		#Watch.h
 		#Agenda.cc
 		#CommandLine.cc
-		#Expression.cc
 		#FileUtilities.cc
 		#MemoryAllocation.cc
 		#SystemDependency.cc
 		#UserFunctions.cc
 		#Utility.cc
 		#PrintUtility.cc
-		Router.cc
 		#Analysis.cc
 		#ArgumentAccess.cc
 		#BinaryLoad.cc
@@ -283,8 +275,8 @@ add_library(clips
 		##DeftemplateRHSParsing.cc
 		##DeftemplateUtilities.cc
 		#UserData.cc
-		#Watch.cc
-		IORouterAware.h)
+		#Watch.cc)
+)
 add_library(maya_extensions
 		BoostExtensions.h
 		#BoostExtensions.cc

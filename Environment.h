@@ -63,8 +63,6 @@
 
 #define _H_envrnmnt
 
-#include <stdbool.h>
-#include <cstdlib>
 #include <memory>
 #include <vector>
 #include <array>

@@ -47,15 +47,14 @@
 
 #define _H_expressn
 
-struct ExpressionHashNode;
-typedef struct savedContexts SavedContexts;
+//struct ExpressionHashNode;
+//typedef struct savedContexts SavedContexts;
 
-#include <cstdio>
-#include "Entities.hxx"
-#include "Construct.h"
-#include "ExternalFunctions.h"
-#include "Scanner.h"
 #include "Environment.h"
+#include "Entities.hxx"
+//#include "Construct.h"
+//#include "ExternalFunctions.h"
+//#include "Scanner.h"
 
 /******************************/
 /* Expression Data Structures */
@@ -75,7 +74,7 @@ public:
             std::shared_ptr<struct Fact>,
             std::shared_ptr<struct Instance>,
             Multifield::Ptr,
-            std::shared_ptr<ConstructHeader>,
+            std::shared_ptr<struct ConstructHeader>,
             std::shared_ptr<FunctionDefinition>> contents;
     Ptr argList;
     Ptr nextArg;
@@ -120,7 +119,7 @@ struct ExpressionModule : public EnvironmentModule {
     Expression *ExpressionArray = nullptr;
     unsigned long ExpressionCount = 0;
 #endif
-    SavedContexts *svContexts = nullptr;
+    //SavedContexts *svContexts = nullptr;
     bool ReturnContext = false;
     bool BreakContext = false;
     bool SequenceOpMode = false;

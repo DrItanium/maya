@@ -61,13 +61,10 @@
 /*************************************************************/
 
 #include "Environment.h"
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
-#include <iostream>
 
 #include "Setup.h"
-
+#include "Router.h"
+#if 0
 #include "BasicMathFunctions.h"
 #include "CommandLine.h"
 #include "ExtendedMathFunctions.h"
@@ -83,11 +80,10 @@
 #include "ProceduralCodeSupportRoutines.h"
 #include "ProceduralFunctions.h"
 #include "PredicateFunctions.h"
-#include "PrintUtility.h"
+//#include "PrintUtility.h"
 #include "ConstructProfilingFunctions.h"
-#include "Router.h"
 #include "SortingFunctions.h"
-#include "StringFunctions.h"
+//#include "StringFunctions.h"
 #include "SystemDependency.h"
 #include "Utility.h"
 #include "Watch.h"
@@ -120,6 +116,7 @@
 #if DEVELOPER
 #include "developr.h"
 #endif
+#endif
 
 constexpr auto SIZE_ENVIRONMENT_HASH = 131;
 
@@ -135,18 +132,6 @@ EnvironmentModule::onReset() noexcept {
 
 
 
-/****************************************/
-/* GLOBAL EXTERNAL FUNCTION DEFINITIONS */
-/****************************************/
-
-extern void UserFunctions(const Environment::Ptr&);
-
-/***************************************/
-/* LOCAL INTERNAL FUNCTION DEFINITIONS */
-/***************************************/
-
-static void SystemFunctionDefinitions(const Environment::Ptr&);
-static void InitializeEnvironment(const Environment::Ptr&);
 Environment::Ptr
 Environment::create() {
     return std::make_shared<Environment>();

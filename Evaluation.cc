@@ -68,18 +68,15 @@
 /*                                                           */
 /*************************************************************/
 
-#include <cstdio>
-#include <stdint.h>
-#include <cstdlib>
-#include <cstring>
-#include <ctype.h>
 
 #include "Setup.h"
+#include "Environment.h"
+#include "Evaluation.h"
 
+#if 0
 #include "ArgumentAccess.h"
 #include "CommandLine.h"
 #include "Constants.h"
-#include "Environment.h"
 #include "Fact.h"
 #include "MemoryAllocation.h"
 #include "DefmoduleUtility.h"
@@ -105,6 +102,7 @@
 
 #include "Evaluation.h"
 #include "ReferenceCounted.h"
+#endif
 
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
