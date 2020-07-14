@@ -172,13 +172,12 @@ template<typename T, T position>
 constexpr bool bitwiseTest(T value) noexcept {
     return decode<T, bool, static_cast<T>(1) << position>(value);
 }
-#define BitwiseTest(n, b) (bitwiseTest<decltype(n), b>(n))
-static_assert(BitwiseTest(0b1, 0));
-static_assert(!BitwiseTest(0, 0));
-static_assert(BitwiseTest(0b10, 1));
-static_assert(!BitwiseTest(0b01, 1));
-static_assert(BitwiseTest(0b100, 2));
-static_assert(!BitwiseTest(0b010, 2));
+static_assert(bitwiseTest<int, 0>(0b1));
+static_assert(!bitwiseTest<int, 0>(0));
+static_assert(bitwiseTest<int, 1>(0b10));
+static_assert(!bitwiseTest<int, 1>(0b01));
+static_assert(bitwiseTest<int, 2>(0b100));
+static_assert(!bitwiseTest<int, 2>(0b010));
 template<typename T, T position>
 constexpr T bitwiseSet(T value) {
     return encode<T, bool, (static_cast<T>(1) << position), position>(value, true);
@@ -197,10 +196,13 @@ static_assert(bitwiseClear<int, 1>(0b1111) == 0b1101);
 static_assert(bitwiseClear<int, 2>(0b1111) == 0b1011);
 static_assert(bitwiseClear<int, 3>(0b1111) == 0b0111);
 
-#define CountToBitMapSize(c) (((c) + (BITS_PER_BYTE - 1)) / BITS_PER_BYTE)
-#define TestBitMap(map, id)  BitwiseTest(map[(id) / BITS_PER_BYTE],(id) % BITS_PER_BYTE)
-#define SetBitMap(map, id)   BitwiseSet(map[(id) / BITS_PER_BYTE],(id) % BITS_PER_BYTE)
-#define ClearBitMap(map, id) BitwiseClear(map[(id) / BITS_PER_BYTE],(id) % BITS_PER_BYTE)
+constexpr size_t countToBitmapSize(size_t size) {
+    return (size + (BITS_PER_BYTE - 1)) / BITS_PER_BYTE;
+}
+
+#define TestBitMap(map, id)  (bitwiseTest<decltype(id), id % BITS_PER_BYTE>(map[(id) / BITS_PER_BYTE]))
+#define SetBitMap(map, id)   (bitwiseSet<decltype(id), id % BITS_PER_BYTE>(map[(id) / BITS_PER_BYTE]))
+#define ClearBitMap(map, id) (bitwiseSet<decltype(id), id % BITS_PER_BYTE>(map [(id) / BITS_PER_BYTE]))
 
 constexpr auto EVALUATION_DATA = 44;
 
