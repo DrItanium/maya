@@ -103,20 +103,12 @@ const std::string& STDWRN() noexcept {
     return contents;
 }
 
-/***************************************/
-/* LOCAL INTERNAL FUNCTION DEFINITIONS */
-/***************************************/
-
-static bool QueryRouter(const Environment::Ptr&, const char *, struct router *);
-static void DeallocateRouterData(const Environment::Ptr&);
-
 /*********************************************************/
 /* InitializeDefaultRouters: Initializes output streams. */
 /*********************************************************/
 void
 RouterModule::install(Environment &theEnv) {
     theEnv.allocateEnvironmentModule<RouterModule>();
-    //const auto& routerModule = RouterData(theEnv);
 #if STUBBING_INACTIVE
     InitializeFileRouter(theEnv);
     InitializeStringRouter(theEnv);
@@ -236,59 +228,27 @@ RouterModule::addRouter(const std::string &name, int priority, LambdaRouter::Que
 bool
 RouterModule::insertRouter(Router::Ptr router) {
    /// @todo implement this
-#if STUBBING_INACTIVE
-    struct router *newPtr, *lastPtr, *currentPtr;
-    char *nameCopy;
-
-    /*==================================================*/
-    /* Reject the router if the name is already in use. */
-    /*==================================================*/
-
-    for (currentPtr = RouterData(theEnv)->ListOfRouters;
-         currentPtr != nullptr;
-         currentPtr = currentPtr->next) {
-        if (strcmp(currentPtr->name, routerName) == 0) { return false; }
-    }
-
-    newPtr = get_struct(theEnv, router);
-
-    nameCopy = (char *) genalloc(theEnv, strlen(routerName) + 1);
-    genstrcpy(nameCopy, routerName);
-    newPtr->name = nameCopy;
-
-    newPtr->active = true;
-    newPtr->context = context;
-    newPtr->priority = priority;
-    newPtr->queryCallback = queryFunction;
-    newPtr->writeCallback = writeFunction;
-    newPtr->exitCallback = exitFunction;
-    newPtr->readCallback = readFunction;
-    newPtr->unreadCallback = unreadFunction;
-    newPtr->next = nullptr;
-
-    if (RouterData(theEnv)->ListOfRouters == nullptr) {
-        RouterData(theEnv)->ListOfRouters = newPtr;
-        return true;
-    }
-
-    lastPtr = nullptr;
-    currentPtr = RouterData(theEnv)->ListOfRouters;
-    while ((currentPtr != nullptr) ? (priority < currentPtr->priority) : false) {
-        lastPtr = currentPtr;
-        currentPtr = currentPtr->next;
-    }
-
-    if (lastPtr == nullptr) {
-        newPtr->next = RouterData(theEnv)->ListOfRouters;
-        RouterData(theEnv)->ListOfRouters = newPtr;
-    } else {
-        newPtr->next = currentPtr;
-        lastPtr->next = newPtr;
-    }
-
-    return true;
-#endif
-    return false;
+   if (_listOfRouters.empty()) {
+       _listOfRouters.emplace_back(router);
+       return true;
+   }
+   // first check and see if the router is already claimed
+   for (auto& existingRouter : _listOfRouters) {
+       if (existingRouter->getName() == router->getName()) {
+           return false;
+       }
+   }
+   for (auto pos = _listOfRouters.begin(); pos != _listOfRouters.end(); ++pos) {
+       auto rtr = *pos;
+       if (router->getPriority() >= rtr->getPriority()) {
+           // we have found the place to insert before
+           _listOfRouters.emplace(pos, router);
+           return true;
+       }
+   }
+   // if we got here then it means we should emplace_back this entry since it was never greater than any of the other entries
+   _listOfRouters.emplace_back(router);
+   return true;
 }
 bool
 RouterModule::destroy(const std::string &logicalName) {
