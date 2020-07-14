@@ -88,7 +88,9 @@ public:
         // do nothing
     }
 };
-
+class TreatAsString { };
+class TreatAsSymbol { };
+class TreatAsInstanceName { };
 /***************/
 /* CLIPSLexeme */
 /***************/
@@ -97,7 +99,15 @@ public:
     using Self = CLIPSLexeme;
     using Ptr = std::shared_ptr<Self>;
 public:
-    CLIPSLexeme(unsigned short type) : TypeHeader(type) { }
+    explicit CLIPSLexeme(TreatAsString) : CLIPSLexeme(STRING_TYPE) { }
+    explicit CLIPSLexeme(TreatAsSymbol) : CLIPSLexeme(SYMBOL_TYPE) { }
+    explicit CLIPSLexeme(TreatAsInstanceName) : CLIPSLexeme(INSTANCE_NAME_TYPE) { }
+    explicit CLIPSLexeme(const std::string& str, TreatAsString) : CLIPSLexeme(STRING_TYPE, str) { }
+    explicit CLIPSLexeme(const std::string& str, TreatAsSymbol) : CLIPSLexeme(SYMBOL_TYPE, str) { }
+    explicit CLIPSLexeme(const std::string& str, TreatAsInstanceName) : CLIPSLexeme(INSTANCE_NAME_TYPE, str) { }
+    explicit CLIPSLexeme(unsigned short type) : TypeHeader(type) { }
+    CLIPSLexeme(unsigned short type, const std::string& str) : TypeHeader(type), contents(str)  { }
+
     ~CLIPSLexeme() override = default;
     size_t hash(size_t range) override;
     void write(const EnvironmentPtr& theEnv, const std::string& logicalName) override;
@@ -113,7 +123,7 @@ public:
     using Self = CLIPSFloat;
     using Ptr = std::shared_ptr<Self>;
 public:
-    CLIPSFloat() : TypeHeader(FLOAT_TYPE) { }
+    CLIPSFloat(double value = 0.0) : TypeHeader(FLOAT_TYPE), contents(value) { }
     ~CLIPSFloat() override = default;
     size_t hash(size_t range) override;
     void write(const EnvironmentPtr& theEnv, const std::string& logicalName) override;
@@ -129,7 +139,7 @@ public:
     using Self = CLIPSInteger;
     using Ptr = std::shared_ptr<Self>;
 public:
-    CLIPSInteger() : TypeHeader(INTEGER_TYPE) { }
+    CLIPSInteger(long long value = 0) : TypeHeader(INTEGER_TYPE), contents(value) { }
     ~CLIPSInteger() override = default;
     size_t hash(size_t range) override;
     void write(const EnvironmentPtr& theEnv, const std::string& logicalName) override;

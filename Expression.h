@@ -64,9 +64,7 @@ struct Expression {
 public:
     using Self = Expression;
     using Ptr = std::shared_ptr<Self>;
-public:
-    unsigned short type;
-    std::variant<std::monostate,
+    using Container = std::variant<std::monostate,
             CLIPSLexeme::Ptr,
             CLIPSFloat::Ptr,
             CLIPSInteger::Ptr,
@@ -75,9 +73,27 @@ public:
             std::shared_ptr<struct Instance>,
             Multifield::Ptr,
             std::shared_ptr<struct ConstructHeader>,
-            std::shared_ptr<FunctionDefinition>> contents;
+            std::shared_ptr<FunctionDefinition>>;
+public:
+    Expression(unsigned short type, Container value);
+    explicit Expression(double value);
+    explicit Expression(long long value);
+    Expression(const std::string&, TreatAsString);
+    Expression(const std::string&, TreatAsSymbol);
+    Expression(const std::string&, TreatAsInstanceName);
+    Expression(const std::string&, unsigned short type);
+    unsigned short _type;
+    Container _contents;
     std::list<Ptr> _argList;
+    Ptr _nextArg;
+    // originally this struct had a nextArg field which was probably used to great effect in making a given expression
+    // I have eliminated that design since it is more of a c-ism than a c++-ism
+    /**
+     * @brief Get the number of expressions stored within this expression
+     * @return 1 + the number of elements in the arg list
+     */
     size_t size() const noexcept;
+    bool evaluate(const Environment::Ptr& parent, UDFValue::Ptr returnValue);
 };
 
 #define arg_list argList

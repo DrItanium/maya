@@ -76,42 +76,6 @@ ExpressionModule::install(Environment & theEnv) {
     theEnv.allocateEnvironmentModule<ExpressionModule>();
     //InitExpressionPointers(theEnv);
 }
-#if STUBBING_INACTIVE
-/*****************************************/
-/* DeallocateExpressionData: Deallocates */
-/*    environment data for expressions.  */
-/*****************************************/
-static void DeallocateExpressionData(
-        const Environment::Ptr&theEnv) {
-    int i;
-    ExpressionHashNode *tmpPtr, *nextPtr;
-
-#if (BLOAD_AND_BSAVE)
-    if (!Bloaded(theEnv))
-#endif
-    {
-        for (i = 0; i < EXPRESSION_HASH_SIZE; i++) {
-            tmpPtr = ExpressionData(theEnv)->ExpressionHashTable[i];
-            while (tmpPtr != nullptr) {
-                nextPtr = tmpPtr->next;
-                ReturnPackedExpression(theEnv, tmpPtr->exp);
-                rtn_struct(theEnv, ExpressionHashNode, tmpPtr);
-                tmpPtr = nextPtr;
-            }
-        }
-    }
-
-    rm(theEnv, ExpressionData(theEnv)->ExpressionHashTable,
-       sizeof(ExpressionHashNode *) * EXPRESSION_HASH_SIZE);
-
-#if (BLOAD_AND_BSAVE)
-    if ((ExpressionData(theEnv)->NumberOfExpressions != 0) && Bloaded(theEnv)) {
-        genfree(theEnv, ExpressionData(theEnv)->ExpressionArray,
-                ExpressionData(theEnv)->NumberOfExpressions * sizeof(Expression));
-    }
-#endif
-}
-#endif
 ExpressionModule::ExpressionModule(Environment &parent) : EnvironmentModule(parent) {
 #if STUBBING_INACTIVE
     ExpressionData(theEnv)->PTR_AND = FindFunction(theEnv, "and");
@@ -1952,28 +1916,9 @@ Expression::size() const noexcept {
     for (const auto& expr : _argList) {
         count += expr->size();
     }
-    return count;
+    return count + (_nextArg ? _nextArg->size() : 0);
 }
 #if STUBBING_INACTIVE
-
-/************************************************/
-/* GenConstant: Generates a constant expression */
-/*   value of type string, symbol, or number.   */
-/************************************************/
-Expression *GenConstant(
-        const Environment::Ptr&theEnv,
-        unsigned short type,
-        void *value) {
-    Expression *top;
-
-    top = get_struct(theEnv, Expression);
-    top->nextArg = nullptr;
-    top->argList = nullptr;
-    top->type = type;
-    top->value = value;
-
-    return top;
-}
 
 /*************************************************/
 /* PrintExpression: Pretty prints an expression. */
