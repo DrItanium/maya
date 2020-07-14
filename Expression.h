@@ -48,7 +48,7 @@
 #define _H_expressn
 
 //struct ExpressionHashNode;
-//typedef struct savedContexts SavedContexts;
+//typedef struct SavedContexts SavedContexts;
 
 #include "Environment.h"
 #include "Entities.hxx"
@@ -76,25 +76,31 @@ public:
             Multifield::Ptr,
             std::shared_ptr<struct ConstructHeader>,
             std::shared_ptr<FunctionDefinition>> contents;
-    Ptr argList;
-    Ptr nextArg;
+    std::list<Ptr> _argList;
 };
 
 #define arg_list argList
 #define next_arg nextArg
 
 struct ExpressionHashNode {
+public:
+    using Self = ExpressionHashNode;
+    using Ptr = std::shared_ptr<Self>;
+public:
     unsigned hashval;
     unsigned count;
-    Expression *exp;
-    ExpressionHashNode *next;
+    Expression::Ptr exp;
     unsigned long bsaveID;
 } ;
 
-struct savedContexts {
-    bool rtn;
-    bool brk;
-    struct savedContexts *nxt;
+struct SavedContexts {
+public:
+    using Self = SavedContexts;
+    using Ptr = std::shared_ptr<Self>;
+public:
+    bool rtn = false;
+    bool brk = false;
+    Ptr nxt;
 };
 
 constexpr auto EXPRESSION_HASH_SIZE = 503;
@@ -104,25 +110,36 @@ constexpr auto EXPRESSION_HASH_SIZE = 503;
 /********************/
 
 constexpr auto EXPRESSION_DATA = 45;
-
+using FunctionDefinitionPtr = std::shared_ptr<struct FunctionDefinition>;
 struct ExpressionModule : public EnvironmentModule {
+public:
+    static void install(Environment&);
+public:
+    ExpressionModule(Environment& parent);
     /// @todo use std::shared_ptr where it makes perfect sense
-    FunctionDefinition *PTR_AND = nullptr;
-    FunctionDefinition *PTR_OR = nullptr;
-    FunctionDefinition *PTR_EQ = nullptr;
-    FunctionDefinition *PTR_NEQ = nullptr;
-    FunctionDefinition *PTR_NOT = nullptr;
+    FunctionDefinitionPtr PTR_AND;
+    FunctionDefinitionPtr PTR_OR;
+    FunctionDefinitionPtr PTR_EQ;
+    FunctionDefinitionPtr PTR_NEQ;
+    FunctionDefinitionPtr PTR_NOT;
     /// @todo replace this with an actual hash table
-    ExpressionHashNode **ExpressionHashTable = nullptr;
+    std::array<std::list<ExpressionHashNode::Ptr>, EXPRESSION_HASH_SIZE> _expressionHashTable;
 #if (BLOAD_AND_BSAVE)
     unsigned long NumberOfExpressions = 0;
     Expression *ExpressionArray = nullptr;
     unsigned long ExpressionCount = 0;
 #endif
-    //SavedContexts *svContexts = nullptr;
-    bool ReturnContext = false;
-    bool BreakContext = false;
-    bool SequenceOpMode = false;
+    std::list<SavedContexts> _svContexts;
+    void setSequenceOperatorMode(bool value) noexcept  { _sequenceOpMode = value; }
+    constexpr auto getSequenceOperatorMode() const noexcept { return _sequenceOpMode; }
+    void setReturnContext(bool value) noexcept  { _returnContext = value; }
+    constexpr auto getReturnContext() const noexcept { return _returnContext; }
+    void setBreakContext(bool value) noexcept  { _breakContext = value; }
+    constexpr auto getBreakContext() const noexcept { return _breakContext; }
+private:
+    bool _sequenceOpMode = false;
+    bool _returnContext = false;
+    bool _breakContext = false;
 };
 RegisterEnvironmentModule(ExpressionModule, EXPRESSION_DATA, Expression);
 
@@ -135,10 +152,6 @@ void ExpressionInstall(const Environment::Ptr&, Expression *);
 void ExpressionDeinstall(const Environment::Ptr&, Expression *);
 Expression *PackExpression(const Environment::Ptr&, Expression *);
 void ReturnPackedExpression(const Environment::Ptr&, Expression *);
-void InitExpressionData(const Environment::Ptr&);
-void InitExpressionPointers(const Environment::Ptr&);
-bool SetSequenceOperatorRecognition(const Environment::Ptr&, bool);
-bool GetSequenceOperatorRecognition(const Environment::Ptr&);
 Expression *AddHashedExpression(const Environment::Ptr&, Expression *);
 void RemoveHashedExpression(const Environment::Ptr&, Expression *);
 #if BLOAD_AND_BSAVE
