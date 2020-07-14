@@ -151,10 +151,6 @@ Environment::Ptr
 Environment::create() {
     return std::make_shared<Environment>();
 }
-void
-Environment::install(std::function<void(Environment&)> body) {
-    body(*this);
-}
 Environment::Environment() {
     /// @todo fix this code
     /*===================================================*/
@@ -337,4 +333,9 @@ Environment::Environment() {
     CleanCurrentGarbageFrame(theEnvironment, nullptr);
 #endif
 
+}
+
+void
+Environment::install(std::function<void (Environment &)> body) {
+    body(*this);
 }

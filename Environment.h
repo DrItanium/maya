@@ -201,6 +201,16 @@ public:
      * @param body the function to invoke
      */
     void install(std::function<void(Environment&)> body);
+    /**
+     * @brief Call the static install methods on a series of provided types
+     * @tparam First the first type to call install on
+     * @tparam Rest the other types to call install on
+     */
+    template<typename First, typename ... Rest>
+    void install() {
+        First::install(*this);
+        (Rest::install(*this), ...) ;
+    }
 public:
     void printErrorID(const std::string& module, int errorID, bool printCR);
     void incrementLineCount() noexcept;
