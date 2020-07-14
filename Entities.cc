@@ -112,21 +112,23 @@ CLIPSLexeme::write(const EnvironmentPtr &theEnv, const std::string &logicalName)
     theEnv->writeString(logicalName, contents);
 }
 
+template<typename T>
+std::string toString(T value) {
+    std::stringstream converter;
+    converter << value;
+    auto target = converter.str();
+    return target;
+}
+
 void
 CLIPSFloat::write(const EnvironmentPtr &theEnv, const std::string &logicalName) {
-    std::stringstream converter;
-    converter << contents;
-    auto target = converter.str();
-    theEnv->writeString(logicalName, target);
+    theEnv->writeString(logicalName, toString(contents));
 }
 
 
 void
 CLIPSInteger::write(const EnvironmentPtr &theEnv, const std::string &logicalName) {
-    std::stringstream converter;
-    converter << contents;
-    auto target = converter.str();
-    theEnv->writeString(logicalName, target);
+    theEnv->writeString(logicalName, toString(contents));
 }
 
 
