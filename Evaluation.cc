@@ -311,28 +311,6 @@ evaluationData::setEvaluationError(bool value) noexcept {
    }
 }
 
-/*****************************************************/
-/* ReturnValues: Returns a linked list of UDFValue */
-/*   structures to the pool of free memory.          */
-/*****************************************************/
-void ReturnValues(
-        const Environment::Ptr&theEnv,
-        UDFValue *garbagePtr,
-        bool decrementSupplementalInfo) {
-#if STUBBING_INACTIVE
-    UDFValue *nextPtr;
-
-    while (garbagePtr != nullptr) {
-        nextPtr = garbagePtr->next;
-        ReleaseUDFV(theEnv, garbagePtr);
-        if ((garbagePtr->supplementalInfo != nullptr) && decrementSupplementalInfo) {
-            ReleaseLexeme(theEnv, (CLIPSLexeme *) garbagePtr->supplementalInfo);
-        }
-        rtn_struct(theEnv, UDFValue, garbagePtr);
-        garbagePtr = nextPtr;
-    }
-#endif
-}
 #if STUBBING_INACTIVE
 
 /**************************************************/
@@ -419,149 +397,11 @@ void SetMultifieldErrorValue(
     returnValue->range = 0;
 }
 
-/***********************************************/
-/* RetainUDFV: Increments the appropriate count */
-/*   (in use) values for a UDFValue structure. */
-/***********************************************/
-void RetainUDFV(
-        const Environment::Ptr&theEnv,
-        UDFValue *vPtr) {
-    if (vPtr->header->type == MULTIFIELD_TYPE) { IncrementCLIPSValueMultifieldReferenceCount(theEnv, vPtr->multifieldValue); }
-    else { Retain(theEnv, vPtr->header); }
-}
 
-/***********************************************/
-/* RetainUDFV: Decrements the appropriate count */
-/*   (in use) values for a UDFValue structure. */
-/***********************************************/
-void ReleaseUDFV(
-        const Environment::Ptr&theEnv,
-        UDFValue *vPtr) {
-    if (vPtr->header->type == MULTIFIELD_TYPE) { DecrementCLIPSValueMultifieldReferenceCount(theEnv, vPtr->multifieldValue); }
-    else { Release(theEnv, vPtr->header); }
-}
 
-/*************************************************/
-/* RetainCV: Increments the appropriate count    */
-/*   (in use) values for a CLIPSValue structure. */
-/*************************************************/
-void RetainCV(
-        const Environment::Ptr&theEnv,
-        CLIPSValue *vPtr) {
-    if (vPtr->header->type == MULTIFIELD_TYPE) { IncrementCLIPSValueMultifieldReferenceCount(theEnv, vPtr->multifieldValue); }
-    else { Retain(theEnv, vPtr->header); }
-}
 
-/*************************************************/
-/* ReleaseCV: Decrements the appropriate count   */
-/*   (in use) values for a CLIPSValue structure. */
-/*************************************************/
-void ReleaseCV(
-        const Environment::Ptr&theEnv,
-        CLIPSValue *vPtr) {
-    if (vPtr->header->type == MULTIFIELD_TYPE) { DecrementCLIPSValueMultifieldReferenceCount(theEnv, vPtr->multifieldValue); }
-    else { Release(theEnv, vPtr->header); }
-}
 
-/******************************************/
-/* Retain: Increments the reference count */
-/*   of an atomic data type.              */
-/******************************************/
-void Retain(
-        const Environment::Ptr&theEnv,
-        TypeHeader *th) {
-    switch (th->type) {
-        case SYMBOL_TYPE:
-        case STRING_TYPE:
-        case INSTANCE_NAME_TYPE:
-            IncrementLexemeCount(th);
-            break;
-
-        case FLOAT_TYPE:
-            IncrementFloatCount(th);
-            break;
-
-        case INTEGER_TYPE:
-            IncrementIntegerCount(th);
-            break;
-
-        case EXTERNAL_ADDRESS_TYPE:
-            IncrementExternalAddressCount(th);
-            break;
-
-        case MULTIFIELD_TYPE:
-            RetainMultifield(theEnv, (Multifield *) th);
-            break;
-
-        case INSTANCE_ADDRESS_TYPE:
-            RetainInstance((Instance *) th);
-            break;
-
-#if DEFTEMPLATE_CONSTRUCT
-        case FACT_ADDRESS_TYPE:
-            RetainFact((Fact *) th);
-            break;
 #endif
-
-        case VOID_TYPE:
-            break;
-
-        default:
-            SystemError(theEnv, "EVALUATN", 7);
-            ExitRouter(theEnv, EXIT_FAILURE);
-            break;
-    }
-}
-
-/*************************************/
-/* Release: Decrements the reference */
-/*   count of an atomic data type.   */
-/*************************************/
-void Release(
-        const Environment::Ptr&theEnv,
-        TypeHeader *th) {
-    switch (th->type) {
-        case SYMBOL_TYPE:
-        case STRING_TYPE:
-        case INSTANCE_NAME_TYPE:
-            ReleaseLexeme(theEnv, (CLIPSLexeme *) th);
-            break;
-
-        case FLOAT_TYPE:
-            ReleaseFloat(theEnv, (CLIPSFloat *) th);
-            break;
-
-        case INTEGER_TYPE:
-            ReleaseInteger(theEnv, (CLIPSInteger *) th);
-            break;
-
-        case EXTERNAL_ADDRESS_TYPE:
-            ReleaseExternalAddress(theEnv, (CLIPSExternalAddress *) th);
-            break;
-
-        case MULTIFIELD_TYPE:
-            ReleaseMultifield(theEnv, (Multifield *) th);
-            break;
-
-        case INSTANCE_ADDRESS_TYPE:
-            ReleaseInstance((Instance *) th);
-            break;
-
-#if DEFTEMPLATE_CONSTRUCT
-        case FACT_ADDRESS_TYPE:
-            ReleaseFact((Fact *) th);
-            break;
-#endif
-
-        case VOID_TYPE:
-            break;
-
-        default:
-            SystemError(theEnv, "EVALUATN", 8);
-            ExitRouter(theEnv, EXIT_FAILURE);
-            break;
-    }
-}
 
 /*****************************************/
 /* AtomInstall: Increments the reference */
@@ -571,6 +411,7 @@ void AtomInstall(
         const Environment::Ptr&theEnv,
         unsigned short type,
         void *vPtr) {
+#if STUBBING_INACTIVE
     switch (type) {
         case SYMBOL_TYPE:
         case STRING_TYPE:
@@ -608,8 +449,8 @@ void AtomInstall(
             }
             break;
     }
+#endif
 }
-
 /*******************************************/
 /* AtomDeinstall: Decrements the reference */
 /*   count of an atomic data type.         */
@@ -618,6 +459,7 @@ void AtomDeinstall(
         const Environment::Ptr&theEnv,
         unsigned short type,
         void *vPtr) {
+#if STUBBING_INACTIVE
     switch (type) {
         case SYMBOL_TYPE:
         case STRING_TYPE:
@@ -654,8 +496,9 @@ void AtomDeinstall(
                 (*EvaluationData(theEnv)->PrimitivesArray[type]->decrementBusyCount)(theEnv, vPtr);
             }
     }
+#endif
 }
-
+#if STUBBING_INACTIVE
 /***************************************************/
 /* CopyDataObject: Copies the values from a source */
 /*   UDFValue to a destination UDFValue.           */

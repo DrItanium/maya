@@ -60,12 +60,15 @@ private:
 /*************/
 /* clipsVoid */
 /*************/
-struct CLIPSVoid : public TypeHeader {
+struct CLIPSVoid : public TypeHeader, public ReferenceCountable {
 public:
     using Self = CLIPSVoid;
     using Ptr = std::shared_ptr<Self>;
 public:
     CLIPSVoid() : TypeHeader(VOID_TYPE) { }
+    void release() override { }
+    void retain() override { }
+    bool canRelease() const noexcept { return false; }
 };
 
 /***************/
