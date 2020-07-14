@@ -147,15 +147,55 @@ constexpr auto BITS_PER_BYTE = 8;
 constexpr auto MAXIMUM_PRIMITIVES = 150;
 constexpr auto MAXIMUM_EXTERNAL_ADDRESS_TYPES = 128;
 /// @todo rewrite as templated methods once I am confident in the design
-#define BitwiseTest(n, b)   (((n) & (char) (1 << (b))) ? true : false)
+template<typename T, typename R, T pattern, T shift = static_cast<T>(0)>
+constexpr R decode(T value) noexcept {
+    using KT = std::decay_t<T>;
+    using KR = std::decay_t<R>;
+    auto maskedOutPortion = (value & pattern);
+    if constexpr (std::is_same_v<KR, bool> && std::is_integral_v<KT>) {
+        // exploit boolean convertibility in the case where we are dealing with integral to boolean conversion
+        return value & pattern;
+    } else {
+        return static_cast<R>((value & pattern) >> shift);
+    }
+}
+
+template<typename T, typename R, T pattern, T shift = static_cast<T>(0)>
+constexpr T encode(T value, R input) noexcept {
+    return (value & ~pattern) | ((static_cast<T>(input) << shift) & pattern);
+}
+
+static_assert(encode<int, short, 0b10, 1>(0b1101, 0b0001) == 0b1111);
+static_assert(encode<int, int, 0x0000'000F, 0>(0xFDED, 0x44) == 0xFDE4);
+
+template<typename T, T position>
+constexpr bool bitwiseTest(T value) noexcept {
+    return decode<T, bool, static_cast<T>(1) << position>(value);
+}
+#define BitwiseTest(n, b) (bitwiseTest<decltype(n), b>(n))
 static_assert(BitwiseTest(0b1, 0));
 static_assert(!BitwiseTest(0, 0));
 static_assert(BitwiseTest(0b10, 1));
 static_assert(!BitwiseTest(0b01, 1));
 static_assert(BitwiseTest(0b100, 2));
 static_assert(!BitwiseTest(0b010, 2));
-#define BitwiseSet(n, b)    (n |= (char) (1 << (b)))
-#define BitwiseClear(n, b)  (n &= (char) ~(1 << (b)))
+template<typename T, T position>
+constexpr T bitwiseSet(T value) {
+    return encode<T, bool, (static_cast<T>(1) << position), position>(value, true);
+}
+static_assert(bitwiseSet<int, 0>(0b1010) == 0b1011);
+static_assert(bitwiseSet<int, 1>(0b1010) == 0b1010);
+static_assert(bitwiseSet<int, 2>(0b1010) == 0b1110);
+static_assert(bitwiseSet<int, 3>(0b1010) == 0b1010);
+static_assert(bitwiseSet<int, 3>(0xFDED) == 0xFDED);
+template<typename T, T position>
+constexpr T bitwiseClear(T value) noexcept {
+    return decode<T, T, ~(static_cast<T>(1) << position)>(value);
+}
+static_assert(bitwiseClear<int, 0>(0b1111) == 0b1110);
+static_assert(bitwiseClear<int, 1>(0b1111) == 0b1101);
+static_assert(bitwiseClear<int, 2>(0b1111) == 0b1011);
+static_assert(bitwiseClear<int, 3>(0b1111) == 0b0111);
 
 #define CountToBitMapSize(c) (((c) + (BITS_PER_BYTE - 1)) / BITS_PER_BYTE)
 #define TestBitMap(map, id)  BitwiseTest(map[(id) / BITS_PER_BYTE],(id) % BITS_PER_BYTE)
