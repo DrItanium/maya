@@ -102,13 +102,13 @@ static void DeallocateRouterData(const Environment::Ptr&);
 /*********************************************************/
 void InitializeDefaultRouters(
         const Environment::Ptr&theEnv) {
+#if STUBBING_INACTIVE
     //AllocateEnvironmentData(theEnv, ROUTER_DATA, sizeof(routerData), DeallocateRouterData);
     theEnv->allocateEnvironmentModule<routerData>();
 
     RouterData(theEnv)->CommandBufferInputCount = 0;
     RouterData(theEnv)->InputUngets = 0;
     RouterData(theEnv)->AwaitingInput = true;
-#if STUBBING_INACTIVE
     InitializeFileRouter(theEnv);
     InitializeStringRouter(theEnv);
 #endif

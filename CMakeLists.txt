@@ -145,7 +145,7 @@ add_library(clips
 		#UserFunctions.cc
 		#Utility.cc
 		#PrintUtility.cc
-		#Router.cc
+		Router.cc
 		#Analysis.cc
 		#ArgumentAccess.cc
 		#BinaryLoad.cc
@@ -284,7 +284,7 @@ add_library(clips
 		##DeftemplateUtilities.cc
 		#UserData.cc
 		#Watch.cc
-		)
+		IORouterAware.h)
 add_library(maya_extensions
 		BoostExtensions.h
 		#BoostExtensions.cc
