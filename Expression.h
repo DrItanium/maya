@@ -76,6 +76,7 @@ public:
             std::shared_ptr<FunctionDefinition>>;
 public:
     Expression(unsigned short type, Container value);
+    //Expression(const Expression& other);
     explicit Expression(double value);
     explicit Expression(long long value);
     Expression(const std::string&, TreatAsString);
@@ -84,7 +85,7 @@ public:
     Expression(const std::string&, unsigned short type);
     unsigned short _type;
     Container _contents;
-    std::list<Ptr> _argList;
+    Ptr _argList;
     Ptr _nextArg;
     // originally this struct had a nextArg field which was probably used to great effect in making a given expression
     // I have eliminated that design since it is more of a c-ism than a c++-ism
@@ -93,6 +94,12 @@ public:
      * @return 1 + the number of elements in the arg list
      */
     size_t size() const noexcept;
+    /**
+     * @brief Get the number of structures stored in an expression as traversed through the nextArg pointer but not the argList pointer
+     * @return The number of structures stored in the expression pointer from this list forward (does not included the arg list count)
+     */
+    size_t argCount() const noexcept;
+    bool constantExpression() const noexcept;
     bool evaluate(const Environment::Ptr& parent, UDFValue::Ptr returnValue);
 };
 
@@ -185,16 +192,11 @@ void BsaveHashedExpressions(const Environment::Ptr&, FILE *);
 void BsaveConstructExpressions(const Environment::Ptr&, FILE *);
 void BsaveExpression(const Environment::Ptr&, Expression *, FILE *);
 
-bool ConstantExpression(Expression*);
 void PrintExpression(const Environment::Ptr&, const char *, Expression *);
-unsigned long ExpressionSize(Expression *);
-unsigned short CountArguments(Expression *);
 Expression *CopyExpression(const Environment::Ptr&, Expression *);
 bool ExpressionContainsVariables(Expression *, bool);
 bool IdenticalExpression(Expression *, Expression *);
-Expression *GenConstant(const Environment::Ptr&, unsigned short, void *);
 bool CheckArgumentAgainstRestriction(const Environment::Ptr&, Expression *, unsigned);
-bool ConstantType(int);
 Expression *CombineExpressions(const Environment::Ptr&, Expression *, Expression *);
 Expression *AppendExpressions(Expression *, Expression *);
 Expression *NegateExpression(const Environment::Ptr&, Expression *);

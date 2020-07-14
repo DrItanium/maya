@@ -54,19 +54,7 @@ using VoidCallFunctionWithArg = EnvironmentPtrNoReturnFunction<std::any, std::an
 struct TypeHeader {
     TypeHeader(unsigned short t = 0) : _type(t) { }
     constexpr auto getType() const noexcept { return _type; }
-    constexpr auto isConstantType() const noexcept {
-        switch (_type) {
-            case SYMBOL_TYPE:
-            case STRING_TYPE:
-            case INTEGER_TYPE:
-            case FLOAT_TYPE:
-            case INSTANCE_NAME_TYPE:
-            case INSTANCE_ADDRESS_TYPE:
-                return true;
-            default:
-                return false;
-        }
-    }
+    constexpr auto isConstantType() const noexcept { return ::isConstantType(_type); }
 private:
     unsigned short _type;
 };

@@ -249,5 +249,28 @@ X( INTEGER_OR_FLOAT              ,180);
 X( SYMBOL_OR_STRING              ,181);
 X( INSTANCE_OR_INSTANCE_NAME     ,182);
 #undef X
-
+constexpr bool isVariableType(unsigned short value) noexcept {
+    switch (value) {
+        case MF_VARIABLE:
+        case SF_VARIABLE:
+        case GBL_VARIABLE:
+        case MF_GBL_VARIABLE:
+            return true;
+        default:
+            return false;
+    }
+}
+constexpr bool isConstantType(unsigned short value) noexcept {
+    switch (value) {
+        case SYMBOL_TYPE:
+        case STRING_TYPE:
+        case INTEGER_TYPE:
+        case FLOAT_TYPE:
+        case INSTANCE_NAME_TYPE:
+        case INSTANCE_ADDRESS_TYPE:
+            return true;
+        default:
+            return false;
+    }
+}
 #endif

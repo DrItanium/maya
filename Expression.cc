@@ -1775,22 +1775,26 @@ bool CheckArgumentAgainstRestriction(
     RemoveConstraint(theEnv, cr3);
     return false;
 }
-/******************************************************/
-/* ConstantExpression: Returns true if the expression */
-/*   is a constant, otherwise false.                  */
-/******************************************************/
-bool ConstantExpression(
-        Expression *testPtr) {
-    while (testPtr != nullptr) {
-        if ((testPtr->type != SYMBOL_TYPE) && (testPtr->type != STRING_TYPE) &&
-            (testPtr->type != INSTANCE_NAME_TYPE) && (testPtr->type != INSTANCE_ADDRESS_TYPE) &&
-            (testPtr->type != INTEGER_TYPE) && (testPtr->type != FLOAT_TYPE)) { return false; }
-        testPtr = testPtr->nextArg;
-    }
-
-    return true;
-}
 #endif
+bool
+Expression::constantExpression() const noexcept {
+    switch (_type) {
+        case SYMBOL_TYPE:
+        case STRING_TYPE:
+        case INSTANCE_NAME_TYPE:
+        case INSTANCE_ADDRESS_TYPE:
+        case INTEGER_TYPE:
+        case FLOAT_TYPE:
+            if (_nextArg) {
+                return _nextArg->constantExpression();
+            } else {
+                return true;
+            }
+            break;
+        default:
+            return false;
+    }
+}
 
 /*****************************************************************************/
 /* IdenticalExpression: Determines if two expressions are identical. Returns */
@@ -1838,25 +1842,14 @@ bool IdenticalExpression(
     return false;
 
 }
+size_t
+Expression::argCount() const noexcept {
+    return 1 /* self */ + (_nextArg ? _nextArg->argCount() : 0);
+}
+
+
 #if STUBBING_INACTIVE
 
-/****************************************************/
-/* CountArguments: Returns the number of structures */
-/*   stored in an expression as traversed through   */
-/*   the nextArg pointer but not the argList        */
-/*   pointer.                                       */
-/****************************************************/
-unsigned short CountArguments(
-        Expression *testPtr) {
-    unsigned short size = 0;
-
-    while (testPtr != nullptr) {
-        size++;
-        testPtr = testPtr->nextArg;
-    }
-
-    return size;
-}
 
 /******************************************/
 /* CopyExpresssion: Copies an expression. */
@@ -1912,11 +1905,9 @@ bool ExpressionContainsVariables(
 #endif
 size_t
 Expression::size() const noexcept {
-    size_t count = 1; // self
-    for (const auto& expr : _argList) {
-        count += expr->size();
-    }
-    return count + (_nextArg ? _nextArg->size() : 0);
+    return 1 +
+           (_argList ? _argList->size() : 0) +
+           (_nextArg ? _nextArg->size() : 0);
 }
 #if STUBBING_INACTIVE
 
