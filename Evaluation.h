@@ -74,8 +74,8 @@
 #include "Entities.hxx"
 #include "Environment.h"
 
+#if STUBBING_INACTIVE
 typedef struct functionCallBuilder FunctionCallBuilder;
-
 struct functionCallBuilder {
     Environment fcbEnv;
     CLIPSValue *contents;
@@ -94,6 +94,26 @@ enum FunctionCallBuilderError {
     FCBE_PROCESSING_ERROR
 } ;
 
+FunctionCallBuilder *CreateFunctionCallBuilder(const Environment::Ptr&, size_t);
+void FCBAppendUDFValue(FunctionCallBuilder *, UDFValue *);
+void FCBAppend(FunctionCallBuilder *, CLIPSValue *);
+void FCBAppendCLIPSInteger(FunctionCallBuilder *, CLIPSInteger *);
+void FCBAppendInteger(FunctionCallBuilder *, long long);
+void FCBAppendCLIPSFloat(FunctionCallBuilder *, CLIPSFloat *);
+void FCBAppendFloat(FunctionCallBuilder *, double);
+void FCBAppendCLIPSLexeme(FunctionCallBuilder *, CLIPSLexeme *);
+void FCBAppendSymbol(FunctionCallBuilder *, const char *);
+void FCBAppendString(FunctionCallBuilder *, const char *);
+void FCBAppendInstanceName(FunctionCallBuilder *, const char *);
+void FCBAppendCLIPSExternalAddress(FunctionCallBuilder *, CLIPSExternalAddress *);
+void FCBAppendFact(FunctionCallBuilder *, Fact *);
+void FCBAppendInstance(FunctionCallBuilder *, Instance *);
+void FCBAppendMultifield(FunctionCallBuilder *, Multifield *);
+void FCBDispose(FunctionCallBuilder *);
+void FCBReset(FunctionCallBuilder *);
+FunctionCallBuilderError FCBCall(FunctionCallBuilder *, const char *, CLIPSValue *);
+#endif
+
 
 constexpr auto C_POINTER_EXTERNAL_ADDRESS = 0;
 constexpr auto PARAMETERS_UNBOUNDED = USHRT_MAX;
@@ -103,12 +123,17 @@ public:
     using Self = externalAddressType;
     using Ptr = std::shared_ptr<Self>;
 public:
-    const char *name;
-    void (*shortPrintFunction)(const Environment::Ptr&, const char *, void *);
-    void (*longPrintFunction)(const Environment::Ptr&, const char *, void *);
-    bool (*discardFunction)(const Environment::Ptr&, void *);
-    void (*newFunction)(UDFContext *, UDFValue *);
-    bool (*callFunction)(UDFContext *, UDFValue *, UDFValue *);
+    std::string name;
+    EnvironmentPtrNoReturnFunction<const std::string&, std::any> shortPrintFunction;
+    EnvironmentPtrNoReturnFunction<const std::string&, std::any> longPrintFunction;
+    EnvironmentPtrFunction<bool, std::any> discardFunction;
+    std::function<void(UDFContext::Ptr, UDFValue::Ptr)> newFunction;
+    std::function<bool(UDFContext::Ptr, UDFValue::Ptr, UDFValue::Ptr)> callFunction;
+    void shortPrint(const Environment::Ptr& env, const std::string& logicalName, std::any context);
+    void longPrint(const Environment::Ptr& env, const std::string& logicalName, std::any context);
+    bool discard(const Environment::Ptr& env, std::any context);
+    void create(UDFContext::Ptr context, UDFValue::Ptr container);
+    bool call(UDFContext::Ptr, UDFValue::Ptr);
 };
 
 #define CoerceToLongInteger(t, v) ((t == INTEGER_TYPE) ? ValueToLong(v) : (long) ValueToDouble(v))
@@ -179,27 +204,9 @@ unsigned long GetAtomicHashValue(unsigned short, void *, unsigned short);
 void TransferDataObjectValues(UDFValue *, UDFValue *);
 Expression *FunctionReferenceExpression(const Environment::Ptr&, const char *);
 bool GetFunctionReference(const Environment::Ptr&, const char *, Expression *);
-bool DOsEqual(UDFValue *, UDFValue *);
 bool EvaluateAndStoreInDataObject(const Environment::Ptr&, bool, Expression *, UDFValue *, bool);
-FunctionCallBuilder *CreateFunctionCallBuilder(const Environment::Ptr&, size_t);
-void FCBAppendUDFValue(FunctionCallBuilder *, UDFValue *);
-void FCBAppend(FunctionCallBuilder *, CLIPSValue *);
-void FCBAppendCLIPSInteger(FunctionCallBuilder *, CLIPSInteger *);
-void FCBAppendInteger(FunctionCallBuilder *, long long);
-void FCBAppendCLIPSFloat(FunctionCallBuilder *, CLIPSFloat *);
-void FCBAppendFloat(FunctionCallBuilder *, double);
-void FCBAppendCLIPSLexeme(FunctionCallBuilder *, CLIPSLexeme *);
-void FCBAppendSymbol(FunctionCallBuilder *, const char *);
-void FCBAppendString(FunctionCallBuilder *, const char *);
-void FCBAppendInstanceName(FunctionCallBuilder *, const char *);
-void FCBAppendCLIPSExternalAddress(FunctionCallBuilder *, CLIPSExternalAddress *);
-void FCBAppendFact(FunctionCallBuilder *, Fact *);
-void FCBAppendInstance(FunctionCallBuilder *, Instance *);
-void FCBAppendMultifield(FunctionCallBuilder *, Multifield *);
-void FCBDispose(FunctionCallBuilder *);
-void FCBReset(FunctionCallBuilder *);
-FunctionCallBuilderError FCBCall(FunctionCallBuilder *, const char *, CLIPSValue *);
 
+#if STUBBING_INACTIVE
 //#define CVIsType(cv, cvType) (((1 << (((TypeHeader *) (cv)->value)->type)) & (cvType)) ? true : false)
 bool CVIsType(CLIPSValue::Ptr target, unsigned short type);
 #define CVIsLexeme(cv) (CVIsType(cv, LEXEME_BITS))
@@ -228,7 +235,6 @@ long long CVCoerceToInteger(UDFValue::Ptr ptr);
 long long CVCoerceToInteger(UDFValue& ptr);
 long long CVCoerceToInteger(UDFValue* ptr);
 
-#if STUBBING_INACTIVE
 #define CVCoerceToFloat(cv) (((cv)->header->type == FLOAT_TYPE) ? \
                              ((cv)->floatValue->contents) : \
                              ((double) (cv)->integerValue->contents))

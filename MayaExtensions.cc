@@ -30,9 +30,9 @@
 #include "BoostExtensions.h"
 #endif
 
-#if FUNCTIONAL_EXTENSIONS
-#include "FunctionalExtensions.h"
-#endif
+//#if FUNCTIONAL_EXTENSIONS
+//#include "FunctionalExtensions.h"
+//#endif
 
 #if !MAYA_EXTENSIONS
 void InstallMayaExtensions(void* environment) { }

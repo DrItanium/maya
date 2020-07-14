@@ -95,3 +95,13 @@ bool
 PatternEntity::canRelease() const noexcept {
     return _busyCount == 0;
 }
+#if 0
+bool
+operator==(const UDFValue& a, const UDFValue& b) {
+   if (a.getType() != b.getType()) {
+        return false;
+   }
+   /// @todo have to handle multifield equality checks
+   return a.getValue() == b.getValue();
+}
+#endif

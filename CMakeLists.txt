@@ -289,7 +289,7 @@ add_library(maya_extensions
 		BoostExtensions.h
 		#BoostExtensions.cc
 		#FunctionalExtensions.cpp
-		FunctionalExtensions.h
+		#FunctionalExtensions.h
 		MayaExtensions.cc
 		InstanceExtensions.h
 		ExternalAddressTracker.h

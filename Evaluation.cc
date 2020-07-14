@@ -123,12 +123,15 @@ static bool                    DiscardCAddress(void *,void *);
 /**************************************************/
 void InitializeEvaluationData(
         const Environment::Ptr&theEnv) {
+#if STUBBING_INACTIVE
     struct externalAddressType cPointer = {"C", PrintCAddress, PrintCAddress, nullptr, NewCAddress, nullptr};
     /// @todo move deallocate evaluation data into the dtor of evaluationData
     //AllocateEnvironmentData(theEnv, EVALUATION_DATA, sizeof(evaluationData), DeallocateEvaluationData);
+    theEnv->allocateEnvironmentModule<>()
     auto ptr = std::make_unique<evaluationData>();
     theEnv->installEnvironmentModule(std::move(ptr));
     InstallExternalAddressType(theEnv, &cPointer);
+#endif
 }
 
 void
@@ -912,21 +915,6 @@ bool GetFunctionReference(
     /*===================================================*/
 
     return false;
-}
-
-/*******************************************************/
-/* DOsEqual: Determines if two DATA_OBJECTS are equal. */
-/*******************************************************/
-bool DOsEqual(
-        UDFValue *dobj1,
-        UDFValue *dobj2) {
-    if (dobj1->header->type != dobj2->header->type) { return false; }
-
-    if (dobj1->header->type == MULTIFIELD_TYPE) {
-        if (!MultifieldDOsEqual(dobj1, dobj2)) { return false; }
-    } else if (dobj1->value != dobj2->value) { return false; }
-
-    return true;
 }
 
 /***********************************************************

@@ -175,6 +175,7 @@ struct HoldsOntoGenericValue : public ReferenceCountable {
     void retain() override;
     void release() override;
     bool canRelease() const noexcept override;
+    unsigned short getType() const noexcept;
 };
 
 /**************/
@@ -186,7 +187,7 @@ public:
     using Ptr = std::shared_ptr<Self>;
 };
 
-
+using ExpressionPtr = std::shared_ptr<struct Expression>;
 /************/
 /* UDFValue */
 /************/
@@ -198,13 +199,19 @@ public:
     std::any supplementalInfo;
     size_t begin;
     size_t range;
+    ExpressionPtr toExpression(const EnvironmentPtr& theEnv);
 };
+bool operator==(const UDFValue& a, const UDFValue& b);
 struct FunctionDefinition;
 struct Expression;
 /**************/
 /* udfContext */
 /**************/
 struct UDFContext : public HoldsEnvironmentCallback {
+public:
+    using Self = UDFContext;
+    using Ptr = std::shared_ptr<Self>;
+public:
     UDFContext(Environment& parent);
     std::shared_ptr<FunctionDefinition> theFunction;
     unsigned int lastPosition = 0;
