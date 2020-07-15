@@ -56,6 +56,11 @@ private:
     unsigned short _type;
 };
 
+class Atom : public TypeHeader, public IORouterAware {
+public:
+    Atom(unsigned short type = 0) : TypeHeader(type) { }
+};
+
 /*************/
 /* clipsVoid */
 /*************/
@@ -245,19 +250,9 @@ public:
     std::shared_ptr<struct Expression> lastArg;
     UDFValue::Ptr returnValue;
 };
-using GenericEntityRecordFunction = std::function<void(std::any, std::any)>;
-using EntityRecordPropagateDepthFunction = GenericEntityRecordFunction ;
-using EntityRecordMarkNeededFunction = GenericEntityRecordFunction ;
-using EntityRecordInstallFunction = GenericEntityRecordFunction ;
-using EntityRecordDeinstallFunction = GenericEntityRecordFunction ;
-using EntityRecordDeleteFunction = std::function<bool(std::any, const EnvironmentPtr&)>;
-using EntityRecordGetNextFunction = std::function<std::any(std::any, std::any)>;
-using EntityPrintFunction = EnvironmentPtrNoReturnFunction<const std::string&, std::any>;
-using EntityEvaluationFunction = EnvironmentPtrFunction<bool, std::any, std::shared_ptr<UDFValue>>;
-using EntityBusyCountFunction = std::function<void(Environment&, std::any)>;
-/****************/
-/* EntityRecord */
-/****************/
+/**
+ * @brief A description of a given type
+ */
 struct Entity : public HoldsEnvironmentCallback {
 public:
     using Self = Entity;
@@ -270,19 +265,26 @@ public:
     constexpr auto copyToEvaluate() const noexcept { return _copyToEvaluate; }
     constexpr auto isBitmap() const noexcept { return _bitMap; }
     constexpr auto addsToRuleComplexity() const noexcept { return _addsToRuleComplexity; }
-    virtual void shortPrint(const std::string& logicalName, std::any value) { }
-    virtual void longPrint(const std::string& logicalName, std::any value) { }
-    virtual bool evaluate(std::any value, std::shared_ptr<UDFValue> returnValue) { }
-    virtual void incrementBusyCount(std::any value) { }
-    virtual void decrementBusyCount(std::any value) { }
+    virtual void shortPrint(const std::string& logicalName) { }
+    virtual void longPrint(const std::string& logicalName) { }
+    virtual bool evaluate(std::shared_ptr<UDFValue> returnValue) { return false; }
+    virtual void incrementBusyCount() { }
+    virtual void decrementBusyCount() { }
 private:
     std::string _name;
     unsigned int _type : 13;
     bool _copyToEvaluate : 1;
     bool _bitMap : 1;
     bool _addsToRuleComplexity : 1;
-
 };
+/****************/
+/* EntityRecord */
+/****************/
+using EntityRecordDeleteFunction = std::function<bool(std::any, const EnvironmentPtr&)>;
+using EntityRecordGetNextFunction = std::function<std::any(std::any, std::any)>;
+using EntityPrintFunction = EnvironmentPtrNoReturnFunction<const std::string&, std::any>;
+using EntityEvaluationFunction = EnvironmentPtrFunction<bool, std::any, std::shared_ptr<UDFValue>>;
+using EntityBusyCountFunction = std::function<void(Environment&, std::any)>;
 struct EntityRecord : public HoldsEnvironmentCallback {
 public:
     using Self = EntityRecord;
@@ -302,10 +304,6 @@ public:
     EntityRecordGetNextFunction getNextFunction;
     EntityBusyCountFunction decrementBusyCount;
     EntityBusyCountFunction incrementBusyCount;
-    EntityRecordPropagateDepthFunction propagateDepth;
-    EntityRecordMarkNeededFunction markNeeded;
-    EntityRecordInstallFunction install;
-    EntityRecordDeinstallFunction deinstall;
 };
 using PatternEntityRecordDecrementBasisCountFunction = EnvironmentPtrNoReturnFunction<std::any>;
 using PatternEntityRecordIncrementBasisCountFunction = EnvironmentPtrNoReturnFunction<std::any>;
