@@ -102,7 +102,7 @@ static bool                    DiscardCAddress(void *,void *);
         InstallExternalAddressType(theEnv, &cPointer);
 #endif
     }
-
+#if STUBBING_INACTIVE
     void
     EvaluationModule::installPrimitive(EntityRecord::Ptr record, int position) {
         if (PrimitivesArray[position]) {
@@ -111,6 +111,7 @@ static bool                    DiscardCAddress(void *,void *);
             PrimitivesArray[position] = record;
         }
     }
+#endif
 
 #if STUBBING_INACTIVE
     /**************************************************************/
@@ -252,6 +253,7 @@ static bool                    DiscardCAddress(void *,void *);
         return EvaluationData(theEnv)->EvaluationError;
     }
 #endif
+#if STUBBING_INACTIVE
     size_t
     EvaluationModule::installExternalAddressType(const externalAddressType &newType) {
         if (numberOfAddressTypes == MAXIMUM_EXTERNAL_ADDRESS_TYPES) {
@@ -263,6 +265,7 @@ static bool                    DiscardCAddress(void *,void *);
         ++numberOfAddressTypes;
         return newIndex;
     }
+#endif
 
 /*******************/
 /* ResetErrorFlags */

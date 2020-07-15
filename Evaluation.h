@@ -116,7 +116,7 @@ namespace maya {
 
     constexpr auto C_POINTER_EXTERNAL_ADDRESS = 0;
     constexpr auto PARAMETERS_UNBOUNDED = USHRT_MAX;
-
+#if STUBBING_INACTIVE
     struct externalAddressType {
     public:
         using Self = externalAddressType;
@@ -134,6 +134,7 @@ namespace maya {
         void create(UDFContext::Ptr context, UDFValue::Ptr container);
         bool call(UDFContext::Ptr, UDFValue::Ptr);
     };
+#endif
 
 #define CoerceToLongInteger(t, v) ((t == INTEGER_TYPE) ? ValueToLong(v) : (long) ValueToDouble(v))
 #define CoerceToInteger(t, v) ((t == INTEGER_TYPE) ? (int) ValueToLong(v) : (int) ValueToDouble(v))
@@ -212,11 +213,11 @@ namespace maya {
         bool HaltExecution = false;
         int CurrentEvaluationDepth = 0;
         size_t numberOfAddressTypes = 0;
-        std::array<EntityRecord::Ptr, MAXIMUM_PRIMITIVES> PrimitivesArray;
+        //std::array<EntityRecord::Ptr, MAXIMUM_PRIMITIVES> PrimitivesArray;
         /// @todo make this a std::list instead to remove hardcoded limits
-        std::array<externalAddressType::Ptr, MAXIMUM_EXTERNAL_ADDRESS_TYPES> ExternalAddressTypes;
-        void installPrimitive(EntityRecord::Ptr record, int position);
-        size_t installExternalAddressType(const externalAddressType &newType);
+        //std::array<externalAddressType::Ptr, MAXIMUM_EXTERNAL_ADDRESS_TYPES> ExternalAddressTypes;
+        //void installPrimitive(EntityRecord::Ptr record, int position);
+        //size_t installExternalAddressType(const externalAddressType &newType);
         void resetErrorFlags() noexcept;
         void setEvaluationError(bool value) noexcept;
         constexpr auto getEvaluationError() const noexcept { return EvaluationError; }

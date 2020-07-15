@@ -35,19 +35,7 @@
 #include "HoldsEnvironmentCallback.h"
 #include "IORouterAware.h"
 namespace maya {
-    struct UDFValue;
-
     class Environment;
-
-    using EnvironmentPtr = std::shared_ptr<Environment>;
-    template<typename R, typename ... Ts>
-    using EnvironmentPtrFunction = std::function<R(const EnvironmentPtr &, Ts...)>;
-    template<typename ... Ts>
-    using EnvironmentPtrNoReturnFunction = EnvironmentPtrFunction<void, Ts...>;
-
-    using BoolCallFunction = EnvironmentPtrFunction<bool, std::any>;
-    using VoidCallFunction = EnvironmentPtrNoReturnFunction<std::any>;
-    using VoidCallFunctionWithArg = EnvironmentPtrNoReturnFunction<std::any, std::any>;
 /**************/
 /* typeHeader */
 /**************/
@@ -302,6 +290,8 @@ public:
         bool _bitMap: 1;
         bool _addsToRuleComplexity: 1;
     };
+
+#if 0
 /****************/
 /* EntityRecord */
 /****************/
@@ -347,7 +337,7 @@ public:
         PatternEntityRecordSynchronizedFunction synchronized;
         PatternEntityRecordIsDeletedFunction isDeleted;
     };
-
+#endif
 /*****************/
 /* PatternEntity */
 /*****************/
