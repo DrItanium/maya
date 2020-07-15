@@ -105,7 +105,7 @@ namespace maya {
     void FCBAppendSymbol(FunctionCallBuilder *, const char *);
     void FCBAppendString(FunctionCallBuilder *, const char *);
     void FCBAppendInstanceName(FunctionCallBuilder *, const char *);
-    void FCBAppendCLIPSExternalAddress(FunctionCallBuilder *, CLIPSExternalAddress *);
+    void FCBAppendCLIPSExternalAddress(FunctionCallBuilder *, ExternalAddress *);
     void FCBAppendFact(FunctionCallBuilder *, Fact *);
     void FCBAppendInstance(FunctionCallBuilder *, Instance *);
     void FCBAppendMultifield(FunctionCallBuilder *, Multifield *);

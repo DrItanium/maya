@@ -155,32 +155,36 @@ public:
     };
 
 /***************/
-/* CLIPSBitMap */
+/* BitMap */
 /***************/
-    struct CLIPSBitMap : public TypeHeader, public ReferenceCounted, public Hashable {
+    struct BitMap : public ReferenceCountedAtom {
     public:
-        using Self = CLIPSBitMap;
+        using Self = BitMap;
         using Ptr = std::shared_ptr<Self>;
     public:
-        CLIPSBitMap(unsigned short type) : TypeHeader(type) {}
+        BitMap(Environment& parent, unsigned short type) : ReferenceCountedAtom(parent, type) {}
         size_t hash(size_t range) override;
+        void write(const std::string& logicalName) override;
     public:
         std::vector<bool> contents;
     };
 
 /************************/
-/* CLIPSExternalAddress */
+/* ExternalAddress */
 /************************/
-    struct CLIPSExternalAddress : public TypeHeader, public ReferenceCounted, public Hashable {
+    struct ExternalAddress : public ReferenceCountedAtom {
     public:
-        using Self = CLIPSExternalAddress;
+        using Self = ExternalAddress;
         using Ptr = std::shared_ptr<Self>;
     public:
-        CLIPSExternalAddress(unsigned short type) : TypeHeader(type) {}
+        ExternalAddress(Environment& parent, unsigned short externalType) : ReferenceCountedAtom(parent, EXTERNAL_ADDRESS_TYPE), _externalAddressType(externalType) {}
         size_t hash(size_t range) override;
+        constexpr auto getExternalType() const noexcept { return _externalAddressType; }
+        void write(const std::string& logicalName) override;
     public:
         std::any contents;
-        unsigned short type;
+    private:
+        unsigned short _externalAddressType;
     };
 
 /**************/
@@ -213,7 +217,7 @@ public:
             Multifield::Ptr,
             std::shared_ptr<Fact>,
             std::shared_ptr<Instance>,
-            CLIPSExternalAddress::Ptr>;
+            ExternalAddress::Ptr>;
 
     struct HoldsOntoGenericValue : public ReferenceCountable {
         HoldsOntoGenericValue() = default;

@@ -1439,7 +1439,7 @@ static void UpdateExpression(
             if (EvaluationData(theEnv)->PrimitivesArray[bexp->type] == nullptr) break;
             if (EvaluationData(theEnv)->PrimitivesArray[bexp->type]->bitMap) {
                 ExpressionData(theEnv)->ExpressionArray[obji].value = SymbolData(theEnv)->BitMapArray[bexp->value];
-                IncrementBitMapCount((CLIPSBitMap *) ExpressionData(theEnv)->ExpressionArray[obji].value);
+                IncrementBitMapCount((BitMap *) ExpressionData(theEnv)->ExpressionArray[obji].value);
             }
             break;
     }
@@ -1497,7 +1497,7 @@ void ClearBloadedExpressions(
                 if (EvaluationData(theEnv)->PrimitivesArray[ExpressionData(theEnv)->ExpressionArray[i].type] == nullptr) break;
                 if (EvaluationData(theEnv)->PrimitivesArray[ExpressionData(
                         theEnv)->ExpressionArray[i].type]->bitMap) {
-                    DecrementBitMapReferenceCount(theEnv, (CLIPSBitMap *) ExpressionData(
+                    DecrementBitMapReferenceCount(theEnv, (BitMap *) ExpressionData(
                             theEnv)->ExpressionArray[i].value);
                 }
                 break;
@@ -1690,7 +1690,7 @@ void BsaveExpression(
             default:
                 if (EvaluationData(theEnv)->PrimitivesArray[testPtr->type] == nullptr) break;
                 if (EvaluationData(
-                        theEnv)->PrimitivesArray[testPtr->type]->bitMap) { newTest.value = ((CLIPSBitMap *) testPtr->value)->bucket; }
+                        theEnv)->PrimitivesArray[testPtr->type]->bitMap) { newTest.value = ((BitMap *) testPtr->value)->bucket; }
                 break;
         }
 

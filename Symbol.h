@@ -158,8 +158,8 @@ public:
 //#define IncrementLexemeCount(theValue) (((CLIPSLexeme *) theValue)->count++)
 //#define IncrementFloatCount(theValue) (((Float *) theValue)->count++)
 //#define IncrementIntegerCount(theValue) (((Integer *) theValue)->count++)
-//#define IncrementBitMapCount(theValue) (((CLIPSBitMap *) theValue)->count++)
-//#define IncrementExternalAddressCount(theValue) (((CLIPSExternalAddress *) theValue)->count++)
+//#define IncrementBitMapCount(theValue) (((BitMap *) theValue)->count++)
+//#define IncrementExternalAddressCount(theValue) (((ExternalAddress *) theValue)->count++)
 
 #define IncrementLexemeCount(theValue) (theValue->retain())
 #define IncrementFloatCount(theValue) (theValue->retain())
@@ -192,8 +192,8 @@ struct symbolData : public EnvironmentModule {
     CLIPSLexeme **SymbolArray;
     Float **FloatArray;
     Integer **IntegerArray;
-    CLIPSBitMap **BitMapArray;
-    CLIPSExternalAddress **ExternalAddressArray;
+    BitMap **BitMapArray;
+    ExternalAddress **ExternalAddressArray;
 #endif
     CLIPSLexeme::Ptr createSymbol(const std::string& value);
     CLIPSLexeme::Ptr createString(const std::string& value);

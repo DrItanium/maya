@@ -68,7 +68,7 @@ namespace maya {
                 Lexeme::Ptr,
                 Float::Ptr,
                 Integer::Ptr,
-                CLIPSBitMap::Ptr,
+                BitMap::Ptr,
                 std::shared_ptr<struct Fact>,
                 std::shared_ptr<struct Instance>,
                 Multifield::Ptr,

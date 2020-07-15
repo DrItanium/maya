@@ -145,7 +145,7 @@ static bool                    DiscardCAddress(void *,void *);
                     std::is_same_v<K, CLIPSInteger::Ptr> ||
                     std::is_same_v<K, Fact::Ptr> ||
                     std::is_same_v<K, std::shared_ptr<Instance>> ||
-                    std::is_same_v<K, CLIPSExternalAddress::Ptr>) {
+                    std::is_same_v<K, ExternalAddress::Ptr>) {
                 returnValue->contents = value;
             } else if constexpr (std::is_same_v<K, std::shared_ptr<FunctionDefinition>>) {
 
@@ -443,7 +443,7 @@ static bool                    DiscardCAddress(void *,void *);
                 break;
 
             case EXTERNAL_ADDRESS_TYPE:
-                ReleaseExternalAddress(theEnv, (CLIPSExternalAddress *) vPtr);
+                ReleaseExternalAddress(theEnv, (ExternalAddress *) vPtr);
                 break;
 
             case MULTIFIELD_TYPE:
@@ -455,7 +455,7 @@ static bool                    DiscardCAddress(void *,void *);
 
             default:
                 if (EvaluationData(theEnv)->PrimitivesArray[type] == nullptr) break;
-                if (EvaluationData(theEnv)->PrimitivesArray[type]->bitMap) DecrementBitMapReferenceCount(theEnv, (CLIPSBitMap *) vPtr);
+                if (EvaluationData(theEnv)->PrimitivesArray[type]->bitMap) DecrementBitMapReferenceCount(theEnv, (BitMap *) vPtr);
                 else if (EvaluationData(theEnv)->PrimitivesArray[type]->decrementBusyCount) {
                     (*EvaluationData(theEnv)->PrimitivesArray[type]->decrementBusyCount)(theEnv, vPtr);
                 }
@@ -551,7 +551,7 @@ static bool                    DiscardCAddress(void *,void *);
 
             case EXTERNAL_ADDRESS_TYPE:
                 fis.liv = 0;
-                fis.vv = ((CLIPSExternalAddress *) value)->contents;
+                fis.vv = ((ExternalAddress *) value)->contents;
                 tvalue = fis.liv;
                 break;
 
@@ -775,7 +775,7 @@ static bool                    DiscardCAddress(void *,void *);
 
         WriteString(theEnv, logicalName, "<Pointer-C-");
 
-        gensprintf(buffer, "%p", ((CLIPSExternalAddress *) theValue)->contents);
+        gensprintf(buffer, "%p", ((ExternalAddress *) theValue)->contents);
         WriteString(theEnv, logicalName, buffer);
         WriteString(theEnv, logicalName, ">");
 #endif
@@ -1035,7 +1035,7 @@ void FCBAppendInstanceName(
 /**********************************/
 void FCBAppendCLIPSExternalAddress(
         FunctionCallBuilder *theFCB,
-        CLIPSExternalAddress *pv) {
+        ExternalAddress *pv) {
     CLIPSValue theValue;
 
     theValue.externalAddressValue = pv;

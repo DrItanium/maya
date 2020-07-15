@@ -12,16 +12,15 @@ namespace maya {
 
 //size_t hash(size_t range) override;
     size_t
-    CLIPSExternalAddress::hash(size_t range) {
+    ExternalAddress::hash(size_t range) {
         /// @todo implement
         return 0;
     }
 
     size_t
-    CLIPSBitMap::hash(size_t range) {
+    BitMap::hash(size_t range) {
         /// @todo implement
         return 0;
-
     }
 
     size_t
@@ -131,4 +130,12 @@ namespace maya {
         _parent.writeString(logicalName, toString(_contents));
     }
 
+    void
+    BitMap::write(const std::string &logicalName) {
+        /// @todo implement
+    }
+    void
+    ExternalAddress::write(const std::string& logicalName) {
+        /// @todo implement
+    }
 } // end namespace maya
