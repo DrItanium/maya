@@ -141,7 +141,7 @@ static bool                    DiscardCAddress(void *,void *);
         std::visit([returnValue](auto&& value) {
             using K = std::decay_t<decltype(value)>;
             if constexpr ( std::is_same_v<K, CLIPSLexeme::Ptr> ||
-                    std::is_same_v<K, CLIPSFloat::Ptr> ||
+                    std::is_same_v<K, Float::Ptr> ||
                     std::is_same_v<K, CLIPSInteger::Ptr> ||
                     std::is_same_v<K, Fact::Ptr> ||
                     std::is_same_v<K, std::shared_ptr<Instance>> ||
@@ -435,11 +435,11 @@ static bool                    DiscardCAddress(void *,void *);
                 break;
 
             case FLOAT_TYPE:
-                ReleaseFloat(theEnv, (CLIPSFloat *) vPtr);
+                ReleaseFloat(theEnv, (Float *) vPtr);
                 break;
 
             case INTEGER_TYPE:
-                ReleaseInteger(theEnv, (CLIPSInteger *) vPtr);
+                ReleaseInteger(theEnv, (Integer *) vPtr);
                 break;
 
             case EXTERNAL_ADDRESS_TYPE:
@@ -541,12 +541,12 @@ static bool                    DiscardCAddress(void *,void *);
         switch (type) {
             case FLOAT_TYPE:
                 fis.liv = 0;
-                fis.fv = ((CLIPSFloat *) value)->contents;
+                fis.fv = ((Float *) value)->contents;
                 tvalue = fis.liv;
                 break;
 
             case INTEGER_TYPE:
-                tvalue = (unsigned long) ((CLIPSInteger *) value)->contents;
+                tvalue = (unsigned long) ((Integer *) value)->contents;
                 break;
 
             case EXTERNAL_ADDRESS_TYPE:
@@ -934,7 +934,7 @@ void FCBAppend(
 /**************************/
 void FCBAppendCLIPSInteger(
         FunctionCallBuilder *theFCB,
-        CLIPSInteger *pv) {
+        Integer *pv) {
     CLIPSValue theValue;
 
     theValue.integerValue = pv;
@@ -948,7 +948,7 @@ void FCBAppendInteger(
         FunctionCallBuilder *theFCB,
         long long intValue) {
     CLIPSValue theValue;
-    CLIPSInteger *pv = CreateInteger(theFCB->fcbEnv, intValue);
+    Integer *pv = CreateInteger(theFCB->fcbEnv, intValue);
 
     theValue.integerValue = pv;
     FCBAppend(theFCB, &theValue);
@@ -959,7 +959,7 @@ void FCBAppendInteger(
 /************************/
 void FCBAppendCLIPSFloat(
         FunctionCallBuilder *theFCB,
-        CLIPSFloat *pv) {
+        Float *pv) {
     CLIPSValue theValue;
 
     theValue.floatValue = pv;
@@ -973,7 +973,7 @@ void FCBAppendFloat(
         FunctionCallBuilder *theFCB,
         double floatValue) {
     CLIPSValue theValue;
-    CLIPSFloat *pv = CreateFloat(theFCB->fcbEnv, floatValue);
+    Float *pv = CreateFloat(theFCB->fcbEnv, floatValue);
 
     theValue.floatValue = pv;
     FCBAppend(theFCB, &theValue);

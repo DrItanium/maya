@@ -163,9 +163,9 @@ inline decltype(auto) declAccessorPrefix ## Data(Environment& theEnv) { \
         void writeString(const std::string& logicalName, const std::string& string);
         void haltExecution(bool value = true) noexcept;
         bool executionHalted() const noexcept;
-        CLIPSLexeme::Ptr getVoidConstant() const noexcept;
-        CLIPSLexeme::Ptr getTrueSymbol() const noexcept;
-        CLIPSLexeme::Ptr getFalseSymbol() const noexcept;
+        Lexeme::Ptr getVoidConstant() const noexcept;
+        Lexeme::Ptr getTrueSymbol() const noexcept;
+        Lexeme::Ptr getFalseSymbol() const noexcept;
     };
 } // end namespace maya
 

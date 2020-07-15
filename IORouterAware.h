@@ -17,7 +17,7 @@ namespace maya {
          * @param theEnv the environment pointer that this object is a part of
          * @param logicalName the logical name to write to
          */
-        virtual void write(const EnvironmentPtr &theEnv, const std::string &logicalName) = 0;
+        virtual void write(const std::string &logicalName) = 0;
     };
 } // end namespace maya
 #endif //MAYA_IOROUTERAWARE_H

@@ -97,9 +97,9 @@ namespace maya {
     FunctionCallBuilder *CreateFunctionCallBuilder(const Environment::Ptr&, size_t);
     void FCBAppendUDFValue(FunctionCallBuilder *, UDFValue *);
     void FCBAppend(FunctionCallBuilder *, CLIPSValue *);
-    void FCBAppendCLIPSInteger(FunctionCallBuilder *, CLIPSInteger *);
+    void FCBAppendCLIPSInteger(FunctionCallBuilder *, Integer *);
     void FCBAppendInteger(FunctionCallBuilder *, long long);
-    void FCBAppendCLIPSFloat(FunctionCallBuilder *, CLIPSFloat *);
+    void FCBAppendCLIPSFloat(FunctionCallBuilder *, Float *);
     void FCBAppendFloat(FunctionCallBuilder *, double);
     void FCBAppendCLIPSLexeme(FunctionCallBuilder *, CLIPSLexeme *);
     void FCBAppendSymbol(FunctionCallBuilder *, const char *);

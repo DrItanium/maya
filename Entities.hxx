@@ -59,27 +59,32 @@ namespace maya {
         unsigned short _type;
     };
 
-    class Atom : public TypeHeader, public IORouterAware {
+    class Atom : public HoldsEnvironmentCallback, public TypeHeader, public IORouterAware, public ReferenceCountable, public Hashable {
     public:
-        Atom(unsigned short type = 0) : TypeHeader(type) {}
+        Atom(Environment& parent, unsigned short type = 0) : HoldsEnvironmentCallback(parent), TypeHeader(type) {}
+        ~Atom() override = default;
+    };
+    class ReferenceCountedAtom : public Atom, public ReferenceCounted {
+    public:
+       ReferenceCountedAtom(Environment& parent, unsigned short type) : Atom(parent, type) { }
+       ~ReferenceCountedAtom() override = default;
     };
 
 /*************/
 /* clipsVoid */
 /*************/
-    struct CLIPSVoid : public TypeHeader, public ReferenceCountable, public IORouterAware {
+    class Void final : public Atom {
     public:
-        using Self = CLIPSVoid;
+        using Self = Void;
         using Ptr = std::shared_ptr<Self>;
     public:
-        CLIPSVoid() : TypeHeader(VOID_TYPE) {}
-        ~CLIPSVoid() override = default;
-        void release() override {}
-        void retain() override {}
-        bool canRelease() const noexcept { return false; }
-        void write(const EnvironmentPtr &, const std::string &) override {
-            // do nothing
-        }
+        Void(Environment& parent) : Atom(parent, VOID_TYPE) {}
+        ~Void() override = default;
+        size_t hash(size_t) override { return 0; }
+        void retain() override { }
+        void release() override { }
+        bool canRelease() const noexcept override { return false; }
+        void write(const std::string& logicalName) override { }
     };
 
     class TreatAsString {
@@ -93,57 +98,60 @@ namespace maya {
 /***************/
 /* CLIPSLexeme */
 /***************/
-    struct CLIPSLexeme : public TypeHeader, public ReferenceCounted, public Hashable, public IORouterAware {
+    class Lexeme : public ReferenceCountedAtom {
     public:
-        using Self = CLIPSLexeme;
+        using Self = Lexeme;
         using Ptr = std::shared_ptr<Self>;
     public:
-        explicit CLIPSLexeme(TreatAsString) : CLIPSLexeme(STRING_TYPE) {}
-        explicit CLIPSLexeme(TreatAsSymbol) : CLIPSLexeme(SYMBOL_TYPE) {}
-        explicit CLIPSLexeme(TreatAsInstanceName) : CLIPSLexeme(INSTANCE_NAME_TYPE) {}
-        explicit CLIPSLexeme(const std::string &str, TreatAsString) : CLIPSLexeme(STRING_TYPE, str) {}
-        explicit CLIPSLexeme(const std::string &str, TreatAsSymbol) : CLIPSLexeme(SYMBOL_TYPE, str) {}
-        explicit CLIPSLexeme(const std::string &str, TreatAsInstanceName) : CLIPSLexeme(INSTANCE_NAME_TYPE, str) {}
-        explicit CLIPSLexeme(unsigned short type) : TypeHeader(type) {}
-        CLIPSLexeme(unsigned short type, const std::string &str) : TypeHeader(type), contents(str) {}
-
-        ~CLIPSLexeme() override = default;
+        Lexeme(Environment& parent, TreatAsSymbol) : ReferenceCountedAtom(parent, SYMBOL_TYPE) { }
+        Lexeme(Environment& parent, TreatAsString) : ReferenceCountedAtom(parent, STRING_TYPE) { }
+        Lexeme(Environment& parent, TreatAsInstanceName) : ReferenceCountedAtom(parent, INSTANCE_NAME_TYPE) { }
+        Lexeme(Environment& parent, const std::string& contents, TreatAsSymbol) : ReferenceCountedAtom(parent, SYMBOL_TYPE), _contents(contents) { }
+        Lexeme(Environment& parent, const std::string& contents, TreatAsString) : ReferenceCountedAtom(parent, STRING_TYPE), _contents(contents) { }
+        Lexeme(Environment& parent, const std::string& contents, TreatAsInstanceName) : ReferenceCountedAtom(parent, INSTANCE_NAME_TYPE), _contents(contents) { }
+        Lexeme(Environment& parent, const std::string& contents, unsigned short type) : ReferenceCountedAtom(parent, type), _contents(contents) { }
+        std::string getContents() const noexcept { return _contents; }
+        ~Lexeme() override = default;
         size_t hash(size_t range) override;
-        void write(const EnvironmentPtr &theEnv, const std::string &logicalName) override;
-    public:
-        std::string contents;
+        void write(const std::string& logicalName) override;
+    private:
+        std::string _contents;
     };
 
+
 /**************/
-/* CLIPSFloat */
+/* Float */
 /**************/
-    struct CLIPSFloat : public TypeHeader, public ReferenceCounted, public Hashable, public IORouterAware {
+class Float : public ReferenceCountedAtom {
+public:
+    using Self = Float;
+    using Ptr = std::shared_ptr<Self>;
     public:
-        using Self = CLIPSFloat;
-        using Ptr = std::shared_ptr<Self>;
-    public:
-        CLIPSFloat(double value = 0.0) : TypeHeader(FLOAT_TYPE), contents(value) {}
-        ~CLIPSFloat() override = default;
+        Float(Environment& parent, double value = 0.0) : ReferenceCountedAtom(parent, FLOAT_TYPE), _contents(value) {}
+        ~Float() override = default;
         size_t hash(size_t range) override;
-        void write(const EnvironmentPtr &theEnv, const std::string &logicalName) override;
-    public:
-        double contents;
+        void write(const std::string &logicalName) override;
+        constexpr auto getContents() const noexcept { return _contents; }
+    private:
+        double _contents;
     };
 
 /****************/
-/* CLIPSInteger */
+/* Integer */
 /****************/
-    struct CLIPSInteger : public TypeHeader, public ReferenceCounted, public Hashable, public IORouterAware {
+    struct Integer : public ReferenceCountedAtom {
     public:
-        using Self = CLIPSInteger;
+        using Self = Integer;
         using Ptr = std::shared_ptr<Self>;
+        using BackingType = long long;
     public:
-        CLIPSInteger(long long value = 0) : TypeHeader(INTEGER_TYPE), contents(value) {}
-        ~CLIPSInteger() override = default;
+        Integer(Environment& parent, BackingType value = 0) : ReferenceCountedAtom(parent, INTEGER_TYPE), _contents(value) {}
+        ~Integer() override = default;
         size_t hash(size_t range) override;
-        void write(const EnvironmentPtr &theEnv, const std::string &logicalName) override;
-    public:
-        long long contents;
+        void write(const std::string &logicalName) override;
+        constexpr auto getContents() const noexcept { return _contents; }
+    private:
+        BackingType _contents;
     };
 
 /***************/
@@ -198,10 +206,10 @@ namespace maya {
     struct Fact;
     struct Instance;
     using ValueContainer = std::variant<std::monostate,
-            CLIPSLexeme::Ptr,
-            CLIPSFloat::Ptr,
-            CLIPSInteger::Ptr,
-            CLIPSVoid::Ptr,
+            Lexeme::Ptr,
+            Float::Ptr,
+            Integer::Ptr,
+            Void::Ptr,
             Multifield::Ptr,
             std::shared_ptr<Fact>,
             std::shared_ptr<Instance>,

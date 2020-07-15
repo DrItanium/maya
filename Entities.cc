@@ -25,9 +25,9 @@ namespace maya {
     }
 
     size_t
-    CLIPSLexeme::hash(size_t range) {
+    Lexeme::hash(size_t range) {
         size_t tally = 0;
-        for (const auto &c : contents) {
+        for (const auto &c : _contents) {
             tally = tally * 127 + (size_t) c;
         }
         if (range == 0) {
@@ -38,7 +38,7 @@ namespace maya {
     }
 
     size_t
-    CLIPSInteger::hash(size_t range) {
+    Integer::hash(size_t range) {
 #if WIN_MVC
         auto tmp = contents;
         if (tmp < 0) {
@@ -46,19 +46,19 @@ namespace maya {
         }
         return (((size_t)tmp) % range);
 #else
-        return (((size_t) llabs(contents)) % range);
+        return (((size_t) llabs(_contents)) % range);
 #endif
     }
 
     size_t
-    CLIPSFloat::hash(size_t range) {
+    Float::hash(size_t range) {
         size_t tally = 0;
         union {
-            decltype(contents) value;
-            char word[sizeof(decltype(contents))];
+            decltype(_contents) value;
+            char word[sizeof(decltype(_contents))];
         } view;
-        view.value = contents;
-        for (int i = 0; i < sizeof(decltype(contents)); ++i) {
+        view.value = _contents;
+        for (int i = 0; i < sizeof(decltype(_contents)); ++i) {
             tally = tally * 127 + (size_t) view.word[i];
         }
         if (range == 0) {
@@ -109,8 +109,8 @@ namespace maya {
 #endif
 
     void
-    CLIPSLexeme::write(const EnvironmentPtr &theEnv, const std::string &logicalName) {
-        theEnv->writeString(logicalName, contents);
+    Lexeme::write(const std::string &logicalName) {
+        _parent.writeString(logicalName, _contents);
     }
 
     template<typename T>
@@ -122,13 +122,13 @@ namespace maya {
     }
 
     void
-    CLIPSFloat::write(const EnvironmentPtr &theEnv, const std::string &logicalName) {
-        theEnv->writeString(logicalName, toString(contents));
+    Float::write(const std::string &logicalName) {
+        _parent.writeString(logicalName, toString(_contents));
     }
 
     void
-    CLIPSInteger::write(const EnvironmentPtr &theEnv, const std::string &logicalName) {
-        theEnv->writeString(logicalName, toString(contents));
+    Integer::write(const std::string &logicalName) {
+        _parent.writeString(logicalName, toString(_contents));
     }
 
 } // end namespace maya

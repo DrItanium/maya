@@ -156,8 +156,8 @@ public:
     Ptr next;
 };
 //#define IncrementLexemeCount(theValue) (((CLIPSLexeme *) theValue)->count++)
-//#define IncrementFloatCount(theValue) (((CLIPSFloat *) theValue)->count++)
-//#define IncrementIntegerCount(theValue) (((CLIPSInteger *) theValue)->count++)
+//#define IncrementFloatCount(theValue) (((Float *) theValue)->count++)
+//#define IncrementIntegerCount(theValue) (((Integer *) theValue)->count++)
 //#define IncrementBitMapCount(theValue) (((CLIPSBitMap *) theValue)->count++)
 //#define IncrementExternalAddressCount(theValue) (((CLIPSExternalAddress *) theValue)->count++)
 
@@ -190,8 +190,8 @@ struct symbolData : public EnvironmentModule {
     unsigned long NumberOfBitMaps;
     unsigned long NumberOfExternalAddresses;
     CLIPSLexeme **SymbolArray;
-    CLIPSFloat **FloatArray;
-    CLIPSInteger **IntegerArray;
+    Float **FloatArray;
+    Integer **IntegerArray;
     CLIPSBitMap **BitMapArray;
     CLIPSExternalAddress **ExternalAddressArray;
 #endif

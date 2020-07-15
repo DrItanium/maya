@@ -65,9 +65,9 @@ namespace maya {
         using Self = Expression;
         using Ptr = std::shared_ptr<Self>;
         using Container = std::variant<std::monostate,
-                CLIPSLexeme::Ptr,
-                CLIPSFloat::Ptr,
-                CLIPSInteger::Ptr,
+                Lexeme::Ptr,
+                Float::Ptr,
+                Integer::Ptr,
                 CLIPSBitMap::Ptr,
                 std::shared_ptr<struct Fact>,
                 std::shared_ptr<struct Instance>,
