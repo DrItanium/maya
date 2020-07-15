@@ -80,7 +80,7 @@
 #include "SystemDependency.h"
 
 #include "Router.h"
-
+namespace maya {
 /**********************/
 /* STRING DEFINITIONS */
 /**********************/
@@ -317,3 +317,4 @@ void
 Environment::writeString(const std::string &logicalName, const std::string &string) {
     getEnvironmentModule<RouterModule>()->writeString(logicalName, string);
 }
+} // end namespace maya

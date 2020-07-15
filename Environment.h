@@ -80,17 +80,17 @@
 #include "HoldsEnvironmentCallback.h"
 #include "Problem.h"
 #include "Entities.hxx"
-
-constexpr auto USER_ENVIRONMENT_DATA = 70;
-class Environment;
-class EnvironmentModule : public HoldsEnvironmentCallback {
-public:
-    EnvironmentModule(Environment& parent) : HoldsEnvironmentCallback(parent) { }
-    virtual ~EnvironmentModule() = default;
-    // called when the (clear) function is invoked
-    virtual void onClear() noexcept;
-    virtual void onReset() noexcept;
-};
+namespace maya {
+    constexpr auto USER_ENVIRONMENT_DATA = 70;
+    class Environment;
+    class EnvironmentModule : public HoldsEnvironmentCallback {
+    public:
+        EnvironmentModule(Environment& parent) : HoldsEnvironmentCallback(parent) { }
+        virtual ~EnvironmentModule() = default;
+        // called when the (clear) function is invoked
+        virtual void onClear() noexcept;
+        virtual void onReset() noexcept;
+    };
 
 #define RegisterEnvironmentModule(actual_type, pos, declAccessorPrefix) \
 inline decltype(auto) declAccessorPrefix ## Data (const Environment::Ptr& theEnv) { \
@@ -101,73 +101,73 @@ inline decltype(auto) declAccessorPrefix ## Data(Environment& theEnv) { \
 }
 
 
-class Environment {
-public:
-    using Self = Environment;
-    using Ptr = std::shared_ptr<Self>;
-public:
-    static Ptr create();
-public:
-    /// @todo Make these symbol pointers shared_ptrs
-    Environment();
-private:
-    std::map<std::type_index, std::unique_ptr<EnvironmentModule>> _modules;
-    template<typename T>
-    void installEnvironmentModule(std::unique_ptr<T>&& module) {
-        if (_modules.find(typeid(T)) != _modules.end()) {
-            std::stringstream ss;
-            ss << "[ENVRNMNT3] Environment module of type: '" << typeid(T).name() << "' already allocated.";
-            auto str = ss.str();
-            throw Problem(str);
-        } else {
-            // not found in our container so instead, we need to install it
-            _modules[typeid(T)] = std::move(module);
+    class Environment {
+    public:
+        using Self = Environment;
+        using Ptr = std::shared_ptr<Self>;
+    public:
+        static Ptr create();
+    public:
+        /// @todo Make these symbol pointers shared_ptrs
+        Environment();
+    private:
+        std::map<std::type_index, std::unique_ptr<EnvironmentModule>> _modules;
+        template<typename T>
+        void installEnvironmentModule(std::unique_ptr<T>&& module) {
+            if (_modules.find(typeid(T)) != _modules.end()) {
+                std::stringstream ss;
+                ss << "[ENVRNMNT3] Environment module of type: '" << typeid(T).name() << "' already allocated.";
+                auto str = ss.str();
+                throw Problem(str);
+            } else {
+                // not found in our container so instead, we need to install it
+                _modules[typeid(T)] = std::move(module);
+            }
         }
-    }
-public:
-    template<typename T>
-    const std::unique_ptr<T>& getEnvironmentModule() {
-        if (_modules.find(typeid(T)) != _modules.end()) {
-            return (std::unique_ptr<T>&)_modules[typeid(T)];
-        } else {
-            std::stringstream ss;
-            ss << "Unallocated environment module of type " << typeid(T).name() << " requested!";
-            auto str = ss.str();
-            throw Problem(str);
+    public:
+        template<typename T>
+        const std::unique_ptr<T>& getEnvironmentModule() {
+            if (_modules.find(typeid(T)) != _modules.end()) {
+                return (std::unique_ptr<T>&)_modules[typeid(T)];
+            } else {
+                std::stringstream ss;
+                ss << "Unallocated environment module of type " << typeid(T).name() << " requested!";
+                auto str = ss.str();
+                throw Problem(str);
+            }
         }
-    }
-    template<typename T, typename ... Args>
-    void allocateEnvironmentModule(Args&& ... args) {
-        auto ptr = std::make_unique<T>(*this, std::forward<Args>(args)...);
-        installEnvironmentModule(std::move(ptr));
-    }
-    /**
-     * @brief Invokes the body of a passed function using this instance as the environment argument; Useful for installing modules into this environment
-     * @param body the function to invoke
-     */
-    void install(std::function<void(Environment&)> body);
-    /**
-     * @brief Call the static install methods on a series of provided types
-     * @tparam First the first type to call install on
-     * @tparam Rest the other types to call install on
-     */
-    template<typename First, typename ... Rest>
-    void install() {
-        First::install(*this);
-        (Rest::install(*this), ...) ;
-    }
-public:
-    void printErrorID(const std::string& module, int errorID, bool printCR);
-    void incrementLineCount() noexcept;
-    void decrementLineCount() noexcept;
-    void writeString(const std::string& logicalName, const std::string& string);
-    void haltExecution(bool value = true) noexcept;
-    bool executionHalted() const noexcept;
-    CLIPSLexeme::Ptr getVoidConstant() const noexcept;
-    CLIPSLexeme::Ptr getTrueSymbol() const noexcept;
-    CLIPSLexeme::Ptr getFalseSymbol() const noexcept;
-};
-
+        template<typename T, typename ... Args>
+        void allocateEnvironmentModule(Args&& ... args) {
+            auto ptr = std::make_unique<T>(*this, std::forward<Args>(args)...);
+            installEnvironmentModule(std::move(ptr));
+        }
+        /**
+         * @brief Invokes the body of a passed function using this instance as the environment argument; Useful for installing modules into this environment
+         * @param body the function to invoke
+         */
+        void install(std::function<void(Environment&)> body);
+        /**
+         * @brief Call the static install methods on a series of provided types
+         * @tparam First the first type to call install on
+         * @tparam Rest the other types to call install on
+         */
+        template<typename First, typename ... Rest>
+        void install() {
+            First::install(*this);
+            (Rest::install(*this), ...) ;
+        }
+    public:
+        void printErrorID(const std::string& module, int errorID, bool printCR);
+        void incrementLineCount() noexcept;
+        void decrementLineCount() noexcept;
+        void writeString(const std::string& logicalName, const std::string& string);
+        void haltExecution(bool value = true) noexcept;
+        bool executionHalted() const noexcept;
+        CLIPSLexeme::Ptr getVoidConstant() const noexcept;
+        CLIPSLexeme::Ptr getTrueSymbol() const noexcept;
+        CLIPSLexeme::Ptr getFalseSymbol() const noexcept;
+    };
+} // end namespace maya
 
 #endif /* _H_envrnmnt */
 

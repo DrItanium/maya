@@ -7,7 +7,7 @@ add_library(clips
 		IORouterAware.h
 		OperatingSystemShim.h
 		Platform.h
-		Setup.h
+		Setup.h UserSetup.h
 		Problem.h
 		Constants.h
 		Entities.hxx Entities.cc CLIPSValue.cc
@@ -16,7 +16,7 @@ add_library(clips
 		Expression.h Expression.cc
 		Router.h Router.cc
 		ReferenceCounted.h ReferenceCounted.cc
-		Hashable.h Hashable.cc
+		Hashable.h
 		HoldsEnvironmentCallback.h HoldsEnvironmentCallback.cc
 		#Agenda.h
 		#Analysis.h
@@ -128,7 +128,6 @@ add_library(clips
 		#Symbol.h
 		#SystemDependency.h
 		#UserData.h
-		#UserSetup.h
 		#Utility.h
 		#Watch.h
 		#Agenda.cc
@@ -278,22 +277,23 @@ add_library(clips
 		#UserData.cc
 		#Watch.cc)
 )
-add_library(maya_extensions
-		BoostExtensions.h
-		#BoostExtensions.cc
-		#FunctionalExtensions.cpp
-		#FunctionalExtensions.h
-		MayaExtensions.cc
-		InstanceExtensions.h
-		ExternalAddressTracker.h
-		)
+#add_library(maya_extensions
+#		BoostExtensions.h
+#		#BoostExtensions.cc
+#		#FunctionalExtensions.cpp
+#		#FunctionalExtensions.h
+#		MayaExtensions.cc
+#		InstanceExtensions.h
+#		ExternalAddressTracker.h
+#		)
 # TODO express the configurable dependencies in setup.h using CMAKE instead
 add_executable(maya cmd/repl/main.cc)
 target_link_libraries(maya PUBLIC
 		boost_system
 		boost_filesystem
 		clips
-		maya_extensions)
+		#maya_extensions
+		)
 target_include_directories(maya PUBLIC "${PROJECT_SRC_DIR}")
 target_include_directories(clips PUBLIC "${PROJECT_SRC_DIR}")
-target_include_directories(maya_extensions PUBLIC "${PROJECT_SRC_DIR}")
+#target_include_directories(maya_extensions PUBLIC "${PROJECT_SRC_DIR}")

@@ -4,5 +4,6 @@
 
 #include "HoldsEnvironmentCallback.h"
 #include "Environment.h"
-
-HoldsEnvironmentCallback::HoldsEnvironmentCallback(Environment &parent) : _parent(parent) {}
+namespace maya {
+    HoldsEnvironmentCallback::HoldsEnvironmentCallback(Environment &parent) : _parent(parent) {}
+}

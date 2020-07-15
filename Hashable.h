@@ -5,9 +5,11 @@
 #ifndef MAYA_HASHABLE_H
 #define MAYA_HASHABLE_H
 #include <cstddef>
-class Hashable {
-public:
-    virtual size_t hash(size_t) = 0;
-};
+namespace maya {
+    class Hashable {
+    public:
+        virtual size_t hash(size_t) = 0;
+    };
+} // end namespace maya
 
 #endif //MAYA_HASHABLE_H

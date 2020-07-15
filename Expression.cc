@@ -58,6 +58,7 @@
 #include "Router.h"
 
 #include "Expression.h"
+namespace maya {
 
 constexpr auto PRIME_ONE   = 257;
 constexpr auto PRIME_TWO   = 263;
@@ -2126,3 +2127,4 @@ Expression *AppendExpressions(
 }
 #endif
 
+} // end namespace maya

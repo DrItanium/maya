@@ -104,14 +104,16 @@
 #include "Evaluation.h"
 #include "ReferenceCounted.h"
 #endif
+#include "Evaluation.h"
 
+namespace maya {
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-static void DeallocateEvaluationData(const Environment::Ptr&);
-static void PrintCAddress(const Environment::Ptr&, const char *, void *);
-static void NewCAddress(UDFContext *, UDFValue *);
+    static void DeallocateEvaluationData(const Environment::Ptr &);
+    static void PrintCAddress(const Environment::Ptr &, const char *, void *);
+    static void NewCAddress(UDFContext *, UDFValue *);
 /*
 static bool                    DiscardCAddress(void *,void *);
 */
@@ -120,719 +122,719 @@ static bool                    DiscardCAddress(void *,void *);
 /* InitializeEvaluationData: Allocates environment */
 /*    data for expression evaluation.             */
 /**************************************************/
-void InitializeEvaluationData(
-        const Environment::Ptr&theEnv) {
+    void InitializeEvaluationData(
+            const Environment::Ptr &theEnv) {
 #if STUBBING_INACTIVE
-    struct externalAddressType cPointer = {"C", PrintCAddress, PrintCAddress, nullptr, NewCAddress, nullptr};
-    /// @todo move deallocate evaluation data into the dtor of EvaluationModule
-    //AllocateEnvironmentData(theEnv, EVALUATION_DATA, sizeof(EvaluationModule), DeallocateEvaluationData);
-    theEnv->allocateEnvironmentModule<>()
-    auto ptr = std::make_unique<EvaluationModule>();
-    theEnv->installEnvironmentModule(std::move(ptr));
-    InstallExternalAddressType(theEnv, &cPointer);
+        struct externalAddressType cPointer = {"C", PrintCAddress, PrintCAddress, nullptr, NewCAddress, nullptr};
+        /// @todo move deallocate evaluation data into the dtor of EvaluationModule
+        //AllocateEnvironmentData(theEnv, EVALUATION_DATA, sizeof(EvaluationModule), DeallocateEvaluationData);
+        theEnv->allocateEnvironmentModule<>()
+        auto ptr = std::make_unique<EvaluationModule>();
+        theEnv->installEnvironmentModule(std::move(ptr));
+        InstallExternalAddressType(theEnv, &cPointer);
 #endif
-}
-
-void
-EvaluationModule::installPrimitive(EntityRecord::Ptr record, int position) {
-    if (PrimitivesArray[position]) {
-        throw Problem("Overwriting an already installed primitive");
-    } else {
-        PrimitivesArray[position] = record;
     }
-}
 
-#if STUBBING_INACTIVE
-/**************************************************************/
-/* EvaluateExpression: Evaluates an expression. Returns false */
-/*   if no errors occurred during evaluation, otherwise true. */
-/**************************************************************/
-bool EvaluateExpression(
-        const Environment::Ptr&theEnv,
-        Expression *problem,
-        UDFValue *returnValue) {
-    Expression *oldArgument;
-    FunctionDefinition *fptr;
-    UDFContext theUDFContext;
-#if PROFILING_FUNCTIONS
-    struct profileFrameInfo profileFrame;
-#endif
-
-    returnValue->contents = VoidConstant(theEnv);
-    returnValue->begin = 0;
-    returnValue->range = SIZE_MAX;
-
-    if (problem == nullptr) {
-        returnValue->contents = FalseSymbol(theEnv);
-        return (EvaluationData(theEnv)->EvaluationError);
-    }
-    /// @todo continue
-#if STUBBING_INACTIVE
-    std::visit([returnValue](auto&& value) {
-        using K = std::decay_t<decltype(value)>;
-        if constexpr ( std::is_same_v<K, CLIPSLexeme::Ptr> ||
-                std::is_same_v<K, CLIPSFloat::Ptr> ||
-                std::is_same_v<K, CLIPSInteger::Ptr> ||
-                std::is_same_v<K, Fact::Ptr> ||
-                std::is_same_v<K, std::shared_ptr<Instance>> ||
-                std::is_same_v<K, CLIPSExternalAddress::Ptr>) {
-            returnValue->contents = value;
-        } else if constexpr (std::is_same_v<K, std::shared_ptr<FunctionDefinition>>) {
-
-        } else if
-
-    }, problem->contents);
-#endif
-    switch (problem->type) {
-        case STRING_TYPE:
-        case SYMBOL_TYPE:
-        case FLOAT_TYPE:
-        case INTEGER_TYPE:
-        case INSTANCE_NAME_TYPE:
-        case INSTANCE_ADDRESS_TYPE:
-        case FACT_ADDRESS_TYPE:
-        case EXTERNAL_ADDRESS_TYPE:
-            returnValue->contents = problem->value;
-            break;
-
-        case FCALL: {
-            fptr = problem->functionValue;
-
-#if PROFILING_FUNCTIONS
-            StartProfile(theEnv, &profileFrame,
-                         &fptr->usrData,
-                         ProfileFunctionData(theEnv)->ProfileUserFunctions);
-#endif
-
-            oldArgument = EvaluationData(theEnv)->CurrentExpression;
-            EvaluationData(theEnv)->CurrentExpression = problem;
-
-            theUDFContext.environment = theEnv;
-            theUDFContext.theFunction = fptr;
-            theUDFContext.lastArg = problem->argList;
-            theUDFContext.lastPosition = 1;
-            theUDFContext.returnValue = returnValue;
-            fptr->functionPointer(theEnv, &theUDFContext, returnValue);
-            if ((returnValue->header->type == MULTIFIELD_TYPE) &&
-                (returnValue->range == SIZE_MAX)) { returnValue->range = returnValue->multifieldValue->length; }
-
-#if PROFILING_FUNCTIONS
-            EndProfile(theEnv, &profileFrame);
-#endif
-
-            EvaluationData(theEnv)->CurrentExpression = oldArgument;
-            break;
+    void
+    EvaluationModule::installPrimitive(EntityRecord::Ptr record, int position) {
+        if (PrimitivesArray[position]) {
+            throw Problem("Overwriting an already installed primitive");
+        } else {
+            PrimitivesArray[position] = record;
         }
+    }
 
-        case MULTIFIELD_TYPE:
-            returnValue->value = ((UDFValue *) (problem->value))->value;
-            returnValue->begin = ((UDFValue *) (problem->value))->begin;
-            returnValue->range = ((UDFValue *) (problem->value))->range;
-            break;
+#if STUBBING_INACTIVE
+    /**************************************************************/
+    /* EvaluateExpression: Evaluates an expression. Returns false */
+    /*   if no errors occurred during evaluation, otherwise true. */
+    /**************************************************************/
+    bool EvaluateExpression(
+            const Environment::Ptr&theEnv,
+            Expression *problem,
+            UDFValue *returnValue) {
+        Expression *oldArgument;
+        FunctionDefinition *fptr;
+        UDFContext theUDFContext;
+#if PROFILING_FUNCTIONS
+        struct profileFrameInfo profileFrame;
+#endif
 
-        case MF_VARIABLE:
-        case SF_VARIABLE:
-            if (!GetBoundVariable(theEnv, returnValue, problem->lexemeValue)) {
-                PrintErrorID(theEnv, "EVALUATN", 1, false);
-                WriteString(theEnv, STDERR, "Variable ");
-                if (problem->type == MF_VARIABLE) { WriteString(theEnv, STDERR, "$?"); }
-                else { WriteString(theEnv, STDERR, "?"); }
-                WriteString(theEnv, STDERR, problem->lexemeValue->contents);
-                WriteString(theEnv, STDERR, " is unbound.\n");
-                returnValue->value = FalseSymbol(theEnv);
-                SetEvaluationError(theEnv, true);
-            }
-            break;
+        returnValue->contents = VoidConstant(theEnv);
+        returnValue->begin = 0;
+        returnValue->range = SIZE_MAX;
 
-        default:
-            if (EvaluationData(theEnv)->PrimitivesArray[problem->type] == nullptr) {
-                SystemError(theEnv, "EVALUATN", 3);
-                ExitRouter(theEnv, EXIT_FAILURE);
-            }
+        if (problem == nullptr) {
+            returnValue->contents = FalseSymbol(theEnv);
+            return (EvaluationData(theEnv)->EvaluationError);
+        }
+        /// @todo continue
+#if STUBBING_INACTIVE
+        std::visit([returnValue](auto&& value) {
+            using K = std::decay_t<decltype(value)>;
+            if constexpr ( std::is_same_v<K, CLIPSLexeme::Ptr> ||
+                    std::is_same_v<K, CLIPSFloat::Ptr> ||
+                    std::is_same_v<K, CLIPSInteger::Ptr> ||
+                    std::is_same_v<K, Fact::Ptr> ||
+                    std::is_same_v<K, std::shared_ptr<Instance>> ||
+                    std::is_same_v<K, CLIPSExternalAddress::Ptr>) {
+                returnValue->contents = value;
+            } else if constexpr (std::is_same_v<K, std::shared_ptr<FunctionDefinition>>) {
 
-            if (EvaluationData(theEnv)->PrimitivesArray[problem->type]->copyToEvaluate) {
-                returnValue->value = problem->value;
+            } else if
+
+        }, problem->contents);
+#endif
+        switch (problem->type) {
+            case STRING_TYPE:
+            case SYMBOL_TYPE:
+            case FLOAT_TYPE:
+            case INTEGER_TYPE:
+            case INSTANCE_NAME_TYPE:
+            case INSTANCE_ADDRESS_TYPE:
+            case FACT_ADDRESS_TYPE:
+            case EXTERNAL_ADDRESS_TYPE:
+                returnValue->contents = problem->value;
+                break;
+
+            case FCALL: {
+                fptr = problem->functionValue;
+
+#if PROFILING_FUNCTIONS
+                StartProfile(theEnv, &profileFrame,
+                             &fptr->usrData,
+                             ProfileFunctionData(theEnv)->ProfileUserFunctions);
+#endif
+
+                oldArgument = EvaluationData(theEnv)->CurrentExpression;
+                EvaluationData(theEnv)->CurrentExpression = problem;
+
+                theUDFContext.environment = theEnv;
+                theUDFContext.theFunction = fptr;
+                theUDFContext.lastArg = problem->argList;
+                theUDFContext.lastPosition = 1;
+                theUDFContext.returnValue = returnValue;
+                fptr->functionPointer(theEnv, &theUDFContext, returnValue);
+                if ((returnValue->header->type == MULTIFIELD_TYPE) &&
+                    (returnValue->range == SIZE_MAX)) { returnValue->range = returnValue->multifieldValue->length; }
+
+#if PROFILING_FUNCTIONS
+                EndProfile(theEnv, &profileFrame);
+#endif
+
+                EvaluationData(theEnv)->CurrentExpression = oldArgument;
                 break;
             }
 
-            if (EvaluationData(theEnv)->PrimitivesArray[problem->type]->evaluateFunction == nullptr) {
-                SystemError(theEnv, "EVALUATN", 4);
-                ExitRouter(theEnv, EXIT_FAILURE);
-            }
+            case MULTIFIELD_TYPE:
+                returnValue->value = ((UDFValue *) (problem->value))->value;
+                returnValue->begin = ((UDFValue *) (problem->value))->begin;
+                returnValue->range = ((UDFValue *) (problem->value))->range;
+                break;
 
-            oldArgument = EvaluationData(theEnv)->CurrentExpression;
-            EvaluationData(theEnv)->CurrentExpression = problem;
+            case MF_VARIABLE:
+            case SF_VARIABLE:
+                if (!GetBoundVariable(theEnv, returnValue, problem->lexemeValue)) {
+                    PrintErrorID(theEnv, "EVALUATN", 1, false);
+                    WriteString(theEnv, STDERR, "Variable ");
+                    if (problem->type == MF_VARIABLE) { WriteString(theEnv, STDERR, "$?"); }
+                    else { WriteString(theEnv, STDERR, "?"); }
+                    WriteString(theEnv, STDERR, problem->lexemeValue->contents);
+                    WriteString(theEnv, STDERR, " is unbound.\n");
+                    returnValue->value = FalseSymbol(theEnv);
+                    SetEvaluationError(theEnv, true);
+                }
+                break;
+
+            default:
+                if (EvaluationData(theEnv)->PrimitivesArray[problem->type] == nullptr) {
+                    SystemError(theEnv, "EVALUATN", 3);
+                    ExitRouter(theEnv, EXIT_FAILURE);
+                }
+
+                if (EvaluationData(theEnv)->PrimitivesArray[problem->type]->copyToEvaluate) {
+                    returnValue->value = problem->value;
+                    break;
+                }
+
+                if (EvaluationData(theEnv)->PrimitivesArray[problem->type]->evaluateFunction == nullptr) {
+                    SystemError(theEnv, "EVALUATN", 4);
+                    ExitRouter(theEnv, EXIT_FAILURE);
+                }
+
+                oldArgument = EvaluationData(theEnv)->CurrentExpression;
+                EvaluationData(theEnv)->CurrentExpression = problem;
 
 #if PROFILING_FUNCTIONS
-            StartProfile(theEnv, &profileFrame,
-                         &EvaluationData(theEnv)->PrimitivesArray[problem->type]->usrData,
-                         ProfileFunctionData(theEnv)->ProfileUserFunctions);
+                StartProfile(theEnv, &profileFrame,
+                             &EvaluationData(theEnv)->PrimitivesArray[problem->type]->usrData,
+                             ProfileFunctionData(theEnv)->ProfileUserFunctions);
 #endif
 
-            (*EvaluationData(theEnv)->PrimitivesArray[problem->type]->evaluateFunction)(theEnv, problem->value, returnValue);
+                (*EvaluationData(theEnv)->PrimitivesArray[problem->type]->evaluateFunction)(theEnv, problem->value, returnValue);
 
 #if PROFILING_FUNCTIONS
-            EndProfile(theEnv, &profileFrame);
+                EndProfile(theEnv, &profileFrame);
 #endif
 
-            EvaluationData(theEnv)->CurrentExpression = oldArgument;
-            break;
-    }
+                EvaluationData(theEnv)->CurrentExpression = oldArgument;
+                break;
+        }
 
-    return EvaluationData(theEnv)->EvaluationError;
-}
-#endif
-size_t
-EvaluationModule::installExternalAddressType(const externalAddressType& newType) {
-    if (numberOfAddressTypes == MAXIMUM_EXTERNAL_ADDRESS_TYPES)  {
-        throw Problem("Too many external address types defined");
+        return EvaluationData(theEnv)->EvaluationError;
     }
-    auto newPtr = std::make_shared<externalAddressType>(newType);
-    auto newIndex = numberOfAddressTypes;
-    ExternalAddressTypes[newIndex] = newPtr;
-    ++numberOfAddressTypes;
-    return newIndex;
-}
+#endif
+    size_t
+    EvaluationModule::installExternalAddressType(const externalAddressType &newType) {
+        if (numberOfAddressTypes == MAXIMUM_EXTERNAL_ADDRESS_TYPES) {
+            throw Problem("Too many external address types defined");
+        }
+        auto newPtr = std::make_shared<externalAddressType>(newType);
+        auto newIndex = numberOfAddressTypes;
+        ExternalAddressTypes[newIndex] = newPtr;
+        ++numberOfAddressTypes;
+        return newIndex;
+    }
 
 /*******************/
 /* ResetErrorFlags */
 /*******************/
-void
-EvaluationModule::resetErrorFlags() noexcept {
-    EvaluationError = false;
-    HaltExecution = false;
-}
-void
-EvaluationModule::setEvaluationError(bool value) noexcept {
-   EvaluationError = value;
-   if (value) {
-       HaltExecution = true;
-   }
-}
+    void
+    EvaluationModule::resetErrorFlags() noexcept {
+        EvaluationError = false;
+        HaltExecution = false;
+    }
+    void
+    EvaluationModule::setEvaluationError(bool value) noexcept {
+        EvaluationError = value;
+        if (value) {
+            HaltExecution = true;
+        }
+    }
 
 #if STUBBING_INACTIVE
 
-/**************************************************/
-/* WriteCLIPSValue: Prints a CLIPSValue structure */
-/*   to the specified logical name.               */
-/**************************************************/
-void WriteCLIPSValue(
-        const Environment::Ptr&theEnv,
-        const char *fileid,
-        CLIPSValue *argPtr) {
-    switch (argPtr->header->type) {
-        case VOID_TYPE:
-        case SYMBOL_TYPE:
-        case STRING_TYPE:
-        case INTEGER_TYPE:
-        case FLOAT_TYPE:
-        case EXTERNAL_ADDRESS_TYPE:
-        case FACT_ADDRESS_TYPE:
-        case INSTANCE_NAME_TYPE:
-        case INSTANCE_ADDRESS_TYPE:
-            PrintAtom(theEnv, fileid, argPtr->header->type, argPtr->value);
-            break;
+    /**************************************************/
+    /* WriteCLIPSValue: Prints a CLIPSValue structure */
+    /*   to the specified logical name.               */
+    /**************************************************/
+    void WriteCLIPSValue(
+            const Environment::Ptr&theEnv,
+            const char *fileid,
+            CLIPSValue *argPtr) {
+        switch (argPtr->header->type) {
+            case VOID_TYPE:
+            case SYMBOL_TYPE:
+            case STRING_TYPE:
+            case INTEGER_TYPE:
+            case FLOAT_TYPE:
+            case EXTERNAL_ADDRESS_TYPE:
+            case FACT_ADDRESS_TYPE:
+            case INSTANCE_NAME_TYPE:
+            case INSTANCE_ADDRESS_TYPE:
+                PrintAtom(theEnv, fileid, argPtr->header->type, argPtr->value);
+                break;
 
-        case MULTIFIELD_TYPE:
-            PrintMultifieldDriver(theEnv, fileid, argPtr->multifieldValue,
-                                  0, argPtr->multifieldValue->length, true);
-            break;
+            case MULTIFIELD_TYPE:
+                PrintMultifieldDriver(theEnv, fileid, argPtr->multifieldValue,
+                                      0, argPtr->multifieldValue->length, true);
+                break;
 
-        default:
-            WriteString(theEnv, fileid, "<UnknownPrintType");
-            WriteInteger(theEnv, fileid, argPtr->header->type);
-            WriteString(theEnv, fileid, ">");
-            SetHaltExecution(theEnv, true);
-            SetEvaluationError(theEnv, true);
-            break;
+            default:
+                WriteString(theEnv, fileid, "<UnknownPrintType");
+                WriteInteger(theEnv, fileid, argPtr->header->type);
+                WriteString(theEnv, fileid, ">");
+                SetHaltExecution(theEnv, true);
+                SetEvaluationError(theEnv, true);
+                break;
+        }
     }
-}
 
-/**********************************************/
-/* WriteUDFValue: Prints a UDFValue structure */
-/*   to the specified logical name.           */
-/**********************************************/
-void WriteUDFValue(
-        const Environment::Ptr&theEnv,
-        const char *fileid,
-        UDFValue *argPtr) {
-    switch (argPtr->header->type) {
-        case VOID_TYPE:
-        case SYMBOL_TYPE:
-        case STRING_TYPE:
-        case INTEGER_TYPE:
-        case FLOAT_TYPE:
-        case EXTERNAL_ADDRESS_TYPE:
-        case FACT_ADDRESS_TYPE:
-        case INSTANCE_NAME_TYPE:
-        case INSTANCE_ADDRESS_TYPE:
-            PrintAtom(theEnv, fileid, argPtr->header->type, argPtr->value);
-            break;
+    /**********************************************/
+    /* WriteUDFValue: Prints a UDFValue structure */
+    /*   to the specified logical name.           */
+    /**********************************************/
+    void WriteUDFValue(
+            const Environment::Ptr&theEnv,
+            const char *fileid,
+            UDFValue *argPtr) {
+        switch (argPtr->header->type) {
+            case VOID_TYPE:
+            case SYMBOL_TYPE:
+            case STRING_TYPE:
+            case INTEGER_TYPE:
+            case FLOAT_TYPE:
+            case EXTERNAL_ADDRESS_TYPE:
+            case FACT_ADDRESS_TYPE:
+            case INSTANCE_NAME_TYPE:
+            case INSTANCE_ADDRESS_TYPE:
+                PrintAtom(theEnv, fileid, argPtr->header->type, argPtr->value);
+                break;
 
-        case MULTIFIELD_TYPE:
-            PrintMultifieldDriver(theEnv, fileid, argPtr->multifieldValue,
-                                  argPtr->begin, argPtr->range, true);
-            break;
+            case MULTIFIELD_TYPE:
+                PrintMultifieldDriver(theEnv, fileid, argPtr->multifieldValue,
+                                      argPtr->begin, argPtr->range, true);
+                break;
 
-        default:
-            WriteString(theEnv, fileid, "<UnknownPrintType");
-            WriteInteger(theEnv, fileid, argPtr->header->type);
-            WriteString(theEnv, fileid, ">");
-            SetHaltExecution(theEnv, true);
-            SetEvaluationError(theEnv, true);
-            break;
+            default:
+                WriteString(theEnv, fileid, "<UnknownPrintType");
+                WriteInteger(theEnv, fileid, argPtr->header->type);
+                WriteString(theEnv, fileid, ">");
+                SetHaltExecution(theEnv, true);
+                SetEvaluationError(theEnv, true);
+                break;
+        }
     }
-}
 
-/*************************************************/
-/* SetMultifieldErrorValue: Creates a multifield */
-/*   value of length zero for error returns.     */
-/*************************************************/
-void SetMultifieldErrorValue(
-        const Environment::Ptr&theEnv,
-        UDFValue *returnValue) {
-    returnValue->value = CreateMultifield(theEnv, 0L);
-    returnValue->begin = 0;
-    returnValue->range = 0;
-}
+    /*************************************************/
+    /* SetMultifieldErrorValue: Creates a multifield */
+    /*   value of length zero for error returns.     */
+    /*************************************************/
+    void SetMultifieldErrorValue(
+            const Environment::Ptr&theEnv,
+            UDFValue *returnValue) {
+        returnValue->value = CreateMultifield(theEnv, 0L);
+        returnValue->begin = 0;
+        returnValue->range = 0;
+    }
 #endif
 
 /*****************************************/
 /* AtomInstall: Increments the reference */
 /*   count of an atomic data type.       */
 /*****************************************/
-void AtomInstall(
-        const Environment::Ptr&theEnv,
-        unsigned short type,
-        void *vPtr) {
+    void AtomInstall(
+            const Environment::Ptr &theEnv,
+            unsigned short type,
+            void *vPtr) {
 #if STUBBING_INACTIVE
-    switch (type) {
-        case SYMBOL_TYPE:
-        case STRING_TYPE:
+        switch (type) {
+            case SYMBOL_TYPE:
+            case STRING_TYPE:
 #if DEFGLOBAL_CONSTRUCT
-        case GBL_VARIABLE:
+            case GBL_VARIABLE:
 #endif
-        case INSTANCE_NAME_TYPE:
-            IncrementLexemeCount(vPtr);
-            break;
+            case INSTANCE_NAME_TYPE:
+                IncrementLexemeCount(vPtr);
+                break;
 
-        case FLOAT_TYPE:
-            IncrementFloatCount(vPtr);
-            break;
+            case FLOAT_TYPE:
+                IncrementFloatCount(vPtr);
+                break;
 
-        case INTEGER_TYPE:
-            IncrementIntegerCount(vPtr);
-            break;
+            case INTEGER_TYPE:
+                IncrementIntegerCount(vPtr);
+                break;
 
-        case EXTERNAL_ADDRESS_TYPE:
-            IncrementExternalAddressCount(vPtr);
-            break;
+            case EXTERNAL_ADDRESS_TYPE:
+                IncrementExternalAddressCount(vPtr);
+                break;
 
-        case MULTIFIELD_TYPE:
-            RetainMultifield(theEnv, (Multifield *) vPtr);
-            break;
+            case MULTIFIELD_TYPE:
+                RetainMultifield(theEnv, (Multifield *) vPtr);
+                break;
 
-        case VOID_TYPE:
-            break;
+            case VOID_TYPE:
+                break;
 
-        default:
-            if (EvaluationData(theEnv)->PrimitivesArray[type] == nullptr) break;
-            if (EvaluationData(theEnv)->PrimitivesArray[type]->bitMap) IncrementBitMapCount(vPtr);
-            else if (EvaluationData(theEnv)->PrimitivesArray[type]->incrementBusyCount) {
-                (*EvaluationData(theEnv)->PrimitivesArray[type]->incrementBusyCount)(theEnv, vPtr);
-            }
-            break;
+            default:
+                if (EvaluationData(theEnv)->PrimitivesArray[type] == nullptr) break;
+                if (EvaluationData(theEnv)->PrimitivesArray[type]->bitMap) IncrementBitMapCount(vPtr);
+                else if (EvaluationData(theEnv)->PrimitivesArray[type]->incrementBusyCount) {
+                    (*EvaluationData(theEnv)->PrimitivesArray[type]->incrementBusyCount)(theEnv, vPtr);
+                }
+                break;
+        }
+#endif
     }
-#endif
-}
 /*******************************************/
 /* AtomDeinstall: Decrements the reference */
 /*   count of an atomic data type.         */
 /*******************************************/
-void AtomDeinstall(
-        const Environment::Ptr&theEnv,
-        unsigned short type,
-        void *vPtr) {
+    void AtomDeinstall(
+            const Environment::Ptr &theEnv,
+            unsigned short type,
+            void *vPtr) {
 #if STUBBING_INACTIVE
-    switch (type) {
-        case SYMBOL_TYPE:
-        case STRING_TYPE:
+        switch (type) {
+            case SYMBOL_TYPE:
+            case STRING_TYPE:
 #if DEFGLOBAL_CONSTRUCT
-        case GBL_VARIABLE:
+            case GBL_VARIABLE:
 #endif
-        case INSTANCE_NAME_TYPE:
-            ReleaseLexeme(theEnv, (CLIPSLexeme *) vPtr);
-            break;
+            case INSTANCE_NAME_TYPE:
+                ReleaseLexeme(theEnv, (CLIPSLexeme *) vPtr);
+                break;
 
-        case FLOAT_TYPE:
-            ReleaseFloat(theEnv, (CLIPSFloat *) vPtr);
-            break;
+            case FLOAT_TYPE:
+                ReleaseFloat(theEnv, (CLIPSFloat *) vPtr);
+                break;
 
-        case INTEGER_TYPE:
-            ReleaseInteger(theEnv, (CLIPSInteger *) vPtr);
-            break;
+            case INTEGER_TYPE:
+                ReleaseInteger(theEnv, (CLIPSInteger *) vPtr);
+                break;
 
-        case EXTERNAL_ADDRESS_TYPE:
-            ReleaseExternalAddress(theEnv, (CLIPSExternalAddress *) vPtr);
-            break;
+            case EXTERNAL_ADDRESS_TYPE:
+                ReleaseExternalAddress(theEnv, (CLIPSExternalAddress *) vPtr);
+                break;
 
-        case MULTIFIELD_TYPE:
-            ReleaseMultifield(theEnv, (Multifield *) vPtr);
-            break;
+            case MULTIFIELD_TYPE:
+                ReleaseMultifield(theEnv, (Multifield *) vPtr);
+                break;
 
-        case VOID_TYPE:
-            break;
+            case VOID_TYPE:
+                break;
 
-        default:
-            if (EvaluationData(theEnv)->PrimitivesArray[type] == nullptr) break;
-            if (EvaluationData(theEnv)->PrimitivesArray[type]->bitMap) DecrementBitMapReferenceCount(theEnv, (CLIPSBitMap *) vPtr);
-            else if (EvaluationData(theEnv)->PrimitivesArray[type]->decrementBusyCount) {
-                (*EvaluationData(theEnv)->PrimitivesArray[type]->decrementBusyCount)(theEnv, vPtr);
-            }
+            default:
+                if (EvaluationData(theEnv)->PrimitivesArray[type] == nullptr) break;
+                if (EvaluationData(theEnv)->PrimitivesArray[type]->bitMap) DecrementBitMapReferenceCount(theEnv, (CLIPSBitMap *) vPtr);
+                else if (EvaluationData(theEnv)->PrimitivesArray[type]->decrementBusyCount) {
+                    (*EvaluationData(theEnv)->PrimitivesArray[type]->decrementBusyCount)(theEnv, vPtr);
+                }
+        }
+#endif
     }
-#endif
-}
 #if STUBBING_INACTIVE
-/***************************************************/
-/* CopyDataObject: Copies the values from a source */
-/*   UDFValue to a destination UDFValue.           */
-/***************************************************/
-void CopyDataObject(
-        const Environment::Ptr&theEnv,
-        UDFValue *dst,
-        UDFValue *src,
-        int garbageMultifield) {
-    if (src->header->type != MULTIFIELD_TYPE) {
+    /***************************************************/
+    /* CopyDataObject: Copies the values from a source */
+    /*   UDFValue to a destination UDFValue.           */
+    /***************************************************/
+    void CopyDataObject(
+            const Environment::Ptr&theEnv,
+            UDFValue *dst,
+            UDFValue *src,
+            int garbageMultifield) {
+        if (src->header->type != MULTIFIELD_TYPE) {
+            dst->value = src->value;
+        } else {
+            DuplicateMultifield(theEnv, dst, src);
+            if (garbageMultifield) { AddToMultifieldList(theEnv, dst->multifieldValue); }
+        }
+    }
+
+    /***********************************************/
+    /* TransferDataObjectValues: Copies the values */
+    /*   directly from a source UDFValue to a    */
+    /*   destination UDFValue.                   */
+    /***********************************************/
+    void TransferDataObjectValues(
+            UDFValue *dst,
+            UDFValue *src) {
         dst->value = src->value;
-    } else {
-        DuplicateMultifield(theEnv, dst, src);
-        if (garbageMultifield) { AddToMultifieldList(theEnv, dst->multifieldValue); }
-    }
-}
-
-/***********************************************/
-/* TransferDataObjectValues: Copies the values */
-/*   directly from a source UDFValue to a    */
-/*   destination UDFValue.                   */
-/***********************************************/
-void TransferDataObjectValues(
-        UDFValue *dst,
-        UDFValue *src) {
-    dst->value = src->value;
-    dst->begin = src->begin;
-    dst->range = src->range;
-    dst->supplementalInfo = src->supplementalInfo;
-    dst->next = src->next;
-}
-
-/************************************************************************/
-/* ConvertValueToExpression: Converts the value stored in a data object */
-/*   into an expression. For multifield values, a chain of expressions  */
-/*   is generated and the chain is linked by the nextArg field. For a   */
-/*   single field value, a single expression is created.                */
-/************************************************************************/
-Expression *ConvertValueToExpression(
-        const Environment::Ptr&theEnv,
-        UDFValue *theValue) {
-    size_t i;
-    Expression *head = nullptr, *last = nullptr, *newItem;
-
-    if (theValue->header->type != MULTIFIELD_TYPE) { return (GenConstant(theEnv, theValue->header->type, theValue->value)); }
-
-    for (i = theValue->begin; i < (theValue->begin + theValue->range); i++) {
-        newItem = GenConstant(theEnv, theValue->multifieldValue->contents[i].header->type,
-                              theValue->multifieldValue->contents[i].value);
-        if (last == nullptr) head = newItem;
-        else last->nextArg = newItem;
-        last = newItem;
+        dst->begin = src->begin;
+        dst->range = src->range;
+        dst->supplementalInfo = src->supplementalInfo;
+        dst->next = src->next;
     }
 
-    if (head == nullptr)
-        return (GenConstant(theEnv, FCALL, FindFunction(theEnv, "create$")));
+    /************************************************************************/
+    /* ConvertValueToExpression: Converts the value stored in a data object */
+    /*   into an expression. For multifield values, a chain of expressions  */
+    /*   is generated and the chain is linked by the nextArg field. For a   */
+    /*   single field value, a single expression is created.                */
+    /************************************************************************/
+    Expression *ConvertValueToExpression(
+            const Environment::Ptr&theEnv,
+            UDFValue *theValue) {
+        size_t i;
+        Expression *head = nullptr, *last = nullptr, *newItem;
 
-    return (head);
-}
+        if (theValue->header->type != MULTIFIELD_TYPE) { return (GenConstant(theEnv, theValue->header->type, theValue->value)); }
 
-/****************************************/
-/* GetAtomicHashValue: Returns the hash */
-/*   value for an atomic data type.     */
-/****************************************/
-unsigned long GetAtomicHashValue(
-        unsigned short type,
-        void *value,
-        unsigned short position) {
-    unsigned long tvalue;
-    union {
-        double fv;
-        void *vv;
-        unsigned long liv;
-    } fis;
+        for (i = theValue->begin; i < (theValue->begin + theValue->range); i++) {
+            newItem = GenConstant(theEnv, theValue->multifieldValue->contents[i].header->type,
+                                  theValue->multifieldValue->contents[i].value);
+            if (last == nullptr) head = newItem;
+            else last->nextArg = newItem;
+            last = newItem;
+        }
 
-    switch (type) {
-        case FLOAT_TYPE:
-            fis.liv = 0;
-            fis.fv = ((CLIPSFloat *) value)->contents;
-            tvalue = fis.liv;
-            break;
+        if (head == nullptr)
+            return (GenConstant(theEnv, FCALL, FindFunction(theEnv, "create$")));
 
-        case INTEGER_TYPE:
-            tvalue = (unsigned long) ((CLIPSInteger *) value)->contents;
-            break;
-
-        case EXTERNAL_ADDRESS_TYPE:
-            fis.liv = 0;
-            fis.vv = ((CLIPSExternalAddress *) value)->contents;
-            tvalue = fis.liv;
-            break;
-
-        case FACT_ADDRESS_TYPE:
-        case INSTANCE_ADDRESS_TYPE:
-            fis.liv = 0;
-            fis.vv = value;
-            tvalue = fis.liv;
-            break;
-
-        case STRING_TYPE:
-        case INSTANCE_NAME_TYPE:
-        case SYMBOL_TYPE:
-            tvalue = ((CLIPSLexeme *) value)->bucket;
-            break;
-
-        default:
-            tvalue = type;
+        return (head);
     }
 
-    return tvalue * (position + 29);
-}
+    /****************************************/
+    /* GetAtomicHashValue: Returns the hash */
+    /*   value for an atomic data type.     */
+    /****************************************/
+    unsigned long GetAtomicHashValue(
+            unsigned short type,
+            void *value,
+            unsigned short position) {
+        unsigned long tvalue;
+        union {
+            double fv;
+            void *vv;
+            unsigned long liv;
+        } fis;
 
-/***********************************************************/
-/* FunctionReferenceExpression: Returns an expression with */
-/*   an appropriate expression reference to the specified  */
-/*   name if it is the name of a deffunction, defgeneric,  */
-/*   or user/system defined function.                      */
-/***********************************************************/
-Expression *FunctionReferenceExpression(
-        const Environment::Ptr&theEnv,
-        const char *name) {
+        switch (type) {
+            case FLOAT_TYPE:
+                fis.liv = 0;
+                fis.fv = ((CLIPSFloat *) value)->contents;
+                tvalue = fis.liv;
+                break;
+
+            case INTEGER_TYPE:
+                tvalue = (unsigned long) ((CLIPSInteger *) value)->contents;
+                break;
+
+            case EXTERNAL_ADDRESS_TYPE:
+                fis.liv = 0;
+                fis.vv = ((CLIPSExternalAddress *) value)->contents;
+                tvalue = fis.liv;
+                break;
+
+            case FACT_ADDRESS_TYPE:
+            case INSTANCE_ADDRESS_TYPE:
+                fis.liv = 0;
+                fis.vv = value;
+                tvalue = fis.liv;
+                break;
+
+            case STRING_TYPE:
+            case INSTANCE_NAME_TYPE:
+            case SYMBOL_TYPE:
+                tvalue = ((CLIPSLexeme *) value)->bucket;
+                break;
+
+            default:
+                tvalue = type;
+        }
+
+        return tvalue * (position + 29);
+    }
+
+    /***********************************************************/
+    /* FunctionReferenceExpression: Returns an expression with */
+    /*   an appropriate expression reference to the specified  */
+    /*   name if it is the name of a deffunction, defgeneric,  */
+    /*   or user/system defined function.                      */
+    /***********************************************************/
+    Expression *FunctionReferenceExpression(
+            const Environment::Ptr&theEnv,
+            const char *name) {
 #if DEFGENERIC_CONSTRUCT
-    Defgeneric *gfunc;
+        Defgeneric *gfunc;
 #endif
 #if DEFFUNCTION_CONSTRUCT
-    Deffunction *dptr;
+        Deffunction *dptr;
 #endif
-    FunctionDefinition *fptr;
+        FunctionDefinition *fptr;
 
-    /*=====================================================*/
-    /* Check to see if the function call is a deffunction. */
-    /*=====================================================*/
+        /*=====================================================*/
+        /* Check to see if the function call is a deffunction. */
+        /*=====================================================*/
 
 #if DEFFUNCTION_CONSTRUCT
-    if ((dptr = LookupDeffunctionInScope(theEnv, name)) != nullptr) { return (GenConstant(theEnv, PCALL, dptr)); }
+        if ((dptr = LookupDeffunctionInScope(theEnv, name)) != nullptr) { return (GenConstant(theEnv, PCALL, dptr)); }
 #endif
 
-    /*====================================================*/
-    /* Check to see if the function call is a defgeneric. */
-    /*====================================================*/
+        /*====================================================*/
+        /* Check to see if the function call is a defgeneric. */
+        /*====================================================*/
 
 #if DEFGENERIC_CONSTRUCT
-    if ((gfunc = LookupDefgenericInScope(theEnv, name)) != nullptr) { return (GenConstant(theEnv, GCALL, gfunc)); }
+        if ((gfunc = LookupDefgenericInScope(theEnv, name)) != nullptr) { return (GenConstant(theEnv, GCALL, gfunc)); }
 #endif
 
-    /*======================================*/
-    /* Check to see if the function call is */
-    /* a system or user defined function.   */
-    /*======================================*/
+        /*======================================*/
+        /* Check to see if the function call is */
+        /* a system or user defined function.   */
+        /*======================================*/
 
-    if ((fptr = FindFunction(theEnv, name)) != nullptr) { return (GenConstant(theEnv, FCALL, fptr)); }
+        if ((fptr = FindFunction(theEnv, name)) != nullptr) { return (GenConstant(theEnv, FCALL, fptr)); }
 
-    /*===================================================*/
-    /* The specified function name is not a deffunction, */
-    /* defgeneric, or user/system defined function.      */
-    /*===================================================*/
+        /*===================================================*/
+        /* The specified function name is not a deffunction, */
+        /* defgeneric, or user/system defined function.      */
+        /*===================================================*/
 
-    return nullptr;
-}
-
-/******************************************************************/
-/* GetFunctionReference: Fills an expression with an appropriate  */
-/*   expression reference to the specified name if it is the      */
-/*   name of a deffunction, defgeneric, or user/system defined    */
-/*   function.                                                    */
-/******************************************************************/
-bool GetFunctionReference(
-        const Environment::Ptr&theEnv,
-        const char *name,
-        Expression *theReference) {
-#if DEFGENERIC_CONSTRUCT
-    Defgeneric *gfunc;
-#endif
-#if DEFFUNCTION_CONSTRUCT
-    Deffunction *dptr;
-#endif
-    FunctionDefinition *fptr;
-    bool moduleSpecified = false;
-    unsigned position;
-    CLIPSLexeme *moduleName = nullptr, *constructName = nullptr;
-
-    theReference->nextArg = nullptr;
-    theReference->argList = nullptr;
-    theReference->type = VOID_TYPE;
-    theReference->value = nullptr;
-
-    /*==============================*/
-    /* Look for a module specifier. */
-    /*==============================*/
-
-    if ((position = FindModuleSeparator(name)) != 0) {
-        moduleName = ExtractModuleName(theEnv, position, name);
-        constructName = ExtractConstructName(theEnv, position, name, SYMBOL_TYPE);
-        moduleSpecified = true;
+        return nullptr;
     }
 
-    /*====================================================*/
-    /* Check to see if the function call is a defgeneric. */
-    /*====================================================*/
+    /******************************************************************/
+    /* GetFunctionReference: Fills an expression with an appropriate  */
+    /*   expression reference to the specified name if it is the      */
+    /*   name of a deffunction, defgeneric, or user/system defined    */
+    /*   function.                                                    */
+    /******************************************************************/
+    bool GetFunctionReference(
+            const Environment::Ptr&theEnv,
+            const char *name,
+            Expression *theReference) {
+#if DEFGENERIC_CONSTRUCT
+        Defgeneric *gfunc;
+#endif
+#if DEFFUNCTION_CONSTRUCT
+        Deffunction *dptr;
+#endif
+        FunctionDefinition *fptr;
+        bool moduleSpecified = false;
+        unsigned position;
+        CLIPSLexeme *moduleName = nullptr, *constructName = nullptr;
+
+        theReference->nextArg = nullptr;
+        theReference->argList = nullptr;
+        theReference->type = VOID_TYPE;
+        theReference->value = nullptr;
+
+        /*==============================*/
+        /* Look for a module specifier. */
+        /*==============================*/
+
+        if ((position = FindModuleSeparator(name)) != 0) {
+            moduleName = ExtractModuleName(theEnv, position, name);
+            constructName = ExtractConstructName(theEnv, position, name, SYMBOL_TYPE);
+            moduleSpecified = true;
+        }
+
+        /*====================================================*/
+        /* Check to see if the function call is a defgeneric. */
+        /*====================================================*/
 
 #if DEFGENERIC_CONSTRUCT
-    if (moduleSpecified) {
-        if (ConstructExported(theEnv, "defgeneric", moduleName, constructName) ||
-            GetCurrentModule(theEnv) == FindDefmodule(theEnv, moduleName->contents)) {
-            if ((gfunc = FindDefgenericInModule(theEnv, name)) != nullptr) {
+        if (moduleSpecified) {
+            if (ConstructExported(theEnv, "defgeneric", moduleName, constructName) ||
+                GetCurrentModule(theEnv) == FindDefmodule(theEnv, moduleName->contents)) {
+                if ((gfunc = FindDefgenericInModule(theEnv, name)) != nullptr) {
+                    theReference->type = GCALL;
+                    theReference->value = gfunc;
+                    return true;
+                }
+            }
+        } else {
+            if ((gfunc = LookupDefgenericInScope(theEnv, name)) != nullptr) {
                 theReference->type = GCALL;
                 theReference->value = gfunc;
                 return true;
             }
         }
-    } else {
-        if ((gfunc = LookupDefgenericInScope(theEnv, name)) != nullptr) {
-            theReference->type = GCALL;
-            theReference->value = gfunc;
-            return true;
-        }
-    }
 #endif
 
-    /*=====================================================*/
-    /* Check to see if the function call is a deffunction. */
-    /*=====================================================*/
+        /*=====================================================*/
+        /* Check to see if the function call is a deffunction. */
+        /*=====================================================*/
 
 #if DEFFUNCTION_CONSTRUCT
-    if (moduleSpecified) {
-        if (ConstructExported(theEnv, "deffunction", moduleName, constructName) ||
-            GetCurrentModule(theEnv) == FindDefmodule(theEnv, moduleName->contents)) {
-            if ((dptr = FindDeffunctionInModule(theEnv, name)) != nullptr) {
+        if (moduleSpecified) {
+            if (ConstructExported(theEnv, "deffunction", moduleName, constructName) ||
+                GetCurrentModule(theEnv) == FindDefmodule(theEnv, moduleName->contents)) {
+                if ((dptr = FindDeffunctionInModule(theEnv, name)) != nullptr) {
+                    theReference->type = PCALL;
+                    theReference->value = dptr;
+                    return true;
+                }
+            }
+        } else {
+            if ((dptr = LookupDeffunctionInScope(theEnv, name)) != nullptr) {
                 theReference->type = PCALL;
                 theReference->value = dptr;
                 return true;
             }
         }
-    } else {
-        if ((dptr = LookupDeffunctionInScope(theEnv, name)) != nullptr) {
-            theReference->type = PCALL;
-            theReference->value = dptr;
-            return true;
-        }
-    }
 #endif
 
-    /*======================================*/
-    /* Check to see if the function call is */
-    /* a system or user defined function.   */
-    /*======================================*/
+        /*======================================*/
+        /* Check to see if the function call is */
+        /* a system or user defined function.   */
+        /*======================================*/
 
-    if ((fptr = FindFunction(theEnv, name)) != nullptr) {
-        theReference->type = FCALL;
-        theReference->value = fptr;
-        return true;
+        if ((fptr = FindFunction(theEnv, name)) != nullptr) {
+            theReference->type = FCALL;
+            theReference->value = fptr;
+            return true;
+        }
+
+        /*===================================================*/
+        /* The specified function name is not a deffunction, */
+        /* defgeneric, or user/system defined function.      */
+        /*===================================================*/
+
+        return false;
     }
 
-    /*===================================================*/
-    /* The specified function name is not a deffunction, */
-    /* defgeneric, or user/system defined function.      */
-    /*===================================================*/
+    /***********************************************************
+      NAME         : EvaluateAndStoreInDataObject
+      DESCRIPTION  : Evaluates slot-value expressions
+                       and stores the result in a
+                       Kernel data object
+      INPUTS       : 1) Flag indicating if multifields are OK
+                     2) The value-expression
+                     3) The data object structure
+                     4) Flag indicating if a multifield value
+                        should be placed on the garbage list.
+      RETURNS      : False on errors, true otherwise
+      SIDE EFFECTS : Segment allocated for storing
+                     multifield values
+      NOTES        : None
+     ***********************************************************/
+    bool EvaluateAndStoreInDataObject(
+            const Environment::Ptr&theEnv,
+            bool mfp,
+            Expression *theExp,
+            UDFValue *val,
+            bool garbageSegment) {
+        val->begin = 0;
+        val->range = 0;
 
-    return false;
-}
+        if (theExp == nullptr) {
+            if (garbageSegment) val->value = CreateMultifield(theEnv, 0L);
+            else val->value = CreateUnmanagedMultifield(theEnv, 0L);
 
-/***********************************************************
-  NAME         : EvaluateAndStoreInDataObject
-  DESCRIPTION  : Evaluates slot-value expressions
-                   and stores the result in a
-                   Kernel data object
-  INPUTS       : 1) Flag indicating if multifields are OK
-                 2) The value-expression
-                 3) The data object structure
-                 4) Flag indicating if a multifield value
-                    should be placed on the garbage list.
-  RETURNS      : False on errors, true otherwise
-  SIDE EFFECTS : Segment allocated for storing
-                 multifield values
-  NOTES        : None
- ***********************************************************/
-bool EvaluateAndStoreInDataObject(
-        const Environment::Ptr&theEnv,
-        bool mfp,
-        Expression *theExp,
-        UDFValue *val,
-        bool garbageSegment) {
-    val->begin = 0;
-    val->range = 0;
+            return true;
+        }
 
-    if (theExp == nullptr) {
-        if (garbageSegment) val->value = CreateMultifield(theEnv, 0L);
-        else val->value = CreateUnmanagedMultifield(theEnv, 0L);
+        if (!mfp && (theExp->nextArg == nullptr))
+            EvaluateExpression(theEnv, theExp, val);
+        else
+            StoreInMultifield(theEnv, val, theExp, garbageSegment);
 
-        return true;
+        return !EvaluationData(theEnv)->EvaluationError;
     }
-
-    if (!mfp && (theExp->nextArg == nullptr))
-        EvaluateExpression(theEnv, theExp, val);
-    else
-        StoreInMultifield(theEnv, val, theExp, garbageSegment);
-
-    return !EvaluationData(theEnv)->EvaluationError;
-}
 #endif
 /******************/
 /* PrintCAddress: */
 /******************/
-static void PrintCAddress(
-        const Environment::Ptr&theEnv,
-        const char *logicalName,
-        void *theValue) {
+    static void PrintCAddress(
+            const Environment::Ptr &theEnv,
+            const char *logicalName,
+            void *theValue) {
 #if STUBBING_INACTIVE
-    char buffer[20];
+        char buffer[20];
 
-    WriteString(theEnv, logicalName, "<Pointer-C-");
+        WriteString(theEnv, logicalName, "<Pointer-C-");
 
-    gensprintf(buffer, "%p", ((CLIPSExternalAddress *) theValue)->contents);
-    WriteString(theEnv, logicalName, buffer);
-    WriteString(theEnv, logicalName, ">");
+        gensprintf(buffer, "%p", ((CLIPSExternalAddress *) theValue)->contents);
+        WriteString(theEnv, logicalName, buffer);
+        WriteString(theEnv, logicalName, ">");
 #endif
-}
+    }
 
 /****************/
 /* NewCAddress: */
 /****************/
-static void NewCAddress(
-        UDFContext *context,
-        UDFValue *rv) {
+    static void NewCAddress(
+            UDFContext *context,
+            UDFValue *rv) {
 #if STUBBING_INACTIVE
-    unsigned int numberOfArguments;
-    const Environment::Ptr&theEnv = context->environment;
+        unsigned int numberOfArguments;
+        const Environment::Ptr&theEnv = context->environment;
 
-    numberOfArguments = UDFArgumentCount(context);
+        numberOfArguments = UDFArgumentCount(context);
 
-    if (numberOfArguments != 1) {
-        PrintErrorID(theEnv, "NEW", 1, false);
-        WriteString(theEnv, STDERR, "Function new expected no additional arguments for the C external language type.\n");
-        SetEvaluationError(theEnv, true);
-        return;
-    }
+        if (numberOfArguments != 1) {
+            PrintErrorID(theEnv, "NEW", 1, false);
+            WriteString(theEnv, STDERR, "Function new expected no additional arguments for the C external language type.\n");
+            SetEvaluationError(theEnv, true);
+            return;
+        }
 
-    rv->value = CreateExternalAddress(theEnv, nullptr, 0);
+        rv->value = CreateExternalAddress(theEnv, nullptr, 0);
 #endif
-}
+    }
 #if STUBBING_INACTIVE
 /******************************/
 /* CreateFunctionCallBuilder: */
@@ -1329,3 +1331,4 @@ static bool DiscardCAddress(
   }
 */
 #endif
+}
