@@ -41,9 +41,6 @@ template<typename R, typename ... Ts>
 using EnvironmentPtrFunction = std::function<R(const EnvironmentPtr&, Ts...)>;
 template<typename ... Ts>
 using EnvironmentPtrNoReturnFunction = EnvironmentPtrFunction<void, Ts...>;
-using EntityPrintFunction = EnvironmentPtrNoReturnFunction<const std::string&, std::any>;
-using EntityEvaluationFunction = EnvironmentPtrFunction<bool, std::any, std::shared_ptr<UDFValue>>;
-using EntityBusyCountFunction = EnvironmentPtrNoReturnFunction<std::any>;
 
 using BoolCallFunction = EnvironmentPtrFunction<bool, std::any>;
 using VoidCallFunction = EnvironmentPtrNoReturnFunction<std::any>;
@@ -196,6 +193,8 @@ using ValueContainer = std::variant<std::monostate,
             CLIPSExternalAddress::Ptr>;
 
 struct HoldsOntoGenericValue : public ReferenceCountable {
+    HoldsOntoGenericValue() = default;
+    ~HoldsOntoGenericValue() override = default;
     ValueContainer contents;
     void retain() override;
     void release() override;
@@ -221,6 +220,9 @@ public:
     using Self = UDFValue;
     using Ptr = std::shared_ptr<Self>;
 public:
+    UDFValue() = default;
+    ~UDFValue() override = default;
+
     std::any supplementalInfo;
     size_t begin;
     size_t range;
@@ -250,14 +252,43 @@ using EntityRecordInstallFunction = GenericEntityRecordFunction ;
 using EntityRecordDeinstallFunction = GenericEntityRecordFunction ;
 using EntityRecordDeleteFunction = std::function<bool(std::any, const EnvironmentPtr&)>;
 using EntityRecordGetNextFunction = std::function<std::any(std::any, std::any)>;
+using EntityPrintFunction = EnvironmentPtrNoReturnFunction<const std::string&, std::any>;
+using EntityEvaluationFunction = EnvironmentPtrFunction<bool, std::any, std::shared_ptr<UDFValue>>;
+using EntityBusyCountFunction = std::function<void(Environment&, std::any)>;
 /****************/
 /* EntityRecord */
 /****************/
-struct EntityRecord {
+struct Entity : public HoldsEnvironmentCallback {
+public:
+    using Self = Entity;
+    using Ptr = std::shared_ptr<Self>;
+public:
+    Entity(Environment& parent, const std::string& name, unsigned int type, bool copyToEvaluate, bool isBitmap, bool addsToRuleComplexity);
+    virtual ~Entity() = default;
+    std::string getName() const noexcept { return _name; }
+    constexpr auto getType() const noexcept { return _type; }
+    constexpr auto copyToEvaluate() const noexcept { return _copyToEvaluate; }
+    constexpr auto isBitmap() const noexcept { return _bitMap; }
+    constexpr auto addsToRuleComplexity() const noexcept { return _addsToRuleComplexity; }
+    virtual void shortPrint(const std::string& logicalName, std::any value) { }
+    virtual void longPrint(const std::string& logicalName, std::any value) { }
+    virtual bool evaluate(std::any value, std::shared_ptr<UDFValue> returnValue) { }
+    virtual void incrementBusyCount(std::any value) { }
+    virtual void decrementBusyCount(std::any value) { }
+private:
+    std::string _name;
+    unsigned int _type : 13;
+    bool _copyToEvaluate : 1;
+    bool _bitMap : 1;
+    bool _addsToRuleComplexity : 1;
+
+};
+struct EntityRecord : public HoldsEnvironmentCallback {
 public:
     using Self = EntityRecord;
     using Ptr = std::shared_ptr<Self>;
 public:
+    EntityRecord(Environment& parent) : HoldsEnvironmentCallback(parent) { }
     std::string name;
     unsigned int type: 13;
     bool copyToEvaluate: 1;

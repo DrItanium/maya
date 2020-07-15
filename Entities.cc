@@ -131,4 +131,3 @@ CLIPSInteger::write(const EnvironmentPtr &theEnv, const std::string &logicalName
     theEnv->writeString(logicalName, toString(contents));
 }
 
-

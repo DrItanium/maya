@@ -9,6 +9,7 @@ add_library(clips
 		Platform.h
 		Setup.h
 		Problem.h
+		Constants.h
 		Entities.hxx Entities.cc CLIPSValue.cc
 		Environment.h Environment.cc
 		Evaluation.h Evaluation.cc
@@ -28,7 +29,6 @@ add_library(clips
 		#clips.h
 		#CommandLine.h
 		#ConflictResolutionStrategy.h
-		#Constants.h
 		#Constraint.h
 		#Construct.h
 		#ConstructProfilingFunctions.h
