@@ -72,6 +72,9 @@
 #include <iostream>
 #include <list>
 #include <sstream>
+#include <map>
+#include <typeinfo>
+#include <typeindex>
 
 #include "Setup.h"
 #include "HoldsEnvironmentCallback.h"
@@ -79,7 +82,6 @@
 #include "Entities.hxx"
 
 constexpr auto USER_ENVIRONMENT_DATA = 70;
-constexpr auto MAXIMUM_ENVIRONMENT_POSITIONS = 100;
 class Environment;
 class EnvironmentModule : public HoldsEnvironmentCallback {
 public:
@@ -90,56 +92,12 @@ public:
     virtual void onReset() noexcept;
 };
 
-template<typename T>
-class EnvironmentModuleTypeToIndex final {
-    EnvironmentModuleTypeToIndex() = delete;
-    ~EnvironmentModuleTypeToIndex() = delete;
-    EnvironmentModuleTypeToIndex(EnvironmentModuleTypeToIndex<T>&&) = delete;
-    EnvironmentModuleTypeToIndex(const EnvironmentModuleTypeToIndex<T>&) = delete;
-    EnvironmentModuleTypeToIndex<T>& operator=(const EnvironmentModuleTypeToIndex<T>&) = delete;
-    EnvironmentModuleTypeToIndex<T>& operator=(EnvironmentModuleTypeToIndex<T>&&) = delete;
-};
-
-template<size_t index>
-class EnvironmentModuleIndexToType final {
-    EnvironmentModuleIndexToType() = delete;
-    ~EnvironmentModuleIndexToType() = delete;
-    EnvironmentModuleIndexToType(EnvironmentModuleIndexToType<index>&&) = delete;
-    EnvironmentModuleIndexToType(const EnvironmentModuleIndexToType<index>&) = delete;
-    EnvironmentModuleIndexToType<index>& operator=(const EnvironmentModuleIndexToType<index>&) = delete;
-    EnvironmentModuleIndexToType<index>& operator=(EnvironmentModuleIndexToType<index>&&) = delete;
-};
-
-template<typename T>
-constexpr size_t EnvironmentModuleIndex = EnvironmentModuleTypeToIndex<T>::index;
-template<size_t index>
-using EnvironmentModuleType = typename EnvironmentModuleIndexToType<index>::type;
 #define RegisterEnvironmentModule(actual_type, pos, declAccessorPrefix) \
-template<> class EnvironmentModuleTypeToIndex<actual_type> final { \
-    EnvironmentModuleTypeToIndex() = delete; \
-~EnvironmentModuleTypeToIndex() = delete; \
-EnvironmentModuleTypeToIndex(EnvironmentModuleTypeToIndex< actual_type >&&) = delete;\
-EnvironmentModuleTypeToIndex(const EnvironmentModuleTypeToIndex< actual_type >&) = delete; \
-EnvironmentModuleTypeToIndex< actual_type >& operator=(const EnvironmentModuleTypeToIndex< actual_type >&) = delete; \
-EnvironmentModuleTypeToIndex< actual_type >& operator=(EnvironmentModuleTypeToIndex< actual_type >&&) = delete; \
-public: \
-static constexpr size_t index = pos ; \
-}; \
-template<> class EnvironmentModuleIndexToType< pos > final { \
-    EnvironmentModuleIndexToType() = delete; \
-~EnvironmentModuleIndexToType() = delete; \
-EnvironmentModuleIndexToType(EnvironmentModuleIndexToType< pos >&&) = delete;\
-EnvironmentModuleIndexToType(const EnvironmentModuleIndexToType< pos >&) = delete; \
-EnvironmentModuleIndexToType< pos >& operator=(const EnvironmentModuleIndexToType< pos >&) = delete; \
-EnvironmentModuleIndexToType< pos >& operator=(EnvironmentModuleIndexToType< pos >&&) = delete; \
-public: \
-using type = actual_type ; \
-}; \
 inline decltype(auto) declAccessorPrefix ## Data (const Environment::Ptr& theEnv) { \
-    return theEnv->getEnvironmentModule<pos>(); \
+    return theEnv->getEnvironmentModule<actual_type>(); \
 } \
 inline decltype(auto) declAccessorPrefix ## Data(Environment& theEnv) { \
-    return theEnv.getEnvironmentModule<pos>(); \
+    return theEnv.getEnvironmentModule<actual_type>(); \
 }
 
 
@@ -151,50 +109,32 @@ public:
     static Ptr create();
 public:
     /// @todo Make these symbol pointers shared_ptrs
-#if STUBBING_INACTIVE
-    CLIPSLexeme::Ptr TrueSymbol = nullptr;
-    CLIPSLexeme::Ptr FalseSymbol = nullptr;
-    CLIPSVoid::Ptr VoidConstant = nullptr;
-#endif
     Environment();
-    std::array<std::unique_ptr<EnvironmentModule>, MAXIMUM_ENVIRONMENT_POSITIONS> environmentModules;
 private:
+    std::map<std::type_index, std::unique_ptr<EnvironmentModule>> _modules;
     template<typename T>
     void installEnvironmentModule(std::unique_ptr<T>&& module) {
-        constexpr auto position = EnvironmentModuleIndex<T>;
-        if (position >= MAXIMUM_ENVIRONMENT_POSITIONS) {
+        if (_modules.find(typeid(T)) != _modules.end()) {
             std::stringstream ss;
-            ss << "[ENVRNMNT2] Environment data position " << position << " exceeds the maximum allowed.";
-            auto str = ss.str();
-            throw Problem(str);
-        }
-        if (auto& ptr = environmentModules[position]; ptr) {
-            std::stringstream ss;
-            ss << "[ENVRNMNT3] Environment data position " << position << " already allocated.";
-            auto str = ss.str();
-            throw Problem(str);
-        }
-        environmentModules[position] = std::move(module);
-    }
-public:
-    template<size_t position>
-    const std::unique_ptr<EnvironmentModuleType<position>>& getEnvironmentModule() {
-        if (position >= MAXIMUM_ENVIRONMENT_POSITIONS) {
-            std::stringstream ss;
-            ss << "[ENVRNMNT2] Environment data position " << position << " exceeds the maximum allowed.";
+            ss << "[ENVRNMNT3] Environment module of type: '" << typeid(T).name() << "' already allocated.";
             auto str = ss.str();
             throw Problem(str);
         } else {
-            if (auto& thing = environmentModules[position]; !thing) {
-                throw Problem("Unallocated environment module requested!");
-            } else {
-                return (std::unique_ptr<EnvironmentModuleType<position>> &) thing;
-            }
+            // not found in our container so instead, we need to install it
+            _modules[typeid(T)] = std::move(module);
         }
     }
+public:
     template<typename T>
-    decltype(auto) getEnvironmentModule() {
-        return getEnvironmentModule<EnvironmentModuleIndex<T>>();
+    const std::unique_ptr<T>& getEnvironmentModule() {
+        if (_modules.find(typeid(T)) != _modules.end()) {
+            return (std::unique_ptr<T>&)_modules[typeid(T)];
+        } else {
+            std::stringstream ss;
+            ss << "Unallocated environment module of type " << typeid(T).name() << " requested!";
+            auto str = ss.str();
+            throw Problem(str);
+        }
     }
     template<typename T, typename ... Args>
     void allocateEnvironmentModule(Args&& ... args) {
