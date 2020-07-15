@@ -62,22 +62,18 @@
 /*                                                           */
 /*************************************************************/
 
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-
 #include "Setup.h"
 
-#include "ArgumentAccess.h"
+//#include "ArgumentAccess.h"
 #include "Constants.h"
 #include "Environment.h"
-#include "ExternalFunctions.h"
-#include "File.h"
-#include "MemoryAllocation.h"
-#include "PrintUtility.h"
-#include "Scanner.h"
-#include "StringRouter.h"
-#include "SystemDependency.h"
+//#include "ExternalFunctions.h"
+//#include "File.h"
+//#include "MemoryAllocation.h"
+//#include "PrintUtility.h"
+//#include "Scanner.h"
+//#include "StringRouter.h"
+//#include "SystemDependency.h"
 
 #include "Router.h"
 namespace maya {

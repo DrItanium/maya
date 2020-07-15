@@ -46,7 +46,7 @@
 /*                                                                         */
 /***************************************************************************/
 
-#include "clips.h"
+#include "Environment.h"
 
 #if   UNIX_V || LINUX || DARWIN || UNIX_7 || WIN_GCC || WIN_MVC
 #include <signal.h>
@@ -64,7 +64,7 @@ static void CatchCtrlC(int);
 /* LOCAL INTERNAL VARIABLE DEFINITIONS */
 /***************************************/
 
-static Environment::Ptr mainEnv;
+static maya::Environment::Ptr mainEnv;
 
 /****************************************/
 /* main: Starts execution of the expert */
@@ -73,7 +73,7 @@ static Environment::Ptr mainEnv;
 int main(
         int argc,
         char *argv[]) {
-    mainEnv = std::make_shared<Environment>();
+    mainEnv = std::make_shared<maya::Environment>();
 #if STUBBING_INACTIVE
 #if UNIX_V || LINUX || DARWIN || UNIX_7 || WIN_GCC || WIN_MVC
     signal(SIGINT, CatchCtrlC);

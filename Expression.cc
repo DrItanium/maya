@@ -44,17 +44,12 @@
 
 #include "Setup.h"
 
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <ctype.h>
-
-#include "BinaryLoad.h"
+//#include "BinaryLoad.h"
 #include "Environment.h"
-#include "Evaluation.h"
-#include "ExternalFunctions.h"
-#include "MemoryAllocation.h"
-#include "PrintUtility.h"
+//#include "Evaluation.h"
+//#include "ExternalFunctions.h"
+//#include "MemoryAllocation.h"
+//#include "PrintUtility.h"
 #include "Router.h"
 
 #include "Expression.h"

@@ -4,8 +4,8 @@
 #include "Entities.hxx"
 #include "Environment.h"
 #include <type_traits>
-#include "Fact.h"
-#include "Object.h"
+//#include "Fact.h"
+//#include "Object.h"
 #include <sstream>
 
 namespace maya {
