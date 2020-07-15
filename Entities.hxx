@@ -35,6 +35,7 @@
 #include "HoldsEnvironmentCallback.h"
 #include "IORouterAware.h"
 #include "BusyCountable.h"
+#include "Evaluable.h"
 namespace maya {
     class Environment;
 /**************/
@@ -55,8 +56,8 @@ namespace maya {
     };
     class ReferenceCountedAtom : public Atom, public ReferenceCounted {
     public:
-       ReferenceCountedAtom(Environment& parent, unsigned short type) : Atom(parent, type) { }
-       ~ReferenceCountedAtom() override = default;
+        ReferenceCountedAtom(Environment& parent, unsigned short type) : Atom(parent, type) { }
+        ~ReferenceCountedAtom() override = default;
     };
 
 /*************/
@@ -87,7 +88,7 @@ namespace maya {
 /***************/
 /* CLIPSLexeme */
 /***************/
-    class Lexeme : public ReferenceCountedAtom {
+    class Lexeme : public ReferenceCountedAtom, public Evaluable {
     public:
         using Self = Lexeme;
         using Ptr = std::shared_ptr<Self>;
@@ -103,6 +104,7 @@ namespace maya {
         ~Lexeme() override = default;
         size_t hash(size_t range) override;
         void write(const std::string& logicalName) override;
+        bool evaluate(std::shared_ptr<UDFValue> retVal) override;
     private:
         std::string _contents;
     };
@@ -111,16 +113,17 @@ namespace maya {
 /**************/
 /* Float */
 /**************/
-class Float : public ReferenceCountedAtom {
-public:
-    using Self = Float;
-    using Ptr = std::shared_ptr<Self>;
+    class Float : public ReferenceCountedAtom, public Evaluable {
+    public:
+        using Self = Float;
+        using Ptr = std::shared_ptr<Self>;
     public:
         Float(Environment& parent, double value = 0.0) : ReferenceCountedAtom(parent, FLOAT_TYPE), _contents(value) {}
         ~Float() override = default;
         size_t hash(size_t range) override;
         void write(const std::string &logicalName) override;
         constexpr auto getContents() const noexcept { return _contents; }
+        bool evaluate(std::shared_ptr<UDFValue> retVal) override;
     private:
         double _contents;
     };
@@ -128,7 +131,7 @@ public:
 /****************/
 /* Integer */
 /****************/
-    struct Integer : public ReferenceCountedAtom {
+    struct Integer : public ReferenceCountedAtom, public Evaluable {
     public:
         using Self = Integer;
         using Ptr = std::shared_ptr<Self>;
@@ -139,6 +142,7 @@ public:
         size_t hash(size_t range) override;
         void write(const std::string &logicalName) override;
         constexpr auto getContents() const noexcept { return _contents; }
+        bool evaluate(std::shared_ptr<UDFValue> retVal) override;
     private:
         BackingType _contents;
     };
@@ -161,7 +165,7 @@ public:
 /************************/
 /* ExternalAddress */
 /************************/
-    struct ExternalAddress : public ReferenceCountedAtom {
+    struct ExternalAddress : public ReferenceCountedAtom, public Evaluable {
     public:
         using Self = ExternalAddress;
         using Ptr = std::shared_ptr<Self>;
@@ -288,7 +292,7 @@ public:
     };
 
 #if 0
-/****************/
+    /****************/
 /* EntityRecord */
 /****************/
     using EntityRecordDeleteFunction = std::function<bool(std::any, const EnvironmentPtr &)>;

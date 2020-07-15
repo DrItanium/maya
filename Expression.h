@@ -102,7 +102,7 @@ namespace maya {
         bool constantExpression() const noexcept;
         bool evaluate(const Environment::Ptr &parent, UDFValue::Ptr returnValue);
     };
-
+#if STUBBING_INACTIVE
 #define arg_list argList
 #define next_arg nextArg
 
@@ -127,6 +127,7 @@ namespace maya {
         Ptr nxt;
     };
 
+#endif
     constexpr auto EXPRESSION_HASH_SIZE = 503;
 
 /********************/
@@ -141,6 +142,7 @@ namespace maya {
         static void install(Environment &);
     public:
         ExpressionModule(Environment &parent);
+#if STUBBING_INACTIVE
         /// @todo use std::shared_ptr where it makes perfect sense
         FunctionDefinitionPtr PTR_AND;
         FunctionDefinitionPtr PTR_OR;
@@ -149,11 +151,13 @@ namespace maya {
         FunctionDefinitionPtr PTR_NOT;
         /// @todo replace this with an actual hash table
         std::array<std::list<ExpressionHashNode::Ptr>, EXPRESSION_HASH_SIZE> _expressionHashTable;
+#endif
 #if (BLOAD_AND_BSAVE)
         unsigned long NumberOfExpressions = 0;
         Expression *ExpressionArray = nullptr;
         unsigned long ExpressionCount = 0;
 #endif
+#if STUBBING_INACTIVE
         std::list<SavedContexts> _svContexts;
         void setSequenceOperatorMode(bool value) noexcept { _sequenceOpMode = value; }
         constexpr auto getSequenceOperatorMode() const noexcept { return _sequenceOpMode; }
@@ -165,6 +169,7 @@ namespace maya {
         bool _sequenceOpMode = false;
         bool _returnContext = false;
         bool _breakContext = false;
+#endif
     };
 
     RegisterEnvironmentModule(ExpressionModule, EXPRESSION_DATA, Expression);

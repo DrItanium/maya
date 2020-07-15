@@ -64,7 +64,7 @@ constexpr auto PRIME_THREE = 269;
 /****************************************/
 
 static unsigned long ListToPacked(Expression *, Expression *, unsigned long);
-static ExpressionHashNode *FindHashedExpression(const Environment::Ptr&, Expression *, unsigned *, ExpressionHashNode **);
+//static ExpressionHashNode *FindHashedExpression(const Environment::Ptr&, Expression *, unsigned *, ExpressionHashNode **);
 static unsigned HashExpression(Expression *);
 
 void
@@ -652,7 +652,6 @@ bool ReplaceSequenceExpansionOps(
     }
     return false;
 }
-#endif
 
 /*************************************************/
 /* PushRtnBrkContexts: Saves the current context */
@@ -660,7 +659,6 @@ bool ReplaceSequenceExpansionOps(
 /*************************************************/
 void PushRtnBrkContexts(
         const Environment::Ptr&theEnv) {
-#if STUBBING_INACTIVE
     SavedContexts *svtmp;
 
     svtmp = get_struct(theEnv, savedContexts);
@@ -668,7 +666,6 @@ void PushRtnBrkContexts(
     svtmp->brk = ExpressionData(theEnv)->BreakContext;
     svtmp->nxt = ExpressionData(theEnv)->svContexts;
     ExpressionData(theEnv)->svContexts = svtmp;
-#endif
 }
 
 /***************************************************/
@@ -678,14 +675,13 @@ void PushRtnBrkContexts(
 void PopRtnBrkContexts(
         const Environment::Ptr&theEnv) {
     SavedContexts *svtmp;
-#if STUBBING_INACTIVE
     ExpressionData(theEnv)->ReturnContext = ExpressionData(theEnv)->svContexts->rtn;
     ExpressionData(theEnv)->BreakContext = ExpressionData(theEnv)->svContexts->brk;
     svtmp = ExpressionData(theEnv)->svContexts;
     ExpressionData(theEnv)->svContexts = ExpressionData(theEnv)->svContexts->nxt;
     rtn_struct(theEnv, savedContexts, svtmp);
-#endif
 }
+#endif
 
 #if STUBBING_INACTIVE
 /**********************/
