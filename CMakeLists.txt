@@ -18,6 +18,8 @@ add_library(clips
 		ReferenceCounted.h ReferenceCounted.cc
 		Hashable.h
 		HoldsEnvironmentCallback.h HoldsEnvironmentCallback.cc
+		BusyCountable.cc BusyCountable.h)
+
 		#Agenda.h
 		#Analysis.h
 		#ArgumentAccess.h
@@ -276,7 +278,6 @@ add_library(clips
 		##DeftemplateUtilities.cc
 		#UserData.cc
 		#Watch.cc)
-)
 #add_library(maya_extensions
 #		BoostExtensions.h
 #		#BoostExtensions.cc

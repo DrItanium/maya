@@ -34,6 +34,7 @@
 #include "Hashable.h"
 #include "HoldsEnvironmentCallback.h"
 #include "IORouterAware.h"
+#include "BusyCountable.h"
 namespace maya {
     class Environment;
 /**************/
@@ -178,21 +179,16 @@ public:
 /**************/
 /* multifield */
 /**************/
-    struct Multifield : public TypeHeader, public ReferenceCountable {
+    struct Multifield : public HoldsEnvironmentCallback, public TypeHeader, public BusyCountable {
     public:
         using Self = Multifield;
         using Ptr = std::shared_ptr<Self>;
     public:
-        Multifield() : TypeHeader(MULTIFIELD_TYPE) {}
+        Multifield(Environment& parent) : HoldsEnvironmentCallback(parent), TypeHeader(MULTIFIELD_TYPE) {}
         ~Multifield() override = default;
-    private:
-        unsigned _busyCount = 0;
     public:
         auto length() const noexcept { return contents.size(); }
-        std::vector<struct CLIPSValue> contents;
-        void retain() override;
-        void release() override;
-        bool canRelease() const noexcept override;
+        std::vector<std::shared_ptr<struct CLIPSValue>> contents;
     };
 
     struct Fact;
@@ -337,7 +333,6 @@ public:
         PatternEntityRecordSynchronizedFunction synchronized;
         PatternEntityRecordIsDeletedFunction isDeleted;
     };
-#endif
 /*****************/
 /* PatternEntity */
 /*****************/
@@ -359,6 +354,7 @@ public:
         constexpr auto getTimeTag() const noexcept { return _timeTag; }
         void setTimetag(unsigned long long value) noexcept { _timeTag = value; }
     };
+#endif
 } // end namespace clips
 #endif /* _H_entities */
 
