@@ -76,7 +76,7 @@
 #include "Setup.h"
 #include "HoldsEnvironmentCallback.h"
 #include "Problem.h"
-
+#include "Entities.hxx"
 
 constexpr auto USER_ENVIRONMENT_DATA = 70;
 constexpr auto MAXIMUM_ENVIRONMENT_POSITIONS = 100;
@@ -221,13 +221,13 @@ public:
     void incrementLineCount() noexcept;
     void decrementLineCount() noexcept;
     void writeString(const std::string& logicalName, const std::string& string);
+    void haltExecution(bool value = true) noexcept;
+    bool executionHalted() const noexcept;
+    CLIPSLexeme::Ptr getVoidConstant() const noexcept;
+    CLIPSLexeme::Ptr getTrueSymbol() const noexcept;
+    CLIPSLexeme::Ptr getFalseSymbol() const noexcept;
 };
 
-#if STUBBING_INACTIVE
-inline auto VoidConstant(const Environment::Ptr& theEnv) noexcept { return theEnv->VoidConstant; }
-inline auto FalseSymbol(const Environment::Ptr& theEnv) noexcept { return theEnv->FalseSymbol; }
-inline auto TrueSymbol(const Environment::Ptr& theEnv) noexcept { return theEnv->TrueSymbol; }
-#endif
 
 #endif /* _H_envrnmnt */
 
