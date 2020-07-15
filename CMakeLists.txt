@@ -9,7 +9,7 @@ add_library(clips
 		Platform.h
 		Setup.h UserSetup.h
 		Problem.h
-		Constants.h
+		Evaluable.h Constants.h
 		Entities.hxx Entities.cc CLIPSValue.cc
 		Environment.h Environment.cc
 		Evaluation.h Evaluation.cc
@@ -18,7 +18,8 @@ add_library(clips
 		ReferenceCounted.h ReferenceCounted.cc
 		Hashable.h
 		HoldsEnvironmentCallback.h HoldsEnvironmentCallback.cc
-		BusyCountable.cc BusyCountable.h)
+		BusyCountable.cc BusyCountable.h
+		)
 
 		#Agenda.h
 		#Analysis.h

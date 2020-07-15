@@ -137,23 +137,6 @@ static bool                    DiscardCAddress(void *,void *);
             returnValue->contents = FalseSymbol(theEnv);
             return (EvaluationData(theEnv)->EvaluationError);
         }
-        /// @todo continue
-#if STUBBING_INACTIVE
-        std::visit([returnValue](auto&& value) {
-            using K = std::decay_t<decltype(value)>;
-            if constexpr ( std::is_same_v<K, CLIPSLexeme::Ptr> ||
-                    std::is_same_v<K, Float::Ptr> ||
-                    std::is_same_v<K, CLIPSInteger::Ptr> ||
-                    std::is_same_v<K, Fact::Ptr> ||
-                    std::is_same_v<K, std::shared_ptr<Instance>> ||
-                    std::is_same_v<K, ExternalAddress::Ptr>) {
-                returnValue->contents = value;
-            } else if constexpr (std::is_same_v<K, std::shared_ptr<FunctionDefinition>>) {
-
-            } else if
-
-        }, problem->contents);
-#endif
         switch (problem->type) {
             case STRING_TYPE:
             case SYMBOL_TYPE:
