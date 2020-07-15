@@ -3,11 +3,12 @@
 //
 
 #include "ReferenceCounted.h"
+#include "Problem.h"
 
 void
 ReferenceCounted::release() {
     if (_count < 0) {
-        throw "unbalanced retain release";
+        throw Problem("unbalanced retain release");
     }
     --_count;
 }

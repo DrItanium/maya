@@ -8,6 +8,7 @@ add_library(clips
 		OperatingSystemShim.h
 		Platform.h
 		Setup.h
+		Problem.h
 		Entities.hxx Entities.cc CLIPSValue.cc
 		Environment.h Environment.cc
 		Evaluation.h Evaluation.cc
@@ -285,7 +286,6 @@ add_library(maya_extensions
 		MayaExtensions.cc
 		InstanceExtensions.h
 		ExternalAddressTracker.h
-		Problem.h
 		)
 # TODO express the configurable dependencies in setup.h using CMAKE instead
 add_executable(maya cmd/repl/main.cc)

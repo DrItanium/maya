@@ -71,9 +71,11 @@
 #include <tuple>
 #include <iostream>
 #include <list>
+#include <sstream>
 
 #include "Setup.h"
 #include "HoldsEnvironmentCallback.h"
+#include "Problem.h"
 
 
 constexpr auto USER_ENVIRONMENT_DATA = 70;
@@ -156,30 +158,35 @@ public:
 #endif
     Environment();
     std::array<std::unique_ptr<EnvironmentModule>, MAXIMUM_ENVIRONMENT_POSITIONS> environmentModules;
-public:
+private:
     template<typename T>
-    bool installEnvironmentModule(std::unique_ptr<T>&& module) noexcept {
+    void installEnvironmentModule(std::unique_ptr<T>&& module) {
         constexpr auto position = EnvironmentModuleIndex<T>;
         if (position >= MAXIMUM_ENVIRONMENT_POSITIONS) {
-            std::cout << "\n[ENVRNMNT2] Environment data position " << position << " exceeds the maximum allowed.\n";
-            return false;
+            std::stringstream ss;
+            ss << "[ENVRNMNT2] Environment data position " << position << " exceeds the maximum allowed.";
+            auto str = ss.str();
+            throw Problem(str);
         }
         if (auto& ptr = environmentModules[position]; ptr) {
-            // already populated, stop now
-            std::cout << "\n[ENVRNMNT3] Environment data position " << position << " already allocated.\n";
-            return false;
+            std::stringstream ss;
+            ss << "[ENVRNMNT3] Environment data position " << position << " already allocated.";
+            auto str = ss.str();
+            throw Problem(str);
         }
         environmentModules[position] = std::move(module);
-        return true;
     }
+public:
     template<size_t position>
     const std::unique_ptr<EnvironmentModuleType<position>>& getEnvironmentModule() {
         if (position >= MAXIMUM_ENVIRONMENT_POSITIONS) {
-            std::cout << "\n[ENVRNMNT2] Environment data position " << position << " exceeds the maximum allowed.\n";
-            throw 44;
+            std::stringstream ss;
+            ss << "[ENVRNMNT2] Environment data position " << position << " exceeds the maximum allowed.";
+            auto str = ss.str();
+            throw Problem(str);
         } else {
             if (auto& thing = environmentModules[position]; !thing) {
-                throw "Unallocated environment module requested!";
+                throw Problem("Unallocated environment module requested!");
             } else {
                 return (std::unique_ptr<EnvironmentModuleType<position>> &) thing;
             }
@@ -190,9 +197,9 @@ public:
         return getEnvironmentModule<EnvironmentModuleIndex<T>>();
     }
     template<typename T, typename ... Args>
-    bool allocateEnvironmentModule(Args&& ... args) noexcept {
+    void allocateEnvironmentModule(Args&& ... args) {
         auto ptr = std::make_unique<T>(*this, std::forward<Args>(args)...);
-        return installEnvironmentModule(std::move(ptr));
+        installEnvironmentModule(std::move(ptr));
     }
     /**
      * @brief Invokes the body of a passed function using this instance as the environment argument; Useful for installing modules into this environment

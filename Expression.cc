@@ -108,7 +108,6 @@ void ExpressionInstall(
         expression = expression->nextArg;
     }
 }
-
 #endif
 /*****************************************************/
 /* ExpressionDeinstall: Decrements the busy count of */
@@ -1268,7 +1267,6 @@ Expression *RemoveUnneededProgn(
 // from expression binary
 
 #if (BLOAD_AND_BSAVE)
-
 #include <cstdio>
 
 #include "BinaryLoad.h"
@@ -1719,7 +1717,6 @@ void BsaveExpression(
 }
 
 #endif /* BLOAD_AND_BSAVE */
-
 #endif /* (BLOAD_AND_BSAVE) */
 
 // from expression operations
@@ -1849,8 +1846,6 @@ Expression::argCount() const noexcept {
 
 
 #if STUBBING_INACTIVE
-
-
 /******************************************/
 /* CopyExpresssion: Copies an expression. */
 /******************************************/
@@ -1910,7 +1905,6 @@ Expression::size() const noexcept {
            (_nextArg ? _nextArg->size() : 0);
 }
 #if STUBBING_INACTIVE
-
 /*************************************************/
 /* PrintExpression: Pretty prints an expression. */
 /*************************************************/

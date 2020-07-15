@@ -72,6 +72,7 @@
 #include "Setup.h"
 #include "Environment.h"
 #include "Evaluation.h"
+#include "Problem.h"
 
 #if 0
 #include "ArgumentAccess.h"
@@ -135,7 +136,7 @@ void InitializeEvaluationData(
 void
 EvaluationModule::installPrimitive(EntityRecord::Ptr record, int position) {
     if (PrimitivesArray[position]) {
-        throw "Overwriting an already installed primitive";
+        throw Problem("Overwriting an already installed primitive");
     } else {
         PrimitivesArray[position] = record;
     }
@@ -284,7 +285,7 @@ bool EvaluateExpression(
 size_t
 EvaluationModule::installExternalAddressType(const externalAddressType& newType) {
     if (numberOfAddressTypes == MAXIMUM_EXTERNAL_ADDRESS_TYPES)  {
-        throw "Too many external address types defined";
+        throw Problem("Too many external address types defined");
     }
     auto newPtr = std::make_shared<externalAddressType>(newType);
     auto newIndex = numberOfAddressTypes;
