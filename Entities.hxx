@@ -44,7 +44,7 @@ namespace maya {
     struct TypeHeader {
         TypeHeader(unsigned short t = 0) : _type(t) {}
         constexpr auto getType() const noexcept { return _type; }
-        constexpr auto isConstantType() const noexcept { return ::isConstantType(_type); }
+        constexpr auto isConstantType() const noexcept { return maya::isConstantType(_type); }
     private:
         unsigned short _type;
     };
@@ -54,12 +54,18 @@ namespace maya {
         Atom(Environment& parent, unsigned short type = 0) : HoldsEnvironmentCallback(parent), TypeHeader(type) {}
         ~Atom() override = default;
     };
-    class ReferenceCountedAtom : public Atom, public ReferenceCounted {
+    class ReferenceCountedAtom : public Atom, public virtual ReferenceCounted {
     public:
         ReferenceCountedAtom(Environment& parent, unsigned short type) : Atom(parent, type) { }
         ~ReferenceCountedAtom() override = default;
     };
+    template<typename T>
+    class TransferEvaluable : public Evaluable, std::enable_shared_from_this<T> {
+    public:
+        ~TransferEvaluable() override = default;
+        bool evaluate(std::shared_ptr<UDFValue> retVal) override;
 
+    };
 /*************/
 /* clipsVoid */
 /*************/
@@ -88,7 +94,7 @@ namespace maya {
 /***************/
 /* CLIPSLexeme */
 /***************/
-    class Lexeme : public ReferenceCountedAtom, public Evaluable {
+    class Lexeme : public ReferenceCountedAtom, public TransferEvaluable<Lexeme> {
     public:
         using Self = Lexeme;
         using Ptr = std::shared_ptr<Self>;
@@ -104,7 +110,6 @@ namespace maya {
         ~Lexeme() override = default;
         size_t hash(size_t range) override;
         void write(const std::string& logicalName) override;
-        bool evaluate(std::shared_ptr<UDFValue> retVal) override;
     private:
         std::string _contents;
     };
@@ -113,7 +118,7 @@ namespace maya {
 /**************/
 /* Float */
 /**************/
-    class Float : public ReferenceCountedAtom, public Evaluable {
+    class Float : public ReferenceCountedAtom, public TransferEvaluable<Float> {
     public:
         using Self = Float;
         using Ptr = std::shared_ptr<Self>;
@@ -131,7 +136,7 @@ namespace maya {
 /****************/
 /* Integer */
 /****************/
-    struct Integer : public ReferenceCountedAtom, public Evaluable {
+    struct Integer : public ReferenceCountedAtom, public TransferEvaluable<Integer> {
     public:
         using Self = Integer;
         using Ptr = std::shared_ptr<Self>;
@@ -165,7 +170,7 @@ namespace maya {
 /************************/
 /* ExternalAddress */
 /************************/
-    struct ExternalAddress : public ReferenceCountedAtom, public Evaluable {
+    struct ExternalAddress : public ReferenceCountedAtom, public TransferEvaluable<ExternalAddress> {
     public:
         using Self = ExternalAddress;
         using Ptr = std::shared_ptr<Self>;
@@ -183,13 +188,14 @@ namespace maya {
 /**************/
 /* multifield */
 /**************/
-    struct Multifield : public HoldsEnvironmentCallback, public TypeHeader, public BusyCountable {
+    struct Multifield : public HoldsEnvironmentCallback, public TypeHeader, public BusyCountable, public Evaluable {
     public:
         using Self = Multifield;
         using Ptr = std::shared_ptr<Self>;
     public:
         Multifield(Environment& parent) : HoldsEnvironmentCallback(parent), TypeHeader(MULTIFIELD_TYPE) {}
         ~Multifield() override = default;
+        bool evaluate(std::shared_ptr<UDFValue> retVal) override;
     public:
         auto length() const noexcept { return contents.size(); }
         std::vector<std::shared_ptr<struct CLIPSValue>> contents;
@@ -261,10 +267,30 @@ namespace maya {
         std::shared_ptr<struct Expression> lastArg;
         UDFValue::Ptr returnValue;
     };
+    // So in the original code the EntityRecord was used as a sort of "class wrapper" to provide
+    // common functionality to a given C type (think a virtual abstract class of sorts). This
+    // design required that one register each type to a given primitive type through an EntityRecord
+    // data structure which described a set of common actions and properties. While this functionaity could
+    // be ported over to the C++ rewrite, I feel that the C++ language provides quite a bit of functionality which
+    // not only allows for more type safety but also expandability.
+    //
+    // For example, each entity record has an associated type and a few boolean properties associated with it.
+    // With the boolean properties we are storing constant data into a unsigned short along with the associated type.
+    // This information does _not_ change at runtime and is better served as compile time constants.
+    //
+    // An entity also has an associated name with it as well. This is also the same for all instances of the thing that
+    // is tied to the entity record. Thus we also have another candidate for template parameters.
+    //
+    // The entity record itself may stay as an independent thing but it will be purely informational and the same for each environment.
+    // The downside to this approach is that the data could be non-thread safe.
+    //
+    // Regardless, the EntityRecord and Entity separation concept needs to be abolished because we have objects.
 
-/**
- * @brief A description of a given type
- */
+    template<typename T>
+    constexpr auto copyToEvaluate = false;
+    template<typename T>
+    constexpr auto addsToRuleComplexity = false;
+
     struct Entity : public HoldsEnvironmentCallback {
     public:
         using Self = Entity;
@@ -273,21 +299,19 @@ namespace maya {
         Entity(Environment &parent, const std::string &name, unsigned int type, bool copyToEvaluate, bool isBitmap,
                bool addsToRuleComplexity);
         virtual ~Entity() = default;
-        std::string getName() const noexcept { return _name; }
-        constexpr auto getType() const noexcept { return _type; }
-        constexpr auto copyToEvaluate() const noexcept { return _copyToEvaluate; }
-        constexpr auto isBitmap() const noexcept { return _bitMap; }
-        constexpr auto addsToRuleComplexity() const noexcept { return _addsToRuleComplexity; }
+        [[nodiscard]] std::string getName() const noexcept { return _name; }
+        [[nodiscard]] constexpr auto getType() const noexcept { return _type; }
+        [[nodiscard]] constexpr auto copyToEvaluate() const noexcept { return _copyToEvaluate; }
+        [[nodiscard]] constexpr auto addsToRuleComplexity() const noexcept { return _addsToRuleComplexity; }
         virtual void shortPrint(const std::string &logicalName) {}
         virtual void longPrint(const std::string &logicalName) {}
-        virtual bool evaluate(std::shared_ptr<UDFValue> returnValue) { return false; }
+        virtual bool evaluate(const std::shared_ptr<UDFValue>& returnValue) { return false; }
         virtual void incrementBusyCount() {}
         virtual void decrementBusyCount() {}
     private:
         std::string _name;
         unsigned int _type: 13;
         bool _copyToEvaluate: 1;
-        bool _bitMap: 1;
         bool _addsToRuleComplexity: 1;
     };
 
@@ -359,6 +383,12 @@ namespace maya {
         void setTimetag(unsigned long long value) noexcept { _timeTag = value; }
     };
 #endif
+    template<typename T>
+    bool
+    TransferEvaluable<T>::evaluate(UDFValue::Ptr retVal) {
+        retVal->contents = this->shared_from_this();
+        return true;
+    }
 } // end namespace clips
 #endif /* _H_entities */
 
