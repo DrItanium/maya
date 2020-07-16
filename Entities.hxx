@@ -49,15 +49,10 @@ namespace maya {
         unsigned short _type;
     };
 
-    class Atom : public HoldsEnvironmentCallback, public TypeHeader, public IORouterAware, public ReferenceCountable, public Hashable {
+    class Atom : public HoldsEnvironmentCallback, public TypeHeader, public IORouterAware, public ReferenceCounted, public Hashable {
     public:
         Atom(Environment& parent, unsigned short type = 0) : HoldsEnvironmentCallback(parent), TypeHeader(type) {}
         ~Atom() override = default;
-    };
-    class ReferenceCountedAtom : public Atom, public virtual ReferenceCounted {
-    public:
-        ReferenceCountedAtom(Environment& parent, unsigned short type) : Atom(parent, type) { }
-        ~ReferenceCountedAtom() override = default;
     };
     template<typename T>
     class TransferEvaluable : public Evaluable, std::enable_shared_from_this<T> {
@@ -94,18 +89,18 @@ namespace maya {
 /***************/
 /* CLIPSLexeme */
 /***************/
-    class Lexeme : public ReferenceCountedAtom, public TransferEvaluable<Lexeme> {
+    class Lexeme : public Atom, public TransferEvaluable<Lexeme> {
     public:
         using Self = Lexeme;
         using Ptr = std::shared_ptr<Self>;
     public:
-        Lexeme(Environment& parent, TreatAsSymbol) : ReferenceCountedAtom(parent, SYMBOL_TYPE) { }
-        Lexeme(Environment& parent, TreatAsString) : ReferenceCountedAtom(parent, STRING_TYPE) { }
-        Lexeme(Environment& parent, TreatAsInstanceName) : ReferenceCountedAtom(parent, INSTANCE_NAME_TYPE) { }
-        Lexeme(Environment& parent, const std::string& contents, TreatAsSymbol) : ReferenceCountedAtom(parent, SYMBOL_TYPE), _contents(contents) { }
-        Lexeme(Environment& parent, const std::string& contents, TreatAsString) : ReferenceCountedAtom(parent, STRING_TYPE), _contents(contents) { }
-        Lexeme(Environment& parent, const std::string& contents, TreatAsInstanceName) : ReferenceCountedAtom(parent, INSTANCE_NAME_TYPE), _contents(contents) { }
-        Lexeme(Environment& parent, const std::string& contents, unsigned short type) : ReferenceCountedAtom(parent, type), _contents(contents) { }
+        Lexeme(Environment& parent, TreatAsSymbol) : Atom(parent, SYMBOL_TYPE) { }
+        Lexeme(Environment& parent, TreatAsString) : Atom(parent, STRING_TYPE) { }
+        Lexeme(Environment& parent, TreatAsInstanceName) : Atom(parent, INSTANCE_NAME_TYPE) { }
+        Lexeme(Environment& parent, const std::string& contents, TreatAsSymbol) : Atom(parent, SYMBOL_TYPE), _contents(contents) { }
+        Lexeme(Environment& parent, const std::string& contents, TreatAsString) : Atom(parent, STRING_TYPE), _contents(contents) { }
+        Lexeme(Environment& parent, const std::string& contents, TreatAsInstanceName) : Atom(parent, INSTANCE_NAME_TYPE), _contents(contents) { }
+        Lexeme(Environment& parent, const std::string& contents, unsigned short type) : Atom(parent, type), _contents(contents) { }
         std::string getContents() const noexcept { return _contents; }
         ~Lexeme() override = default;
         size_t hash(size_t range) override;
@@ -118,12 +113,12 @@ namespace maya {
 /**************/
 /* Float */
 /**************/
-    class Float : public ReferenceCountedAtom, public TransferEvaluable<Float> {
+    class Float : public Atom, public TransferEvaluable<Float> {
     public:
         using Self = Float;
         using Ptr = std::shared_ptr<Self>;
     public:
-        Float(Environment& parent, double value = 0.0) : ReferenceCountedAtom(parent, FLOAT_TYPE), _contents(value) {}
+        Float(Environment& parent, double value = 0.0) : Atom(parent, FLOAT_TYPE), _contents(value) {}
         ~Float() override = default;
         size_t hash(size_t range) override;
         void write(const std::string &logicalName) override;
@@ -136,13 +131,13 @@ namespace maya {
 /****************/
 /* Integer */
 /****************/
-    struct Integer : public ReferenceCountedAtom, public TransferEvaluable<Integer> {
+    struct Integer : public Atom, public TransferEvaluable<Integer> {
     public:
         using Self = Integer;
         using Ptr = std::shared_ptr<Self>;
         using BackingType = long long;
     public:
-        Integer(Environment& parent, BackingType value = 0) : ReferenceCountedAtom(parent, INTEGER_TYPE), _contents(value) {}
+        Integer(Environment& parent, BackingType value = 0) : Atom(parent, INTEGER_TYPE), _contents(value) {}
         ~Integer() override = default;
         size_t hash(size_t range) override;
         void write(const std::string &logicalName) override;
@@ -155,12 +150,12 @@ namespace maya {
 /***************/
 /* BitMap */
 /***************/
-    struct BitMap : public ReferenceCountedAtom {
+    struct BitMap : public Atom {
     public:
         using Self = BitMap;
         using Ptr = std::shared_ptr<Self>;
     public:
-        BitMap(Environment& parent, unsigned short type) : ReferenceCountedAtom(parent, type) {}
+        BitMap(Environment& parent, unsigned short type) : Atom(parent, type) {}
         size_t hash(size_t range) override;
         void write(const std::string& logicalName) override;
     public:
@@ -170,12 +165,12 @@ namespace maya {
 /************************/
 /* ExternalAddress */
 /************************/
-    struct ExternalAddress : public ReferenceCountedAtom, public TransferEvaluable<ExternalAddress> {
+    struct ExternalAddress : public Atom, public TransferEvaluable<ExternalAddress> {
     public:
         using Self = ExternalAddress;
         using Ptr = std::shared_ptr<Self>;
     public:
-        ExternalAddress(Environment& parent, unsigned short externalType) : ReferenceCountedAtom(parent, EXTERNAL_ADDRESS_TYPE), _externalAddressType(externalType) {}
+        ExternalAddress(Environment& parent, unsigned short externalType) : Atom(parent, EXTERNAL_ADDRESS_TYPE), _externalAddressType(externalType) {}
         size_t hash(size_t range) override;
         constexpr auto getExternalType() const noexcept { return _externalAddressType; }
         void write(const std::string& logicalName) override;
