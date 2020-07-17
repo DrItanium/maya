@@ -1765,25 +1765,6 @@ bool CheckArgumentAgainstRestriction(
     return false;
 }
 #endif
-bool
-Expression::constantExpression() const noexcept {
-    switch (_type) {
-        case SYMBOL_TYPE:
-        case STRING_TYPE:
-        case INSTANCE_NAME_TYPE:
-        case INSTANCE_ADDRESS_TYPE:
-        case INTEGER_TYPE:
-        case FLOAT_TYPE:
-            if (_nextArg) {
-                return _nextArg->constantExpression();
-            } else {
-                return true;
-            }
-            break;
-        default:
-            return false;
-    }
-}
 
 /*****************************************************************************/
 /* IdenticalExpression: Determines if two expressions are identical. Returns */
@@ -1831,11 +1812,6 @@ bool IdenticalExpression(
     return false;
 
 }
-size_t
-Expression::argCount() const noexcept {
-    return 1 /* self */ + (_nextArg ? _nextArg->argCount() : 0);
-}
-
 
 #if STUBBING_INACTIVE
 /******************************************/
@@ -1892,9 +1868,7 @@ bool ExpressionContainsVariables(
 #endif
 size_t
 Expression::size() const noexcept {
-    return 1 +
-           (_argList ? _argList->size() : 0) +
-           (_nextArg ? _nextArg->size() : 0);
+    return 1 + _args.size();
 }
 #if STUBBING_INACTIVE
 /*************************************************/

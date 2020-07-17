@@ -112,7 +112,6 @@ static bool                    DiscardCAddress(void *,void *);
         }
     }
 #endif
-
 #if STUBBING_INACTIVE
     /**************************************************************/
     /* EvaluateExpression: Evaluates an expression. Returns false */

@@ -112,7 +112,7 @@ namespace maya {
         /// @todo implement
     }
     bool
-    Entity::evaluate(const std::shared_ptr<UDFValue> &returnValue) {
+    Entity::evaluate(std::shared_ptr<UDFValue> returnValue) {
         return false;
     }
     void

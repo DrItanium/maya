@@ -52,6 +52,7 @@
 
 #include "Environment.h"
 #include "Entities.hxx"
+#include "Evaluable.h"
 //#include "Construct.h"
 //#include "ExternalFunctions.h"
 //#include "Scanner.h"
@@ -60,33 +61,17 @@ namespace maya {
 /* Expression Data Structures */
 /******************************/
 
-    struct Expression {
+    struct Expression : public HoldsEnvironmentCallback {
     public:
         using Self = Expression;
         using Ptr = std::shared_ptr<Self>;
-        using Container = std::variant<std::monostate,
-                Lexeme::Ptr,
-                Float::Ptr,
-                Integer::Ptr,
-                BitMap::Ptr,
-                std::shared_ptr<struct Fact>,
-                std::shared_ptr<struct Instance>,
-                Multifield::Ptr,
-                std::shared_ptr<struct ConstructHeader>,
-                std::shared_ptr<FunctionDefinition>>;
+        using Container = std::variant<Evaluable::Ptr, std::shared_ptr<class ExternalFunction>>;
+        using PtrList = std::list<Ptr>;
     public:
-        Expression(unsigned short type, Container value);
-        //Expression(const Expression& other);
-        explicit Expression(double value);
-        explicit Expression(long long value);
-        Expression(const std::string &, TreatAsString);
-        Expression(const std::string &, TreatAsSymbol);
-        Expression(const std::string &, TreatAsInstanceName);
-        Expression(const std::string &, unsigned short type);
-        unsigned short _type;
+        Expression(Environment& parent, const std::shared_ptr<Evaluable>& evaluable);
+        Expression(Environment& parent, const std::shared_ptr<class ExternalFunction>& extnFunc);
         Container _contents;
-        Ptr _argList;
-        Ptr _nextArg;
+        PtrList _args;
         // originally this struct had a nextArg field which was probably used to great effect in making a given expression
         // I have eliminated that design since it is more of a c-ism than a c++-ism
         /**
@@ -94,13 +79,7 @@ namespace maya {
          * @return 1 + the number of elements in the arg list
          */
         size_t size() const noexcept;
-        /**
-         * @brief Get the number of structures stored in an expression as traversed through the nextArg pointer but not the argList pointer
-         * @return The number of structures stored in the expression pointer from this list forward (does not included the arg list count)
-         */
-        size_t argCount() const noexcept;
-        bool constantExpression() const noexcept;
-        bool evaluate(const Environment::Ptr &parent, UDFValue::Ptr returnValue);
+        bool evaluate(UDFValue::Ptr returnValue);
     };
 #if STUBBING_INACTIVE
 #define arg_list argList

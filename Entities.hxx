@@ -284,7 +284,7 @@ namespace maya {
     template<typename T>
     constexpr auto addsToRuleComplexity = false;
 
-    struct Entity : public HoldsEnvironmentCallback, public BusyCountable {
+    struct Entity : public HoldsEnvironmentCallback, public BusyCountable, public Evaluable {
     public:
         using Self = Entity;
         using Ptr = std::shared_ptr<Self>;
@@ -297,7 +297,7 @@ namespace maya {
         //[[nodiscard]] constexpr auto addsToRuleComplexity() const noexcept { return _addsToRuleComplexity; }
         virtual void shortPrint(const std::string &logicalName);
         virtual void longPrint(const std::string &logicalName);
-        virtual bool evaluate(const std::shared_ptr<UDFValue>& returnValue);
+        bool evaluate(std::shared_ptr<UDFValue> returnValue) override;
         // retain and release are provided by BusyCountable
     private:
         std::string _name;
@@ -311,8 +311,6 @@ namespace maya {
     /****************/
 /* EntityRecord */
 /****************/
-    using EntityRecordDeleteFunction = std::function<bool(std::any, const EnvironmentPtr &)>;
-    using EntityRecordGetNextFunction = std::function<std::any(std::any, std::any)>;
     using EntityPrintFunction = EnvironmentPtrNoReturnFunction<const std::string &, std::any>;
     using EntityEvaluationFunction = EnvironmentPtrFunction<bool, std::any, std::shared_ptr<UDFValue>>;
     using EntityBusyCountFunction = std::function<void(Environment &, std::any)>;
@@ -331,9 +329,7 @@ namespace maya {
         std::shared_ptr<struct userData> usrData;
         EntityPrintFunction shortPrintFunction;
         EntityPrintFunction longPrintFunction;
-        EntityRecordDeleteFunction deleteFunction;
         EntityEvaluationFunction evaluateFunction;
-        EntityRecordGetNextFunction getNextFunction;
         EntityBusyCountFunction decrementBusyCount;
         EntityBusyCountFunction incrementBusyCount;
     };
