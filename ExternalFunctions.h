@@ -53,9 +53,6 @@
 /*************************************************************/
 
 #ifndef _H_extnfunc
-
-#pragma once
-
 #define _H_extnfunc
 #include <functional>
 #include <memory>
@@ -70,12 +67,17 @@
 namespace maya {
 //typedef void UserDefinedFunction(const Environment::Ptr& theEnv, UDFContext *context, UDFValue *ret);
 //typedef Expression* UserDefinedFunctionParser(const Environment::Ptr&, Expression*, const char*);
-        struct ExternalFunction {
+        class ExternalFunction : public HoldsEnvironmentCallback {
             public:
             using Self = ExternalFunction;
             using Ptr = std::shared_ptr<Self>;
+            //using Body = std::function<
             public:
+            ExternalFunction(Environment& env, const std::string& name, unsigned int retType);
+            virtual ~ExternalFunction() = default;
+            Lexeme::Ptr getFunctionName() const noexcept { return _callFunctionName; }
             private:
+            Lexeme::Ptr _callFunctionName;
 
         };
 #if 0

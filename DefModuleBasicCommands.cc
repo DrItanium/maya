@@ -53,7 +53,7 @@
 #include "BinaryLoad.h"
 #include "Construct.h"
 #include "Environment.h"
-#include "ExternalFunctions.hxx"
+#include "ExternalFunctions.h"
 #include "DefmoduleBinarySaveLoad.h"
 #include "Multifield.h"
 #include "PrintUtility.h"

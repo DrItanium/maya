@@ -61,7 +61,7 @@
 
 #include "ArgumentAccess.h"
 #include "Environment.h"
-#include "ExternalFunctions.hxx"
+#include "ExternalFunctions.h"
 #include "InstanceCommand.h"
 #include "InstanceFunctions.h"
 #include "InstanceManager.h"

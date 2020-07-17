@@ -96,7 +96,7 @@
 #include "ClassFunctions.h"
 #include "MemoryAllocation.h"
 #include "Environment.h"
-#include "ExternalFunctions.hxx"
+#include "ExternalFunctions.h"
 #if DEFTEMPLATE_CONSTRUCT
 #include "Fact.h"
 #endif

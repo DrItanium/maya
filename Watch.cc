@@ -65,7 +65,7 @@
 #include "ArgumentAccess.h"
 #include "Constants.h"
 #include "Environment.h"
-#include "ExternalFunctions.hxx"
+#include "ExternalFunctions.h"
 #include "MemoryAllocation.h"
 #include "Router.h"
 

@@ -62,7 +62,7 @@
 #include "Setup.h"
 #include "ArgumentAccess.h"
 #include "Environment.h"
-#include "ExternalFunctions.hxx"
+#include "ExternalFunctions.h"
 #include "MiscFunctions.h"
 #include "PrintUtility.h"
 #include "Router.h"

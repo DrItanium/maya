@@ -119,7 +119,7 @@
 #include "CommandLine.h"
 #include "Constants.h"
 #include "Environment.h"
-#include "ExternalFunctions.hxx"
+#include "ExternalFunctions.h"
 #include "File.h"
 #include "MemoryAllocation.h"
 #include "MiscFunctions.h"

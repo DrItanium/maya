@@ -49,7 +49,7 @@
 
 #include "ArgumentAccess.h"
 #include "Environment.h"
-#include "ExternalFunctions.hxx"
+#include "ExternalFunctions.h"
 #include "Defglobal.h"
 #include "PrintUtility.h"
 #include "Router.h"

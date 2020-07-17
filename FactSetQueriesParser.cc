@@ -62,7 +62,7 @@
 
 #include "Environment.h"
 #include "Expression.h"
-#include "ExternalFunctions.hxx"
+#include "ExternalFunctions.h"
 #include "Fact.h"
 #include "DefmoduleUtility.h"
 #include "ProceduralFunctionsParser.h"

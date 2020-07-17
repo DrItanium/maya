@@ -59,7 +59,7 @@
 
 #include "ConstraintUtilities.h"
 #include "Environment.h"
-#include "ExternalFunctions.hxx"
+#include "ExternalFunctions.h"
 #include "Multifield.h"
 #include "PrintUtility.h"
 #include "Router.h"

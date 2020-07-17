@@ -89,7 +89,7 @@
 
 #include "Environment.h"
 
-#include "ExternalFunctions.hxx"
+#include "ExternalFunctions.h"
 
 #include "DeffunctionExecution.h"
 

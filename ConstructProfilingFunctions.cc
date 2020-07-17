@@ -57,7 +57,7 @@
 #include "ClassFunctions.h"
 #include "Deffunction.h"
 #include "Environment.h"
-#include "ExternalFunctions.hxx"
+#include "ExternalFunctions.h"
 #include "GenericFunctionCommands.h"
 #include "GenericFunction.h"
 #include "MemoryAllocation.h"

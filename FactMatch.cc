@@ -57,7 +57,7 @@
 #include "Drive.h"
 #include "Engine.h"
 #include "Environment.h"
-#include "ExternalFunctions.hxx"
+#include "ExternalFunctions.h"
 #include "Fact.h"
 #include "IncrementalReset.h"
 #include "MemoryAllocation.h"

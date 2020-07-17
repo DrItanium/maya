@@ -39,7 +39,7 @@
 #include "Constants.h"
 #include "Constraint.h"
 #include "Environment.h"
-#include "ExternalFunctions.hxx"
+#include "ExternalFunctions.h"
 #include "MemoryAllocation.h"
 #include "Multifield.h"
 #include "Router.h"

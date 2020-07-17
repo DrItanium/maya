@@ -71,7 +71,7 @@
 #include "Construct.h"
 #include "Construct.h"
 #include "Environment.h"
-#include "ExternalFunctions.hxx"
+#include "ExternalFunctions.h"
 #include "Fact.h"
 #include "MemoryAllocation.h"
 #include "Multifield.h"

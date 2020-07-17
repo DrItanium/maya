@@ -88,7 +88,7 @@
 #include "Construct.h"
 #include "Environment.h"
 #include "Evaluation.h"
-#include "ExternalFunctions.hxx"
+#include "ExternalFunctions.h"
 #include "InstanceFunctions.h"
 #include "InstanceParser.h"
 #include "MemoryAllocation.h"

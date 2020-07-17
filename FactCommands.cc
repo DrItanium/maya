@@ -91,7 +91,7 @@
 #if DEFTEMPLATE_CONSTRUCT
 
 #include "ArgumentAccess.h"
-#include "ExternalFunctions.hxx"
+#include "ExternalFunctions.h"
 #include "Fact.h"
 #include "Multifield.h"
 #include "PrettyPrint.h"

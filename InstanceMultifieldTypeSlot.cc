@@ -55,7 +55,7 @@
 
 #include "ArgumentAccess.h"
 #include "Environment.h"
-#include "ExternalFunctions.hxx"
+#include "ExternalFunctions.h"
 #include "InstanceFunctions.h"
 #include "DefmessageHandlerFunctions.h"
 #include "DefmessageHandlerDispatch.h"

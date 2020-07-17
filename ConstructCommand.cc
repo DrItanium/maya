@@ -70,7 +70,7 @@
 
 #include "Constants.h"
 #include "Environment.h"
-#include "ExternalFunctions.hxx"
+#include "ExternalFunctions.h"
 #include "MemoryAllocation.h"
 #include "Defmodule.h"
 #include "ArgumentAccess.h"

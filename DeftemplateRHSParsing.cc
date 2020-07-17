@@ -44,7 +44,7 @@
 #include <cstdio>
 
 #include "DefaultAttribute.h"
-#include "ExternalFunctions.hxx"
+#include "ExternalFunctions.h"
 #include "Fact.h"
 #include "MemoryAllocation.h"
 #include "DefmoduleUtility.h"

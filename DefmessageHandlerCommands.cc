@@ -79,7 +79,7 @@
 #include "Construct.h"
 #include "DefmessageHandlerParser.h"
 #include "Environment.h"
-#include "ExternalFunctions.hxx"
+#include "ExternalFunctions.h"
 #include "InstanceFunctions.h"
 #include "InstanceModifyAndDuplicate.h"
 #include "DefmessageHandlerFunctions.h"

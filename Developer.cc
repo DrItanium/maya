@@ -54,7 +54,7 @@
 
 #include "ArgumentAccess.h"
 #include "Environment.h"
-#include "ExternalFunctions.hxx"
+#include "ExternalFunctions.h"
 #include "InstanceCommand.h"
 #include "DefmoduleUtility.h"
 #include "PrintUtility.h"
