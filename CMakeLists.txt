@@ -18,7 +18,8 @@ add_library(clips
 		ReferenceCounted.h ReferenceCounted.cc
 		Hashable.h
 		HoldsEnvironmentCallback.h HoldsEnvironmentCallback.cc
-		BusyCountable.cc BusyCountable.h
+		BusyCountable.h BusyCountable.cc
+		ExternalFunctions.h ExternalFunctions.cc
 		)
 
 		#Agenda.h
@@ -69,7 +70,6 @@ add_library(clips
 		#Drive.h
 		#Engine.h
 		#ExtendedMathFunctions.h
-		#ExternalFunctions.h
 		#Fact.h
 		#File.h
 		#Generate.h
@@ -182,7 +182,6 @@ add_library(clips
 		#ExpressionBinary.cc
 		#ExpressionOperations.cc
 		#ExpressionParser.cc
-		#ExternalFunctions.cc
 		#FactBinarySaveLoad.cc
 		#FactBuild.cc
 		#FactCommands.cc

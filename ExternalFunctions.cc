@@ -55,6 +55,7 @@
 
 #include "Setup.h"
 
+#if STUBBING_INACTIVE
 #include <ctype.h>
 #include <cstdlib>
 
@@ -69,7 +70,6 @@
 #include "InstanceCommand.h"
 #include "ExternalFunctions.h"
 #include "ReferenceCounted.h"
-
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
@@ -876,3 +876,4 @@ void PrintTypesString(
 
     if (printCRLF) { WriteString(theEnv, logicalName, ".\n"); }
 }
+#endif

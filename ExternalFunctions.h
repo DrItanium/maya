@@ -57,35 +57,38 @@
 #pragma once
 
 #define _H_extnfunc
+#include <functional>
+#include <memory>
 
 #include "Entities.hxx"
-
+#include "Environment.h"
 #include "Evaluation.h"
 #include "Expression.h"
-#include "Symbol.h"
-#include "UserData.h"
+//#include "Symbol.h"
+//#include "UserData.h"
 
-typedef void UserDefinedFunction(const Environment::Ptr& theEnv, UDFContext *context, UDFValue *ret);
-typedef Expression* UserDefinedFunctionParser(const Environment::Ptr&, Expression*, const char*);
+namespace maya {
+//typedef void UserDefinedFunction(const Environment::Ptr& theEnv, UDFContext *context, UDFValue *ret);
+//typedef Expression* UserDefinedFunctionParser(const Environment::Ptr&, Expression*, const char*);
 
-struct FunctionDefinition {
-    CLIPSLexeme *callFunctionName;
-    unsigned unknownReturnValueType;
-    UserDefinedFunction* functionPointer;
-    UserDefinedFunctionParser* parser;
-    CLIPSLexeme *restrictions;
-    unsigned short minArgs;
-    unsigned short maxArgs;
-    bool overloadable;
-    bool sequenceuseok;
-    bool neededFunction;
-    unsigned long bsaveIndex;
-    FunctionDefinition *next;
-    struct userData *usrData;
-    void *context;
-};
-
-#define UnknownFunctionType(target) (((FunctionDefinition *) target)->unknownReturnValueType)
+        struct FunctionDefinition {
+            CLIPSLexeme *callFunctionName;
+            unsigned unknownReturnValueType;
+            UserDefinedFunction *functionPointer;
+            UserDefinedFunctionParser *parser;
+            CLIPSLexeme *restrictions;
+            unsigned short minArgs;
+            unsigned short maxArgs;
+            bool overloadable;
+            bool sequenceuseok;
+            bool neededFunction;
+            unsigned long bsaveIndex;
+            FunctionDefinition *next;
+            struct userData *usrData;
+            void *context;
+        };
+#if STUBBING_INACTIVE
+        #define UnknownFunctionType(target) (((FunctionDefinition *) target)->unknownReturnValueType)
 #define ExpressionFunctionPointer(target) ((target)->functionValue->functionPointer)
 #define ExpressionFunctionCallName(target) ((target)->functionValue->callFunctionName)
 #define ExpressionUnknownFunctionType(target) ((target)->functionValue->unknownReturnValueType)
@@ -94,56 +97,57 @@ struct FunctionDefinition {
 /* ENVIRONMENT DATA */
 /*==================*/
 
-constexpr auto EXTERNAL_FUNCTION_DATA = 50;
-struct FunctionHash;
-struct externalFunctionData : public EnvironmentModule {
-    FunctionDefinition *ListOfFunctions = nullptr;
-    FunctionHash **FunctionHashtable = nullptr;
-};
-RegisterEnvironmentModule(externalFunctionData, EXTERNAL_FUNCTION_DATA, ExternalFunction);
+        constexpr auto EXTERNAL_FUNCTION_DATA = 50;
+        struct FunctionHash;
+        struct externalFunctionData : public EnvironmentModule {
+            FunctionDefinition *ListOfFunctions = nullptr;
+            FunctionHash **FunctionHashtable = nullptr;
+        };
+        RegisterEnvironmentModule(externalFunctionData, EXTERNAL_FUNCTION_DATA, ExternalFunction);
 
-enum AddUDFError {
-    AUE_NO_ERROR = 0,
-    AUE_MIN_EXCEEDS_MAX_ERROR,
-    AUE_FUNCTION_NAME_IN_USE_ERROR,
-    AUE_INVALID_ARGUMENT_TYPE_ERROR,
-    AUE_INVALID_RETURN_TYPE_ERROR,
-    AUE_CREATE_FUNCTION_STUBBED,
-};
+        enum AddUDFError {
+            AUE_NO_ERROR = 0,
+                    AUE_MIN_EXCEEDS_MAX_ERROR,
+                    AUE_FUNCTION_NAME_IN_USE_ERROR,
+                    AUE_INVALID_ARGUMENT_TYPE_ERROR,
+                    AUE_INVALID_RETURN_TYPE_ERROR,
+                    AUE_CREATE_FUNCTION_STUBBED,
+        };
 
-struct FunctionHash {
-    FunctionDefinition *fdPtr = nullptr;
-    FunctionHash *next = nullptr;
-};
+        struct FunctionHash {
+            FunctionDefinition *fdPtr = nullptr;
+            FunctionHash *next = nullptr;
+        };
 
-constexpr auto SIZE_FUNCTION_HASH = 517;
+        constexpr auto SIZE_FUNCTION_HASH = 517;
 
-void InitializeExternalFunctionData(const Environment::Ptr&);
-AddUDFError AddUDF(const Environment::Ptr&theEnv, const char *name, const char *returnTypes, unsigned short minArgs, unsigned short maxArgs,
-                   const char *argumentTypes, UserDefinedFunction *cFunctionPointer, void *context = nullptr);
-bool AddFunctionParser(const Environment::Ptr&, const char *,
-                       Expression *(*)(const Environment::Ptr&, Expression *, const char *));
-bool RemoveFunctionParser(const Environment::Ptr&, const char *);
-bool FuncSeqOvlFlags(const Environment::Ptr&, const char *, bool, bool);
-FunctionDefinition *GetFunctionList(const Environment::Ptr&);
-void InstallFunctionList(const Environment::Ptr&, FunctionDefinition *);
-FunctionDefinition *FindFunction(const Environment::Ptr&, const char *);
-unsigned GetNthRestriction(const Environment::Ptr&, FunctionDefinition *, unsigned int);
-bool RemoveUDF(const Environment::Ptr&, const char *);
-int GetMinimumArgs(FunctionDefinition *);
-int GetMaximumArgs(FunctionDefinition *);
-unsigned int UDFArgumentCount(UDFContext *);
-bool UDFNthArgument(UDFContext *, unsigned int, unsigned, UDFValue *);
-void UDFInvalidArgumentMessage(UDFContext *, const char *);
-std::string UDFContextFunctionName(UDFContext *);
-void PrintTypesString(const Environment::Ptr&, const char *, unsigned, bool);
-bool UDFFirstArgument(UDFContext *, unsigned, UDFValue *);
-bool UDFNextArgument(UDFContext *, unsigned, UDFValue *);
-void UDFThrowError(UDFContext *);
-void *GetUDFContext(const Environment::Ptr&, const char *);
+        void InitializeExternalFunctionData(const Environment::Ptr&);
+        AddUDFError AddUDF(const Environment::Ptr&theEnv, const char *name, const char *returnTypes, unsigned short minArgs, unsigned short maxArgs,
+        const char *argumentTypes, UserDefinedFunction *cFunctionPointer, void *context = nullptr);
+        bool AddFunctionParser(const Environment::Ptr&, const char *,
+        Expression *(*)(const Environment::Ptr&, Expression *, const char *));
+        bool RemoveFunctionParser(const Environment::Ptr&, const char *);
+        bool FuncSeqOvlFlags(const Environment::Ptr&, const char *, bool, bool);
+        FunctionDefinition *GetFunctionList(const Environment::Ptr&);
+        void InstallFunctionList(const Environment::Ptr&, FunctionDefinition *);
+        FunctionDefinition *FindFunction(const Environment::Ptr&, const char *);
+        unsigned GetNthRestriction(const Environment::Ptr&, FunctionDefinition *, unsigned int);
+        bool RemoveUDF(const Environment::Ptr&, const char *);
+        int GetMinimumArgs(FunctionDefinition *);
+        int GetMaximumArgs(FunctionDefinition *);
+        unsigned int UDFArgumentCount(UDFContext *);
+        bool UDFNthArgument(UDFContext *, unsigned int, unsigned, UDFValue *);
+        void UDFInvalidArgumentMessage(UDFContext *, const char *);
+        std::string UDFContextFunctionName(UDFContext *);
+        void PrintTypesString(const Environment::Ptr&, const char *, unsigned, bool);
+        bool UDFFirstArgument(UDFContext *, unsigned, UDFValue *);
+        bool UDFNextArgument(UDFContext *, unsigned, UDFValue *);
+        void UDFThrowError(UDFContext *);
+        void *GetUDFContext(const Environment::Ptr&, const char *);
 
 #define UDFHasNextArgument(context) (context->lastArg != nullptr)
-
+#endif
+} // end namespace maya
 #endif /* _H_extnfunc */
 
 
