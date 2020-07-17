@@ -282,32 +282,29 @@ namespace maya {
     // Regardless, the EntityRecord and Entity separation concept needs to be abolished because we have objects.
 
     template<typename T>
-    constexpr auto copyToEvaluate = false;
-    template<typename T>
     constexpr auto addsToRuleComplexity = false;
 
-    struct Entity : public HoldsEnvironmentCallback {
+    struct Entity : public HoldsEnvironmentCallback, public BusyCountable {
     public:
         using Self = Entity;
         using Ptr = std::shared_ptr<Self>;
     public:
-        Entity(Environment &parent, const std::string &name, unsigned int type, bool copyToEvaluate, bool isBitmap,
-               bool addsToRuleComplexity);
+        Entity(Environment &parent, const std::string &name, unsigned int type);
         virtual ~Entity() = default;
         [[nodiscard]] std::string getName() const noexcept { return _name; }
         [[nodiscard]] constexpr auto getType() const noexcept { return _type; }
-        [[nodiscard]] constexpr auto copyToEvaluate() const noexcept { return _copyToEvaluate; }
-        [[nodiscard]] constexpr auto addsToRuleComplexity() const noexcept { return _addsToRuleComplexity; }
-        virtual void shortPrint(const std::string &logicalName) {}
-        virtual void longPrint(const std::string &logicalName) {}
-        virtual bool evaluate(const std::shared_ptr<UDFValue>& returnValue) { return false; }
-        virtual void incrementBusyCount() {}
-        virtual void decrementBusyCount() {}
+        //[[nodiscard]] constexpr auto copyToEvaluate() const noexcept { return _copyToEvaluate; }
+        //[[nodiscard]] constexpr auto addsToRuleComplexity() const noexcept { return _addsToRuleComplexity; }
+        virtual void shortPrint(const std::string &logicalName);
+        virtual void longPrint(const std::string &logicalName);
+        virtual bool evaluate(const std::shared_ptr<UDFValue>& returnValue);
+        // retain and release are provided by BusyCountable
     private:
         std::string _name;
         unsigned int _type: 13;
-        bool _copyToEvaluate: 1;
-        bool _addsToRuleComplexity: 1;
+        // this is handled by special forms of Evaluable and a special inheritance of entity that is used
+        //bool _copyToEvaluate: 1;
+        //bool _addsToRuleComplexity: 1;
     };
 
 #if 0
@@ -346,6 +343,8 @@ namespace maya {
     using PatternEntityRecordMatchFunction = EnvironmentPtrNoReturnFunction<std::any>;
     using PatternEntityRecordSynchronizedFunction = EnvironmentPtrFunction<bool, std::any>;
     using PatternEntityRecordIsDeletedFunction = EnvironmentPtrFunction<bool, std::any>;
+#endif
+#if 0
 /***********************/
 /* PatternEntityRecord */
 /***********************/
@@ -378,6 +377,26 @@ namespace maya {
         void setTimetag(unsigned long long value) noexcept { _timeTag = value; }
     };
 #endif
+    class PatternEntity : public Entity {
+    public:
+        using Self = PatternEntity;
+        using Ptr = std::shared_ptr<Self>;
+    public:
+        using Entity::Entity;
+        ~PatternEntity() override = default;
+        virtual void decrementBasisCount();
+        virtual void incrementBasisCount();
+        virtual void onMatch();
+        virtual bool synchronized();
+        [[nodiscard]] constexpr auto getTimeTag() const noexcept { return _timeTag; }
+        void setTimeTag(unsigned long long value) noexcept { _timeTag = value; }
+        auto getDependents() const noexcept { return _dependents; }
+        void setDependents(std::any value) { _dependents = value; }
+    private:
+        unsigned long long _timeTag = 0;
+        std::any _dependents;
+        // virtual bool isDeleted();
+    };
     template<typename T>
     bool
     TransferEvaluable<T>::evaluate(UDFValue::Ptr retVal) {

@@ -111,4 +111,32 @@ namespace maya {
     ExternalAddress::write(const std::string& logicalName) {
         /// @todo implement
     }
+    bool
+    Entity::evaluate(const std::shared_ptr<UDFValue> &returnValue) {
+        return false;
+    }
+    void
+    Entity::longPrint(const std::string &logicalName) {
+
+    }
+    void
+    Entity::shortPrint(const std::string &logicalName) {
+
+    }
+    void
+    PatternEntity::incrementBasisCount() {
+
+    }
+    void
+    PatternEntity::decrementBasisCount() {
+
+    }
+    void
+    PatternEntity::onMatch() {
+
+    }
+    bool
+    PatternEntity::synchronized() {
+        return true;
+    }
 } // end namespace maya
