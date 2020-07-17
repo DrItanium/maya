@@ -64,7 +64,7 @@
 
 #include "ConstraintUtilities.h"
 #include "Environment.h"
-#include "ExternalFunctions.h"
+#include "ExternalFunctions.hxx"
 #include "MemoryAllocation.h"
 #include "Pattern.h"
 #include "PrintUtility.h"

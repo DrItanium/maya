@@ -72,7 +72,7 @@
 #include "Deffacts.h"
 #include "DeffactsParser.h"
 #include "Environment.h"
-#include "ExternalFunctions.h"
+#include "ExternalFunctions.hxx"
 #include "Fact.h"
 #include "MemoryAllocation.h"
 #include "Multifield.h"

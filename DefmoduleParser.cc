@@ -50,7 +50,7 @@
 #include "Construct.h"
 #include "Construct.h"
 #include "Environment.h"
-#include "ExternalFunctions.h"
+#include "ExternalFunctions.hxx"
 #include "MemoryAllocation.h"
 #include "DefmoduleUtility.h"
 #include "PrettyPrint.h"

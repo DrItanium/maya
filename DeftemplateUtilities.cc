@@ -68,7 +68,7 @@
 #include "Construct.h"
 #include "Constraint.h"
 #include "Environment.h"
-#include "ExternalFunctions.h"
+#include "ExternalFunctions.hxx"
 #include "MemoryAllocation.h"
 #include "DefmoduleUtility.h"
 #include "Multifield.h"

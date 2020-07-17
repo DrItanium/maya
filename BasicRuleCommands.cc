@@ -69,7 +69,7 @@
 #include "Drive.h"
 #include "Engine.h"
 #include "Environment.h"
-#include "ExternalFunctions.h"
+#include "ExternalFunctions.hxx"
 #include "Multifield.h"
 #include "ReteUtility.h"
 #include "Router.h"

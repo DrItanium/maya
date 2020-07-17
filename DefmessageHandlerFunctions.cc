@@ -57,7 +57,7 @@
 #include "ClassCommands.h"
 #include "ClassFunctions.h"
 #include "Environment.h"
-#include "ExternalFunctions.h"
+#include "ExternalFunctions.hxx"
 #include "InstanceCommand.h"
 #include "InstanceFunctions.h"
 #include "MemoryAllocation.h"

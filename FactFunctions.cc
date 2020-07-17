@@ -107,7 +107,7 @@
 
 #include "ArgumentAccess.h"
 #include "Environment.h"
-#include "ExternalFunctions.h"
+#include "ExternalFunctions.hxx"
 #include "Multifield.h"
 #include "PrintUtility.h"
 #include "Router.h"

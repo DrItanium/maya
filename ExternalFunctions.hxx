@@ -70,7 +70,15 @@
 namespace maya {
 //typedef void UserDefinedFunction(const Environment::Ptr& theEnv, UDFContext *context, UDFValue *ret);
 //typedef Expression* UserDefinedFunctionParser(const Environment::Ptr&, Expression*, const char*);
+        struct ExternalFunction {
+            public:
+            using Self = ExternalFunction;
+            using Ptr = std::shared_ptr<Self>;
+            public:
+            private:
 
+        };
+#if 0
         struct FunctionDefinition {
             CLIPSLexeme *callFunctionName;
             unsigned unknownReturnValueType;
@@ -87,6 +95,7 @@ namespace maya {
             struct userData *usrData;
             void *context;
         };
+#endif
 #if STUBBING_INACTIVE
         #define UnknownFunctionType(target) (((FunctionDefinition *) target)->unknownReturnValueType)
 #define ExpressionFunctionPointer(target) ((target)->functionValue->functionPointer)

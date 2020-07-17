@@ -42,7 +42,7 @@
 #include "Analysis.h"
 #include "Constraint.h"
 #include "Environment.h"
-#include "ExternalFunctions.h"
+#include "ExternalFunctions.hxx"
 #include "ProceduralFunctionsParser.h"
 #include "PrintUtility.h"
 #include "Reorder.h"

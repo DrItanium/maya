@@ -95,7 +95,7 @@
 #include "Engine.h"
 #include "Environment.h"
 #include "Expression.h"
-#include "ExternalFunctions.h"
+#include "ExternalFunctions.hxx"
 #include "MemoryAllocation.h"
 #include "MiscFunctions.h"
 #include "Multifield.h"

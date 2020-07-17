@@ -43,7 +43,7 @@
 #include "ArgumentAccess.h"
 #include "Constants.h"
 #include "Environment.h"
-#include "ExternalFunctions.h"
+#include "ExternalFunctions.hxx"
 #include "MemoryAllocation.h"
 #include "Multifield.h"
 #include "Router.h"

@@ -54,7 +54,7 @@
 #define _H_bload
 
 #include "Utility.h"
-#include "ExternalFunctions.h"
+#include "ExternalFunctions.hxx"
 #include "Expression.h"
 #include "Symbol.h"
 #include "SystemDependency.h"

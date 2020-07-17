@@ -54,7 +54,7 @@
 /*************************************************************/
 
 #include "Setup.h"
-
+#include "ExternalFunctions.hxx"
 #if STUBBING_INACTIVE
 #include <ctype.h>
 #include <cstdlib>

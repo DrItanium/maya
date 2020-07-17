@@ -93,7 +93,7 @@
 #include "Construct.h"
 #include "Environment.h"
 #include "Evaluation.h"
-#include "ExternalFunctions.h"
+#include "ExternalFunctions.hxx"
 #if BLOAD_AND_BSAVE
 #include "GenericFunctionBinaryLoadSave.h"
 #endif

@@ -42,7 +42,7 @@
 #include "Deffunction.h"
 #include "Environment.h"
 #include "Evaluation.h"
-#include "ExternalFunctions.h"
+#include "ExternalFunctions.hxx"
 #include "MemoryAllocation.h"
 #include "Multifield.h"
 #include "SystemDependency.h"

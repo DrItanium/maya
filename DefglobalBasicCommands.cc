@@ -63,7 +63,7 @@
 
 #include "Construct.h"
 #include "Environment.h"
-#include "ExternalFunctions.h"
+#include "ExternalFunctions.hxx"
 #if BLOAD_AND_BSAVE
 #include "DefglobalBinary.h"
 #endif

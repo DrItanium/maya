@@ -62,7 +62,7 @@
 #include "ConstraintUtilities.h"
 #include "Environment.h"
 #include "Expression.h"
-#include "ExternalFunctions.h"
+#include "ExternalFunctions.hxx"
 #include "GenericFunctionParser.h"
 #include "MemoryAllocation.h"
 #include "ProceduralCodeSupportRoutines.h"

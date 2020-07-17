@@ -84,7 +84,7 @@
 #include "CommandLine.h"
 #include "Construct.h"
 #include "Environment.h"
-#include "ExternalFunctions.h"
+#include "ExternalFunctions.hxx"
 #include "File.h"
 #include "MemoryAllocation.h"
 #include "Router.h"

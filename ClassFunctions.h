@@ -60,7 +60,7 @@
 #include "Scanner.h"
 #include "Environment.h"
 #include "Entities.hxx"
-#include "ExternalFunctions.h"
+#include "ExternalFunctions.hxx"
 #include "Construct.h"
 #include "Defmodule.h"
 #include "Object.h"

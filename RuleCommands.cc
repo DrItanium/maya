@@ -84,7 +84,7 @@
 #include "Engine.h"
 #include "Environment.h"
 #include "Evaluation.h"
-#include "ExternalFunctions.h"
+#include "ExternalFunctions.hxx"
 #include "IncrementalReset.h"
 #include "LogicalDependencies.h"
 #include "MemoryAllocation.h"

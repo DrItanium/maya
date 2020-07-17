@@ -69,7 +69,7 @@
 
 #include "Constraint.h"
 #include "Environment.h"
-#include "ExternalFunctions.h"
+#include "ExternalFunctions.hxx"
 #include "Fact.h"
 #include "InstanceCommand.h"
 #include "InstanceFunctions.h"

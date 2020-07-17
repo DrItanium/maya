@@ -67,7 +67,7 @@ namespace maya {
         }
     }
 
-    UDFContext::UDFContext(Environment &parent) : HoldsEnvironmentCallback(parent) {}
+    UDFContext::UDFContext(Environment &parent, std::shared_ptr<FunctionDefinition> func, std::list<std::shared_ptr<struct Expression>>& argList, UDFValue::Ptr retVal) : HoldsEnvironmentCallback(parent), theFunction(func), _args(argList), returnValue(retVal) { }
 
 #if 0
     bool
