@@ -28,6 +28,7 @@
 #include <any>
 #include <vector>
 #include <functional>
+#include <list>
 
 #include "Constants.h"
 #include "ReferenceCounted.h"
@@ -256,10 +257,9 @@ namespace maya {
         using Self = UDFContext;
         using Ptr = std::shared_ptr<Self>;
     public:
-        UDFContext(Environment &parent);
+        UDFContext(Environment &parent, std::shared_ptr<FunctionDefinition> func, std::list<std::shared_ptr<struct Expression>>& argList, UDFValue::Ptr retVal);
         std::shared_ptr<FunctionDefinition> theFunction;
-        unsigned int lastPosition = 0;
-        std::shared_ptr<struct Expression> lastArg;
+        std::list<std::shared_ptr<struct Expression>>& _args;
         UDFValue::Ptr returnValue;
     };
     // So in the original code the EntityRecord was used as a sort of "class wrapper" to provide
