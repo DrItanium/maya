@@ -65,23 +65,50 @@
 //#include "UserData.h"
 
 namespace maya {
-//typedef void UserDefinedFunction(const Environment::Ptr& theEnv, UDFContext *context, UDFValue *ret);
-//typedef Expression* UserDefinedFunctionParser(const Environment::Ptr&, Expression*, const char*);
-        class ExternalFunction : public HoldsEnvironmentCallback {
-            public:
-            using Self = ExternalFunction;
-            using Ptr = std::shared_ptr<Self>;
-            //using Body = std::function<
-            public:
-            ExternalFunction(Environment& env, const std::string& name, unsigned int retType);
-            virtual ~ExternalFunction() = default;
-            Lexeme::Ptr getFunctionName() const noexcept { return _callFunctionName; }
-            private:
-            Lexeme::Ptr _callFunctionName;
-
-        };
+    class ExternalFunction : public HoldsEnvironmentCallback {
+    public:
+        using Self = ExternalFunction;
+        using Ptr = std::shared_ptr<Self>;
+        using Body = std::function<void(Environment&, UDFContext&, UDFValue::Ptr)>;
+        using Parser = std::function<Expression::Ptr(Environment&, Expression::Ptr, const std::string&)>;
+    public:
+        ExternalFunction(Environment& env, const std::string& name, unsigned int retType, Body function, Parser parser, const std::string& restrictions, unsigned short minArgs, unsigned short maxArgs);
+        virtual ~ExternalFunction() = default;
+        [[nodiscard]] Lexeme::Ptr getFunctionName() const noexcept { return _callFunctionName; }
+        [[nodiscard]] Lexeme::Ptr getRestrictions() const noexcept { return _restrictions; }
+        bool evaluate(UDFContext& context, UDFValue::Ptr returnValue);
+        Expression::Ptr parse(Expression::Ptr, const std::string&);
+        [[nodiscard]] constexpr auto isNeeded() const noexcept { return _neededFunction; }
+        void setNeeded(bool value) noexcept { _neededFunction = value; }
+        [[nodiscard]] constexpr auto sequenceUseOk() const noexcept { return _sequenceUseOk; }
+        void setSequenceUseOk(bool value = true) noexcept { _sequenceUseOk = value; }
+        [[nodiscard]] constexpr auto overloadable() const noexcept { return _overloadable; }
+        void setOverloadable(bool value = true) noexcept { _overloadable = value; }
+        [[nodiscard]] bool hasCustomParser() const noexcept { return (bool)_parser; }
+        [[nodiscard]] bool hasBody() const noexcept { return (bool)_function; }
+        [[nodiscard]] constexpr auto getMinArgs() const noexcept { return _minArgs; }
+        [[nodiscard]] constexpr auto getMaxArgs() const noexcept { return _maxArgs; }
+    private:
+        Lexeme::Ptr _callFunctionName;
+        unsigned int _returnType;
+        Body _function;
+        Parser _parser;
+        Lexeme::Ptr _restrictions;
+        unsigned short _minArgs = 0;
+        unsigned short _maxArgs = 0;
+        bool _overloadable = false;
+        bool _sequenceUseOk = false;
+        bool _neededFunction = false;
 #if 0
-        struct FunctionDefinition {
+        unsigned long bsaveIndex = 0;
+#endif
+
+
+
+
+    };
+#if 0
+    struct FunctionDefinition {
             CLIPSLexeme *callFunctionName;
             unsigned unknownReturnValueType;
             UserDefinedFunction *functionPointer;
@@ -99,7 +126,7 @@ namespace maya {
         };
 #endif
 #if STUBBING_INACTIVE
-        #define UnknownFunctionType(target) (((FunctionDefinition *) target)->unknownReturnValueType)
+    #define UnknownFunctionType(target) (((FunctionDefinition *) target)->unknownReturnValueType)
 #define ExpressionFunctionPointer(target) ((target)->functionValue->functionPointer)
 #define ExpressionFunctionCallName(target) ((target)->functionValue->callFunctionName)
 #define ExpressionUnknownFunctionType(target) ((target)->functionValue->unknownReturnValueType)

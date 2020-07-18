@@ -247,7 +247,7 @@ namespace maya {
     };
 
     bool operator==(const UDFValue &a, const UDFValue &b);
-    struct FunctionDefinition;
+    struct ExternalFunction;
     struct Expression;
 /**************/
 /* udfContext */
@@ -257,8 +257,8 @@ namespace maya {
         using Self = UDFContext;
         using Ptr = std::shared_ptr<Self>;
     public:
-        UDFContext(Environment &parent, std::shared_ptr<FunctionDefinition> func, std::list<std::shared_ptr<struct Expression>>& argList, UDFValue::Ptr retVal);
-        std::shared_ptr<FunctionDefinition> theFunction;
+        UDFContext(Environment &parent, std::shared_ptr<ExternalFunction> func, std::list<std::shared_ptr<struct Expression>>& argList, UDFValue::Ptr retVal);
+        std::shared_ptr<ExternalFunction> theFunction;
         std::list<std::shared_ptr<struct Expression>>& _args;
         UDFValue::Ptr returnValue;
     };

@@ -73,6 +73,7 @@
 #include "Environment.h"
 #include "Evaluation.h"
 #include "Problem.h"
+#include "ExternalFunctions.h"
 
 namespace maya {
 /***************************************/
@@ -112,6 +113,23 @@ static bool                    DiscardCAddress(void *,void *);
         }
     }
 #endif
+bool
+Expression::evaluate(UDFValue::Ptr returnValue) {
+   return std::visit([this, &returnValue](auto&& executable) {
+        using K = std::decay_t<decltype(executable)>;
+        if constexpr (std::is_same_v<K, Evaluable::Ptr>) {
+            return executable->evaluate(returnValue);
+        } else if (std::is_same_v<K, ExternalFunction::Ptr>) {
+            UDFContext ctx(getParent(), executable, _args, returnValue);
+            return executable->evaluate(ctx, returnValue);
+        } else {
+            /// @todo turn this into a compile time error
+            throw Problem("Undefined type passed to the Expression container!");
+            return false;
+        }
+   }, _contents);
+
+}
 #if STUBBING_INACTIVE
     /**************************************************************/
     /* EvaluateExpression: Evaluates an expression. Returns false */

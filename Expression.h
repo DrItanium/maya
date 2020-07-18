@@ -60,12 +60,12 @@ namespace maya {
 /******************************/
 /* Expression Data Structures */
 /******************************/
-
+    class ExternalFunction;
     struct Expression : public HoldsEnvironmentCallback {
     public:
         using Self = Expression;
         using Ptr = std::shared_ptr<Self>;
-        using Container = std::variant<Evaluable::Ptr, std::shared_ptr<class ExternalFunction>>;
+        using Container = std::variant<Evaluable::Ptr, std::shared_ptr<ExternalFunction>>;
         using PtrList = std::list<Ptr>;
     public:
         Expression(Environment& parent, const std::shared_ptr<Evaluable>& evaluable);
@@ -82,7 +82,7 @@ namespace maya {
         bool evaluate(UDFValue::Ptr returnValue);
     };
 #if STUBBING_INACTIVE
-#define arg_list argList
+    #define arg_list argList
 #define next_arg nextArg
 
     struct ExpressionHashNode {
