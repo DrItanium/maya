@@ -20,6 +20,7 @@ add_library(clips
 		HoldsEnvironmentCallback.h HoldsEnvironmentCallback.cc
 		BusyCountable.h BusyCountable.cc
 		ExternalFunctions.h ExternalFunctions.cc
+		Symbol.h Symbol.cc
 		)
 
 		#Agenda.h

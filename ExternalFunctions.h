@@ -151,9 +151,6 @@ namespace maya {
         void InitializeExternalFunctionData(const Environment::Ptr&);
         AddUDFError AddUDF(const Environment::Ptr&theEnv, const char *name, const char *returnTypes, unsigned short minArgs, unsigned short maxArgs,
         const char *argumentTypes, UserDefinedFunction *cFunctionPointer, void *context = nullptr);
-        bool AddFunctionParser(const Environment::Ptr&, const char *,
-        Expression *(*)(const Environment::Ptr&, Expression *, const char *));
-        bool RemoveFunctionParser(const Environment::Ptr&, const char *);
         bool FuncSeqOvlFlags(const Environment::Ptr&, const char *, bool, bool);
         FunctionDefinition *GetFunctionList(const Environment::Ptr&);
         void InstallFunctionList(const Environment::Ptr&, FunctionDefinition *);
@@ -168,7 +165,6 @@ namespace maya {
         bool UDFFirstArgument(UDFContext *, unsigned, UDFValue *);
         bool UDFNextArgument(UDFContext *, unsigned, UDFValue *);
         void UDFThrowError(UDFContext *);
-        void *GetUDFContext(const Environment::Ptr&, const char *);
 
 #define UDFHasNextArgument(context) (context->lastArg != nullptr)
 #endif
