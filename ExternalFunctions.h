@@ -61,11 +61,12 @@
 #include "Environment.h"
 #include "Evaluation.h"
 #include "Expression.h"
+#include "Hashable.h"
 //#include "Symbol.h"
 //#include "UserData.h"
 
 namespace maya {
-    class ExternalFunction : public HoldsEnvironmentCallback {
+    class ExternalFunction : public HoldsEnvironmentCallback, public Hashable {
     public:
         using Self = ExternalFunction;
         using Ptr = std::shared_ptr<Self>;
@@ -83,11 +84,12 @@ namespace maya {
         [[nodiscard]] constexpr auto sequenceUseOk() const noexcept { return _sequenceUseOk; }
         void setSequenceUseOk(bool value = true) noexcept { _sequenceUseOk = value; }
         [[nodiscard]] constexpr auto overloadable() const noexcept { return _overloadable; }
-        void setOverloadable(bool value = true) noexcept { _overloadable = value; }
         [[nodiscard]] bool hasCustomParser() const noexcept { return (bool)_parser; }
+        void setCustomParser(Parser parser) noexcept;
         [[nodiscard]] bool hasBody() const noexcept { return (bool)_function; }
         [[nodiscard]] constexpr auto getMinArgs() const noexcept { return _minArgs; }
         [[nodiscard]] constexpr auto getMaxArgs() const noexcept { return _maxArgs; }
+        size_t hash(size_t limit) override;
     private:
         Lexeme::Ptr _callFunctionName;
         unsigned int _returnType;
@@ -96,35 +98,22 @@ namespace maya {
         Lexeme::Ptr _restrictions;
         unsigned short _minArgs = 0;
         unsigned short _maxArgs = 0;
-        bool _overloadable = false;
-        bool _sequenceUseOk = false;
+        bool _overloadable = true;
+        bool _sequenceUseOk = true; // is the use of the sequence operator ($) allowed?
         bool _neededFunction = false;
 #if 0
         unsigned long bsaveIndex = 0;
+        std::shared_ptr<struct userData> userData; // not sure what this is for to be honest
 #endif
+    };
 
-
-
+    class ExternalFunctionModule : public EnvironmentModule {
+    public:
+        static void install(Environment& parent);
+    public:
+        ExternalFunctionModule(Environment& parent) : EnvironmentModule(parent) { }
 
     };
-#if 0
-    struct FunctionDefinition {
-            CLIPSLexeme *callFunctionName;
-            unsigned unknownReturnValueType;
-            UserDefinedFunction *functionPointer;
-            UserDefinedFunctionParser *parser;
-            CLIPSLexeme *restrictions;
-            unsigned short minArgs;
-            unsigned short maxArgs;
-            bool overloadable;
-            bool sequenceuseok;
-            bool neededFunction;
-            unsigned long bsaveIndex;
-            FunctionDefinition *next;
-            struct userData *usrData;
-            void *context;
-        };
-#endif
 #if STUBBING_INACTIVE
     #define UnknownFunctionType(target) (((FunctionDefinition *) target)->unknownReturnValueType)
 #define ExpressionFunctionPointer(target) ((target)->functionValue->functionPointer)
@@ -171,8 +160,6 @@ namespace maya {
         FunctionDefinition *FindFunction(const Environment::Ptr&, const char *);
         unsigned GetNthRestriction(const Environment::Ptr&, FunctionDefinition *, unsigned int);
         bool RemoveUDF(const Environment::Ptr&, const char *);
-        int GetMinimumArgs(FunctionDefinition *);
-        int GetMaximumArgs(FunctionDefinition *);
         unsigned int UDFArgumentCount(UDFContext *);
         bool UDFNthArgument(UDFContext *, unsigned int, unsigned, UDFValue *);
         void UDFInvalidArgumentMessage(UDFContext *, const char *);

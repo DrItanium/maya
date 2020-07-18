@@ -166,6 +166,13 @@ inline decltype(auto) declAccessorPrefix ## Data(Environment& theEnv) { \
         Lexeme::Ptr getVoidConstant() const noexcept;
         Lexeme::Ptr getTrueSymbol() const noexcept;
         Lexeme::Ptr getFalseSymbol() const noexcept;
+        Lexeme::Ptr create(const std::string& text, TreatAsSymbol);
+        Lexeme::Ptr create(const std::string& text, TreatAsString);
+        Lexeme::Ptr create(const std::string& text, TreatAsInstanceName);
+        Lexeme::Ptr create(const std::string& text, unsigned short type);
+        inline Lexeme::Ptr createSymbol(const std::string& text) { return create(text, TreatAsSymbol{}); }
+        inline Lexeme::Ptr createString(const std::string& text) { return create(text, TreatAsString{}); }
+        inline Lexeme::Ptr createInstanceName(const std::string& text) { return create(text, TreatAsInstanceName{}); }
     };
 } // end namespace maya
 

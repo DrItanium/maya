@@ -55,6 +55,47 @@
 
 #include "Setup.h"
 #include "ExternalFunctions.h"
+
+namespace maya {
+   bool
+   ExternalFunction::evaluate(UDFContext &context, UDFValue::Ptr returnValue) {
+       if (_function) {
+           _function(_parent, context, returnValue);
+           return true;
+       }
+       return false;
+   }
+   Expression::Ptr
+   ExternalFunction::parse(Expression::Ptr expression, const std::string & str) {
+        if (_parser) {
+            return _parser(_parent, expression, str);
+        } else {
+            return nullptr;
+        }
+   }
+   size_t
+   ExternalFunction::hash(size_t range) {
+       return _callFunctionName->hash(range);
+   }
+    ExternalFunction::ExternalFunction(Environment &env,
+            const std::string &name,
+            unsigned int retType,
+            Body function,
+            Parser parser,
+            const std::string &restrictions,
+            unsigned short minArgs,
+            unsigned short maxArgs) :
+            HoldsEnvironmentCallback(env),
+            _callFunctionName(env.createSymbol(name)), _returnType(retType), _function(function),
+            _parser(parser), _restrictions(env.createString(restrictions)),
+            _minArgs(minArgs), _maxArgs(maxArgs), _overloadable(!parser.operator bool()) { }
+    void
+    ExternalFunction::setCustomParser(Parser parser) noexcept {
+       _parser = parser;
+       // if we now have a parser then disable overloadability
+       _overloadable = !_parser.operator bool();
+   }
+} // end namespace maya
 #if STUBBING_INACTIVE
 #include <ctype.h>
 #include <cstdlib>
@@ -273,54 +314,6 @@ static bool RemoveHashFunction(
 }
 
 
-/***************************************************************************/
-/* AddFunctionParser: Associates a specialized expression parsing function */
-/*   with the function entry for a function which was defined using        */
-/*   DefineFunction. When this function is parsed, the specialized parsing */
-/*   function will be called to parse the arguments of the function. Only  */
-/*   user and system defined functions can have specialized parsing        */
-/*   routines. Generic functions and deffunctions can not have specialized */
-/*   parsing routines.                                                     */
-/***************************************************************************/
-bool AddFunctionParser(
-        const Environment::Ptr&theEnv,
-        const char *functionName,
-        Expression *(*fpPtr)(const Environment::Ptr&, Expression *, const char *)) {
-    FunctionDefinition *fdPtr;
-
-    fdPtr = FindFunction(theEnv, functionName);
-    if (fdPtr == nullptr) {
-        WriteString(theEnv, STDERR, "Function parsers can only be added for existing functions.\n");
-        return false;
-    }
-
-    fdPtr->parser = fpPtr;
-    fdPtr->overloadable = false;
-
-    return true;
-}
-
-
-/*********************************************************************/
-/* RemoveFunctionParser: Removes a specialized expression parsing    */
-/*   function (if it exists) from the function entry for a function. */
-/*********************************************************************/
-bool RemoveFunctionParser(
-        const Environment::Ptr&theEnv,
-        const char *functionName) {
-    FunctionDefinition *fdPtr;
-
-    fdPtr = FindFunction(theEnv, functionName);
-    if (fdPtr == nullptr) {
-        WriteString(theEnv, STDERR, "Function parsers can only be removed from existing functions.\n");
-        return false;
-    }
-
-    fdPtr->parser = nullptr;
-
-    return true;
-}
-
 /*****************************************************************/
 /* FuncSeqOvlFlags: Makes a system function overloadable or not, */
 /* i.e. can the function be a method for a generic function.     */
@@ -494,23 +487,6 @@ static void AddHashFunction(
 #endif
 }
 
-/*************************************************/
-/* GetMinimumArgs: Returns the minimum number of */
-/*   arguments expected by an external function. */
-/*************************************************/
-int GetMinimumArgs(
-        FunctionDefinition *theFunction) {
-    return theFunction->minArgs;
-}
-
-/*************************************************/
-/* GetMaximumArgs: Returns the maximum number of */
-/*   arguments expected by an external function. */
-/*************************************************/
-int GetMaximumArgs(
-        FunctionDefinition *theFunction) {
-    return theFunction->maxArgs;
-}
 #if STUBBING_INACTIVE
 /********************/
 /* AssignErrorValue */
