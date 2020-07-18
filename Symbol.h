@@ -82,15 +82,10 @@
 
 #define _H_symbol
 
-#include <cstdlib>
-#include <cstdio>
-#include <vector>
-#include <array>
-#include <string>
-#include <list>
-
+#include <memory>
 #include "Entities.hxx"
 
+namespace maya {
 
 #ifndef SYMBOL_HASH_SIZE
 #define SYMBOL_HASH_SIZE       63559L
@@ -111,18 +106,18 @@
 #ifndef EXTERNAL_ADDRESS_HASH_SIZE
 #define EXTERNAL_ADDRESS_HASH_SIZE        8191
 #endif
-
+#if STUBBING_INACTIVE
 /******************************/
 /* genericHashNode STRUCTURE: */
 /******************************/
-struct genericHashNode : public ReferenceCounted {
-public:
-    using Self = genericHashNode;
-    using Ptr = std::shared_ptr<Self>;
-public:
-    TypeHeader header;
-    Ptr next;
-};
+    struct genericHashNode : public ReferenceCounted {
+    public:
+        using Self = genericHashNode;
+        using Ptr = std::shared_ptr<Self>;
+    public:
+        TypeHeader header;
+        Ptr next;
+    };
 
 /**********************************************************/
 /* EPHEMERON STRUCTURE: Data structure used to keep track */
@@ -135,27 +130,30 @@ public:
 /*   next: Contains a pointer to the next ephemeral item  */
 /*   in a list of ephemeral items.                        */
 /**********************************************************/
-struct ephemeron {
-public:
-    using Self = ephemeron;
-    using Ptr = std::shared_ptr<Self>;
-public:
-    genericHashNode::Ptr associatedValue;
-    Ptr next;
-};
-
+    struct ephemeron {
+    public:
+        using Self = ephemeron;
+        using Ptr = std::shared_ptr<Self>;
+    public:
+        genericHashNode::Ptr associatedValue;
+        Ptr next;
+    };
+#endif
 /***************/
 /* symbolMatch */
 /***************/
-struct symbolMatch {
+struct SymbolMatch {
 public:
-    using Self = symbolMatch;
+    using Self = SymbolMatch;
     using Ptr = std::shared_ptr<Self>;
 public:
-    CLIPSLexeme::Ptr match;
-    Ptr next;
+    SymbolMatch(Lexeme::Ptr match) : _match(match) { }
+    Lexeme::Ptr getMatch() const noexcept { return _match; }
+private:
+    Lexeme::Ptr _match;
 };
-//#define IncrementLexemeCount(theValue) (((CLIPSLexeme *) theValue)->count++)
+#if STUBBING_INACTIVE
+    //#define IncrementLexemeCount(theValue) (((CLIPSLexeme *) theValue)->count++)
 //#define IncrementFloatCount(theValue) (((Float *) theValue)->count++)
 //#define IncrementIntegerCount(theValue) (((Integer *) theValue)->count++)
 //#define IncrementBitMapCount(theValue) (((BitMap *) theValue)->count++)
@@ -264,6 +262,8 @@ void WriteNeededIntegers(const Environment::Ptr&, FILE *);
 void ReadNeededSymbols(const Environment::Ptr&);
 void ReadNeededFloats(const Environment::Ptr&);
 void ReadNeededIntegers(const Environment::Ptr&);
+#endif
+}
 #endif /* _H_symbol */
 
 

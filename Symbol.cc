@@ -70,25 +70,22 @@
 /*                                                           */
 /*************************************************************/
 
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-
 #include "Setup.h"
 
-#include "ArgumentAccess.h"
-#include "Constants.h"
+//#include "ArgumentAccess.h"
+//#include "Constants.h"
 #include "Environment.h"
-#include "MemoryAllocation.h"
-#include "Multifield.h"
-#include "PrintUtility.h"
-#include "Router.h"
-#include "SystemDependency.h"
-#include "Utility.h"
+//#include "MemoryAllocation.h"
+//#include "Multifield.h"
+//#include "PrintUtility.h"
+//#include "Router.h"
+//#include "SystemDependency.h"
+//#include "Utility.h"
 
 #include "Symbol.h"
 #include "ReferenceCounted.h"
 
+#if STUBBING_INACTIVE
 /***************/
 /* DEFINITIONS */
 /***************/
@@ -105,7 +102,6 @@ constexpr auto NUMBER_OF_LONGS_FOR_HASH = 25;
 /***************************************/
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
-
 static void RemoveHashNode(const Environment::Ptr&, genericHashNode::Ptr *, genericHashNode::Ptr **, int, int);
 static void AddEphemeralHashNode(const Environment::Ptr&, genericHashNode::Ptr *, struct ephemeron **,
                                  int, int, bool);
@@ -1704,4 +1700,5 @@ void RestoreAtomicValueBuckets(
 }
 
 #endif /* BLOAD_AND_BSAVE || BSAVE_INSTANCES */
+#endif
 #endif
