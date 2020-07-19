@@ -139,4 +139,6 @@ namespace maya {
     PatternEntity::synchronized() {
         return true;
     }
+    Void::Void(Environment &parent) : Atom(parent, VOID_TYPE) {
+    }
 } // end namespace maya

@@ -126,9 +126,9 @@ inline decltype(auto) declAccessorPrefix ## Data(Environment& theEnv) { \
         }
     public:
         template<typename T>
-        const std::unique_ptr<T>& getEnvironmentModule() {
+        const std::unique_ptr<T>& getEnvironmentModule() const {
             if (_modules.find(typeid(T)) != _modules.end()) {
-                return (std::unique_ptr<T>&)_modules[typeid(T)];
+                return (std::unique_ptr<T>&)_modules.at(typeid(T));
             } else {
                 std::stringstream ss;
                 ss << "Unallocated environment module of type " << typeid(T).name() << " requested!";
@@ -166,13 +166,14 @@ inline decltype(auto) declAccessorPrefix ## Data(Environment& theEnv) { \
         Lexeme::Ptr getVoidConstant() const noexcept;
         Lexeme::Ptr getTrueSymbol() const noexcept;
         Lexeme::Ptr getFalseSymbol() const noexcept;
-        Lexeme::Ptr create(const std::string& text, TreatAsSymbol);
-        Lexeme::Ptr create(const std::string& text, TreatAsString);
-        Lexeme::Ptr create(const std::string& text, TreatAsInstanceName);
-        Lexeme::Ptr create(const std::string& text, unsigned short type);
-        inline Lexeme::Ptr createSymbol(const std::string& text) { return create(text, TreatAsSymbol{}); }
-        inline Lexeme::Ptr createString(const std::string& text) { return create(text, TreatAsString{}); }
-        inline Lexeme::Ptr createInstanceName(const std::string& text) { return create(text, TreatAsInstanceName{}); }
+        Lexeme::Ptr createLexeme(const std::string& text, TreatAsSymbol);
+        Lexeme::Ptr createLexeme(const std::string& text, TreatAsString);
+        Lexeme::Ptr createLexeme(const std::string& text, TreatAsInstanceName);
+        Lexeme::Ptr createLexeme(const std::string& text, unsigned short type);
+        inline Lexeme::Ptr createSymbol(const std::string& text) { return createLexeme(text, TreatAsSymbol{}); }
+        inline Lexeme::Ptr createString(const std::string& text) { return createLexeme(text, TreatAsString{}); }
+        inline Lexeme::Ptr createInstanceName(const std::string& text) { return createLexeme(text, TreatAsInstanceName{}); }
+        Lexeme::Ptr createBoolean(bool value) noexcept;
     };
 } // end namespace maya
 

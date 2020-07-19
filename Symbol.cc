@@ -90,6 +90,13 @@ namespace maya {
         env.allocateEnvironmentModule<SymbolModule>();
     }
     SymbolModule::SymbolModule(Environment &parent) : EnvironmentModule(parent) {
+        // the retain and release mechanisms are actually built into shared_ptr. We cannot
+        // use the unique method because it is deprecated in C++20 but use_count can be exact
+        // if it isn't in a multhreaded environment. An environment can be run in a thread but spreading
+        // execution across multiple threads will require a different tracking mechanism.
+
+        // This also means the retain and release mechanisms can be dropped out because we are exchanging
+        // std::shared_ptr's everywhere. The use_count becomes the retain/release mechanism
         _voidConstant = std::make_shared<Void>(parent);
         _trueSymbol = createBoolean(true);
         _falseSymbol = createBoolean(false);
@@ -97,16 +104,26 @@ namespace maya {
         _negativeInfinity = createSymbol(NegativeInfinityString);
         _zero = createInteger(0);
     }
+    Lexeme::Ptr
+    Environment::getTrueSymbol() const noexcept {
+        return getEnvironmentModule<SymbolModule>()->getTrueSymbol();
+    }
+
+    Lexeme::Ptr
+    Environment::getFalseSymbol() const noexcept {
+        return getEnvironmentModule<SymbolModule>()->getFalseSymbol();
+    }
+
+    Lexeme::Ptr
+    Environment::createBoolean(bool value) noexcept {
+        return value ? getTrueSymbol() : getFalseSymbol();
+    }
+
 }
 #if STUBBING_INACTIVE
 /***************/
 /* DEFINITIONS */
 /***************/
-
-#define FALSE_STRING "FALSE"
-#define TRUE_STRING  "TRUE"
-#define POSITIVE_INFINITY_STRING "+oo"
-#define NEGATIVE_INFINITY_STRING "-oo"
 
 constexpr auto AVERAGE_STRING_SIZE = 10;
 constexpr auto AVERAGE_BITMAP_SIZE = sizeof(long);
@@ -125,131 +142,7 @@ static const char *StringWithinString(const char *, const char *);
 static size_t CommonPrefixLength(const char *, const char *);
 static void DeallocateSymbolData(const Environment::Ptr&);
 
-/*************************************************/
-/* DeallocateSymbolData: Deallocates environment */
-/*    data for symbols.                          */
-/*************************************************/
-static void DeallocateSymbolData(
-        const Environment::Ptr&theEnv) {
-    CLIPSLexeme *shPtr, *nextSHPtr;
-    CLIPSInteger *ihPtr, *nextIHPtr;
-    CLIPSFloat *fhPtr, *nextFHPtr;
-    CLIPSBitMap *bmhPtr, *nextBMHPtr;
-    CLIPSExternalAddress *eahPtr, *nextEAHPtr;
-    if ((SymbolData(theEnv)->SymbolTable == nullptr) ||
-        (SymbolData(theEnv)->FloatTable == nullptr) ||
-        (SymbolData(theEnv)->IntegerTable == nullptr) ||
-        (SymbolData(theEnv)->BitMapTable == nullptr) ||
-        (SymbolData(theEnv)->ExternalAddressTable == nullptr)) { return; }
 
-    genfree(theEnv, theEnv->VoidConstant, sizeof(TypeHeader));
-
-    for (int i = 0; i < SYMBOL_HASH_SIZE; i++) {
-        shPtr = SymbolData(theEnv)->SymbolTable[i];
-
-        while (shPtr != nullptr) {
-            nextSHPtr = shPtr->next;
-            if (!shPtr->permanent) {
-                rm(theEnv, (void *) shPtr->contents, strlen(shPtr->contents) + 1);
-                rtn_struct(theEnv, CLIPSLexeme, shPtr);
-            }
-            shPtr = nextSHPtr;
-        }
-    }
-
-    for (int i = 0; i < FLOAT_HASH_SIZE; i++) {
-        fhPtr = SymbolData(theEnv)->FloatTable[i];
-
-        while (fhPtr != nullptr) {
-            nextFHPtr = fhPtr->next;
-            if (!fhPtr->permanent) { rtn_struct(theEnv, CLIPSFloat, fhPtr); }
-            fhPtr = nextFHPtr;
-        }
-    }
-
-    for (int i = 0; i < INTEGER_HASH_SIZE; i++) {
-        ihPtr = SymbolData(theEnv)->IntegerTable[i];
-
-        while (ihPtr != nullptr) {
-            nextIHPtr = ihPtr->next;
-            if (!ihPtr->permanent) { rtn_struct(theEnv, CLIPSInteger, ihPtr); }
-            ihPtr = nextIHPtr;
-        }
-    }
-
-    for (int i = 0; i < BITMAP_HASH_SIZE; i++) {
-        bmhPtr = SymbolData(theEnv)->BitMapTable[i];
-
-        while (bmhPtr != nullptr) {
-            nextBMHPtr = bmhPtr->next;
-            if (!bmhPtr->permanent) {
-                rm(theEnv, (void *) bmhPtr->contents, bmhPtr->size);
-                rtn_struct(theEnv, CLIPSBitMap, bmhPtr);
-            }
-            bmhPtr = nextBMHPtr;
-        }
-    }
-
-    for (int i = 0; i < EXTERNAL_ADDRESS_HASH_SIZE; i++) {
-        eahPtr = SymbolData(theEnv)->ExternalAddressTable[i];
-
-        while (eahPtr != nullptr) {
-            nextEAHPtr = eahPtr->next;
-            if (!eahPtr->permanent) {
-                rtn_struct(theEnv, CLIPSExternalAddress, eahPtr);
-            }
-            eahPtr = nextEAHPtr;
-        }
-    }
-
-    /*================================*/
-    /* Remove the symbol hash tables. */
-    /*================================*/
-
-    rm(theEnv, SymbolData(theEnv)->SymbolTable, sizeof(CLIPSLexeme *) * SYMBOL_HASH_SIZE);
-
-    genfree(theEnv, SymbolData(theEnv)->FloatTable, sizeof(CLIPSFloat *) * FLOAT_HASH_SIZE);
-
-    genfree(theEnv, SymbolData(theEnv)->IntegerTable, sizeof(CLIPSInteger *) * INTEGER_HASH_SIZE);
-
-    genfree(theEnv, SymbolData(theEnv)->BitMapTable, sizeof(CLIPSBitMap *) * BITMAP_HASH_SIZE);
-
-    genfree(theEnv, SymbolData(theEnv)->ExternalAddressTable, sizeof(CLIPSExternalAddress *) * EXTERNAL_ADDRESS_HASH_SIZE);
-
-    /*==============================*/
-    /* Remove binary symbol tables. */
-    /*==============================*/
-
-#if BSAVE_INSTANCES
-    if (SymbolData(theEnv)->SymbolArray != nullptr)
-        rm(theEnv, SymbolData(theEnv)->SymbolArray, sizeof(CLIPSLexeme *) * SymbolData(theEnv)->NumberOfSymbols);
-    if (SymbolData(theEnv)->FloatArray != nullptr)
-        rm(theEnv, SymbolData(theEnv)->FloatArray, sizeof(CLIPSFloat *) * SymbolData(theEnv)->NumberOfFloats);
-    if (SymbolData(theEnv)->IntegerArray != nullptr)
-        rm(theEnv, SymbolData(theEnv)->IntegerArray, sizeof(CLIPSInteger *) * SymbolData(theEnv)->NumberOfIntegers);
-    if (SymbolData(theEnv)->BitMapArray != nullptr)
-        rm(theEnv, SymbolData(theEnv)->BitMapArray, sizeof(CLIPSBitMap *) * SymbolData(theEnv)->NumberOfBitMaps);
-#endif
-}
-
-/*****************/
-/* CreateBoolean */
-/*****************/
-CLIPSLexeme::Ptr CreateBoolean(
-        const Environment::Ptr&theEnv,
-        bool value) {
-    if (value) { return TrueSymbol(theEnv); }
-    else { return FalseSymbol(theEnv); }
-}
-
-/****************/
-/* CreateSymbol */
-/****************/
-CLIPSLexeme::Ptr CreateSymbol(
-        const Environment::Ptr&theEnv,
-        const char *str) {
-    return AddSymbol(theEnv, str, SYMBOL_TYPE);
-}
 
 /****************/
 /* CreateString */

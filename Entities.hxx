@@ -80,7 +80,7 @@ namespace maya {
         using Self = Void;
         using Ptr = std::shared_ptr<Self>;
     public:
-        Void(Environment& parent) : Atom(parent, VOID_TYPE) {}
+        Void(Environment& parent);
         ~Void() override = default;
         size_t hash(size_t) override { return 0; }
         void retain() override { }

@@ -75,7 +75,8 @@ namespace maya {
         /// @todo bitmap support
         //BitMap::Ptr create();
         ExternalAddress::Ptr createExternalAddress(std::any contents, unsigned short kind);
-
+        Lexeme::Ptr getTrueSymbol() const noexcept { return _trueSymbol; }
+        Lexeme::Ptr getFalseSymbol() const noexcept { return _falseSymbol; }
     private:
         DataTable<Lexeme> _symbolTable;
         DataTable<Float> _floatTable;
@@ -101,7 +102,6 @@ namespace maya {
 /* ENVIRONMENT DATA */
 /*==================*/
 
-constexpr auto SYMBOL_DATA = 49;
 template<typename T, size_t capacity>
 using PointerTable = std::array<std::list<typename T::Ptr>, capacity>;
 struct symbolData : public EnvironmentModule {
@@ -132,16 +132,13 @@ struct symbolData : public EnvironmentModule {
     CLIPSInteger::Ptr createInteger(long long value);
     CLIPSFloat::Ptr createFloat(double value);
 };
-RegisterEnvironmentModule(symbolData, SYMBOL_DATA, Symbol);
 
-void InitializeAtomTables(const Environment::Ptr&);
 CLIPSLexeme::Ptr AddSymbol(const Environment::Ptr& theEnv, const std::string &contents, unsigned short type);
 CLIPSLexeme *FindSymbolHN(const Environment::Ptr&, const char *, unsigned short);
 CLIPSFloat::Ptr CreateFloat(const Environment::Ptr& theEnv, double value);
 CLIPSInteger::Ptr CreateInteger(const Environment::Ptr& theEnv, long long value);
 void *AddBitMap(const Environment::Ptr&, void *, unsigned short);
 CLIPSExternalAddress::Ptr CreateExternalAddress(const Environment::Ptr& theEnv, void * ctx, unsigned short kind);
-CLIPSExternalAddress::Ptr CreateCExternalAddress(const Environment::Ptr& theEnv, void * ctx);
 CLIPSInteger::Ptr FindLongHN(const Environment::Ptr& theEnv, long long value);
 void IncrementBitMapReferenceCount(const Environment::Ptr&, CLIPSBitMap *);
 void DecrementBitMapReferenceCount(const Environment::Ptr&, CLIPSBitMap *);
