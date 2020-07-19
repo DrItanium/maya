@@ -119,6 +119,32 @@ namespace maya {
         return value ? getTrueSymbol() : getFalseSymbol();
     }
 
+    Lexeme::Ptr
+    SymbolModule::createLexeme(const std::string &str, unsigned short type) {
+        auto newLexeme = std::make_shared<Lexeme>(this->getParent(), str, type);
+        auto hashCode = newLexeme->hash(SYMBOL_HASH_SIZE);
+        /// see if the target symbol is in the table by finding the target hash entry
+        auto range = _symbolTable.equal_range(hashCode);
+        for (auto iter = range.first; iter != range.second; ++iter) {
+            if (auto peek = iter->second; (peek->getType() == type) && (str == peek->getContents())) {
+                return peek;
+            }
+        }
+
+        // we did not find the symbol so instead, add it to the list
+        // configure the rest of the design as well
+        newLexeme->setBucket(hashCode);
+        newLexeme->setIsPermanent(false);
+        _symbolTable.emplace(hashCode, newLexeme);
+        // in the CLIPS original code there is an addition to the list of ephemeral nodes.
+        // This list of nodes is used to do garbage collection as we go through. I believe that
+        // this is not necessary due to the fact that the shared_ptr keeps track of data destruction.
+        // If we have a use_count of 1 then we destroy the target entry
+        //
+        // Anyway, return the newLexeme
+        return newLexeme;
+    }
+
 }
 #if STUBBING_INACTIVE
 /***************/
@@ -129,39 +155,6 @@ constexpr auto AVERAGE_STRING_SIZE = 10;
 constexpr auto AVERAGE_BITMAP_SIZE = sizeof(long);
 constexpr auto NUMBER_OF_LONGS_FOR_HASH = 25;
 
-/***************************************/
-/* LOCAL INTERNAL FUNCTION DEFINITIONS */
-/***************************************/
-static void RemoveHashNode(const Environment::Ptr&, genericHashNode::Ptr *, genericHashNode::Ptr **, int, int);
-static void AddEphemeralHashNode(const Environment::Ptr&, genericHashNode::Ptr *, struct ephemeron **,
-                                 int, int, bool);
-static void RemoveEphemeralHashNodes(const Environment::Ptr&, struct ephemeron **,
-                                     genericHashNode::Ptr **,
-                                     int, int, int);
-static const char *StringWithinString(const char *, const char *);
-static size_t CommonPrefixLength(const char *, const char *);
-static void DeallocateSymbolData(const Environment::Ptr&);
-
-
-
-/****************/
-/* CreateString */
-/****************/
-CLIPSLexeme::Ptr CreateString(
-        const Environment::Ptr&theEnv,
-        const char *str) {
-    return AddSymbol(theEnv, str, STRING_TYPE);
-}
-
-/**********************/
-/* CreateInstanceName */
-/**********************/
-CLIPSLexeme::Ptr CreateInstanceName(
-        const Environment::Ptr&theEnv,
-        const char *str) {
-    return AddSymbol(theEnv, str, INSTANCE_NAME_TYPE);
-}
-
 /********************************************************************/
 /* AddSymbol: Searches for the string in the symbol table. If the   */
 /*   string is already in the symbol table, then the address of the */
@@ -169,21 +162,8 @@ CLIPSLexeme::Ptr CreateInstanceName(
 /*   the string is added to the symbol table and then the address   */
 /*   of the string's location in the symbol table is returned.      */
 /********************************************************************/
-CLIPSLexeme::Ptr AddSymbol(
-        const Environment::Ptr&theEnv,
-        const std::string &contents,
-        unsigned short type) {
-
-    /*====================================*/
-    /* Get the hash value for the string. */
-    /*====================================*/
-//    if (!contents) {
-//        SystemError(theEnv, "SYMBOL", 1);
-//        ExitRouter(theEnv, EXIT_FAILURE);
-//    }
-
+CLIPSLexeme::Ptr AddSymbol(const Environment::Ptr&theEnv, const std::string &contents, unsigned short type) {
     auto tally = HashSymbol(contents, SYMBOL_HASH_SIZE);
-
     /*==================================================*/
     /* Search for the string in the list of entries for */
     /* this symbol table location.  If the string is    */
@@ -195,15 +175,12 @@ CLIPSLexeme::Ptr AddSymbol(
             return peek;
         }
     }
-
     /*==================================================*/
     /* Add the string at the end of the list of entries */
     /* for this symbol table location.                  */
     /*==================================================*/
-
     auto newEntry = getStruct<CLIPSLexeme>(theEnv, type);
     SymbolData(theEnv)->SymbolTable[tally].emplace_back(newEntry);
-
 #if 0
     auto length = strlen(contents) + 1;
     buffer = (char *) gm2(theEnv, length);
