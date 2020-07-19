@@ -117,6 +117,25 @@
 #include "developr.h"
 #endif
 #endif
+#ifndef SYMBOL_HASH_SIZE
+#define SYMBOL_HASH_SIZE       63559L
+#endif
+
+#ifndef FLOAT_HASH_SIZE
+#define FLOAT_HASH_SIZE         8191
+#endif
+
+#ifndef INTEGER_HASH_SIZE
+#define INTEGER_HASH_SIZE       8191
+#endif
+
+#ifndef BITMAP_HASH_SIZE
+#define BITMAP_HASH_SIZE        8191
+#endif
+
+#ifndef EXTERNAL_ADDRESS_HASH_SIZE
+#define EXTERNAL_ADDRESS_HASH_SIZE        8191
+#endif
 namespace maya {
 
     void
@@ -133,7 +152,13 @@ namespace maya {
     Environment::create() {
         return std::make_shared<Environment>();
     }
-    Environment::Environment() {
+    Environment::Environment() : _voidConstant(std::make_shared<Void>(*this)){
+        _positiveInfinity = createSymbol(PositiveInfinityString);
+        _negativeInfinity = createSymbol(NegativeInfinityString);
+        _zero = createInteger(0);
+        _trueSymbol = createSymbol(TrueString);
+        _falseSymbol = createSymbol(FalseString);
+        // setup the initial symbols
         /// @todo fix this code
         /*===================================================*/
         /* Initialize environment data for various features. */
@@ -321,4 +346,70 @@ namespace maya {
     Environment::install(std::function<void(Environment &)> body) {
         body(*this);
     }
+
+
+    Lexeme::Ptr
+    Environment::createLexeme(const std::string &str, unsigned short type) {
+        auto newLexeme = std::make_shared<Lexeme>(*this, str, type);
+        auto hashCode = newLexeme->hash(SYMBOL_HASH_SIZE);
+        /// see if the target symbol is in the table by finding the target hash entry
+        auto range = _symbolTable.equal_range(hashCode);
+        for (auto iter = range.first; iter != range.second; ++iter) {
+            if (auto peek = iter->second; (peek->getType() == type) && (str == peek->getContents())) {
+                return peek;
+            }
+        }
+
+        // we did not find the symbol so instead, add it to the list
+        // configure the rest of the design as well
+        newLexeme->setBucket(hashCode);
+        newLexeme->setIsPermanent(false);
+        _symbolTable.emplace(hashCode, newLexeme);
+        // in the CLIPS original code there is an addition to the list of ephemeral nodes.
+        // This list of nodes is used to do garbage collection as we go through. I believe that
+        // this is not necessary due to the fact that the shared_ptr keeps track of data destruction.
+        // If we have a use_count of 1 then we destroy the target entry
+        //
+        // Anyway, return the newLexeme
+        return newLexeme;
+    }
+    Float::Ptr
+    Environment::createFloat(Float::BackingType value) {
+        Float::Ptr newFloat = std::make_shared<Float>(*this, value) ;
+        auto hash = newFloat->hash(FLOAT_HASH_SIZE);
+        auto range = _floatTable.equal_range(hash);
+        for(auto iter = range.first; iter != range.second; ++iter) {
+            if (auto peek = iter->second; peek->getContents() == value) {
+                return peek;
+            }
+        }
+        newFloat->setBucket(hash);
+        newFloat->setIsPermanent(false);
+        /// @todo ephemeral hash garbage frame code was here, add it back in if it makes sense
+        _floatTable.emplace(hash, newFloat);
+        return newFloat;
+    }
+    Integer::Ptr
+    Environment::createInteger(Integer::BackingType value) {
+        Integer::Ptr newInteger = std::make_shared<Integer>(*this, value);
+        auto hash = newInteger->hash(INTEGER_HASH_SIZE);
+        auto range = _integerTable.equal_range(hash);
+        for (auto iter = range.first; iter != range.second; ++iter) {
+            if (auto peek = iter->second; peek->getContents() == value) {
+                return peek;
+            }
+        }
+        // not in the list
+        newInteger->setBucket(hash);
+        newInteger->setIsPermanent(false);
+        // ephemeral hash node support was here
+        _integerTable.emplace(hash, newInteger);
+        return newInteger;
+    }
+
+    Lexeme::Ptr
+    Environment::createBoolean(bool value) noexcept {
+        return value ? _trueSymbol : _falseSymbol;
+    }
+
 }

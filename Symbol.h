@@ -12,35 +12,6 @@
 
 namespace maya {
 
-#ifndef SYMBOL_HASH_SIZE
-#define SYMBOL_HASH_SIZE       63559L
-#endif
-
-#ifndef FLOAT_HASH_SIZE
-#define FLOAT_HASH_SIZE         8191
-#endif
-
-#ifndef INTEGER_HASH_SIZE
-#define INTEGER_HASH_SIZE       8191
-#endif
-
-#ifndef BITMAP_HASH_SIZE
-#define BITMAP_HASH_SIZE        8191
-#endif
-
-#ifndef EXTERNAL_ADDRESS_HASH_SIZE
-#define EXTERNAL_ADDRESS_HASH_SIZE        8191
-#endif
-    class Ephemeron {
-    public:
-        using Self = Ephemeron;
-        using Ptr = std::shared_ptr<Self>;
-    public:
-        Ephemeron(EphemeralAtom::Ptr target) : _target(target) { }
-        EphemeralAtom::Ptr getAssociatedValue() const noexcept { return _target; }
-    private:
-        EphemeralAtom::Ptr _target;
-    };
     class SymbolMatch {
     public:
         using Self = SymbolMatch;
@@ -50,46 +21,6 @@ namespace maya {
         Lexeme::Ptr getMatch() const noexcept { return _match; }
     private:
         Lexeme::Ptr _match;
-    };
-    class SymbolModule : public EnvironmentModule {
-    public:
-        template<typename T>
-        using DataTable = std::multimap<size_t, typename T::Ptr>;
-        static void install(Environment& env);
-        static inline const std::string TrueString{"TRUE"};
-        static inline const std::string FalseString{"FALSE"};
-        static inline const std::string PositiveInfinityString{"+oo"};
-        static inline const std::string NegativeInfinityString{"-oo"};
-    public:
-        SymbolModule(Environment& parent);
-        Lexeme::Ptr createLexeme(const std::string& str, unsigned short type);
-        inline Lexeme::Ptr createLexeme(const std::string& str, TreatAsString) { return createLexeme(str, STRING_TYPE); }
-        inline Lexeme::Ptr createLexeme(const std::string& str, TreatAsSymbol) { return createLexeme(str, SYMBOL_TYPE); }
-        inline Lexeme::Ptr createLexeme(const std::string& str, TreatAsInstanceName) { return createLexeme(str, INSTANCE_NAME_TYPE); }
-        inline Lexeme::Ptr createString(const std::string& str) { return createLexeme(str, TreatAsString{}); }
-        inline Lexeme::Ptr createSymbol(const std::string& str) { return createLexeme(str, TreatAsSymbol{}); }
-        inline Lexeme::Ptr createInstanceName(const std::string& str) { return createLexeme(str, TreatAsInstanceName{}); }
-        inline Lexeme::Ptr createBoolean(bool value) { return createSymbol(value ? TrueString : FalseString); }
-        Float::Ptr createFloat(Float::BackingType value);
-        Integer::Ptr createInteger(Integer::BackingType value);
-        /// @todo bitmap and external address support
-        //BitMap::Ptr create();
-        //ExternalAddress::Ptr createExternalAddress(std::any contents, unsigned short kind);
-        Lexeme::Ptr getTrueSymbol() const noexcept { return _trueSymbol; }
-        Lexeme::Ptr getFalseSymbol() const noexcept { return _falseSymbol; }
-    private:
-        DataTable<Lexeme> _symbolTable;
-        DataTable<Float> _floatTable;
-        DataTable<Integer> _integerTable;
-        /// @todo reimplement this later
-        //DataTable<BitMap> _bitmapTable;
-        //DataTable<ExternalAddress> _externalAddressTable;
-        Lexeme::Ptr _positiveInfinity;
-        Lexeme::Ptr _negativeInfinity;
-        Integer::Ptr _zero;
-        Lexeme::Ptr _trueSymbol;
-        Lexeme::Ptr _falseSymbol;
-        Void::Ptr _voidConstant;
     };
 #if STUBBING_INACTIVE
 
