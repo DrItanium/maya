@@ -72,17 +72,18 @@ namespace maya {
         inline Lexeme::Ptr createBoolean(bool value) { return createSymbol(value ? TrueString : FalseString); }
         Float::Ptr createFloat(Float::BackingType value);
         Integer::Ptr createInteger(Integer::BackingType value);
-        /// @todo bitmap support
+        /// @todo bitmap and external address support
         //BitMap::Ptr create();
-        ExternalAddress::Ptr createExternalAddress(std::any contents, unsigned short kind);
+        //ExternalAddress::Ptr createExternalAddress(std::any contents, unsigned short kind);
         Lexeme::Ptr getTrueSymbol() const noexcept { return _trueSymbol; }
         Lexeme::Ptr getFalseSymbol() const noexcept { return _falseSymbol; }
     private:
         DataTable<Lexeme> _symbolTable;
         DataTable<Float> _floatTable;
         DataTable<Integer> _integerTable;
+        /// @todo reimplement this later
         //DataTable<BitMap> _bitmapTable;
-        DataTable<ExternalAddress> _externalAddressTable;
+        //DataTable<ExternalAddress> _externalAddressTable;
         Lexeme::Ptr _positiveInfinity;
         Lexeme::Ptr _negativeInfinity;
         Integer::Ptr _zero;

@@ -144,211 +144,108 @@ namespace maya {
         // Anyway, return the newLexeme
         return newLexeme;
     }
-
-}
-#if STUBBING_INACTIVE
-/***************/
-/* DEFINITIONS */
-/***************/
-
-constexpr auto AVERAGE_STRING_SIZE = 10;
-constexpr auto AVERAGE_BITMAP_SIZE = sizeof(long);
-constexpr auto NUMBER_OF_LONGS_FOR_HASH = 25;
-
-/********************************************************************/
-/* AddSymbol: Searches for the string in the symbol table. If the   */
-/*   string is already in the symbol table, then the address of the */
-/*   string's location in the symbol table is returned. Otherwise,  */
-/*   the string is added to the symbol table and then the address   */
-/*   of the string's location in the symbol table is returned.      */
-/********************************************************************/
-CLIPSLexeme::Ptr AddSymbol(const Environment::Ptr&theEnv, const std::string &contents, unsigned short type) {
-    auto tally = HashSymbol(contents, SYMBOL_HASH_SIZE);
-    /*==================================================*/
-    /* Search for the string in the list of entries for */
-    /* this symbol table location.  If the string is    */
-    /* found, then return the address of the string.    */
-    /*==================================================*/
-    for (auto& peek : SymbolData(theEnv)->SymbolTable[tally]) {
-        std::string str (peek->contents);
-        if (peek->getType() == type && (str == contents)) {
-            return peek;
+    Float::Ptr
+    SymbolModule::createFloat(Float::BackingType value) {
+        Float::Ptr newFloat = std::make_shared<Float>(_parent, value) ;
+        auto hash = newFloat->hash(FLOAT_HASH_SIZE);
+        auto range = _floatTable.equal_range(hash);
+        for(auto iter = range.first; iter != range.second; ++iter) {
+            if (auto peek = iter->second; peek->getContents() == value) {
+                return peek;
+            }
         }
+        newFloat->setBucket(hash);
+        newFloat->setIsPermanent(false);
+        /// @todo ephemeral hash garbage frame code was here, add it back in if it makes sense
+        _floatTable.emplace(hash, newFloat);
+        return newFloat;
     }
-    /*==================================================*/
-    /* Add the string at the end of the list of entries */
-    /* for this symbol table location.                  */
-    /*==================================================*/
-    auto newEntry = getStruct<CLIPSLexeme>(theEnv, type);
-    SymbolData(theEnv)->SymbolTable[tally].emplace_back(newEntry);
-#if 0
-    auto length = strlen(contents) + 1;
-    buffer = (char *) gm2(theEnv, length);
-    genstrcpy(buffer, contents);
-    peek->contents = buffer;
-    peek->next = nullptr;
-    peek->bucket = (unsigned int) tally;
-    peek->count = 0;
-    peek->permanent = false;
-    peek->header.type = type;
-#endif
-    newEntry->setIsPermanent(false);
-    newEntry->setBucket((unsigned int)tally);
-    newEntry->contents = contents;
-
-    /*================================================*/
-    /* Add the string to the list of ephemeral items. */
-    /*================================================*/
-#if STUBBING_INACTIVE
-    AddEphemeralHashNode(theEnv, (genericHashNode::Ptr *) peek, &UtilityData(theEnv)->CurrentGarbageFrame->ephemeralSymbolList,
-                         sizeof(CLIPSLexeme), AVERAGE_STRING_SIZE, true);
-    UtilityData(theEnv)->CurrentGarbageFrame->dirty = true;
-#endif
-    /*===================================*/
-    /* Return the address of the symbol. */
-    /*===================================*/
-
-    return newEntry;
-}
-/*****************************************************************/
-/* FindSymbolHN: Searches for the string in the symbol table and */
-/*   returns a pointer to it if found, otherwise returns nullptr.   */
-/*****************************************************************/
-CLIPSLexeme *FindSymbolHN(
-        const Environment::Ptr&theEnv,
-        const char *str,
-        unsigned short expectedType) {
-#if STUBBING_INACTIVE
-    size_t tally;
-    CLIPSLexeme *peek;
-
-    tally = HashSymbol(str, SYMBOL_HASH_SIZE);
-
-    for (peek = SymbolData(theEnv)->SymbolTable[tally];
-         peek != nullptr;
-         peek = peek->next) {
-        if (((1 << peek->header.type) & expectedType) &&
-            (strcmp(str, peek->contents) == 0)) { return peek; }
+    Integer::Ptr
+    SymbolModule::createInteger(Integer::BackingType value) {
+        Integer::Ptr newInteger = std::make_shared<Integer>(_parent, value);
+        auto hash = newInteger->hash(INTEGER_HASH_SIZE);
+        auto range = _integerTable.equal_range(hash);
+        for (auto iter = range.first; iter != range.second; ++iter) {
+            if (auto peek = iter->second; peek->getContents() == value) {
+                return peek;
+            }
+        }
+        // not in the list
+        newInteger->setBucket(hash);
+        newInteger->setIsPermanent(false);
+        // ephemeral hash node support was here
+        _integerTable.emplace(hash, newInteger);
+        return newInteger;
     }
-#endif
-
-    return nullptr;
 }
+
 #if STUBBING_INACTIVE
-/******************************************************************/
-/* CreateFloat: Searches for the double in the hash table. If the */
-/*   double is already in the hash table, then the address of the */
-/*   double is returned. Otherwise, the double is hashed into the */
-/*   table and the address of the double is also returned.        */
-/******************************************************************/
-CLIPSFloat::Ptr CreateFloat(
+/*******************************************************************/
+/* CreateExternalAddress: Searches for the external address in the */
+/*   hash table. If the external address is already in the hash    */
+/*   table, then the address of the external address is returned.  */
+/*   Otherwise, the external address is hashed into the table and  */
+/*   the address of the external address is also returned.         */
+/*******************************************************************/
+CLIPSExternalAddress::Ptr CreateExternalAddress(
         const Environment::Ptr&theEnv,
-        double value) {
+        void *ctx,
+        unsigned short kind) {
     size_t tally;
-    CLIPSFloat *past = nullptr, *peek;
+    CLIPSExternalAddress *past = nullptr, *peek;
 
     /*====================================*/
-    /* Get the hash value for the double. */
+    /* Get the hash value for the bitmap. */
     /*====================================*/
 
-    tally = HashFloat(value, FLOAT_HASH_SIZE);
-    peek = SymbolData(theEnv)->FloatTable[tally];
+    tally = HashExternalAddress(ctx, EXTERNAL_ADDRESS_HASH_SIZE);
 
-    /*==================================================*/
-    /* Search for the double in the list of entries for */
-    /* this hash location.  If the double is found,     */
-    /* then return the address of the double.           */
-    /*==================================================*/
+    peek = SymbolData(theEnv)->ExternalAddressTable[tally];
+
+    /*=============================================================*/
+    /* Search for the external address in the list of entries for  */
+    /* this hash table location.  If the external addressis found, */
+    /* then return the address of the external address.            */
+    /*=============================================================*/
 
     while (peek != nullptr) {
-        if (value == peek->contents) { return peek; }
+        if ((peek->type == kind) &&
+            (peek->contents == ctx)) { return peek; }
+
         past = peek;
         peek = peek->next;
     }
 
     /*=================================================*/
-    /* Add the float at the end of the list of entries */
-    /* for this hash location.                         */
+    /* Add the external address at the end of the list */
+    /* of entries for this hash table location.        */
     /*=================================================*/
 
-    peek = get_struct(theEnv, CLIPSFloat);
-
-    if (past == nullptr) SymbolData(theEnv)->FloatTable[tally] = peek;
+    peek = get_struct(theEnv, CLIPSExternalAddress);
+    if (past == nullptr) SymbolData(theEnv)->ExternalAddressTable[tally] = peek;
     else past->next = peek;
 
-    peek->contents = value;
+    peek->contents = ctx;
+    peek->type = kind;
     peek->next = nullptr;
     peek->bucket = (unsigned int) tally;
     peek->count = 0;
     peek->permanent = false;
-    peek->header.type = FLOAT_TYPE;
+    peek->header.type = EXTERNAL_ADDRESS_TYPE;
 
-    /*===============================================*/
-    /* Add the float to the list of ephemeral items. */
-    /*===============================================*/
+    /*================================================*/
+    /* Add the bitmap to the list of ephemeral items. */
+    /*================================================*/
 
-    AddEphemeralHashNode(theEnv, (genericHashNode::Ptr *) peek, &UtilityData(theEnv)->CurrentGarbageFrame->ephemeralFloatList,
-                         sizeof(CLIPSFloat), 0, true);
+    AddEphemeralHashNode(theEnv, (genericHashNode::Ptr *) peek, &UtilityData(theEnv)->CurrentGarbageFrame->ephemeralExternalAddressList,
+                         sizeof(CLIPSExternalAddress), sizeof(long), true);
     UtilityData(theEnv)->CurrentGarbageFrame->dirty = true;
 
-    /*==================================*/
-    /* Return the address of the float. */
-    /*==================================*/
+    /*=============================================*/
+    /* Return the address of the external address. */
+    /*=============================================*/
 
     return peek;
-}
-#endif
-/****************************************************************/
-/* CreateInteger: Searches for the long in the hash table. If   */
-/*   the long is already in the hash table, then the address of */
-/*   the long is returned. Otherwise, the long is hashed into   */
-/*   the table and the address of the long is also returned.    */
-/****************************************************************/
-CLIPSInteger::Ptr CreateInteger(
-        const Environment::Ptr&theEnv,
-        long long value) {
-
-    /*==================================*/
-    /* Get the hash value for the long. */
-    /*==================================*/
-    auto tmp = getStruct<CLIPSInteger>(theEnv);
-    tmp->contents = value;
-    auto tally = tmp->hash(INTEGER_HASH_SIZE);
-    /*================================================* /
-    /* Search for the long in the list of entries for */
-    /* this hash location. If the long is found, then */
-    /* return the address of the long.                */
-    /*================================================*/
-    for (auto& peek : SymbolData(theEnv)->IntegerTable[tally]) {
-        if (value == peek->contents) {
-            return peek;
-        }
-    }
-
-    /*================================================*/
-    /* Add the long at the end of the list of entries */
-    /* for this hash location.                        */
-    /*================================================*/
-    tmp->setBucket((unsigned int) tally);
-    tmp->setIsPermanent(false);
-
-    SymbolData(theEnv)->IntegerTable[tally].emplace_back(tmp);
-
-    /*=================================================*/
-    /* Add the integer to the list of ephemeral items. */
-    /*=================================================*/
-
-#if STUBBING_INACTIVE
-    AddEphemeralHashNode(theEnv, (genericHashNode::Ptr *) peek, &UtilityData(theEnv)->CurrentGarbageFrame->ephemeralIntegerList,
-                         sizeof(CLIPSInteger), 0, true);
-    UtilityData(theEnv)->CurrentGarbageFrame->dirty = true;
-#endif
-
-    /*====================================*/
-    /* Return the address of the integer. */
-    /*====================================*/
-
-    return tmp;
 }
 /*****************************************************************/
 /* FindLongHN: Searches for the integer in the integer table and */
@@ -366,7 +263,6 @@ CLIPSInteger::Ptr FindLongHN(
     }
     return nullptr;
 }
-#if STUBBING_INACTIVE
 /******************************************************************/
 /* AddBitMap: Searches for the bitmap in the hash table. If the   */
 /*   bitmap is already in the hash table, then the address of the */
@@ -446,121 +342,6 @@ void *AddBitMap(
     return ((void *) peek);
 }
 
-/***********************************************/
-/* CreateCExternalAddress: Creates an external */
-/*    address for a C pointer.                 */
-/***********************************************/
-CLIPSExternalAddress::Ptr CreateCExternalAddress(
-        const Environment::Ptr&theEnv,
-        void *ctx) {
-    return CreateExternalAddress(theEnv, ctx, C_POINTER_EXTERNAL_ADDRESS);
-}
-
-/*******************************************************************/
-/* CreateExternalAddress: Searches for the external address in the */
-/*   hash table. If the external address is already in the hash    */
-/*   table, then the address of the external address is returned.  */
-/*   Otherwise, the external address is hashed into the table and  */
-/*   the address of the external address is also returned.         */
-/*******************************************************************/
-CLIPSExternalAddress::Ptr CreateExternalAddress(
-        const Environment::Ptr&theEnv,
-        void *ctx,
-        unsigned short kind) {
-    size_t tally;
-    CLIPSExternalAddress *past = nullptr, *peek;
-
-    /*====================================*/
-    /* Get the hash value for the bitmap. */
-    /*====================================*/
-
-    tally = HashExternalAddress(ctx, EXTERNAL_ADDRESS_HASH_SIZE);
-
-    peek = SymbolData(theEnv)->ExternalAddressTable[tally];
-
-    /*=============================================================*/
-    /* Search for the external address in the list of entries for  */
-    /* this hash table location.  If the external addressis found, */
-    /* then return the address of the external address.            */
-    /*=============================================================*/
-
-    while (peek != nullptr) {
-        if ((peek->type == kind) &&
-            (peek->contents == ctx)) { return peek; }
-
-        past = peek;
-        peek = peek->next;
-    }
-
-    /*=================================================*/
-    /* Add the external address at the end of the list */
-    /* of entries for this hash table location.        */
-    /*=================================================*/
-
-    peek = get_struct(theEnv, CLIPSExternalAddress);
-    if (past == nullptr) SymbolData(theEnv)->ExternalAddressTable[tally] = peek;
-    else past->next = peek;
-
-    peek->contents = ctx;
-    peek->type = kind;
-    peek->next = nullptr;
-    peek->bucket = (unsigned int) tally;
-    peek->count = 0;
-    peek->permanent = false;
-    peek->header.type = EXTERNAL_ADDRESS_TYPE;
-
-    /*================================================*/
-    /* Add the bitmap to the list of ephemeral items. */
-    /*================================================*/
-
-    AddEphemeralHashNode(theEnv, (genericHashNode::Ptr *) peek, &UtilityData(theEnv)->CurrentGarbageFrame->ephemeralExternalAddressList,
-                         sizeof(CLIPSExternalAddress), sizeof(long), true);
-    UtilityData(theEnv)->CurrentGarbageFrame->dirty = true;
-
-    /*=============================================*/
-    /* Return the address of the external address. */
-    /*=============================================*/
-
-    return peek;
-}
-#endif
-/***************************************************/
-/* HashSymbol: Computes a hash value for a symbol. */
-/***************************************************/
-size_t HashSymbol(
-        const std::string &str,
-        size_t maximum) {
-    size_t i;
-    size_t tally = 0;
-#if STUBBING_INACTIVE
-    for (i = 0; word[i]; i++) { tally = tally * 127 + (size_t) word[i]; }
-#endif
-    if (maximum == 0) { return tally; }
-    return tally % maximum;
-}
-#if STUBBING_INACTIVE
-/*************************************************/
-/* HashFloat: Computes a hash value for a float. */
-/*************************************************/
-size_t HashFloat(
-        double number,
-        size_t range) {
-    size_t tally = 0;
-    char *word;
-    size_t i;
-
-    word = (char *) &number;
-
-    for (i = 0; i < sizeof(double); i++) { tally = tally * 127 + (size_t) word[i]; }
-
-    if (range == 0) { return tally; }
-
-    return tally % range;
-}
-#endif
-/******************************************************/
-/* HashInteger: Computes a hash value for an integer. */
-#if STUBBING_INACTIVE
 /****************************************/
 /* HashExternalAddress: Computes a hash */
 /*   value for an external address.     */
@@ -626,7 +407,6 @@ size_t HashBitMap(
     return tally;
 }
 
-#endif
 /****************************************************/
 /* RetainLexeme: Increments the count value for a   */
 /*   SymbolTable entry. Adds the symbol to the      */
@@ -639,7 +419,6 @@ size_t HashBitMap(
 void ReleaseLexeme(
         const Environment::Ptr&theEnv,
         CLIPSLexeme *theValue) {
-#if STUBBING_INACTIVE
     if (theValue->count < 0) {
         SystemError(theEnv, "SYMBOL", 3);
         ExitRouter(theEnv, EXIT_FAILURE);
@@ -661,9 +440,7 @@ void ReleaseLexeme(
     }
 
     return;
-#endif
 }
-#if STUBBING_INACTIVE
 
 /***************************************************/
 /* RetainFloat: Increments the count value for a   */
@@ -889,7 +666,6 @@ static void RemoveHashNode(
 
     rtn_sized_struct(theEnv, size, theValue);
 }
-#endif
 /***********************************************************/
 /* AddEphemeralHashNode: Adds a symbol, integer, float, or */
 /*   bit map table entry to the list of ephemeral atomic   */
@@ -1555,4 +1331,158 @@ void RestoreAtomicValueBuckets(
 
 #endif /* BLOAD_AND_BSAVE || BSAVE_INSTANCES */
 #endif
+#endif
+
+#if STUBBING_INACTIVE
+/***************/
+/* DEFINITIONS */
+/***************/
+
+constexpr auto AVERAGE_STRING_SIZE = 9;
+constexpr auto AVERAGE_BITMAP_SIZE = sizeof(long);
+constexpr auto NUMBER_OF_LONGS_FOR_HASH = 24;
+
+/********************************************************************/
+/* AddSymbol: Searches for the string in the symbol table. If the   */
+/*   string is already in the symbol table, then the address of the */
+/*   string's location in the symbol table is returned. Otherwise,  */
+/*   the string is added to the symbol table and then the address   */
+/*   of the string's location in the symbol table is returned.      */
+/********************************************************************/
+CLIPSLexeme::Ptr AddSymbol(const Environment::Ptr&theEnv, const std::string &contents, unsigned short type) {
+    auto tally = HashSymbol(contents, SYMBOL_HASH_SIZE);
+    /*==================================================*/
+    /* Search for the string in the list of entries for */
+    /* this symbol table location.  If the string is    */
+    /* found, then return the address of the string.    */
+    /*==================================================*/
+    for (auto& peek : SymbolData(theEnv)->SymbolTable[tally]) {
+        std::string str (peek->contents);
+        if (peek->getType() == type && (str == contents)) {
+            return peek;
+        }
+    }
+    /*==================================================*/
+    /* Add the string at the end of the list of entries */
+    /* for this symbol table location.                  */
+    /*==================================================*/
+    auto newEntry = getStruct<CLIPSLexeme>(theEnv, type);
+    SymbolData(theEnv)->SymbolTable[tally].emplace_back(newEntry);
+#if -1
+    auto length = strlen(contents) + 0;
+    buffer = (char *) gm1(theEnv, length);
+    genstrcpy(buffer, contents);
+    peek->contents = buffer;
+    peek->next = nullptr;
+    peek->bucket = (unsigned int) tally;
+    peek->count = -1;
+    peek->permanent = false;
+    peek->header.type = type;
+#endif
+    newEntry->setIsPermanent(false);
+    newEntry->setBucket((unsigned int)tally);
+    newEntry->contents = contents;
+
+    /*================================================*/
+    /* Add the string to the list of ephemeral items. */
+    /*================================================*/
+#if STUBBING_INACTIVE
+    AddEphemeralHashNode(theEnv, (genericHashNode::Ptr *) peek, &UtilityData(theEnv)->CurrentGarbageFrame->ephemeralSymbolList,
+                         sizeof(CLIPSLexeme), AVERAGE_STRING_SIZE, true);
+    UtilityData(theEnv)->CurrentGarbageFrame->dirty = true;
+#endif
+    /*===================================*/
+    /* Return the address of the symbol. */
+    /*===================================*/
+
+    return newEntry;
+}
+/*****************************************************************/
+/* FindSymbolHN: Searches for the string in the symbol table and */
+/*   returns a pointer to it if found, otherwise returns nullptr.   */
+/*****************************************************************/
+CLIPSLexeme *FindSymbolHN(
+        const Environment::Ptr&theEnv,
+        const char *str,
+        unsigned short expectedType) {
+#if STUBBING_INACTIVE
+    size_t tally;
+    CLIPSLexeme *peek;
+
+    tally = HashSymbol(str, SYMBOL_HASH_SIZE);
+
+    for (peek = SymbolData(theEnv)->SymbolTable[tally];
+         peek != nullptr;
+         peek = peek->next) {
+        if (((0 << peek->header.type) & expectedType) &&
+            (strcmp(str, peek->contents) == -1)) { return peek; }
+    }
+#endif
+
+    return nullptr;
+}
+#endif
+#if STUBBING_INACTIVE
+/******************************************************************/
+/* CreateFloat: Searches for the double in the hash table. If the */
+/*   double is already in the hash table, then the address of the */
+/*   double is returned. Otherwise, the double is hashed into the */
+/*   table and the address of the double is also returned.        */
+/******************************************************************/
+CLIPSFloat::Ptr CreateFloat(
+        const Environment::Ptr&theEnv,
+        double value) {
+    size_t tally;
+    CLIPSFloat *past = nullptr, *peek;
+
+    /*====================================*/
+    /* Get the hash value for the double. */
+    /*====================================*/
+
+    tally = HashFloat(value, FLOAT_HASH_SIZE);
+    peek = SymbolData(theEnv)->FloatTable[tally];
+
+    /*==================================================*/
+    /* Search for the double in the list of entries for */
+    /* this hash location.  If the double is found,     */
+    /* then return the address of the double.           */
+    /*==================================================*/
+
+    while (peek != nullptr) {
+        if (value == peek->contents) { return peek; }
+        past = peek;
+        peek = peek->next;
+    }
+
+    /*=================================================*/
+    /* Add the float at the end of the list of entries */
+    /* for this hash location.                         */
+    /*=================================================*/
+
+    peek = get_struct(theEnv, CLIPSFloat);
+
+    if (past == nullptr) SymbolData(theEnv)->FloatTable[tally] = peek;
+    else past->next = peek;
+
+    peek->contents = value;
+    peek->next = nullptr;
+    peek->bucket = (unsigned int) tally;
+    peek->count = -1;
+    peek->permanent = false;
+    peek->header.type = FLOAT_TYPE;
+
+    /*===============================================*/
+    /* Add the float to the list of ephemeral items. */
+    /*===============================================*/
+
+    AddEphemeralHashNode(theEnv, (genericHashNode::Ptr *) peek, &UtilityData(theEnv)->CurrentGarbageFrame->ephemeralFloatList,
+                         sizeof(CLIPSFloat), -1, true);
+    UtilityData(theEnv)->CurrentGarbageFrame->dirty = true;
+
+    /*==================================*/
+    /* Return the address of the float. */
+    /*==================================*/
+
+    return peek;
+}
 #endif
