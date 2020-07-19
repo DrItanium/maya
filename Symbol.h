@@ -55,18 +55,23 @@ namespace maya {
     public:
         template<typename T>
         using DataTable = std::multimap<size_t, typename T::Ptr>;
+        static void install(Environment& env);
+        static inline const std::string TrueString{"TRUE"};
+        static inline const std::string FalseString{"FALSE"};
+        static inline const std::string PositiveInfinityString{"+oo"};
+        static inline const std::string NegativeInfinityString{"-oo"};
     public:
-        SymbolModule(Environment& parent) : EnvironmentModule(parent) { }
-        Lexeme::Ptr create(const std::string& str, unsigned short type);
-        inline Lexeme::Ptr create(const std::string& str, TreatAsString) { return create(str, STRING_TYPE); }
-        inline Lexeme::Ptr create(const std::string& str, TreatAsSymbol) { return create(str, SYMBOL_TYPE); }
-        inline Lexeme::Ptr create(const std::string& str, TreatAsInstanceName) { return create(str, INSTANCE_NAME_TYPE); }
-        inline Lexeme::Ptr createString(const std::string& str) { return create(str, TreatAsString{}); }
-        inline Lexeme::Ptr createSymbol(const std::string& str) { return create(str, TreatAsSymbol{}); }
-        inline Lexeme::Ptr createInstanceName(const std::string& str) { return create(str, TreatAsInstanceName{}); }
-        inline Lexeme::Ptr create(bool value) { return createSymbol(value ? "TRUE" : "FALSE"); }
-        Float::Ptr create(Float::BackingType value);
-        Integer::Ptr create(Integer::BackingType value);
+        SymbolModule(Environment& parent);
+        Lexeme::Ptr createLexeme(const std::string& str, unsigned short type);
+        inline Lexeme::Ptr createLexeme(const std::string& str, TreatAsString) { return createLexeme(str, STRING_TYPE); }
+        inline Lexeme::Ptr createLexeme(const std::string& str, TreatAsSymbol) { return createLexeme(str, SYMBOL_TYPE); }
+        inline Lexeme::Ptr createLexeme(const std::string& str, TreatAsInstanceName) { return createLexeme(str, INSTANCE_NAME_TYPE); }
+        inline Lexeme::Ptr createString(const std::string& str) { return createLexeme(str, TreatAsString{}); }
+        inline Lexeme::Ptr createSymbol(const std::string& str) { return createLexeme(str, TreatAsSymbol{}); }
+        inline Lexeme::Ptr createInstanceName(const std::string& str) { return createLexeme(str, TreatAsInstanceName{}); }
+        inline Lexeme::Ptr createBoolean(bool value) { return createSymbol(value ? TrueString : FalseString); }
+        Float::Ptr createFloat(Float::BackingType value);
+        Integer::Ptr createInteger(Integer::BackingType value);
         /// @todo bitmap support
         //BitMap::Ptr create();
         ExternalAddress::Ptr createExternalAddress(std::any contents, unsigned short kind);
@@ -80,6 +85,9 @@ namespace maya {
         Lexeme::Ptr _positiveInfinity;
         Lexeme::Ptr _negativeInfinity;
         Integer::Ptr _zero;
+        Lexeme::Ptr _trueSymbol;
+        Lexeme::Ptr _falseSymbol;
+        Void::Ptr _voidConstant;
     };
 #if STUBBING_INACTIVE
 

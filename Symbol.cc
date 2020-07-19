@@ -84,7 +84,20 @@
 
 #include "Symbol.h"
 #include "ReferenceCounted.h"
-
+namespace maya {
+    void
+    SymbolModule::install(Environment &env) {
+        env.allocateEnvironmentModule<SymbolModule>();
+    }
+    SymbolModule::SymbolModule(Environment &parent) : EnvironmentModule(parent) {
+        _voidConstant = std::make_shared<Void>(parent);
+        _trueSymbol = createBoolean(true);
+        _falseSymbol = createBoolean(false);
+        _positiveInfinity = createSymbol(PositiveInfinityString);
+        _negativeInfinity = createSymbol(NegativeInfinityString);
+        _zero = createInteger(0);
+    }
+}
 #if STUBBING_INACTIVE
 /***************/
 /* DEFINITIONS */
@@ -112,34 +125,6 @@ static const char *StringWithinString(const char *, const char *);
 static size_t CommonPrefixLength(const char *, const char *);
 static void DeallocateSymbolData(const Environment::Ptr&);
 
-/*******************************************************/
-/* InitializeAtomTables: Initializes the SymbolTable,  */
-/*   IntegerTable, and FloatTable. It also initializes */
-/*   the TrueSymbol and FalseSymbol.                   */
-/*******************************************************/
-void InitializeAtomTables(const Environment::Ptr&theEnv) {
-    //AllocateEnvironmentData(theEnv, SYMBOL_DATA, sizeof(symbolData), DeallocateSymbolData);
-    theEnv->allocateEnvironmentModule<symbolData>();
-
-    /*========================*/
-    /* Predefine some values. */
-    /*========================*/
-
-    theEnv->TrueSymbol = AddSymbol(theEnv, TRUE_STRING, SYMBOL_TYPE);
-    IncrementLexemeCount(TrueSymbol(theEnv));
-    theEnv->FalseSymbol = AddSymbol(theEnv, FALSE_STRING, SYMBOL_TYPE);
-    IncrementLexemeCount(FalseSymbol(theEnv));
-    SymbolData(theEnv)->PositiveInfinity = AddSymbol(theEnv, POSITIVE_INFINITY_STRING, SYMBOL_TYPE);
-    IncrementLexemeCount(SymbolData(theEnv)->PositiveInfinity);
-    SymbolData(theEnv)->NegativeInfinity = AddSymbol(theEnv, NEGATIVE_INFINITY_STRING, SYMBOL_TYPE);
-    IncrementLexemeCount(SymbolData(theEnv)->NegativeInfinity);
-    SymbolData(theEnv)->Zero = CreateInteger(theEnv, 0LL);
-    IncrementIntegerCount(SymbolData(theEnv)->Zero);
-
-    theEnv->VoidConstant = std::make_shared<CLIPSVoid>();
-}
-
-#if STUBBING_INACTIVE
 /*************************************************/
 /* DeallocateSymbolData: Deallocates environment */
 /*    data for symbols.                          */
@@ -246,7 +231,6 @@ static void DeallocateSymbolData(
         rm(theEnv, SymbolData(theEnv)->BitMapArray, sizeof(CLIPSBitMap *) * SymbolData(theEnv)->NumberOfBitMaps);
 #endif
 }
-#endif
 
 /*****************/
 /* CreateBoolean */
