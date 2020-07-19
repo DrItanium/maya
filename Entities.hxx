@@ -29,6 +29,7 @@
 #include <vector>
 #include <functional>
 #include <list>
+#include <iostream>
 
 #include "Constants.h"
 #include "ReferenceCounted.h"
@@ -410,7 +411,11 @@ namespace maya {
         retVal->contents = this->shared_from_this();
         return true;
     }
-} // end namespace clips
+} // end namespace maya
+
+std::ostream& operator<<(std::ostream& os, const maya::Lexeme& lexeme);
+std::ostream& operator<<(std::ostream& os, const maya::Float& value);
+std::ostream& operator<<(std::ostream& os, const maya::Integer& value);
 #endif /* _H_entities */
 
 

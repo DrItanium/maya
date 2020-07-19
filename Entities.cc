@@ -142,3 +142,21 @@ namespace maya {
     Void::Void(Environment &parent) : Atom(parent, VOID_TYPE) {
     }
 } // end namespace maya
+
+std::ostream&
+operator<<(std::ostream& os, const maya::Lexeme& lexeme) {
+    os << lexeme.getContents();
+    return os;
+}
+
+std::ostream&
+operator<<(std::ostream& os, const maya::Float& value) {
+    os << value.getContents();
+    return os;
+}
+
+std::ostream&
+operator<<(std::ostream& os, const maya::Integer& value) {
+    os << value.getContents();
+    return os;
+}
