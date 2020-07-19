@@ -62,6 +62,16 @@ namespace maya {
         bool evaluate(std::shared_ptr<UDFValue> retVal) override;
 
     };
+    /**
+     * @brief A special type inserted to make the ephemeron type make sense
+     */
+    class EphemeralAtom : public Atom {
+    public:
+        using Self = EphemeralAtom;
+        using Ptr = std::shared_ptr<Self>;
+    public:
+        using Atom::Atom;
+    };
 /*************/
 /* clipsVoid */
 /*************/
@@ -90,18 +100,18 @@ namespace maya {
 /***************/
 /* CLIPSLexeme */
 /***************/
-    class Lexeme : public Atom, public TransferEvaluable<Lexeme> {
+    class Lexeme : public EphemeralAtom, public TransferEvaluable<Lexeme> {
     public:
         using Self = Lexeme;
         using Ptr = std::shared_ptr<Self>;
     public:
-        Lexeme(Environment& parent, TreatAsSymbol) : Atom(parent, SYMBOL_TYPE) { }
-        Lexeme(Environment& parent, TreatAsString) : Atom(parent, STRING_TYPE) { }
-        Lexeme(Environment& parent, TreatAsInstanceName) : Atom(parent, INSTANCE_NAME_TYPE) { }
-        Lexeme(Environment& parent, const std::string& contents, TreatAsSymbol) : Atom(parent, SYMBOL_TYPE), _contents(contents) { }
-        Lexeme(Environment& parent, const std::string& contents, TreatAsString) : Atom(parent, STRING_TYPE), _contents(contents) { }
-        Lexeme(Environment& parent, const std::string& contents, TreatAsInstanceName) : Atom(parent, INSTANCE_NAME_TYPE), _contents(contents) { }
-        Lexeme(Environment& parent, const std::string& contents, unsigned short type) : Atom(parent, type), _contents(contents) { }
+        Lexeme(Environment& parent, TreatAsSymbol) : EphemeralAtom(parent, SYMBOL_TYPE) { }
+        Lexeme(Environment& parent, TreatAsString) : EphemeralAtom(parent, STRING_TYPE) { }
+        Lexeme(Environment& parent, TreatAsInstanceName) : EphemeralAtom(parent, INSTANCE_NAME_TYPE) { }
+        Lexeme(Environment& parent, const std::string& contents, TreatAsSymbol) : EphemeralAtom(parent, SYMBOL_TYPE), _contents(contents) { }
+        Lexeme(Environment& parent, const std::string& contents, TreatAsString) : EphemeralAtom(parent, STRING_TYPE), _contents(contents) { }
+        Lexeme(Environment& parent, const std::string& contents, TreatAsInstanceName) : EphemeralAtom(parent, INSTANCE_NAME_TYPE), _contents(contents) { }
+        Lexeme(Environment& parent, const std::string& contents, unsigned short type) : EphemeralAtom(parent, type), _contents(contents) { }
         std::string getContents() const noexcept { return _contents; }
         ~Lexeme() override = default;
         size_t hash(size_t range) override;
@@ -114,31 +124,32 @@ namespace maya {
 /**************/
 /* Float */
 /**************/
-    class Float : public Atom, public TransferEvaluable<Float> {
+    class Float : public EphemeralAtom, public TransferEvaluable<Float> {
     public:
         using Self = Float;
         using Ptr = std::shared_ptr<Self>;
+        using BackingType = double;
     public:
-        Float(Environment& parent, double value = 0.0) : Atom(parent, FLOAT_TYPE), _contents(value) {}
+        Float(Environment& parent, BackingType value = 0.0) : EphemeralAtom(parent, FLOAT_TYPE), _contents(value) {}
         ~Float() override = default;
         size_t hash(size_t range) override;
         void write(const std::string &logicalName) override;
         constexpr auto getContents() const noexcept { return _contents; }
         bool evaluate(std::shared_ptr<UDFValue> retVal) override;
     private:
-        double _contents;
+        BackingType _contents;
     };
 
 /****************/
 /* Integer */
 /****************/
-    struct Integer : public Atom, public TransferEvaluable<Integer> {
+    struct Integer : public EphemeralAtom, public TransferEvaluable<Integer> {
     public:
         using Self = Integer;
         using Ptr = std::shared_ptr<Self>;
         using BackingType = long long;
     public:
-        Integer(Environment& parent, BackingType value = 0) : Atom(parent, INTEGER_TYPE), _contents(value) {}
+        Integer(Environment& parent, BackingType value = 0) : EphemeralAtom(parent, INTEGER_TYPE), _contents(value) {}
         ~Integer() override = default;
         size_t hash(size_t range) override;
         void write(const std::string &logicalName) override;

@@ -1,87 +1,12 @@
-/*******************************************************/
-/*      "C" Language Integrated Production System      */
-/*                                                     */
-/*             CLIPS Version 6.40  10/01/16            */
-/*                                                     */
-/*                 SYMBOL HEADER FILE                  */
-/*******************************************************/
-
-/*************************************************************/
-/* Purpose: Manages the atomic data value hash tables for    */
-/*   storing symbols, integers, floats, and bit maps.        */
-/*   Contains routines for adding entries, examining the     */
-/*   hash tables, and performing garbage collection to       */
-/*   remove entries no longer in use.                        */
-/*                                                           */
-/* Principal Programmer(s):                                  */
-/*      Gary D. Riley                                        */
-/*                                                           */
-/* Contributing Programmer(s):                               */
-/*                                                           */
-/* Revision History:                                         */
-/*                                                           */
-/*      6.23: Correction for FalseSymbol/TrueSymbol. DR0859  */
-/*                                                           */
-/*      6.24: CLIPS crashing on AMD64 processor in the       */
-/*            function used to generate a hash value for     */
-/*            integers. DR0871                               */
-/*                                                           */
-/*            Support for run-time programs directly passing */
-/*            the hash tables for initialization.            */
-/*                                                           */
-/*            Corrected code generating compilation          */
-/*            warnings.                                      */
-/*                                                           */
-/*      6.30: Changed integer type/precision.                */
-/*                                                           */
-/*            Removed conditional code for unsupported       */
-/*            compilers/operating systems (IBM_MCW,          */
-/*            MAC_MCW, and IBM_TBC).                         */
-/*                                                           */
-/*            Support for hashing EXTERNAL_ADDRESS_TYPE      */
-/*            data type.                                     */
-/*                                                           */
-/*            Support for long long integers.                */
-/*                                                           */
-/*            Changed garbage collection algorithm.          */
-/*                                                           */
-/*            Used genstrcpy instead of strcpy.              */
-/*                                                           */
-/*            Added support for external address hash table  */
-/*            and subtyping.                                 */
-/*                                                           */
-/*            Added const qualifiers to remove C++           */
-/*            deprecation warnings.                          */
-/*                                                           */
-/*            Converted API macros to function calls.        */
-/*                                                           */
-/*            Added ValueToPointer and EnvValueToPointer     */
-/*            macros.                                        */
-/*                                                           */
-/*      6.40: Refactored code to reduce header dependencies  */
-/*            in sysdep.c.                                   */
-/*                                                           */
-/*            Removed LOCALE definition.                     */
-/*                                                           */
-/*            Pragma once and other inclusion changes.       */
-/*                                                           */
-/*            Added support for booleans with <stdbool.h>.   */
-/*                                                           */
-/*            Removed use of void pointers for specific      */
-/*            data structures.                               */
-/*                                                           */
-/*            ALLOW_ENVIRONMENT_GLOBALS no longer supported. */
-/*                                                           */
-/*            UDF redesign.                                  */
-/*                                                           */
-/*************************************************************/
-
+/**
+ * @brief Symbol related operations
+ */
 #ifndef _H_symbol
 
 #pragma once
 
 #define _H_symbol
-
+#include <map>
 #include <memory>
 #include "Entities.hxx"
 
@@ -106,58 +31,57 @@ namespace maya {
 #ifndef EXTERNAL_ADDRESS_HASH_SIZE
 #define EXTERNAL_ADDRESS_HASH_SIZE        8191
 #endif
-#if STUBBING_INACTIVE
-/******************************/
-/* genericHashNode STRUCTURE: */
-/******************************/
-    struct genericHashNode : public ReferenceCounted {
+    class Ephemeron {
     public:
-        using Self = genericHashNode;
+        using Self = Ephemeron;
         using Ptr = std::shared_ptr<Self>;
     public:
-        TypeHeader header;
-        Ptr next;
+        Ephemeron(EphemeralAtom::Ptr target) : _target(target) { }
+        EphemeralAtom::Ptr getAssociatedValue() const noexcept { return _target; }
+    private:
+        EphemeralAtom::Ptr _target;
     };
+    class SymbolMatch {
+    public:
+        using Self = SymbolMatch;
+        using Ptr = std::shared_ptr<Self>;
+    public:
+        SymbolMatch(Lexeme::Ptr match) : _match(match) { }
+        Lexeme::Ptr getMatch() const noexcept { return _match; }
+    private:
+        Lexeme::Ptr _match;
+    };
+    class SymbolModule : public EnvironmentModule {
+    public:
+        template<typename T>
+        using DataTable = std::multimap<size_t, typename T::Ptr>;
+    public:
+        SymbolModule(Environment& parent) : EnvironmentModule(parent) { }
+        Lexeme::Ptr create(const std::string& str, unsigned short type);
+        inline Lexeme::Ptr create(const std::string& str, TreatAsString) { return create(str, STRING_TYPE); }
+        inline Lexeme::Ptr create(const std::string& str, TreatAsSymbol) { return create(str, SYMBOL_TYPE); }
+        inline Lexeme::Ptr create(const std::string& str, TreatAsInstanceName) { return create(str, INSTANCE_NAME_TYPE); }
+        inline Lexeme::Ptr createString(const std::string& str) { return create(str, TreatAsString{}); }
+        inline Lexeme::Ptr createSymbol(const std::string& str) { return create(str, TreatAsSymbol{}); }
+        inline Lexeme::Ptr createInstanceName(const std::string& str) { return create(str, TreatAsInstanceName{}); }
+        inline Lexeme::Ptr create(bool value) { return createSymbol(value ? "TRUE" : "FALSE"); }
+        Float::Ptr create(Float::BackingType value);
+        Integer::Ptr create(Integer::BackingType value);
+        /// @todo bitmap support
+        //BitMap::Ptr create();
+        ExternalAddress::Ptr createExternalAddress(std::any contents, unsigned short kind);
 
-/**********************************************************/
-/* EPHEMERON STRUCTURE: Data structure used to keep track */
-/*   of ephemeral symbols, floats, and integers.          */
-/*                                                        */
-/*   associatedValue: Contains a pointer to the storage   */
-/*   structure for the symbol, float, or integer which is */
-/*   ephemeral.                                           */
-/*                                                        */
-/*   next: Contains a pointer to the next ephemeral item  */
-/*   in a list of ephemeral items.                        */
-/**********************************************************/
-    struct ephemeron {
-    public:
-        using Self = ephemeron;
-        using Ptr = std::shared_ptr<Self>;
-    public:
-        genericHashNode::Ptr associatedValue;
-        Ptr next;
+    private:
+        DataTable<Lexeme> _symbolTable;
+        DataTable<Float> _floatTable;
+        DataTable<Integer> _integerTable;
+        //DataTable<BitMap> _bitmapTable;
+        DataTable<ExternalAddress> _externalAddressTable;
+        Lexeme::Ptr _positiveInfinity;
+        Lexeme::Ptr _negativeInfinity;
+        Integer::Ptr _zero;
     };
-#endif
-/***************/
-/* symbolMatch */
-/***************/
-struct SymbolMatch {
-public:
-    using Self = SymbolMatch;
-    using Ptr = std::shared_ptr<Self>;
-public:
-    SymbolMatch(Lexeme::Ptr match) : _match(match) { }
-    Lexeme::Ptr getMatch() const noexcept { return _match; }
-private:
-    Lexeme::Ptr _match;
-};
 #if STUBBING_INACTIVE
-    //#define IncrementLexemeCount(theValue) (((CLIPSLexeme *) theValue)->count++)
-//#define IncrementFloatCount(theValue) (((Float *) theValue)->count++)
-//#define IncrementIntegerCount(theValue) (((Integer *) theValue)->count++)
-//#define IncrementBitMapCount(theValue) (((BitMap *) theValue)->count++)
-//#define IncrementExternalAddressCount(theValue) (((ExternalAddress *) theValue)->count++)
 
 #define IncrementLexemeCount(theValue) (theValue->retain())
 #define IncrementFloatCount(theValue) (theValue->retain())
@@ -211,27 +135,10 @@ void *AddBitMap(const Environment::Ptr&, void *, unsigned short);
 CLIPSExternalAddress::Ptr CreateExternalAddress(const Environment::Ptr& theEnv, void * ctx, unsigned short kind);
 CLIPSExternalAddress::Ptr CreateCExternalAddress(const Environment::Ptr& theEnv, void * ctx);
 CLIPSInteger::Ptr FindLongHN(const Environment::Ptr& theEnv, long long value);
-size_t HashSymbol(const std::string &str, size_t maximum);
-size_t HashFloat(double, size_t);
-size_t HashBitMap(const char *, size_t, unsigned);
-size_t HashExternalAddress(void *, size_t);
 void IncrementBitMapReferenceCount(const Environment::Ptr&, CLIPSBitMap *);
-void ReleaseLexeme(const Environment::Ptr&, CLIPSLexeme *);
-void ReleaseFloat(const Environment::Ptr&, CLIPSFloat *);
-void ReleaseInteger(const Environment::Ptr&, CLIPSInteger *);
 void DecrementBitMapReferenceCount(const Environment::Ptr&, CLIPSBitMap *);
 void ReleaseExternalAddress(const Environment::Ptr&, CLIPSExternalAddress *);
 void RemoveEphemeralAtoms(const Environment::Ptr&);
-CLIPSLexeme **GetSymbolTable(const Environment::Ptr&);
-void SetSymbolTable(const Environment::Ptr&, CLIPSLexeme **);
-CLIPSFloat **GetFloatTable(const Environment::Ptr&);
-void SetFloatTable(const Environment::Ptr&, CLIPSFloat **);
-CLIPSInteger **GetIntegerTable(const Environment::Ptr&);
-void SetIntegerTable(const Environment::Ptr&, CLIPSInteger **);
-CLIPSBitMap **GetBitMapTable(const Environment::Ptr&);
-void SetBitMapTable(const Environment::Ptr&, CLIPSBitMap **);
-CLIPSExternalAddress **GetExternalAddressTable(const Environment::Ptr&);
-void SetExternalAddressTable(const Environment::Ptr&, CLIPSExternalAddress **);
 void RefreshSpecialSymbols(const Environment::Ptr&);
 struct symbolMatch *FindSymbolMatches(const Environment::Ptr&, const char *, unsigned *, size_t *);
 void ReturnSymbolMatches(const Environment::Ptr&, struct symbolMatch *);
@@ -240,10 +147,6 @@ void ClearBitString(void *, size_t);
 void SetAtomicValueIndices(const Environment::Ptr&, bool);
 void RestoreAtomicValueBuckets(const Environment::Ptr&);
 void EphemerateValue(const Environment::Ptr&, void *);
-CLIPSLexeme::Ptr CreateSymbol(const Environment::Ptr& theEnv, const char * str);
-CLIPSLexeme::Ptr CreateString(const Environment::Ptr& theEnv, const char * str);
-CLIPSLexeme::Ptr CreateInstanceName(const Environment::Ptr& theEnv, const char * str);
-CLIPSLexeme::Ptr CreateBoolean(const Environment::Ptr& theEnv, bool value);
 bool BitStringHasBitsSet(void *, unsigned);
 
 #define BitMapPointer(i) ((CLIPSBitMap *) (SymbolData(theEnv)->BitMapArray[i]))
