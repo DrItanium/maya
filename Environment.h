@@ -111,6 +111,57 @@ namespace maya {
     public:
         [[nodiscard]] std::function<void(Environment &, std::string, std::string, std::string, long)> getParserErrorCallback() const noexcept { return _parserErrorCallback; }
         void setParserErrorCallback(std::function<void(Environment &, std::string, std::string, std::string, long)> parserErrorCallback) { _parserErrorCallback = parserErrorCallback; }
+    public:
+        bool isClearReadyInProgress() const noexcept;
+        void setClearReadyInProgress(bool clearReadyInProgress) noexcept;
+        bool isClearInProgress() const noexcept;
+        void setClearInProgress(bool clearInProgress) noexcept;
+        bool isResetReadyInProgress() const noexcept;
+        void setResetReadyInProgress(bool resetReadyInProgress) noexcept;
+        bool isResetInProgress() const noexcept;
+        void setResetInProgress(bool resetInProgress) noexcept;
+        int16_t getClearReadyLocks() const noexcept;
+        void setClearReadyLocks(int16_t clearReadyLocks) noexcept;
+        int getDanglingConstructs() const noexcept;
+        void setDanglingConstructs(int danglingConstructs) noexcept;
+        bool isPrintWhileLoading() const noexcept;
+        void setPrintWhileLoading(bool printWhileLoading) noexcept;
+        bool isLoadInProgress() const noexcept;
+        void setLoadInProgress(bool loadInProgress) noexcept;
+        bool isWatchCompilations() const noexcept;
+        void setWatchCompilations(bool watchCompilations) noexcept;
+        bool isCheckSyntaxMode() const noexcept;
+        void setCheckSyntaxMode(bool checkSyntaxMode) noexcept;
+        bool isParsingConstruct() const noexcept;
+        void setParsingConstruct(bool parsingConstruct) noexcept;
+        std::string getErrorString() const noexcept;
+        void setErrorString(const std::string &errorString) noexcept;
+        std::string getWarningString() const noexcept;
+        void setWarningString(const std::string &warningString) noexcept;
+        std::string getParsingFileName() const noexcept;
+        void setParsingFileName(const std::string &parsingFileName) noexcept;
+        std::string getErrorFileName() const noexcept;
+        void setErrorFileName(const std::string &errorFileName) noexcept;
+        std::string getWarningFileName() const noexcept;
+        void setWarningFileName(const std::string &warningFileName) noexcept;
+        ssize_t getErrorLineNumber() const noexcept;
+        void setErrorLineNumber(ssize_t errorLineNumber) noexcept;
+        constexpr ssize_t getWarnLineNumber() const noexcept { return _warnLineNumber; }
+        void setWarnLineNumber(ssize_t warnLineNumber) noexcept;
+        constexpr ssize_t getErrorCaptureRouterCount() const noexcept { return _errorCaptureRouterCount; }
+        void setErrorCaptureRouterCount(ssize_t errorCaptureRouterCount) noexcept;
+        constexpr size_t getMaxErrorChars() const noexcept { return _maxErrorChars; }
+        void setMaxErrorChars(size_t maxErrorChars) noexcept;
+        constexpr size_t getCurrentErrorPosition() const noexcept { return _currentErrorPosition; }
+        void setCurrentErrorPosition(size_t currentErrorPosition) noexcept;
+        [[nodiscard]] constexpr size_t getMaxWarnChars() const noexcept { return _maxWarnChars; }
+        void setMaxWarnChars(size_t maxWarnChars) noexcept;
+        [[nodiscard]] constexpr size_t getCurrentWarnPosition() const noexcept { return _currentWarnPosition; }
+        void setCurrentWarnPosition(size_t currentWarnPosition) noexcept;
+        [[nodiscard]] constexpr bool isExecuting() const noexcept { return _executing; }
+        void setExecuting(bool executing) noexcept;
+        [[nodiscard]] std::function<bool(Environment &)> getBeforeResetCallback() const noexcept { return _beforeResetCallback; }
+        void setBeforeResetCallback(std::function<bool(Environment &)> beforeResetCallback) noexcept;
 
 
     private: // symbol
@@ -178,10 +229,6 @@ namespace maya {
         std::forward_list<BoolCallFunctionItem::Ptr> _clearReadyFunctions;
         bool _executing = false;
         std::function<bool(Environment&)> _beforeResetCallback;
-
-
-
-
     };
 } // end namespace maya
 

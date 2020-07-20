@@ -550,4 +550,155 @@ namespace maya {
             _executionHalted = true;
         }
     }
+    bool Environment::isClearReadyInProgress() const noexcept {
+        return _clearReadyInProgress;
+    }
+    void Environment::setClearReadyInProgress(bool clearReadyInProgress) noexcept {
+        _clearReadyInProgress = clearReadyInProgress;
+    }
+    bool Environment::isClearInProgress() const noexcept {
+        return _clearInProgress;
+    }
+    void Environment::setClearInProgress(bool clearInProgress) noexcept {
+        _clearInProgress = clearInProgress;
+    }
+    bool Environment::isResetReadyInProgress() const noexcept {
+        return _resetReadyInProgress;
+    }
+    void Environment::setResetReadyInProgress(bool resetReadyInProgress) noexcept {
+        _resetReadyInProgress = resetReadyInProgress;
+    }
+    bool Environment::isResetInProgress() const noexcept {
+        return _resetInProgress;
+    }
+    void Environment::setResetInProgress(bool resetInProgress) noexcept {
+        _resetInProgress = resetInProgress;
+    }
+    int16_t Environment::getClearReadyLocks() const noexcept {
+        return _clearReadyLocks;
+    }
+    void Environment::setClearReadyLocks(int16_t clearReadyLocks) noexcept {
+        _clearReadyLocks = clearReadyLocks;
+    }
+    int Environment::getDanglingConstructs() const noexcept {
+        return _danglingConstructs;
+    }
+    void Environment::setDanglingConstructs(int danglingConstructs) noexcept {
+        _danglingConstructs = danglingConstructs;
+    }
+    bool Environment::isPrintWhileLoading() const noexcept {
+        return _printWhileLoading;
+    }
+    void Environment::setPrintWhileLoading(bool printWhileLoading) noexcept {
+        _printWhileLoading = printWhileLoading;
+    }
+    bool Environment::isLoadInProgress() const noexcept {
+        return _loadInProgress;
+    }
+    void Environment::setLoadInProgress(bool loadInProgress) noexcept {
+        _loadInProgress = loadInProgress;
+    }
+    bool Environment::isWatchCompilations() const noexcept {
+        return _watchCompilations;
+    }
+    void Environment::setWatchCompilations(bool watchCompilations) noexcept {
+        _watchCompilations = watchCompilations;
+    }
+    bool Environment::isCheckSyntaxMode() const noexcept {
+        return _checkSyntaxMode;
+    }
+    void Environment::setCheckSyntaxMode(bool checkSyntaxMode) noexcept {
+        _checkSyntaxMode = checkSyntaxMode;
+    }
+    bool Environment::isParsingConstruct() const noexcept {
+        return _parsingConstruct;
+    }
+    void Environment::setParsingConstruct(bool parsingConstruct) noexcept {
+        _parsingConstruct = parsingConstruct;
+    }
+    std::string
+    Environment::getErrorString() const noexcept {
+        return _errorString;
+    }
+    void Environment::setErrorString(const std::string &errorString) noexcept {
+        _errorString = errorString;
+    }
+    std::string
+    Environment::getWarningString() const noexcept {
+        return _warningString;
+    }
+    void
+    Environment::setWarningString(const std::string &warningString) noexcept {
+        _warningString = warningString;
+    }
+    std::string
+    Environment::getParsingFileName() const noexcept {
+        return _parsingFileName;
+    }
+    void Environment::setParsingFileName(const std::string &parsingFileName) noexcept {
+        _parsingFileName = parsingFileName;
+    }
+    std::string Environment::getErrorFileName() const noexcept {
+        return _errorFileName;
+    }
+    void Environment::setErrorFileName(const std::string &errorFileName) noexcept {
+        _errorFileName = errorFileName;
+    }
+    std::string Environment::getWarningFileName() const noexcept {
+        return _warningFileName;
+    }
+    void Environment::setWarningFileName(const std::string &warningFileName) noexcept {
+        _warningFileName = warningFileName;
+    }
+    ssize_t Environment::getErrorLineNumber() const noexcept {
+        return _errorLineNumber;
+    }
+    void Environment::setErrorLineNumber(ssize_t errorLineNumber) noexcept {
+        _errorLineNumber = errorLineNumber;
+    }
+    ssize_t Environment::getWarnLineNumber() const noexcept {
+        return _warnLineNumber;
+    }
+    void Environment::setWarnLineNumber(ssize_t warnLineNumber) noexcept {
+        _warnLineNumber = warnLineNumber;
+    }
+    ssize_t Environment::getErrorCaptureRouterCount() const noexcept {
+        return _errorCaptureRouterCount;
+    }
+    void Environment::setErrorCaptureRouterCount(ssize_t errorCaptureRouterCount) noexcept {
+        _errorCaptureRouterCount = errorCaptureRouterCount;
+    }
+    size_t Environment::getMaxErrorChars() const noexcept {
+        return _maxErrorChars;
+    }
+    void Environment::setMaxErrorChars(size_t maxErrorChars) noexcept {
+        _maxErrorChars = maxErrorChars;
+    }
+    size_t Environment::getCurrentErrorPosition() const noexcept {
+        return _currentErrorPosition;
+    }
+    void Environment::setCurrentErrorPosition(size_t currentErrorPosition) noexcept {
+        _currentErrorPosition = currentErrorPosition;
+    }
+    size_t Environment::getMaxWarnChars() const noexcept {
+        return _maxWarnChars;
+    }
+    void Environment::setMaxWarnChars(size_t maxWarnChars) noexcept {
+        _maxWarnChars = maxWarnChars;
+    }
+    size_t Environment::getCurrentWarnPosition() const noexcept {
+        return _currentWarnPosition;
+    }
+    void Environment::setCurrentWarnPosition(size_t currentWarnPosition) noexcept {
+        _currentWarnPosition = currentWarnPosition;
+    }
+    bool Environment::isExecuting() const noexcept {
+        return _executing;
+    }
+    void Environment::setExecuting(bool executing) noexcept {
+        _executing = executing;
+    }
+    void Environment::setBeforeResetCallback(std::function<bool(Environment &)> beforeResetCallback) noexcept {
+        _beforeResetCallback = beforeResetCallback;
+    }
 }
