@@ -40,9 +40,6 @@
 #include "Evaluable.h"
 namespace maya {
     class Environment;
-/**************/
-/* typeHeader */
-/**************/
     struct TypeHeader {
         TypeHeader(unsigned short t = 0) : _type(t) {}
         constexpr auto getType() const noexcept { return _type; }

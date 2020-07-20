@@ -14,12 +14,15 @@
 #include <map>
 #include <typeinfo>
 #include <typeindex>
+#include <forward_list>
 
 #include "Setup.h"
 #include "HoldsEnvironmentCallback.h"
 #include "Problem.h"
 #include "Entities.hxx"
 #include "Router.h"
+#include "Construct.h"
+#include "CallFunctionItem.h"
 namespace maya {
     class Environment {
     public:
@@ -70,11 +73,11 @@ namespace maya {
     public:
         bool addRouter(std::function<Router::Ptr(Environment&)> makerFunction);
         bool addRouter(const std::string& name, int priority,
-                LambdaRouter::QueryFunction queryFn = nullptr,
-                LambdaRouter::WriteFunction writeFn = nullptr,
-                LambdaRouter::ReadFunction readFn = nullptr,
-                LambdaRouter::UnreadFunction unreadFn = nullptr,
-                LambdaRouter::ExitFunction exitFn = nullptr);
+                       LambdaRouter::QueryFunction queryFn = nullptr,
+                       LambdaRouter::WriteFunction writeFn = nullptr,
+                       LambdaRouter::ReadFunction readFn = nullptr,
+                       LambdaRouter::UnreadFunction unreadFn = nullptr,
+                       LambdaRouter::ExitFunction exitFn = nullptr);
         void exitRouter(int code);
         int readRouter(const std::string& logicalName);
         int unreadRouter(const std::string& logicalName, int toUnread);
@@ -99,16 +102,18 @@ namespace maya {
         void setLineCountRouter(const std::string& value) noexcept { _lineCountRouter = value; }
         void incrementLineCount() noexcept;
         void decrementLineCount() noexcept;
-    public:
     public: // evaluation
         //void installPrimitive(EntityRecord::Ptr record, int position);
         //size_t installExternalAddressType(const externalAddressType &newType);
         void resetErrorFlags() noexcept;
         void setEvaluationError(bool value) noexcept;
         [[nodiscard]] constexpr auto getEvaluationError() const noexcept { return _evaluationError; }
+    public:
+        [[nodiscard]] std::function<void(Environment &, std::string, std::string, std::string, long)> getParserErrorCallback() const noexcept { return _parserErrorCallback; }
+        void setParserErrorCallback(std::function<void(Environment &, std::string, std::string, std::string, long)> parserErrorCallback) { _parserErrorCallback = parserErrorCallback; }
 
 
-    private:
+    private: // symbol
         Void::Ptr _voidConstant;
         DataTable<Lexeme> _symbolTable;
         DataTable<Float> _floatTable;
@@ -125,7 +130,7 @@ namespace maya {
         bool _sequenceOpMode = false;
         bool _returnContext = false;
         bool _breakContext = false;
-    private:
+    private: // router
         bool _abortExit = false;
         std::list<Router::Ptr> _listOfRouters;
         bool _awaitingInput = true;
@@ -141,6 +146,41 @@ namespace maya {
         //std::array<EntityRecord::Ptr, MAXIMUM_PRIMITIVES> PrimitivesArray;
         /// @todo make this a std::list instead to remove hardcoded limits
         //std::array<externalAddressType::Ptr, MAXIMUM_EXTERNAL_ADDRESS_TYPES> ExternalAddressTypes;
+    private: // construct
+        bool _clearReadyInProgress = false;
+        bool _clearInProgress = false;
+        bool _resetReadyInProgress = false;
+        bool _resetInProgress = false;
+        int16_t _clearReadyLocks = 0;
+        int _danglingConstructs = 0;
+        // std::list<SaveCallFunctionItem::Ptr> _listOfSaveFunctions;
+        bool _printWhileLoading = false;
+        bool _loadInProgress = false;
+        bool _watchCompilations = false;
+        bool _checkSyntaxMode = false;
+        bool _parsingConstruct = false;
+        std::string _errorString,
+                    _warningString,
+                    _parsingFileName,
+                    _errorFileName,
+                    _warningFileName;
+        ssize_t _errorLineNumber = 0;
+        ssize_t _warnLineNumber = 0;
+        ssize_t _errorCaptureRouterCount = 0;
+        size_t _maxErrorChars = 0;
+        size_t _currentErrorPosition = 0;
+        size_t _maxWarnChars = 0;
+        size_t _currentWarnPosition = 0;
+        std::function<void(Environment&, std::string, std::string, std::string, long)> _parserErrorCallback;
+        //std::map<std::string, Construct::Ptr> _listOfConstructs;
+        std::forward_list<VoidCallFunctionItem::Ptr> _resetFunctions;
+        std::forward_list<VoidCallFunctionItem::Ptr> _clearFunctions;
+        std::forward_list<BoolCallFunctionItem::Ptr> _clearReadyFunctions;
+        bool _executing = false;
+        std::function<bool(Environment&)> _beforeResetCallback;
+
+
+
 
     };
 } // end namespace maya

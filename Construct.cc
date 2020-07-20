@@ -79,7 +79,7 @@
 /*            and warnings during load command.              */
 /*                                                           */
 /*************************************************************/
-
+#if 0
 #include <cstdio>
 #include <cstring>
 
@@ -1014,4 +1014,4 @@ void DeallocateSaveCallList(
         tmpPtr = nextPtr;
     }
 }
-
+#endif

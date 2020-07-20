@@ -21,7 +21,8 @@ add_library(clips
 		BusyCountable.h BusyCountable.cc
 		ExternalFunctions.h ExternalFunctions.cc
 		Symbol.h Symbol.cc
-		)
+		Construct.h Construct.cc
+		CallFunctionItem.h)
 
 		#Agenda.h
 		#Analysis.h

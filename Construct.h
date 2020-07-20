@@ -74,7 +74,7 @@
 #pragma once
 
 #define _H_constrct
-
+#if 0
 typedef struct construct Construct;
 
 #include "Entities.hxx"
@@ -154,7 +154,6 @@ struct ConstructModule : public EnvironmentModule {
     bool Executing;
     BeforeResetFunction *BeforeResetCallback;
 };
-RegisterEnvironmentModule(ConstructModule, CONSTRUCT_DATA, Construct);
 
 bool Clear(const Environment::Ptr&);
 void Reset(const Environment::Ptr&);
@@ -299,6 +298,7 @@ bool ConstructSetWatchAccess(const Environment::Ptr&, Construct *, bool,
                              ConstructSetWatchFunction *);
 #endif
 bool ConstructsDeletable(const Environment::Ptr&);
+#endif
 
 #endif /* _H_constrct */
 

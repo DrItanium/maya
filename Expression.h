@@ -81,10 +81,22 @@ namespace maya {
         size_t size() const noexcept;
         bool evaluate(UDFValue::Ptr returnValue);
     };
+    /**
+     * @brief Used to preserve return and break status when doing call frames
+     */
+    class SavedContexts {
+    public:
+        using Self = SavedContexts;
+        using Ptr = std::shared_ptr<Self>;
+    public:
+        SavedContexts(bool rtn, bool brk) : _rtn(rtn), _brk(brk) { }
+        [[nodiscard]] constexpr auto getReturnStatus() const noexcept { return _rtn; }
+        [[nodiscard]] constexpr auto getBreakStatus() const noexcept { return _brk; }
+    private:
+        bool _rtn;
+        bool _brk;
+    };
 #if STUBBING_INACTIVE
-    #define arg_list argList
-#define next_arg nextArg
-
     struct ExpressionHashNode {
     public:
         using Self = ExpressionHashNode;
@@ -95,17 +107,6 @@ namespace maya {
         Expression::Ptr exp;
         unsigned long bsaveID;
     };
-
-    struct SavedContexts {
-    public:
-        using Self = SavedContexts;
-        using Ptr = std::shared_ptr<Self>;
-    public:
-        bool rtn = false;
-        bool brk = false;
-        Ptr nxt;
-    };
-
 #endif
     constexpr auto EXPRESSION_HASH_SIZE = 503;
 

@@ -538,4 +538,16 @@ namespace maya {
         /// @todo reimplement as C++ code
         //genexit(theEnv, num);
     }
+    void
+    Environment::resetErrorFlags() noexcept {
+        _evaluationError = false;
+        _executionHalted = false;
+    }
+    void
+    Environment::setEvaluationError(bool value) noexcept {
+        _evaluationError = value;
+        if (value) {
+            _executionHalted = true;
+        }
+    }
 }
