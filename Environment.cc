@@ -656,44 +656,23 @@ namespace maya {
     void Environment::setErrorLineNumber(ssize_t errorLineNumber) noexcept {
         _errorLineNumber = errorLineNumber;
     }
-    ssize_t Environment::getWarnLineNumber() const noexcept {
-        return _warnLineNumber;
-    }
     void Environment::setWarnLineNumber(ssize_t warnLineNumber) noexcept {
         _warnLineNumber = warnLineNumber;
-    }
-    ssize_t Environment::getErrorCaptureRouterCount() const noexcept {
-        return _errorCaptureRouterCount;
     }
     void Environment::setErrorCaptureRouterCount(ssize_t errorCaptureRouterCount) noexcept {
         _errorCaptureRouterCount = errorCaptureRouterCount;
     }
-    size_t Environment::getMaxErrorChars() const noexcept {
-        return _maxErrorChars;
-    }
     void Environment::setMaxErrorChars(size_t maxErrorChars) noexcept {
         _maxErrorChars = maxErrorChars;
-    }
-    size_t Environment::getCurrentErrorPosition() const noexcept {
-        return _currentErrorPosition;
     }
     void Environment::setCurrentErrorPosition(size_t currentErrorPosition) noexcept {
         _currentErrorPosition = currentErrorPosition;
     }
-    size_t Environment::getMaxWarnChars() const noexcept {
-        return _maxWarnChars;
-    }
     void Environment::setMaxWarnChars(size_t maxWarnChars) noexcept {
         _maxWarnChars = maxWarnChars;
     }
-    size_t Environment::getCurrentWarnPosition() const noexcept {
-        return _currentWarnPosition;
-    }
     void Environment::setCurrentWarnPosition(size_t currentWarnPosition) noexcept {
         _currentWarnPosition = currentWarnPosition;
-    }
-    bool Environment::isExecuting() const noexcept {
-        return _executing;
     }
     void Environment::setExecuting(bool executing) noexcept {
         _executing = executing;
