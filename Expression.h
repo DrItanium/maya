@@ -112,7 +112,7 @@ namespace maya {
 /********************/
 /* ENVIRONMENT DATA */
 /********************/
-
+#if 0
     constexpr auto EXPRESSION_DATA = 45;
     using FunctionDefinitionPtr = std::shared_ptr<struct FunctionDefinition>;
 
@@ -150,9 +150,8 @@ namespace maya {
         bool _breakContext = false;
 #endif
     };
-
-    RegisterEnvironmentModule(ExpressionModule, EXPRESSION_DATA, Expression);
-
+#endif
+#if STUBBING_INACTIVE
 /********************/
 /* Global Functions */
 /********************/
@@ -216,6 +215,7 @@ namespace maya {
                                                               FunctionDefinition *, const char *);
 
     bool RestrictionExists(const char *, int);
+#endif
 } // end namespace maya
 #endif
 

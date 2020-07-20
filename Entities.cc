@@ -82,7 +82,7 @@ namespace maya {
 
     void
     Lexeme::write(const std::string &logicalName) {
-        _parent.writeString(logicalName, _contents);
+        _parent.writeStringRouter(logicalName, _contents);
     }
 
     template<typename T>
@@ -95,12 +95,12 @@ namespace maya {
 
     void
     Float::write(const std::string &logicalName) {
-        _parent.writeString(logicalName, toString(_contents));
+        _parent.writeStringRouter(logicalName, toString(_contents));
     }
 
     void
     Integer::write(const std::string &logicalName) {
-        _parent.writeString(logicalName, toString(_contents));
+        _parent.writeStringRouter(logicalName, toString(_contents));
     }
 
     void

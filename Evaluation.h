@@ -204,29 +204,7 @@ namespace maya {
 #define SetBitMap(map, id)   (bitwiseSet<decltype(id), id % BITS_PER_BYTE>(map[(id) / BITS_PER_BYTE]))
 #define ClearBitMap(map, id) (bitwiseSet<decltype(id), id % BITS_PER_BYTE>(map [(id) / BITS_PER_BYTE]))
 
-    constexpr auto EVALUATION_DATA = 44;
-
-    struct EvaluationModule : public EnvironmentModule {
-        EvaluationModule(Environment &parent) : EnvironmentModule(parent) {}
-        std::shared_ptr<Expression> CurrentExpression;
-        bool EvaluationError = false;
-        bool HaltExecution = false;
-        int CurrentEvaluationDepth = 0;
-        size_t numberOfAddressTypes = 0;
-        //std::array<EntityRecord::Ptr, MAXIMUM_PRIMITIVES> PrimitivesArray;
-        /// @todo make this a std::list instead to remove hardcoded limits
-        //std::array<externalAddressType::Ptr, MAXIMUM_EXTERNAL_ADDRESS_TYPES> ExternalAddressTypes;
-        //void installPrimitive(EntityRecord::Ptr record, int position);
-        //size_t installExternalAddressType(const externalAddressType &newType);
-        void resetErrorFlags() noexcept;
-        void setEvaluationError(bool value) noexcept;
-        constexpr auto getEvaluationError() const noexcept { return EvaluationError; }
-        constexpr auto shouldHaltExecution() const noexcept { return HaltExecution; }
-        void haltExecution(bool value = true) noexcept { HaltExecution = value; }
-    };
-
-    RegisterEnvironmentModule(EvaluationModule, EVALUATION_DATA, Evaluation);
-
+#if STUBBING_INACTIVE
     void InitializeEvaluationData(const Environment::Ptr &);
     bool EvaluateExpression(const Environment::Ptr &, Expression *, UDFValue *);
     void WriteUDFValue(const Environment::Ptr &, const char *, UDFValue *);
@@ -242,7 +220,6 @@ namespace maya {
     bool GetFunctionReference(const Environment::Ptr &, const char *, Expression *);
     bool EvaluateAndStoreInDataObject(const Environment::Ptr &, bool, Expression *, UDFValue *, bool);
 
-#if STUBBING_INACTIVE
     //#define CVIsType(cv, cvType) (((1 << (((TypeHeader *) (cv)->value)->type)) & (cvType)) ? true : false)
     bool CVIsType(CLIPSValue::Ptr target, unsigned short type);
 #define CVIsLexeme(cv) (CVIsType(cv, LEXEME_BITS))

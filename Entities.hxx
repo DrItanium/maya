@@ -136,7 +136,6 @@ namespace maya {
         size_t hash(size_t range) override;
         void write(const std::string &logicalName) override;
         constexpr auto getContents() const noexcept { return _contents; }
-        bool evaluate(std::shared_ptr<UDFValue> retVal) override;
     private:
         BackingType _contents;
     };
@@ -144,7 +143,7 @@ namespace maya {
 /****************/
 /* Integer */
 /****************/
-    struct Integer : public EphemeralAtom, public TransferEvaluable<Integer> {
+    class Integer : public EphemeralAtom, public TransferEvaluable<Integer> {
     public:
         using Self = Integer;
         using Ptr = std::shared_ptr<Self>;
@@ -155,7 +154,6 @@ namespace maya {
         size_t hash(size_t range) override;
         void write(const std::string &logicalName) override;
         constexpr auto getContents() const noexcept { return _contents; }
-        bool evaluate(std::shared_ptr<UDFValue> retVal) override;
     private:
         BackingType _contents;
     };

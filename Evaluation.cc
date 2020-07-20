@@ -271,20 +271,19 @@ Expression::evaluate(UDFValue::Ptr returnValue) {
 /* ResetErrorFlags */
 /*******************/
     void
-    EvaluationModule::resetErrorFlags() noexcept {
-        EvaluationError = false;
-        HaltExecution = false;
+    Environment::resetErrorFlags() noexcept {
+        _evaluationError = false;
+        _executionHalted = false;
     }
     void
-    EvaluationModule::setEvaluationError(bool value) noexcept {
-        EvaluationError = value;
+    Environment::setEvaluationError(bool value) noexcept {
+        _evaluationError = value;
         if (value) {
-            HaltExecution = true;
+            _executionHalted = true;
         }
     }
 
 #if STUBBING_INACTIVE
-
     /**************************************************/
     /* WriteCLIPSValue: Prints a CLIPSValue structure */
     /*   to the specified logical name.               */

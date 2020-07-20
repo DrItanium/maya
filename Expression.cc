@@ -67,27 +67,6 @@ static unsigned long ListToPacked(Expression *, Expression *, unsigned long);
 //static ExpressionHashNode *FindHashedExpression(const Environment::Ptr&, Expression *, unsigned *, ExpressionHashNode **);
 static unsigned HashExpression(Expression *);
 
-void
-ExpressionModule::install(Environment & theEnv) {
-    theEnv.allocateEnvironmentModule<ExpressionModule>();
-    //InitExpressionPointers(theEnv);
-}
-ExpressionModule::ExpressionModule(Environment &parent) : EnvironmentModule(parent) {
-#if STUBBING_INACTIVE
-    ExpressionData(theEnv)->PTR_AND = FindFunction(theEnv, "and");
-    ExpressionData(theEnv)->PTR_OR = FindFunction(theEnv, "or");
-    ExpressionData(theEnv)->PTR_EQ = FindFunction(theEnv, "eq");
-    ExpressionData(theEnv)->PTR_NEQ = FindFunction(theEnv, "neq");
-    ExpressionData(theEnv)->PTR_NOT = FindFunction(theEnv, "not");
-
-    if ((ExpressionData(theEnv)->PTR_AND == nullptr) || (ExpressionData(theEnv)->PTR_OR == nullptr) ||
-        (ExpressionData(theEnv)->PTR_EQ == nullptr) || (ExpressionData(theEnv)->PTR_NEQ == nullptr) ||
-        (ExpressionData(theEnv)->PTR_NOT == nullptr)) {
-        SystemError(theEnv, "EXPRESSN", 1);
-        ExitRouter(theEnv, EXIT_FAILURE);
-    }
-#endif
-}
 #if STUBBING_INACTIVE
 /***************************************************/
 /* ExpressionInstall: Increments the busy count of */
@@ -104,7 +83,6 @@ void ExpressionInstall(
         expression = expression->nextArg;
     }
 }
-#endif
 /*****************************************************/
 /* ExpressionDeinstall: Decrements the busy count of */
 /*   atomic data values found in an expression.      */
@@ -112,7 +90,6 @@ void ExpressionInstall(
 void ExpressionDeinstall(
         const Environment::Ptr&theEnv,
         Expression *expression) {
-#if STUBBING_INACTIVE
     if (expression == nullptr) return;
 
     while (expression != nullptr) {
@@ -120,7 +97,6 @@ void ExpressionDeinstall(
         ExpressionDeinstall(theEnv, expression->argList);
         expression = expression->nextArg;
     }
-#endif
 }
 
 
@@ -134,7 +110,6 @@ void ExpressionDeinstall(
 Expression *PackExpression(
         const Environment::Ptr&theEnv,
         Expression *original) {
-#if STUBBING_INACTIVE
     Expression *packPtr;
 
     if (original == nullptr) return nullptr;
@@ -144,7 +119,6 @@ Expression *PackExpression(
     ListToPacked(original, packPtr, 0);
 
     return packPtr;
-#endif
     return nullptr;
 }
 /***********************************************************/
@@ -154,7 +128,6 @@ static unsigned long ListToPacked(
         Expression *original,
         Expression *destination,
         unsigned long count) {
-#if STUBBING_INACTIVE
     unsigned long i;
 
     if (original == nullptr) { return count; }
@@ -180,11 +153,9 @@ static unsigned long ListToPacked(
 
         original = original->nextArg;
     }
-#endif
     return count;
 }
 
-#if STUBBING_INACTIVE
 /***************************************************
   NAME         : FindHashedExpression
   DESCRIPTION  : Determines if a given expression

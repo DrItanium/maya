@@ -107,13 +107,6 @@ namespace maya {
 #endif
     };
 
-    class ExternalFunctionModule : public EnvironmentModule {
-    public:
-        static void install(Environment& parent);
-    public:
-        ExternalFunctionModule(Environment& parent) : EnvironmentModule(parent) { }
-
-    };
 #if STUBBING_INACTIVE
     #define UnknownFunctionType(target) (((FunctionDefinition *) target)->unknownReturnValueType)
 #define ExpressionFunctionPointer(target) ((target)->functionValue->functionPointer)

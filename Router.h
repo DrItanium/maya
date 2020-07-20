@@ -77,6 +77,7 @@
 #include <list>
 #include <map>
 
+
 namespace maya {
 
     const std::string &STDOUT() noexcept;
@@ -86,7 +87,7 @@ namespace maya {
 
     constexpr auto ROUTER_DATA = 46;
 
-    class Router {
+    class Router : public HoldsEnvironmentCallback {
     public:
         using Self = Router;
         using Ptr = std::shared_ptr<Self>;
@@ -109,8 +110,6 @@ namespace maya {
         virtual bool canUnread() const noexcept = 0;
         virtual bool canExit() const noexcept = 0;
         bool respondsTo(const std::string &logicalName) noexcept;
-    protected:
-        Environment &_parent;
     private:
         std::string _name;
         bool _active = true;
@@ -180,57 +179,5 @@ namespace maya {
         ReadFunction _readCallback;
         UnreadFunction _unreadCallback;
     };
-
-    struct RouterModule : public EnvironmentModule {
-    public:
-        static void install(Environment &theEnv);
-    public:
-        RouterModule(Environment &parent) : EnvironmentModule(parent) {}
-        ~RouterModule() override = default;
-        size_t _commandBufferInputCount = 0;
-        size_t _inputUngets = 0;
-        bool _awaitingInput = true;
-        std::string _lineCountRouter;
-        std::list<Router::Ptr> _listOfRouters;
-        bool _abort = false;
-    private:
-        bool insertRouter(Router::Ptr router);
-    public:
-        bool addRouter(std::function<Router::Ptr(Environment & )> makerFunction);
-        bool addRouter(const std::string &name, int priority,
-                       LambdaRouter::QueryFunction queryFn = nullptr,
-                       LambdaRouter::WriteFunction writeFn = nullptr,
-                       LambdaRouter::ReadFunction readFn = nullptr,
-                       LambdaRouter::UnreadFunction unreadFn = nullptr,
-                       LambdaRouter::ExitFunction exitFn = nullptr);
-        void exit(int code);
-        int read(const std::string &logicalName);
-        int unread(const std::string &logicalName, int toUnread);
-        void writeString(const std::string &logicalName, const std::string &str);
-        template<typename ... Strs>
-        void writeStrings(const std::string &logicalName, Strs &&... strings) {
-            (writeString(logicalName, strings), ...);
-        }
-        /**
-         * @brief Write the given string to STDOUT
-         * @param str the string to output to the stdout router
-         */
-        void write(const std::string &str);
-        /**
-         * @brief write the given string + a newline to the STDOUT router
-         * @param str the string to printout out
-         */
-        void writeLine(const std::string &str);
-        bool destroy(const std::string &logicalName);
-        bool query(const std::string &logicalName);
-        bool deactivate(const std::string &logicalName);
-        bool activate(const std::string &logicalName);
-        Router::Ptr find(const std::string &logicalName);
-        bool printRouterExists(const std::string &logicalName);
-        void unrecognizedRouterMessage(const std::string &logicalName);
-        void abortExit() noexcept;
-    };
-
-    RegisterEnvironmentModule(RouterModule, ROUTER_DATA, Router);
 }
 #endif /* _H_router */

@@ -1,68 +1,5 @@
-/*******************************************************/
-/*      "C" Language Integrated Production System      */
-/*                                                     */
-/*            CLIPS Version 6.40  10/18/16             */
-/*                                                     */
-/*                ENVIRONMENT MODULE                   */
-/*******************************************************/
-
-/*************************************************************/
-/* Purpose: Routines for supporting multiple environments.   */
-/*                                                           */
-/* Principal Programmer(s):                                  */
-/*      Gary D. Riley                                        */
-/*                                                           */
-/* Revision History:                                         */
-/*                                                           */
-/*      6.24: Added code to CreateEnvironment to free        */
-/*            already allocated data if one of the malloc    */
-/*            calls fail.                                    */
-/*                                                           */
-/*            Modified AllocateEnvironmentData to print a    */
-/*            message if it was unable to allocate memory.   */
-/*                                                           */
-/*            Renamed BOOLEAN macro type to intBool.         */
-/*                                                           */
-/*            Added CreateRuntimeEnvironment function.       */
-/*                                                           */
-/*            Added support for context information when an  */
-/*            environment is created (i.e a pointer from the */
-/*            CLIPS environment to its parent environment).  */
-/*                                                           */
-/*      6.30: Added support for passing context information  */
-/*            to user defined functions and callback         */
-/*            functions.                                     */
-/*                                                           */
-/*            Support for hashing EXTERNAL_ADDRESS_TYPE      */
-/*            data type.                                     */
-/*                                                           */
-/*            Added const qualifiers to remove C++           */
-/*            deprecation warnings.                          */
-/*                                                           */
-/*            Removed deallocating message parameter from    */
-/*            EnvReleaseMem.                                 */
-/*                                                           */
-/*            Removed support for BLOCK_MEMORY.              */
-/*                                                           */
-/*      6.40: Refactored code to reduce header dependencies  */
-/*            in sysdep.c.                                   */
-/*                                                           */
-/*            Pragma once and other inclusion changes.       */
-/*                                                           */
-/*            Added support for booleans with <stdbool.h>.   */
-/*                                                           */
-/*            Removed use of void pointers for specific      */
-/*            data structures.                               */
-/*                                                           */
-/*            ALLOW_ENVIRONMENT_GLOBALS no longer supported. */
-/*                                                           */
-/*            Eval support for run time and bload only.      */
-/*                                                           */
-/*************************************************************/
-
-#include "Environment.h"
-
 #include "Setup.h"
+#include "Environment.h"
 #include "Router.h"
 #if 0
 #include "BasicMathFunctions.h"
@@ -138,26 +75,26 @@
 #endif
 namespace maya {
 
-    void
-    EnvironmentModule::onClear() noexcept {
-        // by default do nothing
-    }
-
-    void
-    EnvironmentModule::onReset() noexcept {
-
-    }
-
-    Environment::Ptr
-    Environment::create() {
-        return std::make_shared<Environment>();
-    }
     Environment::Environment() : _voidConstant(std::make_shared<Void>(*this)){
         _positiveInfinity = createSymbol(PositiveInfinityString);
         _negativeInfinity = createSymbol(NegativeInfinityString);
         _zero = createInteger(0);
         _trueSymbol = createSymbol(TrueString);
         _falseSymbol = createSymbol(FalseString);
+#if STUBBING_INACTIVE
+        ExpressionData(theEnv)->PTR_AND = FindFunction(theEnv, "and");
+    ExpressionData(theEnv)->PTR_OR = FindFunction(theEnv, "or");
+    ExpressionData(theEnv)->PTR_EQ = FindFunction(theEnv, "eq");
+    ExpressionData(theEnv)->PTR_NEQ = FindFunction(theEnv, "neq");
+    ExpressionData(theEnv)->PTR_NOT = FindFunction(theEnv, "not");
+
+    if ((ExpressionData(theEnv)->PTR_AND == nullptr) || (ExpressionData(theEnv)->PTR_OR == nullptr) ||
+        (ExpressionData(theEnv)->PTR_EQ == nullptr) || (ExpressionData(theEnv)->PTR_NEQ == nullptr) ||
+        (ExpressionData(theEnv)->PTR_NOT == nullptr)) {
+        SystemError(theEnv, "EXPRESSN", 1);
+        ExitRouter(theEnv, EXIT_FAILURE);
+    }
+#endif
         // setup the initial symbols
         /// @todo fix this code
         /*===================================================*/
@@ -342,12 +279,6 @@ namespace maya {
 
     }
 
-    void
-    Environment::install(std::function<void(Environment &)> body) {
-        body(*this);
-    }
-
-
     Lexeme::Ptr
     Environment::createLexeme(const std::string &str, unsigned short type) {
         auto newLexeme = std::make_shared<Lexeme>(*this, str, type);
@@ -412,4 +343,199 @@ namespace maya {
         return value ? _trueSymbol : _falseSymbol;
     }
 
+    void
+    Environment::incrementLineCount() noexcept {
+        /// @todo implement
+    }
+    void
+    Environment::decrementLineCount() noexcept {
+        /// @todo implement
+    }
+    void
+    Environment::printErrorID(const std::string &module, int errorID, bool printCR) {
+        /// @todo implement
+    }
+
+/*********************************************************/
+/* AddRouter: Adds an I/O router to the list of routers. */
+/*********************************************************/
+    bool
+    Environment::addRouter(std::function<Router::Ptr (Environment &)> makerFunction) {
+        return insertRouter(makerFunction(*this));
+    }
+    bool
+    Environment::addRouter(const std::string &name, int priority, LambdaRouter::QueryFunction queryFn, LambdaRouter::WriteFunction writeFn, LambdaRouter::ReadFunction readFn, LambdaRouter::UnreadFunction unreadFn, LambdaRouter::ExitFunction exitFn) {
+        return insertRouter(std::make_shared<LambdaRouter>(*this, name, priority, queryFn, writeFn, readFn, unreadFn, exitFn));
+    }
+    bool
+    Environment::insertRouter(Router::Ptr router) {
+        /// @todo implement this
+        if (_listOfRouters.empty()) {
+            _listOfRouters.emplace_back(router);
+            return true;
+        }
+        // first check and see if the router is already claimed
+        for (auto& existingRouter : _listOfRouters) {
+            if (existingRouter->getName() == router->getName()) {
+                return false;
+            }
+        }
+        for (auto pos = _listOfRouters.begin(); pos != _listOfRouters.end(); ++pos) {
+            auto rtr = *pos;
+            if (router->getPriority() >= rtr->getPriority()) {
+                // we have found the place to insert before
+                _listOfRouters.emplace(pos, router);
+                return true;
+            }
+        }
+        // if we got here then it means we should emplace_back this entry since it was never greater than any of the other entries
+        _listOfRouters.emplace_back(router);
+        return true;
+    }
+    bool
+    Environment::destroyRouter(const std::string &logicalName) {
+        for (auto pos = _listOfRouters.begin(); pos != _listOfRouters.end(); ++pos) {
+            auto router = *pos; // this will go out of scope and cause the shared pointer to reclaim
+            if (router->getName() == logicalName) {
+                // need to purge it out
+                _listOfRouters.erase(pos);
+                return true;
+            }
+        }
+        return false;
+    }
+    bool
+    Environment::queryRouter(const std::string &logicalName) {
+        for (auto& router : _listOfRouters) {
+            if (router->respondsTo(logicalName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    bool
+    Environment::deactivateRouter(const std::string &logicalName) {
+        for (auto& element : _listOfRouters) {
+            if (element->getName() == logicalName) {
+                element->deactivate();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    bool
+    Environment::activateRouter(const std::string &logicalName) {
+        for (auto& element : _listOfRouters) {
+            if (element->getName() == logicalName) {
+                element->activate();
+                return true;
+            }
+        }
+        return false;
+    }
+    Router::Ptr
+    Environment::findRouter(const std::string& logicalName) {
+        for (auto& element : _listOfRouters) {
+            if (element->getName() == logicalName) {
+                return element;
+            }
+        }
+        return nullptr;
+    }
+
+/*****************************************************/
+/* UnrecognizedRouterMessage: Standard error message */
+/*   for an unrecognized router name.                */
+/*****************************************************/
+    void
+    Environment::unrecognizedRouterMessage(const std::string& logicalName) {
+        printErrorID("ROUTER", 1, false);
+        writeStringsRouter(STDERR(), "Logical name '", logicalName, "' was not recognized by any routers.\n");
+    }
+    bool
+    Environment::printRouterExists(const std::string &logicalName) {
+        for (const auto& router : _listOfRouters) {
+            if (router->canWriteTo() && router->respondsTo(logicalName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void
+    Environment::writeStringRouter(const std::string &logicalName, const std::string &str) {
+        if (str.empty()) {
+            return;
+        }
+        for (auto router : _listOfRouters) {
+            if (router->canWriteTo() && router->respondsTo(str)) {
+                router->write(logicalName, str);
+                return;
+            }
+        }
+        if (logicalName != STDERR()) {
+            unrecognizedRouterMessage(logicalName);
+        }
+    }
+    void
+    Environment::write(const std::string &str) {
+        writeStringRouter(STDOUT(), str);
+    }
+
+    void
+    Environment::writeLine(const std::string &str) {
+        writeStringRouter(STDOUT(), str);
+        writeStringRouter(STDOUT(), "\n");
+    }
+    int
+    Environment::readRouter(const std::string& logicalName) {
+        for (auto& router : _listOfRouters) {
+            if (router->canRead() && router->respondsTo(logicalName)) {
+                auto inchar = router->read(logicalName);
+                if (inchar == '\n') {
+                    if (!_lineCountRouter.empty() && (logicalName == _lineCountRouter)) {
+                        incrementLineCount();
+                    }
+                }
+                return inchar;
+            }
+        }
+        unrecognizedRouterMessage(logicalName);
+        return -1;
+    }
+
+    int
+    Environment::unreadRouter(const std::string &logicalName, int toUnread) {
+        for (auto& router : _listOfRouters) {
+            if (router->canUnread() && router->respondsTo(logicalName)) {
+                if (toUnread == '\n') {
+                    if (!_lineCountRouter.empty() && (logicalName == _lineCountRouter)) {
+                        decrementLineCount();
+                    }
+                }
+                return router->unread(logicalName, toUnread);
+            }
+        }
+        // the logical name was not recognized by any routers
+        unrecognizedRouterMessage(logicalName);
+        return -1;
+    }
+    void
+    Environment::exitRouter(int code) {
+        _abortExit = false;
+        for (auto& router : _listOfRouters) {
+            if (router->isActive()) {
+                if (router->canExit()) {
+                    router->onExit(code);
+                }
+            }
+        }
+        if (_abortExit) {
+            return;
+        }
+        /// @todo reimplement as C++ code
+        //genexit(theEnv, num);
+    }
 }
