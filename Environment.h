@@ -162,6 +162,29 @@ namespace maya {
         void setExecuting(bool executing) noexcept;
         [[nodiscard]] std::function<bool(Environment &)> getBeforeResetCallback() const noexcept { return _beforeResetCallback; }
         void setBeforeResetCallback(std::function<bool(Environment &)> beforeResetCallback) noexcept;
+        void clear();
+        void reset();
+        bool save(const std::string& path);
+        bool addResetFunction(VoidCallFunctionItem::Ptr target) noexcept;
+        template<typename ... Args>
+        bool addResetFunction(Args&& ... args) noexcept {
+            return addResetFunction(std::make_shared<VoidCallFunctionItem>(*this, std::forward<Args>(args)...));
+        }
+        bool removeResetFunction(const std::string& name) noexcept;
+        bool addClearReadyFunction(BoolCallFunctionItem::Ptr target) noexcept;
+        template<typename ... Args>
+        bool addClearReadyFunction(Args&& ... args) noexcept {
+            return addClearReadyFunction(std::make_shared<BoolCallFunctionItem>(*this, std::forward<Args>(args)...));
+        }
+        bool removeClearReadyFunction(const std::string& name) noexcept;
+        bool addClearFunction(VoidCallFunctionItem::Ptr) noexcept;
+        template<typename ... Args>
+        bool addClearFunction(Args&& ... args) noexcept {
+            return addClearFunction(std::make_shared<VoidCallFunctionItem>(*this, std::forward<Args>(args)...));
+        }
+        bool removeClearFunction(const std::string& name) noexcept;
+        void incrementClearReadyLocks() noexcept;
+        void decrementClearReadyLocks() noexcept;
 
 
     private: // symbol
