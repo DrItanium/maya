@@ -47,7 +47,7 @@
 /***************************************************************************/
 
 #include "Environment.h"
-
+#include <iostream>
 #if   UNIX_V || LINUX || DARWIN || UNIX_7 || WIN_GCC || WIN_MVC
 #include <signal.h>
 #endif
@@ -74,6 +74,12 @@ int main(
         int argc,
         char *argv[]) {
     mainEnv = std::make_shared<maya::Environment>();
+    auto symbol = mainEnv->getTrueSymbol();
+    std::cout << "Emitting True Symbol: " << *symbol << std::endl;
+    auto newSymbol2 = mainEnv->createSymbol("Donuts");
+    std::cout << "Emitting newSymbol2: " << *newSymbol2 << std::endl;
+    auto newSymbol3 = mainEnv->createSymbol("Donuts are tasty");
+    std::cout << "Emitting newSymbol3: " << *newSymbol3 << std::endl;
 #if STUBBING_INACTIVE
 #if UNIX_V || LINUX || DARWIN || UNIX_7 || WIN_GCC || WIN_MVC
     signal(SIGINT, CatchCtrlC);
@@ -85,7 +91,7 @@ int main(
     CommandLoop(mainEnv);
 #endif
 
-    return -1;
+    return 0;
 }
 #if STUBBING_INACTIVE
 #if UNIX_V || LINUX || DARWIN || UNIX_7 || WIN_GCC || WIN_MVC || DARWIN
