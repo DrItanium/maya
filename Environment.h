@@ -217,6 +217,8 @@ namespace maya {
         bool _executionHalted = false;
         size_t _currentEvaluationDepth = 0;
         size_t _numberOfAddressTypes = 0;
+        // this is not necessary because C++ merges the entity record and the entity instance together
+        // it is called a class/struct
         //std::array<EntityRecord::Ptr, MAXIMUM_PRIMITIVES> PrimitivesArray;
         /// @todo make this a std::list instead to remove hardcoded limits
         //std::array<externalAddressType::Ptr, MAXIMUM_EXTERNAL_ADDRESS_TYPES> ExternalAddressTypes;

@@ -287,18 +287,17 @@ namespace maya {
     // The downside to this approach is that the data could be non-thread safe.
     //
     // Regardless, the EntityRecord and Entity separation concept needs to be abolished because we have objects.
-
-
+    template<typename T>
+    constexpr auto AddsToRuleComplexity = false;
     struct Entity : public HoldsEnvironmentCallback, public BusyCountable, public Evaluable {
     public:
         using Self = Entity;
         using Ptr = std::shared_ptr<Self>;
     public:
-        Entity(Environment &parent, const std::string &name, unsigned int type, bool copyToEvaluate, bool addsToRuleComplexity);
+        Entity(Environment &parent, const std::string &name, unsigned int type);
         virtual ~Entity() = default;
         [[nodiscard]] std::string getName() const noexcept { return _name; }
         [[nodiscard]] constexpr auto getType() const noexcept { return _type; }
-        [[nodiscard]] constexpr auto addsToRuleComplexity() const noexcept { return _addsToRuleComplexity; }
         virtual void shortPrint(const std::string &logicalName);
         virtual void longPrint(const std::string &logicalName);
         bool evaluate(std::shared_ptr<UDFValue> returnValue) override;
@@ -306,8 +305,6 @@ namespace maya {
     private:
         std::string _name;
         unsigned int _type: 13;
-        // this is handled by special forms of Evaluable and a special inheritance of entity that is used
-        bool _addsToRuleComplexity: 1;
     };
 
 #if 0
