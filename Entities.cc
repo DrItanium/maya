@@ -18,12 +18,6 @@ namespace maya {
     }
 
     size_t
-    BitMap::hash(size_t range) {
-        /// @todo implement
-        return 0;
-    }
-
-    size_t
     Lexeme::hash(size_t range) {
         size_t tally = 0;
         for (const auto &c : _contents) {
@@ -103,10 +97,6 @@ namespace maya {
         _parent.writeStringRouter(logicalName, toString(_contents));
     }
 
-    void
-    BitMap::write(const std::string &logicalName) {
-        /// @todo implement
-    }
     void
     ExternalAddress::write(const std::string& logicalName) {
         /// @todo implement

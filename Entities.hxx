@@ -155,19 +155,20 @@ namespace maya {
         BackingType _contents;
     };
 
-/***************/
-/* BitMap */
-/***************/
+    /***
+     * @brief A wrapper around a generic linear quantity of bytes that can be viewed under different lenses.
+     * This is a primitive but really is just another kind of generic atomic quantity. It allows you to bind non simple type ids
+     * as an atom while tracking them (and use the atomic tables as such). In the original clips this information was easily handled
+     * by a char pointer and a size. This is no longer the case and you must inherit from BitMap and override the corresponding methods
+     * as part of this process. I guess you could view it as an opaque wrapper for the purposes of tracking.
+     *
+     */
     struct BitMap : public Atom {
     public:
         using Self = BitMap;
         using Ptr = std::shared_ptr<Self>;
     public:
         BitMap(Environment& parent, unsigned short type) : Atom(parent, type) {}
-        size_t hash(size_t range) override;
-        void write(const std::string& logicalName) override;
-    public:
-        std::vector<bool> contents;
     };
 
 /************************/
