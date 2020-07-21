@@ -298,7 +298,6 @@ namespace maya {
         virtual ~Entity() = default;
         [[nodiscard]] std::string getName() const noexcept { return _name; }
         [[nodiscard]] constexpr auto getType() const noexcept { return _type; }
-        [[nodiscard]] constexpr auto copyToEvaluate() const noexcept { return _copyToEvaluate; }
         [[nodiscard]] constexpr auto addsToRuleComplexity() const noexcept { return _addsToRuleComplexity; }
         virtual void shortPrint(const std::string &logicalName);
         virtual void longPrint(const std::string &logicalName);
@@ -308,7 +307,6 @@ namespace maya {
         std::string _name;
         unsigned int _type: 13;
         // this is handled by special forms of Evaluable and a special inheritance of entity that is used
-        bool _copyToEvaluate: 1;
         bool _addsToRuleComplexity: 1;
     };
 
