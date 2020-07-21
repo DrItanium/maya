@@ -10,15 +10,13 @@ add_library(clips
 		Setup.h UserSetup.h
 		Problem.h
 		Evaluable.h Constants.h
-		Entities.hxx Entities.cc CLIPSValue.cc
+		Entities.hxx Entities.cc
 		Environment.h Environment.cc
 		Evaluation.h Evaluation.cc
 		Expression.h Expression.cc
 		Router.h Router.cc
-		ReferenceCounted.h ReferenceCounted.cc
 		Hashable.h
 		HoldsEnvironmentCallback.h HoldsEnvironmentCallback.cc
-		BusyCountable.h BusyCountable.cc
 		ExternalFunctions.h ExternalFunctions.cc
 		Symbol.h Symbol.cc
 		Construct.h Construct.cc

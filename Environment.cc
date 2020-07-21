@@ -293,8 +293,6 @@ namespace maya {
 
         // we did not find the symbol so instead, add it to the list
         // configure the rest of the design as well
-        newLexeme->setBucket(hashCode);
-        newLexeme->setIsPermanent(false);
         _symbolTable.emplace(hashCode, newLexeme);
         // in the CLIPS original code there is an addition to the list of ephemeral nodes.
         // This list of nodes is used to do garbage collection as we go through. I believe that
@@ -314,8 +312,6 @@ namespace maya {
                 return peek;
             }
         }
-        newFloat->setBucket(hash);
-        newFloat->setIsPermanent(false);
         /// @todo ephemeral hash garbage frame code was here, add it back in if it makes sense
         _floatTable.emplace(hash, newFloat);
         return newFloat;
@@ -330,9 +326,6 @@ namespace maya {
                 return peek;
             }
         }
-        // not in the list
-        newInteger->setBucket(hash);
-        newInteger->setIsPermanent(false);
         // ephemeral hash node support was here
         _integerTable.emplace(hash, newInteger);
         return newInteger;

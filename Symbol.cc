@@ -83,7 +83,6 @@
 //#include "Utility.h"
 
 #include "Symbol.h"
-#include "ReferenceCounted.h"
 namespace maya {
 
 }

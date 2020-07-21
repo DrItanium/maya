@@ -193,7 +193,7 @@ namespace maya {
         DataTable<Float> _floatTable;
         DataTable<Integer> _integerTable;
         /// @todo reimplement this later
-        //DataTable<BitMap> _bitmapTable;
+        DataTable<Entity> _entityTable; // in place of the bitmap table
         //DataTable<ExternalAddress> _externalAddressTable;
         Lexeme::Ptr _positiveInfinity;
         Lexeme::Ptr _negativeInfinity;

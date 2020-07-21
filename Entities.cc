@@ -114,14 +114,6 @@ namespace maya {
 
     }
     void
-    PatternEntity::incrementBasisCount() {
-
-    }
-    void
-    PatternEntity::decrementBasisCount() {
-
-    }
-    void
     PatternEntity::onMatch() {
 
     }
@@ -131,6 +123,12 @@ namespace maya {
     }
     Void::Void(Environment &parent) : Atom(parent, VOID_TYPE) {
     }
+
+    void
+    Entity::write(const std::string& logicalName) {
+        longPrint(logicalName);
+    }
+
 } // end namespace maya
 
 std::ostream&

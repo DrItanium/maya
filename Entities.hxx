@@ -32,11 +32,9 @@
 #include <iostream>
 
 #include "Constants.h"
-#include "ReferenceCounted.h"
 #include "Hashable.h"
 #include "HoldsEnvironmentCallback.h"
 #include "IORouterAware.h"
-#include "BusyCountable.h"
 #include "Evaluable.h"
 namespace maya {
     class Environment;
@@ -48,7 +46,7 @@ namespace maya {
         unsigned short _type;
     };
 
-    class Atom : public HoldsEnvironmentCallback, public TypeHeader, public IORouterAware, public ReferenceCounted, public Hashable {
+    class Atom : public HoldsEnvironmentCallback, public TypeHeader, public IORouterAware, public Hashable {
     public:
         Atom(Environment& parent, unsigned short type = 0) : HoldsEnvironmentCallback(parent), TypeHeader(type) {}
         ~Atom() override = default;
@@ -81,9 +79,6 @@ namespace maya {
         Void(Environment& parent);
         ~Void() override = default;
         size_t hash(size_t) override { return 0; }
-        void retain() override { }
-        void release() override { }
-        bool canRelease() const noexcept override { return false; }
         void write(const std::string& logicalName) override { }
     };
 
@@ -155,22 +150,6 @@ namespace maya {
         BackingType _contents;
     };
 
-    /***
-     * @brief A wrapper around a generic linear quantity of bytes that can be viewed under different lenses.
-     * This is a primitive but really is just another kind of generic atomic quantity. It allows you to bind non simple type ids
-     * as an atom while tracking them (and use the atomic tables as such). In the original clips this information was easily handled
-     * by a char pointer and a size. This is no longer the case and you must inherit from BitMap and override the corresponding methods
-     * as part of this process. I guess you could view it as an opaque wrapper for the purposes of tracking.
-     *
-     */
-    struct BitMap : public Atom {
-    public:
-        using Self = BitMap;
-        using Ptr = std::shared_ptr<Self>;
-    public:
-        BitMap(Environment& parent, unsigned short type) : Atom(parent, type) {}
-    };
-
 /************************/
 /* ExternalAddress */
 /************************/
@@ -192,7 +171,7 @@ namespace maya {
 /**************/
 /* multifield */
 /**************/
-    struct Multifield : public HoldsEnvironmentCallback, public TypeHeader, public BusyCountable, public Evaluable {
+    struct Multifield : public HoldsEnvironmentCallback, public TypeHeader, public Evaluable {
     public:
         using Self = Multifield;
         using Ptr = std::shared_ptr<Self>;
@@ -217,13 +196,8 @@ namespace maya {
             std::shared_ptr<Instance>,
             ExternalAddress::Ptr>;
 
-    struct HoldsOntoGenericValue : public ReferenceCountable {
-        HoldsOntoGenericValue() = default;
-        ~HoldsOntoGenericValue() override = default;
+    struct HoldsOntoGenericValue {
         ValueContainer contents;
-        void retain() override;
-        void release() override;
-        bool canRelease() const noexcept override;
         unsigned short getType() const noexcept;
     };
 
@@ -246,7 +220,6 @@ namespace maya {
         using Ptr = std::shared_ptr<Self>;
     public:
         UDFValue() = default;
-        ~UDFValue() override = default;
 
         std::any supplementalInfo;
         size_t begin;
@@ -270,43 +243,49 @@ namespace maya {
         std::list<std::shared_ptr<struct Expression>>& _args;
         UDFValue::Ptr returnValue;
     };
-    // So in the original code the EntityRecord was used as a sort of "class wrapper" to provide
-    // common functionality to a given C type (think a virtual abstract class of sorts). This
-    // design required that one register each type to a given primitive type through an EntityRecord
-    // data structure which described a set of common actions and properties. While this functionaity could
-    // be ported over to the C++ rewrite, I feel that the C++ language provides quite a bit of functionality which
-    // not only allows for more type safety but also expandability.
-    //
-    // For example, each entity record has an associated type and a few boolean properties associated with it.
-    // With the boolean properties we are storing constant data into a unsigned short along with the associated type.
-    // This information does _not_ change at runtime and is better served as compile time constants.
-    //
-    // An entity also has an associated name with it as well. This is also the same for all instances of the thing that
-    // is tied to the entity record. Thus we also have another candidate for template parameters.
-    //
-    // The entity record itself may stay as an independent thing but it will be purely informational and the same for each environment.
-    // The downside to this approach is that the data could be non-thread safe.
-    //
-    // Regardless, the EntityRecord and Entity separation concept needs to be abolished because we have objects.
-    template<typename T>
-    constexpr auto AddsToRuleComplexity = false;
-    struct Entity : public HoldsEnvironmentCallback, public BusyCountable, public Evaluable {
+
+    struct Entity : public HoldsEnvironmentCallback, public Evaluable, public Hashable, public IORouterAware {
     public:
         using Self = Entity;
         using Ptr = std::shared_ptr<Self>;
     public:
-        Entity(Environment &parent, const std::string &name, unsigned int type);
+        Entity(Environment &parent);
         virtual ~Entity() = default;
-        [[nodiscard]] std::string getName() const noexcept { return _name; }
-        [[nodiscard]] constexpr auto getType() const noexcept { return _type; }
+        void write(const std::string& logicalName) override;
         virtual void shortPrint(const std::string &logicalName);
         virtual void longPrint(const std::string &logicalName);
         bool evaluate(std::shared_ptr<UDFValue> returnValue) override;
-        // retain and release are provided by BusyCountable
-    private:
-        std::string _name;
-        unsigned int _type: 13;
     };
+    template<typename T>
+    struct EntityMetadata final {
+        EntityMetadata() = delete;
+        ~EntityMetadata() = delete;
+        EntityMetadata(const EntityMetadata&) = delete;
+        EntityMetadata(EntityMetadata&&) = delete;
+        EntityMetadata& operator=(const EntityMetadata&) = delete;
+        EntityMetadata& operator=(EntityMetadata&&) = delete;
+        static constexpr bool addsToRuleComplexity() noexcept { return false; }
+    };
+
+#define DefEntityMetadata(T, TypeName, TypeID, IsComplex) \
+template<> \
+    struct EntityMetadata<T> final { \
+        EntityMetadata() = delete; \
+        ~EntityMetadata() = delete; \
+        EntityMetadata(const EntityMetadata&) = delete; \
+        EntityMetadata(EntityMetadata&&) = delete; \
+        EntityMetadata& operator=(const EntityMetadata&) = delete; \
+        EntityMetadata& operator=(EntityMetadata&&) = delete; \
+        static const std::string& getName() noexcept { \
+            static std::string _value = TypeName ; \
+            return _value; \
+        } \
+        static constexpr unsigned short getId() noexcept { return TypeID; } \
+        static constexpr bool isComplex() noexcept { return IsComplex; } \
+    }
+    template<typename T>
+    constexpr auto AddsToRuleComplexity = EntityMetadata<T>::addsToRuleComplexity();
+
 
 #if 0
     /****************/
@@ -381,8 +360,6 @@ namespace maya {
     public:
         using Entity::Entity;
         ~PatternEntity() override = default;
-        virtual void decrementBasisCount();
-        virtual void incrementBasisCount();
         virtual void onMatch();
         virtual bool synchronized();
         [[nodiscard]] constexpr auto getTimeTag() const noexcept { return _timeTag; }
