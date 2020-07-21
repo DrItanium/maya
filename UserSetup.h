@@ -14,12 +14,5 @@
 #if !STUBBING_INACTIVE
 #warning "Specific bodies are currently stubbed"
 #endif
-template<typename T>
-inline void zeroMemory(T* container) noexcept {
-    char* tmpBuf = (char*)container;
-    for (int i = 0; i < sizeof(T); ++i) {
-        tmpBuf[i] = 0;
-    }
-}
 
 #endif
