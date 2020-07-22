@@ -149,7 +149,19 @@ namespace maya {
     private:
         BackingType _contents;
     };
+    /**
+     * @brief Generic view of a binary quantity separated into different fields
+     */
+    class BitMap : public Atom, public Evaluable {
+    public:
+        using Self = BitMap;
+        using Ptr = std::shared_ptr<Self>;
+    public:
+        BitMap(Environment& parent, unsigned short externalType) : Atom(parent, externalType) { }
+        ~BitMap() override = default;
+        virtual size_t size() const noexcept = 0;
 
+    };
 /************************/
 /* ExternalAddress */
 /************************/

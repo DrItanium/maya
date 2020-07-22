@@ -330,6 +330,16 @@ namespace maya {
         _integerTable.emplace(hash, newInteger);
         return newInteger;
     }
+#if 0
+    void
+    Environment::installEntity(Entity::Ptr target) {
+        auto hash = target->hash(BITMAP_HASH_SIZE);
+        auto range = _entityTable.equal_range(hash);
+        for (auto iter = range.first; iter != range.second; ++iter) {
+
+        }
+    }
+#endif
 
     Lexeme::Ptr
     Environment::createBoolean(bool value) noexcept {
@@ -673,4 +683,5 @@ namespace maya {
     void Environment::setBeforeResetCallback(std::function<bool(Environment &)> beforeResetCallback) noexcept {
         _beforeResetCallback = beforeResetCallback;
     }
+
 }
