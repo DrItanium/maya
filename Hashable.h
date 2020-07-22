@@ -8,7 +8,7 @@
 namespace maya {
     class Hashable {
     public:
-        virtual size_t hash(size_t) = 0;
+        virtual size_t hash(size_t range) const = 0;
     };
 } // end namespace maya
 

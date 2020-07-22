@@ -89,7 +89,7 @@ namespace maya {
         [[nodiscard]] bool hasBody() const noexcept { return (bool)_function; }
         [[nodiscard]] constexpr auto getMinArgs() const noexcept { return _minArgs; }
         [[nodiscard]] constexpr auto getMaxArgs() const noexcept { return _maxArgs; }
-        size_t hash(size_t limit) override;
+        size_t hash(size_t limit) const override;
     private:
         Lexeme::Ptr _callFunctionName;
         unsigned int _returnType;

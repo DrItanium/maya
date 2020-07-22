@@ -74,7 +74,7 @@ namespace maya {
         }
    }
    size_t
-   ExternalFunction::hash(size_t range) {
+   ExternalFunction::hash(size_t range) const {
        return _callFunctionName->hash(range);
    }
     ExternalFunction::ExternalFunction(Environment &env,

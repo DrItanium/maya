@@ -10,15 +10,19 @@
 
 namespace maya {
 
+    size_t
+    BitMap::hash(size_t range) const {
+
+    }
 //size_t hash(size_t range) override;
     size_t
-    ExternalAddress::hash(size_t range) {
+    ExternalAddress::hash(size_t range) const {
         /// @todo implement
         return 0;
     }
 
     size_t
-    Lexeme::hash(size_t range) {
+    Lexeme::hash(size_t range) const {
         size_t tally = 0;
         for (const auto &c : _contents) {
             tally = tally * 127 + (size_t) c;
@@ -31,7 +35,7 @@ namespace maya {
     }
 
     size_t
-    Integer::hash(size_t range) {
+    Integer::hash(size_t range) const {
 #if WIN_MVC
         auto tmp = contents;
         if (tmp < 0) {
@@ -44,7 +48,7 @@ namespace maya {
     }
 
     size_t
-    Float::hash(size_t range) {
+    Float::hash(size_t range) const {
         size_t tally = 0;
         union {
             decltype(_contents) value;

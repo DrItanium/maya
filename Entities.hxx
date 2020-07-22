@@ -78,7 +78,7 @@ namespace maya {
     public:
         Void(Environment& parent);
         ~Void() override = default;
-        size_t hash(size_t) override { return 0; }
+        size_t hash(size_t range) const override { return 0; }
         void write(const std::string& logicalName) override { }
     };
 
@@ -107,7 +107,7 @@ namespace maya {
         Lexeme(Environment& parent, const std::string& contents, unsigned short type) : EphemeralAtom(parent, type), _contents(contents) { }
         std::string getContents() const noexcept { return _contents; }
         ~Lexeme() override = default;
-        size_t hash(size_t range) override;
+        size_t hash(size_t range) const override;
         void write(const std::string& logicalName) override;
     private:
         std::string _contents;
@@ -125,7 +125,7 @@ namespace maya {
     public:
         Float(Environment& parent, BackingType value = 0.0) : EphemeralAtom(parent, FLOAT_TYPE), _contents(value) {}
         ~Float() override = default;
-        size_t hash(size_t range) override;
+        size_t hash(size_t range) const override;
         void write(const std::string &logicalName) override;
         constexpr auto getContents() const noexcept { return _contents; }
     private:
@@ -143,7 +143,7 @@ namespace maya {
     public:
         Integer(Environment& parent, BackingType value = 0) : EphemeralAtom(parent, INTEGER_TYPE), _contents(value) {}
         ~Integer() override = default;
-        size_t hash(size_t range) override;
+        size_t hash(size_t range) const override;
         void write(const std::string &logicalName) override;
         constexpr auto getContents() const noexcept { return _contents; }
     private:
@@ -163,6 +163,7 @@ namespace maya {
         [[nodiscard]] virtual std::byte getByte(size_t index) const = 0;
         [[nodiscard]] virtual size_t numBytes() const noexcept = 0;
         [[nodiscard]] bool contentsEqual(Ptr other) const;
+        size_t hash(size_t range) const override;
     };
 /************************/
 /* ExternalAddress */
@@ -173,7 +174,7 @@ namespace maya {
         using Ptr = std::shared_ptr<Self>;
     public:
         ExternalAddress(Environment& parent, unsigned short externalType) : Atom(parent, EXTERNAL_ADDRESS_TYPE), _externalAddressType(externalType) {}
-        size_t hash(size_t range) override;
+        size_t hash(size_t range) const override;
         constexpr auto getExternalType() const noexcept { return _externalAddressType; }
         void write(const std::string& logicalName) override;
     public:
