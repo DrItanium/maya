@@ -128,6 +128,18 @@ namespace maya {
     Entity::write(const std::string& logicalName) {
         longPrint(logicalName);
     }
+    bool
+    BitMap::contentsEqual(Ptr other) const {
+        if (other->numBytes() != numBytes()) {
+            return false;
+        }
+        for (size_t i = 0; numBytes(); ++i) {
+            if (other->getByte(i) != getByte(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
 } // end namespace maya
 

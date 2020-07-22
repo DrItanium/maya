@@ -150,17 +150,19 @@ namespace maya {
         BackingType _contents;
     };
     /**
-     * @brief Generic view of a binary quantity separated into different fields
+     * @brief A generic entity which holds onto a binary view of some kind of bits. At this level, the act of preventing duplicates
+     * is provided through getByte and numBytes.
      */
     class BitMap : public Atom, public Evaluable {
     public:
         using Self = BitMap;
         using Ptr = std::shared_ptr<Self>;
     public:
-        BitMap(Environment& parent, unsigned short externalType) : Atom(parent, externalType) { }
+        BitMap(Environment& parent, unsigned short type) : Atom(parent, type) { }
         ~BitMap() override = default;
-        virtual size_t size() const noexcept = 0;
-
+        [[nodiscard]] virtual std::byte getByte(size_t index) const = 0;
+        [[nodiscard]] virtual size_t numBytes() const noexcept = 0;
+        [[nodiscard]] bool contentsEqual(Ptr other) const;
     };
 /************************/
 /* ExternalAddress */
@@ -276,7 +278,7 @@ namespace maya {
         EntityMetadata(EntityMetadata&&) = delete;
         EntityMetadata& operator=(const EntityMetadata&) = delete;
         EntityMetadata& operator=(EntityMetadata&&) = delete;
-        static constexpr bool addsToRuleComplexity() noexcept { return false; }
+        static constexpr bool isComplex() noexcept { return false; }
     };
 
 #define DefEntityMetadata(T, TypeName, TypeID, IsComplex) \
@@ -296,7 +298,7 @@ template<> \
         static constexpr bool isComplex() noexcept { return IsComplex; } \
     }
     template<typename T>
-    constexpr auto AddsToRuleComplexity = EntityMetadata<T>::addsToRuleComplexity();
+    constexpr auto AddsToRuleComplexity = EntityMetadata<T>::isComplex();
 
 
 #if 0

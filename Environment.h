@@ -53,16 +53,11 @@ namespace maya {
         Lexeme::Ptr createBoolean(bool value) noexcept;
         Integer::Ptr createInteger(Integer::BackingType value);
         Float::Ptr createFloat(Float::BackingType value);
-    private:
-        void installEntity(Entity::Ptr target);
-    public:
-        template<typename T, typename ... Args, std::enable_if_t<std::is_base_of_v<Entity, std::decay_t<T>>, int> = 0>
-        typename T::Ptr registerEntity(Args&& ... args) {
-            auto target = std::make_shared<T>(*this, std::forward<Args>(args)...);
-            installEntity(target);
-            return target;
+        BitMap::Ptr registerBitmap(BitMap::Ptr target);
+        template<typename T, typename ... Args, std::enable_if_t<std::is_base_of_v<BitMap, std::decay_t<T>>, int> = 0>
+        typename T::Ptr registerBitmap(Args&& ... args) {
+            return installBitmap(std::make_shared<T>(*this, std::forward<Args>(args)...));
         }
-
         /// @todo implement these later
         //ExternalAddress::Ptr createExternalAddress(std::any contents, unsigned short kind);
         [[nodiscard]] constexpr bool executionHalted() const noexcept { return _executionHalted; }
@@ -201,8 +196,8 @@ namespace maya {
         DataTable<Lexeme> _symbolTable;
         DataTable<Float> _floatTable;
         DataTable<Integer> _integerTable;
+        DataTable<BitMap> _bitmapTable;
         /// @todo reimplement this later
-        //DataTable<Entity> _entityTable; // in place of the bitmap table but not all types are 
         //DataTable<ExternalAddress> _externalAddressTable;
         Lexeme::Ptr _positiveInfinity;
         Lexeme::Ptr _negativeInfinity;

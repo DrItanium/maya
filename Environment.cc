@@ -330,16 +330,18 @@ namespace maya {
         _integerTable.emplace(hash, newInteger);
         return newInteger;
     }
-#if 0
-    void
-    Environment::installEntity(Entity::Ptr target) {
+    BitMap::Ptr
+    Environment::registerBitmap(BitMap::Ptr target) {
         auto hash = target->hash(BITMAP_HASH_SIZE);
-        auto range = _entityTable.equal_range(hash);
+        auto range = _bitmapTable.equal_range(hash);
         for (auto iter = range.first; iter != range.second; ++iter) {
-
+            if (auto peek = iter->second; target->contentsEqual(target)) {
+                return peek;
+            }
         }
+        _bitmapTable.emplace(hash, target);
+        return target;
     }
-#endif
 
     Lexeme::Ptr
     Environment::createBoolean(bool value) noexcept {
