@@ -160,10 +160,15 @@ namespace maya {
     public:
         BitMap(Environment& parent, unsigned short type) : Atom(parent, type) { }
         ~BitMap() override = default;
-        [[nodiscard]] virtual std::byte getByte(size_t index) const = 0;
-        [[nodiscard]] virtual size_t numBytes() const noexcept = 0;
         [[nodiscard]] bool contentsEqual(Ptr other) const;
-        size_t hash(size_t range) const override;
+        [[nodiscard]] size_t getTypeHashCode() const noexcept { return typeid(*this).hash_code(); }
+    protected:
+        /**
+         * @brief Compares the internals of a given BitMap when it is already known that the other is of the same polymorphic type as this instance
+         * @param other the other BitMap that has already been polymorphically verified to be of the right type
+         * @return boolean signifying if the internals are equal to one another provided that they are of the same type
+         */
+        [[nodiscard]] virtual bool compareInternals(Ptr other) const = 0;
     };
 /************************/
 /* ExternalAddress */
