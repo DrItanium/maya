@@ -12,9 +12,30 @@ namespace maya {
 
     size_t
     BitMap::hash(size_t range) const {
-
+        size_t tally = 0;
+        union {
+            size_t value;
+            std::byte chars[sizeof(size_t)];
+        } temporary;
+        temporary.value = 0; // clear everything out
+        // add up in terms of size_t blocks to the tally
+        auto totalBytes = numBytes();
+        auto numberOfIterations = totalBytes / sizeof(size_t);
+        auto bytesProcessedByIteration = numberOfIterations * sizeof(size_t);
+        for (size_t j = 0; j < numberOfIterations; ++j) {
+            temporary.value = 0;
+            auto offset = j * sizeof(size_t);
+            for (size_t i = 0; i < sizeof(size_t); ++i) {
+                temporary.chars[i] = getByte(offset + i);
+            }
+            tally += temporary.value;
+        }
+        // add the left over bytes individually to the hash
+        for (auto i = bytesProcessedByIteration; i < totalBytes; ++i) {
+            tally += static_cast<size_t>(getByte(i));
+        }
+        return range == 0 ? tally : (tally % range);
     }
-//size_t hash(size_t range) override;
     size_t
     ExternalAddress::hash(size_t range) const {
         /// @todo implement
