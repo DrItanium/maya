@@ -331,7 +331,7 @@ namespace maya {
         return newInteger;
     }
     BitMap::Ptr
-    Environment::registerBitmap(BitMap::Ptr target) {
+    Environment::createBitmap(BitMap::Ptr target) {
         auto hash = target->hash(BITMAP_HASH_SIZE);
         auto range = _bitmapTable.equal_range(hash);
         for (auto iter = range.first; iter != range.second; ++iter) {

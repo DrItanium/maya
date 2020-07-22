@@ -53,10 +53,10 @@ namespace maya {
         Lexeme::Ptr createBoolean(bool value) noexcept;
         Integer::Ptr createInteger(Integer::BackingType value);
         Float::Ptr createFloat(Float::BackingType value);
-        BitMap::Ptr registerBitmap(BitMap::Ptr target);
+        BitMap::Ptr createBitmap(BitMap::Ptr target);
         template<typename T, typename ... Args, std::enable_if_t<std::is_base_of_v<BitMap, std::decay_t<T>>, int> = 0>
-        typename T::Ptr registerBitmap(Args&& ... args) {
-            return installBitmap(std::make_shared<T>(*this, std::forward<Args>(args)...));
+        typename T::Ptr createBitmap(Args&& ... args) {
+            return createBitmap(std::make_shared<T>(*this, std::forward<Args>(args)...));
         }
         /// @todo implement these later
         //ExternalAddress::Ptr createExternalAddress(std::any contents, unsigned short kind);
