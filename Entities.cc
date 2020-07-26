@@ -4,6 +4,7 @@
 #include "Environment.h"
 #include "ExternalAddress.h"
 #include "Atom.h"
+#include "UDFContext.h"
 #include <type_traits>
 //#include "Fact.h"
 //#include "Object.h"

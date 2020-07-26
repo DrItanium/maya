@@ -7,9 +7,8 @@
 #include "Environment.h"
 #include "Atom.h"
 #include "TransferEvaluable.h"
+#include "UDFContext.h"
 namespace maya {
-    template<typename T>
-    constexpr bool IsNewConstructible = std::is_constructible_v<T, maya::Environment &, struct UDFContext &>;
 
     struct ExternalAddress : public Atom, public TransferEvaluable<ExternalAddress> {
     public:
@@ -28,6 +27,11 @@ namespace maya {
         virtual void longPrint(const std::string &logicalName) = 0;
     };
 
+    template<typename T>
+    constexpr auto IsExternalAddressType = std::is_base_of_v<ExternalAddress, T>;
+    template<typename T>
+    constexpr auto IsConstructibleExternalAddressType = IsExternalAddressType<T> && std::is_constructible_v<T, Environment &, UDFContext &>;
+
 
 /**
  * @brief Make a newFunction if such a thing can be generated from an ExternalAddress constructor
@@ -36,7 +40,7 @@ namespace maya {
  */
     template<typename T, std::enable_if_t<std::is_base_of_v<ExternalAddress, T>, int> = 0>
     std::function<ExternalAddress::Ptr(Environment &, struct UDFContext &)> makeNewFunction() noexcept {
-        if (IsNewConstructible<T>) {
+        if (IsConstructibleExternalAddressType<T>) {
             return [](Environment &env, struct UDFContext &ctx) { return std::make_shared<T>(env, ctx); };
         } else {
             return nullptr;

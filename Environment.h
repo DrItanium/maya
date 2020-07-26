@@ -23,6 +23,7 @@
 #include "Router.h"
 #include "Construct.h"
 #include "CallFunctionItem.h"
+#include "UDFContext.h"
 namespace maya {
     class Environment {
     public:

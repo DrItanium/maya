@@ -53,6 +53,7 @@
 #include "Router.h"
 
 #include "Expression.h"
+#include "UDFContext.h"
 namespace maya {
 
 constexpr auto PRIME_ONE   = 257;
@@ -1742,8 +1743,8 @@ bool CheckArgumentAgainstRestriction(
 /*   true if the expressions are identical, otherwise false is returned.     */
 /*****************************************************************************/
 bool IdenticalExpression(
-        Expression *firstList,
-        Expression *secondList) {
+            Expression *firstList,
+            Expression *secondList) {
 #if STUBBING_INACTIVE
     /*==============================================*/
     /* Compare each argument in both expressions by */

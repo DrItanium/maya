@@ -53,6 +53,7 @@
 #include "Environment.h"
 #include "Entities.hxx"
 #include "Evaluable.h"
+#include "UDFContext.h"
 //#include "Construct.h"
 //#include "ExternalFunctions.h"
 //#include "Scanner.h"

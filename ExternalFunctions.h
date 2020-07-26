@@ -63,6 +63,7 @@
 #include "Expression.h"
 #include "Hashable.h"
 #include "ExternalAddress.h"
+#include "UDFContext.h"
 //#include "Symbol.h"
 //#include "UserData.h"
 

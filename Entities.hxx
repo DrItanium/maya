@@ -159,41 +159,6 @@ namespace maya {
         std::vector<std::shared_ptr<struct CLIPSValue>> contents;
     };
 
-    struct Fact;
-    struct Instance;
-    using ValueContainer = std::variant<std::monostate,
-            Lexeme::Ptr,
-            Float::Ptr,
-            Integer::Ptr,
-            Void::Ptr,
-            Multifield::Ptr,
-            std::shared_ptr<Fact>,
-            std::shared_ptr<Instance>,
-            ExternalAddress::Ptr>;
-
-    struct HoldsOntoGenericValue {
-        ValueContainer contents;
-        unsigned short getType() const noexcept;
-    };
-
-
-    struct ExternalFunction;
-    struct Expression;
-/**************/
-/* udfContext */
-/**************/
-    struct UDFContext : public HoldsEnvironmentCallback {
-    public:
-        using Self = UDFContext;
-        using Ptr = std::shared_ptr<Self>;
-    public:
-        UDFContext(Environment &parent, std::shared_ptr<ExternalFunction> func, std::list<std::shared_ptr<struct Expression>> &argList,
-                   UDFValue::Ptr retVal);
-        std::shared_ptr<ExternalFunction> theFunction;
-        std::list<std::shared_ptr<struct Expression>> &_args;
-        UDFValue::Ptr returnValue;
-    };
-
     struct Entity : public HoldsEnvironmentCallback, public Evaluable, public Hashable, public IORouterAware {
     public:
         using Self = Entity;

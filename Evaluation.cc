@@ -76,6 +76,7 @@
 #include "ExternalFunctions.h"
 #include "ExternalAddress.h"
 #include "Value.h"
+#include "UDFContext.h"
 
 namespace maya {
 /**************************************************/

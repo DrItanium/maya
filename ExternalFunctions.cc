@@ -56,6 +56,7 @@
 #include "Setup.h"
 #include "ExternalFunctions.h"
 #include "ExternalAddress.h"
+#include "UDFContext.h"
 
 namespace maya {
    bool
