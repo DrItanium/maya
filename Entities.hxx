@@ -30,12 +30,14 @@
 #include <functional>
 #include <list>
 #include <iostream>
+#include <experimental/memory>
 
 #include "Constants.h"
 #include "Hashable.h"
 #include "HoldsEnvironmentCallback.h"
 #include "IORouterAware.h"
 #include "Evaluable.h"
+#include "Callable.h"
 namespace maya {
     class Environment;
     struct TypeHeader {
@@ -170,21 +172,18 @@ namespace maya {
          */
         [[nodiscard]] virtual bool compareInternals(Ptr other) const = 0;
     };
-    /**
-     * @brief Provides a callable interface that when implemented on a ExternalAddress child will provide a "call" method
-     */
-    class Callable {
-    public:
-        virtual ~Callable() = default;
-        virtual bool call(struct UDFContext& context, std::shared_ptr<struct UDFValue> returnValue) = 0;
-    };
+
     template<typename T>
     constexpr bool IsCallable = std::is_base_of_v<Callable, T>;
 
     struct ExternalAddress : public Atom, public TransferEvaluable<ExternalAddress> {
     public:
         using Self = ExternalAddress;
-        using Ptr = std::shared_ptr<Self>;
+        //using Ptr = std::shared_ptr<Self>;
+        using ObserverPtr = std::experimental::observer_ptr<Self>;
+        using WeakPtr = std::weak_ptr<Self>;
+        using SharedPtr = std::shared_ptr<Self>;
+        using Ptr = std::variant<SharedPtr, ObserverPtr>;
     public:
         using Atom::Atom;
         ~ExternalAddress() override = default;

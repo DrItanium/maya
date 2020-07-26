@@ -20,6 +20,7 @@ add_library(clips
 		ExternalFunctions.h ExternalFunctions.cc
 		Symbol.h Symbol.cc
 		Construct.h Construct.cc
+		Callable.h
 		CallFunctionItem.h HasBinarySaveID.h)
 
 		#Agenda.h
