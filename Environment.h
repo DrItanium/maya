@@ -40,16 +40,16 @@ namespace maya {
         Environment();
     public:
         void printErrorID(const std::string& module, int errorID, bool printCR);
-        [[nodiscard]] Void::Ptr getVoidConstant() const noexcept { return _voidConstant; }
-        [[nodiscard]] Lexeme::Ptr getTrueSymbol() const noexcept { return _trueSymbol; }
-        [[nodiscard]] Lexeme::Ptr getFalseSymbol() const noexcept { return _falseSymbol; }
-        [[nodiscard]] Lexeme::Ptr createLexeme(const std::string& text, unsigned short type);
-        [[nodiscard]] Lexeme::Ptr createLexeme(const std::string& text, TreatAsSymbol) { return createLexeme(text, SYMBOL_TYPE); }
-        [[nodiscard]] Lexeme::Ptr createLexeme(const std::string& text, TreatAsString) { return createLexeme(text, STRING_TYPE); }
-        [[nodiscard]] Lexeme::Ptr createLexeme(const std::string& text, TreatAsInstanceName) { return createLexeme(text, INSTANCE_NAME_TYPE); }
-        inline Lexeme::Ptr createSymbol(const std::string& text) { return createLexeme(text, TreatAsSymbol{}); }
-        inline Lexeme::Ptr createString(const std::string& text) { return createLexeme(text, TreatAsString{}); }
-        inline Lexeme::Ptr createInstanceName(const std::string& text) { return createLexeme(text, TreatAsInstanceName{}); }
+        [[nodiscard]] std::shared_ptr<struct Void> getVoidConstant() const noexcept { return _voidConstant; }
+        [[nodiscard]] auto getTrueSymbol() const noexcept { return _trueSymbol; }
+        [[nodiscard]] auto getFalseSymbol() const noexcept { return _falseSymbol; }
+        [[nodiscard]] std::shared_ptr<struct Lexeme> createLexeme(const std::string& text, unsigned short type);
+        [[nodiscard]] auto createLexeme(const std::string& text, TreatAsSymbol) { return createLexeme(text, SYMBOL_TYPE); }
+        [[nodiscard]] auto createLexeme(const std::string& text, TreatAsString) { return createLexeme(text, STRING_TYPE); }
+        [[nodiscard]] auto createLexeme(const std::string& text, TreatAsInstanceName) { return createLexeme(text, INSTANCE_NAME_TYPE); }
+        inline auto createSymbol(const std::string& text) { return createLexeme(text, TreatAsSymbol{}); }
+        inline auto createString(const std::string& text) { return createLexeme(text, TreatAsString{}); }
+        inline auto createInstanceName(const std::string& text) { return createLexeme(text, TreatAsInstanceName{}); }
         Lexeme::Ptr createBoolean(bool value) noexcept;
         Integer::Ptr createInteger(Integer::BackingType value);
         Float::Ptr createFloat(Float::BackingType value);

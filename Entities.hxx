@@ -42,11 +42,6 @@
 #include "TypeHeader.h"
 #include "Atom.h"
 namespace maya {
-    class Environment;
-
-/*************/
-/* clipsVoid */
-/*************/
     class Void final : public Atom {
     public:
         using Self = Void;

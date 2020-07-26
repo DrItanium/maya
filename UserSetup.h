@@ -11,8 +11,4 @@
 #define STUBBING_INACTIVE 0
 #endif
 
-#if !STUBBING_INACTIVE
-#warning "Specific bodies are currently stubbed"
-#endif
-
 #endif

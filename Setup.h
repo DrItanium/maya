@@ -273,14 +273,6 @@
 #ifndef BSAVE_INSTANCES
 #define BSAVE_INSTANCES 0
 #endif
-#if !BSAVE_INSTANCES
-#warning "BSAVE_INSTANCES Hard Disabled!"
-#endif
-
-#if !BLOAD_INSTANCES
-#warning "BLOAD_INSTANCES Hard Disabled!"
-#endif
-
 /****************************************************************/
 /* EXTENDED MATH PACKAGE FLAG: If this is on, then the extended */
 /* math package functions will be available for use, (normal    */
@@ -300,9 +292,6 @@
 
 #ifndef BLOAD_AND_BSAVE
 #define BLOAD_AND_BSAVE 0
-#endif
-#if !BLOAD_AND_BSAVE
-#warning "BLOAD_AND_BSAVE Hard Disabled!"
 #endif
 
 /************************************************/

@@ -28,7 +28,7 @@ namespace maya {
 
     class UDFValue : public Value {
     public:
-        using Self = Value;
+        using Self = UDFValue;
         using Ptr = std::shared_ptr<Self>;
     public:
         UDFValue(Environment& parent, std::any atom, std::any supplementalInfo, size_t begin = 0, size_t range = 0) : Value(parent, atom), _supplementalInfo(supplementalInfo), _begin(begin), _range(range) { }
