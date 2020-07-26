@@ -11,12 +11,6 @@
 namespace maya {
 
     size_t
-    ExternalAddress::hash(size_t range) const {
-        /// @todo implement
-        return 0;
-    }
-
-    size_t
     Lexeme::hash(size_t range) const {
         size_t tally = 0;
         for (const auto &c : _contents) {
@@ -98,7 +92,7 @@ namespace maya {
 
     void
     ExternalAddress::write(const std::string& logicalName) {
-        /// @todo implement
+        longPrint(logicalName);
     }
     bool
     Entity::evaluate(std::shared_ptr<UDFValue> returnValue) {
@@ -108,6 +102,7 @@ namespace maya {
     Entity::longPrint(const std::string &logicalName) {
 
     }
+
     void
     Entity::shortPrint(const std::string &logicalName) {
 

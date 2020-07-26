@@ -58,6 +58,9 @@ namespace maya {
         typename T::Ptr createBitmap(Args&& ... args) {
             return createBitmap(std::make_shared<T>(*this, std::forward<Args>(args)...));
         }
+        Lexeme::Ptr findSymbol(const std::string& name, unsigned short type) noexcept;
+        Integer::Ptr findInteger(Integer::BackingType value) noexcept;
+
         /// @todo implement these later
         //ExternalAddress::Ptr createExternalAddress(std::any contents, unsigned short kind);
         [[nodiscard]] constexpr bool executionHalted() const noexcept { return _executionHalted; }
@@ -204,6 +207,18 @@ namespace maya {
         Integer::Ptr _zero;
         Lexeme::Ptr _trueSymbol;
         Lexeme::Ptr _falseSymbol;
+#if BSAVE_INSTANCES
+        unsigned long NumberOfSymbols;
+    unsigned long NumberOfFloats;
+    unsigned long NumberOfIntegers;
+    unsigned long NumberOfBitMaps;
+    unsigned long NumberOfExternalAddresses;
+    CLIPSLexeme **SymbolArray;
+    Float **FloatArray;
+    Integer **IntegerArray;
+    BitMap **BitMapArray;
+    ExternalAddress **ExternalAddressArray;
+#endif
     private: // expression
         bool _sequenceOpMode = false;
         bool _returnContext = false;

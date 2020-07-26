@@ -24,72 +24,19 @@ namespace maya {
     };
 #if STUBBING_INACTIVE
 
-#define IncrementLexemeCount(theValue) (theValue->retain())
-#define IncrementFloatCount(theValue) (theValue->retain())
-#define IncrementIntegerCount(theValue) (theValue->retain())
-#define IncrementBitMapCount(theValue) (theValue->retain())
-#define IncrementExternalAddressCount(theValue) (theValue->retain())
-
 /*==================*/
 /* ENVIRONMENT DATA */
 /*==================*/
 
-template<typename T, size_t capacity>
-using PointerTable = std::array<std::list<typename T::Ptr>, capacity>;
-struct symbolData : public EnvironmentModule {
-    CLIPSLexeme::Ptr PositiveInfinity;
-    CLIPSLexeme::Ptr NegativeInfinity;
-    CLIPSInteger::Ptr Zero;
-    PointerTable<CLIPSLexeme, SYMBOL_HASH_SIZE> SymbolTable;
-    PointerTable<CLIPSFloat, FLOAT_HASH_SIZE> FloatTable;
-    PointerTable<CLIPSInteger, INTEGER_HASH_SIZE> IntegerTable;
-    PointerTable<CLIPSBitMap, BITMAP_HASH_SIZE> BitMapTable;
-    PointerTable<CLIPSExternalAddress, EXTERNAL_ADDRESS_HASH_SIZE> ExternalAddressTable;
-#if BSAVE_INSTANCES
-    unsigned long NumberOfSymbols;
-    unsigned long NumberOfFloats;
-    unsigned long NumberOfIntegers;
-    unsigned long NumberOfBitMaps;
-    unsigned long NumberOfExternalAddresses;
-    CLIPSLexeme **SymbolArray;
-    Float **FloatArray;
-    Integer **IntegerArray;
-    BitMap **BitMapArray;
-    ExternalAddress **ExternalAddressArray;
-#endif
-    CLIPSLexeme::Ptr createSymbol(const std::string& value);
-    CLIPSLexeme::Ptr createString(const std::string& value);
-    CLIPSLexeme::Ptr createInstanceName(const std::string& value);
-    CLIPSLexeme::Ptr createBoolean(bool value);
-    CLIPSInteger::Ptr createInteger(long long value);
-    CLIPSFloat::Ptr createFloat(double value);
-};
-
-CLIPSLexeme::Ptr AddSymbol(const Environment::Ptr& theEnv, const std::string &contents, unsigned short type);
 CLIPSLexeme *FindSymbolHN(const Environment::Ptr&, const char *, unsigned short);
-CLIPSFloat::Ptr CreateFloat(const Environment::Ptr& theEnv, double value);
-CLIPSInteger::Ptr CreateInteger(const Environment::Ptr& theEnv, long long value);
-void *AddBitMap(const Environment::Ptr&, void *, unsigned short);
 CLIPSExternalAddress::Ptr CreateExternalAddress(const Environment::Ptr& theEnv, void * ctx, unsigned short kind);
-CLIPSInteger::Ptr FindLongHN(const Environment::Ptr& theEnv, long long value);
-void IncrementBitMapReferenceCount(const Environment::Ptr&, CLIPSBitMap *);
-void DecrementBitMapReferenceCount(const Environment::Ptr&, CLIPSBitMap *);
-void ReleaseExternalAddress(const Environment::Ptr&, CLIPSExternalAddress *);
-void RemoveEphemeralAtoms(const Environment::Ptr&);
-void RefreshSpecialSymbols(const Environment::Ptr&);
 struct symbolMatch *FindSymbolMatches(const Environment::Ptr&, const char *, unsigned *, size_t *);
-void ReturnSymbolMatches(const Environment::Ptr&, struct symbolMatch *);
 CLIPSLexeme *GetNextSymbolMatch(const Environment::Ptr&, const char *, size_t, CLIPSLexeme *, bool, size_t *);
 void ClearBitString(void *, size_t);
 void SetAtomicValueIndices(const Environment::Ptr&, bool);
 void RestoreAtomicValueBuckets(const Environment::Ptr&);
 void EphemerateValue(const Environment::Ptr&, void *);
 bool BitStringHasBitsSet(void *, unsigned);
-
-#define BitMapPointer(i) ((CLIPSBitMap *) (SymbolData(theEnv)->BitMapArray[i]))
-#define SymbolPointer(i) ((CLIPSLexeme *) (SymbolData(theEnv)->SymbolArray[i]))
-#define FloatPointer(i) ((CLIPSFloat *) (SymbolData(theEnv)->FloatArray[i]))
-#define IntegerPointer(i) ((CLIPSInteger *) (SymbolData(theEnv)->IntegerArray[i]))
 
 void MarkNeededAtomicValues(Environment);
 void WriteNeededAtomicValues(const Environment::Ptr&, FILE *);

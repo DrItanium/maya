@@ -170,23 +170,47 @@ namespace maya {
          */
         [[nodiscard]] virtual bool compareInternals(Ptr other) const = 0;
     };
-/************************/
-/* ExternalAddress */
-/************************/
+    /**
+     * @brief Provides a callable interface that when implemented on a ExternalAddress child will provide a "call" method
+     */
+    class Callable {
+    public:
+        virtual ~Callable() = default;
+        virtual bool call(struct UDFContext& context, std::shared_ptr<struct UDFValue> returnValue) = 0;
+    };
+    template<typename T>
+    constexpr bool IsCallable = std::is_base_of_v<Callable, T>;
+
     struct ExternalAddress : public Atom, public TransferEvaluable<ExternalAddress> {
     public:
         using Self = ExternalAddress;
         using Ptr = std::shared_ptr<Self>;
     public:
-        ExternalAddress(Environment& parent, unsigned short externalType) : Atom(parent, EXTERNAL_ADDRESS_TYPE), _externalAddressType(externalType) {}
-        size_t hash(size_t range) const override;
-        constexpr auto getExternalType() const noexcept { return _externalAddressType; }
+        using Atom::Atom;
+        ~ExternalAddress() override = default;
+        [[nodiscard]] constexpr bool isCallable() const noexcept { return maya::IsCallable<decltype(*this)>; }
         void write(const std::string& logicalName) override;
-    public:
-        std::any contents;
-    private:
-        unsigned short _externalAddressType;
+        virtual void shortPrint(const std::string& logicalName) = 0;
+        virtual void longPrint(const std::string& logicalName) = 0;
     };
+
+    template<typename T>
+    constexpr bool IsNewConstructible = std::is_constructible_v<T, Environment&, struct UDFContext&>;
+
+    /**
+     * @brief Make a newFunction if such a thing can be generated from an ExternalAddress constructor
+     * @tparam T The type to make (must inherit from ExternalAddress)
+     * @return If the proper ctor is there then an actual std::function otherwise nullptr
+     */
+    template<typename T, std::enable_if_t<std::is_base_of_v<ExternalAddress, T>, int> = 0>
+    std::function<ExternalAddress::Ptr(Environment&, struct UDFContext&)> makeNewFunction() noexcept {
+        if (IsNewConstructible<T>) {
+            return [](Environment& env, struct UDFContext& ctx) { return std::make_shared<T>(env, ctx); };
+        } else {
+            return nullptr;
+        }
+    }
+
 
 /**************/
 /* multifield */
