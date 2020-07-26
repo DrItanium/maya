@@ -62,6 +62,7 @@
 #include "Evaluation.h"
 #include "Expression.h"
 #include "Hashable.h"
+#include "ExternalAddress.h"
 //#include "Symbol.h"
 //#include "UserData.h"
 

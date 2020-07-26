@@ -21,7 +21,7 @@ add_library(clips
 		Symbol.h Symbol.cc
 		Construct.h Construct.cc
 		Callable.h
-		CallFunctionItem.h HasBinarySaveID.h)
+		CallFunctionItem.h HasBinarySaveID.h TransferEvaluable.h)
 
 		#Agenda.h
 		#Analysis.h

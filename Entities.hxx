@@ -38,38 +38,12 @@
 #include "IORouterAware.h"
 #include "Evaluable.h"
 #include "Callable.h"
+#include "ExternalAddress.h"
+#include "TypeHeader.h"
+#include "Atom.h"
 namespace maya {
     class Environment;
-    struct TypeHeader {
-        TypeHeader(unsigned short t = 0) : _type(t) {}
-        constexpr auto getType() const noexcept { return _type; }
-        constexpr auto isConstantType() const noexcept { return maya::isConstantType(_type); }
-    private:
-        unsigned short _type;
-    };
 
-    class Atom : public HoldsEnvironmentCallback, public TypeHeader, public IORouterAware, public Hashable {
-    public:
-        Atom(Environment& parent, unsigned short type = 0) : HoldsEnvironmentCallback(parent), TypeHeader(type) {}
-        ~Atom() override = default;
-    };
-    template<typename T>
-    class TransferEvaluable : public Evaluable, std::enable_shared_from_this<T> {
-    public:
-        ~TransferEvaluable() override = default;
-        bool evaluate(std::shared_ptr<UDFValue> retVal) override;
-
-    };
-    /**
-     * @brief A special type inserted to make the ephemeron type make sense
-     */
-    class EphemeralAtom : public Atom {
-    public:
-        using Self = EphemeralAtom;
-        using Ptr = std::shared_ptr<Self>;
-    public:
-        using Atom::Atom;
-    };
 /*************/
 /* clipsVoid */
 /*************/
@@ -173,45 +147,8 @@ namespace maya {
         [[nodiscard]] virtual bool compareInternals(Ptr other) const = 0;
     };
 
-    template<typename T>
-    constexpr bool IsCallable = std::is_base_of_v<Callable, T>;
 
-    struct ExternalAddress : public Atom, public TransferEvaluable<ExternalAddress> {
-    public:
-        using Self = ExternalAddress;
-        //using Ptr = std::shared_ptr<Self>;
-        using ObserverPtr = std::experimental::observer_ptr<Self>;
-        using WeakPtr = std::weak_ptr<Self>;
-        using SharedPtr = std::shared_ptr<Self>;
-        using Ptr = std::variant<SharedPtr, ObserverPtr>;
-    public:
-        using Atom::Atom;
-        ~ExternalAddress() override = default;
-        [[nodiscard]] constexpr bool isCallable() const noexcept { return maya::IsCallable<decltype(*this)>; }
-        void write(const std::string& logicalName) override;
-        virtual void shortPrint(const std::string& logicalName) = 0;
-        virtual void longPrint(const std::string& logicalName) = 0;
-    };
-
-    template<typename T>
-    constexpr bool IsNewConstructible = std::is_constructible_v<T, Environment&, struct UDFContext&>;
-
-    /**
-     * @brief Make a newFunction if such a thing can be generated from an ExternalAddress constructor
-     * @tparam T The type to make (must inherit from ExternalAddress)
-     * @return If the proper ctor is there then an actual std::function otherwise nullptr
-     */
-    template<typename T, std::enable_if_t<std::is_base_of_v<ExternalAddress, T>, int> = 0>
-    std::function<ExternalAddress::Ptr(Environment&, struct UDFContext&)> makeNewFunction() noexcept {
-        if (IsNewConstructible<T>) {
-            return [](Environment& env, struct UDFContext& ctx) { return std::make_shared<T>(env, ctx); };
-        } else {
-            return nullptr;
-        }
-    }
-
-
-/**************/
+    /**************/
 /* multifield */
 /**************/
     struct Multifield : public HoldsEnvironmentCallback, public TypeHeader, public Evaluable {
@@ -244,33 +181,7 @@ namespace maya {
         unsigned short getType() const noexcept;
     };
 
-/**************/
-/* CLIPSValue */
-/**************/
-    struct CLIPSValue : public HoldsOntoGenericValue {
-    public:
-        using Self = CLIPSValue;
-        using Ptr = std::shared_ptr<Self>;
-    };
 
-    using ExpressionPtr = std::shared_ptr<struct Expression>;
-/************/
-/* UDFValue */
-/************/
-    struct UDFValue : public HoldsOntoGenericValue {
-    public:
-        using Self = UDFValue;
-        using Ptr = std::shared_ptr<Self>;
-    public:
-        UDFValue() = default;
-
-        std::any supplementalInfo;
-        size_t begin;
-        size_t range;
-        ExpressionPtr toExpression(const EnvironmentPtr &theEnv);
-    };
-
-    bool operator==(const UDFValue &a, const UDFValue &b);
     struct ExternalFunction;
     struct Expression;
 /**************/
@@ -281,9 +192,10 @@ namespace maya {
         using Self = UDFContext;
         using Ptr = std::shared_ptr<Self>;
     public:
-        UDFContext(Environment &parent, std::shared_ptr<ExternalFunction> func, std::list<std::shared_ptr<struct Expression>>& argList, UDFValue::Ptr retVal);
+        UDFContext(Environment &parent, std::shared_ptr<ExternalFunction> func, std::list<std::shared_ptr<struct Expression>> &argList,
+                   UDFValue::Ptr retVal);
         std::shared_ptr<ExternalFunction> theFunction;
-        std::list<std::shared_ptr<struct Expression>>& _args;
+        std::list<std::shared_ptr<struct Expression>> &_args;
         UDFValue::Ptr returnValue;
     };
 
@@ -364,7 +276,7 @@ template<> \
     using PatternEntityRecordIsDeletedFunction = EnvironmentPtrFunction<bool, std::any>;
 #endif
 #if 0
-/***********************/
+    /***********************/
 /* PatternEntityRecord */
 /***********************/
     struct PatternEntityRecord : public EntityRecord {
@@ -413,12 +325,6 @@ template<> \
         unsigned long long _timeTag = 0;
         std::any _dependents;
     };
-    template<typename T>
-    bool
-    TransferEvaluable<T>::evaluate(UDFValue::Ptr retVal) {
-        retVal->contents = this->shared_from_this();
-        return true;
-    }
 } // end namespace maya
 
 std::ostream& operator<<(std::ostream& os, const maya::Lexeme& lexeme);

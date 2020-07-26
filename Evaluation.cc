@@ -74,6 +74,7 @@
 #include "Evaluation.h"
 #include "Problem.h"
 #include "ExternalFunctions.h"
+#include "ExternalAddress.h"
 
 namespace maya {
 /**************************************************/
