@@ -3,3 +3,10 @@
 //
 
 #include "BitmapAtom.h"
+
+namespace maya {
+    bool
+    BitMap::contentsEqual(Ptr other) const {
+        return (getTypeHashCode() == other->getTypeHashCode()) && compareInternals(other);
+    }
+} // end namespace maya

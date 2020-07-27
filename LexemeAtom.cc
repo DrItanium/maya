@@ -3,6 +3,30 @@
 //
 
 #include "LexemeAtom.h"
+#include "Environment.h"
+#include <string>
+#include <iostream>
 namespace maya {
+    size_t
+    Lexeme::hash(size_t range) const {
+        size_t tally = 0;
+        for (const auto &c : _contents) {
+            tally = tally * 127 + (size_t) c;
+        }
+        if (range == 0) {
+            return tally;
+        } else {
+            return tally % range;
+        }
+    }
+    void
+    Lexeme::write(const std::string &logicalName) {
+        _parent.writeStringRouter(logicalName, _contents);
+    }
+}
 
+std::ostream&
+operator<<(std::ostream& os, const maya::Lexeme& lexeme) {
+    os << lexeme.getContents();
+    return os;
 }

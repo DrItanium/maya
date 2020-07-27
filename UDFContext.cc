@@ -3,3 +3,8 @@
 //
 
 #include "UDFContext.h"
+#include "Expression.h"
+#include <memory>
+namespace maya {
+    UDFContext::UDFContext(Environment &parent, std::shared_ptr<ExternalFunction> func, std::list<Expression::Ptr>& argList, UDFValue::Ptr retVal) : HoldsEnvironmentCallback(parent), theFunction(func), _args(argList), returnValue(retVal) { }
+}

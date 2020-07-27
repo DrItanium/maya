@@ -21,6 +21,8 @@ add_library(clips
 		Symbol.h Symbol.cc
 		Construct.h Construct.cc
 		Callable.h
+		Value.h Value.cc
+		ExternalAddress.h ExternalAddress.cc
 		LexemeAtom.cc LexemeAtom.h
 		Atom.h Atom.cc
 		VoidAtom.h VoidAtom.cc
@@ -28,6 +30,7 @@ add_library(clips
 		FloatAtom.h FloatAtom.cc
 		IntegerAtom.h IntegerAtom.cc
 		BitmapAtom.h BitmapAtom.cc
+		UDFContext.h UDFContext.cc
 		CallFunctionItem.h HasBinarySaveID.h TransferEvaluable.h)
 
 		#Agenda.h
