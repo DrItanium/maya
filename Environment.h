@@ -30,6 +30,7 @@
 #include "IntegerAtom.h"
 #include "BitmapAtom.h"
 namespace maya {
+    class Expression;
     class Environment {
     public:
         using Self = Environment;
@@ -46,10 +47,10 @@ namespace maya {
         Environment();
     public:
         void printErrorID(const std::string& module, int errorID, bool printCR);
-        [[nodiscard]] std::shared_ptr<struct Void> getVoidConstant() const noexcept { return _voidConstant; }
+        [[nodiscard]] Void::Ptr getVoidConstant() const noexcept { return _voidConstant; }
         [[nodiscard]] auto getTrueSymbol() const noexcept { return _trueSymbol; }
         [[nodiscard]] auto getFalseSymbol() const noexcept { return _falseSymbol; }
-        [[nodiscard]] std::shared_ptr<struct Lexeme> createLexeme(const std::string& text, unsigned short type);
+        [[nodiscard]] Lexeme::Ptr createLexeme(const std::string& text, unsigned short type);
         [[nodiscard]] auto createLexeme(const std::string& text, TreatAsSymbol) { return createLexeme(text, SYMBOL_TYPE); }
         [[nodiscard]] auto createLexeme(const std::string& text, TreatAsString) { return createLexeme(text, STRING_TYPE); }
         [[nodiscard]] auto createLexeme(const std::string& text, TreatAsInstanceName) { return createLexeme(text, INSTANCE_NAME_TYPE); }
@@ -237,7 +238,7 @@ namespace maya {
         size_t _inputUngets = 0;
         std::string _lineCountRouter;
     private: // evaluation
-        std::shared_ptr<class Expression> _currentExpression;
+        std::shared_ptr<Expression> _currentExpression;
         bool _evaluationError = false;
         bool _executionHalted = false;
         size_t _currentEvaluationDepth = 0;

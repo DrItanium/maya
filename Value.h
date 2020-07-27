@@ -25,7 +25,9 @@ namespace maya {
     private:
         Contents _contents;
     };
-
+    /**
+     * @brief A special kind of Value which is used for User Defined Functions; Has extra fields.
+     */
     class UDFValue : public Value {
     public:
         using Self = UDFValue;
@@ -44,6 +46,8 @@ namespace maya {
         size_t _begin;
         size_t _range;
     };
-    //bool operator==(const UDFValue &a, const UDFValue &b);
+#if 0
+    bool operator==(const UDFValue &a, const UDFValue &b);
+#endif
 }
 #endif //MAYA_VALUE_H

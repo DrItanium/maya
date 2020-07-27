@@ -8,6 +8,10 @@
 #include "Value.h"
 #include <memory>
 namespace maya {
+    /**
+     * @brief An implementation of Evaluable where the contents of this type are returned
+     * @tparam T The type of the class to store within the return value
+     */
     template<typename T>
     class TransferEvaluable : public Evaluable, std::enable_shared_from_this<T> {
     public:

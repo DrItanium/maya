@@ -1,51 +1,14 @@
-/*******************************************************/
-/*      "C" Language Integrated Production System      */
-/*                                                     */
-/*            CLIPS Version 6.40  04/22/20             */
-/*                                                     */
-/*                CONSTANTS HEADER FILE                */
-/*******************************************************/
-
-/*************************************************************/
-/* Purpose:                                                  */
-/*                                                           */
-/* Principal Programmer(s):                                  */
-/*      Gary D. Riley                                        */
-/*                                                           */
-/* Contributing Programmer(s):                               */
-/*                                                           */
-/* Revision History:                                         */
-/*                                                           */
-/*      6.30: Moved default type constants (NO_DEFAULT,      */
-/*            STATIC_DEFAULT, and DYNAMIC_DEFAULT) to        */
-/*            constant.h                                     */
-/*                                                           */
-/*            Added DATA_OBJECT_ARRAY primitive type.        */
-/*                                                           */
-/*            Added NESTED_RHS constant.                     */
-/*                                                           */
-/*      6.40: Pragma once and other inclusion changes.       */
-/*                                                           */
-/*            Added support for booleans with <stdbool.h>.   */
-/*                                                           */
-/*            Removed use of void pointers for specific      */
-/*            data structures.                               */
-/*                                                           */
-/*            UDF redesign.                                  */
-/*                                                           */
-/*            Removed DATA_OBJECT_ARRAY primitive type.      */
-/*                                                           */
-/*************************************************************/
-
+/**
+ * @brief Constants that are used throughout the implementation
+ */
 #ifndef _H_constant
-
-#pragma once
-
 #define _H_constant
 
 
 #include <cstdint>
 #include <climits>
+#include <cstddef>
+#include <string>
 namespace maya {
 #define X(name, idx) constexpr auto name = idx
     X(EXACTLY, 0);
@@ -66,36 +29,34 @@ namespace maya {
     X(EQUAL, 2);
 #undef X
 
-    enum SaveScope {
-        LOCAL_SAVE,
-        VISIBLE_SAVE
+    enum class SaveScope {
+        Local,
+        Visible,
     };
 
-    enum DefaultType {
-        NO_DEFAULT,
-        STATIC_DEFAULT,
-        DYNAMIC_DEFAULT
+    enum class DefaultType {
+        None,
+        Static,
+        Dynamic,
     };
-
-    enum PutSlotError {
-        PSE_NO_ERROR = 0,
-        PSE_nullptr_POINTER_ERROR,
-        PSE_INVALID_TARGET_ERROR,
-        PSE_SLOT_NOT_FOUND_ERROR,
-        PSE_TYPE_ERROR,
-        PSE_RANGE_ERROR,
-        PSE_ALLOWED_VALUES_ERROR,
-        PSE_CARDINALITY_ERROR,
-        PSE_ALLOWED_CLASSES_ERROR,
-        PSE_EVALUATION_ERROR,
-        PSE_RULE_NETWORK_ERROR
+    enum class PutSlotError {
+        None = 0,
+        NullPointer,
+        InvalidTarget,
+        SlotNotFound,
+        Type,
+        Range,
+        AllowedValues,
+        Cardinality,
+        AllowedClasses,
+        Evaluation,
+        RuleNetwork,
     };
-
-    enum GetSlotError {
-        GSE_NO_ERROR = 0,
-        GSE_nullptr_POINTER_ERROR,
-        GSE_INVALID_TARGET_ERROR,
-        GSE_SLOT_NOT_FOUND_ERROR
+    enum class GetSlotError {
+        None = 0,
+        NullPointer,
+        InvalidTarget,
+        SlotNotFound,
     };
 
 #ifndef APPLICATION_NAME
@@ -121,7 +82,6 @@ namespace maya {
 /*************************/
 /* TOKEN AND TYPE VALUES */
 /*************************/
-
 #define OBJECT_TYPE_NAME               "OBJECT"
 #define USER_TYPE_NAME                 "USER"
 #define PRIMITIVE_TYPE_NAME            "PRIMITIVE"
