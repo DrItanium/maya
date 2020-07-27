@@ -57,7 +57,7 @@
 #include <functional>
 #include <memory>
 
-#include "Entities.hxx"
+#include "PatternEntity.hxx"
 #include "Environment.h"
 #include "Evaluation.h"
 #include "Expression.h"

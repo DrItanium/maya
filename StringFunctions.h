@@ -59,7 +59,7 @@
 
 #define _H_strngfun
 
-#include "Entities.hxx"
+#include "PatternEntity.hxx"
 
 enum EvalError {
     EE_NO_ERROR = 0,

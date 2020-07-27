@@ -71,7 +71,7 @@
 #define _H_evaluatn
 
 #include "Constants.h"
-#include "Entities.hxx"
+#include "PatternEntity.hxx"
 #include "Environment.h"
 namespace maya {
 #if STUBBING_INACTIVE

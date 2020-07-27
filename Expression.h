@@ -51,7 +51,7 @@
 //typedef struct SavedContexts SavedContexts;
 
 #include "Environment.h"
-#include "Entities.hxx"
+#include "PatternEntity.hxx"
 #include "Evaluable.h"
 #include "UDFContext.h"
 //#include "Construct.h"

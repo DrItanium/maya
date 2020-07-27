@@ -19,7 +19,7 @@
 #include "Setup.h"
 #include "HoldsEnvironmentCallback.h"
 #include "Problem.h"
-#include "Entities.hxx"
+#include "PatternEntity.hxx"
 #include "Router.h"
 #include "Construct.h"
 #include "CallFunctionItem.h"

@@ -52,7 +52,7 @@
 #include <cstdio>
 
 #include "Evaluation.h"
-#include "Entities.hxx"
+#include "PatternEntity.hxx"
 
 #include "Symbol.h"
 #include "Scanner.h"

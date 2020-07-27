@@ -45,24 +45,6 @@
 
 namespace maya {
 
-
-    /**************/
-/* multifield */
-/**************/
-    struct Multifield : public HoldsEnvironmentCallback, public TypeHeader, public Evaluable {
-    public:
-        using Self = Multifield;
-        using Ptr = std::shared_ptr<Self>;
-    public:
-        Multifield(Environment& parent) : HoldsEnvironmentCallback(parent), TypeHeader(MULTIFIELD_TYPE) {}
-        ~Multifield() override = default;
-        bool evaluate(std::shared_ptr<UDFValue> retVal) override;
-    public:
-        auto length() const noexcept { return contents.size(); }
-        std::vector<std::shared_ptr<struct CLIPSValue>> contents;
-    };
-
-
 #if 0
     /***********************/
 /* PatternEntityRecord */

@@ -64,7 +64,7 @@
 
 #define _H_multifld
 
-#include "Entities.hxx"
+#include "PatternEntity.hxx"
 #include "Evaluation.h"
 typedef struct multifieldBuilder MultifieldBuilder;
 

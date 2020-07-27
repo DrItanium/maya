@@ -69,7 +69,7 @@ typedef struct templateSlot TemplateSlot;
 struct templateSlot;
 struct deftemplateModule;
 
-#include "Entities.hxx"
+#include "PatternEntity.hxx"
 
 #include "Construct.h"
 #include "Evaluation.h"

@@ -10,7 +10,7 @@ add_library(clips
 		Setup.h UserSetup.h
 		Problem.h
 		Evaluable.h Constants.h
-		Entities.hxx Entities.cc
+		PatternEntity.hxx PatternEntity.cc
 		Environment.h Environment.cc
 		Evaluation.h Evaluation.cc
 		Expression.h Expression.cc

@@ -68,7 +68,7 @@ typedef struct defgeneric Defgeneric;
 
 #include <cstdio>
 
-#include "Entities.hxx"
+#include "PatternEntity.hxx"
 #include "Construct.h"
 #include "Expression.h"
 #include "Evaluation.h"

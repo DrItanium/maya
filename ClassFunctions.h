@@ -59,7 +59,7 @@
 #include "Object.h"
 #include "Scanner.h"
 #include "Environment.h"
-#include "Entities.hxx"
+#include "PatternEntity.hxx"
 #include "ExternalFunctions.h"
 #include "Construct.h"
 #include "Defmodule.h"

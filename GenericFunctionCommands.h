@@ -60,7 +60,7 @@
 
 #define _H_genrccom
 
-#include "Entities.hxx"
+#include "PatternEntity.hxx"
 #include "Construct.h"
 #include "GenericFunction.h"
 

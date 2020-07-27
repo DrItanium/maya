@@ -59,7 +59,7 @@ constexpr auto VALUE_REQUIRED     = 0;
 constexpr auto VALUE_PROHIBITED   = 1;
 constexpr auto VALUE_NOT_REQUIRED = 2;
 
-#include "Entities.hxx"
+#include "PatternEntity.hxx"
 #include "Construct.h"
 #include "Constraint.h"
 #include "Defmodule.h"

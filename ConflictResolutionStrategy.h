@@ -69,7 +69,7 @@ enum StrategyType {
 };
 
 #include "Agenda.h"
-#include "Entities.hxx"
+#include "PatternEntity.hxx"
 
 constexpr auto DEFAULT_STRATEGY = DEPTH_STRATEGY;
 

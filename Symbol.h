@@ -8,7 +8,7 @@
 #define _H_symbol
 #include <map>
 #include <memory>
-#include "Entities.hxx"
+#include "PatternEntity.hxx"
 #include "LexemeAtom.h"
 
 namespace maya {
