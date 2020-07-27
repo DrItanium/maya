@@ -64,6 +64,7 @@
 #include "Hashable.h"
 #include "ExternalAddress.h"
 #include "UDFContext.h"
+#include "LexemeAtom.h"
 //#include "Symbol.h"
 //#include "UserData.h"
 

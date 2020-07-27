@@ -1,6 +1,11 @@
 #include "Setup.h"
 #include "Environment.h"
 #include "Router.h"
+#include "VoidAtom.h"
+#include "LexemeAtom.h"
+#include "FloatAtom.h"
+#include "IntegerAtom.h"
+#include "BitmapAtom.h"
 #if 0
 #include "BasicMathFunctions.h"
 #include "CommandLine.h"

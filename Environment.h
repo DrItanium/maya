@@ -24,6 +24,11 @@
 #include "Construct.h"
 #include "CallFunctionItem.h"
 #include "UDFContext.h"
+#include "VoidAtom.h"
+#include "LexemeAtom.h"
+#include "FloatAtom.h"
+#include "IntegerAtom.h"
+#include "BitmapAtom.h"
 namespace maya {
     class Environment {
     public:

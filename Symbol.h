@@ -9,6 +9,7 @@
 #include <map>
 #include <memory>
 #include "Entities.hxx"
+#include "LexemeAtom.h"
 
 namespace maya {
 

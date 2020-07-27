@@ -5,6 +5,12 @@
 #include "ExternalAddress.h"
 #include "Atom.h"
 #include "UDFContext.h"
+#include "Entity.h"
+#include "VoidAtom.h"
+#include "LexemeAtom.h"
+#include "FloatAtom.h"
+#include "IntegerAtom.h"
+#include "BitmapAtom.h"
 #include <type_traits>
 //#include "Fact.h"
 //#include "Object.h"
