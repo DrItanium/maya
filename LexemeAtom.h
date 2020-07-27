@@ -22,7 +22,7 @@ namespace maya {
     /**
      * @brief Represents a symbol, string, instance name, or any other string based type
      */
-    class Lexeme : public EphemeralAtom, public TransferEvaluable<Lexeme> {
+    class Lexeme : public EphemeralAtom, std::enable_shared_from_this<Lexeme> {
     public:
         using Self = Lexeme;
         using Ptr = std::shared_ptr<Self>;
@@ -43,6 +43,7 @@ namespace maya {
         ~Lexeme() override = default;
         size_t hash(size_t range) const override;
         void write(const std::string &logicalName) override;
+        bool evaluate(UDFValue::Ptr retVal) override;
     private:
         std::string _contents;
     };

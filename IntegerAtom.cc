@@ -32,4 +32,11 @@ namespace maya {
         _parent.writeStringRouter(logicalName, tmp);
     }
 
+    bool
+    Integer::evaluate(UDFValue::Ptr retVal) {
+        retVal->setContents(this->shared_from_this());
+        return true;
+    }
+
+
 } // end namespace maya

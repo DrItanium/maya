@@ -12,14 +12,15 @@
 #include <memory>
 #include <vector>
 namespace maya {
-    struct Multifield : public HoldsEnvironmentCallback, public TypeHeader, public Evaluable {
+    struct Multifield : public Atom, public std::enable_shared_from_this<Multifield> {
     public:
         using Self = Multifield;
         using Ptr = std::shared_ptr<Self>;
     public:
-        Multifield(Environment &parent) : HoldsEnvironmentCallback(parent), TypeHeader(MULTIFIELD_TYPE) {}
+        Multifield(Environment &parent) : Atom(parent, MULTIFIELD_TYPE) {}
         ~Multifield() override = default;
         bool evaluate(UDFValue::Ptr retVal) override;
+        size_t hash(size_t range) const override;
     public:
         auto length() const noexcept { return contents.size(); }
         std::vector<Value::Ptr> contents;

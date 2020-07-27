@@ -10,7 +10,7 @@
 #include <memory>
 #include <string>
 namespace maya {
-    class Float : public EphemeralAtom, public TransferEvaluable<Float> {
+    class Float : public EphemeralAtom, std::enable_shared_from_this<Float> {
     public:
         using Self = Float;
         using Ptr = std::shared_ptr<Self>;
@@ -21,6 +21,7 @@ namespace maya {
         size_t hash(size_t range) const override;
         void write(const std::string &logicalName) override;
         constexpr auto getContents() const noexcept { return _contents; }
+        bool evaluate(UDFValue::Ptr retVal) override;
     private:
         BackingType _contents;
     };

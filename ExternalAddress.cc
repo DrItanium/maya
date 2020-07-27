@@ -9,4 +9,11 @@ namespace maya {
     ExternalAddress::write(const std::string& logicalName) {
         longPrint(logicalName);
     }
+
+    bool
+    ExternalAddress::evaluate(UDFValue::Ptr retVal) {
+        retVal->setContents(this->shared_from_this());
+        return true;
+    }
+
 }

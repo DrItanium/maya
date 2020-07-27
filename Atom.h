@@ -8,10 +8,11 @@
 #include "HoldsEnvironmentCallback.h"
 #include "IORouterAware.h"
 #include "Hashable.h"
+#include "Evaluable.h"
+#include "Value.h"
 #include <memory>
 namespace maya {
-    class Environment;
-    class Atom : public HoldsEnvironmentCallback, public TypeHeader, public IORouterAware, public maya::Hashable {
+class Atom : public HoldsEnvironmentCallback, public TypeHeader, public IORouterAware, public Hashable, public Evaluable {
     public:
         using Self = Atom;
         using Ptr = std::shared_ptr<Self>;

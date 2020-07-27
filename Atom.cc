@@ -3,3 +3,6 @@
 //
 
 #include "Atom.h"
+
+namespace maya {
+}

@@ -23,6 +23,7 @@ add_library(clips
 		Callable.h
 		Value.h Value.cc
 		ExternalAddress.h ExternalAddress.cc
+		MultifieldPrimitive.h MultifieldPrimitive.cc
 		LexemeAtom.cc LexemeAtom.h
 		Atom.h Atom.cc
 		VoidAtom.h VoidAtom.cc

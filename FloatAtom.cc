@@ -30,6 +30,11 @@ namespace maya {
             return tally % range;
         }
     }
+    bool
+    Float::evaluate(UDFValue::Ptr retVal) {
+        retVal->setContents(this->shared_from_this());
+        return true;
+    }
 } // end namespace maya
 
 std::ostream&

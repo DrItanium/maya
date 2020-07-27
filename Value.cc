@@ -4,6 +4,17 @@
 
 #include "Value.h"
 namespace maya {
+    size_t
+    Value::hash(size_t range) const {
+        return _contents.has_value() ? std::any_cast<Hashable::Ptr>(_contents)->hash(range) : 0;
+    }
+
+    bool
+    Value::evaluate(UDFValue::Ptr retVal) {
+        return _contents.has_value() ? std::any_cast<Evaluable::Ptr>(_contents)->evaluate(retVal) : false;
+    }
+
+
 #if 0
     bool
     operator==(const UDFValue& a, const UDFValue& b) {

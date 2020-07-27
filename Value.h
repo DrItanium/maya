@@ -7,21 +7,27 @@
 #include <memory>
 #include <any>
 #include <variant>
+#include <cstdint>
 #include "Atom.h"
 #include "HoldsEnvironmentCallback.h"
+#include "Hashable.h"
 namespace maya {
     /**
      * @brief Generic container to hold onto an Atom or another kind of thing
      */
-    class Value : public HoldsEnvironmentCallback {
+    class UDFValue;
+    class Value : public HoldsEnvironmentCallback, public Hashable, public Evaluable {
     public:
         using Self = Value;
         using Ptr = std::shared_ptr<Self>;
         using Contents = std::any;
+                //std::variant<Atom::Ptr>;
     public:
         Value(Environment& parent, Contents atom) : HoldsEnvironmentCallback(parent), _contents(atom) { }
         [[nodiscard]] const Contents& getContents() const noexcept { return _contents; }
         void setContents(Contents value) noexcept { _contents = value; }
+        size_t hash(size_t range) const override;
+        bool evaluate(std::shared_ptr<UDFValue> retVal) override;
     private:
         Contents _contents;
     };

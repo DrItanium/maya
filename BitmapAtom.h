@@ -14,7 +14,7 @@ namespace maya {
      * @brief A generic entity which holds onto a binary view of some kind of bits. At this level, the act of preventing duplicates
      * is provided through getByte and numBytes.
      */
-    class BitMap : public Atom, public Evaluable {
+    class BitMap : public Atom {
     public:
         using Self = BitMap;
         using Ptr = std::shared_ptr<Self>;
