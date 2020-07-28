@@ -9,9 +9,9 @@
 #include "IORouterAware.h"
 #include "Hashable.h"
 #include "Evaluable.h"
-#include "Value.h"
 #include <memory>
 namespace maya {
+
 class Atom : public HoldsEnvironmentCallback, public TypeHeader, public IORouterAware, public Hashable, public Evaluable {
     public:
         using Self = Atom;

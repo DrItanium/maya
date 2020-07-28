@@ -3,15 +3,30 @@
 //
 
 #include "Value.h"
+#include "Environment.h"
+#include <variant>
 namespace maya {
     size_t
     Value::hash(size_t range) const {
-        return _contents.has_value() ? std::any_cast<Hashable::Ptr>(_contents)->hash(range) : 0;
+        return std::visit([range](auto&& value) -> size_t {
+                if (value) {
+                    return value->hash(range);
+                } else {
+                    return 0;
+                }
+            }, _contents);
     }
 
     bool
     Value::evaluate(UDFValue::Ptr retVal) {
-        return _contents.has_value() ? std::any_cast<Evaluable::Ptr>(_contents)->evaluate(retVal) : false;
+        return std::visit([this, retVal](auto&& value) -> bool {
+            if (value) {
+                return value->evaluate(retVal);
+            } else {
+                retVal->setContents(_parent.getFalseSymbol());
+                return false;
+            }
+        }, _contents);
     }
 
 

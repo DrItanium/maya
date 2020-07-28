@@ -12,16 +12,15 @@
 #include "HoldsEnvironmentCallback.h"
 #include "Hashable.h"
 namespace maya {
+    class UDFValue;
     /**
      * @brief Generic container to hold onto an Atom or another kind of thing
      */
-    class UDFValue;
     class Value : public HoldsEnvironmentCallback, public Hashable, public Evaluable {
     public:
         using Self = Value;
         using Ptr = std::shared_ptr<Self>;
-        using Contents = std::any;
-                //std::variant<Atom::Ptr>;
+        using Contents = std::variant<Atom::Ptr>;
     public:
         Value(Environment& parent, Contents atom) : HoldsEnvironmentCallback(parent), _contents(atom) { }
         [[nodiscard]] const Contents& getContents() const noexcept { return _contents; }
@@ -39,7 +38,7 @@ namespace maya {
         using Self = UDFValue;
         using Ptr = std::shared_ptr<Self>;
     public:
-        UDFValue(Environment& parent, std::any atom, std::any supplementalInfo, size_t begin = 0, size_t range = 0) : Value(parent, atom), _supplementalInfo(supplementalInfo), _begin(begin), _range(range) { }
+        UDFValue(Environment& parent, Value::Contents atom, std::any supplementalInfo, size_t begin = 0, size_t range = 0) : Value(parent, atom), _supplementalInfo(supplementalInfo), _begin(begin), _range(range) { }
         std::shared_ptr<struct Expression> toExpression();
         constexpr auto getBegin() const noexcept { return _begin; }
         void setBegin(size_t value) noexcept { _begin = value; }
