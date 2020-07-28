@@ -31,7 +31,9 @@ add_library(clips
 		IntegerAtom.h IntegerAtom.cc
 		BitmapAtom.h BitmapAtom.cc
 		UDFContext.h UDFContext.cc
-		CallFunctionItem.h HasBinarySaveID.h TransferEvaluable.h)
+		CallFunctionItem.h HasBinarySaveID.h TransferEvaluable.h
+		CommandLine.h CommandLine.cc
+		)
 
 		#Agenda.h
 		#Analysis.h

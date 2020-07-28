@@ -64,13 +64,12 @@
 /*************************************************************/
 
 #ifndef _H_commline
-
 #pragma once
-
 #define _H_commline
 
 constexpr auto COMMANDLINE_DATA = 40;
 
+#if 0
 #include <cstdlib>
 #include <string>
 #include "Environment.h"
@@ -123,7 +122,7 @@ bool CommandCompleteAndNotEmpty(const Environment::Ptr&);
 void SetHaltCommandLoopBatch(const Environment::Ptr&, bool);
 bool GetHaltCommandLoopBatch(const Environment::Ptr&);
 void RerouteStdin(const Environment::Ptr&, int, char *[]);
-
+#endif
 #endif
 
 

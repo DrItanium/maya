@@ -280,6 +280,71 @@ namespace maya {
         std::forward_list<BoolCallFunctionItem::Ptr> _clearReadyFunctions;
         bool _executing = false;
         std::function<bool(Environment&)> _beforeResetCallback;
+    public: // command line
+        using EventFunction = std::function<void(Environment&)>;
+        using AfterPromptFunction = std::function<void(Environment&)>;
+        using BeforeCommandExecutionFunction = std::function<bool(Environment&)>;
+
+        constexpr auto isEvaluatingTopLevel() const noexcept { return _evaluatingTopLevel; }
+        void setEvaluatingTopLevel(bool value) noexcept { _evaluatingTopLevel = value; }
+        constexpr auto isHaltCommandLoopBatch() const noexcept { return _haltCommandLoopBatch; }
+        void setHaltCommandLoopBatch(bool value) noexcept { _haltCommandLoopBatch = value; }
+        auto getCurrentCommand() const noexcept { return _currentCommand; }
+        void setCurrentCommand(std::shared_ptr<Expression> value) noexcept { _currentCommand = value; }
+        std::string getCommandString() const noexcept { return _commandString; }
+        void setCommandString(const std::string& value) noexcept { _commandString = value; }
+        constexpr auto getMaximumCharacters() const noexcept { return _maximumCharacters; }
+        void setMaximumCharacters(size_t value) noexcept { _maximumCharacters = value; }
+        constexpr auto isParsingTopLevelCommand() const noexcept { return _parsingTopLevelCommand; }
+        void setParsingTopLevelCommand(bool value) noexcept { _parsingTopLevelCommand = value; }
+        std::string getBannerString() const noexcept { return _bannerString; }
+        void setBannerString(const std::string& value) noexcept { _bannerString = value; }
+        void setEventCallback(EventFunction value) noexcept { _eventCallback = value; }
+        auto getEventCallback() const noexcept { return _eventCallback; }
+        void setAfterPromptCallback(AfterPromptFunction value) noexcept { _afterPromptCallback = value; }
+        auto getAfterPromptCallback() const noexcept { return _afterPromptCallback; }
+        void setBeforeCommandExecutionCallback(BeforeCommandExecutionFunction value) noexcept { _beforeCommandExecutionCallback = value; }
+        auto getBeforeCommandExecutionCallback() const noexcept { return _beforeCommandExecutionCallback; }
+        bool expandCommandString(int);
+        void flushCommandString();
+        void appendCommandString(const std::string& str);
+        void insertCommandString(const std::string& str, unsigned int at);
+        /**
+         * @brief Determines whether a string forms a complete command. A complete command is either a constant, a variable, or a function
+         * call which is followed (at some point) by a carriage return. Once a complete command is found (not including the parens), extraneous
+         * parens and other tokens are ignored.
+         * @param str The string to check
+         * @return true/false if the command is a complete command or not
+         * @throws If the command contains an error
+         */
+        static bool isCompleteCommand(const std::string& str);
+
+        void commandLoop();
+        void commandLoopBatch();
+        void commandLoopBatchDriver();
+        void printPrompt();
+        void printBanner();
+        bool routeCommand(const std::string& str, bool);
+        bool isTopLevelCommand();
+        void appendNCommandString(const std::string& str, unsigned int length);
+        void setNCommandString(const std::string& str, unsigned int at);
+        std::string getCommandCompletionString(const std::string& str, size_t capacity);
+        bool executeIfCommandComplete();
+        void commandLoopOnceThenBatch();
+        void commandCompleteAndNotEmpty();
+        void rerouteStdin(int argc, char* argv[]);
+
+    private: // command line
+        bool _evaluatingTopLevel = false;
+        bool _haltCommandLoopBatch = false;
+        std::shared_ptr<Expression> _currentCommand;
+        std::string _commandString;
+        size_t _maximumCharacters = 0;
+        bool _parsingTopLevelCommand = false;
+        std::string _bannerString;
+        EventFunction _eventCallback;
+        AfterPromptFunction _afterPromptCallback;
+        BeforeCommandExecutionFunction _beforeCommandExecutionCallback;
     };
 } // end namespace maya
 
