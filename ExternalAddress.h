@@ -31,7 +31,18 @@ namespace maya {
         using SharedPtr = std::shared_ptr<Self>;
         using Ptr = std::variant<SharedPtr, ObserverPtr>;
     public:
+        /**
+         * @brief Construct an external address with the given type
+         * @param env
+         * @param externalType
+         */
         ExternalAddress(Environment& env, uint16_t externalType) : Atom(env, EXTERNAL_ADDRESS_TYPE), _externalType(externalType) { }
+        /**
+         * @brief Used by the new method to construct a given type
+         * @param context The context that describes the environment this external address will be a part of
+         * @param externalType The type id which specifies the proper type
+         */
+        ExternalAddress(UDFContext& context, uint16_t externalType ) : ExternalAddress(context.getParent(), externalType) { }
         /**
          * @brief Override this destructor to do something when destroying this container
          */
@@ -60,7 +71,7 @@ namespace maya {
     class ExternalAddressPointer : public ExternalAddress {
     public:
         ExternalAddressPointer(Environment& parent, uint16_t externalType) : ExternalAddress(parent, externalType) { }
-        ExternalAddressPointer(UDFContext& context, uint16_t externalType) : ExternalAddress(context.getParent(), externalType) { }
+        ExternalAddressPointer(UDFContext& context, uint16_t externalType) : ExternalAddress(context, externalType) { }
         ~ExternalAddressPointer() override = default;
         void shortPrint(const std::string& logicalName) override;
         void longPrint(const std::string& logicalName) override;
@@ -71,9 +82,17 @@ namespace maya {
     };
     template<typename T>
     constexpr auto IsConstructibleExternalAddress = std::is_base_of_v<ExternalAddress, T> && std::is_constructible_v<T, UDFContext&, uint16_t>;
-    /// @todo Add support for non typed pointer external addresses (java, C, etc)
-    /// @todo Add support for constructing/destructing new instances of external addresses within maya itself
-    /// @todo Add support for call and new UDFs at some point in the future
-
+    /**
+     * @brief Invoke the call method associated with a given ExternalAddress
+     * @param context The data about the invoking context
+     * @param returnValue The result of the call operation
+     */
+    void CallFunction(UDFContext& context, UDFValue::Ptr returnValue);
+    /**
+     * @brief Constructs a new external address of a given type
+     * @param context The data about the invoking context
+     * @param returnValue The external address or false
+     */
+    void NewFunction(UDFContext& context, UDFValue::Ptr returnValue);
 } // end namespace maya
 #endif //MAYA_EXTERNALADDRESS_H
