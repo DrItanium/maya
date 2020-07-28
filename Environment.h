@@ -29,6 +29,7 @@
 #include "FloatAtom.h"
 #include "IntegerAtom.h"
 #include "BitmapAtom.h"
+#include "ExternalAddress.h"
 namespace maya {
     class Expression;
     class Environment {
@@ -67,7 +68,6 @@ namespace maya {
         }
         Lexeme::Ptr findSymbol(const std::string& name, unsigned short type) noexcept;
         Integer::Ptr findInteger(Integer::BackingType value) noexcept;
-
         /// @todo implement these later
         //ExternalAddress::Ptr createExternalAddress(std::any contents, unsigned short kind);
         [[nodiscard]] constexpr bool executionHalted() const noexcept { return _executionHalted; }
@@ -207,7 +207,7 @@ namespace maya {
         DataTable<Float> _floatTable;
         DataTable<Integer> _integerTable;
         DataTable<BitMap> _bitmapTable;
-        /// @todo reimplement this later
+        /// @todo implement registration of external address types
         //DataTable<ExternalAddress> _externalAddressTable;
         Lexeme::Ptr _positiveInfinity;
         Lexeme::Ptr _negativeInfinity;

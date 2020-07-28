@@ -8,28 +8,22 @@
 #include <memory>
 #include <functional>
 #include <any>
-#include "Environment.h"
+#include <string>
+#include "HoldsEnvironmentCallback.h"
 #include "Atom.h"
 #include "UDFContext.h"
 #include "Value.h"
 #include "Constants.h"
 namespace maya {
-
-    /**
-     * When the call method passes a symbol as it's first argument this kind of method is used
-     */
-    using StaticExternalAddressCallable = std::function<bool(struct UDFContext&, std::shared_ptr<struct UDFValue>)>;
     /**
      * @brief An external address is a kind of atom which wraps an external type.
      */
     struct ExternalAddress : public Atom, std::enable_shared_from_this<ExternalAddress> {
     public:
         using Self = ExternalAddress;
-        //using Ptr = std::shared_ptr<Self>;
-        using ObserverPtr = std::experimental::fundamentals_v2::observer_ptr<Self>;
-        using WeakPtr = std::weak_ptr<Self>;
-        using SharedPtr = std::shared_ptr<Self>;
-        using Ptr = std::variant<SharedPtr, ObserverPtr>;
+        using Ptr = std::shared_ptr<Self>;
+
+        using CallableFunction = std::function<bool(UDFContext&, std::shared_ptr<UDFValue>)>;
     public:
         /**
          * @brief Construct an external address with the given type
@@ -83,16 +77,48 @@ namespace maya {
     template<typename T>
     constexpr auto IsConstructibleExternalAddress = std::is_base_of_v<ExternalAddress, T> && std::is_constructible_v<T, UDFContext&, uint16_t>;
     /**
+     * When the call method passes a symbol as it's first argument this kind of method is used
+     */
+    using ExternalAddressSymbolCallableFunction = std::function<bool(UDFContext&, std::shared_ptr<UDFValue>)>;
+    /**
+     * @brief A function which will generate a new method
+     */
+    using ExternalAddressNewFunction = std::function<ExternalAddress::Ptr(UDFContext&, uint16_t)>;
+
+
+    /**
+     * @brief Registered into the environment as part of the setup process, it holds global information about a given external address type
+     */
+     class ExternalAddressStaticRecord : public HoldsEnvironmentCallback {
+     public:
+         using Self = ExternalAddressStaticRecord;
+         using SymbolCallableFunction = std::function<bool(UDFContext&, UDFValue::Ptr)>;
+         using NewFunction = std::function<ExternalAddress::Ptr(UDFContext&, uint16_t)>;
+     public:
+         ExternalAddressStaticRecord(Environment& parent, const std::string& name, size_t externalId, SymbolCallableFunction symcallfunc = nullptr, NewFunction newFunc = nullptr) : HoldsEnvironmentCallback(parent), _name(name), _externalId(externalId), _symcall(symcallfunc), _newFunc(newFunc) { }
+         [[nodiscard]] std::string getName() const noexcept { return _name; }
+         [[nodiscard]] constexpr auto getExternalAddressId() const noexcept { return _externalId; }
+         bool call(UDFContext& context, UDFValue::Ptr returnValue);
+         ExternalAddress::Ptr makeNewInstance(UDFContext& context);
+     private:
+         std::string _name;
+         size_t _externalId;
+         SymbolCallableFunction _symcall;
+         NewFunction _newFunc;
+     };
+    /**
      * @brief Invoke the call method associated with a given ExternalAddress
+     * @param env the environment itself
      * @param context The data about the invoking context
      * @param returnValue The result of the call operation
      */
-    void CallFunction(UDFContext& context, UDFValue::Ptr returnValue);
+    void CallFunction(Environment& env, UDFContext& context, UDFValue::Ptr returnValue);
     /**
      * @brief Constructs a new external address of a given type
+     * @param env The Environment itself
      * @param context The data about the invoking context
      * @param returnValue The external address or false
      */
-    void NewFunction(UDFContext& context, UDFValue::Ptr returnValue);
+    void NewFunction(Environment& env, UDFContext& context, UDFValue::Ptr returnValue);
 } // end namespace maya
 #endif //MAYA_EXTERNALADDRESS_H

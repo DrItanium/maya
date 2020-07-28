@@ -3,6 +3,7 @@
 //
 
 #include "ExternalAddress.h"
+#include "Environment.h"
 #include <sstream>
 
 namespace maya {
@@ -40,5 +41,22 @@ namespace maya {
         returnValue->setContents(_parent.getFalseSymbol());
         return false;
     }
+    bool
+    ExternalAddressStaticRecord::call(UDFContext &context, UDFValue::Ptr returnValue) {
+        if (_symcall) {
+            return _symcall(context, returnValue);
+        } else {
+            returnValue->setContents(_parent.getFalseSymbol());
+            return false;
+        }
+    }
 
+    ExternalAddress::Ptr
+    ExternalAddressStaticRecord::makeNewInstance(UDFContext &context) {
+        if (_newFunc) {
+            return _newFunc(context, _externalId);
+        } else {
+            return nullptr;
+        }
+    }
 }
