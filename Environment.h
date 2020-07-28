@@ -352,10 +352,16 @@ namespace maya {
     private:
         void commandLoopBatchDriver();
     public:
+        /**
+         * @brief Prints the command prompt
+         */
         void printPrompt();
+        /**
+         * @brief Prints the maya banner
+         */
         void printBanner();
         bool routeCommand(const std::string& str, bool);
-        bool isTopLevelCommand();
+        [[nodiscard]] constexpr bool isTopLevelCommand() const noexcept { return _parsingTopLevelCommand; }
         std::string getCommandCompletionString(const std::string& str, size_t capacity);
         bool executeIfCommandComplete();
         bool commandCompleteAndNotEmpty();
@@ -373,6 +379,12 @@ namespace maya {
          * @return Status code of Incomplete, Complete, or Error
          */
         static CommandCompletionStatus isCompleteCommand(const std::string& str) noexcept;
+        [[nodiscard]] bool usingCustomEventCallback() const noexcept { return static_cast<bool>(_eventCallback); }
+    private:
+        /**
+         * @brief Interface to the event handling function, if no method provided then a default handler will be used instead.
+         */
+        void doEventCallback();
     private: // command line
         bool _evaluatingTopLevel = false;
         bool _haltCommandLoopBatch = false;

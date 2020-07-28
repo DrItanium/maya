@@ -119,12 +119,12 @@ namespace maya {
             if (batchActive()) {
                 inchar = llgetcBatch(STDIN(), true) ;
                 if (inchar == EOF) {
-                    _eventCallback(*this);
+                    doEventCallback();
                 } else {
                     expandCommandString(static_cast<char>(inchar));
                 }
             } else {
-                _eventCallback(*this);
+                doEventCallback();
             }
             // if execution was halted, then remove everything from the command buffer
             if (executionHalted()) {
@@ -164,34 +164,34 @@ namespace maya {
         int inchar = 0;
 
         while (true) {
-           if (isHaltCommandLoopBatch())  {
-               closeAllBatchSources();
-               setHaltCommandLoopBatch(false);
-           }
+            if (isHaltCommandLoopBatch())  {
+                closeAllBatchSources();
+                setHaltCommandLoopBatch(false);
+            }
 
-           // if a batch file is active, grab the command input directly from the batch file,
-           // otherwise call the event function.
+            // if a batch file is active, grab the command input directly from the batch file,
+            // otherwise call the event function.
 
-           if (batchActive()) {
-               inchar = llgetcBatch(STDIN(), true);
-               if (inchar == EOF) {
-                   return;
-               } else {
-                   expandCommandString(static_cast<char>(inchar));
-               }
-           } else {
-               return;
-           }
-           // if execution was halted, then remove everything from the command buffer.
-           if (executionHalted()) {
-               _executionHalted = false;
-               _evaluationError = false;
-               flushCommandString();
-               writeStringRouter(STDOUT(), "\n");
-               printPrompt();
-           }
-           // if a complete command is in the command buffer, then execute it
-           executeIfCommandComplete();
+            if (batchActive()) {
+                inchar = llgetcBatch(STDIN(), true);
+                if (inchar == EOF) {
+                    return;
+                } else {
+                    expandCommandString(static_cast<char>(inchar));
+                }
+            } else {
+                return;
+            }
+            // if execution was halted, then remove everything from the command buffer.
+            if (executionHalted()) {
+                _executionHalted = false;
+                _evaluationError = false;
+                flushCommandString();
+                writeStringRouter(STDOUT(), "\n");
+                printPrompt();
+            }
+            // if a complete command is in the command buffer, then execute it
+            executeIfCommandComplete();
         }
     }
     bool
@@ -222,67 +222,37 @@ namespace maya {
         printPrompt();
         return true;
     }
+    bool
+    Environment::commandCompleteAndNotEmpty() {
+        auto cmdStr = getCommandString();
+        return ! ((isCompleteCommand(cmdStr) == CommandCompletionStatus::Incomplete) || (_commandBufferInputCount == 0) || !_awaitingInput);
+    }
+    void
+    Environment::printPrompt() {
+        writeStringRouter(STDOUT(), COMMAND_PROMPT);
+        if (_afterPromptCallback) {
+            _afterPromptCallback(*this);
+        }
+    }
+    void
+    Environment::printBanner() {
+        writeStringRouter(STDOUT(), _bannerString);
+    }
+    void
+    Environment::doEventCallback() {
+        // if we have an event callback then use it, otherwise do the default implementation
+        if (_eventCallback) {
+            _eventCallback(*this);
+        } else {
+            // default implementation
+            auto inchar = readRouter(STDIN());
+            if (inchar == EOF) inchar = '\n';
+            expandCommandString(static_cast<char>(inchar));
+        }
+    }
 #if 0
 
-
-
-/*******************************/
-/* CommandCompleteAndNotEmpty: */
-/*******************************/
-bool CommandCompleteAndNotEmpty(
-        const Environment::Ptr&theEnv) {
-    return !((CompleteCommand(CommandLineData(theEnv)->CommandString) == 0) ||
-             (RouterData(theEnv)->CommandBufferInputCount == 0) ||
-             !RouterData(theEnv)->AwaitingInput);
-    return false;
-
-}
-
-/*******************************************/
-/* PrintPrompt: Prints the command prompt. */
-/*******************************************/
-void PrintPrompt(const Environment::Ptr&theEnv) {
-#if STUBBING_INACTIVE
-    WriteString(theEnv, STDOUT, COMMAND_PROMPT);
-
-    if (CommandLineData(theEnv)->AfterPromptCallback != nullptr) { (*CommandLineData(theEnv)->AfterPromptCallback)(theEnv); }
-#endif
-}
-
-/*****************************************/
-/* PrintBanner: Prints the CLIPS banner. */
-/*****************************************/
-void PrintBanner(
-        const Environment::Ptr&theEnv) {
-#if STUBBING_INACTIVE
-    WriteString(theEnv, STDOUT, CommandLineData(theEnv)->BannerString);
-#endif
-}
-
-/************************************************/
-/* SetAfterPromptFunction: Replaces the current */
-/*   value of AfterPromptFunction.              */
-/************************************************/
-void SetAfterPromptFunction(
-        const Environment::Ptr&theEnv,
-        AfterPromptFunction *funptr) {
-#if STUBBING_INACTIVE
-    CommandLineData(theEnv)->AfterPromptCallback = funptr;
-#endif
-}
-
-/***********************************************************/
-/* SetBeforeCommandExecutionFunction: Replaces the current */
-/*   value of BeforeCommandExecutionFunction.              */
-/***********************************************************/
-void SetBeforeCommandExecutionFunction(
-        const Environment::Ptr&theEnv,
-        BeforeCommandExecutionFunction *funptr) {
-#if STUBBING_INACTIVE
-    CommandLineData(theEnv)->BeforeCommandExecutionCallback = funptr;
-#endif
-}
-/*********************************************************/
+    /*********************************************************/
 /* RouteCommand: Processes a completed command. Returns  */
 /*   true if a command could be parsed, otherwise false. */
 /*********************************************************/
@@ -449,48 +419,7 @@ bool RouteCommand(
     return false;
 }
 
-/*****************************************************************/
-/* DefaultGetNextEvent: Default event-handling function. Handles */
-/*   only keyboard events by first calling ReadRouter to get a   */
-/*   character and then calling ExpandCommandString to add the   */
-/*   character to the CommandString.                             */
-/*****************************************************************/
-static void DefaultGetNextEvent(
-        const Environment::Ptr&theEnv) {
-    int inchar;
 
-    inchar = ReadRouter(theEnv, STDIN);
-
-    if (inchar == EOF) inchar = '\n';
-
-    ExpandCommandString(theEnv, (char) inchar);
-}
-
-/*************************************/
-/* SetEventFunction: Replaces the    */
-/*   current value of EventFunction. */
-/*************************************/
-EventFunction *SetEventFunction(
-        const Environment::Ptr&theEnv,
-        EventFunction *theFunction) {
-#if STUBBING_INACTIVE
-    EventFunction *tmp_ptr;
-
-    tmp_ptr = CommandLineData(theEnv)->EventCallback;
-    CommandLineData(theEnv)->EventCallback = theFunction;
-    return tmp_ptr;
-#endif
-    return nullptr;
-}
-
-/****************************************/
-/* TopLevelCommand: Indicates whether a */
-/*   top-level command is being parsed. */
-/****************************************/
-bool TopLevelCommand(
-        const Environment::Ptr&theEnv) {
-    return (CommandLineData(theEnv)->ParsingTopLevelCommand);
-}
 
 /***********************************************************/
 /* GetCommandCompletionString: Returns the last token in a */
@@ -561,27 +490,11 @@ const char *GetCommandCompletionString(
     return ("");
 }
 
-/****************************************************************/
-/* SetHaltCommandLoopBatch: Sets the HaltCommandLoopBatch flag. */
-/****************************************************************/
-void SetHaltCommandLoopBatch(
-        const Environment::Ptr&theEnv,
-        bool value) {
-    CommandLineData(theEnv)->HaltCommandLoopBatch = value;
-}
-
-/*******************************************************************/
-/* GetHaltCommandLoopBatch: Returns the HaltCommandLoopBatch flag. */
-/*******************************************************************/
-bool GetHaltCommandLoopBatch(
-        const Environment::Ptr&theEnv) {
-    return (CommandLineData(theEnv)->HaltCommandLoopBatch);
-}
 #endif
-/// @todo finish implementing isCompleteCommand
-#if 0
     Environment::CommandCompletionStatus
     Environment::isCompleteCommand(const std::string &str) noexcept {
+/// @todo finish implementing isCompleteCommand
+#if 0
         if (str.empty()) {
             return CommandCompletionStatus::Incomplete;
         }
@@ -668,8 +581,10 @@ bool GetHaltCommandLoopBatch(
             }
         }
         // if we got here then there is no complete command to be found
+#endif
         return CommandCompletionStatus::Incomplete;
     }
+#if 0
     namespace {
         int
         doString(const std::string &str, int position, bool& complete) {
@@ -692,96 +607,96 @@ bool GetHaltCommandLoopBatch(
 /* DoString: Skips over a string contained within a string */
 /*   until the closing quotation mark is encountered.      */
 /***********************************************************/
-static int DoString(
-        const char *str,
-        int pos,
-        bool *complete) {
-    int inchar;
+    static int DoString(
+            const char *str,
+            int pos,
+            bool *complete) {
+        int inchar;
 
-    /*=================================================*/
-    /* Process the string character by character until */
-    /* the closing quotation mark is found.            */
-    /*=================================================*/
+        /*=================================================*/
+        /* Process the string character by character until */
+        /* the closing quotation mark is found.            */
+        /*=================================================*/
 
-    inchar = str[pos];
-    while (inchar != '"') {
-        /*=====================================================*/
-        /* If a \ is found, then the next character is ignored */
-        /* even if it is a closing quotation mark.             */
-        /*=====================================================*/
+        inchar = str[pos];
+        while (inchar != '"') {
+            /*=====================================================*/
+            /* If a \ is found, then the next character is ignored */
+            /* even if it is a closing quotation mark.             */
+            /*=====================================================*/
 
-        if (inchar == '\\') {
+            if (inchar == '\\') {
+                pos++;
+                inchar = str[pos];
+            }
+
+            /*===================================================*/
+            /* If the end of input is reached before the closing */
+            /* quotation mark is found, the return the last      */
+            /* position that was reached and indicate that a     */
+            /* complete string was not found.                    */
+            /*===================================================*/
+
+            if (inchar == EOS) {
+                *complete = false;
+                return (pos);
+            }
+
+            /*================================*/
+            /* Move on to the next character. */
+            /*================================*/
+
             pos++;
             inchar = str[pos];
         }
 
-        /*===================================================*/
-        /* If the end of input is reached before the closing */
-        /* quotation mark is found, the return the last      */
-        /* position that was reached and indicate that a     */
-        /* complete string was not found.                    */
-        /*===================================================*/
-
-        if (inchar == EOS) {
-            *complete = false;
-            return (pos);
-        }
-
-        /*================================*/
-        /* Move on to the next character. */
-        /*================================*/
+        /*======================================================*/
+        /* Indicate that a complete string was found and return */
+        /* the position of the closing quotation mark.          */
+        /*======================================================*/
 
         pos++;
-        inchar = str[pos];
+        *complete = true;
+        return (pos);
     }
-
-    /*======================================================*/
-    /* Indicate that a complete string was found and return */
-    /* the position of the closing quotation mark.          */
-    /*======================================================*/
-
-    pos++;
-    *complete = true;
-    return (pos);
-}
 
 /*************************************************************/
 /* DoComment: Skips over a comment contained within a string */
 /*   until a line feed or carriage return is encountered.    */
 /*************************************************************/
-static int DoComment(
-        const char *str,
-        int pos) {
-    int inchar;
+    static int DoComment(
+            const char *str,
+            int pos) {
+        int inchar;
 
-    inchar = str[pos];
-    while ((inchar != '\n') && (inchar != '\r')) {
-        if (inchar == EOS) { return (pos); }
-
-        pos++;
         inchar = str[pos];
-    }
+        while ((inchar != '\n') && (inchar != '\r')) {
+            if (inchar == EOS) { return (pos); }
 
-    return (pos);
-}
+            pos++;
+            inchar = str[pos];
+        }
+
+        return (pos);
+    }
 
 /**************************************************************/
 /* DoWhiteSpace: Skips over white space consisting of spaces, */
 /*   tabs, and form feeds that is contained within a string.  */
 /**************************************************************/
-static int DoWhiteSpace(
-        const char *str,
-        int pos) {
-    int inchar;
+    static int DoWhiteSpace(
+            const char *str,
+            int pos) {
+        int inchar;
 
-    inchar = str[pos];
-    while ((inchar == ' ') || (inchar == '\f') || (inchar == '\t')) {
-        pos++;
         inchar = str[pos];
-    }
+        while ((inchar == ' ') || (inchar == '\f') || (inchar == '\t')) {
+            pos++;
+            inchar = str[pos];
+        }
 
-    return (pos);
-}
+        return (pos);
+    }
 #endif
 
 } // end namespace maya
