@@ -33,7 +33,7 @@ add_library(clips
 		UDFContext.h UDFContext.cc
 		CallFunctionItem.h HasBinarySaveID.h TransferEvaluable.h
 		CommandLine.h CommandLine.cc
-		)
+		Token.cc Token.h)
 
 		#Agenda.h
 		#Analysis.h
