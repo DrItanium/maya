@@ -250,17 +250,22 @@ namespace maya {
             expandCommandString(static_cast<char>(inchar));
         }
     }
+    bool
+    Environment::routeCommand(const std::string &command, bool printResult) {
+        if (command.empty()) {
+            return false;
+        }
+        openStringSource("command", command, 0);
+        //auto theToken = getToken("command");
+        /// @todo continue implementation
+        return true;
+    }
 #if 0
 
-    /*********************************************************/
-/* RouteCommand: Processes a completed command. Returns  */
-/*   true if a command could be parsed, otherwise false. */
-/*********************************************************/
 bool RouteCommand(
         const Environment::Ptr&theEnv,
         const char *command,
         bool printResult) {
-#if STUBBING_INACTIVE
     UDFValue returnValue;
     Expression *top;
     const char *commandName;
@@ -415,8 +420,6 @@ bool RouteCommand(
     }
 
     return true;
-#endif
-    return false;
 }
 
 

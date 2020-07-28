@@ -32,6 +32,7 @@
 #include "ExternalAddress.h"
 namespace maya {
     class Expression;
+    class Token;
     class Environment {
     public:
         using Self = Environment;
@@ -360,7 +361,13 @@ namespace maya {
          * @brief Prints the maya banner
          */
         void printBanner();
-        bool routeCommand(const std::string& str, bool);
+        /**
+         * @brief Processes a complete command. Returns true if a command could be parsed, otherwise false.
+         * @param command The command to process
+         * @param printResult should the result be printed out?
+         * @return a boolean value signifying if the command could be parsed or not
+         */
+        bool routeCommand(const std::string& command, bool printResult);
         [[nodiscard]] constexpr bool isTopLevelCommand() const noexcept { return _parsingTopLevelCommand; }
         std::string getCommandCompletionString(const std::string& str, size_t capacity);
         bool executeIfCommandComplete();
@@ -409,6 +416,11 @@ namespace maya {
         };
         LoadError load(const std::string& path);
         int llgetcBatch(const std::string& logicalName, bool);
+        void openStringSource(const std::string& logicalName, const std::string& command, size_t startAt);
+    public: // scanner
+        Token getToken(const std::string& logicalName);
+    private:
+
     };
 } // end namespace maya
 
