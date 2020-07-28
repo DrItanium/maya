@@ -1,708 +1,239 @@
-#if 0
-#include <cstdio>
-#include <cstring>
-#include <ctype.h>
-
-#include "Setup.h"
-#include "Constants.h"
-
-#include "ArgumentAccess.h"
-#include "Construct.h"
-#include "Environment.h"
-#include "Expression.h"
-#include "File.h"
-#include "MemoryAllocation.h"
-#include "Multifield.h"
-#include "PrettyPrint.h"
-#include "ProceduralFunctions.h"
-#include "ProceduralFunctionsParser.h"
-#include "PrintUtility.h"
-#include "Router.h"
-#include "Scanner.h"
-#include "StringRouter.h"
-#include "Symbol.h"
-#include "SystemDependency.h"
-#include "Utility.h"
-
 #include "CommandLine.h"
-
-/***************/
-/* DEFINITIONS */
-/***************/
-
-constexpr auto NO_SWITCH         = 0;
-constexpr auto BATCH_SWITCH      = 1;
-constexpr auto BATCH_STAR_SWITCH = 2;
-constexpr auto LOAD_SWITCH       = 3;
-
-/***************************************/
-/* LOCAL INTERNAL FUNCTION DEFINITIONS */
-/***************************************/
-
-static int DoString(const char *, int, bool *);
-static int DoComment(const char *, int);
-static int DoWhiteSpace(const char *, int);
-static void DefaultGetNextEvent(const Environment::Ptr&);
-static void DeallocateCommandLineData(const Environment::Ptr&);
-
-CommandLineModule::CommandLineModule(Environment& envCallback, const std::string &banner, EventFunction callback) : EnvironmentModule(envCallback), BannerString(banner), EventCallback(callback) { }
-/****************************************************/
-/* InitializeCommandLineData: Allocates environment */
-/*    data for command line functionality.          */
-/****************************************************/
-void InitializeCommandLineData(
-        const Environment::Ptr&theEnv) {
-    theEnv->allocateEnvironmentModule<CommandLineModule>(BANNER_STRING, DefaultGetNextEvent);
-    /// @todo migrate DeallocateCommandLineData to the destructor of cmdlineData
-    //AllocateEnvironmentData(theEnv, COMMANDLINE_DATA, sizeof(CommandLineModule), DeallocateCommandLineData);
-}
-
-#if STUBBING_INACTIVE
-/*******************************************************/
-/* DeallocateCommandLineData: Deallocates environment */
-/*    data for the command line functionality.        */
-/******************************************************/
-static void DeallocateCommandLineData(
-        const Environment::Ptr&theEnv) {
-    if (CommandLineData(theEnv)->CommandString != nullptr) {
-        rm(theEnv, CommandLineData(theEnv)->CommandString, CommandLineData(theEnv)->MaximumCharacters);
-    }
-
-    if (CommandLineData(theEnv)->CurrentCommand != nullptr) { ReturnExpression(theEnv, CommandLineData(theEnv)->CurrentCommand); }
-}
-
-#endif
-/*************************************************/
-/* RerouteStdin: Processes the -f, -f2, and -l   */
-/*   options available on machines which support */
-/*   argc and arv command line options.          */
-/*************************************************/
-void RerouteStdin(
-        const Environment::Ptr&theEnv,
-        int argc,
-        char *argv[]) {
-    int i;
-    int theSwitch = NO_SWITCH;
-
-    /*======================================*/
-    /* If there aren't enough arguments for */
-    /* the -f argument, then return.        */
-    /*======================================*/
-
-    if (argc < 3) { return; }
-
-    /*=====================================*/
-    /* If argv was not passed then return. */
-    /*=====================================*/
-
-    if (argv == nullptr) return;
-
-    /*=============================================*/
-    /* Process each of the command line arguments. */
-    /*=============================================*/
-
-    for (i = 1; i < argc; i++) {
-        if (strcmp(argv[i], "-f") == 0) theSwitch = BATCH_SWITCH;
-        else if (strcmp(argv[i], "-f2") == 0) theSwitch = BATCH_STAR_SWITCH;
-        else if (strcmp(argv[i], "-l") == 0) theSwitch = LOAD_SWITCH;
-        else if (theSwitch == NO_SWITCH) {
-            PrintErrorID(theEnv, "SYSDEP", 2, false);
-            WriteString(theEnv, STDERR, "Invalid option '");
-            WriteString(theEnv, STDERR, argv[i]);
-            WriteString(theEnv, STDERR, "'.\n");
-        }
-
-        if (i > (argc - 1)) {
-            PrintErrorID(theEnv, "SYSDEP", 1, false);
-            WriteString(theEnv, STDERR, "No file found for '");
-
-            switch (theSwitch) {
-                case BATCH_SWITCH:
-                    WriteString(theEnv, STDERR, "-f");
-                    break;
-
-                case BATCH_STAR_SWITCH:
-                    WriteString(theEnv, STDERR, "-f2");
-                    break;
-
-                case LOAD_SWITCH:
-                    WriteString(theEnv, STDERR, "-l");
-            }
-
-            WriteString(theEnv, STDERR, "' option.\n");
+#include "Environment.h"
+namespace maya {
+    constexpr auto NO_SWITCH         = 0;
+    constexpr auto BATCH_SWITCH      = 1;
+    constexpr auto BATCH_STAR_SWITCH = 2;
+    constexpr auto LOAD_SWITCH       = 3;
+    namespace {
+        int doString(const std::string &str, int i, bool &);
+        int doComment(const std::string &str, int i);
+        int doWhitespace(const std::string &str, int i);
+    } // end namespace
+    void
+    Environment::rerouteStdin(int argc, char **argv) {
+        // if there are not enough arguments for the -f argument then return
+        if (argc < 3) {
             return;
         }
-
-        switch (theSwitch) {
-            case BATCH_SWITCH:
-                OpenBatch(theEnv, argv[++i], true);
-                break;
-
-            case BATCH_STAR_SWITCH:
-                BatchStar(theEnv, argv[++i]);
-                break;
-
-            case LOAD_SWITCH:
-                Load(theEnv, argv[++i]);
-                break;
+        // we were not given argv so just return
+        if (!argv) {
+            return;
         }
-    }
-}
-
-
-/***************************************************/
-/* ExpandCommandString: Appends a character to the */
-/*   command string. Returns true if the command   */
-/*   string was successfully expanded, otherwise   */
-/*   false. Expanding the string also includes     */
-/*   adding a backspace character which reduces    */
-/*   string's length.                              */
-/***************************************************/
-bool ExpandCommandString(
-        const Environment::Ptr&theEnv,
-        int inchar) {
-#if STUBBING_INACTIVE
-    size_t k;
-    k = RouterData(theEnv)->CommandBufferInputCount;
-    CommandLineData(theEnv)->CommandString = ExpandStringWithChar(theEnv, inchar, CommandLineData(theEnv)->CommandString,
-                                                                  &RouterData(theEnv)->CommandBufferInputCount,
-                                                                  &CommandLineData(theEnv)->MaximumCharacters,
-                                                                  CommandLineData(theEnv)->MaximumCharacters + 80);
-    return RouterData(theEnv)->CommandBufferInputCount != k;
-#endif
-    return false;
-}
-
-/******************************************************************/
-/* FlushCommandString: Empties the contents of the CommandString. */
-/******************************************************************/
-void FlushCommandString(
-        const Environment::Ptr&theEnv) {
-#if STUBBING_INACTIVE
-    if (CommandLineData(theEnv)->CommandString != nullptr)
-        rm(theEnv, CommandLineData(theEnv)->CommandString, CommandLineData(theEnv)->MaximumCharacters);
-    CommandLineData(theEnv)->CommandString = nullptr;
-    CommandLineData(theEnv)->MaximumCharacters = 0;
-    RouterData(theEnv)->CommandBufferInputCount = 0;
-    RouterData(theEnv)->InputUngets = 0;
-    RouterData(theEnv)->AwaitingInput = true;
-#endif
-}
-
-/*********************************************************************************/
-/* SetCommandString: Sets the contents of the CommandString to a specific value. */
-/*********************************************************************************/
-void SetCommandString(
-        const Environment::Ptr&theEnv,
-        const char *str) {
-#if STUBBING_INACTIVE
-    size_t length;
-
-    FlushCommandString(theEnv);
-    length = strlen(str);
-    CommandLineData(theEnv)->CommandString = (char *)
-            genrealloc(theEnv, CommandLineData(theEnv)->CommandString,
-                       CommandLineData(theEnv)->MaximumCharacters,
-                       CommandLineData(theEnv)->MaximumCharacters + length + 1);
-
-    genstrcpy(CommandLineData(theEnv)->CommandString, str);
-    CommandLineData(theEnv)->MaximumCharacters += (length + 1);
-    RouterData(theEnv)->CommandBufferInputCount += length;
-#endif
-}
-
-/*************************************************************/
-/* SetNCommandString: Sets the contents of the CommandString */
-/*   to a specific value up to N characters.                 */
-/*************************************************************/
-void SetNCommandString(
-        const Environment::Ptr&theEnv,
-        const char *str,
-        unsigned length) {
-#if STUBBING_INACTIVE
-    FlushCommandString(theEnv);
-    CommandLineData(theEnv)->CommandString = (char *)
-            genrealloc(theEnv, CommandLineData(theEnv)->CommandString,
-                       CommandLineData(theEnv)->MaximumCharacters,
-                       CommandLineData(theEnv)->MaximumCharacters + length + 1);
-
-    genstrncpy(CommandLineData(theEnv)->CommandString, str, length);
-    CommandLineData(theEnv)->CommandString[CommandLineData(theEnv)->MaximumCharacters + length] = 0;
-    CommandLineData(theEnv)->MaximumCharacters += (length + 1);
-    RouterData(theEnv)->CommandBufferInputCount += length;
-#endif
-}
-
-/******************************************************************************/
-/* AppendCommandString: Appends a value to the contents of the CommandString. */
-/******************************************************************************/
-void AppendCommandString(
-        const Environment::Ptr&theEnv,
-        const char *str) {
-#if STUBBING_INACTIVE
-    CommandLineData(theEnv)->CommandString = AppendToString(theEnv, str, CommandLineData(theEnv)->CommandString,
-                                                            &RouterData(theEnv)->CommandBufferInputCount,
-                                                            &CommandLineData(theEnv)->MaximumCharacters);
-#endif
-}
-
-/******************************************************************************/
-/* InsertCommandString: Inserts a value in the contents of the CommandString. */
-/******************************************************************************/
-void InsertCommandString(
-        const Environment::Ptr&theEnv,
-        const char *str,
-        unsigned int position) {
-#if STUBBING_INACTIVE
-    CommandLineData(theEnv)->CommandString =
-            InsertInString(theEnv, str, position, CommandLineData(theEnv)->CommandString,
-                           &RouterData(theEnv)->CommandBufferInputCount, &CommandLineData(theEnv)->MaximumCharacters);
-#endif
-}
-
-/************************************************************/
-/* AppendNCommandString: Appends a value up to N characters */
-/*   to the contents of the CommandString.                  */
-/************************************************************/
-void AppendNCommandString(
-        const Environment::Ptr&theEnv,
-        const char *str,
-        unsigned length) {
-#if STUBBING_INACTIVE
-    CommandLineData(theEnv)->CommandString = AppendNToString(theEnv, str, CommandLineData(theEnv)->CommandString, length,
-                                                             &RouterData(theEnv)->CommandBufferInputCount,
-                                                             &CommandLineData(theEnv)->MaximumCharacters);
-#endif
-}
-
-/*****************************************************************************/
-/* GetCommandString: Returns a pointer to the contents of the CommandString. */
-/*****************************************************************************/
-std::string
-GetCommandString(const Environment::Ptr&theEnv) {
-    return (CommandLineData(theEnv)->getCommandString());
-}
-
-/**************************************************************************/
-/* CompleteCommand: Determines whether a string forms a complete command. */
-/*   A complete command is either a constant, a variable, or a function   */
-/*   call which is followed (at some point) by a carriage return. Once a  */
-/*   complete command is found (not including the parenthesis),           */
-/*   extraneous parenthesis and other tokens are ignored. If a complete   */
-/*   command exists, then 1 is returned. 0 is returned if the command was */
-/*   not complete and without errors. -1 is returned if the command       */
-/*   contains an error.                                                   */
-/**************************************************************************/
-int CompleteCommand(
-        const char *mstring) {
-    int i;
-    char inchar;
-    int depth = 0;
-    bool moreThanZero = false;
-    bool complete;
-    bool error = false;
-
-    if (mstring == nullptr) return 0;
-
-    /*===================================================*/
-    /* Loop through each character of the command string */
-    /* to determine if there is a complete command.      */
-    /*===================================================*/
-
-    i = 0;
-    while ((inchar = mstring[i++]) != EOS) {
-        switch (inchar) {
-            /*======================================================*/
-            /* If a carriage return or line feed is found, there is */
-            /* at least one completed token in the command buffer,  */
-            /* and parentheses are balanced, then a complete        */
-            /* command has been found. Otherwise, remove all white  */
-            /* space beginning with the current character.          */
-            /*======================================================*/
-
-            case '\n' :
-            case '\r' :
-                if (error) return (-1);
-                if (moreThanZero && (depth == 0)) return 1;
-                i = DoWhiteSpace(mstring, i);
-                break;
-
-                /*=====================*/
-                /* Remove white space. */
-                /*=====================*/
-
-            case ' ' :
-            case '\f' :
-            case '\t' :
-                i = DoWhiteSpace(mstring, i);
-                break;
-
-                /*======================================================*/
-                /* If the opening quotation of a string is encountered, */
-                /* determine if the closing quotation of the string is  */
-                /* in the command buffer. Until the closing quotation   */
-                /* is found, a complete command can not be made.        */
-                /*======================================================*/
-
-            case '"' :
-                i = DoString(mstring, i, &complete);
-                if ((depth == 0) && complete) moreThanZero = true;
-                break;
-
-                /*====================*/
-                /* Process a comment. */
-                /*====================*/
-
-            case ';' :
-                i = DoComment(mstring, i);
-                if (moreThanZero && (depth == 0) && (mstring[i] != EOS)) {
-                    if (error) return -1;
-                    else return 1;
-                } else if (mstring[i] != EOS) i++;
-                break;
-
-                /*====================================================*/
-                /* A left parenthesis increases the nesting depth of  */
-                /* the current command by 1. Don't bother to increase */
-                /* the depth if the first token encountered was not   */
-                /* a parenthesis (e.g. for the command string         */
-                /* "red (+ 3 4", the symbol red already forms a       */
-                /* complete command, so the next carriage return will */
-                /* cause evaluation of red--the closing parenthesis   */
-                /* for "(+ 3 4" does not have to be found).           */
-                /*====================================================*/
-
-            case '(' :
-                if ((depth > 0) || !moreThanZero) {
-                    depth++;
-                    moreThanZero = true;
+        for (int i = 1; i < argc; ++i) {
+            auto theSwitch = NO_SWITCH;
+            std::string currentArgv(argv[i]);
+            if (currentArgv == "-f") {
+                theSwitch = BATCH_SWITCH;
+            } else if (currentArgv == "-f2") {
+                theSwitch = BATCH_STAR_SWITCH;
+            } else if (currentArgv == "-l") {
+                theSwitch = LOAD_SWITCH;
+            } else if (theSwitch == NO_SWITCH) {
+                printErrorID("SYSDEP", 2, false);
+                writeStringsRouter(STDERR(), "Invalid option '", argv[i], "'.\n");
+            }
+            if (i > (argc - 1)) {
+                printErrorID("SYSDEP", 1, false);
+                writeStringRouter(STDERR(), "No file found for '");
+                switch (theSwitch) {
+                    case BATCH_SWITCH:
+                        writeStringRouter(STDERR(), "-f");
+                        break;
+                    case BATCH_STAR_SWITCH:
+                        writeStringRouter(STDERR(), "-f2");
+                        break;
+                    case LOAD_SWITCH:
+                        writeStringRouter(STDERR(), "-l");
+                        break;
                 }
-                break;
+                writeStringRouter(STDERR(), "' option.\n");
+                return;
+            }
+            std::string str(argv[++i]);
+            switch (theSwitch) {
+                case BATCH_SWITCH:
+                    openBatch(str, true);
+                    break;
+                case BATCH_STAR_SWITCH:
+                    batchStar(str);
+                    break;
+                case LOAD_SWITCH:
+                    load(str);
+                    break;
+            }
+        }
+    }
+    std::string
+    Environment::getCommandString() const noexcept {
+        std::string str = _commandStream.str();
+        return str;
+    }
+    void
+    Environment::setCommandString(const std::string &value) noexcept {
+        resetCommandStringTracking();
+        _commandStream.str(value);
+        _maximumCharacters += value.length();
+        _commandBufferInputCount += value.length();
 
-                /*====================================================*/
-                /* A right parenthesis decreases the nesting depth of */
-                /* the current command by 1. If the parenthesis is    */
-                /* the first token of the command, then an error is   */
-                /* generated.                                         */
-                /*====================================================*/
+    }
+    bool
+    Environment::expandCommandString(char inchar) {
+        _commandStream << inchar;
+        return _commandStream.fail();
+    }
 
-            case ')' :
-                if (depth > 0) depth--;
-                else if (!moreThanZero) error = true;
-                break;
+    void
+    Environment::flushCommandString() {
+        static std::string empty;
+        setCommandString(empty);
+    }
+    void
+    Environment::resetCommandStringTracking() {
+        _maximumCharacters = 0;
+        _commandBufferInputCount = 0;
+        _inputUngets = 0;
+        _awaitingInput = true;
+    }
 
-                /*=====================================================*/
-                /* If the command begins with any other character and  */
-                /* an opening parenthesis hasn't yet been found, then  */
-                /* skip all characters on the same line. If a carriage */
-                /* return or line feed is found, then a complete       */
-                /* command exists.                                     */
-                /*=====================================================*/
+    void
+    Environment::appendCommandString(const std::string &str) {
+        _commandStream << str;
+    }
+    void
+    Environment::commandLoop() {
+        int inchar = 0;
+        writeStringRouter(STDOUT(), _bannerString);
+        _executionHalted = false;
+        _evaluationError = false;
 
-            default:
-                if (depth == 0) {
-                    if (IsUTF8MultiByteStart(inchar) || isprint(inchar)) {
-                        while ((inchar = mstring[i++]) != EOS) {
-                            if ((inchar == '\n') || (inchar == '\r')) {
-                                if (error) return -1;
-                                else return 1;
-                            }
-                        }
-                        return 0;
-                    }
+        // cleanCurrentGarbageFrame(nullptr);
+        // callPeriodicTasks();
+        printPrompt();
+        _commandBufferInputCount = 0;
+        _inputUngets = 0;
+        _awaitingInput = true;
+        while (true) {
+            // if a batch file is active, grab the command input directly from the batch file, otherwise call
+            // the event function
+            if (batchActive()) {
+                inchar = llgetcBatch(STDIN(), true) ;
+                if (inchar == EOF) {
+                    _eventCallback(*this);
+                } else {
+                    expandCommandString(static_cast<char>(inchar));
                 }
-                break;
+            } else {
+                _eventCallback(*this);
+            }
+            // if execution was halted, then remove everything from the command buffer
+            if (executionHalted()) {
+                _executionHalted = false;
+                _evaluationError = false;
+                flushCommandString();
+                writeStringRouter(STDOUT(), "\n");
+                printPrompt();
+            }
+            // if a complete command is in the command buffer, then execute it
+            executeIfCommandComplete();
         }
     }
+    void
+    Environment::commandLoopBatch() {
+        _executionHalted = false;
+        _evaluationError = false;
 
-    /*====================================================*/
-    /* Return 0 because a complete command was not found. */
-    /*====================================================*/
+        // cleanCurrentGarbageFrame(nullptr);
+        // callPeriodicTasks();
 
-    return 0;
-}
+        printPrompt();
+        _commandBufferInputCount = 0;
+        _inputUngets = 0;
+        _awaitingInput = true;
+        commandLoopBatchDriver();
+    }
+    void
+    Environment::commandLoopOnceThenBatch() {
+        if (!executeIfCommandComplete()) {
+            return;
+        }
+        commandLoopBatchDriver();
+    }
+    void
+    Environment::commandLoopBatchDriver() {
+        int inchar = 0;
 
-/***********************************************************/
-/* DoString: Skips over a string contained within a string */
-/*   until the closing quotation mark is encountered.      */
-/***********************************************************/
-static int DoString(
-        const char *str,
-        int pos,
-        bool *complete) {
-    int inchar;
+        while (true) {
+           if (isHaltCommandLoopBatch())  {
+               closeAllBatchSources();
+               setHaltCommandLoopBatch(false);
+           }
 
-    /*=================================================*/
-    /* Process the string character by character until */
-    /* the closing quotation mark is found.            */
-    /*=================================================*/
+           // if a batch file is active, grab the command input directly from the batch file,
+           // otherwise call the event function.
 
-    inchar = str[pos];
-    while (inchar != '"') {
-        /*=====================================================*/
-        /* If a \ is found, then the next character is ignored */
-        /* even if it is a closing quotation mark.             */
-        /*=====================================================*/
-
-        if (inchar == '\\') {
-            pos++;
-            inchar = str[pos];
+           if (batchActive()) {
+               inchar = llgetcBatch(STDIN(), true);
+               if (inchar == EOF) {
+                   return;
+               } else {
+                   expandCommandString(static_cast<char>(inchar));
+               }
+           } else {
+               return;
+           }
+           // if execution was halted, then remove everything from the command buffer.
+           if (executionHalted()) {
+               _executionHalted = false;
+               _evaluationError = false;
+               flushCommandString();
+               writeStringRouter(STDOUT(), "\n");
+               printPrompt();
+           }
+           // if a complete command is in the command buffer, then execute it
+           executeIfCommandComplete();
+        }
+    }
+    bool
+    Environment::executeIfCommandComplete() {
+        auto cmdString = getCommandString();
+        if (cmdString.empty() || (_commandBufferInputCount == 0) || !_awaitingInput) {
+            return false;
         }
 
-        /*===================================================*/
-        /* If the end of input is reached before the closing */
-        /* quotation mark is found, the return the last      */
-        /* position that was reached and indicate that a     */
-        /* complete string was not found.                    */
-        /*===================================================*/
-
-        if (inchar == EOS) {
-            *complete = false;
-            return (pos);
+        if (_beforeCommandExecutionCallback) {
+            if (!_beforeCommandExecutionCallback(*this)) {
+                return false;
+            }
         }
-
-        /*================================*/
-        /* Move on to the next character. */
-        /*================================*/
-
-        pos++;
-        inchar = str[pos];
+        //flushPPBuffer();
+        // setPPBufferStatus(false);
+        _commandBufferInputCount = 0;
+        _inputUngets = 0;
+        _awaitingInput = false;
+        routeCommand(cmdString, true);
+        // flushPPBuffer();
+        // flushParsingMessages();
+        _executionHalted = false;
+        _evaluationError = false;
+        flushCommandString();
+        // cleanCurrentGarbageFrame(nullptr);
+        // callPeriodicTasks();
+        printPrompt();
+        return true;
     }
+#if 0
 
-    /*======================================================*/
-    /* Indicate that a complete string was found and return */
-    /* the position of the closing quotation mark.          */
-    /*======================================================*/
 
-    pos++;
-    *complete = true;
-    return (pos);
-}
-
-/*************************************************************/
-/* DoComment: Skips over a comment contained within a string */
-/*   until a line feed or carriage return is encountered.    */
-/*************************************************************/
-static int DoComment(
-        const char *str,
-        int pos) {
-    int inchar;
-
-    inchar = str[pos];
-    while ((inchar != '\n') && (inchar != '\r')) {
-        if (inchar == EOS) { return (pos); }
-
-        pos++;
-        inchar = str[pos];
-    }
-
-    return (pos);
-}
-
-/**************************************************************/
-/* DoWhiteSpace: Skips over white space consisting of spaces, */
-/*   tabs, and form feeds that is contained within a string.  */
-/**************************************************************/
-static int DoWhiteSpace(
-        const char *str,
-        int pos) {
-    int inchar;
-
-    inchar = str[pos];
-    while ((inchar == ' ') || (inchar == '\f') || (inchar == '\t')) {
-        pos++;
-        inchar = str[pos];
-    }
-
-    return (pos);
-}
-
-/********************************************************************/
-/* CommandLoop: Endless loop which waits for user commands and then */
-/*   executes them. The command loop will bypass the EventFunction  */
-/*   if there is an active batch file.                              */
-/********************************************************************/
-void CommandLoop(const Environment::Ptr&theEnv) {
-#if STUBBING_INACTIVE
-    int inchar;
-
-    WriteString(theEnv, STDOUT, CommandLineData(theEnv)->BannerString);
-    SetHaltExecution(theEnv, false);
-    SetEvaluationError(theEnv, false);
-
-    CleanCurrentGarbageFrame(theEnv, nullptr);
-    CallPeriodicTasks(theEnv);
-
-    PrintPrompt(theEnv);
-    RouterData(theEnv)->CommandBufferInputCount = 0;
-    RouterData(theEnv)->InputUngets = 0;
-    RouterData(theEnv)->AwaitingInput = true;
-
-    while (true) {
-        /*===================================================*/
-        /* If a batch file is active, grab the command input */
-        /* directly from the batch file, otherwise call the  */
-        /* event function.                                   */
-        /*===================================================*/
-
-        if (BatchActive(theEnv)) {
-            inchar = LLGetcBatch(theEnv, STDIN, true);
-            if (inchar == EOF) { (*CommandLineData(theEnv)->EventCallback)(theEnv); }
-            else { ExpandCommandString(theEnv, (char) inchar); }
-        } else { (*CommandLineData(theEnv)->EventCallback)(theEnv); }
-
-        /*=================================================*/
-        /* If execution was halted, then remove everything */
-        /* from the command buffer.                        */
-        /*=================================================*/
-
-        if (GetHaltExecution(theEnv)) {
-            SetHaltExecution(theEnv, false);
-            SetEvaluationError(theEnv, false);
-            FlushCommandString(theEnv);
-            WriteString(theEnv, STDOUT, "\n");
-            PrintPrompt(theEnv);
-        }
-
-        /*=========================================*/
-        /* If a complete command is in the command */
-        /* buffer, then execute it.                */
-        /*=========================================*/
-
-        ExecuteIfCommandComplete(theEnv);
-    }
-#endif
-}
-
-/***********************************************************/
-/* CommandLoopBatch: Loop which waits for commands from a  */
-/*   batch file and then executes them. Returns when there */
-/*   are no longer any active batch files.                 */
-/***********************************************************/
-void CommandLoopBatch(
-        const Environment::Ptr&theEnv) {
-    SetHaltExecution(theEnv, false);
-    SetEvaluationError(theEnv, false);
-
-    CleanCurrentGarbageFrame(theEnv, nullptr);
-    CallPeriodicTasks(theEnv);
-
-    PrintPrompt(theEnv);
-    RouterData(theEnv)->CommandBufferInputCount = 0;
-    RouterData(theEnv)->InputUngets = 0;
-    RouterData(theEnv)->AwaitingInput = true;
-
-    CommandLoopBatchDriver(theEnv);
-}
-
-/************************************************************/
-/* CommandLoopOnceThenBatch: Loop which waits for commands  */
-/*   from a batch file and then executes them. Returns when */
-/*   there are no longer any active batch files.            */
-/************************************************************/
-void CommandLoopOnceThenBatch(
-        const Environment::Ptr&theEnv) {
-    if (!ExecuteIfCommandComplete(theEnv)) return;
-
-    CommandLoopBatchDriver(theEnv);
-}
-
-/*********************************************************/
-/* CommandLoopBatchDriver: Loop which waits for commands */
-/*   from a batch file and then executes them. Returns   */
-/*   when there are no longer any active batch files.    */
-/*********************************************************/
-void CommandLoopBatchDriver(
-        const Environment::Ptr&theEnv) {
-    int inchar;
-
-    while (true) {
-        if (GetHaltCommandLoopBatch(theEnv)) {
-            CloseAllBatchSources(theEnv);
-            SetHaltCommandLoopBatch(theEnv, false);
-        }
-
-        /*===================================================*/
-        /* If a batch file is active, grab the command input */
-        /* directly from the batch file, otherwise call the  */
-        /* event function.                                   */
-        /*===================================================*/
-
-        if (BatchActive(theEnv)) {
-            inchar = LLGetcBatch(theEnv, STDIN, true);
-            if (inchar == EOF) { return; }
-            else { ExpandCommandString(theEnv, (char) inchar); }
-        } else { return; }
-
-        /*=================================================*/
-        /* If execution was halted, then remove everything */
-        /* from the command buffer.                        */
-        /*=================================================*/
-
-        if (GetHaltExecution(theEnv)) {
-            SetHaltExecution(theEnv, false);
-            SetEvaluationError(theEnv, false);
-            FlushCommandString(theEnv);
-            WriteString(theEnv, STDOUT, "\n");
-            PrintPrompt(theEnv);
-        }
-
-        /*=========================================*/
-        /* If a complete command is in the command */
-        /* buffer, then execute it.                */
-        /*=========================================*/
-
-        ExecuteIfCommandComplete(theEnv);
-    }
-}
-
-/**********************************************************/
-/* ExecuteIfCommandComplete: Checks to determine if there */
-/*   is a completed command and if so executes it.        */
-/**********************************************************/
-bool ExecuteIfCommandComplete(
-        const Environment::Ptr&theEnv) {
-#if STUBBING_INACTIVE
-    if ((CompleteCommand(CommandLineData(theEnv)->CommandString) == 0) ||
-        (RouterData(theEnv)->CommandBufferInputCount == 0) ||
-        !RouterData(theEnv)->AwaitingInput) { return false; }
-
-    if (CommandLineData(theEnv)->BeforeCommandExecutionCallback != nullptr) {
-        if (!(*CommandLineData(theEnv)->BeforeCommandExecutionCallback)(theEnv)) { return false; }
-    }
-
-    FlushPPBuffer(theEnv);
-    SetPPBufferStatus(theEnv, false);
-    RouterData(theEnv)->CommandBufferInputCount = 0;
-    RouterData(theEnv)->InputUngets = 0;
-    RouterData(theEnv)->AwaitingInput = false;
-    RouteCommand(theEnv, CommandLineData(theEnv)->CommandString, true);
-    FlushPPBuffer(theEnv);
-    FlushParsingMessages(theEnv);
-    SetHaltExecution(theEnv, false);
-    SetEvaluationError(theEnv, false);
-    FlushCommandString(theEnv);
-
-    CleanCurrentGarbageFrame(theEnv, nullptr);
-    CallPeriodicTasks(theEnv);
-
-    PrintPrompt(theEnv);
-
-    return true;
-#endif
-    return false;
-}
 
 /*******************************/
 /* CommandCompleteAndNotEmpty: */
 /*******************************/
 bool CommandCompleteAndNotEmpty(
         const Environment::Ptr&theEnv) {
-#if STUBBING_INACTIVE
     return !((CompleteCommand(CommandLineData(theEnv)->CommandString) == 0) ||
              (RouterData(theEnv)->CommandBufferInputCount == 0) ||
              !RouterData(theEnv)->AwaitingInput);
-#endif
     return false;
 
 }
@@ -1046,5 +577,211 @@ bool GetHaltCommandLoopBatch(
         const Environment::Ptr&theEnv) {
     return (CommandLineData(theEnv)->HaltCommandLoopBatch);
 }
-
 #endif
+/// @todo finish implementing isCompleteCommand
+#if 0
+    Environment::CommandCompletionStatus
+    Environment::isCompleteCommand(const std::string &str) noexcept {
+        if (str.empty()) {
+            return CommandCompletionStatus::Incomplete;
+        }
+        auto error = false;
+        auto complete = false;
+        auto moreThanZero = false;
+        auto depth = 0;
+        // iterate through each character
+        for (size_t index = 0; index < str.length(); ++index) {
+            switch (char targetCharacter = str.at(index); targetCharacter) {
+                /// If a carriage return or line feed is found there is at least
+                /// one completed token in the command buffer,
+                /// and parentheses are balanced, then a complete command has been found.
+                /// Otherwise, remove all whitespace beginning with the current character
+                case '\n':
+                case '\r':
+                    if (error) {
+                        return CommandCompletionStatus::Error;
+                    }
+                    if (moreThanZero && (depth == 0)) {
+                        return CommandCompletionStatus::Complete;
+                    }
+                    index = doWhitespace(str, index);
+                    break;
+                    /// Remove whitespace
+                case ' ':
+                case '\f':
+                case '\t':
+                    index = doWhitespace(str, index);
+                    break;
+                    /// If the opening quotation of a string is encountered, determine if the closing quotation of the string is  in the command buffer.
+                    /// Until the closing quotation is found, a complete command can not be made.
+                case '"' :
+                    index = doString(str, index, complete);
+                    if ((depth == 0) && complete) {
+                        moreThanZero = true;
+                    }
+                    break;
+
+                case ';' : /// process a comment
+                    index = doComment(str, index);
+                    if (moreThanZero && (depth == 0) && (str.at(index) != EOS)) {
+                        return error ? CommandCompletionStatus::Error : CommandCompletionStatus::Complete;
+                    } else if (str.at(index) != EOS) {
+                        index++;
+                    }
+                    break;
+
+                    /// a left paren "(" increases the nesting depth of the current command by 1.
+                    /// Do not increment the count if the first token encountered was not a parenthesis (e.g. "donuts (+ 3 6", the symbol
+                    /// donuts already forms a complete command, so the next carriage return will cause evaluation of red--the closing paren
+                    /// for "(+ 3 6" does not have to be found)
+                case '(' :
+                    if ((depth > 0) || !moreThanZero) {
+                        depth++;
+                        moreThanZero = true;
+                    }
+                    break;
+                    /// A right paren decreases the nesting depth of the current command by 1. If the parenthesis is
+                    /// the first token of the command, then an error is generated.
+                case ')' :
+                    if (depth > 0) {
+                        depth--;
+                    } else if (!moreThanZero) {
+                        error = true;
+                    }
+                    break;
+                    /// if the command begins with any other character and an opening paren hasn't been found, then
+                    /// skip all chars on the same line. If a carriage return or line feed is found, then a complete command
+                    /// exists.
+                default:
+                    if (depth == 0) {
+                        if (IsUTF8MultiByteStart(targetCharacter) || isprint(targetCharacter)) {
+                            while ((targetCharacter = str.at(index++)) != EOS) {
+                                if ((targetCharacter == '\n') || (targetCharacter == '\r')) {
+                                    if (error) return CommandCompletionStatus::Error;
+                                    else return CommandCompletionStatus::Complete;
+                                }
+                            }
+                            return CommandCompletionStatus::Incomplete;
+                        }
+                    }
+                    break;
+            }
+        }
+        // if we got here then there is no complete command to be found
+        return CommandCompletionStatus::Incomplete;
+    }
+    namespace {
+        int
+        doString(const std::string &str, int position, bool& complete) {
+            try {
+                char targetCharacter = str.at(position);
+                while (targetCharacter != '"') {
+                    // if we find a \ then the next character is ignored even if it is a closing quote mark
+                    if (targetCharacter == '\\') {
+                        ++position;
+                        targetCharacter = str.at(position);
+                    }
+                }
+            } catch (std::out_of_range&) {
+                // we've gone out of bounds
+            }
+        }
+    }
+
+/***********************************************************/
+/* DoString: Skips over a string contained within a string */
+/*   until the closing quotation mark is encountered.      */
+/***********************************************************/
+static int DoString(
+        const char *str,
+        int pos,
+        bool *complete) {
+    int inchar;
+
+    /*=================================================*/
+    /* Process the string character by character until */
+    /* the closing quotation mark is found.            */
+    /*=================================================*/
+
+    inchar = str[pos];
+    while (inchar != '"') {
+        /*=====================================================*/
+        /* If a \ is found, then the next character is ignored */
+        /* even if it is a closing quotation mark.             */
+        /*=====================================================*/
+
+        if (inchar == '\\') {
+            pos++;
+            inchar = str[pos];
+        }
+
+        /*===================================================*/
+        /* If the end of input is reached before the closing */
+        /* quotation mark is found, the return the last      */
+        /* position that was reached and indicate that a     */
+        /* complete string was not found.                    */
+        /*===================================================*/
+
+        if (inchar == EOS) {
+            *complete = false;
+            return (pos);
+        }
+
+        /*================================*/
+        /* Move on to the next character. */
+        /*================================*/
+
+        pos++;
+        inchar = str[pos];
+    }
+
+    /*======================================================*/
+    /* Indicate that a complete string was found and return */
+    /* the position of the closing quotation mark.          */
+    /*======================================================*/
+
+    pos++;
+    *complete = true;
+    return (pos);
+}
+
+/*************************************************************/
+/* DoComment: Skips over a comment contained within a string */
+/*   until a line feed or carriage return is encountered.    */
+/*************************************************************/
+static int DoComment(
+        const char *str,
+        int pos) {
+    int inchar;
+
+    inchar = str[pos];
+    while ((inchar != '\n') && (inchar != '\r')) {
+        if (inchar == EOS) { return (pos); }
+
+        pos++;
+        inchar = str[pos];
+    }
+
+    return (pos);
+}
+
+/**************************************************************/
+/* DoWhiteSpace: Skips over white space consisting of spaces, */
+/*   tabs, and form feeds that is contained within a string.  */
+/**************************************************************/
+static int DoWhiteSpace(
+        const char *str,
+        int pos) {
+    int inchar;
+
+    inchar = str[pos];
+    while ((inchar == ' ') || (inchar == '\f') || (inchar == '\t')) {
+        pos++;
+        inchar = str[pos];
+    }
+
+    return (pos);
+}
+#endif
+
+} // end namespace maya

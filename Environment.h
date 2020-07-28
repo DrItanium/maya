@@ -291,8 +291,16 @@ namespace maya {
         void setHaltCommandLoopBatch(bool value) noexcept { _haltCommandLoopBatch = value; }
         auto getCurrentCommand() const noexcept { return _currentCommand; }
         void setCurrentCommand(std::shared_ptr<Expression> value) noexcept { _currentCommand = value; }
-        std::string getCommandString() const noexcept { return _commandString; }
-        void setCommandString(const std::string& value) noexcept { _commandString = value; }
+        /**
+         * @brief Retrieve the contents of the command stream as a string
+         * @return A string representation of the command stream
+         */
+        std::string getCommandString() const noexcept;
+        /**
+         * @brief Sets the command string to a specific string
+         * @param value the string to set the command string to
+         */
+        void setCommandString(const std::string& value) noexcept;
         constexpr auto getMaximumCharacters() const noexcept { return _maximumCharacters; }
         void setMaximumCharacters(size_t value) noexcept { _maximumCharacters = value; }
         constexpr auto isParsingTopLevelCommand() const noexcept { return _parsingTopLevelCommand; }
@@ -305,46 +313,90 @@ namespace maya {
         auto getAfterPromptCallback() const noexcept { return _afterPromptCallback; }
         void setBeforeCommandExecutionCallback(BeforeCommandExecutionFunction value) noexcept { _beforeCommandExecutionCallback = value; }
         auto getBeforeCommandExecutionCallback() const noexcept { return _beforeCommandExecutionCallback; }
-        bool expandCommandString(int);
+        /**
+         * @brief Process the -f, -f2, and -l options available on machines which support argc and argv command line options
+         * @param argc The argument count
+         * @param argv The arguments themselves
+         */
+        void rerouteStdin(int argc, char* argv[]);
+        /**
+         * @brief Appends a character to the command string.
+         * @return True if the command was successfully expanded, otherwise false.
+         */
+        bool expandCommandString(char inchar);
+        /**
+         * @brief Empties the contents of the command string
+         */
         void flushCommandString();
+    private:
+        void resetCommandStringTracking();
+    public:
+        /**
+         * @brief Appends the given string to the command string
+         * @param str the string to be appended to the command string
+         */
         void appendCommandString(const std::string& str);
-        void insertCommandString(const std::string& str, unsigned int at);
+
+        /**
+         * @brief Endless loop which waits for user commands and then executes them. The command loop will bypass the event function if there is one
+         */
+        void commandLoop();
+        /**
+         * @brief Loop which waits for commands from a batch file and then execute them. Returns when there are no longer any active batch files
+         */
+        void commandLoopBatch();
+        /**
+         * @brief Loop which waits for commands from a batch file and then executes them. Returns when there are no longer any active batch files.
+         */
+        void commandLoopOnceThenBatch();
+    private:
+        void commandLoopBatchDriver();
+    public:
+        void printPrompt();
+        void printBanner();
+        bool routeCommand(const std::string& str, bool);
+        bool isTopLevelCommand();
+        std::string getCommandCompletionString(const std::string& str, size_t capacity);
+        bool executeIfCommandComplete();
+        bool commandCompleteAndNotEmpty();
+        enum class CommandCompletionStatus
+        {
+            Incomplete,
+            Complete,
+            Error,
+        };
         /**
          * @brief Determines whether a string forms a complete command. A complete command is either a constant, a variable, or a function
          * call which is followed (at some point) by a carriage return. Once a complete command is found (not including the parens), extraneous
          * parens and other tokens are ignored.
          * @param str The string to check
-         * @return true/false if the command is a complete command or not
-         * @throws If the command contains an error
+         * @return Status code of Incomplete, Complete, or Error
          */
-        static bool isCompleteCommand(const std::string& str);
-
-        void commandLoop();
-        void commandLoopBatch();
-        void commandLoopBatchDriver();
-        void printPrompt();
-        void printBanner();
-        bool routeCommand(const std::string& str, bool);
-        bool isTopLevelCommand();
-        void appendNCommandString(const std::string& str, unsigned int length);
-        void setNCommandString(const std::string& str, unsigned int at);
-        std::string getCommandCompletionString(const std::string& str, size_t capacity);
-        bool executeIfCommandComplete();
-        void commandLoopOnceThenBatch();
-        void commandCompleteAndNotEmpty();
-        void rerouteStdin(int argc, char* argv[]);
-
+        static CommandCompletionStatus isCompleteCommand(const std::string& str) noexcept;
     private: // command line
         bool _evaluatingTopLevel = false;
         bool _haltCommandLoopBatch = false;
         std::shared_ptr<Expression> _currentCommand;
-        std::string _commandString;
+        std::stringstream _commandStream;
         size_t _maximumCharacters = 0;
         bool _parsingTopLevelCommand = false;
         std::string _bannerString;
         EventFunction _eventCallback;
         AfterPromptFunction _afterPromptCallback;
         BeforeCommandExecutionFunction _beforeCommandExecutionCallback;
+    public: // file commands
+        bool batchActive() const noexcept;
+        bool removeBatch() noexcept;
+        void closeAllBatchSources();
+        bool openBatch(const std::string& str, bool);
+        bool batchStar(const std::string& path);
+        enum class LoadError {
+            None = 0,
+            OpenFile,
+            Parsing,
+        };
+        LoadError load(const std::string& path);
+        int llgetcBatch(const std::string& logicalName, bool);
     };
 } // end namespace maya
 

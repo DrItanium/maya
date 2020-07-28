@@ -67,9 +67,21 @@
 #pragma once
 #define _H_commline
 
+namespace maya {
+    constexpr bool IsUTF8Start(char ch) noexcept {
+        return ((ch) & 0xC0) != 0x80;
+    }
+
+    constexpr bool IsUTF8MultiByteStart(char ch) noexcept {
+        return (((unsigned char) ch) >= 0xC0) && (((unsigned char) ch) <= 0xF7);
+    }
+    constexpr bool IsUTF8MultiByteContinuation(char ch) noexcept {
+        return (((unsigned char) ch) >= 0x80) && (((unsigned char) ch) <= 0xBF);
+    }
+} // end namespace maya
+#if 0
 constexpr auto COMMANDLINE_DATA = 40;
 
-#if 0
 #include <cstdlib>
 #include <string>
 #include "Environment.h"
