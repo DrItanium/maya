@@ -84,6 +84,10 @@ namespace maya {
         Expression::Ptr parse(Expression::Ptr, const std::string&);
         [[nodiscard]] constexpr auto isNeeded() const noexcept { return _neededFunction; }
         void setNeeded(bool value) noexcept { _neededFunction = value; }
+        /**
+         * @brief Is the use of the sequence operator allowed ($) ???
+         * @return True if it is allowed
+         */
         [[nodiscard]] constexpr auto sequenceUseOk() const noexcept { return _sequenceUseOk; }
         void setSequenceUseOk(bool value = true) noexcept { _sequenceUseOk = value; }
         [[nodiscard]] constexpr auto overloadable() const noexcept { return _overloadable; }

@@ -20,7 +20,6 @@ add_library(clips
 		ExternalFunctions.h ExternalFunctions.cc
 		Symbol.h Symbol.cc
 		Construct.h Construct.cc
-		Callable.h
 		Value.h Value.cc
 		ExternalAddress.h ExternalAddress.cc
 		MultifieldPrimitive.h MultifieldPrimitive.cc

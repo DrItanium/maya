@@ -37,7 +37,6 @@
 #include "HoldsEnvironmentCallback.h"
 #include "IORouterAware.h"
 #include "Evaluable.h"
-#include "Callable.h"
 #include "ExternalAddress.h"
 #include "TypeHeader.h"
 #include "Atom.h"

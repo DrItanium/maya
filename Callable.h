@@ -5,17 +5,16 @@
 #ifndef MAYA_CALLABLE_H
 #define MAYA_CALLABLE_H
 #include <memory>
+#include <functional>
 namespace maya {
 /**
- * @brief Provides a callable interface that when implemented on a ExternalAddress child will provide a "call" method
+ * @brief Provides a callable interface used by ExternalAddresses which operate on an instance of ExternalAddress
  */
-    class Callable {
+    class InstanceCallable {
     public:
-        virtual ~Callable() = default;
+        virtual ~InstanceCallable() = default;
         virtual bool call(struct UDFContext &context, std::shared_ptr<struct UDFValue> returnValue) = 0;
     };
-    template<typename T>
-    constexpr auto IsCallable = std::is_base_of_v<Callable, T>;
-}
+} // end namespace maya
 
 #endif //MAYA_CALLABLE_H

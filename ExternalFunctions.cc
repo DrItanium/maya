@@ -69,11 +69,7 @@ namespace maya {
    }
    Expression::Ptr
    ExternalFunction::parse(Expression::Ptr expression, const std::string & str) {
-        if (_parser) {
-            return _parser(_parent, expression, str);
-        } else {
-            return nullptr;
-        }
+       return _parser ? _parser(_parent, expression, str) : nullptr;
    }
    size_t
    ExternalFunction::hash(size_t range) const {
