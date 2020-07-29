@@ -7,57 +7,118 @@ namespace maya {
         return (value == ' ') || (value == '\n') || (value == '\f') ||
                (value == '\r') || (value == ';') || (value == '\t');
     }
+    static_assert(isWhiteSpace(' '));
+    static_assert(isWhiteSpace('\n'));
+    static_assert(isWhiteSpace('\f'));
+    static_assert(isWhiteSpace('\r'));
+    static_assert(isWhiteSpace('\t'));
+    static_assert(isWhiteSpace(';'));
+    static_assert(!isWhiteSpace('a'));
+
     constexpr auto isCommentCharacter(char value) noexcept { return value == ';'; }
+    static_assert(isCommentCharacter(';'));
+    static_assert(!isCommentCharacter('a'));
     Token
     Environment::getToken(const std::string& logicalName) {
-        auto targetType = Token::Type::Unknown;
-        std::string printForm("unknown");
-        Token::Contents storage = nullptr;
+        Token targetToken;
         _globalPos = 0;
         _globalMax = 0;
         auto inchar = readRouter(logicalName);
         // remove all whitespace before processing the actual request
         while (isWhiteSpace(inchar)) {
-           // remove comment lines
-           if (isCommentCharacter(inchar)) {
-              inchar = readRouter(logicalName);
-              while ((inchar != '\n') && (inchar != '\r') && (inchar != EOF)) {
-                  inchar = readRouter(logicalName);
-              }
-           }
-           inchar = readRouter(logicalName);
+            // remove comment lines
+            if (isCommentCharacter(inchar)) {
+                inchar = readRouter(logicalName);
+                while ((inchar != '\n') && (inchar != '\r') && (inchar != EOF)) {
+                    inchar = readRouter(logicalName);
+                }
+            }
+            inchar = readRouter(logicalName);
         }
         // process symbolic tokens
         if (isalpha(inchar) || IsUTF8MultiByteStart(inchar)) {
-           targetType = Token::Type::Symbol;
-           unreadRouter(logicalName, inchar);
-           auto symbol = scanSymbol(logicalName, 0, targetType);
-           storage = symbol;
-           printForm = symbol->getContents();
-        } else if (isdigit(inchar)) {
             unreadRouter(logicalName, inchar);
-            //scanNumber(logicalName, )
+            targetToken = scanSymbol(logicalName, 0);
+        } else if (isdigit(inchar)) {
+            // process number tokens beginning with a digit
+            unreadRouter(logicalName, inchar);
+            targetToken = scanNumber(logicalName);
+        } else {
+            switch (inchar) {
+                // process string tokens
+                case '"':
+                    targetToken = scanString(logicalName);
+                    break;
+            }
         }
-        return {targetType, printForm, storage};
+        return targetToken;
     }
-} // end namespace maya
+    constexpr bool isReservedCharacter(char c) noexcept {
+        switch(c) {
+            case '<':
+            case '"':
+            case '(':
+            case ')':
+            case '&':
+            case '|':
+            case '~':
+            case ' ':
+            case ';':
+                return true;
+            default:
+                return false;
+        }
+    }
+    static_assert(isReservedCharacter('<'));
+    static_assert(isReservedCharacter('"'));
+    static_assert(isReservedCharacter('('));
+    static_assert(isReservedCharacter(')'));
+    static_assert(isReservedCharacter('&'));
+    static_assert(isReservedCharacter('|'));
+    static_assert(isReservedCharacter('~'));
+    static_assert(isReservedCharacter(' '));
+    static_assert(isReservedCharacter(';'));
+    static_assert(!isReservedCharacter('a'));
+    bool hasInstanceMarkers(const std::string& str) noexcept {
+        return (!str.empty()) && (str.length() > 2) && (str.at(0) == '[') && (str.at(str.length() - 1) == ']');
+    }
+    std::string stripOffInstanceMarkers(const std::string& str) noexcept {
+        if (hasInstanceMarkers(str)) {
+            return str.substr(1, str.length() - 2);
+        } else {
+            return str;
+        }
+    }
+    Token
+    Environment::scanSymbol(const std::string& logicalName, int count) {
+        std::stringstream ss; /// @todo replace this with an instance stringstream
+        // scan characters and add them to the symbol until a delimiter is found.
+        auto inchar = readRouter(logicalName);
+        while ((!isReservedCharacter(inchar)) && (IsUTF8MultiByteStart(inchar) || IsUTF8MultiByteContinuation(inchar) || isprint(inchar))) {
+            ss << inchar;
+            ++count;
+            inchar = readRouter(logicalName);
+        }
+        // return the last character scanned (the delimiter) to the input stream so it will scanned as part of the next token
+        unreadRouter(logicalName, inchar);
+
+        // add the symbol to the symbol table and return the symbol table address of the symbol.
+        // Symbols of the form [<symbol>] are instance names, so the type returned is InstanceName rather than Symbol
+        auto str = ss.str();
+        if (auto str = ss.str(); count > 2) {
+            if (hasInstanceMarkers(str)) {
+                auto actualInstanceName = stripOffInstanceMarkers(str);
+                auto ptr = createInstanceName(actualInstanceName);
+                return {Token::Type::InstanceName, actualInstanceName, ptr};
+            } else {
+                return {Token::Type::Symbol, str, createSymbol(str)};
+            }
+        } else {
+            return {Token::Type::Symbol, str, createSymbol(str)};
+        }
+    }
 #if 0
-
-void GetToken( const Environment::Ptr&theEnv, const char *logicalName, struct token *theToken) {
-    if (isalpha(inchar) || IsUTF8MultiByteStart(inchar)) {
-        theToken->tknType = SYMBOL_TOKEN;
-        UnreadRouter(theEnv, logicalName, inchar);
-        theToken->lexemeValue = ScanSymbol(theEnv, logicalName, 0, &type);
-        theToken->printForm = theToken->lexemeValue->contents;
-    }
-
-        /*===============================================*/
-        /* Process Number Tokens beginning with a digit. */
-        /*===============================================*/
-
-    else if (isdigit(inchar)) {
-        UnreadRouter(theEnv, logicalName, inchar);
-        ScanNumber(theEnv, logicalName, theToken);
+    void GetToken( const Environment::Ptr&theEnv, const char *logicalName, struct token *theToken) {
     } else
         switch (inchar) {
             /*========================*/
@@ -268,119 +329,6 @@ void GetToken( const Environment::Ptr&theEnv, const char *logicalName, struct to
     return;
 }
 
-/*************************************/
-/* ScanSymbol: Scans a symbol token. */
-/*************************************/
-static CLIPSLexeme *ScanSymbol(
-        const Environment::Ptr&theEnv,
-        const char *logicalName,
-        int count,
-        TokenType *type) {
-#if STUBBING_INACTIVE
-    int inchar;
-    CLIPSLexeme *symbol;
-
-    /*=====================================*/
-    /* Scan characters and add them to the */
-    /* symbol until a delimiter is found.  */
-    /*=====================================*/
-
-    inchar = ReadRouter(theEnv, logicalName);
-    while ((inchar != '<') && (inchar != '"') &&
-           (inchar != '(') && (inchar != ')') &&
-           (inchar != '&') && (inchar != '|') && (inchar != '~') &&
-           (inchar != ' ') && (inchar != ';') &&
-           (IsUTF8MultiByteStart(inchar) ||
-            IsUTF8MultiByteContinuation(inchar) ||
-            isprint(inchar))) {
-        ScannerData(theEnv)->GlobalString = ExpandStringWithChar(theEnv, inchar, ScannerData(theEnv)->GlobalString,
-                                                                 &ScannerData(theEnv)->GlobalPos, &ScannerData(theEnv)->GlobalMax,
-                                                                 ScannerData(theEnv)->GlobalMax + 80);
-
-        count++;
-        inchar = ReadRouter(theEnv, logicalName);
-    }
-
-    /*===================================================*/
-    /* Return the last character scanned (the delimiter) */
-    /* to the input stream so it will be scanned as part */
-    /* of the next token.                                */
-    /*===================================================*/
-
-    UnreadRouter(theEnv, logicalName, inchar);
-
-    /*====================================================*/
-    /* Add the symbol to the symbol table and return the  */
-    /* symbol table address of the symbol. Symbols of the */
-    /* form [<symbol>] are instance names, so the type    */
-    /* returned is INSTANCE_NAME_TYPE rather than SYMBOL_TYPE.      */
-    /*====================================================*/
-
-    if (count > 2) {
-        if ((ScannerData(theEnv)->GlobalString[0] == '[') ? (ScannerData(theEnv)->GlobalString[count - 1] == ']') : false) {
-            *type = INSTANCE_NAME_TOKEN;
-            inchar = ']';
-        } else {
-            *type = SYMBOL_TOKEN;
-            return CreateSymbol(theEnv, ScannerData(theEnv)->GlobalString);
-        }
-        ScannerData(theEnv)->GlobalString[count - 1] = EOS;
-        symbol = CreateInstanceName(theEnv, ScannerData(theEnv)->GlobalString + 1);
-        ScannerData(theEnv)->GlobalString[count - 1] = (char) inchar;
-        return symbol;
-    } else {
-        *type = SYMBOL_TOKEN;
-        return CreateSymbol(theEnv, ScannerData(theEnv)->GlobalString);
-    }
-#endif
-    return nullptr;
-}
-#if STUBBING_INACTIVE
-/*************************************/
-/* ScanString: Scans a string token. */
-/*************************************/
-static CLIPSLexeme *ScanString(
-        const Environment::Ptr&theEnv,
-        const char *logicalName) {
-    int inchar;
-    size_t pos = 0;
-    size_t max = 0;
-    char *theString = nullptr;
-    CLIPSLexeme *thePtr;
-
-    /*============================================*/
-    /* Scan characters and add them to the string */
-    /* until the " delimiter is found.            */
-    /*============================================*/
-
-    inchar = ReadRouter(theEnv, logicalName);
-    while ((inchar != '"') && (inchar != EOF)) {
-        if (inchar == '\\') { inchar = ReadRouter(theEnv, logicalName); }
-
-        theString = ExpandStringWithChar(theEnv, inchar, theString, &pos, &max, max + 80);
-        inchar = ReadRouter(theEnv, logicalName);
-    }
-
-    if ((inchar == EOF) && !ScannerData(theEnv)->IgnoreCompletionErrors) {
-        PrintErrorID(theEnv, "SCANNER", 1, true);
-        WriteString(theEnv, STDERR, "Encountered End-Of-File while scanning a string\n");
-    }
-
-    /*===============================================*/
-    /* Add the string to the symbol table and return */
-    /* the symbol table address of the string.       */
-    /*===============================================*/
-
-    if (theString == nullptr) { thePtr = CreateString(theEnv, ""); }
-    else {
-        thePtr = CreateString(theEnv, theString);
-        rm(theEnv, theString, max);
-    }
-
-    return thePtr;
-}
-#endif
-
 /**************************************/
 /* ScanNumber: Scans a numeric token. */
 /**************************************/
@@ -388,7 +336,6 @@ static void ScanNumber(
         const Environment::Ptr&theEnv,
         const char *logicalName,
         struct token *theToken) {
-#if STUBBING_INACTIVE
     int count = 0;
     int inchar, phase;
     bool digitFound = false;
@@ -604,7 +551,43 @@ static void ScanNumber(
     }
 
     return;
+    }
 #endif
-}
+    constexpr bool isEscapeCharacter(char c) noexcept {
+        return c == '\\' ;
+    }
+    static_assert(isEscapeCharacter('\\'));
+    static_assert(!isEscapeCharacter('a'));
+    constexpr bool isDoubleQuoteCharacter(char c) noexcept {
+        return c == '"';
+    }
+    static_assert(isDoubleQuoteCharacter('"'));
+    static_assert(!isDoubleQuoteCharacter('a'));
+    constexpr bool isEOFSymbol(char c) noexcept {
+        return c == EOF;
+    }
+    static_assert(isEOFSymbol(EOF));
+    static_assert(!isEOFSymbol('a'));
+    Token
+    Environment::scanString(const std::string& logicalName) {
+        std::stringstream theString;
+        auto inchar = readRouter(logicalName);
+        // scan characters and add them to the string until the " delimiter is found.
+        while (!isDoubleQuoteCharacter(inchar) && !isEOFSymbol(inchar)) {
+            if (isEscapeCharacter(inchar)) {
+                inchar = readRouter(logicalName);
+            }
+            theString << inchar;
+            inchar = readRouter(logicalName);
+        }
+        if (isEOFSymbol(inchar) && !_ignoreCompletionErrors) {
+            printErrorID("SCANNER", 1, true);
+            writeStringRouter(STDERR(), "Encountered End-Of-File while scanning a string\n");
+        }
+        // make a string out of this
+        auto str = theString.str();
+        auto lex = createString(str.empty() ? "" : str);
+        return {Token::Type::String, stringPrintForm(lex->getContents()), lex };
+    }
 
-#endif
+} // end namespace maya

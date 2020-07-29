@@ -431,9 +431,20 @@ namespace maya {
         void incrementLineCount() noexcept { ++_lineCount; }
         void decrementLineCount() noexcept { --_lineCount; }
     private:
-        Lexeme::Ptr scanSymbol(const std::string&, int, Token::Type&);
-        Lexeme::Ptr scanString(const std::string&);
-        void scanNumber(const std::string&, Token&);
+        /**
+         * @brief Scans a symbol token
+         * @param logicalName the router to read from
+         * @param count the count
+         * @return A new token
+         */
+        Token scanSymbol(const std::string& logicalName, int count);
+        /**
+         * @brief Scan a string token
+         * @return a properly formed token
+         */
+        Token scanString(const std::string&);
+        Token scanNumber(const std::string&);
+        std::string stringPrintForm(const std::string& str);
     private:
         std::string _globalString;
         size_t _globalMax = 0;
