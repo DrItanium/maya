@@ -354,14 +354,6 @@ namespace maya {
     }
 
     void
-    Environment::incrementLineCount() noexcept {
-        /// @todo implement
-    }
-    void
-    Environment::decrementLineCount() noexcept {
-        /// @todo implement
-    }
-    void
     Environment::printErrorID(const std::string &module, int errorID, bool printCR) {
         /// @todo implement
     }

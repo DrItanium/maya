@@ -14,7 +14,7 @@ namespace maya {
     public:
         using Self = Token;
         using Ptr = std::shared_ptr<Self>;
-        using Contents = std::variant<std::monostate, Lexeme::Ptr, Float::Ptr, Integer::Ptr>;
+        using Contents = std::variant<std::nullptr_t, Lexeme::Ptr, Float::Ptr, Integer::Ptr>;
     public:
         enum class Type {
             Symbol = 1025,
@@ -37,8 +37,9 @@ namespace maya {
             Unknown,
         };
     public:
+        Token() = default;
         Token(Type type, const std::string& printForm, Contents contents) : _tokenType(type), _printForm(printForm), _contents(contents)  { }
-        Token(const Token&);
+        Token(const Token& other);
         constexpr auto getType() const noexcept { return _tokenType; }
         std::string getPrintForm() const noexcept { return _printForm; }
         void setContents(Contents contents) noexcept { _contents = contents; }
@@ -58,9 +59,9 @@ namespace maya {
             }
         }
     private:
-        Type _tokenType;
-        std::string _printForm;
-        Contents _contents;
+        Type _tokenType = Type::Unknown;
+        std::string _printForm{"unknown"};
+        Contents _contents = nullptr;
     };
 }
 

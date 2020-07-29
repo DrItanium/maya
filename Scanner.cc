@@ -1,141 +1,49 @@
-/*******************************************************/
-/*      "C" Language Integrated Production System      */
-/*                                                     */
-/*            CLIPS Version 6.40  07/30/16             */
-/*                                                     */
-/*                    SCANNER MODULE                   */
-/*******************************************************/
-
-/*************************************************************/
-/* Purpose: Routines for scanning lexical tokens from an     */
-/*   input source.                                           */
-/*                                                           */
-/* Principal Programmer(s):                                  */
-/*      Gary D. Riley                                        */
-/*                                                           */
-/* Contributing Programmer(s):                               */
-/*      Chris Culbert                                        */
-/*      Brian Dantes                                         */
-/*                                                           */
-/* Revision History:                                         */
-/*                                                           */
-/*      6.30: Changed integer type/precision.                */
-/*                                                           */
-/*            Support for long long integers.                */
-/*                                                           */
-/*            Added SetLineCount function.                   */
-/*                                                           */
-/*            Added UTF-8 support.                           */
-/*                                                           */
-/*            Added const qualifiers to remove C++           */
-/*            deprecation warnings.                          */
-/*                                                           */
-/*      6.40: Pragma once and other inclusion changes.       */
-/*                                                           */
-/*            Added support for booleans with <stdbool.h>.   */
-/*                                                           */
-/*            Removed use of void pointers for specific      */
-/*            data structures.                               */
-/*                                                           */
-/*************************************************************/
-
-#include <ctype.h>
-#include <cstdio>
-#include <cstring>
-#include <errno.h>
-#include <cstdlib>
-
-#include "Setup.h"
-
-#include "Constants.h"
 #include "Environment.h"
-#include "MemoryAllocation.h"
-#include "PrettyPrint.h"
-#include "PrintUtility.h"
-#include "Router.h"
-#include "Symbol.h"
-#include "SystemDependency.h"
-#include "Utility.h"
+#include "Token.h"
+#include "CommandLine.h"
 
-#include "Scanner.h"
-
-/***************************************/
-/* LOCAL INTERNAL FUNCTION DEFINITIONS */
-/***************************************/
-
-static CLIPSLexeme *ScanSymbol(const Environment::Ptr&, const char *, int, TokenType *);
-static CLIPSLexeme *ScanString(const Environment::Ptr&, const char *);
-static void ScanNumber(const Environment::Ptr&, const char *, struct token *);
-static void DeallocateScannerData(const Environment::Ptr&);
-
-/************************************************/
-/* InitializeScannerData: Allocates environment */
-/*    data for scanner routines.                */
-/************************************************/
-void InitializeScannerData(
-        const Environment::Ptr&theEnv) {
-    //AllocateEnvironmentData(theEnv, SCANNER_DATA, sizeof(scannerData), DeallocateScannerData);
-    theEnv->allocateEnvironmentModule<scannerData>();
-}
-
-/**************************************************/
-/* DeallocateScannerData: Deallocates environment */
-/*    data for scanner routines.                  */
-/**************************************************/
-static void DeallocateScannerData(
-        const Environment::Ptr&theEnv) {
-    if (ScannerData(theEnv)->GlobalMax != 0) { genfree(theEnv, ScannerData(theEnv)->GlobalString, ScannerData(theEnv)->GlobalMax); }
-}
-
-/***********************************************************************/
-/* GetToken: Reads next token from the input stream. The pointer to    */
-/*   the token data structure passed as an argument is set to contain  */
-/*   the type of token (e.g., symbol, string, integer, etc.), the data */
-/*   value for the token (i.e., a symbol table location if it is a     */
-/*   symbol or string, an integer table location if it is an integer), */
-/*   and the pretty print representation.                              */
-/***********************************************************************/
-void GetToken(
-        const Environment::Ptr&theEnv,
-        const char *logicalName,
-        struct token *theToken) {
-#if STUBBING_INACTIVE
-    int inchar;
-    TokenType type;
-
-    /*=======================================*/
-    /* Set Unknown default values for token. */
-    /*=======================================*/
-
-    theToken->tknType = UNKNOWN_VALUE_TOKEN;
-    theToken->value = nullptr;
-    theToken->printForm = "unknown";
-    ScannerData(theEnv)->GlobalPos = 0;
-    ScannerData(theEnv)->GlobalMax = 0;
-
-    /*==============================================*/
-    /* Remove all white space before processing the */
-    /* GetToken() request.                          */
-    /*==============================================*/
-
-    inchar = ReadRouter(theEnv, logicalName);
-    while ((inchar == ' ') || (inchar == '\n') || (inchar == '\f') ||
-           (inchar == '\r') || (inchar == ';') || (inchar == '\t')) {
-        /*=======================*/
-        /* Remove comment lines. */
-        /*=======================*/
-
-        if (inchar == ';') {
-            inchar = ReadRouter(theEnv, logicalName);
-            while ((inchar != '\n') && (inchar != '\r') && (inchar != EOF)) { inchar = ReadRouter(theEnv, logicalName); }
-        }
-        inchar = ReadRouter(theEnv, logicalName);
+namespace maya {
+    constexpr auto isWhiteSpace(char value) noexcept {
+        return (value == ' ') || (value == '\n') || (value == '\f') ||
+               (value == '\r') || (value == ';') || (value == '\t');
     }
+    constexpr auto isCommentCharacter(char value) noexcept { return value == ';'; }
+    Token
+    Environment::getToken(const std::string& logicalName) {
+        auto targetType = Token::Type::Unknown;
+        std::string printForm("unknown");
+        Token::Contents storage = nullptr;
+        _globalPos = 0;
+        _globalMax = 0;
+        auto inchar = readRouter(logicalName);
+        // remove all whitespace before processing the actual request
+        while (isWhiteSpace(inchar)) {
+           // remove comment lines
+           if (isCommentCharacter(inchar)) {
+              inchar = readRouter(logicalName);
+              while ((inchar != '\n') && (inchar != '\r') && (inchar != EOF)) {
+                  inchar = readRouter(logicalName);
+              }
+           }
+           inchar = readRouter(logicalName);
+        }
+        // process symbolic tokens
+        if (isalpha(inchar) || IsUTF8MultiByteStart(inchar)) {
+           targetType = Token::Type::Symbol;
+           unreadRouter(logicalName, inchar);
+           auto symbol = scanSymbol(logicalName, 0, targetType);
+           storage = symbol;
+           printForm = symbol->getContents();
+        } else if (isdigit(inchar)) {
+            unreadRouter(logicalName, inchar);
+            //scanNumber(logicalName, )
+        }
+        return {targetType, printForm, storage};
+    }
+} // end namespace maya
+#if 0
 
-    /*==========================*/
-    /* Process Symbolic Tokens. */
-    /*==========================*/
-
+void GetToken( const Environment::Ptr&theEnv, const char *logicalName, struct token *theToken) {
     if (isalpha(inchar) || IsUTF8MultiByteStart(inchar)) {
         theToken->tknType = SYMBOL_TOKEN;
         UnreadRouter(theEnv, logicalName, inchar);
@@ -358,7 +266,6 @@ void GetToken(
     }
 
     return;
-#endif
 }
 
 /*************************************/
@@ -700,93 +607,4 @@ static void ScanNumber(
 #endif
 }
 
-/***********************************************************/
-/* CopyToken: Copies values of one token to another token. */
-/***********************************************************/
-void CopyToken(
-        struct token *destination,
-        struct token *source) {
-    destination->tknType = source->tknType;
-    destination->value = source->value;
-    destination->printForm = source->printForm;
-}
-
-/****************************************/
-/* ResetLineCount: Resets the scanner's */
-/*   line count to zero.                */
-/****************************************/
-void ResetLineCount(
-        const Environment::Ptr&theEnv) {
-    ScannerData(theEnv)->LineCount = 0;
-}
-
-/***************************************************/
-/* GetLineCount: Returns the scanner's line count. */
-/***************************************************/
-long GetLineCount(
-        const Environment::Ptr&theEnv) {
-    return (ScannerData(theEnv)->LineCount);
-}
-
-/***********************************************/
-/* SetLineCount: Sets the scanner's line count */
-/*   and returns the previous value.           */
-/***********************************************/
-long SetLineCount(
-        const Environment::Ptr&theEnv,
-        long value) {
-    long oldValue;
-
-    oldValue = ScannerData(theEnv)->LineCount;
-
-    ScannerData(theEnv)->LineCount = value;
-
-    return (oldValue);
-}
-
-/**********************************/
-/* IncrementLineCount: Increments */
-/*   the scanner's line count.    */
-/**********************************/
-void IncrementLineCount(
-        const Environment::Ptr&theEnv) {
-    ScannerData(theEnv)->LineCount++;
-}
-
-/**********************************/
-/* DecrementLineCount: Decrements */
-/*   the scanner's line count.    */
-/**********************************/
-void DecrementLineCount(
-        const Environment::Ptr&theEnv) {
-    ScannerData(theEnv)->LineCount--;
-}
-
-/********************/
-/* TokenTypeToType: */
-/********************/
-unsigned short TokenTypeToType(
-        TokenType theType) {
-    switch (theType) {
-        case FLOAT_TOKEN:
-            return FLOAT_TYPE;
-        case INTEGER_TOKEN:
-            return INTEGER_TYPE;
-        case SYMBOL_TOKEN:
-            return SYMBOL_TYPE;
-        case STRING_TOKEN:
-            return STRING_TYPE;
-        case INSTANCE_NAME_TOKEN:
-            return INSTANCE_NAME_TYPE;
-        case SF_VARIABLE_TOKEN:
-            return SF_VARIABLE;
-        case MF_VARIABLE_TOKEN:
-            return MF_VARIABLE;
-        case GBL_VARIABLE_TOKEN:
-            return GBL_VARIABLE;
-        case MF_GBL_VARIABLE_TOKEN:
-            return MF_GBL_VARIABLE;
-        default:
-            return VOID_TYPE;
-    }
-}
+#endif

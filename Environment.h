@@ -30,9 +30,9 @@
 #include "IntegerAtom.h"
 #include "BitmapAtom.h"
 #include "ExternalAddress.h"
+#include "Token.h"
 namespace maya {
     class Expression;
-    class Token;
     class Environment {
     public:
         using Self = Environment;
@@ -115,8 +115,6 @@ namespace maya {
         [[nodiscard]] constexpr size_t getInputUngets() const noexcept { return _inputUngets; }
         [[nodiscard]] std::string getLineCountRouter() const noexcept { return _lineCountRouter; }
         void setLineCountRouter(const std::string& value) noexcept { _lineCountRouter = value; }
-        void incrementLineCount() noexcept;
-        void decrementLineCount() noexcept;
     public: // evaluation
         //void installPrimitive(EntityRecord::Ptr record, int position);
         //size_t installExternalAddressType(const externalAddressType &newType);
@@ -418,9 +416,30 @@ namespace maya {
         int llgetcBatch(const std::string& logicalName, bool);
         void openStringSource(const std::string& logicalName, const std::string& command, size_t startAt);
     public: // scanner
+        /**
+         * @brief Reads the next token from the input stream.
+         * The pointer to the token data structure passed as an argument is set to contain the type of token (e.g. symbol, string, integer, etc.),
+         * the data value for the token (i.e., a symbol table location if it is a symbol or string, an integer table location if it is an integer), and the
+         * pretty print representation.
+         * @param logicalName the router to read from
+         * @return A token
+         */
         Token getToken(const std::string& logicalName);
+        constexpr auto getLineCount() const noexcept { return _lineCount; }
+        void setLineCount(int64_t value) noexcept { _lineCount = value; }
+        void resetLineCount() noexcept { _lineCount = 0; }
+        void incrementLineCount() noexcept { ++_lineCount; }
+        void decrementLineCount() noexcept { --_lineCount; }
     private:
-
+        Lexeme::Ptr scanSymbol(const std::string&, int, Token::Type&);
+        Lexeme::Ptr scanString(const std::string&);
+        void scanNumber(const std::string&, Token&);
+    private:
+        std::string _globalString;
+        size_t _globalMax = 0;
+        size_t _globalPos = 0;
+        int64_t _lineCount = 0;
+        bool _ignoreCompletionErrors = true;
     };
 } // end namespace maya
 
