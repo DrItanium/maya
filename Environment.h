@@ -459,6 +459,11 @@ namespace maya {
          * @return
          */
         Token scanNumber(const std::string& logicalName);
+        /**
+         * @brief Generates printed represenation of a string. Replaces / with // and " with /"
+         * @param str The string to armor
+         * @return A copy of the string with the armoring in place
+         */
         static std::string stringPrintForm(const std::string& str);
     private:
         std::stringstream _globalStream;

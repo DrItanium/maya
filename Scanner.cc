@@ -416,14 +416,13 @@ namespace maya {
     static_assert(!isEOFSymbol('a'));
     Token
     Environment::scanString(const std::string& logicalName) {
-        std::stringstream theString;
         auto inchar = readRouter(logicalName);
         // scan characters and add them to the string until the " delimiter is found.
         while (!isDoubleQuoteCharacter(inchar) && !isEOFSymbol(inchar)) {
             if (isEscapeCharacter(inchar)) {
                 inchar = readRouter(logicalName);
             }
-            theString << inchar;
+            _globalStream << inchar;
             inchar = readRouter(logicalName);
         }
         if (isEOFSymbol(inchar) && !_ignoreCompletionErrors) {
@@ -431,14 +430,20 @@ namespace maya {
             writeStringRouter(STDERR(), "Encountered End-Of-File while scanning a string\n");
         }
         // make a string out of this
-        auto str = theString.str();
+        auto str = _globalStream.str();
         auto lex = createString(str.empty() ? "" : str);
         return {Token::Type::String, stringPrintForm(lex->getContents()), lex };
     }
     std::string
     Environment::stringPrintForm(const std::string &str) {
         std::stringstream container;
-
+        /// @todo figure out if there is a better c++ way to do this
+        for (const auto& c : str) {
+            if (c == '"' || c == '\\')  {
+                container << '\\';
+            }
+            container << c;
+        }
         auto out = container.str();
         return out;
     }
