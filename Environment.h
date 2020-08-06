@@ -430,7 +430,17 @@ namespace maya {
         void resetLineCount() noexcept { _lineCount = 0; }
         void incrementLineCount() noexcept { ++_lineCount; }
         void decrementLineCount() noexcept { --_lineCount; }
+    public:
+        void saveToPrettyPrintBuffer(const std::string& str);
+        void saveToPrettyPrintBuffer(int64_t value);
+        void saveToPrettyPrintBuffer(double value);
+        template<typename ... Args>
+        void saveMultipleToPrettyPrintBuffer(Args&& ... contents) noexcept {
+            (saveToPrettyPrintBuffer(contents), ...);
+        }
     private:
+        Token scanQuestionMarkVariable(const std::string& logicalName);
+        Token scanDollarQuestionMarkVariable(const std::string& logicalName);
         /**
          * @brief Scans a symbol token
          * @param logicalName the router to read from
@@ -449,12 +459,9 @@ namespace maya {
          * @return
          */
         Token scanNumber(const std::string& logicalName);
-        std::string stringPrintForm(const std::string& str);
+        static std::string stringPrintForm(const std::string& str);
     private:
         std::stringstream _globalStream;
-        std::string _globalString;
-        size_t _globalMax = 0;
-        size_t _globalPos = 0;
         int64_t _lineCount = 0;
         bool _ignoreCompletionErrors = true;
     };

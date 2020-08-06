@@ -41,7 +41,9 @@ namespace maya {
         Token(Type type, const std::string& printForm, Contents contents) : _tokenType(type), _printForm(printForm), _contents(contents)  { }
         Token(const Token& other);
         constexpr auto getType() const noexcept { return _tokenType; }
+        void setType(Type value) noexcept { _tokenType = value; }
         std::string getPrintForm() const noexcept { return _printForm; }
+        void setPrintForm(const std::string& value) noexcept { _printForm = value; }
         void setContents(Contents contents) noexcept { _contents = contents; }
         const Contents& getContents() const noexcept { return _contents; }
         constexpr uint16_t getGlobalType() const noexcept {
