@@ -218,7 +218,7 @@ namespace maya {
         // scan characters and add them to the symbol until a delimiter is found.
         auto inchar = readRouter(logicalName);
         while ((!isReservedCharacter(inchar)) && (IsUTF8MultiByteStart(inchar) || IsUTF8MultiByteContinuation(inchar) || isprint(inchar))) {
-            _globalStream << inchar;
+            _globalStream << static_cast<char>(inchar);
             ++count;
             inchar = readRouter(logicalName);
         }
