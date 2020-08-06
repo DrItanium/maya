@@ -303,12 +303,15 @@ add_library(clips
 #		)
 # TODO express the configurable dependencies in setup.h using CMAKE instead
 add_executable(maya cmd/repl/main.cc)
+add_executable(mayaScannerTest cmd/test/ScannerTest.cc)
 target_link_libraries(maya PUBLIC
 		boost_system
 		boost_filesystem
 		clips
 		#maya_extensions
 		)
+target_link_libraries(mayaScannerTest PUBLIC clips)
 target_include_directories(maya PUBLIC "${PROJECT_SRC_DIR}")
+target_include_directories(mayaScannerTest PUBLIC "${PROJECT_SRC_DIR}")
 target_include_directories(clips PUBLIC "${PROJECT_SRC_DIR}")
 #target_include_directories(maya_extensions PUBLIC "${PROJECT_SRC_DIR}")

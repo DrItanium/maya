@@ -447,5 +447,17 @@ namespace maya {
         auto out = container.str();
         return out;
     }
+    void
+    Environment::saveToPrettyPrintBuffer(double value) {
 
+    }
+    void
+    Environment::saveToPrettyPrintBuffer(int64_t value) {
+
+    }
+
+    void
+    Environment::saveToPrettyPrintBuffer(const std::string &str) {
+        /// @todo implement this method
+    }
 } // end namespace maya
