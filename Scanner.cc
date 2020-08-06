@@ -328,30 +328,174 @@ namespace maya {
 
     return;
 }
+#endif
+constexpr bool isExponentMark(int c) noexcept {
+    return (c == 'E') || (c == 'e');
+}
+constexpr bool isSign(int c) noexcept {
+    return (c == '-') || (c == '+');
+}
+constexpr bool isDot(int c) noexcept {
+    return c == '.';
+}
+Token
+Environment::scanNumber(const std::string& logicalName) {
+    enum class ScanNumberPhase {
+        Sign, // -1
+        Integral, // 0
+        Decimal, // 1
+        ExponentBegin, // 2
+        ExponentValue, // 3
+        Done, // 5
+        Error // 9
+    };
+    size_t count = 0;
+    ScanNumberPhase currentPhase = ScanNumberPhase::Sign;
+    auto inChar = readRouter(logicalName);
+    decltype(inChar) previousChar = 0;
+    bool digitFound = false;
+    bool processFloat = false;
+    while ((currentPhase != ScanNumberPhase::Done) && (currentPhase != ScanNumberPhase::Error)) {
+        if (currentPhase == ScanNumberPhase::Sign) {
+            if (isdigit(inChar)) {
+                currentPhase = ScanNumberPhase::Integral;
+                digitFound = true;
+                _globalStream << static_cast<char>(inChar);
+                ++count;
+            } else if (isSign(inChar)) {
+                currentPhase = ScanNumberPhase::Integral;
+                _globalStream << static_cast<char>(inChar);
+                ++count;
+            } else if (isDot(inChar)) {
+                processFloat = true;
+                _globalStream << static_cast<char>(inChar);
+                ++count;
+                currentPhase = ScanNumberPhase::Decimal;
+            } else if (isExponentMark(inChar)) {
+                processFloat = true;
+                _globalStream << static_cast<char>(inChar);
+                ++count;
+                currentPhase = ScanNumberPhase::ExponentBegin;
+            } else if (isReservedCharacter(inChar) || (isprint(inChar) == 0)) {
+                currentPhase = ScanNumberPhase::Done;
+            } else {
+                currentPhase = ScanNumberPhase::Error;
+                _globalStream << static_cast<char>(inChar);
+                ++count;
+            }
+        } else if (currentPhase == ScanNumberPhase::Integral) {
+            if (isdigit(inChar)) {
+                digitFound = true;
+                _globalStream << static_cast<char>(inChar);
+                ++count;
+            } else if (isDot(inChar)) {
+                processFloat = true;
+                _globalStream << static_cast<char>(inChar);
+                ++count;
+                currentPhase = ScanNumberPhase::Decimal;
+            } else if (isExponentMark(inChar)) {
+                processFloat = true;
+                _globalStream << static_cast<char>(inChar);
+                ++count;
+                currentPhase = ScanNumberPhase::ExponentBegin;
+            } else if (isReservedCharacter(inChar) || (!IsUTF8MultiByteStart(inChar) && (isprint(inChar) == 0)) ) {
+                currentPhase = ScanNumberPhase::Done;
+            } else {
+                currentPhase = ScanNumberPhase::Error;
+                _globalStream << static_cast<char>(inChar);
+                ++count;
+            }
+        } else if (currentPhase == ScanNumberPhase::Decimal) {
+            if (isdigit(inChar)) {
+                digitFound = true;
+                _globalStream << static_cast<char>(inChar);
+                ++count;
+            } else if (isExponentMark(inChar)) {
+                _globalStream << static_cast<char>(inChar);
+                ++count;
+                currentPhase = ScanNumberPhase::ExponentBegin;
+            } else if (isReservedCharacter(inChar) || (!IsUTF8MultiByteStart(inChar) && (isprint(inChar) == 0)) ) {
+                currentPhase = ScanNumberPhase::Done;
+            } else {
+                currentPhase = ScanNumberPhase::Error;
+                _globalStream << static_cast<char>(inChar);
+                ++count;
+            }
+        } else if (currentPhase == ScanNumberPhase::ExponentBegin) {
+            if (isdigit(inChar)) {
+                _globalStream << static_cast<char>(inChar);
+                ++count;
+                currentPhase = ScanNumberPhase::ExponentValue;
+            } else if (isSign(inChar)) {
+                _globalStream << static_cast<char>(inChar);
+                ++count;
+                currentPhase = ScanNumberPhase::ExponentValue;
+            } else if (isReservedCharacter(inChar) || (!IsUTF8MultiByteStart(inChar) && (isprint(inChar) == 0))) {
+                currentPhase = ScanNumberPhase::Done;
+                digitFound = false;
+            } else {
+                currentPhase = ScanNumberPhase::Error;
+                _globalStream << static_cast<char>(inChar);
+                ++count;
+            }
+        } else if (currentPhase == ScanNumberPhase::ExponentValue) {
+            if (isdigit(inChar)) {
+                _globalStream << static_cast<char>(inChar);
+                ++count;
+            } else if (isReservedCharacter(inChar) || (!IsUTF8MultiByteStart(inChar) && (isprint(inChar) == 0))) {
+                if (isSign(previousChar)) {
+                    digitFound = false;
+                }
+                currentPhase = ScanNumberPhase::Done;
+            } else {
+                currentPhase = ScanNumberPhase::Error;
+                _globalStream << static_cast<char>(inChar);
+                ++count;
+            }
+        }
+        if (currentPhase != ScanNumberPhase::Done || currentPhase != ScanNumberPhase::Error) {
+            previousChar = inChar;
+            inChar = readRouter(logicalName);
+        }
+    }
+    if (currentPhase == ScanNumberPhase::Error) {
+        return scanSymbol(logicalName, count);
+    }
 
+    // stuff last character back into buffer and return the number
+    unreadRouter(logicalName, inChar);
+
+    if (!digitFound) {
+        auto str = _globalStream.str();
+        auto target = createSymbol(str);
+        return Token(Token::Type::Symbol, target->getContents(), target);
+    }
+    std::stringstream printFormGenerator;
+    if (processFloat) {
+       double fvalue = 0.0;
+       _globalStream >> fvalue;
+       auto target = createFloat(fvalue);
+       printFormGenerator << fvalue;
+       auto printForm = printFormGenerator.str();
+       return Token(Token::Type::Float, printForm, target);
+    } else {
+        int64_t ivalue = 0;
+        _globalStream >> ivalue;
+        auto target = createInteger(ivalue);
+        printFormGenerator << ivalue;
+        auto printForm = printFormGenerator.str();
+        return Token(Token::Type::Integer, printForm, target);
+    }
+}
+
+#if 0
 /**************************************/
 /* ScanNumber: Scans a numeric token. */
 /**************************************/
-static void ScanNumber(
-        const Environment::Ptr&theEnv,
-        const char *logicalName,
-        struct token *theToken) {
-    int count = 0;
-    int inchar, phase;
-    bool digitFound = false;
-    bool processFloat = false;
-    double fvalue;
-    long long lvalue;
-    TokenType type;
-
-    /* Phases:              */
-    /*  -1 = sign           */
-    /*   0 = integral       */
-    /*   1 = decimal        */
-    /*   2 = exponent-begin */
-    /*   3 = exponent-value */
-    /*   5 = done           */
-    /*   9 = error          */
+static void ScanNumber(const Environment::Ptr&theEnv, const char *logicalName, struct token *theToken) {
+    int count = 0; int inchar, phase;
+    bool digitFound = false; bool processFloat = false;
+    double fvalue; long long lvalue; TokenType type;
 
     inchar = ReadRouter(theEnv, logicalName);
     phase = -1;

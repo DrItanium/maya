@@ -442,10 +442,16 @@ namespace maya {
          * @brief Scan a string token
          * @return a properly formed token
          */
-        Token scanString(const std::string&);
-        Token scanNumber(const std::string&);
+        Token scanString(const std::string& logicalName);
+        /**
+         * @brief Scan a numeric token
+         * @param logicalName the router to read from
+         * @return
+         */
+        Token scanNumber(const std::string& logicalName);
         std::string stringPrintForm(const std::string& str);
     private:
+        std::stringstream _globalStream;
         std::string _globalString;
         size_t _globalMax = 0;
         size_t _globalPos = 0;
