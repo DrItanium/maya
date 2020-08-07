@@ -1,50 +1,70 @@
-/*******************************************************/
-/*      "C" Language Integrated Production System      */
-/*                                                     */
-/*             CLIPS Version 6.40  07/30/16            */
-/*                                                     */
-/*            STRING_TYPE I/O ROUTER HEADER FILE            */
-/*******************************************************/
-
-/*************************************************************/
-/* Purpose: I/O Router routines which allow strings to be    */
-/*   used as input and output sources.                       */
-/*                                                           */
-/* Principal Programmer(s):                                  */
-/*      Gary D. Riley                                        */
-/*                                                           */
-/* Contributing Programmer(s):                               */
-/*                                                           */
-/* Revision History:                                         */
-/*                                                           */
-/*      6.30: Used genstrcpy instead of strcpy.              */
-/*                                                           */
-/*            Removed conditional code for unsupported       */
-/*            compilers/operating systems (IBM_MCW,          */
-/*            MAC_MCW, and IBM_TBC).                         */
-/*                                                           */
-/*            Changed integer type/precision.                */
-/*                                                           */
-/*            Added const qualifiers to remove C++           */
-/*            deprecation warnings.                          */
-/*                                                           */
-/*      6.40: Removed LOCALE definition.                     */
-/*                                                           */
-/*            Pragma once and other inclusion changes.       */
-/*                                                           */
-/*            Added support for booleans with <stdbool.h>.   */
-/*                                                           */
-/*            Removed use of void pointers for specific      */
-/*            data structures.                               */
-/*                                                           */
-/*************************************************************/
-
+/**
+ * @brief Allows a string to be wrapped into an IO router
+ */
 #ifndef _H_strngrtr
-
-#pragma once
-
 #define _H_strngrtr
+#include "Router.h"
+#include <sstream>
+#include <string>
+#include <memory>
+namespace maya {
+    class Environment;
+    class HasExtractableContents {
+    public:
+        virtual std::string getContents() const noexcept = 0;
+    };
+    class StringRouter : public Router {
+    public:
+        using Self = StringRouter;
+        using Ptr = std::shared_ptr<Self>;
+    public:
+        using Router::Router;
+        ~StringRouter() override = default;
+    };
+    class DestinationStringRouter : public StringRouter, public HasExtractableContents {
+    public:
+        using Self = DestinationStringRouter;
+        using Ptr = std::shared_ptr<Self>;
+    public:
+        using StringRouter::StringRouter;
+        ~DestinationStringRouter() override = default;
+        std::string getContents() const noexcept override;
+        bool query(const std::string &logicalName) override;
+        void write(const std::string &logicalName, const std::string &value) override;
+        void onExit(int exitCode) override;
+        int read(const std::string &logicalName) override;
+        int unread(const std::string &logicalName, int value) override;
+        bool canWriteTo() const noexcept override;
+        bool canQuery() const noexcept override;
+        bool canRead() const noexcept override;
+        bool canUnread() const noexcept override;
+        bool canExit() const noexcept override;
+    private:
+        std::ostringstream _output;
+    };
+    class SourceStringRouter : public StringRouter {
+    public:
+        using Self = SourceStringRouter;
+        using Ptr = std::shared_ptr<Self>;
+    public:
+        SourceStringRouter(Environment& env, const std::string& logicalName, int priority, const std::string& inputString);
+        ~SourceStringRouter() override = default;
+        bool query(const std::string &logicalName) override;
+        void write(const std::string &logicalName, const std::string &value) override;
+        void onExit(int exitCode) override;
+        int read(const std::string &logicalName) override;
+        int unread(const std::string &logicalName, int value) override;
+        bool canWriteTo() const noexcept override;
+        bool canQuery() const noexcept override;
+        bool canRead() const noexcept override;
+        bool canUnread() const noexcept override;
+        bool canExit() const noexcept override;
 
+    private:
+        std::istringstream _input;
+    };
+} // end namespace maya
+#if 0
 typedef struct stringRouter StringRouter;
 typedef struct stringBuilderRouter StringBuilderRouter;
 
@@ -87,7 +107,7 @@ bool OpenStringDestination(const Environment::Ptr&, const char *, char *, size_t
 bool CloseStringDestination(const Environment::Ptr&, const char *);
 bool OpenStringBuilderDestination(const Environment::Ptr&, const char *, StringBuilder *);
 bool CloseStringBuilderDestination(const Environment::Ptr&, const char *);
-
+#endif
 #endif /* _H_strngrtr */
 
 

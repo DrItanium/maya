@@ -33,6 +33,8 @@
 #include "Token.h"
 namespace maya {
     class Expression;
+    class StringRouter;
+    class HasExtractableContents;
     class Environment {
     public:
         using Self = Environment;
@@ -418,7 +420,6 @@ namespace maya {
         };
         LoadError load(const std::string& path);
         int llgetcBatch(const std::string& logicalName, bool);
-        void openStringSource(const std::string& logicalName, const std::string& command, size_t startAt);
     public: // scanner
         /**
          * @brief Reads the next token from the input stream.
@@ -473,6 +474,23 @@ namespace maya {
         std::stringstream _globalStream;
         int64_t _lineCount = 0;
         bool _ignoreCompletionErrors = true;
+    public: // string router
+        /**
+         * @brief Opens a new string router for text which is nullptr terminated
+         * @param name
+         * @param theString
+         * @return
+         */
+        bool openStringSource(const std::string& name, const std::string& theString);
+        bool openStringSource(const std::string& name, const std::string& theString, size_t startAt) { return openStringSource(name, theString.substr(startAt)); }
+        bool openTextSource(const std::string& name, const std::string& theText, size_t start, size_t length) { return openStringSource(name, theText.substr(start, length)); }
+        bool closeStringSource(const std::string& name);
+
+        std::shared_ptr<HasExtractableContents> openStringDestination(const std::string& name);
+        bool closeStringDestination(const std::string& name);
+        /// @todo add support for the clips string builder stuff
+    private: // string router
+        std::list<std::shared_ptr<StringRouter>> _stringRouters;
     };
 } // end namespace maya
 

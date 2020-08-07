@@ -76,6 +76,8 @@
 #include <memory>
 #include <list>
 #include <map>
+#include <functional>
+#include "HoldsEnvironmentCallback.h"
 
 
 namespace maya {
@@ -84,8 +86,6 @@ namespace maya {
     const std::string &STDIN() noexcept;
     const std::string &STDERR() noexcept;
     const std::string &STDWRN() noexcept;
-
-    constexpr auto ROUTER_DATA = 46;
 
     class Router : public HoldsEnvironmentCallback {
     public:

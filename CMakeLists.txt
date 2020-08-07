@@ -34,7 +34,8 @@ add_library(clips
 		CallFunctionItem.h HasBinarySaveID.h TransferEvaluable.h
 		CommandLine.h CommandLine.cc
 		Token.cc Token.h
-		Scanner.cc cmd/scanner/main.cc)
+		Scanner.cc
+		StringRouter.h StringRouter.cc)
 
 		#Agenda.h
 		#Analysis.h

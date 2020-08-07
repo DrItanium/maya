@@ -1,42 +1,71 @@
-/*******************************************************/
-/*      "C" Language Integrated Production System      */
-/*                                                     */
-/*            CLIPS Version 6.40  07/30/16             */
-/*                                                     */
-/*              STRING_TYPE I/O ROUTER MODULE               */
-/*******************************************************/
+#include "StringRouter.h"
+#include "Environment.h"
+#include <memory>
+namespace maya {
 
-/*************************************************************/
-/* Purpose: I/O Router routines which allow strings to be    */
-/*   used as input and output sources.                       */
-/*                                                           */
-/* Principal Programmer(s):                                  */
-/*      Gary D. Riley                                        */
-/*                                                           */
-/* Contributing Programmer(s):                               */
-/*      Brian L. Dantes                                      */
-/*                                                           */
-/* Revision History:                                         */
-/*                                                           */
-/*      6.30: Used genstrcpy instead of strcpy.              */
-/*                                                           */
-/*            Removed conditional code for unsupported       */
-/*            compilers/operating systems (IBM_MCW,          */
-/*            MAC_MCW, and IBM_TBC).                         */
-/*                                                           */
-/*            Changed integer type/precision.                */
-/*                                                           */
-/*            Added const qualifiers to remove C++           */
-/*            deprecation warnings.                          */
-/*                                                           */
-/*      6.40: Pragma once and other inclusion changes.       */
-/*                                                           */
-/*            Added support for booleans with <stdbool.h>.   */
-/*                                                           */
-/*            Changed return values for router functions.    */
-/*                                                           */
-/*************************************************************/
+    bool DestinationStringRouter::query(const std::string &logicalName) { return logicalName == getName(); }
+    void DestinationStringRouter::write(const std::string &, const std::string &value) {
+        _output << value;
+    }
+    void DestinationStringRouter::onExit(int exitCode) { }
+    int DestinationStringRouter::read(const std::string &logicalName) { return 0; }
+    int DestinationStringRouter::unread(const std::string &logicalName, int value) { return 0; }
+    bool DestinationStringRouter::canWriteTo() const noexcept { return true; }
+    bool DestinationStringRouter::canQuery() const noexcept { return true; }
+    bool DestinationStringRouter::canRead() const noexcept { return false; }
+    bool DestinationStringRouter::canUnread() const noexcept { return false; }
+    bool DestinationStringRouter::canExit() const noexcept { return false; }
+    std::string
+    DestinationStringRouter::getContents() const noexcept {
+        auto str = _output.str();
+        return str;
+    }
+    bool SourceStringRouter::query(const std::string &logicalName) { return logicalName == getName(); }
+    void SourceStringRouter::write(const std::string &logicalName, const std::string &value) { }
+    void SourceStringRouter::onExit(int exitCode) { }
+    int SourceStringRouter::read(const std::string &logicalName) {
+        if (_input.bad() || _input.eof()) {
+            return EOF;
+        } else {
+            return _input.get();
+        }
+    }
+    int SourceStringRouter::unread(const std::string &logicalName, int value) {
+        _input.putback(value);
+        if (_input.bad() || _input.eof()) {
+            return EOF;
+        } else {
+            return value;
+        }
+    }
+    bool SourceStringRouter::canWriteTo() const noexcept { return false; }
+    bool SourceStringRouter::canQuery() const noexcept { return true; }
+    bool SourceStringRouter::canRead() const noexcept { return true; }
+    bool SourceStringRouter::canUnread() const noexcept { return true; }
+    bool SourceStringRouter::canExit() const noexcept { return false; }
+    SourceStringRouter::SourceStringRouter(Environment &env, const std::string &logicalName, int priority, const std::string &inputString) : StringRouter(env, logicalName, priority), _input(inputString) { }
+    std::shared_ptr<HasExtractableContents>
+    Environment::openStringDestination(const std::string &name) {
+        return nullptr;
+    }
+    bool
+    Environment::openStringSource(const std::string &name, const std::string &theString) {
+       return false;
+    }
 
+    bool
+    Environment::closeStringSource(const std::string &name) {
+        return false;
+    }
+
+    bool
+    Environment::closeStringDestination(const std::string &name) {
+        return false;
+    }
+
+
+} // end namespace maya
+#if 0
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -482,4 +511,4 @@ static void WriteStringBuilderCallback(
     SBAppend(head->SBR, str);
 }
 
-
+#endif

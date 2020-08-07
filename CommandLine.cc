@@ -255,7 +255,7 @@ namespace maya {
         if (command.empty()) {
             return false;
         }
-        openStringSource("command", command, 0);
+        openStringSource("command", command);
         //auto theToken = getToken("command");
         /// @todo continue implementation
         return true;
