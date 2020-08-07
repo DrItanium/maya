@@ -18,8 +18,10 @@ namespace maya {
         using Self = StringRouter;
         using Ptr = std::shared_ptr<Self>;
     public:
-        using Router::Router;
+        StringRouter(Environment& env, const std::string& logicalName);
         ~StringRouter() override = default;
+        bool query(const std::string& logicalName) override;
+        bool canQuery() const noexcept override;
     };
     class DestinationStringRouter : public StringRouter, public HasExtractableContents {
     public:
@@ -29,13 +31,11 @@ namespace maya {
         using StringRouter::StringRouter;
         ~DestinationStringRouter() override = default;
         std::string getContents() const noexcept override;
-        bool query(const std::string &logicalName) override;
         void write(const std::string &logicalName, const std::string &value) override;
         void onExit(int exitCode) override;
         int read(const std::string &logicalName) override;
         int unread(const std::string &logicalName, int value) override;
         bool canWriteTo() const noexcept override;
-        bool canQuery() const noexcept override;
         bool canRead() const noexcept override;
         bool canUnread() const noexcept override;
         bool canExit() const noexcept override;
@@ -47,8 +47,30 @@ namespace maya {
         using Self = SourceStringRouter;
         using Ptr = std::shared_ptr<Self>;
     public:
-        SourceStringRouter(Environment& env, const std::string& logicalName, int priority, const std::string& inputString);
+        SourceStringRouter(Environment& env, const std::string& logicalName, const std::string& inputString);
         ~SourceStringRouter() override = default;
+        void write(const std::string &logicalName, const std::string &value) override;
+        void onExit(int exitCode) override;
+        int read(const std::string &logicalName) override;
+        int unread(const std::string &logicalName, int value) override;
+        bool canWriteTo() const noexcept override;
+        bool canRead() const noexcept override;
+        bool canUnread() const noexcept override;
+        bool canExit() const noexcept override;
+
+    private:
+        std::istringstream _input;
+    };
+
+    /**
+     * @brief To emulate clips as closely as possible this type of router is defined to look through the list of string routers and act upon them
+     */
+    class StringRouterInterfaceRouter : public Router {
+    public:
+        using Self = StringRouterInterfaceRouter;
+        using Ptr = std::shared_ptr<Self>;
+    public:
+        using Router::Router;
         bool query(const std::string &logicalName) override;
         void write(const std::string &logicalName, const std::string &value) override;
         void onExit(int exitCode) override;
@@ -59,9 +81,7 @@ namespace maya {
         bool canRead() const noexcept override;
         bool canUnread() const noexcept override;
         bool canExit() const noexcept override;
-
-    private:
-        std::istringstream _input;
+        ~StringRouterInterfaceRouter() override = default;
     };
 } // end namespace maya
 #if 0

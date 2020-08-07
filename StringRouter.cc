@@ -2,16 +2,25 @@
 #include "Environment.h"
 #include <memory>
 namespace maya {
+    StringRouter::StringRouter(Environment &env, const std::string &logicalName) : Router(env, logicalName, 0) {
 
-    bool DestinationStringRouter::query(const std::string &logicalName) { return logicalName == getName(); }
-    void DestinationStringRouter::write(const std::string &, const std::string &value) {
+    }
+    bool
+    StringRouter::query(const std::string& logicalName) {
+        return logicalName == getName();
+    }
+    bool
+    StringRouter::canQuery() const noexcept {
+        return true;
+    }
+    void
+    DestinationStringRouter::write(const std::string &, const std::string &value) {
         _output << value;
     }
     void DestinationStringRouter::onExit(int exitCode) { }
     int DestinationStringRouter::read(const std::string &logicalName) { return 0; }
     int DestinationStringRouter::unread(const std::string &logicalName, int value) { return 0; }
     bool DestinationStringRouter::canWriteTo() const noexcept { return true; }
-    bool DestinationStringRouter::canQuery() const noexcept { return true; }
     bool DestinationStringRouter::canRead() const noexcept { return false; }
     bool DestinationStringRouter::canUnread() const noexcept { return false; }
     bool DestinationStringRouter::canExit() const noexcept { return false; }
@@ -20,7 +29,6 @@ namespace maya {
         auto str = _output.str();
         return str;
     }
-    bool SourceStringRouter::query(const std::string &logicalName) { return logicalName == getName(); }
     void SourceStringRouter::write(const std::string &logicalName, const std::string &value) { }
     void SourceStringRouter::onExit(int exitCode) { }
     int SourceStringRouter::read(const std::string &logicalName) {
@@ -39,31 +47,97 @@ namespace maya {
         }
     }
     bool SourceStringRouter::canWriteTo() const noexcept { return false; }
-    bool SourceStringRouter::canQuery() const noexcept { return true; }
     bool SourceStringRouter::canRead() const noexcept { return true; }
     bool SourceStringRouter::canUnread() const noexcept { return true; }
     bool SourceStringRouter::canExit() const noexcept { return false; }
-    SourceStringRouter::SourceStringRouter(Environment &env, const std::string &logicalName, int priority, const std::string &inputString) : StringRouter(env, logicalName, priority), _input(inputString) { }
+    SourceStringRouter::SourceStringRouter(Environment &env, const std::string &logicalName, const std::string &inputString) : StringRouter(env, logicalName), _input(inputString) { }
     std::shared_ptr<HasExtractableContents>
     Environment::openStringDestination(const std::string &name) {
-        return nullptr;
+        if (auto result = _stringRouters.find(name); result != _stringRouters.end()) {
+            return nullptr;
+        } else {
+            auto ptr = std::make_shared<DestinationStringRouter>(*this, name);
+            _stringRouters.emplace(name, ptr);
+            return ptr;
+        }
     }
     bool
     Environment::openStringSource(const std::string &name, const std::string &theString) {
-       return false;
+        if (auto result = _stringRouters.find(name); result != _stringRouters.end()) {
+            return false;
+        } else {
+            auto ptr = std::make_shared<SourceStringRouter>(*this, name, theString);
+            _stringRouters.emplace(name, ptr);
+            return true;
+        }
     }
 
     bool
     Environment::closeStringSource(const std::string &name) {
-        return false;
+        return _stringRouters.erase(name) > 0;
     }
 
     bool
     Environment::closeStringDestination(const std::string &name) {
-        return false;
+        return closeStringSource(name);
     }
-
-
+    StringRouter::Ptr
+    Environment::findStringRouter(const std::string &name) {
+        if (auto outcome = _stringRouters.find(name); outcome != _stringRouters.end()) {
+            return outcome->second;
+        } else {
+            return nullptr;
+        }
+    }
+    bool
+    Environment::stringRouterRespondsTo(const std::string &name) {
+        return (bool)findStringRouter(name);
+    }
+    bool StringRouterInterfaceRouter::canExit() const noexcept { return false; }
+    void StringRouterInterfaceRouter::onExit(int exitCode) { }
+    bool
+    StringRouterInterfaceRouter::query(const std::string &logicalName) {
+       return _parent.stringRouterRespondsTo(logicalName);
+    }
+    int
+    StringRouterInterfaceRouter::read(const std::string &logicalName) {
+        if (auto target = _parent.findStringRouter(logicalName); target) {
+            if (target->canRead()) {
+                return target->read(logicalName);
+            } else {
+                return EOF;
+            }
+        } else {
+            throw "Query was successful but string router could not be found!!!!";
+        }
+    }
+    int
+    StringRouterInterfaceRouter::unread(const std::string &logicalName, int value) {
+        if (auto target = _parent.findStringRouter(logicalName); target) {
+            if (target->canUnread()) {
+                return target->unread(logicalName, value);
+            } else {
+                return 0;
+            }
+        } else {
+            throw "Query was successful but string router could not be found!!!!";
+        }
+        return 0;
+    }
+    void
+    StringRouterInterfaceRouter::write(const std::string &logicalName, const std::string &value) {
+        if (auto target = _parent.findStringRouter(logicalName); target) {
+            if (target->canWriteTo()) {
+                target->write(logicalName, value);
+            }
+        } else {
+            throw "Could not find a successfully queried string router!";
+        }
+    }
+    bool StringRouterInterfaceRouter::canWriteTo() const noexcept { return true; }
+    bool StringRouterInterfaceRouter::canQuery() const noexcept { return true; }
+    bool StringRouterInterfaceRouter::canRead() const noexcept { return true; }
+    bool StringRouterInterfaceRouter::canUnread() const noexcept { return true; }
 } // end namespace maya
 #if 0
 #include <cstdio>

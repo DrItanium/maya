@@ -489,8 +489,10 @@ namespace maya {
         std::shared_ptr<HasExtractableContents> openStringDestination(const std::string& name);
         bool closeStringDestination(const std::string& name);
         /// @todo add support for the clips string builder stuff
+        std::shared_ptr<StringRouter> findStringRouter(const std::string& name);
+        bool stringRouterRespondsTo(const std::string& name);
     private: // string router
-        std::list<std::shared_ptr<StringRouter>> _stringRouters;
+        std::map<std::string, std::shared_ptr<StringRouter>> _stringRouters;
     };
 } // end namespace maya
 

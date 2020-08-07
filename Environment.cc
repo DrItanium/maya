@@ -6,6 +6,7 @@
 #include "FloatAtom.h"
 #include "IntegerAtom.h"
 #include "BitmapAtom.h"
+#include "StringRouter.h"
 #if 0
 #include "BasicMathFunctions.h"
 #include "CommandLine.h"
@@ -86,6 +87,8 @@ namespace maya {
         _zero = createInteger(0);
         _trueSymbol = createSymbol(TrueString);
         _falseSymbol = createSymbol(FalseString);
+        addRouter<StringRouterInterfaceRouter>("string", 0);
+        /// @todo implement support for the stringBuilder router!
 #if STUBBING_INACTIVE
         ExpressionData(theEnv)->PTR_AND = FindFunction(theEnv, "and");
     ExpressionData(theEnv)->PTR_OR = FindFunction(theEnv, "or");
@@ -281,6 +284,7 @@ namespace maya {
         /// allocate storage for cleanup
         CleanCurrentGarbageFrame(theEnvironment, nullptr);
 #endif
+
 
     }
 
