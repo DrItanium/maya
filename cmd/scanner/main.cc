@@ -1,6 +1,6 @@
-//
-// Created by jwscoggins on 8/7/20.
-//
+/**
+ * @brief A tool to turn an expression into it's constituent tokens, useful for debugging or getting another representation
+ */
 
 #include "Environment.h"
 #include "Token.h"
