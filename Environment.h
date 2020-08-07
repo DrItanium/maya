@@ -93,6 +93,10 @@ namespace maya {
                        LambdaRouter::ReadFunction readFn = nullptr,
                        LambdaRouter::UnreadFunction unreadFn = nullptr,
                        LambdaRouter::ExitFunction exitFn = nullptr);
+        template<typename T, typename ... Args>
+        bool addRouter(const std::string& name, int priority, Args&& ... extraArgs) {
+            return insertRouter(std::make_shared<T>(*this, name, priority, extraArgs...));
+        }
         void exitRouter(int code);
         int readRouter(const std::string& logicalName);
         int unreadRouter(const std::string& logicalName, int toUnread);

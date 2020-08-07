@@ -12,7 +12,7 @@ class StringParsingRouter : public maya::Router {
 public:
     using Parent = maya::Router;
 public:
-    using Parent::Parent;
+    StringParsingRouter(maya::Environment& parent, const std::string& name, int priority, const std::string& statementToParse) : Parent(parent, name, priority), _contents(statementToParse) {}
     ~StringParsingRouter() override = default;
     void setStringToParse(const std::string& value) noexcept { _contents.str(value); }
     bool canQuery() const noexcept override { return true; }
@@ -75,11 +75,7 @@ int main(int argc, char** argv) {
     auto expectFloat = [env](double target) { expect<double, maya::Float::Ptr>(env, "test", "integer", target, maya::Token::Type::Float); };
     auto expectOpenParen = [env]() { expect(env, "test", "open paren", maya::Token::Type::LeftParen); };
     auto expectCloseParen = [env]() { expect(env, "test", "close paren", maya::Token::Type::RightParen); };
-    env->addRouter([](maya::Environment& env) -> maya::Router::Ptr {
-        auto ptr = std::make_shared<StringParsingRouter>(env, "test", 50);
-        ptr->setStringToParse("a b cat 1 -2 +3 4.0 4.1 +4.0 -4.2 (+ 1 2 3 4 5)");
-        return ptr;
-    });
+    env->addRouter<StringParsingRouter>("test", 50, "a b cat 1 -2 +3 4.0 4.1 +4.0 -4.2 (+ 1 2 3 4 5)");
     expectSymbol("a");
     expectSymbol("b");
     expectSymbol("cat");
