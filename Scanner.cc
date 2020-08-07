@@ -422,7 +422,7 @@ namespace maya {
             if (isEscapeCharacter(inchar)) {
                 inchar = readRouter(logicalName);
             }
-            _globalStream << inchar;
+            _globalStream << static_cast<char>(inchar);
             inchar = readRouter(logicalName);
         }
         if (isEOFSymbol(inchar) && !_ignoreCompletionErrors) {

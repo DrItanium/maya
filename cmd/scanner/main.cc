@@ -26,30 +26,21 @@ int main(int argc, char** argv) {
                            [](maya::Environment&, const std::string& lName, const std::string& text) { std::cerr << text; });
     int64_t callDepth = 0;
     for (auto i = environment->getToken("stdio"); !i.isStopToken(); i = environment->getToken("stdio")) {
+        if (i.getType() == maya::Token::Type::RightParen) {
+            --callDepth;
+        }
         // insert a tab for each nested depth
         for (int64_t c = 0; c < callDepth; ++c) {
             environment->writeStringRouter("stdio", "\t");
         }
         i.dump(*environment, "stdio");
         environment->writeStringRouter("stdio", "\n");
-        switch (i.getType()) {
-            case maya::Token::Type::LeftParen:
-                ++callDepth;
-                break;
-            case maya::Token::Type::RightParen:
-                --callDepth;
-                break;
-            default:
-                break;
-        }
-        if (callDepth < 0) {
-            environment->writeStringRouter("stderr", "Found a paren mismatch at this point\n");
-            return 1;
+        if (i.getType() == maya::Token::Type::LeftParen) {
+            ++callDepth;
         }
     }
     if (callDepth != 0) {
         environment->writeStringRouter("stderr", "Not all parens were matched!\n");
-        return 1;
     }
     return 0;
 }
