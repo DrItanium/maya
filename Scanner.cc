@@ -364,7 +364,7 @@ namespace maya {
                     ++count;
                 }
             }
-            if (currentPhase != ScanNumberPhase::Done || currentPhase != ScanNumberPhase::Error) {
+            if (currentPhase != ScanNumberPhase::Done && currentPhase != ScanNumberPhase::Error) {
                 previousChar = inChar;
                 inChar = readRouter(logicalName);
             }

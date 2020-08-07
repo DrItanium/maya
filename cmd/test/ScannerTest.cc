@@ -41,64 +41,43 @@ public:
 private:
     std::istringstream _contents;
 };
+template<typename T, typename E>
+void expect(maya::Environment::Ptr env, const std::string& logicalName, const std::string& kind, T comparison, maya::Token::Type expectedType) noexcept {
+    auto tok = env->getToken(logicalName);
+    std::cout << "Expecting a " << kind << std::endl;
+    std::cout << "\tIs a " << kind << "? " << std::boolalpha << (tok.getType() == expectedType) << std::endl;
+    std::cout << "\tHas the value " << comparison << "? " << std::boolalpha;
+    std::visit([&comparison](auto&& value) {
+        using K = std::decay_t<decltype(value)>;
+        if constexpr (std::is_same_v<E, K>) {
+            std::cout << (value->getContents() == comparison);
+            std::cout << " (" << value->getContents()  << " == " << comparison << ")";
+        } else {
+            std::cout << "Wrong type so false!";
+        }
+    }, tok.getContents());
+    std::cout << std::endl;
+}
+
+/**
+ * @brief Expect function for the non atomic tokens ('(', ')', '&', '|', etc)
+ */
+void expect(maya::Environment::Ptr env, const std::string& logicalName, const std::string& kind, maya::Token::Type expectedType) noexcept {
+    auto tok = env->getToken(logicalName);
+    std::cout << "Expecting a " << kind << std::endl;
+    std::cout << "\tIs a " << kind << "? " << std::boolalpha << (tok.getType() == expectedType) << std::endl;
+    std::cout << std::endl;
+}
 int main(int argc, char** argv) {
     auto env = std::make_shared<maya::Environment>();
-    auto expectSymbol = [env](const std::string& target) {
-        auto first = env->getToken("test");
-        std::cout << "Expecting a symbol '" << target << "'" << std::endl;
-        std::cout << "\tIs a symbol? " << std::boolalpha << (first.getType() == maya::Token::Type::Symbol) << std::endl;
-        std::cout << "\tIs is word '" << target << "? " << std::boolalpha;
-        std::visit([&target](auto&& value) {
-            using K = std::decay_t<decltype(value)>;
-            if constexpr (std::is_same_v<maya::Lexeme::Ptr, K>) {
-                auto lexemeValue = value;
-                std::cout << (lexemeValue->getContents() == target);
-                std::cout << "(" << lexemeValue->getContents() << "[" << lexemeValue->getContents().length() << "] == "
-                          << target << "[" << target.length() << "])";
-            } else {
-                std::cout << false;
-            }
-        }, first.getContents());
-        std::cout << std::endl;
-    };
-    auto expectInteger = [env](int64_t value) {
-        auto nextToken = env->getToken("test");
-        std::cout << "Expecting an integer '" << value << "'" << std::endl;
-        std::cout << "\tIs an integer? " << std::boolalpha << (nextToken.getType() == maya::Token::Type::Integer) << std::endl;
-        std::cout << "\tIs is the number " << value << "? " << std::boolalpha;
-        std::visit([ival = value](auto&& value) {
-            using K = std::decay_t<decltype(value)>;
-            if constexpr (std::is_same_v<maya::Integer::Ptr, K>) {
-                auto integerValue = value;
-                std::cout << (integerValue->getContents() == ival);
-                std::cout << "(" << integerValue->getContents() << " == " << ival << ")";
-            } else {
-                std::cout << false;
-            }
-        }, nextToken.getContents());
-        std::cout << std::endl;
-    };
-
-    auto expectFloat = [env](double value) {
-        auto nextToken = env->getToken("test");
-        std::cout << "Expecting an integer '" << value << "'" << std::endl;
-        std::cout << "\tIs an integer? " << std::boolalpha << (nextToken.getType() == maya::Token::Type::Float) << std::endl;
-        std::cout << "\tIs is the number " << value << "? " << std::boolalpha;
-        std::visit([fval = value](auto&& value) {
-            using K = std::decay_t<decltype(value)>;
-            if constexpr (std::is_same_v<maya::Float::Ptr, K>) {
-                auto integerValue = value;
-                std::cout << (integerValue->getContents() == fval);
-                std::cout << "(" << integerValue->getContents() << " == " << fval << ")";
-            } else {
-                std::cout << false;
-            }
-        }, nextToken.getContents());
-        std::cout << std::endl;
-    };
+    auto expectSymbol = [env](const std::string& target) { expect<const std::string&, maya::Lexeme::Ptr>(env, "test", "symbol", target, maya::Token::Type::Symbol); };
+    auto expectInteger = [env](int64_t target) { expect<int64_t, maya::Integer::Ptr>(env, "test", "integer", target, maya::Token::Type::Integer); };
+    auto expectFloat = [env](double target) { expect<double, maya::Float::Ptr>(env, "test", "integer", target, maya::Token::Type::Float); };
+    auto expectOpenParen = [env]() { expect(env, "test", "open paren", maya::Token::Type::LeftParen); };
+    auto expectCloseParen = [env]() { expect(env, "test", "close paren", maya::Token::Type::RightParen); };
     env->addRouter([](maya::Environment& env) -> maya::Router::Ptr {
         auto ptr = std::make_shared<StringParsingRouter>(env, "test", 50);
-        ptr->setStringToParse("a b cat 1 -2 +3 4.0 4.1 +4.0 -4.2");
+        ptr->setStringToParse("a b cat 1 -2 +3 4.0 4.1 +4.0 -4.2 (+ 1 2 3 4 5)");
         return ptr;
     });
     expectSymbol("a");
@@ -114,6 +93,14 @@ int main(int argc, char** argv) {
     expectFloat(+4.0);
     expectFloat(-4.2);
 
+    expectOpenParen();
+    expectSymbol("+");
+    expectInteger(1);
+    expectInteger(2);
+    expectInteger(3);
+    expectInteger(4);
+    expectInteger(5);
+    expectCloseParen();
 
     return 0;
 }
