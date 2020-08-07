@@ -34,7 +34,7 @@ add_library(clips
 		CallFunctionItem.h HasBinarySaveID.h TransferEvaluable.h
 		CommandLine.h CommandLine.cc
 		Token.cc Token.h
-		Scanner.cc)
+		Scanner.cc cmd/scanner/main.cc)
 
 		#Agenda.h
 		#Analysis.h
@@ -304,6 +304,7 @@ add_library(clips
 # TODO express the configurable dependencies in setup.h using CMAKE instead
 add_executable(maya cmd/repl/main.cc)
 add_executable(mayaScannerTest cmd/test/ScannerTest.cc)
+add_executable(mayaScanner cmd/scanner/main.cc)
 target_link_libraries(maya PUBLIC
 		boost_system
 		boost_filesystem
@@ -311,7 +312,9 @@ target_link_libraries(maya PUBLIC
 		#maya_extensions
 		)
 target_link_libraries(mayaScannerTest PUBLIC clips)
+target_link_libraries(mayaScanner PUBLIC clips)
 target_include_directories(maya PUBLIC "${PROJECT_SRC_DIR}")
+target_include_directories(mayaScanner PUBLIC "${PROJECT_SRC_DIR}")
 target_include_directories(mayaScannerTest PUBLIC "${PROJECT_SRC_DIR}")
 target_include_directories(clips PUBLIC "${PROJECT_SRC_DIR}")
 #target_include_directories(maya_extensions PUBLIC "${PROJECT_SRC_DIR}")

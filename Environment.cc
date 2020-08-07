@@ -472,7 +472,7 @@ namespace maya {
             return;
         }
         for (auto router : _listOfRouters) {
-            if (router->canWriteTo() && router->respondsTo(str)) {
+            if (router->canWriteTo() && router->respondsTo(logicalName)) {
                 router->write(logicalName, str);
                 return;
             }

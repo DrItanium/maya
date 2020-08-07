@@ -36,6 +36,7 @@ namespace maya {
             Stop,
             Unknown,
         };
+        static const std::string& toString(Type t) noexcept;
     public:
         Token() = default;
         Token(Type type, const std::string& printForm, Contents contents) : _tokenType(type), _printForm(printForm), _contents(contents)  { }
@@ -60,6 +61,8 @@ namespace maya {
                 default: return VOID_TYPE;
             }
         }
+        constexpr bool isStopToken() const noexcept { return _tokenType == Type::Stop; }
+        void dump(Environment& env, const std::string& logicalName);
     private:
         Type _tokenType = Type::Unknown;
         std::string _printForm{"unknown"};
