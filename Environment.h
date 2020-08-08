@@ -493,6 +493,12 @@ namespace maya {
         bool stringRouterRespondsTo(const std::string& name);
     private: // string router
         std::map<std::string, std::shared_ptr<StringRouter>> _stringRouters;
+    public:
+        template<typename T>
+        std::shared_ptr<Expression> genConstant(uint16_t type, std::shared_ptr<T> ptr) {
+            return nullptr;
+        }
+        UDFValue::Ptr evaluateExpression(std::shared_ptr<Expression> expr);
     };
 } // end namespace maya
 

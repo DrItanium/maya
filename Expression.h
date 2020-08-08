@@ -62,7 +62,7 @@ namespace maya {
 /* Expression Data Structures */
 /******************************/
     class ExternalFunction;
-    struct Expression : public HoldsEnvironmentCallback {
+    struct Expression : public HoldsEnvironmentCallback, public Evaluable {
     public:
         using Self = Expression;
         using Ptr = std::shared_ptr<Self>;
@@ -80,7 +80,7 @@ namespace maya {
          * @return 1 + the number of elements in the arg list
          */
         size_t size() const noexcept;
-        bool evaluate(UDFValue::Ptr returnValue);
+        UDFValue::Ptr evaluate() override;
     };
     /**
      * @brief Used to preserve return and break status when doing call frames

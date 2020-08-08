@@ -19,11 +19,9 @@ namespace maya {
     public:
         UDFContext(maya::Environment &parent,
                    std::shared_ptr<ExternalFunction> func,
-                   std::list<std::shared_ptr<Expression>> &argList,
-                   maya::UDFValue::Ptr retVal);
+                   std::list<std::shared_ptr<Expression>> &argList);
         std::shared_ptr<ExternalFunction> theFunction;
         std::list<std::shared_ptr<Expression>> &_args;
-        maya::UDFValue::Ptr returnValue;
     };
 }
 #endif //MAYA_UDFCONTEXT_H

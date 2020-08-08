@@ -6,6 +6,7 @@
 #include "Environment.h"
 #include <sstream>
 #include "Setup.h"
+#include <memory>
 std::ostream&
 operator<<(std::ostream& os, const maya::Integer& value) {
     os << value.getContents();
@@ -32,10 +33,9 @@ namespace maya {
         getParent().writeStringRouter(logicalName, tmp);
     }
 
-    bool
-    Integer::evaluate(UDFValue::Ptr retVal) {
-        retVal->setContents(this->shared_from_this());
-        return true;
+    UDFValue::Ptr
+    Integer::evaluate() {
+        return std::make_shared<UDFValue>(getParent(), shared_from_this(), nullptr);
     }
 
 

@@ -3,12 +3,12 @@
 //
 
 #include "MultifieldPrimitive.h"
+#include "Expression.h"
 
 namespace maya {
-    bool
-    Multifield::evaluate(UDFValue::Ptr retVal) {
-
-        return true;
+    UDFValue::Ptr
+    Multifield::evaluate() {
+        return std::make_shared<UDFValue>(getParent(), getParent().getFalseSymbol(), nullptr);
     }
 
     size_t

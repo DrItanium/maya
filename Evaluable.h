@@ -17,7 +17,7 @@ namespace maya {
         using Ptr = std::shared_ptr<Self>;
     public:
         virtual ~Evaluable() = default;
-        virtual bool evaluate(std::shared_ptr<UDFValue> returnValue) = 0;
+        virtual std::shared_ptr<UDFValue> evaluate() = 0;
     };
 }
 #endif //MAYA_EVALUABLE_H

@@ -12,10 +12,9 @@ namespace maya {
         longPrint(logicalName);
     }
 
-    bool
-    ExternalAddress::evaluate(UDFValue::Ptr retVal) {
-        retVal->setContents(this->shared_from_this());
-        return true;
+    UDFValue::Ptr
+    ExternalAddress::evaluate() {
+        return std::make_shared<UDFValue>(getParent(), shared_from_this(), nullptr);
     }
 
     void

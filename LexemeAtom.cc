@@ -23,10 +23,9 @@ namespace maya {
     Lexeme::write(const std::string &logicalName) {
         getParent().writeStringRouter(logicalName, _contents);
     }
-    bool
-    Lexeme::evaluate(UDFValue::Ptr retVal) {
-        retVal->setContents(this->shared_from_this());
-        return true;
+    UDFValue::Ptr
+    Lexeme::evaluate() {
+        return std::make_shared<UDFValue>(getParent(), shared_from_this(), nullptr);
     }
 }
 

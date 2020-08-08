@@ -20,7 +20,7 @@ namespace maya {
         void write(const std::string &logicalName) override;
         virtual void shortPrint(const std::string &logicalName);
         virtual void longPrint(const std::string &logicalName);
-        bool evaluate(std::shared_ptr<UDFValue> returnValue) override;
+        std::shared_ptr<UDFValue> evaluate() override;
     };
 
     template<typename T>

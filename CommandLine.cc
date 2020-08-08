@@ -1,5 +1,6 @@
 #include "CommandLine.h"
 #include "Environment.h"
+#include "Expression.h"
 namespace maya {
     constexpr auto NO_SWITCH         = 0;
     constexpr auto BATCH_SWITCH      = 1;
@@ -267,6 +268,10 @@ namespace maya {
             return true;
         } else if (theToken.isVariable()) {
             closeStringSource("command");
+            auto top = genConstant<Lexeme>(theToken.getGlobalType(), std::get<Lexeme::Ptr>(theToken.getContents()));
+            auto result = top->evaluate();
+            if (printResult) {
+            }
             /// @todo continue implementing here
         }
         /// @todo continue implementation

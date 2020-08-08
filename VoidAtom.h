@@ -16,7 +16,7 @@ class Void final : public Atom {
         ~Void() override = default;
         size_t hash(size_t range) const override;
         void write(const std::string &logicalName) override;
-        bool evaluate(std::shared_ptr<struct UDFValue> retVal) override;
+        std::shared_ptr<struct UDFValue> evaluate() override;
     };
 } // end namespace maya
 

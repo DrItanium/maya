@@ -105,19 +105,18 @@ namespace maya {
         }
     }
 #endif
-bool
-Expression::evaluate(UDFValue::Ptr returnValue) {
-   return std::visit([this, &returnValue](auto&& executable) {
+UDFValue::Ptr
+Expression::evaluate() {
+   return std::visit([this](auto&& executable) {
         using K = std::decay_t<decltype(executable)>;
         if constexpr (std::is_same_v<K, Evaluable::Ptr>) {
-            return executable->evaluate(returnValue);
+            return executable->evaluate();
         } else if (std::is_same_v<K, ExternalFunction::Ptr>) {
-            UDFContext ctx(getParent(), executable, _args, returnValue);
-            return executable->evaluate(ctx, returnValue);
+            UDFContext ctx(getParent(), executable, _args);
+            return executable->evaluate(ctx);
         } else {
             /// @todo turn this into a compile time error
             throw Problem("Undefined type passed to the Expression container!");
-            return false;
         }
    }, _contents);
 

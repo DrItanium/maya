@@ -4,11 +4,12 @@
 
 #include "VoidAtom.h"
 #include "Environment.h"
+#include <memory>
 namespace maya {
     Void::Void(Environment &parent) : Atom(parent, VOID_TYPE) { }
-    bool
-    Void::evaluate(UDFValue::Ptr retVal) {
-        return true;
+    UDFValue::Ptr
+    Void::evaluate() {
+        return std::make_shared<UDFValue>(getParent(), getParent().getFalseSymbol(), nullptr);
     }
 
     size_t

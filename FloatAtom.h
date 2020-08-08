@@ -21,7 +21,7 @@ namespace maya {
         size_t hash(size_t range) const override;
         void write(const std::string &logicalName) override;
         constexpr auto getContents() const noexcept { return _contents; }
-        bool evaluate(UDFValue::Ptr retVal) override;
+        UDFValue::Ptr evaluate() override;
     private:
         BackingType _contents;
     };

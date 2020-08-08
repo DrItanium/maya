@@ -73,14 +73,14 @@ namespace maya {
     public:
         using Self = ExternalFunction;
         using Ptr = std::shared_ptr<Self>;
-        using Body = std::function<void(Environment&, UDFContext&, UDFValue::Ptr)>;
+        using Body = std::function<UDFValue::Ptr(Environment&, UDFContext&)>;
         using Parser = std::function<Expression::Ptr(Environment&, Expression::Ptr, const std::string&)>;
     public:
         ExternalFunction(Environment& env, const std::string& name, unsigned int retType, Body function, Parser parser, const std::string& restrictions, unsigned short minArgs, unsigned short maxArgs);
         virtual ~ExternalFunction() = default;
         [[nodiscard]] Lexeme::Ptr getFunctionName() const noexcept { return _callFunctionName; }
         [[nodiscard]] Lexeme::Ptr getRestrictions() const noexcept { return _restrictions; }
-        bool evaluate(UDFContext& context, UDFValue::Ptr returnValue);
+        UDFValue::Ptr evaluate(UDFContext& context);
         Expression::Ptr parse(Expression::Ptr, const std::string&);
         [[nodiscard]] constexpr auto isNeeded() const noexcept { return _neededFunction; }
         void setNeeded(bool value) noexcept { _neededFunction = value; }

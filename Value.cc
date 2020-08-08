@@ -17,14 +17,13 @@ namespace maya {
             }, _contents);
     }
 
-    bool
-    Value::evaluate(UDFValue::Ptr retVal) {
-        return std::visit([this, retVal](auto&& value) -> bool {
+    UDFValue::Ptr
+    Value::evaluate() {
+        return std::visit([this](auto&& value) {
             if (value) {
-                return value->evaluate(retVal);
+                return value->evaluate();
             } else {
-                retVal->setContents(getParent().getFalseSymbol());
-                return false;
+                return std::make_shared<UDFValue>(getParent(), getParent().getFalseSymbol(), nullptr);
             }
         }, _contents);
     }

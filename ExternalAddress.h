@@ -57,7 +57,7 @@ namespace maya {
          * @param retVal The Value to store this result in
          * @return boolean value signifying if success happened or not
          */
-        bool evaluate(UDFValue::Ptr retVal) override final;
+        UDFValue::Ptr evaluate() override final;
     private:
         uint16_t _externalType;
     };

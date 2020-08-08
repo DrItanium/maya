@@ -43,7 +43,7 @@ namespace maya {
         ~Lexeme() override = default;
         size_t hash(size_t range) const override;
         void write(const std::string &logicalName) override;
-        bool evaluate(UDFValue::Ptr retVal) override;
+        UDFValue::Ptr evaluate() override;
     private:
         std::string _contents;
     };

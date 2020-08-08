@@ -59,13 +59,13 @@
 #include "UDFContext.h"
 
 namespace maya {
-   bool
-   ExternalFunction::evaluate(UDFContext &context, UDFValue::Ptr returnValue) {
+   UDFValue::Ptr
+   ExternalFunction::evaluate(UDFContext &context) {
        if (_function) {
-           _function(getParent(), context, returnValue);
-           return true;
+           return _function(getParent(), context);
+       } else {
+           return nullptr;
        }
-       return false;
    }
    Expression::Ptr
    ExternalFunction::parse(Expression::Ptr expression, const std::string & str) {

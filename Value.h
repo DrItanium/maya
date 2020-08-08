@@ -26,7 +26,7 @@ namespace maya {
         [[nodiscard]] const Contents& getContents() const noexcept { return _contents; }
         void setContents(Contents value) noexcept { _contents = value; }
         size_t hash(size_t range) const override;
-        bool evaluate(std::shared_ptr<UDFValue> retVal) override;
+        std::shared_ptr<UDFValue> evaluate() override;
     private:
         Contents _contents;
     };

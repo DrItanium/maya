@@ -3,12 +3,12 @@
 //
 
 #include "Entity.h"
-
+#include "Environment.h"
 namespace maya {
 
-    bool
-    Entity::evaluate(std::shared_ptr<UDFValue> returnValue) {
-        return false;
+    UDFValue::Ptr
+    Entity::evaluate() {
+        return std::make_shared<UDFValue>(getParent(), getParent().getFalseSymbol(), nullptr);
     }
     void
     Entity::longPrint(const std::string &logicalName) {
