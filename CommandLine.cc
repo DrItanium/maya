@@ -266,13 +266,16 @@ namespace maya {
                 writeStringRouter("stdout", "\n");
             }
             return true;
-        } else if (theToken.isVariable()) {
+        }
+        if (theToken.isVariable()) {
             closeStringSource("command");
             auto top = genConstant<Lexeme>(theToken.getGlobalType(), std::get<Lexeme::Ptr>(theToken.getContents()));
             auto result = top->evaluate();
             if (printResult) {
+                result->write("stdout");
+                writeStringRouter("stdout", "\n");
             }
-            /// @todo continue implementing here
+            return true;
         }
         /// @todo continue implementation
         return true;

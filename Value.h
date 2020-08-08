@@ -16,7 +16,7 @@ namespace maya {
     /**
      * @brief Generic container to hold onto an Atom or another kind of thing
      */
-    class Value : public HoldsEnvironmentCallback, public Hashable, public Evaluable {
+    class Value : public HoldsEnvironmentCallback, public Hashable, public Evaluable, public IORouterAware {
     public:
         using Self = Value;
         using Ptr = std::shared_ptr<Self>;
@@ -27,6 +27,7 @@ namespace maya {
         void setContents(Contents value) noexcept { _contents = value; }
         size_t hash(size_t range) const override;
         std::shared_ptr<UDFValue> evaluate() override;
+        void write(const std::string &logicalName) override;
     private:
         Contents _contents;
     };

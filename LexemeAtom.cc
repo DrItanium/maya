@@ -4,8 +4,9 @@
 
 #include "LexemeAtom.h"
 #include "Environment.h"
+#include "Value.h"
 #include <string>
-#include <iostream>
+#include <memory>
 namespace maya {
     size_t
     Lexeme::hash(size_t range) const {

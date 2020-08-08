@@ -28,6 +28,15 @@ namespace maya {
         }, _contents);
     }
 
+    void
+    Value::write(const std::string &logicalName) {
+        std::visit([&logicalName](auto&& value) {
+            if (value) {
+                value->write(logicalName);
+            }
+        }, _contents);
+    }
+
 
 #if 0
     bool
