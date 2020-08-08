@@ -46,7 +46,15 @@ namespace maya {
         std::string getPrintForm() const noexcept { return _printForm; }
         void setPrintForm(const std::string& value) noexcept { _printForm = value; }
         void setContents(Contents contents) noexcept { _contents = contents; }
-        const Contents& getContents() const noexcept { return _contents; }
+        [[nodiscard]] const Contents& getContents() const noexcept { return _contents; }
+        template<typename T>
+        [[nodiscard]] constexpr bool contentsContainType() const noexcept {
+            return std::holds_alternative<T>(_contents);
+        }
+        template<typename T>
+        decltype(auto) unpackContents() const {
+            return std::get<T>(_contents);
+        }
         constexpr uint16_t getGlobalType() const noexcept {
             switch (_tokenType) {
                 case Type::Float: return FLOAT_TYPE;

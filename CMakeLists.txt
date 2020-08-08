@@ -35,7 +35,7 @@ add_library(clips
 		CommandLine.h CommandLine.cc
 		Token.cc Token.h
 		Scanner.cc
-		StringRouter.h StringRouter.cc)
+		StringRouter.h StringRouter.cc BuildError.h)
 
 		#Agenda.h
 		#Analysis.h

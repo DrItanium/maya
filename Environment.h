@@ -31,6 +31,7 @@
 #include "BitmapAtom.h"
 #include "ExternalAddress.h"
 #include "Token.h"
+#include "BuildError.h"
 namespace maya {
     class Expression;
     class StringRouter;
@@ -443,6 +444,8 @@ namespace maya {
         void saveMultipleToPrettyPrintBuffer(Args&& ... contents) noexcept {
             (saveToPrettyPrintBuffer(contents), ...);
         }
+        std::string getPrettyPrintBuffer() const noexcept;
+        void clearPrettyPrintBuffer() noexcept;
     private:
         Token scanQuestionMarkVariable(const std::string& logicalName);
         Token scanDollarQuestionMarkVariable(const std::string& logicalName);
@@ -499,6 +502,8 @@ namespace maya {
             return nullptr;
         }
         UDFValue::Ptr evaluateExpression(std::shared_ptr<Expression> expr);
+    public:
+        BuildError parseConstruct(const std::string&, const std::string&);
     };
 } // end namespace maya
 

@@ -1,6 +1,7 @@
 #include "CommandLine.h"
 #include "Environment.h"
 #include "Expression.h"
+#include "BuildError.h"
 namespace maya {
     constexpr auto NO_SWITCH         = 0;
     constexpr auto BATCH_SWITCH      = 1;
@@ -262,8 +263,8 @@ namespace maya {
         if (theToken.isConstant()) {
             closeStringSource("command");
             if (printResult) {
-                theToken.write("stdout");
-                writeStringRouter("stdout", "\n");
+                theToken.write(STDOUT());
+                writeStringRouter(STDOUT(), "\n");
             }
             return true;
         }
@@ -272,12 +273,81 @@ namespace maya {
             auto top = genConstant<Lexeme>(theToken.getGlobalType(), std::get<Lexeme::Ptr>(theToken.getContents()));
             auto result = top->evaluate();
             if (printResult) {
-                result->write("stdout");
-                writeStringRouter("stdout", "\n");
+                result->write(STDOUT());
+                writeStringRouter(STDOUT(), "\n");
             }
             return true;
         }
-        /// @todo continue implementation
+        /**
+         * @brief If the next token isn't the beginning left parenthesis of a command or construct, then whatever was entered cannot be evaluated
+         * at the command prompt!
+         */
+        if (theToken.getType() != Token::Type::LeftParen) {
+            printErrorID("COMMLINE", 1, false);
+            writeStringRouter(STDERR(), "Expected a '(', constant, or variable!\n");
+            closeStringSource("command");
+            return false;
+        }
+        // the next token must be a function name or construct type.
+
+        auto nextToken = getToken("command");
+        if (nextToken.getType() != Token::Type::Symbol) {
+           printErrorID("COMMLINE", 2, false);
+           writeStringRouter(STDERR(), "Expected a command!\n");
+           closeStringSource("command");
+           return false;
+        }
+        auto commandName = nextToken.unpackContents<Lexeme::Ptr>();
+        // evaluate constructs
+        {
+            if (auto errorFlag = this->parseConstruct(commandName->getContents(), "command"); errorFlag != BuildError::ConstructNotFound) {
+                closeStringSource("command");
+                if (errorFlag == BuildError::Parsing) {
+                    writeStringsRouter(STDERR(), "\nERROR:\n", getPrettyPrintBuffer(), "\n");
+                }
+                clearPrettyPrintBuffer();
+
+                /// @todo implement this at some point
+                setWarningFileName("");
+                setErrorFileName("");
+                return errorFlag == BuildError::None;
+            }
+        }
+
+        // parse a function call
+        auto danglingConstructs = _danglingConstructs;
+        _parsingTopLevelCommand = true;
+        auto top = function2Parse("command", commandName);
+        _parsingTopLevelCommand = false;
+        clearParsedBindNames();
+
+        // close the string input source.
+        closeStringSource("command");
+        // evaluate function call
+        if (!top) {
+            setWarningFileName("");
+            setErrorFileName("");
+            _danglingConstructs = danglingConstructs;
+            return false;
+        }
+
+        installExpression(top);
+
+        _evaluatingTopLevel = true;
+        _currentCommand = top;
+        auto returnValue = evaluateExpression(top);
+        _currentCommand = nullptr;
+        _evaluatingTopLevel = false;
+
+        deinstallExpression(top);
+        _danglingConstructs = danglingConstructs;
+        setWarningFileName("");
+        setErrorFileName("");
+
+
+        // print the return value of the function/command.
+        /// @todo continue
+
         return true;
     }
 #if 0

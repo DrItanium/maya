@@ -1,79 +1,10 @@
-/*******************************************************/
-/*      "C" Language Integrated Production System      */
-/*                                                     */
-/*             CLIPS Version 6.40  10/01/16            */
-/*                                                     */
-/*                  CONSTRUCT MODULE                   */
-/*******************************************************/
-
-/*************************************************************/
-/* Purpose:                                                  */
-/*                                                           */
-/* Principal Programmer(s):                                  */
-/*      Gary D. Riley                                        */
-/*                                                           */
-/* Contributing Programmer(s):                               */
-/*                                                           */
-/* Revision History:                                         */
-/*                                                           */
-/*      6.24: Added environment parameter to GenClose.       */
-/*            Added environment parameter to GenOpen.        */
-/*                                                           */
-/*            Renamed BOOLEAN macro type to intBool.         */
-/*                                                           */
-/*      6.30: Changed garbage collection algorithm.          */
-/*                                                           */
-/*            Removed conditional code for unsupported       */
-/*            compilers/operating systems (IBM_MCW and       */
-/*            MAC_MCW).                                      */
-/*                                                           */
-/*            Added code for capturing errors/warnings       */
-/*            (EnvSetParserErrorCallback).                   */
-/*                                                           */
-/*            Fixed issue with save function when multiple   */
-/*            defmodules exist.                              */
-/*                                                           */
-/*            Added const qualifiers to remove C++           */
-/*            deprecation warnings.                          */
-/*                                                           */
-/*            Converted API macros to function calls.        */
-/*                                                           */
-/*            Fixed linkage issue when BLOAD_ONLY compiler   */
-/*            flag is set to 1.                              */
-/*                                                           */
-/*            Added code to prevent a clear command from     */
-/*            being executed during fact assertions via      */
-/*            Increment/DecrementClearReadyLocks API.        */
-/*                                                           */
-/*            Added code to keep track of pointers to        */
-/*            constructs that are contained externally to    */
-/*            to constructs, DanglingConstructs.             */
-/*                                                           */
-/*      6.40: Removed LOCALE definition.                     */
-/*                                                           */
-/*            Pragma once and other inclusion changes.       */
-/*                                                           */
-/*            Added support for booleans with <stdbool.h>.   */
-/*                                                           */
-/*            Removed use of void pointers for specific      */
-/*            data structures.                               */
-/*                                                           */
-/*            ALLOW_ENVIRONMENT_GLOBALS no longer supported. */
-/*                                                           */
-/*            UDF redesign.                                  */
-/*                                                           */
-/*            Modified EnvClear to return completion status. */
-/*                                                           */
-/*            File name/line count displayed for errors      */
-/*            and warnings during load command.              */
-/*                                                           */
-/*************************************************************/
 
 #ifndef _H_constrct
-
 #pragma once
-
 #define _H_constrct
+namespace maya {
+
+} // end namespace maya
 #if 0
 typedef struct construct Construct;
 
