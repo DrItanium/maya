@@ -23,7 +23,7 @@ namespace maya {
             if (value) {
                 return value->evaluate(retVal);
             } else {
-                retVal->setContents(_parent.getFalseSymbol());
+                retVal->setContents(getParent().getFalseSymbol());
                 return false;
             }
         }, _contents);

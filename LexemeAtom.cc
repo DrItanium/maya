@@ -21,7 +21,7 @@ namespace maya {
     }
     void
     Lexeme::write(const std::string &logicalName) {
-        _parent.writeStringRouter(logicalName, _contents);
+        getParent().writeStringRouter(logicalName, _contents);
     }
     bool
     Lexeme::evaluate(UDFValue::Ptr retVal) {

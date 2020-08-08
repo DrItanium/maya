@@ -40,19 +40,28 @@ namespace maya {
         }
     }
 
-    Token::Token(const Token & other) : Token(other._tokenType, other._printForm, other._contents) { }
     void
-    Token::dump(Environment &env, const std::string &logicalName) {
-        env.writeStringsRouter(logicalName,  "{ ", toString(_tokenType),
+    Token::dump(const std::string &logicalName) {
+        getParent().writeStringsRouter(logicalName,  "{ ", toString(_tokenType),
                                ", \"", _printForm, "\", " );
-        std::visit([&env, &logicalName](auto&& value) {
+        std::visit([this, &logicalName](auto&& value) {
             using K = std::decay_t<decltype(value)>;
             if constexpr (std::is_same_v<K, std::nullptr_t>) {
-                env.writeStringRouter(logicalName, "nil");
+                getParent().writeStringRouter(logicalName, "nil");
             } else {
                 value->write(logicalName);
             }
         }, _contents);
-        env.writeStringRouter(logicalName, " }");
+        getParent().writeStringRouter(logicalName, " }");
+    }
+    void Token::write(const std::string &logicalName) {
+        std::visit([this, logicalName](auto&& value) {
+            using K = std::decay_t<decltype(value)>;
+            if constexpr (std::is_same_v<K, Lexeme::Ptr> || std::is_same_v<K, Integer::Ptr> || std::is_same_v<K, Float::Ptr>) {
+                value->write(logicalName);
+            } else {
+                // do nothing for the time being, we can jump through the types later on
+            }
+        }, _contents);
     }
 } // end namespace maya

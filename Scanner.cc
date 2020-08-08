@@ -50,12 +50,12 @@ namespace maya {
             }
         } else {
             unreadRouter(logicalName, inchar);
-            return { Token::Type::SFWildcard, "?", createSymbol("?") };
+            return { *this, Token::Type::SFWildcard, "?", createSymbol("?") };
         }
     }
     Token
     Environment::getToken(const std::string& logicalName) {
-        Token targetToken;
+        Token targetToken(*this);
         auto inchar = readRouter(logicalName);
         // remove all whitespace before processing the actual request
         while (isWhiteSpace(inchar)) {
@@ -103,25 +103,25 @@ namespace maya {
                     break;
                     // process "(", ")", "~", "|" and "&" tokens
                 case '(':
-                    targetToken = { Token::Type::LeftParen, "(", createString("(") };
+                    targetToken = { *this, Token::Type::LeftParen, "(", createString("(") };
                     break;
                 case ')':
-                    targetToken = { Token::Type::RightParen, ")", createString(")") };
+                    targetToken = { *this, Token::Type::RightParen, ")", createString(")") };
                     break;
                 case '~':
-                    targetToken = { Token::Type::NotConstraint, "~", createString("~") };
+                    targetToken = { *this, Token::Type::NotConstraint, "~", createString("~") };
                     break;
                 case '|':
-                    targetToken = { Token::Type::OrConstraint, "|", createString("|") };
+                    targetToken = { *this, Token::Type::OrConstraint, "|", createString("|") };
                     break;
                 case '&':
-                    targetToken = { Token::Type::AndConstraint, "&", createString("&") };
+                    targetToken = { *this, Token::Type::AndConstraint, "&", createString("&") };
                     break;
                     // process end-of-file token
                 case EOF:
                 case 0:
                 case 3:
-                    targetToken = {Token::Type::Stop, "", createSymbol("stop") };
+                    targetToken = {*this, Token::Type::Stop, "", createSymbol("stop") };
                     break;
                     //process other tokens
                 default: {
@@ -169,7 +169,7 @@ namespace maya {
                 }
             } else {
                 unreadRouter(logicalName, inchar);
-                return {Token::Type::MFWildcard, "$?", createSymbol("$?")};
+                return {*this, Token::Type::MFWildcard, "$?", createSymbol("$?")};
             }
         } else {
             _globalStream << "$";
@@ -232,12 +232,12 @@ namespace maya {
             if (hasInstanceMarkers(str)) {
                 auto actualInstanceName = stripOffInstanceMarkers(str);
                 auto ptr = createInstanceName(actualInstanceName);
-                return {Token::Type::InstanceName, actualInstanceName, ptr};
+                return {*this, Token::Type::InstanceName, actualInstanceName, ptr};
             } else {
-                return {Token::Type::Symbol, str, createSymbol(str)};
+                return {*this, Token::Type::Symbol, str, createSymbol(str)};
             }
         } else {
-            return {Token::Type::Symbol, str, createSymbol(str)};
+            return {*this, Token::Type::Symbol, str, createSymbol(str)};
         }
     }
     constexpr bool isExponentMark(int c) noexcept {
@@ -379,7 +379,7 @@ namespace maya {
         if (!digitFound) {
             auto str = _globalStream.str();
             auto target = createSymbol(str);
-            return Token(Token::Type::Symbol, target->getContents(), target);
+            return {*this, Token::Type::Symbol, target->getContents(), target};
         }
         std::stringstream printFormGenerator;
         if (auto str = _globalStream.str(); processFloat) {
@@ -388,14 +388,14 @@ namespace maya {
             /// @todo implement support for FloatToString as clips defines it
             printFormGenerator << fvalue;
             auto printForm = printFormGenerator.str();
-            return Token(Token::Type::Float, printForm, target);
+            return {*this, Token::Type::Float, printForm, target};
         } else {
             int64_t ivalue = std::stoll(str);
             auto target = createInteger(ivalue);
             /// @todo implement support for LongIntegerToString as clips defines it
             printFormGenerator << ivalue;
             auto printForm = printFormGenerator.str();
-            return Token(Token::Type::Integer, printForm, target);
+            return {*this, Token::Type::Integer, printForm, target};
         }
     }
 
@@ -432,7 +432,7 @@ namespace maya {
         // make a string out of this
         auto str = _globalStream.str();
         auto lex = createString(str.empty() ? "" : str);
-        return {Token::Type::String, stringPrintForm(lex->getContents()), lex };
+        return {*this, Token::Type::String, stringPrintForm(lex->getContents()), lex };
     }
     std::string
     Environment::stringPrintForm(const std::string &str) {

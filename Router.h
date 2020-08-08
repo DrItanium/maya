@@ -138,31 +138,31 @@ namespace maya {
         ~LambdaRouter() override = default;
         bool query(const std::string &logicalName) override {
             if (_queryCallback) {
-                return _queryCallback(_parent, logicalName);
+                return _queryCallback(getParent(), logicalName);
             } else {
                 return false;
             }
         }
         void write(const std::string &logicalName, const std::string &value) override {
             if (_writeCallback) {
-                _writeCallback(_parent, logicalName, value);
+                _writeCallback(getParent(), logicalName, value);
             }
         }
         void onExit(int exitCode) override {
             if (_exitCallback) {
-                _exitCallback(_parent, exitCode);
+                _exitCallback(getParent(), exitCode);
             }
         }
         int read(const std::string &logicalName) override {
             if (_readCallback) {
-                return _readCallback(_parent, logicalName);
+                return _readCallback(getParent(), logicalName);
             } else {
                 return -1;
             }
         }
         int unread(const std::string &logicalName, int value) override {
             if (_unreadCallback) {
-                return _unreadCallback(_parent, logicalName, value);
+                return _unreadCallback(getParent(), logicalName, value);
             } else {
                 return -1;
             }

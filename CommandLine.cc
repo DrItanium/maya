@@ -257,6 +257,18 @@ namespace maya {
         }
         openStringSource("command", command);
         auto theToken = getToken("command");
+        // evaluate constants
+        if (theToken.isConstant()) {
+            closeStringSource("command");
+            if (printResult) {
+                theToken.write("stdout");
+                writeStringRouter("stdout", "\n");
+            }
+            return true;
+        } else if (theToken.isVariable()) {
+            closeStringSource("command");
+            /// @todo continue implementing here
+        }
         /// @todo continue implementation
         return true;
     }

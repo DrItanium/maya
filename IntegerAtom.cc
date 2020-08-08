@@ -29,7 +29,7 @@ namespace maya {
         std::stringstream ss;
         ss << _contents;
         auto tmp = ss.str();
-        _parent.writeStringRouter(logicalName, tmp);
+        getParent().writeStringRouter(logicalName, tmp);
     }
 
     bool

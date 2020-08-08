@@ -97,11 +97,11 @@ namespace maya {
     void StringRouterInterfaceRouter::onExit(int exitCode) { }
     bool
     StringRouterInterfaceRouter::query(const std::string &logicalName) {
-       return _parent.stringRouterRespondsTo(logicalName);
+       return getParent().stringRouterRespondsTo(logicalName);
     }
     int
     StringRouterInterfaceRouter::read(const std::string &logicalName) {
-        if (auto target = _parent.findStringRouter(logicalName); target) {
+        if (auto target = getParent().findStringRouter(logicalName); target) {
             if (target->canRead()) {
                 return target->read(logicalName);
             } else {
@@ -113,7 +113,7 @@ namespace maya {
     }
     int
     StringRouterInterfaceRouter::unread(const std::string &logicalName, int value) {
-        if (auto target = _parent.findStringRouter(logicalName); target) {
+        if (auto target = getParent().findStringRouter(logicalName); target) {
             if (target->canUnread()) {
                 return target->unread(logicalName, value);
             } else {
@@ -126,7 +126,7 @@ namespace maya {
     }
     void
     StringRouterInterfaceRouter::write(const std::string &logicalName, const std::string &value) {
-        if (auto target = _parent.findStringRouter(logicalName); target) {
+        if (auto target = getParent().findStringRouter(logicalName); target) {
             if (target->canWriteTo()) {
                 target->write(logicalName, value);
             }

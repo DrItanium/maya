@@ -7,10 +7,11 @@
 #include "LexemeAtom.h"
 #include "FloatAtom.h"
 #include "IntegerAtom.h"
+#include "IORouterAware.h"
 #include <memory>
 #include <variant>
 namespace maya {
-    class Token {
+    class Token : public HoldsEnvironmentCallback, public IORouterAware {
     public:
         using Self = Token;
         using Ptr = std::shared_ptr<Self>;
@@ -38,9 +39,8 @@ namespace maya {
         };
         static const std::string& toString(Type t) noexcept;
     public:
-        Token() = default;
-        Token(Type type, const std::string& printForm, Contents contents) : _tokenType(type), _printForm(printForm), _contents(contents)  { }
-        Token(const Token& other);
+        Token(Environment& parent) : HoldsEnvironmentCallback(parent) {}
+        Token(Environment& parent, Type type, const std::string& printForm, Contents contents) : HoldsEnvironmentCallback(parent), _tokenType(type), _printForm(printForm), _contents(contents)  { }
         constexpr auto getType() const noexcept { return _tokenType; }
         void setType(Type value) noexcept { _tokenType = value; }
         std::string getPrintForm() const noexcept { return _printForm; }
@@ -62,7 +62,22 @@ namespace maya {
             }
         }
         constexpr bool isStopToken() const noexcept { return _tokenType == Type::Stop; }
-        void dump(Environment& env, const std::string& logicalName);
+        void dump(const std::string& logicalName);
+        constexpr bool isNumber() const noexcept { return _tokenType == Type::Integer || _tokenType == Type::Float; }
+        constexpr bool isLexeme() const noexcept { return _tokenType == Type::String || _tokenType == Type::Symbol || _tokenType == Type::InstanceName; }
+        constexpr bool isConstant() const noexcept { return isNumber() || isLexeme(); }
+        constexpr bool isVariable() const noexcept {
+            switch(_tokenType) {
+                case Type::GlobalVariable:
+                case Type::MFGlobalVariable:
+                case Type::SFVariable:
+                case Type::MFVariable:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+        void write(const std::string &logicalName) override;
     private:
         Type _tokenType = Type::Unknown;
         std::string _printForm{"unknown"};

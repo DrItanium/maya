@@ -62,14 +62,14 @@ namespace maya {
    bool
    ExternalFunction::evaluate(UDFContext &context, UDFValue::Ptr returnValue) {
        if (_function) {
-           _function(_parent, context, returnValue);
+           _function(getParent(), context, returnValue);
            return true;
        }
        return false;
    }
    Expression::Ptr
    ExternalFunction::parse(Expression::Ptr expression, const std::string & str) {
-       return _parser ? _parser(_parent, expression, str) : nullptr;
+       return _parser ? _parser(getParent(), expression, str) : nullptr;
    }
    size_t
    ExternalFunction::hash(size_t range) const {

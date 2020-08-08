@@ -11,7 +11,7 @@ namespace maya {
         std::stringstream converter;
         converter << _contents;
         auto target = converter.str();
-        _parent.writeStringRouter(logicalName, target);
+        getParent().writeStringRouter(logicalName, target);
     }
     size_t
     Float::hash(size_t range) const {

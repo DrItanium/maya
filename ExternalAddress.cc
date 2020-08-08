@@ -33,12 +33,13 @@ namespace maya {
         std::ostringstream contents;
         contents << "<Pointer-" << getPointerAddress() << ">";
         auto str = contents.str();
-        _parent.writeStringRouter(logicalName, str);
+        getParent().writeStringRouter(logicalName, str);
+
     }
 
     bool
     ExternalAddress::call(UDFContext &context, UDFValue::Ptr returnValue) {
-        returnValue->setContents(_parent.getFalseSymbol());
+        returnValue->setContents(getParent().getFalseSymbol());
         return false;
     }
     bool
@@ -46,7 +47,7 @@ namespace maya {
         if (_symcall) {
             return _symcall(context, returnValue);
         } else {
-            returnValue->setContents(_parent.getFalseSymbol());
+            returnValue->setContents(getParent().getFalseSymbol());
             return false;
         }
     }
