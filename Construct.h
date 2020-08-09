@@ -2,8 +2,30 @@
 #ifndef _H_constrct
 #pragma once
 #define _H_constrct
+#import <memory>
 namespace maya {
+    /*
+     * Porting this to C++ is interesting because the Construct itself is an abstract interface to provide management functionality
+     * for different types by a given string name. However the functionality in CLIPS is actually
+     * emulating many different C++ concepts including:
+     * - iterators
+     * - find
+     * - insert
+     * - destructors (via the free function pointer)
+     * - constructor (via the parse function pointer)
+     *
+     * In this case, the construct is a class which is responsible for tracking a collection of instances of a
+     * given type by only the name of the construct as a whole. These concepts (as stated earlier) are bound to
+     * a collection of the given type, not an instance of the type itself. Thus a Construct is really a ConstructList.
+     */
 
+    class Construct {
+public:
+    using Self = Construct;
+    using Ptr = std::shared_ptr<Self>;
+public:
+    /// @todo keep implementing
+};
 } // end namespace maya
 #if 0
 typedef struct construct Construct;
