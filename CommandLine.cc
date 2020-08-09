@@ -8,7 +8,7 @@ namespace maya {
     constexpr auto BATCH_STAR_SWITCH = 2;
     constexpr auto LOAD_SWITCH       = 3;
     namespace {
-        int doString(const std::string &str, int i, bool &);
+        std::tuple<bool, int> doString(const std::string& str, int i);
         int doComment(const std::string &str, int i);
         int doWhitespace(const std::string &str, int i);
     } // end namespace
@@ -413,10 +413,10 @@ namespace maya {
             return "";
         }
     }
+#if 0
     Environment::CommandCompletionStatus
     Environment::isCompleteCommand(const std::string &str) noexcept {
 /// @todo finish implementing isCompleteCommand
-#if 0
         if (str.empty()) {
             return CommandCompletionStatus::Incomplete;
         }
@@ -503,10 +503,8 @@ namespace maya {
             }
         }
         // if we got here then there is no complete command to be found
-#endif
         return CommandCompletionStatus::Incomplete;
     }
-#if 0
     namespace {
         int
         doString(const std::string &str, int position, bool& complete) {
@@ -522,9 +520,12 @@ namespace maya {
             } catch (std::out_of_range&) {
                 // we've gone out of bounds
             }
+            return position;
         }
     }
+#endif
 
+#if 0
 /***********************************************************/
 /* DoString: Skips over a string contained within a string */
 /*   until the closing quotation mark is encountered.      */
