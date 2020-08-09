@@ -504,6 +504,16 @@ namespace maya {
         UDFValue::Ptr evaluateExpression(std::shared_ptr<Expression> expr);
     public:
         BuildError parseConstruct(const std::string&, const std::string&);
+    protected:
+        void clearParsedBindNames();
+    public:
+        void installExpression(std::shared_ptr<Expression> target);
+        void deinstallExpression(std::shared_ptr<Expression> target);
+        std::shared_ptr<Expression> pack(std::shared_ptr<Expression> target);
+        std::shared_ptr<Expression> function0Parse(const std::string&);
+        std::shared_ptr<Expression> function1Parse(const std::string&);
+        std::shared_ptr<Expression> function2Parse(const std::string&, const std::string&);
+
     };
 } // end namespace maya
 

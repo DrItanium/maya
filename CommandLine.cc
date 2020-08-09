@@ -317,7 +317,7 @@ namespace maya {
         // parse a function call
         auto danglingConstructs = _danglingConstructs;
         _parsingTopLevelCommand = true;
-        auto top = function2Parse("command", commandName);
+        auto top = function2Parse("command", commandName->getContents());
         _parsingTopLevelCommand = false;
         clearParsedBindNames();
 
