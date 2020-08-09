@@ -374,7 +374,13 @@ namespace maya {
          */
         bool routeCommand(const std::string& command, bool printResult);
         [[nodiscard]] constexpr bool isTopLevelCommand() const noexcept { return _parsingTopLevelCommand; }
-        std::string getCommandCompletionString(const std::string& str, size_t capacity);
+        /**
+         * @brief Returns the last token in a string if it is a valid token for command completion
+         * @param str the string to tokenize and check
+         * @param capacity the number of characters to check
+         * @return An optional string if we found a command completion string
+         */
+        std::optional<std::string> getCommandCompletionString(const std::string& str, size_t capacity);
         bool executeIfCommandComplete();
         bool commandCompleteAndNotEmpty();
         enum class CommandCompletionStatus

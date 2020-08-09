@@ -69,12 +69,37 @@ namespace maya {
                 default: return VOID_TYPE;
             }
         }
-        constexpr bool isStopToken() const noexcept { return _tokenType == Type::Stop; }
+        [[nodiscard]] constexpr bool isStopToken() const noexcept { return _tokenType == Type::Stop; }
         void dump(const std::string& logicalName);
-        constexpr bool isNumber() const noexcept { return _tokenType == Type::Integer || _tokenType == Type::Float; }
-        constexpr bool isLexeme() const noexcept { return _tokenType == Type::String || _tokenType == Type::Symbol || _tokenType == Type::InstanceName; }
-        constexpr bool isConstant() const noexcept { return isNumber() || isLexeme(); }
-        constexpr bool isVariable() const noexcept {
+        [[nodiscard]] constexpr bool isNumber() const noexcept {
+            switch (_tokenType) {
+                case Type::Integer:
+                case Type::Float:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+        [[nodiscard]] constexpr bool isSymbol() const noexcept { return _tokenType == Type::Symbol; }
+        [[nodiscard]] constexpr bool isString() const noexcept { return _tokenType == Type::String; }
+        [[nodiscard]] constexpr bool isInstanceName() const noexcept { return _tokenType == Type::InstanceName; }
+        [[nodiscard]] constexpr bool isSingleFieldVariable() const noexcept { return _tokenType == Type::SFVariable; }
+        [[nodiscard]] constexpr bool isMultiFieldVariable() const noexcept { return _tokenType == Type::MFVariable; }
+        [[nodiscard]] constexpr bool isSingleFieldGlobalVariable() const noexcept { return _tokenType == Type::GlobalVariable; }
+        [[nodiscard]] constexpr bool isMultiFieldGlobalVariable() const noexcept { return _tokenType == Type::MFGlobalVariable; }
+        [[nodiscard]] constexpr bool isGlobalVariable() const noexcept { return isSingleFieldGlobalVariable() || isMultiFieldGlobalVariable(); }
+        [[nodiscard]] constexpr bool isLexeme() const noexcept {
+            switch (_tokenType) {
+                case Type::String:
+                case Type::Symbol:
+                case Type::InstanceName:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+        [[nodiscard]] constexpr bool isConstant() const noexcept { return isNumber() || isLexeme(); }
+        [[nodiscard]] constexpr bool isVariable() const noexcept {
             switch(_tokenType) {
                 case Type::GlobalVariable:
                 case Type::MFGlobalVariable:

@@ -357,240 +357,62 @@ namespace maya {
             return true;
         }, returnValue->getContents());
     }
-#if 0
-
-bool RouteCommand(
-        const Environment::Ptr&theEnv,
-        const char *command,
-        bool printResult) {
-    UDFValue returnValue;
-    Expression *top;
-    const char *commandName;
-    struct token theToken;
-    int danglingConstructs;
-
-    if (command == nullptr) { return false; }
-
-    /*========================================*/
-    /* Open a string input source and get the */
-    /* first token from that source.          */
-    /*========================================*/
-
-    OpenStringSource(theEnv, "command", command, 0);
-
-    GetToken(theEnv, "command", &theToken);
-
-    /*=====================*/
-    /* Evaluate constants. */
-    /*=====================*/
-
-    if ((theToken.tknType == SYMBOL_TOKEN) || (theToken.tknType == STRING_TOKEN) ||
-        (theToken.tknType == FLOAT_TOKEN) || (theToken.tknType == INTEGER_TOKEN) ||
-        (theToken.tknType == INSTANCE_NAME_TOKEN)) {
-        CloseStringSource(theEnv, "command");
-        if (printResult) {
-            PrintAtom(theEnv, STDOUT, TokenTypeToType(theToken.tknType), theToken.value);
-            WriteString(theEnv, STDOUT, "\n");
+    std::optional<std::string>
+    Environment::getCommandCompletionString(const std::string &str, size_t capacity) {
+        // get the command string
+        if (str.empty()) {
+            return "";
         }
-        return true;
-    }
 
-    /*=====================*/
-    /* Evaluate variables. */
-    /*=====================*/
-
-    if ((theToken.tknType == GBL_VARIABLE_TOKEN) ||
-        (theToken.tknType == MF_GBL_VARIABLE_TOKEN) ||
-        (theToken.tknType == SF_VARIABLE_TOKEN) ||
-        (theToken.tknType == MF_VARIABLE_TOKEN)) {
-        CloseStringSource(theEnv, "command");
-        top = GenConstant(theEnv, TokenTypeToType(theToken.tknType), theToken.value);
-        EvaluateExpression(theEnv, top, &returnValue);
-        rtn_struct(theEnv, Expression, top);
-        if (printResult) {
-            WriteUDFValue(theEnv, STDOUT, &returnValue);
-            WriteString(theEnv, STDOUT, "\n");
+        // if the last character in teh command string is a space, character return, or quotation mark, then the command completion can
+        // be anything
+        auto lastChar = str.back();
+        switch (lastChar) {
+            case ' ':
+            case '"':
+            case '\t':
+            case '\f':
+            case '\n':
+            case '\r':
+                return "";
+            default:
+                break;
         }
-        return true;
-    }
 
-    /*========================================================*/
-    /* If the next token isn't the beginning left parenthesis */
-    /* of a command or construct, then whatever was entered   */
-    /* cannot be evaluated at the command prompt.             */
-    /*========================================================*/
-
-    if (theToken.tknType != LEFT_PARENTHESIS_TOKEN) {
-        PrintErrorID(theEnv, "COMMLINE", 1, false);
-        WriteString(theEnv, STDERR, "Expected a '(', constant, or variable.\n");
-        CloseStringSource(theEnv, "command");
-        return false;
-    }
-
-    /*===========================================================*/
-    /* The next token must be a function name or construct type. */
-    /*===========================================================*/
-
-    GetToken(theEnv, "command", &theToken);
-    if (theToken.tknType != SYMBOL_TOKEN) {
-        PrintErrorID(theEnv, "COMMLINE", 2, false);
-        WriteString(theEnv, STDERR, "Expected a command.\n");
-        CloseStringSource(theEnv, "command");
-        return false;
-    }
-
-    commandName = theToken.lexemeValue->contents;
-
-    /*======================*/
-    /* Evaluate constructs. */
-    /*======================*/
-
-    {
-        BuildError errorFlag;
-
-        errorFlag = ParseConstruct(theEnv, commandName, "command");
-        if (errorFlag != BE_CONSTRUCT_NOT_FOUND_ERROR) {
-            CloseStringSource(theEnv, "command");
-            if (errorFlag == BE_PARSING_ERROR) {
-                WriteString(theEnv, STDERR, "\nERROR:\n");
-                WriteString(theEnv, STDERR, GetPPBuffer(theEnv));
-                WriteString(theEnv, STDERR, "\n");
+        // find the last token in the command string
+        openTextSource("CommandCompletion", str, 0, capacity);
+        _ignoreCompletionErrors = true;
+        auto theToken = getToken("CommandCompletion");
+        auto lastToken = theToken;
+        while (!theToken.isStopToken()) {
+            lastToken = theToken;
+            theToken = getToken("CommandCompletion");
+        }
+        closeStringSource("CommandCompletion");
+        _ignoreCompletionErrors = false;
+        // determine if the last token can be completed.
+        if (lastToken.isSymbol()) {
+            auto rs = lastToken.unpackContents<Lexeme::Ptr>();
+            if (auto targetLexeme = rs->getContents(); !targetLexeme.empty() && (targetLexeme.front() == '[')) {
+                return targetLexeme.substr(1);
+            } else {
+                return targetLexeme;
             }
-            DestroyPPBuffer(theEnv);
-
-            SetWarningFileName(theEnv, nullptr);
-            SetErrorFileName(theEnv, nullptr);
-
-            return errorFlag == BE_NO_ERROR;
+        } else if (lastToken.isSingleFieldVariable()) {
+            return lastToken.unpackContents<Lexeme::Ptr>()->getContents();
+        } else if (lastToken.isMultiFieldVariable()) {
+            return lastToken.unpackContents<Lexeme::Ptr>()->getContents();
+        } else if (lastToken.isGlobalVariable() || lastToken.isInstanceName()) {
+            return std::nullopt;
+        } else if (lastToken.isString()) {
+            auto newContents = lastToken.unpackContents<Lexeme::Ptr>()->getContents();
+            return getCommandCompletionString(newContents, newContents.length());
+        } else if (lastToken.isNumber()) {
+            return std::nullopt;
+        } else {
+            return "";
         }
     }
-
-    /*========================*/
-    /* Parse a function call. */
-    /*========================*/
-
-    danglingConstructs = ConstructData(theEnv)->DanglingConstructs;
-    CommandLineData(theEnv)->ParsingTopLevelCommand = true;
-    top = Function2Parse(theEnv, "command", commandName);
-    CommandLineData(theEnv)->ParsingTopLevelCommand = false;
-    ClearParsedBindNames(theEnv);
-
-    /*================================*/
-    /* Close the string input source. */
-    /*================================*/
-
-    CloseStringSource(theEnv, "command");
-
-    /*=========================*/
-    /* Evaluate function call. */
-    /*=========================*/
-
-    if (top == nullptr) {
-        SetWarningFileName(theEnv, nullptr);
-        SetErrorFileName(theEnv, nullptr);
-        ConstructData(theEnv)->DanglingConstructs = danglingConstructs;
-        return false;
-    }
-
-    ExpressionInstall(theEnv, top);
-
-    CommandLineData(theEnv)->EvaluatingTopLevelCommand = true;
-    CommandLineData(theEnv)->CurrentCommand = top;
-    EvaluateExpression(theEnv, top, &returnValue);
-    CommandLineData(theEnv)->CurrentCommand = nullptr;
-    CommandLineData(theEnv)->EvaluatingTopLevelCommand = false;
-
-    ExpressionDeinstall(theEnv, top);
-    ReturnExpression(theEnv, top);
-    ConstructData(theEnv)->DanglingConstructs = danglingConstructs;
-
-    SetWarningFileName(theEnv, nullptr);
-    SetErrorFileName(theEnv, nullptr);
-
-    /*=================================================*/
-    /* Print the return value of the function/command. */
-    /*=================================================*/
-
-    if ((returnValue.header->type != VOID_TYPE) && printResult) {
-        WriteUDFValue(theEnv, STDOUT, &returnValue);
-        WriteString(theEnv, STDOUT, "\n");
-    }
-
-    return true;
-}
-
-
-
-/***********************************************************/
-/* GetCommandCompletionString: Returns the last token in a */
-/*   string if it is a valid token for command completion. */
-/***********************************************************/
-const char *GetCommandCompletionString(
-        const Environment::Ptr&theEnv,
-        const char *theString,
-        size_t maxPosition) {
-#if STUBBING_INACTIVE
-    struct token lastToken;
-    struct token theToken;
-    char lastChar;
-    const char *rs;
-    size_t length;
-
-    /*=========================*/
-    /* Get the command string. */
-    /*=========================*/
-
-    if (theString == nullptr) return ("");
-
-    /*=========================================================================*/
-    /* If the last character in the command string is a space, character       */
-    /* return, or quotation mark, then the command completion can be anything. */
-    /*=========================================================================*/
-
-    lastChar = theString[maxPosition - 1];
-    if ((lastChar == ' ') || (lastChar == '"') ||
-        (lastChar == '\t') || (lastChar == '\f') ||
-        (lastChar == '\n') || (lastChar == '\r')) { return (""); }
-
-    /*============================================*/
-    /* Find the last token in the command string. */
-    /*============================================*/
-
-    OpenTextSource(theEnv, "CommandCompletion", theString, 0, maxPosition);
-    ScannerData(theEnv)->IgnoreCompletionErrors = true;
-    GetToken(theEnv, "CommandCompletion", &theToken);
-    CopyToken(&lastToken, &theToken);
-    while (theToken.tknType != STOP_TOKEN) {
-        CopyToken(&lastToken, &theToken);
-        GetToken(theEnv, "CommandCompletion", &theToken);
-    }
-    CloseStringSource(theEnv, "CommandCompletion");
-    ScannerData(theEnv)->IgnoreCompletionErrors = false;
-
-    /*===============================================*/
-    /* Determine if the last token can be completed. */
-    /*===============================================*/
-
-    if (lastToken.tknType == SYMBOL_TOKEN) {
-        rs = lastToken.lexemeValue->contents;
-        if (rs[0] == '[') return (&rs[1]);
-        return lastToken.lexemeValue->contents;
-    } else if (lastToken.tknType == SF_VARIABLE_TOKEN) { return lastToken.lexemeValue->contents; }
-    else if (lastToken.tknType == MF_VARIABLE_TOKEN) { return lastToken.lexemeValue->contents; }
-    else if ((lastToken.tknType == GBL_VARIABLE_TOKEN) ||
-             (lastToken.tknType == MF_GBL_VARIABLE_TOKEN) ||
-             (lastToken.tknType == INSTANCE_NAME_TOKEN)) { return nullptr; }
-    else if (lastToken.tknType == STRING_TOKEN) {
-        length = strlen(lastToken.lexemeValue->contents);
-        return GetCommandCompletionString(theEnv, lastToken.lexemeValue->contents, length);
-    } else if ((lastToken.tknType == FLOAT_TOKEN) ||
-               (lastToken.tknType == INTEGER_TOKEN)) { return nullptr; }
-
-#endif
-    return ("");
-}
-
-#endif
     Environment::CommandCompletionStatus
     Environment::isCompleteCommand(const std::string &str) noexcept {
 /// @todo finish implementing isCompleteCommand
