@@ -335,7 +335,7 @@ namespace maya {
 
         _evaluatingTopLevel = true;
         _currentCommand = top;
-        auto returnValue = evaluateExpression(top);
+        std::shared_ptr<UDFValue> returnValue = evaluateExpression(top);
         _currentCommand = nullptr;
         _evaluatingTopLevel = false;
 
@@ -346,9 +346,16 @@ namespace maya {
 
 
         // print the return value of the function/command.
-        /// @todo continue
-
-        return true;
+        return std::visit([this, printResult](auto&& value) {
+            using K = std::decay_t<decltype(value)>;
+            if constexpr (!std::is_same_v<K, std::nullptr_t > && !std::is_same_v<K, Void>) {
+                 if (printResult) {
+                     value->write(STDOUT());
+                     writeStringRouter(STDOUT(), "\n");
+                 }
+            }
+            return true;
+        }, returnValue->getContents());
     }
 #if 0
 
