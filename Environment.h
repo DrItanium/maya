@@ -32,6 +32,7 @@
 #include "ExternalAddress.h"
 #include "Token.h"
 #include "BuildError.h"
+#include "SaveCallFunctionItem.h"
 namespace maya {
     class Expression;
     class StringRouter;
@@ -261,7 +262,7 @@ namespace maya {
         bool _resetInProgress = false;
         int16_t _clearReadyLocks = 0;
         int _danglingConstructs = 0;
-        // std::list<SaveCallFunctionItem::Ptr> _listOfSaveFunctions;
+        std::list<SaveCallFunctionItem::Ptr> _listOfSaveFunctions;
         bool _printWhileLoading = false;
         bool _loadInProgress = false;
         bool _watchCompilations = false;
@@ -280,6 +281,7 @@ namespace maya {
         size_t _maxWarnChars = 0;
         size_t _currentWarnPosition = 0;
         std::function<void(Environment&, std::string, std::string, std::string, long)> _parserErrorCallback;
+        std::map<std::string, std::shared_ptr<class ConstructTypeMetadata>> _listOfConstructMetadata;
         //std::map<std::string, Construct::Ptr> _listOfConstructs;
         std::forward_list<VoidCallFunctionItem::Ptr> _resetFunctions;
         std::forward_list<VoidCallFunctionItem::Ptr> _clearFunctions;
@@ -519,6 +521,8 @@ namespace maya {
         std::shared_ptr<Expression> function0Parse(const std::string&);
         std::shared_ptr<Expression> function1Parse(const std::string&);
         std::shared_ptr<Expression> function2Parse(const std::string&, const std::string&);
+    public: // defmodule
+    private:
 
     };
 } // end namespace maya
