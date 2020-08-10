@@ -63,7 +63,25 @@ namespace maya {
         // unsigned long _bsaveID = 0;
         /// @todo figure out what userdata is for...
         // UserData::Ptr _userData;
-
+    };
+    class ConstructTypeMetadata : public HoldsEnvironmentCallback {
+    public:
+        using Self = ConstructTypeMetadata;
+        using ParseFunction = std::function<bool(Environment&, const std::string&)>;
+        using FindFunction = std::function<Construct::Ptr(Environment&, const std::string&)>;
+    public:
+        ConstructTypeMetadata(Environment& parent, const std::string& name, const std::string& pluralForm, ParseFunction parseFn, FindFunction findFn);
+        bool canParse() const noexcept { return _parse.operator bool(); }
+        bool canFind() const noexcept { return _find.operator bool(); }
+        bool parse(const std::string& logicalName) { return _parse ? _parse(getParent(), logicalName) : false; }
+        Construct::Ptr find(const std::string& name) { return _find ? _find(getParent(), name) : nullptr; }
+        std::string getConstructName() const noexcept { return _constructName; }
+        std::string getPluralName() const noexcept { return _pluralName; }
+    private:
+        std::string _constructName;
+        std::string _pluralName;
+        ParseFunction _parse;
+        FindFunction _find;
     };
 } // end namespace maya
 #if 0
