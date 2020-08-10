@@ -33,6 +33,7 @@
 #include "Token.h"
 #include "BuildError.h"
 #include "SaveCallFunctionItem.h"
+#include "Construct.h"
 namespace maya {
     class Expression;
     class StringRouter;
@@ -183,7 +184,7 @@ namespace maya {
         void setExecuting(bool executing) noexcept;
         [[nodiscard]] std::function<bool(Environment &)> getBeforeResetCallback() const noexcept { return _beforeResetCallback; }
         void setBeforeResetCallback(std::function<bool(Environment &)> beforeResetCallback) noexcept;
-        void clear();
+        bool clear();
         void reset();
         bool save(const std::string& path);
         bool addResetFunction(VoidCallFunctionItem::Ptr target) noexcept;
@@ -206,7 +207,17 @@ namespace maya {
         bool removeClearFunction(const std::string& name) noexcept;
         void incrementClearReadyLocks() noexcept;
         void decrementClearReadyLocks() noexcept;
-
+        ConstructTypeMetadata::Ptr addConstruct(const std::string& name,
+                                                const std::string& pluralForm,
+                                                ConstructTypeMetadata::ParseFunction parse,
+                                                ConstructTypeMetadata::FindFunction find);
+        bool removeConstruct(const std::string&);
+        void setCompilationsWatch(bool value) noexcept;
+        bool getCompilationsWatch() const noexcept;
+        bool getExecutingConstruct() const noexcept;
+        void setExecutingConstruct(bool value) noexcept;
+        bool clearReady();
+        Construct::Ptr findConstruct(const std::string&);
 
     private: // symbol
         Void::Ptr _voidConstant;

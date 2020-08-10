@@ -67,6 +67,7 @@ namespace maya {
     class ConstructTypeMetadata : public HoldsEnvironmentCallback {
     public:
         using Self = ConstructTypeMetadata;
+        using Ptr = std::shared_ptr<Self>;
         using ParseFunction = std::function<bool(Environment&, const std::string&)>;
         using FindFunction = std::function<Construct::Ptr(Environment&, const std::string&)>;
     public:
