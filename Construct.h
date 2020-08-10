@@ -2,7 +2,7 @@
 #ifndef _H_constrct
 #pragma once
 #define _H_constrct
-#import <memory>
+#include <memory>
 namespace maya {
     /*
      * Porting this to C++ is interesting because the Construct itself is an abstract interface to provide management functionality
