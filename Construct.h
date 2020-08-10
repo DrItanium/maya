@@ -3,6 +3,10 @@
 #pragma once
 #define _H_constrct
 #include <memory>
+#include <string>
+#include <list>
+#include "HoldsEnvironmentCallback.h"
+#include "LexemeAtom.h"
 namespace maya {
     /*
      * Porting this to C++ is interesting because the Construct itself is an abstract interface to provide management functionality
@@ -19,13 +23,48 @@ namespace maya {
      * a collection of the given type, not an instance of the type itself. Thus a Construct is really a ConstructList.
      */
 
-    class Construct {
-public:
-    using Self = Construct;
-    using Ptr = std::shared_ptr<Self>;
-public:
-    /// @todo keep implementing
-};
+    class DefmoduleItemHeader;
+    /**
+     * @brief Describes a more complex type which can be registered with maya (in clips this is known as a ConstructHeader which was composed into your
+     * types!)
+     */
+    class Construct : public HoldsEnvironmentCallback {
+    public:
+        enum class Type {
+            DefModule,
+            DefRule,
+            DefTemplate,
+            DefFacts,
+            DefGlobal,
+            DefFunction,
+            DefGeneric,
+            DefMethod,
+            DefClass,
+            DefMessageHandler,
+            DefInstances,
+        };
+    public:
+        using Self = Construct;
+        using Ptr = std::shared_ptr<Self>;
+        using PtrList = std::list<Ptr>;
+    public:
+        Construct(Environment& parent, Type t, const std::string& name, const std::string& ppForm, std::shared_ptr<DefmoduleItemHeader> whichModule);
+        virtual ~Construct() = default;
+        constexpr auto getType() const noexcept { return _type; }
+        auto getName() const noexcept { return _name; }
+        std::string getPrettyPrintForm() const noexcept { return _ppForm; }
+        auto getWhichModule() const noexcept { return _whichModule; }
+    private:
+        Type _type;
+        Lexeme::Ptr _name;
+        std::string _ppForm;
+        std::shared_ptr<DefmoduleItemHeader> _whichModule;
+        /// @todo reintroduce when binary save and load is reintroduced
+        // unsigned long _bsaveID = 0;
+        /// @todo figure out what userdata is for...
+        // UserData::Ptr _userData;
+
+    };
 } // end namespace maya
 #if 0
 typedef struct construct Construct;
@@ -55,6 +94,9 @@ typedef CLIPSLexeme* ConstructGetConstructNameFunction(ConstructHeader*);
 typedef const char* ConstructGetPPFormFunction(ConstructHeader*);
 typedef struct defmoduleItemHeader* ConstructGetModuleItemFunction(ConstructHeader*);
 typedef void ConstructSetNextItemFunction(ConstructHeader*, ConstructHeader*);
+/*
+ * A metadata record which wraps common functionality, it does not define the common fields found in a construct type itself
+ */
 struct construct {
     const char *constructName;
     const char *pluralName;
