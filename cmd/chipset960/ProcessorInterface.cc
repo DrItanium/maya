@@ -81,6 +81,10 @@ namespace i960 {
 #else
         be0Asserted = inputSignals_.be0Asserted();
         be1Asserted = inputSignals_.be1Asserted();
+        std::cout << "be0:be1: ";
+        if (be0Asserted) { std::cout << "0"; } else { std::cout << "1"; }
+        if (be1Asserted) { std::cout << "0"; } else { std::cout << "1"; }
+        std::cout << std::endl;
 #endif
         if (be0Asserted) {
             if (be1Asserted)  {
