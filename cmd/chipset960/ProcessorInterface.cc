@@ -108,7 +108,6 @@ namespace i960 {
         do {
             updateInputSignals();
         } while (!inputSignals_.inTransaction());
-        updateInputSignals();
 #endif
     }
 #if V1Layout
@@ -326,7 +325,6 @@ namespace i960 {
         do {
             updateInputSignals();
         } while (!inputSignals_.doCycleAsserted());
-        updateInputSignals(); // make sure
 #endif
     }
     uint16_t
@@ -642,7 +640,9 @@ namespace i960 {
     }
     void
     ChipsetInterface::updateInputSignals() noexcept {
+        std::cout << "Input Before: 0x" << std::hex << static_cast<int>(inputSignals_.getValue()) << std::endl;
         inputSignals_.setValue(readFromIOBus(ParallelBusAddresses::InputSignals));
+        std::cout << "Input After: 0x" << std::hex << static_cast<int>(inputSignals_.getValue()) << std::endl;
     }
     void
     ChipsetInterface::updateOutputSignals() noexcept {

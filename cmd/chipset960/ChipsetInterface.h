@@ -359,11 +359,14 @@ namespace i960 {
             disableWrite();
         }
         inline byte readFromIOBus(ParallelBusAddresses address) noexcept {
+            byte result = 0;
             setupDataLinesForWrite();
             setIOBusAddress(address);
             enableRead();
             enableBus();
-            auto result = readIOBusLines();
+            {
+                result = readIOBusLines();
+            }
             disableBus();
             disableRead();
             return result;
