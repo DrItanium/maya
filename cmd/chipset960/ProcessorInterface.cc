@@ -641,7 +641,9 @@ namespace i960 {
     void
     ChipsetInterface::updateInputSignals() noexcept {
         std::cout << "Input Before: 0x" << std::hex << static_cast<int>(inputSignals_.getValue()) << std::endl;
-        inputSignals_.setValue(readFromIOBus(ParallelBusAddresses::InputSignals));
+        auto result = readFromIOBus(ParallelBusAddresses::InputSignals);
+        std::cout << "\tresult = 0x" << std::hex << static_cast<int>(result) << std::endl;
+        inputSignals_.setValue(result);
         std::cout << "Input After: 0x" << std::hex << static_cast<int>(inputSignals_.getValue()) << std::endl;
     }
     void
