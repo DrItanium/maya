@@ -198,6 +198,10 @@ namespace i960 {
         WaitBoot960.assertPin();
         ManagementEngineReset.deassertPin();
 #else
+        putManagementEngineInReset();
+        /// @todo insert some sort of wait state here to make sure we wait around enough
+        sleep(1);
+        pullManagementEngineOutOfReset();
 #endif
         /// @todo insert GPIO release command here
         // exit at this point
@@ -259,6 +263,9 @@ namespace i960 {
         ManagementEngineReset.assertPin();
         WaitBoot960.assertPin();
 #else
+        outputSignals_.putMEIntoReset();
+        outputSignals_.holdi960InReset();
+        updateOutputSignals();
 #endif
     }
     void
@@ -266,7 +273,8 @@ namespace i960 {
 #ifdef V1Layout
         ManagementEngineReset.deassertPin();
 #else
-
+        outputSignals_.pullMEOutOfReset();
+        updateOutputSignals();
 #endif
     }
     void
@@ -280,6 +288,8 @@ namespace i960 {
 #ifdef V1Layout
         WaitBoot960.deassertPin();
 #else
+        outputSignals_.releasei960FromReset();
+        updateOutputSignals();
 #endif
     }
     bool
@@ -290,6 +300,10 @@ namespace i960 {
         while (InTransaction.isAsserted() && Blast.isDeasserted());
         outcome = InTransaction.isDeasserted();
 #else
+        while (inputSignals_.inTransaction() && !inputSignals_.blastAsserted()) {
+            updateInputSignals();
+        }
+        outcome = !inputSignals_.inTransaction();
 #endif
         Ready.deassertPin();
         return outcome;
@@ -299,6 +313,10 @@ namespace i960 {
 #ifdef V1Layout
         while (DoCycle.isDeasserted());
 #else
+        do {
+            updateInputSignals();
+        } while (!inputSignals_.doCycleAsserted());
+        updateInputSignals(); // make sure
 #endif
     }
     uint16_t
@@ -319,10 +337,11 @@ namespace i960 {
             case 0b11:
                 break;
         }
-        return latchedDataInput_.getWholeValue();
 #else
-        return 0;
+        latchedDataInput_.bytes[0] = readFromIOBus(ParallelBusAddresses::DataLinesLower);
+        latchedDataInput_.bytes[1] = readFromIOBus(ParallelBusAddresses::DataLinesUpper);
 #endif
+        return latchedDataInput_.getWholeValue();
     }
 
     void
@@ -343,6 +362,9 @@ namespace i960 {
             latchedDataOutput_ = wrap;
         }
 #else
+        SplitWord16 v0{value};
+        writeToIOBus(ParallelBusAddresses::DataLinesLower, v0.getLowerHalf());
+        writeToIOBus(ParallelBusAddresses::DataLinesUpper, v0.getUpperHalf());
 #endif
     }
     void
@@ -606,5 +628,13 @@ namespace i960 {
         address_.bytes[3] = readFromIOBus(ParallelBusAddresses::Address_24_31);
 #endif
         return address_.getWholeValue();
+    }
+    void
+    ChipsetInterface::updateInputSignals() noexcept {
+        inputSignals_.setValue(readFromIOBus(ParallelBusAddresses::InputSignals));
+    }
+    void
+    ChipsetInterface::updateOutputSignals() noexcept {
+        writeToIOBus(ParallelBusAddresses::OutputSignals, outputSignals_.getValue());
     }
 }

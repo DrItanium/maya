@@ -368,6 +368,8 @@ namespace i960 {
             disableRead();
             return result;
         }
+        void updateInputSignals() noexcept;
+        void updateOutputSignals() noexcept;
 #endif
     private:
         void installExtensions() noexcept;
@@ -382,6 +384,50 @@ namespace i960 {
         SplitWord16 latchedDataOutput_ { 0 };
         SplitWord16 latchedDataInput_ { 0 };
         SplitWord32 address_{0};
+        union
+        {
+            struct
+            {
+                int wr_ : 1;
+                int be0_ : 1;
+                int be1_ : 1;
+                int unclaimed0_ : 1;
+                int unclaimed1_ : 1;
+                int inTransaction_ : 1;
+                int doCycle_ : 1;
+                int blast_ : 1;
+            };
+            byte value;
+            void setValue(byte v) noexcept { value = v; }
+            [[nodiscard]] auto getValue() const noexcept { return value; }
+            [[nodiscard]] bool isWriteOperation() const noexcept { return wr_; }
+            [[nodiscard]] bool isReadOperation() const noexcept { return !isWriteOperation(); }
+            [[nodiscard]] bool inTransaction() const noexcept { return !inTransaction_; }
+            [[nodiscard]] bool doCycleAsserted() const noexcept { return !doCycle_; }
+            [[nodiscard]] bool blastAsserted() const noexcept { return !blast_; }
+            [[nodiscard]] bool getUnclaimed0() const noexcept { return unclaimed0_; }
+            [[nodiscard]] bool getUnclaimed1() const noexcept { return unclaimed1_; }
+            [[nodiscard]] bool getByteEnable0() const noexcept { return be0_; }
+            [[nodiscard]] bool getByteEnable1() const noexcept { return be1_; }
+        } inputSignals_;
+        union
+        {
+            struct
+            {
+                int resetManagementEngine_ : 1;
+                int resetHold_ : 1;
+                int unclaimed_ : 6;
+            };
+            byte value;
+            void setValue(byte v) noexcept { value = v; }
+            [[nodiscard]] auto getValue() const noexcept { return value; }
+            void putMEIntoReset() noexcept { resetManagementEngine_ = 0; }
+            void pullMEOutOfReset() noexcept { resetManagementEngine_ = 1; }
+            void holdi960InReset() noexcept { resetHold_ = 0; }
+            void releasei960FromReset() noexcept { resetHold_ = 1; }
+            void setUnclaimed(byte value) noexcept { unclaimed_ = value; }
+            byte getUnclaimed() const noexcept { return unclaimed_; }
+        } outputSignals_;
     };
 }
 #endif //MAYA_CHIPSETINTERFACE_H
