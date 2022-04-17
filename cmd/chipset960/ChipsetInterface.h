@@ -311,6 +311,63 @@ namespace i960 {
     private:
         static constexpr uint8_t generateReadOpcode(IOExpanderAddress address) noexcept { return 0b0100'0001 | (static_cast<uint8_t>(address) << 1); }
         static constexpr uint8_t generateWriteOpcode(IOExpanderAddress address) noexcept { return 0b0100'0000 | (static_cast<uint8_t>(address) << 1); }
+#else
+    private:
+        enum class ParallelBusAddresses : byte {
+            Dev0 = 0b00000,
+            Dev1,
+            Dev2,
+            Dev3,
+            Dev4,
+            Dev5,
+            Dev6,
+            Dev7,
+            DataLinesLower = Dev0,
+            DataLinesUpper = Dev1,
+            InputSignals = Dev2,
+            OutputSignals = Dev3,
+            Address_0_7= Dev4,
+            Address_8_15 = Dev5,
+            Address_16_23 = Dev6,
+            Address_24_31 = Dev7,
+        };
+        void setIOBusAddress(ParallelBusAddresses address) noexcept;
+        /**
+         * @brief Output the given 8-bit value over the data lines
+         * @param value The value to output
+         */
+        void writeIOBusLines(byte value) noexcept;
+        /**
+         * @brief Read the contents of the data lines
+         * @return The 8-bits from the data lines
+         */
+        byte readIOBusLines() noexcept;
+        void enableBus() noexcept;
+        void disableBus() noexcept;
+        void enableRead() noexcept;
+        void disableRead() noexcept;
+        void enableWrite() noexcept;
+        void disableWrite() noexcept;
+    private:
+        inline void writeToIOBus(ParallelBusAddresses address, byte value) noexcept {
+            setupDataLinesForRead();
+            setIOBusAddress(address);
+            enableWrite();
+            enableBus();
+            writeIOBusLines(value);
+            disableBus();
+            disableWrite();
+        }
+        inline byte readFromIOBus(ParallelBusAddresses address) noexcept {
+            setupDataLinesForWrite();
+            setIOBusAddress(address);
+            enableRead();
+            enableBus();
+            auto result = readIOBusLines();
+            disableBus();
+            disableRead();
+            return result;
+        }
 #endif
     private:
         void installExtensions() noexcept;

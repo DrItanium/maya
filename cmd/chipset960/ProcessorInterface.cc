@@ -228,6 +228,25 @@ namespace i960 {
                                 IOEXP_INT6,
                                 IOEXP_INT7);
 #else
+        i960::configurePinBlock(Ready,
+                                BootSuccessful,
+                                Address0,
+                                Address1,
+                                Address2,
+                                Address3,
+                                Address4,
+                                Read,
+                                Write,
+                                BusEnable
+                                );
+        pinMode(Pinout::Data0, Neutron::GPIO::PinMode::Input);
+        pinMode(Pinout::Data1, Neutron::GPIO::PinMode::Input);
+        pinMode(Pinout::Data2, Neutron::GPIO::PinMode::Input);
+        pinMode(Pinout::Data3, Neutron::GPIO::PinMode::Input);
+        pinMode(Pinout::Data4, Neutron::GPIO::PinMode::Input);
+        pinMode(Pinout::Data5, Neutron::GPIO::PinMode::Input);
+        pinMode(Pinout::Data6, Neutron::GPIO::PinMode::Input);
+        pinMode(Pinout::Data7, Neutron::GPIO::PinMode::Input);
 #endif
     }
     void
@@ -334,6 +353,16 @@ namespace i960 {
             currentDataLineDirection_ = ~currentDataLineDirection_;
             setDirection<IOExpanderAddress::DataLines>(currentDataLineDirection_);
         }
+#else
+        // setup the data lines as inputs since we will be getting data off the bus
+        pinMode(Pinout::Data0, Neutron::GPIO::PinMode::Input);
+        pinMode(Pinout::Data1, Neutron::GPIO::PinMode::Input);
+        pinMode(Pinout::Data2, Neutron::GPIO::PinMode::Input);
+        pinMode(Pinout::Data3, Neutron::GPIO::PinMode::Input);
+        pinMode(Pinout::Data4, Neutron::GPIO::PinMode::Input);
+        pinMode(Pinout::Data5, Neutron::GPIO::PinMode::Input);
+        pinMode(Pinout::Data6, Neutron::GPIO::PinMode::Input);
+        pinMode(Pinout::Data7, Neutron::GPIO::PinMode::Input);
 #endif
     }
     void
@@ -344,6 +373,16 @@ namespace i960 {
             currentDataLineDirection_ = ~currentDataLineDirection_;
             setDirection<IOExpanderAddress::DataLines>(currentDataLineDirection_);
         }
+#else
+        // okay setup the data lines as outputs
+        pinMode(Pinout::Data0, Neutron::GPIO::PinMode::Output);
+        pinMode(Pinout::Data1, Neutron::GPIO::PinMode::Output);
+        pinMode(Pinout::Data2, Neutron::GPIO::PinMode::Output);
+        pinMode(Pinout::Data3, Neutron::GPIO::PinMode::Output);
+        pinMode(Pinout::Data4, Neutron::GPIO::PinMode::Output);
+        pinMode(Pinout::Data5, Neutron::GPIO::PinMode::Output);
+        pinMode(Pinout::Data6, Neutron::GPIO::PinMode::Output);
+        pinMode(Pinout::Data7, Neutron::GPIO::PinMode::Output);
 #endif
     }
     namespace {
@@ -560,9 +599,12 @@ namespace i960 {
                address_.halves[1] = readGPIO16<IOExpanderAddress::Upper16Lines>();
                break;
         }
-        return address_.getWholeValue();
 #else
-        return 0;
+        address_.bytes[0] = readFromIOBus(ParallelBusAddresses::Address_0_7);
+        address_.bytes[1] = readFromIOBus(ParallelBusAddresses::Address_8_15);
+        address_.bytes[2] = readFromIOBus(ParallelBusAddresses::Address_16_23);
+        address_.bytes[3] = readFromIOBus(ParallelBusAddresses::Address_24_31);
 #endif
+        return address_.getWholeValue();
     }
 }

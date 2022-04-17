@@ -179,9 +179,11 @@ int main(int argc, char *argv[]) {
     theCache.begin();
     try {
         Neutron::GPIO::begin();
+#ifdef V1Layout
         if (!Neutron::SPI::begin(0, 10 * 1000 * 1000)) {
             i960::shutdown("Could not open SPI Bus!");
         }
+#endif
     } catch (std::system_error& err) {
         i960::shutdown(err.what());
         return -1;
