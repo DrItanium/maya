@@ -652,4 +652,52 @@ namespace i960 {
         digitalWrite(Pinout::Address3, byteValue & 0b01000 ? PinValue ::High : PinValue :: Low);
         digitalWrite(Pinout::Address4, byteValue & 0b10000 ? PinValue ::High : PinValue :: Low);
     }
+    void
+    ChipsetInterface::enableBus() noexcept {
+        BusEnable.assertPin();
+    }
+    void
+    ChipsetInterface::disableBus() noexcept {
+        BusEnable.deassertPin();
+    }
+    void
+    ChipsetInterface::enableRead() noexcept {
+        Read.assertPin();
+    }
+    void
+    ChipsetInterface::disableRead() noexcept {
+        Read.deassertPin();
+    }
+    void
+    ChipsetInterface::enableWrite() noexcept {
+        Write.assertPin();
+    }
+    void
+    ChipsetInterface::disableWrite() noexcept {
+        Write.deassertPin();
+    }
+    void
+    ChipsetInterface::writeIOBusLines(byte value) noexcept {
+        digitalWrite(Pinout::Data0, value & 0b00000001 ? PinValue ::High : PinValue :: Low);
+        digitalWrite(Pinout::Data1, value & 0b00000010 ? PinValue ::High : PinValue :: Low);
+        digitalWrite(Pinout::Data2, value & 0b00000100 ? PinValue ::High : PinValue :: Low);
+        digitalWrite(Pinout::Data3, value & 0b00001000 ? PinValue ::High : PinValue :: Low);
+        digitalWrite(Pinout::Data4, value & 0b00010000 ? PinValue ::High : PinValue :: Low);
+        digitalWrite(Pinout::Data5, value & 0b00100000 ? PinValue ::High : PinValue :: Low);
+        digitalWrite(Pinout::Data6, value & 0b01000000 ? PinValue ::High : PinValue :: Low);
+        digitalWrite(Pinout::Data7, value & 0b10000000 ? PinValue ::High : PinValue :: Low);
+    }
+    byte
+    ChipsetInterface::readIOBusLines() noexcept {
+        byte result = 0;
+        if (digitalRead(Pinout::Data0) == PinValue::High) { result |= (1 << 0); }
+        if (digitalRead(Pinout::Data1) == PinValue::High) { result |= (1 << 1); }
+        if (digitalRead(Pinout::Data2) == PinValue::High) { result |= (1 << 2); }
+        if (digitalRead(Pinout::Data3) == PinValue::High) { result |= (1 << 3); }
+        if (digitalRead(Pinout::Data4) == PinValue::High) { result |= (1 << 4); }
+        if (digitalRead(Pinout::Data5) == PinValue::High) { result |= (1 << 5); }
+        if (digitalRead(Pinout::Data6) == PinValue::High) { result |= (1 << 6); }
+        if (digitalRead(Pinout::Data7) == PinValue::High) { result |= (1 << 7); }
+        return result;
+    }
 }
