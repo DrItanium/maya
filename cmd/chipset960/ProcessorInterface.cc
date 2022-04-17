@@ -633,6 +633,7 @@ namespace i960 {
         address_.bytes[2] = readFromIOBus(ParallelBusAddresses::Address_16_23);
         address_.bytes[3] = readFromIOBus(ParallelBusAddresses::Address_24_31);
 #endif
+        std::cout << "Target Address: 0x" << std::hex << address_.getWholeValue() << std::endl;
         return address_.getWholeValue();
     }
     void
