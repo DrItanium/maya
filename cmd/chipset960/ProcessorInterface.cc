@@ -643,4 +643,13 @@ namespace i960 {
     ChipsetInterface::updateOutputSignals() noexcept {
         writeToIOBus(ParallelBusAddresses::OutputSignals, outputSignals_.getValue());
     }
+    void
+    ChipsetInterface::setIOBusAddress(ParallelBusAddresses address) noexcept {
+        auto byteValue = static_cast<uint8_t>(address) & 0b11111;
+        digitalWrite(Pinout::Address0, byteValue & 0b00001 ? PinValue ::High : PinValue :: Low);
+        digitalWrite(Pinout::Address1, byteValue & 0b00010 ? PinValue ::High : PinValue :: Low);
+        digitalWrite(Pinout::Address2, byteValue & 0b00100 ? PinValue ::High : PinValue :: Low);
+        digitalWrite(Pinout::Address3, byteValue & 0b01000 ? PinValue ::High : PinValue :: Low);
+        digitalWrite(Pinout::Address4, byteValue & 0b10000 ? PinValue ::High : PinValue :: Low);
+    }
 }
