@@ -107,7 +107,7 @@ namespace i960 {
 #else
         do {
             updateInputSignals();
-        } while (!inputSignals_.inTransaction());
+        } while (inputSignals_.notInTransaction());
 #endif
     }
 #if V1Layout
@@ -309,10 +309,10 @@ namespace i960 {
         while (InTransaction.isAsserted() && Blast.isDeasserted());
         outcome = InTransaction.isDeasserted();
 #else
-        while (inputSignals_.inTransaction() && !inputSignals_.blastAsserted()) {
-            updateInputSignals();
-        }
-        outcome = !inputSignals_.inTransaction();
+        do {
+                updateInputSignals();
+        } while (inputSignals_.inTransaction() && inputSignals_.blastDeasserted());
+        outcome = inputSignals_.notInTransaction();
 #endif
         Ready.deassertPin();
         return outcome;
@@ -324,7 +324,7 @@ namespace i960 {
 #else
         do {
             updateInputSignals();
-        } while (!inputSignals_.doCycleAsserted());
+        } while (inputSignals_.doCycleDeasserted());
 #endif
     }
     uint16_t
@@ -635,16 +635,13 @@ namespace i960 {
         address_.bytes[2] = readFromIOBus(ParallelBusAddresses::Address_16_23);
         address_.bytes[3] = readFromIOBus(ParallelBusAddresses::Address_24_31);
 #endif
-        std::cout << "Target Address: 0x" << std::hex << address_.getWholeValue() << std::endl;
+        std::cout << "Address: 0x" << std::hex << address_.getWholeValue() << std::endl;
         return address_.getWholeValue();
     }
     void
     ChipsetInterface::updateInputSignals() noexcept {
-        std::cout << "Input Before: 0x" << std::hex << static_cast<int>(inputSignals_.getValue()) << std::endl;
         auto result = readFromIOBus(ParallelBusAddresses::InputSignals);
-        std::cout << "\tresult = 0x" << std::hex << static_cast<int>(result) << std::endl;
         inputSignals_.setValue(result);
-        std::cout << "Input After: 0x" << std::hex << static_cast<int>(inputSignals_.getValue()) << std::endl;
     }
     void
     ChipsetInterface::updateOutputSignals() noexcept {

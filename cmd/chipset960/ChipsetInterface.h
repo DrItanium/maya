@@ -403,15 +403,18 @@ namespace i960 {
             byte value;
             void setValue(byte v) noexcept { value = v; }
             [[nodiscard]] auto getValue() const noexcept { return value; }
-            [[nodiscard]] bool isWriteOperation() const noexcept { return wr_; }
-            [[nodiscard]] bool isReadOperation() const noexcept { return !isWriteOperation(); }
-            [[nodiscard]] bool inTransaction() const noexcept { return !inTransaction_; }
-            [[nodiscard]] bool doCycleAsserted() const noexcept { return !doCycle_; }
-            [[nodiscard]] bool blastAsserted() const noexcept { return !blast_; }
+            [[nodiscard]] bool isWriteOperation() const noexcept { return wr_ == 1; }
+            [[nodiscard]] bool isReadOperation() const noexcept { return wr_ == 0; }
+            [[nodiscard]] bool inTransaction() const noexcept { return inTransaction_ == 0; }
+            [[nodiscard]] bool notInTransaction() const noexcept { return inTransaction_ == 1; }
+            [[nodiscard]] bool doCycleAsserted() const noexcept { return doCycle_ == 0; }
+            [[nodiscard]] bool doCycleDeasserted() const noexcept { return doCycle_ == 1; }
+            [[nodiscard]] bool blastAsserted() const noexcept { return blast_ == 0; }
+            [[nodiscard]] bool blastDeasserted() const noexcept { return blast_ == 1;; }
             [[nodiscard]] bool getUnclaimed0() const noexcept { return unclaimed0_; }
             [[nodiscard]] bool getUnclaimed1() const noexcept { return unclaimed1_; }
-            [[nodiscard]] bool be0Asserted() const noexcept { return !be0_; }
-            [[nodiscard]] bool be1Asserted() const noexcept { return !be1_; }
+            [[nodiscard]] bool be0Asserted() const noexcept { return be0_ == 0; }
+            [[nodiscard]] bool be1Asserted() const noexcept { return be1_ == 0; }
         } inputSignals_;
         union
         {
