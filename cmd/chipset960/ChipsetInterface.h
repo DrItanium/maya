@@ -217,6 +217,9 @@ namespace i960 {
         void setupDataLinesForWrite() noexcept;
         void setDataLines(uint16_t value) noexcept;
         uint16_t getDataLines() noexcept;
+        [[nodiscard]] uint32_t getAddress();
+        bool signalCPU() noexcept;
+#ifdef V1Layout
         void setupDataLines() noexcept;
         enum class IOExpanderAddress : uint8_t {
             Lower16Lines= 0,
@@ -303,14 +306,14 @@ namespace i960 {
         [[nodiscard]] inline uint8_t getIOCON() {
             return read8<address, MCP23x17Registers::IOCON>();
         }
-        [[nodiscard]] uint32_t getAddress();
-        bool signalCPU() noexcept;
     private:
         void doSPITransaction(uint8_t* storage, int count);
-        void installExtensions() noexcept;
     private:
         static constexpr uint8_t generateReadOpcode(IOExpanderAddress address) noexcept { return 0b0100'0001 | (static_cast<uint8_t>(address) << 1); }
         static constexpr uint8_t generateWriteOpcode(IOExpanderAddress address) noexcept { return 0b0100'0000 | (static_cast<uint8_t>(address) << 1); }
+#endif
+    private:
+        void installExtensions() noexcept;
     public:
         static size_t read(uint32_t address, uint16_t* storage, size_t length);
         static size_t write(uint32_t address, uint16_t* storage, size_t length);

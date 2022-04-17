@@ -55,24 +55,39 @@ namespace i960 {
 
     bool
     ChipsetInterface::isReadOperation() noexcept {
+#ifdef V1Layout
         return WR.isAsserted();
+#else
+        return false;
+#endif
     }
 
     bool
     ChipsetInterface::isWriteOperation() noexcept {
+#ifdef V1Layout
         return WR.isDeasserted();
+#else
+        return false;
+#endif
     }
 
     LoadStoreStyle
     ChipsetInterface::getStyle() noexcept {
-        if (BE0.isAsserted()) {
-            if (BE1.isAsserted())  {
+        auto be0Asserted = false;
+        auto be1Asserted = false;
+#ifdef V1Layout
+        be0Asserted = BE0.isAsserted();
+        be1Asserted = BE1.isAsserted();
+#else
+#endif
+        if (be0Asserted) {
+            if (be1Asserted)  {
                 return LoadStoreStyle::Full16;
             } else {
                 return LoadStoreStyle::Lower8;
             }
         } else {
-            if (BE1.isAsserted()) {
+            if (be1Asserted) {
                 return LoadStoreStyle::Upper8;
             } else {
                 return LoadStoreStyle::None;
@@ -81,8 +96,12 @@ namespace i960 {
     }
     void
     ChipsetInterface::waitForTransactionStart() noexcept {
+#ifdef V1Layout
         while (InTransaction.isDeasserted());
+#else
+#endif
     }
+#if V1Layout
     void
     ChipsetInterface::write8(IOExpanderAddress address, MCP23x17Registers target, uint8_t value) {
         uint8_t command[4] {
@@ -159,6 +178,7 @@ namespace i960 {
         write16(IOExpanderAddress::DataLines, MCP23x17Registers::INTCON, 0);
         write16(IOExpanderAddress::DataLines, MCP23x17Registers::OLAT, latchedDataOutput_.getWholeValue());
     }
+#endif
     void
     ChipsetInterface::waitForBootSignal() noexcept {
         std::cout << "Waiting for boot signal" << std::endl;
@@ -173,9 +193,12 @@ namespace i960 {
         std::cout << "SHUTDOWN: " << str << std::endl;
         SetHaltExecution(getRawEnvironment(),true);
         CloseAllBatchSources(getRawEnvironment());
+#ifdef V1Layout
         ManagementEngineReset.assertPin();
         WaitBoot960.assertPin();
         ManagementEngineReset.deassertPin();
+#else
+#endif
         /// @todo insert GPIO release command here
         // exit at this point
         exit(1);
@@ -185,6 +208,7 @@ namespace i960 {
     }
     void
     ChipsetInterface::setupPins() noexcept {
+#ifdef V1Layout
         i960::configurePinBlock(Ready,
                                 BootSuccessful,
                                 WR,
@@ -203,6 +227,8 @@ namespace i960 {
                                 IOEXP_INT5,
                                 IOEXP_INT6,
                                 IOEXP_INT7);
+#else
+#endif
     }
     void
     shutdown(const std::string& msg) noexcept {
@@ -210,12 +236,19 @@ namespace i960 {
     }
     void
     ChipsetInterface::putManagementEngineInReset() noexcept {
+#ifdef V1Layout
         ManagementEngineReset.assertPin();
         WaitBoot960.assertPin();
+#else
+#endif
     }
     void
     ChipsetInterface::pullManagementEngineOutOfReset() noexcept {
+#ifdef V1Layout
         ManagementEngineReset.deassertPin();
+#else
+
+#endif
     }
     void
     ChipsetInterface::loadMicrocode() noexcept {
@@ -225,22 +258,33 @@ namespace i960 {
     }
     void
     ChipsetInterface::pull960OutOfReset() noexcept {
+#ifdef V1Layout
         WaitBoot960.deassertPin();
+#else
+#endif
     }
     bool
     ChipsetInterface::signalCPU() noexcept {
+        auto outcome = false;
         Ready.assertPin();
+#ifdef V1Layout
         while (InTransaction.isAsserted() && Blast.isDeasserted());
-        auto outcome = InTransaction.isDeasserted();
+        outcome = InTransaction.isDeasserted();
+#else
+#endif
         Ready.deassertPin();
         return outcome;
     }
     void
     ChipsetInterface::waitForCycleUnlock() noexcept {
+#ifdef V1Layout
         while (DoCycle.isDeasserted());
+#else
+#endif
     }
     uint16_t
     ChipsetInterface::getDataLines() noexcept {
+#ifdef V1Layout
         uint8_t actionType = digitalRead(Pinout::IoExpander_Int4) == PinValue::High ? 0b0001 : 0;
         actionType |= digitalRead(Pinout::IoExpander_Int5) == PinValue::High ? 0b0010 : 0;
         switch (actionType & 0b11) {
@@ -257,11 +301,14 @@ namespace i960 {
                 break;
         }
         return latchedDataInput_.getWholeValue();
+#else
+        return 0;
+#endif
     }
 
     void
     ChipsetInterface::setDataLines(uint16_t value) noexcept {
-
+#ifdef V1Layout
         if (SplitWord16 wrap(value); wrap.getWholeValue() != latchedDataOutput_.getWholeValue()) {
             if (wrap.getLowerHalf() == latchedDataOutput_.getLowerHalf()) {
                 // okay it is the upper half that is not the same
@@ -276,22 +323,28 @@ namespace i960 {
             // then update the latch
             latchedDataOutput_ = wrap;
         }
+#else
+#endif
     }
     void
     ChipsetInterface::setupDataLinesForWrite() noexcept {
+#ifdef V1Layout
         // input
         if (!currentDataLineDirection_) {
             currentDataLineDirection_ = ~currentDataLineDirection_;
             setDirection<IOExpanderAddress::DataLines>(currentDataLineDirection_);
         }
+#endif
     }
     void
     ChipsetInterface::setupDataLinesForRead() noexcept {
+#ifdef V1Layout
         // output
         if (currentDataLineDirection_) {
             currentDataLineDirection_ = ~currentDataLineDirection_;
             setDirection<IOExpanderAddress::DataLines>(currentDataLineDirection_);
         }
+#endif
     }
     namespace {
         void
@@ -440,6 +493,7 @@ namespace i960 {
     }
     uint32_t
     ChipsetInterface::getAddress() {
+#ifdef V1Layout
         // read the interrupts for the address lines
         uint8_t actionType = digitalRead(Pinout::IoExpander_Int0) == PinValue::High ? 0b0001 : 0;
         actionType |= digitalRead(Pinout::IoExpander_Int1) == PinValue::High ? 0b0010 : 0;
@@ -507,5 +561,8 @@ namespace i960 {
                break;
         }
         return address_.getWholeValue();
+#else
+        return 0;
+#endif
     }
 }
