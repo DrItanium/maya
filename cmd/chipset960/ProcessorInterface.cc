@@ -58,7 +58,7 @@ namespace i960 {
 #ifdef V1Layout
         return WR.isAsserted();
 #else
-        return false;
+        return inputSignals_.isReadOperation();
 #endif
     }
 
@@ -67,7 +67,7 @@ namespace i960 {
 #ifdef V1Layout
         return WR.isDeasserted();
 #else
-        return false;
+        return inputSignals_.isWriteOperation();
 #endif
     }
 
@@ -79,6 +79,8 @@ namespace i960 {
         be0Asserted = BE0.isAsserted();
         be1Asserted = BE1.isAsserted();
 #else
+        be0Asserted = inputSignals_.be0Asserted();
+        be1Asserted = inputSignals_.be1Asserted();
 #endif
         if (be0Asserted) {
             if (be1Asserted)  {
@@ -99,6 +101,10 @@ namespace i960 {
 #ifdef V1Layout
         while (InTransaction.isDeasserted());
 #else
+        do {
+            updateInputSignals();
+        } while (!inputSignals_.inTransaction());
+        updateInputSignals();
 #endif
     }
 #if V1Layout

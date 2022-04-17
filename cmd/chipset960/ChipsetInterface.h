@@ -407,8 +407,8 @@ namespace i960 {
             [[nodiscard]] bool blastAsserted() const noexcept { return !blast_; }
             [[nodiscard]] bool getUnclaimed0() const noexcept { return unclaimed0_; }
             [[nodiscard]] bool getUnclaimed1() const noexcept { return unclaimed1_; }
-            [[nodiscard]] bool getByteEnable0() const noexcept { return be0_; }
-            [[nodiscard]] bool getByteEnable1() const noexcept { return be1_; }
+            [[nodiscard]] bool be0Asserted() const noexcept { return !be0_; }
+            [[nodiscard]] bool be1Asserted() const noexcept { return !be1_; }
         } inputSignals_;
         union
         {
