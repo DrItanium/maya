@@ -81,10 +81,6 @@ namespace i960 {
 #else
         be0Asserted = inputSignals_.be0Asserted();
         be1Asserted = inputSignals_.be1Asserted();
-        std::cout << "be0:be1: ";
-        if (be0Asserted) { std::cout << "0"; } else { std::cout << "1"; }
-        if (be1Asserted) { std::cout << "0"; } else { std::cout << "1"; }
-        std::cout << std::endl;
 #endif
         if (be0Asserted) {
             if (be1Asserted)  {
@@ -635,7 +631,6 @@ namespace i960 {
         address_.bytes[2] = readFromIOBus(ParallelBusAddresses::Address_16_23);
         address_.bytes[3] = readFromIOBus(ParallelBusAddresses::Address_24_31);
 #endif
-        std::cout << "Address: 0x" << std::hex << address_.getWholeValue() << std::endl;
         return address_.getWholeValue();
     }
     void
