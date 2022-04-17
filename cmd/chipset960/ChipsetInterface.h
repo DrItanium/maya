@@ -40,7 +40,10 @@
 #include "platform/config.h"
 #include <memory>
 namespace i960 {
+    template<int index>
+    constexpr auto PhysicalPinToGPIOIndex_v = Neutron::GPIO::RaspberryPi::PhysicalPinToGPIOIndex_v<index>;
     enum class Pinout {
+#ifdef V1Layout
         BootSuccessful = Neutron::GPIO::RaspberryPi::PhysicalPinToGPIOIndex_v<7>,
         Ready = Neutron::GPIO::RaspberryPi::PhysicalPinToGPIOIndex_v<29>,
         WR = Neutron::GPIO::RaspberryPi::PhysicalPinToGPIOIndex_v<31>,
@@ -59,6 +62,42 @@ namespace i960 {
         IoExpander_Int5 = Neutron::GPIO::RaspberryPi::PhysicalPinToGPIOIndex_v<18>,
         IoExpander_Int6 = Neutron::GPIO::RaspberryPi::PhysicalPinToGPIOIndex_v<22>,
         IoExpander_Int7 = Neutron::GPIO::RaspberryPi::PhysicalPinToGPIOIndex_v<37>,
+#else
+        BootSuccessful = PhysicalPinToGPIOIndex_v<29>,
+        Ready = PhysicalPinToGPIOIndex_v<31>,
+        GPIO0 = PhysicalPinToGPIOIndex_v<32>,
+        GPIO1 = PhysicalPinToGPIOIndex_v<33>,
+        GPIO2 = PhysicalPinToGPIOIndex_v<8>,
+        GPIO3 = PhysicalPinToGPIOIndex_v<10>,
+        GPIO4 = PhysicalPinToGPIOIndex_v<36>,
+        GPIO5 = PhysicalPinToGPIOIndex_v<11>,
+        GPIO6 = PhysicalPinToGPIOIndex_v<12>,
+        GPIO7 = PhysicalPinToGPIOIndex_v<35>,
+        GPIO8 = PhysicalPinToGPIOIndex_v<38>,
+        GPIO9 = PhysicalPinToGPIOIndex_v<40>,
+        GPIO10 = PhysicalPinToGPIOIndex_v<15>,
+        GPIO11 = PhysicalPinToGPIOIndex_v<16>,
+        GPIO12 = PhysicalPinToGPIOIndex_v<18>,
+        GPIO13 = PhysicalPinToGPIOIndex_v<22>,
+        GPIO14 = PhysicalPinToGPIOIndex_v<37>,
+        GPIO15 = PhysicalPinToGPIOIndex_v<13>,
+        Data0 = GPIO0,
+        Data1 = GPIO1,
+        Data2 = GPIO2,
+        Data3 = GPIO3,
+        Data4 = GPIO4,
+        Data5 = GPIO5,
+        Data6 = GPIO6,
+        Data7 = GPIO7,
+        Address0 = GPIO8,
+        Address1 = GPIO9,
+        Address2 = GPIO10,
+        Address3 = GPIO11,
+        Address4 = GPIO12,
+        Read = GPIO13,
+        Write = GPIO14,
+        BusEnable = GPIO15,
+#endif
     };
     using PinDirection = Neutron::GPIO::PinMode;
     using PinValue = Neutron::GPIO::PinValue;
@@ -99,6 +138,7 @@ namespace i960 {
     };
     constexpr PinConfiguration BootSuccessful {Pinout::BootSuccessful, PinDirection::Input, PinValue::High, PinValue::Low};
     constexpr PinConfiguration Ready {Pinout::Ready, PinDirection::Output };
+#ifdef V1Layout
     constexpr PinConfiguration WR {Pinout::WR, PinDirection::Input};
     constexpr PinConfiguration BE0 {Pinout::BE0, PinDirection::Input};
     constexpr PinConfiguration BE1 {Pinout::BE1, PinDirection::Input};
@@ -115,6 +155,17 @@ namespace i960 {
     constexpr PinConfiguration IOEXP_INT5 { Pinout::IoExpander_Int5, PinDirection::Input};
     constexpr PinConfiguration IOEXP_INT6 { Pinout::IoExpander_Int6, PinDirection::Input};
     constexpr PinConfiguration IOEXP_INT7 { Pinout::IoExpander_Int7, PinDirection::Input};
+#else
+    /// @todo data lines
+    constexpr PinConfiguration Address0 { Pinout::Address0, PinDirection::Output };
+    constexpr PinConfiguration Address1 { Pinout::Address1, PinDirection::Output };
+    constexpr PinConfiguration Address2 { Pinout::Address2, PinDirection::Output };
+    constexpr PinConfiguration Address3 { Pinout::Address3, PinDirection::Output };
+    constexpr PinConfiguration Address4 { Pinout::Address4, PinDirection::Output };
+    constexpr PinConfiguration Read { Pinout::Read, PinDirection::Output };
+    constexpr PinConfiguration Write { Pinout::Write, PinDirection::Output };
+    constexpr PinConfiguration BusEnable { Pinout::BusEnable, PinDirection::Output };
+#endif
     enum class LoadStoreStyle : byte {
         None,
         Lower8,
