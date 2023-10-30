@@ -26,15 +26,26 @@
 namespace Electron
 {
 bool
-DeftemplateInspector::isWatched() const noexcept
+DeftemplateInspector::isWatchingFacts() const noexcept
 {
-    return ::DeftemplateGetWatch(_raw);
+    return ::DeftemplateGetWatchFacts(_raw);
 }
 
 void
-DeftemplateInspector::watch(bool enable) noexcept
+DeftemplateInspector::watchFacts(bool enable) noexcept
 {
-    ::DeftemplateSetWatch(_raw, enable);
+    ::DeftemplateSetWatchFacts(_raw, enable);
+}
+bool
+DeftemplateInspector::isWatchingGoals() const noexcept
+{
+    return ::DeftemplateGetWatchGoals(_raw);
+}
+
+void
+DeftemplateInspector::watchGoals(bool enable) noexcept
+{
+    ::DeftemplateSetWatchGoals(_raw, enable);
 }
 
 std::string

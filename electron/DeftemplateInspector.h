@@ -40,8 +40,12 @@ public:
 public:
     DeftemplateInspector(Environment& env, RawType* type) : _env(env), _raw(type) { }
     ~DeftemplateInspector() = default;
-    bool isWatched() const noexcept;
-    void watch(bool enable = true) noexcept;
+    bool isWatchingFacts() const noexcept;
+    void watchFacts(bool enable = true) noexcept;
+    bool isWatchingGoals() const noexcept;
+    void watchGoals(bool enable = true) noexcept;
+    void unwatchFacts() noexcept { watchFacts(false); }
+    void unwatchGoals() noexcept { watchGoals(false); }
     // attributes
     std::string getModule() const noexcept;
     std::string getName() const noexcept;

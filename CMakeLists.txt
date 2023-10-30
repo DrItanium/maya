@@ -346,7 +346,10 @@ clips/tmpltutl.h
 clips/userdata.h
 clips/usrsetup.h
 clips/utility.h
-clips/watch.h)
+clips/watch.h
+clips/factgoal.c
+clips/factgoal.h
+)
 add_library(neutron 
 	error/Exception.cc
 	error/Exception.h
