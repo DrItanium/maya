@@ -1,7 +1,7 @@
    /*******************************************************/
    /*      "C" Language Integrated Production System      */
    /*                                                     */
-   /*             CLIPS Version 6.40  08/25/16            */
+   /*             CLIPS Version 6.50  08/24/23            */
    /*                                                     */
    /*                 DEVELOPER HEADER FILE               */
    /*******************************************************/
@@ -38,6 +38,8 @@
 /*                                                           */
 /*            UDF redesign.                                  */
 /*                                                           */
+/*      6.50: Support for data driven backward chaining.     */
+/*                                                           */
 /*************************************************************/
 
 #ifndef _H_developr
@@ -52,6 +54,7 @@
 
 #if DEFRULE_CONSTRUCT && DEFTEMPLATE_CONSTRUCT
    void                           ShowFactPatternNetworkCommand(Environment *,UDFContext *,UDFValue *);
+   void                           ShowGoalPatternNetworkCommand(Environment *,UDFContext *,UDFValue *);
    void                           ValidateFactIntegrityCommand(Environment *,UDFContext *,UDFValue *);
 #endif
 #if DEFRULE_CONSTRUCT && OBJECT_SYSTEM

@@ -1,7 +1,7 @@
    /*******************************************************/
    /*      "C" Language Integrated Production System      */
    /*                                                     */
-   /*            CLIPS Version 6.41  12/04/22             */
+   /*            CLIPS Version 6.50  10/08/23             */
    /*                                                     */
    /*                PRINT UTILITY MODULE                 */
    /*******************************************************/
@@ -69,6 +69,8 @@
 /*                                                           */
 /*      6.41: Used gensnprintf in place of gensprintf and.   */
 /*            sprintf.                                       */
+/*                                                           */
+/*      6.50: Support for data driven backward chaining.     */
 /*                                                           */
 /*************************************************************/
 
@@ -167,6 +169,10 @@ void PrintAtom(
         WriteFloat(theEnv,logicalName,((CLIPSFloat *) value)->contents);
         break;
       case INTEGER_TYPE:
+        WriteInteger(theEnv,logicalName,((CLIPSInteger *) value)->contents);
+        break;
+      case UQV_TYPE:
+        WriteString(theEnv,logicalName,"?");
         WriteInteger(theEnv,logicalName,((CLIPSInteger *) value)->contents);
         break;
       case SYMBOL_TYPE:

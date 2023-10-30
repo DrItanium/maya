@@ -1,7 +1,7 @@
    /*******************************************************/
    /*      "C" Language Integrated Production System      */
    /*                                                     */
-   /*             CLIPS Version 6.40  11/01/16            */
+   /*             CLIPS Version 6.50  10/13/23            */
    /*                                                     */
    /*          DEFTEMPLATE FUNCTION HEADER FILE           */
    /*******************************************************/
@@ -82,8 +82,9 @@
 #include "factmngr.h"
 #include "symbol.h"
 #include "tmpltdef.h"
+#include "reorder.h"
 
-   bool                           UpdateModifyDuplicate(Environment *,struct expr *,const char *,void *);
+   bool                           UpdateModifyDuplicate(Environment *,struct expr *,const char *,struct lhsParseNode *);
    struct expr                   *ModifyParse(Environment *,struct expr *,const char *);
    struct expr                   *DuplicateParse(Environment *,struct expr *,const char *);
    void                           DeftemplateFunctions(Environment *);

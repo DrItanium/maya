@@ -1,7 +1,7 @@
    /*******************************************************/
    /*      "C" Language Integrated Production System      */
    /*                                                     */
-   /*            CLIPS Version 6.40  02/03/21             */
+   /*            CLIPS Version 6.50  09/07/23             */
    /*                                                     */
    /*          OBJECT PATTERN MATCHER MODULE              */
    /*******************************************************/
@@ -56,6 +56,8 @@
 /*            UDF redesign.                                  */
 /*                                                           */
 /*            Removed initial-object support.                */
+/*                                                           */
+/*      6.50: Support for data driven backward chaining.     */
 /*                                                           */
 /*************************************************************/
 /* =========================================
@@ -141,7 +143,7 @@
    static struct lhsParseNode    *ObjectLHSParse(Environment *,const char *,struct token *);
    static bool                    ReorderAndAnalyzeObjectPattern(Environment *,struct lhsParseNode *);
    static struct patternNodeHeader
-                                 *PlaceObjectPattern(Environment *,struct lhsParseNode *);
+                                 *PlaceObjectPattern(Environment *,struct lhsParseNode *,bool *,struct expr **);
    static OBJECT_PATTERN_NODE    *FindObjectPatternNode(OBJECT_PATTERN_NODE *,struct lhsParseNode *,
                                                   OBJECT_PATTERN_NODE **,bool,bool);
    static OBJECT_PATTERN_NODE    *CreateNewObjectPatternNode(Environment *,struct lhsParseNode *,OBJECT_PATTERN_NODE *,
@@ -652,7 +654,9 @@ static bool ReorderAndAnalyzeObjectPattern(
  *****************************************************/
 static struct patternNodeHeader *PlaceObjectPattern(
   Environment *theEnv,
-  struct lhsParseNode *thePattern)
+  struct lhsParseNode *thePattern,
+  bool *isGoal,
+  struct expr **goalExpression)
   {
    OBJECT_PATTERN_NODE *currentLevel,*lastLevel;
    struct lhsParseNode *tempPattern = NULL;
@@ -665,7 +669,7 @@ static struct patternNodeHeader *PlaceObjectPattern(
    const CLASS_BITMAP *cbmp;
    Defclass *relevantDefclass;
    CLASS_ALPHA_LINK *newAlphaLink;
-
+    
    /*========================================================*/
    /* Get the top of the object pattern network and prepare  */
    /* for the traversal to look for shareable pattern nodes. */

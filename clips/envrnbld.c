@@ -109,7 +109,7 @@
 /* CreateEnvironment: Creates an environment data structure */
 /*   and initializes its content to zero/null.              */
 /************************************************************/
-Environment *CreateEnvironment()
+Environment *CreateEnvironment(void)
   {
    return CreateEnvironmentDriver(NULL,NULL,NULL,NULL,NULL,NULL);
   }

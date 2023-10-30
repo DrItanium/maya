@@ -1,7 +1,7 @@
    /*******************************************************/
    /*      "C" Language Integrated Production System      */
    /*                                                     */
-   /*            CLIPS Version 6.40  02/03/21             */
+   /*            CLIPS Version 6.50  10/13/23             */
    /*                                                     */
    /*                                                     */
    /*******************************************************/
@@ -619,7 +619,7 @@ int ReplaceProcVars(
             Replace the call to "bind" with a call to PROC_BIND - the
             special internal function for procedure local variables.
             ==================================================================== */
-         if ((actions->value == (void *) FindFunction(theEnv,"bind")) &&
+         if ((actions->functionValue == FindFunction(theEnv,"bind")) &&
              (actions->argList->type == SYMBOL_TYPE))
            {
             actions->type = PROC_BIND;
@@ -1387,7 +1387,7 @@ static bool ReplaceProcBinds(
         {
          if (ReplaceProcBinds(theEnv,actions->argList,altbindfunc,userBuffer))
            return true;
-         if ((actions->value == (void *) FindFunction(theEnv,"bind")) &&
+         if ((actions->functionValue == FindFunction(theEnv,"bind")) &&
              (actions->argList->type == SYMBOL_TYPE))
            {
             bname = actions->argList->lexemeValue;

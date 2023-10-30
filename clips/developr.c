@@ -1,7 +1,7 @@
    /*******************************************************/
    /*      "C" Language Integrated Production System      */
    /*                                                     */
-   /*            CLIPS Version 6.40  04/08/20             */
+   /*            CLIPS Version 6.50  09/07/23             */
    /*                                                     */
    /*                   DEVELOPER MODULE                  */
    /*******************************************************/
@@ -46,6 +46,8 @@
 /*                                                           */
 /*            UDF redesign.                                  */
 /*                                                           */
+/*      6.50: Support for data driven backward chaining.     */
+/*                                                           */
 /*************************************************************/
 
 #include <stdio.h>
@@ -85,6 +87,10 @@
    static void                    PrintOPNLevel(Environment *,OBJECT_PATTERN_NODE *,char *,int);
 #endif
 
+#if DEFRULE_CONSTRUCT && DEFTEMPLATE_CONSTRUCT
+   static void                    ShowFactPatternNetworkDriver(Environment *,struct factPatternNode *);
+#endif
+
 /**************************************************/
 /* DeveloperCommands: Sets up developer commands. */
 /**************************************************/
@@ -99,6 +105,7 @@ void DeveloperCommands(
    AddUDF(theEnv,"validate-fact-integrity","b", 0,0,NULL,ValidateFactIntegrityCommand,"ValidateFactIntegrityCommand",NULL);
 
    AddUDF(theEnv,"show-fpn","v",1,1,"y",ShowFactPatternNetworkCommand,"ShowFactPatternNetworkCommand",NULL);
+   AddUDF(theEnv,"show-gpn","v",1,1,"y",ShowGoalPatternNetworkCommand,"ShowGoalPatternNetworkCommand",NULL);
    AddUDF(theEnv,"show-fht","v",0,0,NULL,ShowFactHashTableCommand,"ShowFactHashTableCommand",NULL);
 #endif
 
@@ -368,10 +375,8 @@ void ShowFactPatternNetworkCommand(
   UDFContext *context,
   UDFValue *returnValue)
   {
-   struct factPatternNode *patternPtr;
    Deftemplate *theDeftemplate;
    const char *theName;
-   int depth = 0, i;
 
    theName = GetConstructName(context,"show-fpn","template name");
    if (theName == NULL) return;
@@ -379,7 +384,42 @@ void ShowFactPatternNetworkCommand(
    theDeftemplate = FindDeftemplate(theEnv,theName);
    if (theDeftemplate == NULL) return;
 
-   patternPtr = theDeftemplate->patternNetwork;
+   ShowFactPatternNetworkDriver(theEnv,theDeftemplate->patternNetwork);
+  }
+  
+/*************************************************************/
+/* ShowGoalPatternNetworkCommand: Command for displaying the */
+/*   goal pattern network for a specified deftemplate.       */
+/*************************************************************/
+void ShowGoalPatternNetworkCommand(
+  Environment *theEnv,
+  UDFContext *context,
+  UDFValue *returnValue)
+  {
+   Deftemplate *theDeftemplate;
+   const char *theName;
+
+   theName = GetConstructName(context,"show-gpn","template name");
+   if (theName == NULL) return;
+
+   theDeftemplate = FindDeftemplate(theEnv,theName);
+   if (theDeftemplate == NULL) return;
+
+   ShowFactPatternNetworkDriver(theEnv,theDeftemplate->goalNetwork);
+  }
+  
+/************************************************/
+/* ShowFactPatternNetworkDriver: Driver routine */
+/*   for show-fpn and show-fgn commands.        */
+/************************************************/
+static void ShowFactPatternNetworkDriver(
+  Environment *theEnv,
+  struct factPatternNode *rootNode)
+  {
+   struct factPatternNode *patternPtr;
+   int depth = 0, i;
+
+   patternPtr = rootNode;
    while (patternPtr != NULL)
      {
       for (i = 0; i < depth; i++) WriteString(theEnv,STDOUT," ");
@@ -423,7 +463,6 @@ void ShowFactPatternNetworkCommand(
         }
      }
   }
-
 #endif
 
 #if DEFRULE_CONSTRUCT && OBJECT_SYSTEM

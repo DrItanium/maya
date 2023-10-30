@@ -1,7 +1,7 @@
    /*******************************************************/
    /*      "C" Language Integrated Production System      */
    /*                                                     */
-   /*            CLIPS Version 6.40  08/11/16             */
+   /*            CLIPS Version 6.50  09/16/23             */
    /*                                                     */
    /*              DEFTEMPLATE PARSER MODULE              */
    /*******************************************************/
@@ -42,6 +42,8 @@
 /*            data structures.                               */
 /*                                                           */
 /*            Static constraint checking is always enabled.  */
+/*                                                           */
+/*      6.50: Support for data driven backward chaining.     */
 /*                                                           */
 /*************************************************************/
 
@@ -177,9 +179,11 @@ bool ParseDeftemplate(
    newDeftemplate->implied = false;
    newDeftemplate->numberOfSlots = 0;
    newDeftemplate->busyCount = 0;
-   newDeftemplate->watch = 0;
+   newDeftemplate->watchFacts = 0;
+   newDeftemplate->watchGoals = 0;
    newDeftemplate->inScope = true;
    newDeftemplate->patternNetwork = NULL;
+   newDeftemplate->goalNetwork = NULL;
    newDeftemplate->factList = NULL;
    newDeftemplate->lastFact = NULL;
    newDeftemplate->header.whichModule = (struct defmoduleItemHeader *)
@@ -211,7 +215,11 @@ bool ParseDeftemplate(
 #if DEBUGGING_FUNCTIONS
    if ((BitwiseTest(DeftemplateData(theEnv)->DeletedTemplateDebugFlags,0)) ||
        (GetWatchItem(theEnv,"facts") == 1))
-     { DeftemplateSetWatch(newDeftemplate,true); }
+     { DeftemplateSetWatchFacts(newDeftemplate,true); }
+     
+   if ((BitwiseTest(DeftemplateData(theEnv)->DeletedTemplateDebugFlags,1)) ||
+       (GetWatchItem(theEnv,"goals") == 1))
+     { DeftemplateSetWatchGoals(newDeftemplate,true); }
 #endif
 
    /*==============================================*/

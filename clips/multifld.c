@@ -1,7 +1,7 @@
    /*******************************************************/
    /*      "C" Language Integrated Production System      */
    /*                                                     */
-   /*            CLIPS Version 6.42  05/08/23             */
+   /*            CLIPS Version 6.50  10/08/23             */
    /*                                                     */
    /*                  MULTIFIELD MODULE                  */
    /*******************************************************/
@@ -61,6 +61,8 @@
 /*                                                           */
 /*      6.42: Refactored CreateMultifield to remove          */
 /*            duplicated code.                               */
+/*                                                           */
+/*      6.50: Support for data driven backward chaining.     */
 /*                                                           */
 /*************************************************************/
 
@@ -801,6 +803,7 @@ size_t HashMultifield(
             break;
 
           case INTEGER_TYPE:
+          case UQV_TYPE:
             count += (((unsigned long) fieldPtr[i].integerValue->contents) * (i + 29)) +
                       ((unsigned long) fieldPtr[i].integerValue->contents);
             break;

@@ -1,7 +1,7 @@
    /*******************************************************/
    /*      "C" Language Integrated Production System      */
    /*                                                     */
-   /*            CLIPS Version 6.40  07/30/16             */
+   /*            CLIPS Version 6.50  09/07/23             */
    /*                                                     */
    /*          DEFTEMPLATE CONSTRUCTS-TO-C MODULE         */
    /*******************************************************/
@@ -43,6 +43,8 @@
 /*                                                           */
 /*            Removed use of void pointers for specific      */
 /*            data structures.                               */
+/*                                                           */
+/*      6.50: Support for data driven backward chaining.     */
 /*                                                           */
 /*************************************************************/
 
@@ -309,14 +311,21 @@ static void DeftemplateToCode(
 
    fprintf(theFile,"%d,0,0,%d,%ld,",theTemplate->implied,theTemplate->numberOfSlots,theTemplate->busyCount);
 
-   /*=================*/
-   /* Pattern Network */
-   /*=================*/
+   /*==========================*/
+   /* Pattern and Goal Network */
+   /*==========================*/
 
    if (theTemplate->patternNetwork == NULL)
      { fprintf(theFile,"NULL"); }
    else
      { FactPatternNodeReference(theEnv,theTemplate->patternNetwork,theFile,imageID,maxIndices); }
+
+   fprintf(theFile,",");
+
+   if (theTemplate->goalNetwork == NULL)
+     { fprintf(theFile,"NULL"); }
+   else
+     { FactPatternNodeReference(theEnv,theTemplate->goalNetwork,theFile,imageID,maxIndices); }
 
    /*============================================*/
    /* Print the factList and lastFact references */

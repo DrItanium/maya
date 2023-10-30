@@ -1,7 +1,7 @@
    /*******************************************************/
    /*      "C" Language Integrated Production System      */
    /*                                                     */
-   /*            CLIPS Version 6.40  10/01/16             */
+   /*            CLIPS Version 6.50  10/08/23             */
    /*                                                     */
    /*                    DRIVE MODULE                     */
    /*******************************************************/
@@ -47,6 +47,8 @@
 /*                                                           */
 /*            UDF redesign.                                  */
 /*                                                           */
+/*      6.50: Support for data driven backward chaining.     */
+/*                                                           */
 /*************************************************************/
 
 #include <stdio.h>
@@ -60,6 +62,7 @@
 #include "constant.h"
 #include "engine.h"
 #include "envrnmnt.h"
+#include "factgoal.h"
 #include "incrrset.h"
 #include "lgcldpnd.h"
 #include "memalloc.h"
@@ -67,6 +70,10 @@
 #include "reteutil.h"
 #include "retract.h"
 #include "router.h"
+
+#if DEFTEMPLATE_CONSTRUCT
+#include "factmngr.h"
+#endif
 
 #include "drive.h"
 
@@ -182,7 +189,9 @@ void NetworkAssertRight(
    while (lhsBinds != NULL)
      {
       nextBind = lhsBinds->nextInMemory;
+#if DEBUGGING_FUNCTIONS
       join->memoryCompares++;
+#endif
 
       /*===========================================================*/
       /* Initialize some variables pointing to the partial matches */
@@ -197,7 +206,7 @@ void NetworkAssertRight(
          else
            { EngineData(theEnv)->betaHashHTSkips++; }
 
-         if (lhsBinds->marker != NULL)
+         if ((lhsBinds->marker != NULL) && (! lhsBinds->goalMarker))
            { EngineData(theEnv)->unneededMarkerCompare++; }
 #endif
          lhsBinds = nextBind;
@@ -211,7 +220,7 @@ void NetworkAssertRight(
       /* on to the next partial match found in the beta memory.        */
       /*===============================================================*/
 
-      if (lhsBinds->marker != NULL)
+      if ((lhsBinds->marker != NULL) && (! lhsBinds->goalMarker))
         {
 #if DEVELOPER
          EngineData(theEnv)->unneededMarkerCompare++;
@@ -271,7 +280,7 @@ void NetworkAssertRight(
       /* appropriate action given the logic of this join.   */
       /*====================================================*/
 
-      if (exprResult != false)
+      if (exprResult != false) // TBD Here
         {
          if (join->patternIsExists)
            {
@@ -289,7 +298,12 @@ void NetworkAssertRight(
             */
            }
          else
-           { PPDrive(theEnv,lhsBinds,rhsBinds,join,operation); }
+           {
+            if ((join->goalExpression != NULL) && lhsBinds->goalMarker)
+              { UpdateGoalSupport(theEnv,lhsBinds); }
+
+            PPDrive(theEnv,lhsBinds,rhsBinds,join,operation);
+           }
         }
 
       /*====================================*/
@@ -432,8 +446,10 @@ void NetworkAssertLeft(
          rhsBinds = rhsBinds->nextInMemory;
          continue;
         }
-
+        
+#if DEBUGGING_FUNCTIONS
       join->memoryCompares++;
+#endif
 
       /*===================================================*/
       /* If the join has no expression associated with it, */
@@ -571,6 +587,18 @@ void NetworkAssertLeft(
       else
         { PPDrive(theEnv,lhsBinds,NULL,join,operation); }
      }
+     
+   /*=======================================================*/
+   /* Otherwise if the partial match from the left memory   */
+   /* is not matched by anything in the right memory, and   */
+   /* this is a goal generating join, then generate a goal. */
+   /*=======================================================*/
+   
+#if DEFTEMPLATE_CONSTRUCT
+   else if ((lhsBinds->children == NULL) &&
+            (join->goalExpression != NULL))
+     { AttachGoal(theEnv,join,lhsBinds,lhsBinds,true); }
+#endif
 
    /*=========================================*/
    /* Restore the old evaluation environment. */
@@ -1009,7 +1037,7 @@ static void EmptyDrive(
   struct partialMatch *rhsBinds,
   int operation)
   {
-   struct partialMatch *linker, *existsParent = NULL, *notParent;
+   struct partialMatch *linker, *existsParent = NULL, *theParent;
    struct joinLink *listOfJoins;
    bool joinExpr;
    unsigned long hashValue;
@@ -1025,7 +1053,6 @@ static void EmptyDrive(
 
    if (join->networkTest != NULL)
      {
-
 #if DEVELOPER
       EngineData(theEnv)->rightToLeftComparisons++;
 #endif
@@ -1074,19 +1101,14 @@ static void EmptyDrive(
 
    if (join->patternIsNegated || (join->joinFromTheRight && (! join->patternIsExists))) /* reorder to remove patternIsExists test */
      {
-      notParent = join->leftMemory->beta[0];
-      if (notParent->marker != NULL)
+      theParent = join->leftMemory->beta[0];
+      if (theParent->marker != NULL)
         { return; }
 
-      AddBlockedLink(notParent,rhsBinds);
+      AddBlockedLink(theParent,rhsBinds);
 
-      if (notParent->children != NULL)
-        { PosEntryRetractBeta(theEnv,notParent,notParent->children,operation); }
-      /*
-      if (notParent->dependents != NULL)
-		{ RemoveLogicalSupport(theEnv,notParent); }
-        */
-
+      if (theParent->children != NULL)
+        { PosEntryRetractBeta(theEnv,theParent,theParent->children,operation); }
       return;
      }
 
@@ -1105,6 +1127,21 @@ static void EmptyDrive(
       AddBlockedLink(existsParent,rhsBinds);
      }
 
+   /*================================================*/
+   /* If a goal has been attached to the left memory */
+   /* of the join, decrement the goal support count  */
+   /* and queue a retraction of the goal if needed.  */
+   /*================================================*/
+ 
+ #if DEFTEMPLATE_CONSTRUCT
+   if (join->goalExpression != NULL)
+     {
+      theParent = join->leftMemory->beta[0];
+      if (theParent->goalMarker)
+        { UpdateGoalSupport(theEnv,theParent); }
+     }
+ #endif
+ 
    /*============================================*/
    /* Send the partial match to all child joins. */
    /*============================================*/

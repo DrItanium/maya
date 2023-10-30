@@ -1,7 +1,7 @@
    /*******************************************************/
    /*      "C" Language Integrated Production System      */
    /*                                                     */
-   /*             CLIPS Version 6.40  02/19/20            */
+   /*             CLIPS Version 6.50  08/26/23            */
    /*                                                     */
    /*                 DEFRULE HEADER FILE                 */
    /*******************************************************/
@@ -65,6 +65,8 @@
 /*            data structures.                               */
 /*                                                           */
 /*            ALLOW_ENVIRONMENT_GLOBALS no longer supported. */
+/*                                                           */
+/*      6.50: Support for data driven backward chaining.     */
 /*                                                           */
 /*************************************************************/
 
@@ -132,6 +134,7 @@ struct defruleData
    bool BetaMemoryResizingFlag;
    struct joinLink *RightPrimeJoins;
    struct joinLink *LeftPrimeJoins;
+   struct joinLink *GoalPrimeJoins;
 
 #if DEBUGGING_FUNCTIONS
     bool WatchRules;
@@ -163,7 +166,7 @@ struct defruleData
    struct defruleModule          *GetDefruleModuleItem(Environment *,Defmodule *);
    bool                           DefruleIsDeletable(Defrule *);
 #if RUN_TIME
-   void                           DefruleRunTimeInitialize(Environment *,struct joinLink *,struct joinLink *);
+   void                           DefruleRunTimeInitialize(Environment *,struct joinLink *,struct joinLink *,struct joinLink *);
 #endif
 #if RUN_TIME || BLOAD_ONLY || BLOAD || BLOAD_AND_BSAVE
    void                           AddBetaMemoriesToJoin(Environment *,struct joinNode *);

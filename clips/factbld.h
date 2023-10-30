@@ -1,7 +1,7 @@
    /*******************************************************/
    /*      "C" Language Integrated Production System      */
    /*                                                     */
-   /*             CLIPS Version 6.40  07/23/20            */
+   /*             CLIPS Version 6.50  09/23/23            */
    /*                                                     */
    /*                FACT BUILD HEADER FILE               */
    /*******************************************************/
@@ -59,5 +59,8 @@ struct factPatternNode
 
    void                           InitializeFactPatterns(Environment *);
    void                           DestroyFactPatternNetwork(Environment *,struct factPatternNode *);
-
+   void                           IncrementalResetAddGoalExpressions(Environment *);
+   void                           IncrementalResetGoals(Environment *);
+   void                           ReleaseGoalUpdates(Environment *);
+  
 #endif /* _H_factbld */

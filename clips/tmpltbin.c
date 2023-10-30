@@ -1,7 +1,7 @@
    /*******************************************************/
    /*      "C" Language Integrated Production System      */
    /*                                                     */
-   /*            CLIPS Version 6.40  07/30/16             */
+   /*            CLIPS Version 6.50  09/14/23             */
    /*                                                     */
    /*           DEFTEMPLATE BSAVE/BLOAD MODULE            */
    /*******************************************************/
@@ -33,6 +33,8 @@
 /*            data structures.                               */
 /*                                                           */
 /*            Removed initial-fact support.                  */
+/*                                                           */
+/*      6.50: Support for data driven backward chaining.     */
 /*                                                           */
 /*************************************************************/
 
@@ -285,6 +287,7 @@ static void BsaveBinaryItem(
          tempDeftemplate.implied = theDeftemplate->implied;
          tempDeftemplate.numberOfSlots = theDeftemplate->numberOfSlots;
          tempDeftemplate.patternNetwork = BsaveFactPatternIndex(theDeftemplate->patternNetwork);
+         tempDeftemplate.goalNetwork = BsaveFactPatternIndex(theDeftemplate->goalNetwork);
 
          if (theDeftemplate->slotList != NULL)
            { tempDeftemplate.slotList = DeftemplateBinaryData(theEnv)->NumberOfTemplateSlots; }
@@ -500,9 +503,15 @@ static void UpdateDeftemplate(
    else
      { theDeftemplate->patternNetwork = NULL; }
 
+   if (bdtPtr->goalNetwork != ULONG_MAX)
+     { theDeftemplate->goalNetwork = (struct factPatternNode *) BloadFactPatternPointer(bdtPtr->goalNetwork); }
+   else
+     { theDeftemplate->goalNetwork = NULL; }
+
    theDeftemplate->implied = bdtPtr->implied;
 #if DEBUGGING_FUNCTIONS
-   theDeftemplate->watch = FactData(theEnv)->WatchFacts;
+   theDeftemplate->watchFacts = FactData(theEnv)->WatchFacts;
+   theDeftemplate->watchGoals = FactData(theEnv)->WatchGoals;
 #endif
    theDeftemplate->inScope = false;
    theDeftemplate->numberOfSlots = bdtPtr->numberOfSlots;

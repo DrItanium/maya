@@ -119,7 +119,7 @@ struct externalAddressType
 #define GetNextArgument(ep)          (ep->nextArg)
 
 #define MAXIMUM_PRIMITIVES 150
-#define MAXIMUM_EXTERNAL_ADDRESS_TYPES 256
+#define MAXIMUM_EXTERNAL_ADDRESS_TYPES 10
 
 #define BITS_PER_BYTE    8
 

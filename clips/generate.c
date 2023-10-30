@@ -1,7 +1,7 @@
    /*******************************************************/
    /*      "C" Language Integrated Production System      */
    /*                                                     */
-   /*            CLIPS Version 6.40  07/30/16             */
+   /*            CLIPS Version 6.50  10/13/23             */
    /*                                                     */
    /*                   GENERATE MODULE                   */
    /*******************************************************/
@@ -39,6 +39,8 @@
 /*                                                           */
 /*            Removed use of void pointers for specific      */
 /*            data structures.                               */
+/*                                                           */
+/*      6.50: Support for data driven backward chaining.     */
 /*                                                           */
 /*************************************************************/
 
@@ -279,13 +281,17 @@ void FieldConversion(
          /* Generate the hash index. */
          /*==========================*/
 
-         if (theField->patternType->genGetPNValueFunction != NULL)
+         if ((! theField->goalCE) &&
+             (! theField->referringNode->goalCE) &&
+             (theField->patternType->genGetPNValueFunction != NULL))
            {
             tempExpression = (*theField->patternType->genGetPNValueFunction)(theEnv,theField);
             thePattern->rightHash = AppendExpressions(tempExpression,thePattern->rightHash);
            }
 
-         if (theField->referringNode->patternType->genGetJNValueFunction)
+         if ((! theField->goalCE) &&
+             (! theField->referringNode->goalCE) &&
+             (theField->referringNode->patternType->genGetJNValueFunction))
            {
             tempExpression = (*theField->referringNode->patternType->genGetJNValueFunction)(theEnv,theField->referringNode,LHS);
             thePattern->leftHash = AppendExpressions(tempExpression,thePattern->leftHash);
@@ -406,8 +412,10 @@ static void ExtractFieldTest(
       if (testInPatternNetwork == true)
         {
          *patternNetTest = GenPNConstant(theEnv,theField);
-
-         if (! theField->negated)
+ 
+         if ((! theField->negated) &&
+             (! ((theField->pnType == SYMBOL_NODE) &&
+                 (strcmp(theField->lexemeValue->contents,"??") == 0)))) // TBD Use Universal value instead
            {
             *constantSelector = (*theField->patternType->genGetPNValueFunction)(theEnv,theField);
             *constantValue = GenConstant(theEnv,NodeTypeToType(theField),theField->value);

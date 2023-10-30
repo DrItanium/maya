@@ -1,7 +1,7 @@
    /*******************************************************/
    /*      "C" Language Integrated Production System      */
    /*                                                     */
-   /*            CLIPS Version 6.40  02/03/21             */
+   /*            CLIPS Version 6.50  10/08/23             */
    /*                                                     */
    /*                   UTILITY MODULE                    */
    /*******************************************************/
@@ -71,6 +71,8 @@
 /*                                                           */
 /*            Moved BufferedRead and FreeReadBuffer from     */
 /*            insfile.c to utility.c                         */
+/*                                                           */
+/*      6.50: Support for data driven backward chaining.     */
 /*                                                           */
 /*************************************************************/
 
@@ -1186,6 +1188,7 @@ size_t ItemHashValue(
         return HashFloat(((CLIPSFloat *) theValue)->contents,theRange);
 
       case INTEGER_TYPE:
+      case UQV_TYPE:
         return HashInteger(((CLIPSInteger *) theValue)->contents,theRange);
 
       case SYMBOL_TYPE:

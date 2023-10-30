@@ -1,7 +1,7 @@
    /*******************************************************/
    /*      "C" Language Integrated Production System      */
    /*                                                     */
-   /*            CLIPS Version 6.41  03/15/23             */
+   /*            CLIPS Version 6.50  10/24/23             */
    /*                                                     */
    /*                 FACT MANAGER MODULE                 */
    /*******************************************************/
@@ -126,6 +126,8 @@
 /*            FMModify was releasing a multifield that was   */
 /*            allocated to the fact just modified.           */
 /*                                                           */
+/*      6.50: Support for data driven backward chaining.     */
+/*                                                           */
 /*************************************************************/
 
 #include <stdio.h>
@@ -142,6 +144,8 @@
 #include "factcom.h"
 #include "factfile.h"
 #include "factfun.h"
+#include "factgen.h"
+#include "factgoal.h"
 #include "factmch.h"
 #include "factqury.h"
 #include "factrhs.h"
@@ -171,7 +175,7 @@
    static void                    RemoveGarbageFacts(Environment *,void *);
    static void                    DeallocateFactData(Environment *);
    static bool                    RetractCallback(Fact *,Environment *);
-
+  
 /**************************************************************/
 /* InitializeFacts: Initializes the fact data representation. */
 /*   Facts are only available when both the defrule and       */
@@ -199,7 +203,7 @@ void InitializeFacts(
       };
 
    Fact dummyFact = { { { { FACT_ADDRESS_TYPE } , NULL, NULL, 0, 0L } },
-                      NULL, NULL, -1L, 0, 1,
+                      NULL, NULL, -1L, 0, 1, 0, 0, 0,
                       NULL, NULL, NULL, NULL, NULL, 
                       { {MULTIFIELD_TYPE } , 1, 0UL, NULL, { { { NULL } } } } };
 
@@ -245,6 +249,8 @@ void InitializeFacts(
 
 #if DEBUGGING_FUNCTIONS
    AddWatchItem(theEnv,"facts",0,&FactData(theEnv)->WatchFacts,80,
+                DeftemplateWatchAccess,DeftemplateWatchPrint);
+   AddWatchItem(theEnv,"goals",1,&FactData(theEnv)->WatchGoals,79,
                 DeftemplateWatchAccess,DeftemplateWatchPrint);
 #endif
 
@@ -315,7 +321,7 @@ static void DeallocateFactData(
      {
       nextFactPtr = tmpFactPtr->nextFact;
 
-      theMatch = (struct patternMatch *) tmpFactPtr->list;
+      theMatch = tmpFactPtr->list;
       while (theMatch != NULL)
         {
          tmpMatch = theMatch->next;
@@ -354,7 +360,10 @@ void PrintFactWithIdentifier(
   {
    char printSpace[20];
 
-   gensnprintf(printSpace,sizeof(printSpace),"f-%-5lld ",factPtr->factIndex);
+   if (factPtr->goal)
+      { gensnprintf(printSpace,sizeof(printSpace),"g-%-5lld ",factPtr->factIndex); }
+   else
+      { gensnprintf(printSpace,sizeof(printSpace),"f-%-5lld ",factPtr->factIndex); }
    WriteString(theEnv,logicalName,printSpace);
    PrintFact(theEnv,logicalName,factPtr,false,false,changeMap);
   }
@@ -369,7 +378,10 @@ void PrintFactIdentifier(
   {
    char printSpace[20];
 
-   gensnprintf(printSpace,sizeof(printSpace),"f-%lld",factPtr->factIndex);
+   if (factPtr->goal)
+     { gensnprintf(printSpace,sizeof(printSpace),"g-%lld",factPtr->factIndex); }
+   else
+     { gensnprintf(printSpace,sizeof(printSpace),"f-%lld",factPtr->factIndex); }
    WriteString(theEnv,logicalName,printSpace);
   }
 
@@ -528,7 +540,7 @@ void MatchFactFunction(
   Environment *theEnv,
   Fact *theFact)
   {
-   FactPatternMatch(theEnv,theFact,theFact->whichDeftemplate->patternNetwork,0,0,NULL,NULL);
+   FactPatternMatch(theEnv,theFact,theFact->whichDeftemplate->patternNetwork,0,0,NULL,NULL); // TBD goalNetwork
   }
 
 /**********************************************/
@@ -561,6 +573,19 @@ RetractError RetractDriver(
      {
       PrintErrorID(theEnv,"FACTMNGR",1,true);
       WriteString(theEnv,STDERR,"Facts may not be retracted during pattern-matching.\n");
+      SetEvaluationError(theEnv,true);
+      FactData(theEnv)->retractError = RE_COULD_NOT_RETRACT_ERROR;
+      return RE_COULD_NOT_RETRACT_ERROR;
+     }
+
+   /*===========================*/
+   /* Goals can't be retracted. */
+   /*===========================*/
+   
+   if (theFact->goal)
+     {
+      PrintErrorID(theEnv,"FACTMNGR",3,true);
+      WriteString(theEnv,STDERR,"Goals may not be retracted.\n");
       SetEvaluationError(theEnv,true);
       FactData(theEnv)->retractError = RE_COULD_NOT_RETRACT_ERROR;
       return RE_COULD_NOT_RETRACT_ERROR;
@@ -602,7 +627,7 @@ RetractError RetractDriver(
    /*============================*/
 
 #if DEBUGGING_FUNCTIONS
-   if (theFact->whichDeftemplate->watch &&
+   if (theFact->whichDeftemplate->watchFacts &&
        (! ConstructData(theEnv)->ClearReadyInProgress) &&
        (! ConstructData(theEnv)->ClearInProgress))
      {
@@ -704,7 +729,7 @@ RetractError RetractDriver(
    /*===========================================*/
 
    EngineData(theEnv)->JoinOperationInProgress = true;
-   NetworkRetract(theEnv,(struct patternMatch *) theFact->list);
+   NetworkRetract(theEnv,theFact->list);
    theFact->list = NULL;
    EngineData(theEnv)->JoinOperationInProgress = false;
 
@@ -715,6 +740,13 @@ RetractError RetractDriver(
 
    if (EngineData(theEnv)->ExecutingRule == NULL)
      { FlushGarbagePartialMatches(theEnv); }
+
+   /*================================================*/
+   /* Remove any goals that are no longer supported. */
+   /*================================================*/
+
+   if (! modifyOperation)
+     { ProcessGoalQueue(theEnv); }
 
    /*=========================================*/
    /* Retract other facts that were logically */
@@ -1018,7 +1050,7 @@ Fact *AssertDriver(
    /*==========================*/
 
 #if DEBUGGING_FUNCTIONS
-   if (theFact->whichDeftemplate->watch &&
+   if (theFact->whichDeftemplate->watchFacts &&
        (! ConstructData(theEnv)->ClearReadyInProgress) &&
        (! ConstructData(theEnv)->ClearInProgress))
      {
@@ -1054,8 +1086,14 @@ Fact *AssertDriver(
    /*=============================================*/
 
    EngineData(theEnv)->JoinOperationInProgress = true;
-   FactPatternMatch(theEnv,theFact,theFact->whichDeftemplate->patternNetwork,0,0,NULL,NULL);
+   FactPatternMatch(theEnv,theFact,theFact->whichDeftemplate->patternNetwork,0,0,NULL,NULL); // TBD goalNetwork
    EngineData(theEnv)->JoinOperationInProgress = false;
+
+   /*================================================*/
+   /* Remove any goals that are no longer supported. */
+   /*================================================*/
+   
+   ProcessGoalQueue(theEnv);
 
    /*===================================================*/
    /* Retract other facts that were logically dependent */
@@ -1117,6 +1155,24 @@ RetractError RetractAllFacts(
    return RE_NO_ERROR;
   }
 
+/**************************************/
+/* RetractAllGoals: Loops through the */
+/*   goal-list and removes each goal. */
+/**************************************/
+RetractError RetractAllGoals(
+  Environment *theEnv)
+  {
+   RetractError rv;
+   
+   while (FactData(theEnv)->GoalList != NULL)
+     {
+      if ((rv = RetractGoal(FactData(theEnv)->GoalList)) != RE_NO_ERROR)
+        { return rv; }
+     }
+     
+   return RE_NO_ERROR;
+  }
+
 /*********************************************/
 /* CreateFact: Creates a fact data structure */
 /*   of the specified deftemplate.           */
@@ -1155,7 +1211,7 @@ Fact *CreateFact(
    else
      {
       newFact = CreateFactBySize(theEnv,1);
-      newFact->theProposition.contents[0].value = CreateUnmanagedMultifield(theEnv,0L);
+      newFact->theProposition.contents[0].voidValue = VoidConstant(theEnv);
      }
 
    /*===============================*/
@@ -1536,6 +1592,9 @@ Fact *CreateFactBySize(
 
    theFact->patternHeader.header.type = FACT_ADDRESS_TYPE;
    theFact->garbage = false;
+   theFact->goal = false;
+   theFact->pendingAssert = false;
+   theFact->supportCount = 0;
    theFact->factIndex = 0LL;
    theFact->patternHeader.busyCount = 0;
    theFact->patternHeader.theInfo = &FactData(theEnv)->FactInfo;
@@ -1596,7 +1655,10 @@ void FactInstall(
   Environment *theEnv,
   Fact *newFact)
   {
-   FactData(theEnv)->NumberOfFacts++;
+   if (newFact->goal)
+     { FactData(theEnv)->NumberOfGoals++; }
+   else
+     { FactData(theEnv)->NumberOfFacts++; }
    newFact->whichDeftemplate->busyCount++;
    newFact->patternHeader.busyCount++;
   }
@@ -1609,7 +1671,10 @@ void FactDeinstall(
   Environment *theEnv,
   Fact *newFact)
   {
-   FactData(theEnv)->NumberOfFacts--;
+   if (newFact->goal)
+     { FactData(theEnv)->NumberOfGoals--; }
+   else
+     { FactData(theEnv)->NumberOfFacts--; }
    newFact->whichDeftemplate->busyCount--;
    newFact->patternHeader.busyCount--;
   }
@@ -1749,7 +1814,87 @@ Fact *GetNextFactInScope(
 
    return NULL;
   }
+  
+/*********************************************************/
+/* GetNextGoal: If passed a NULL pointer, returns the */
+/*   first goal in the goal-list. Otherwise returns the  */
+/*   next goal following the goal passed as an argument. */
+/*********************************************************/
+Fact *GetNextGoal(
+  Environment *theEnv,
+  Fact *goalPtr)
+  {
+   if (goalPtr == NULL)
+     { return FactData(theEnv)->GoalList; }
 
+   if (goalPtr->garbage) return NULL;
+
+   return goalPtr->nextFact;
+  }
+
+/**************************************************/
+/* GetNextGoalInScope: Returns the next goal that */
+/*   is in scope of the current module. Works in  */
+/*   a similar fashion to GetNextGoal, but skips  */
+/*   goals that are out of scope.                 */
+/**************************************************/
+Fact *GetNextGoalInScope(
+  Environment *theEnv,
+  Fact *theGoal)
+  {
+   /*=======================================================*/
+   /* If goal passed as an argument is a NULL pointer, then */
+   /* we're just beginning a traversal of the goal list. If */
+   /* the module index has changed since that last time the */
+   /* goal list was traversed by this routine, then         */
+   /* determine all of the deftemplates that are in scope   */
+   /* of the current module.                                */
+   /*=======================================================*/
+
+   if (theGoal == NULL)
+     {
+      theGoal = FactData(theEnv)->GoalList;
+      if (FactData(theEnv)->LastModuleIndex != DefmoduleData(theEnv)->ModuleChangeIndex)
+        {
+         UpdateDeftemplateScope(theEnv);
+         FactData(theEnv)->LastModuleIndex = DefmoduleData(theEnv)->ModuleChangeIndex;
+        }
+     }
+
+   /*==================================================*/
+   /* Otherwise, if the goal passed as an argument has */
+   /* been retracted, then there's no way to determine */
+   /* the next goal, so return a NULL pointer.         */
+   /*==================================================*/
+
+   else if (theGoal->garbage)
+     { return NULL; }
+
+   /*==================================================*/
+   /* Otherwise, start the search for the next goal in */
+   /* scope with the goal immediately following the    */
+   /* goal passed as an argument.                      */
+   /*==================================================*/
+
+   else
+     { theGoal = theGoal->nextFact; }
+
+   /*================================================*/
+   /* Continue traversing the goal-list until a goal */
+   /* is found that's associated with a deftemplate  */
+   /* that's in scope.                               */
+   /*================================================*/
+
+   while (theGoal != NULL)
+     {
+      if (theGoal->whichDeftemplate->inScope) return theGoal;
+
+      theGoal = theGoal->nextFact;
+     }
+
+   return NULL;
+  }
+  
 /*************************************/
 /* FactPPForm: Returns the pretty    */
 /*   print representation of a fact. */
@@ -1882,17 +2027,21 @@ static void ResetFacts(
   Environment *theEnv,
   void *context)
   {
-   /*====================================*/
-   /* Initialize the fact index to zero. */
-   /*====================================*/
+   /*=======================================*/
+   /* Initialize the fact and goal indices. */
+   /*=======================================*/
 
    FactData(theEnv)->NextFactIndex = 1L;
+   FactData(theEnv)->NextGoalIndex = 1L;
 
    /*======================================*/
    /* Remove all facts from the fact list. */
    /*======================================*/
 
+   FactData(theEnv)->goalGenerationDisabled = true;
    RetractAllFacts(theEnv);
+   RetractAllGoals(theEnv);
+   FactData(theEnv)->goalGenerationDisabled = false;   
   }
 
 /************************************************************/
@@ -1911,17 +2060,21 @@ static bool ClearFactsReady(
 
    if (EngineData(theEnv)->JoinOperationInProgress) return false;
 
-   /*====================================*/
-   /* Initialize the fact index to zero. */
-   /*====================================*/
+   /*=======================================*/
+   /* Initialize the fact and goal indices. */
+   /*=======================================*/
 
    FactData(theEnv)->NextFactIndex = 1L;
+   FactData(theEnv)->NextGoalIndex = 1L;
 
    /*======================================*/
    /* Remove all facts from the fact list. */
    /*======================================*/
 
+   FactData(theEnv)->goalGenerationDisabled = true;
    RetractAllFacts(theEnv);
+   RetractAllGoals(theEnv);
+   FactData(theEnv)->goalGenerationDisabled = false;
 
    /*==============================================*/
    /* If for some reason there are any facts still */
@@ -1929,6 +2082,7 @@ static bool ClearFactsReady(
    /*==============================================*/
 
    if (GetNextFact(theEnv,NULL) != NULL) return false;
+   if (GetNextGoal(theEnv,NULL) != NULL) return false;
 
    /*=============================*/
    /* Return true to indicate the */
@@ -1954,6 +2108,27 @@ Fact *FindIndexedFact(
      {
       if (theFact->factIndex == factIndexSought)
         { return(theFact); }
+     }
+
+   return NULL;
+  }
+
+/***************************************************/
+/* FindIndexedGoal: Returns a pointer to a goal in */
+/*   the goal list with the specified goal index.  */
+/***************************************************/
+Fact *FindIndexedGoal(
+  Environment *theEnv,
+  long long goalIndexSought)
+  {
+   Fact *theGoal;
+
+   for (theGoal = GetNextGoal(theEnv,NULL);
+        theGoal != NULL;
+        theGoal = GetNextGoal(theEnv,theGoal))
+     {
+      if (theGoal->factIndex == goalIndexSought)
+        { return(theGoal); }
      }
 
    return NULL;
@@ -3369,5 +3544,297 @@ FactModifierError FMError(
    return FactData(theEnv)->factModifierError;
   }
 
-#endif /* DEFTEMPLATE_CONSTRUCT && DEFRULE_CONSTRUCT */
+/********************************************/
+/* AssertGoal: Routine for asserting goals. */
+/********************************************/
+Fact *AssertGoal(
+  Fact *theGoal)
+  {
+   size_t i;
+   Environment *theEnv = theGoal->whichDeftemplate->header.env;
+   Fact *goalListPosition;
+      
+   /*===========================================*/
+   /* A goal can not be asserted while another  */
+   /* fact/goal is being asserted or retracted. */
+   /*===========================================*/
 
+   if (EngineData(theEnv)->JoinOperationInProgress)
+     {
+      /* TBD Create the goal */
+     }
+
+   if (! theGoal->pendingAssert) return theGoal;
+   
+   theGoal->pendingAssert = false;
+   
+   /*================================*/
+   /* Add the goal to the goal list. */
+   /*================================*/
+
+   goalListPosition = FactData(theEnv)->LastGoal;
+
+   if (goalListPosition == NULL)
+     {
+      theGoal->nextFact = FactData(theEnv)->GoalList;
+      FactData(theEnv)->GoalList = theGoal;
+      theGoal->previousFact = NULL;
+      if (theGoal->nextFact != NULL)
+        { theGoal->nextFact->previousFact = theGoal; }
+     }
+   else
+     {
+      theGoal->nextFact = goalListPosition->nextFact;
+      theGoal->previousFact = goalListPosition;
+      goalListPosition->nextFact = theGoal;
+      if (theGoal->nextFact != NULL)
+        { theGoal->nextFact->previousFact = theGoal; }
+     }
+
+   if ((FactData(theEnv)->LastGoal == NULL) || (theGoal->nextFact == NULL))
+     { FactData(theEnv)->LastGoal = theGoal; }
+
+   /*==================================*/
+   /* Set the fact index and time tag. */
+   /*==================================*/
+
+   theGoal->factIndex = FactData(theEnv)->NextGoalIndex++;
+
+   theGoal->patternHeader.timeTag = DefruleData(theEnv)->CurrentEntityTimeTag++;
+
+   /*=====================*/
+   /* Update busy counts. */
+   /*=====================*/
+
+   FactInstall(theEnv,theGoal);
+   //theGoal->supportCount = 1;
+
+   Multifield *theSegment = &theGoal->theProposition;
+   for (i = 0 ; i < theSegment->length ; i++)
+     { AtomInstall(theEnv,theSegment->contents[i].header->type,theSegment->contents[i].value); }
+
+   /*==========================*/
+   /* Print assert output if   */
+   /* facts are being watched. */
+   /*==========================*/
+
+#if DEBUGGING_FUNCTIONS
+   if (theGoal->whichDeftemplate->watchGoals &&
+       (! ConstructData(theEnv)->ClearReadyInProgress) &&
+       (! ConstructData(theEnv)->ClearInProgress))
+     {
+      WriteString(theEnv,STDOUT,"==> ");
+      PrintFactWithIdentifier(theEnv,STDOUT,theGoal,NULL);
+      WriteString(theEnv,STDOUT,"\n");
+     }
+#endif
+
+   /*==================================*/
+   /* Set the change flag to indicate  */
+   /* the goal-list has been modified. */
+   /*==================================*/
+
+   FactData(theEnv)->ChangeToGoalList = true;
+
+   /*===================================================*/
+   /* Reset the evaluation error flag since expressions */
+   /* will be evaluated as part of the assert .         */
+   /*===================================================*/
+
+   SetEvaluationError(theEnv,false);
+
+   /*=============================================*/
+   /* Pattern match the fact using the associated */
+   /* deftemplate's pattern network.              */
+   /*=============================================*/
+
+   EngineData(theEnv)->JoinOperationInProgress = true;
+   FactPatternMatch(theEnv,theGoal,theGoal->whichDeftemplate->goalNetwork,0,0,NULL,NULL);
+   EngineData(theEnv)->JoinOperationInProgress = false;
+
+   /*===================================================*/
+   /* Retract other facts that were logically dependent */
+   /* on the non-existence of the fact just asserted.   */
+   /*===================================================*/
+/*
+   ForceLogicalRetractions(theEnv);
+*/
+   /*=========================================*/
+   /* Free partial matches that were released */
+   /* by the assertion of the fact.           */
+   /*=========================================*/
+
+   if (EngineData(theEnv)->ExecutingRule == NULL) FlushGarbagePartialMatches(theEnv);
+
+   /*===============================*/
+   /* Return a pointer to the goal. */
+   /*===============================*/
+
+   return theGoal;
+  }
+  
+/****************/
+/* RetractGoal: */
+/****************/
+RetractError RetractGoal(
+  Fact *theGoal)
+  {
+   Deftemplate *theTemplate = theGoal->whichDeftemplate;
+   Environment *theEnv;
+
+   /*===========================================*/
+   /* Retracting a retracted fact does nothing. */
+   /*===========================================*/
+
+   if (theGoal->garbage)
+     { return RE_COULD_NOT_RETRACT_ERROR; }
+
+   /*===========================================*/
+   /* A goal can not be retracted while another */
+   /* fact is being asserted or retracted.      */
+   /*===========================================*/
+
+   theEnv = theTemplate->header.env;
+   if (EngineData(theEnv)->JoinOperationInProgress)
+     { return RE_COULD_NOT_RETRACT_ERROR; }
+
+   /*=============================================*/
+   /* The support count for the goal should be 0. */
+   /*=============================================*/
+/* TBD Should be done elsewhere
+   if (theGoal->supportCount != 0)
+     { return RE_COULD_NOT_RETRACT_ERROR; }
+*/
+   /*============================*/
+   /* Print retraction output if */
+   /* facts are being watched.   */
+   /*============================*/
+
+#if DEBUGGING_FUNCTIONS
+   if (theGoal->whichDeftemplate->watchGoals &&
+       (! ConstructData(theEnv)->ClearReadyInProgress) &&
+       (! ConstructData(theEnv)->ClearInProgress))
+     {
+      WriteString(theEnv,STDOUT,"<== ");
+      PrintFactWithIdentifier(theEnv,STDOUT,theGoal,NULL);
+      WriteString(theEnv,STDOUT,"\n");
+     }
+#endif
+
+   /*==================================*/
+   /* Set the change flag to indicate  */
+   /* the goal-list has been modified. */
+   /*==================================*/
+
+   FactData(theEnv)->ChangeToGoalList = true;
+
+   /*===========================================*/
+   /* Remove the fact from the fact hash table. */
+   /*===========================================*/
+
+   RemoveHashedFact(theEnv,theGoal);
+
+   /*=========================================*/
+   /* Remove the fact from its template list. */
+   /*=========================================*/
+/*
+   if (theFact == theTemplate->lastFact)
+     { theTemplate->lastFact = theFact->previousTemplateFact; }
+
+   if (theFact->previousTemplateFact == NULL)
+     {
+      theTemplate->factList = theTemplate->factList->nextTemplateFact;
+      if (theTemplate->factList != NULL)
+        { theTemplate->factList->previousTemplateFact = NULL; }
+     }
+   else
+     {
+      theFact->previousTemplateFact->nextTemplateFact = theFact->nextTemplateFact;
+      if (theFact->nextTemplateFact != NULL)
+        { theFact->nextTemplateFact->previousTemplateFact = theFact->previousTemplateFact; }
+     }
+*/
+   /*=====================================*/
+   /* Remove the goal from the goal list. */
+   /*=====================================*/
+
+   if (theGoal == FactData(theEnv)->LastGoal)
+     { FactData(theEnv)->LastGoal = theGoal->previousFact; }
+
+   if (theGoal->previousFact == NULL)
+     {
+      FactData(theEnv)->GoalList = FactData(theEnv)->GoalList->nextFact;
+      if (FactData(theEnv)->GoalList != NULL)
+        { FactData(theEnv)->GoalList->previousFact = NULL; }
+     }
+   else
+     {
+      theGoal->previousFact->nextFact = theGoal->nextFact;
+      if (theGoal->nextFact != NULL)
+        { theGoal->nextFact->previousFact = theGoal->previousFact; }
+     }
+
+   /*========================================*/
+   /* Add the goal to the fact garbage list. */
+   /*========================================*/
+   
+   theGoal->nextFact = FactData(theEnv)->GarbageFacts;
+   FactData(theEnv)->GarbageFacts = theGoal;
+   UtilityData(theEnv)->CurrentGarbageFrame->dirty = true;
+   theGoal->garbage = true;
+
+   /*===================================================*/
+   /* Reset the evaluation error flag since expressions */
+   /* will be evaluated as part of the retract.         */
+   /*===================================================*/
+
+   SetEvaluationError(theEnv,false);
+
+   /*===========================================*/
+   /* Loop through the list of all the patterns */
+   /* that matched the fact and process the     */
+   /* retract operation for each one.           */
+   /*===========================================*/
+
+   EngineData(theEnv)->JoinOperationInProgress = true;
+   NetworkRetract(theEnv,theGoal->list);
+   theGoal->list = NULL;
+   EngineData(theEnv)->JoinOperationInProgress = false;
+
+   /*=========================================*/
+   /* Free partial matches that were released */
+   /* by the retraction of the goal.          */
+   /*=========================================*/
+
+   if (EngineData(theEnv)->ExecutingRule == NULL)
+     { FlushGarbagePartialMatches(theEnv); }
+
+   /*=========================================*/
+   /* Retract other facts that were logically */
+   /* dependent on the fact just retracted.   */
+   /*=========================================*/
+
+   //ForceLogicalRetractions(theEnv);
+
+   /*==================================*/
+   /* Update busy counts and ephemeral */
+   /* garbage information.             */
+   /*==================================*/
+
+   FactDeinstall(theEnv,theGoal);
+
+   /*====================================*/
+   /* Return the appropriate error code. */
+   /*====================================*/
+
+   if (GetEvaluationError(theEnv))
+     {
+      FactData(theEnv)->retractError = RE_RULE_NETWORK_ERROR;
+      return RE_RULE_NETWORK_ERROR;
+     }
+
+   FactData(theEnv)->retractError = RE_NO_ERROR;
+   return RE_NO_ERROR;
+  }
+  
+#endif /* DEFTEMPLATE_CONSTRUCT && DEFRULE_CONSTRUCT */

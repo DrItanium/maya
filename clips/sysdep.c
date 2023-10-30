@@ -207,7 +207,7 @@ void InitializeSystemDependentData(
 /*   which indicates the present time. Used internally   */
 /*   for timing rule firings and debugging.              */
 /*********************************************************/
-double gentime()
+double gentime(void)
   {
 #if MAC_XCD || UNIX_V || DARWIN || LINUX || UNIX_7
    struct timeval now;
@@ -398,7 +398,7 @@ int gensnprintf(
 /******************************************************/
 /* genrand: Generic random number generator function. */
 /******************************************************/
-int genrand()
+int genrand(void)
   {
    return(rand());
   }

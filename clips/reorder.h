@@ -1,7 +1,7 @@
    /*******************************************************/
    /*      "C" Language Integrated Production System      */
    /*                                                     */
-   /*             CLIPS Version 6.40  06/22/18            */
+   /*             CLIPS Version 6.50  10/13/23            */
    /*                                                     */
    /*                 REORDER HEADER FILE                 */
    /*******************************************************/
@@ -46,6 +46,8 @@
 /*                                                           */
 /*            Removed use of void pointers for specific      */
 /*            data structures.                               */
+/*                                                           */
+/*      6.50: Support for data driven backward chaining.     */
 /*                                                           */
 /*************************************************************/
 
@@ -116,9 +118,10 @@ struct lhsParseNode
    unsigned int bindingVariable : 1;
    unsigned int derivedConstraints : 1;
    unsigned int userCE : 1;
-   unsigned int whichCE : 7;
-   //unsigned int marked : 1;
+   unsigned int whichCE : 7; // TBD increase?
    unsigned int withinMultifieldSlot : 1;
+   unsigned int goalCE : 1;
+   unsigned int explicitCE : 1;
    unsigned short multiFieldsBefore;
    unsigned short multiFieldsAfter;
    unsigned short singleFieldsBefore;

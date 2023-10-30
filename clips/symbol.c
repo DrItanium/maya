@@ -1,7 +1,7 @@
    /*******************************************************/
    /*      "C" Language Integrated Production System      */
    /*                                                     */
-   /*            CLIPS Version 6.40  11/20/17             */
+   /*            CLIPS Version 6.50  10/08/23             */
    /*                                                     */
    /*                    SYMBOL MODULE                    */
    /*******************************************************/
@@ -67,6 +67,8 @@
 /*            data structures.                               */
 /*                                                           */
 /*            ALLOW_ENVIRONMENT_GLOBALS no longer supported. */
+/*                                                           */
+/*      6.50: Support for data driven backward chaining.     */
 /*                                                           */
 /*************************************************************/
 
@@ -545,15 +547,36 @@ CLIPSFloat *CreateFloat(
     return peek;
    }
 
+/*****************/
+/* CreateInteger */
+/*****************/
+CLIPSInteger *CreateInteger(
+  Environment *theEnv,
+  long long number)
+  {
+   return AddInteger(theEnv,number,INTEGER_TYPE);
+  }
+
+/*************/
+/* CreateUQV */
+/*************/
+CLIPSInteger *CreateUQV(
+  Environment *theEnv,
+  long long number)
+  {
+   return AddInteger(theEnv,number,UQV_TYPE);
+  }
+
 /****************************************************************/
-/* CreateInteger: Searches for the long in the hash table. If   */
+/* AddInteger: Searches for the long in the hash table. If      */
 /*   the long is already in the hash table, then the address of */
 /*   the long is returned. Otherwise, the long is hashed into   */
 /*   the table and the address of the long is also returned.    */
 /****************************************************************/
-CLIPSInteger *CreateInteger(
+CLIPSInteger *AddInteger(
   Environment *theEnv,
-  long long number)
+  long long number,
+  unsigned short theType)
   {
    size_t tally;
    CLIPSInteger *past = NULL, *peek;
@@ -573,8 +596,10 @@ CLIPSInteger *CreateInteger(
 
     while (peek != NULL)
       {
-       if (number == peek->contents)
+       if ((peek->header.type == theType) &&
+           (number == peek->contents))
          { return peek; }
+
        past = peek;
        peek = peek->next;
       }
@@ -593,7 +618,7 @@ CLIPSInteger *CreateInteger(
     peek->bucket = (unsigned int) tally;
     peek->count = 0;
     peek->permanent = false;
-    peek->header.type = INTEGER_TYPE;
+    peek->header.type = theType;
 
     /*=================================================*/
     /* Add the integer to the list of ephemeral items. */
@@ -1339,6 +1364,7 @@ void EphemerateValue(
         break;
 
       case INTEGER_TYPE:
+      case UQV_TYPE:
         theInteger = (CLIPSInteger *) theValue;
         if (theInteger->markedEphemeral) return;
         AddEphemeralHashNode(theEnv,(GENERIC_HN *) theValue,

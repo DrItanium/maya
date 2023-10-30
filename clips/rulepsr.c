@@ -1,7 +1,7 @@
    /*******************************************************/
    /*      "C" Language Integrated Production System      */
    /*                                                     */
-   /*            CLIPS Version 6.42  05/08/23             */
+   /*            CLIPS Version 6.50  10/13/23             */
    /*                                                     */
    /*                 RULE PARSING MODULE                 */
    /*******************************************************/
@@ -588,9 +588,10 @@ static Defrule *CreateNewDisjunct(
 static int ReplaceRHSVariable(
   Environment *theEnv,
   struct expr *list,
-  void *VtheLHS)
+  void *vTheLHS)
   {
    struct lhsParseNode *theVariable;
+   struct lhsParseNode *theLHS = (struct lhsParseNode *) vTheLHS;
 
    /*=======================================*/
    /* Handle modify and duplicate commands. */
@@ -599,14 +600,14 @@ static int ReplaceRHSVariable(
 #if DEFTEMPLATE_CONSTRUCT
    if (list->type == FCALL)
      {
-      if (list->value == (void *) FindFunction(theEnv,"modify"))
+      if (list->functionValue == FindFunction(theEnv,"modify"))
         {
-         if (UpdateModifyDuplicate(theEnv,list,"modify",VtheLHS) == false)
+         if (UpdateModifyDuplicate(theEnv,list,"modify",theLHS) == false)
            { return -1; }
         }
-      else if (list->value == (void *) FindFunction(theEnv,"duplicate"))
+      else if (list->functionValue == FindFunction(theEnv,"duplicate"))
         {
-         if (UpdateModifyDuplicate(theEnv,list,"duplicate",VtheLHS) == false)
+         if (UpdateModifyDuplicate(theEnv,list,"duplicate",theLHS) == false)
            { return -1; }
         }
 
@@ -622,7 +623,7 @@ static int ReplaceRHSVariable(
    /* Check to see if the variable is bound on the LHS of the rule. */
    /*===============================================================*/
 
-   theVariable = FindVariable(list->lexemeValue,(struct lhsParseNode *) VtheLHS);
+   theVariable = FindVariable(list->lexemeValue,theLHS);
    if (theVariable == NULL) return 0;
 
    /*================================================*/
@@ -912,7 +913,7 @@ struct lhsParseNode *FindVariable(
       /* Check the pattern address variable. */
       /*=====================================*/
 
-      if (theLHS->value == (void *) name)
+      if (theLHS->lexemeValue == name)
         { theReturnValue = theLHS; }
 
       /*============================================*/
@@ -941,8 +942,13 @@ struct lhsParseNode *FindVariable(
            { /* Do Nothing */ }
          else if (((theFields->pnType == SF_VARIABLE_NODE) ||
                    (theFields->pnType == MF_VARIABLE_NODE)) &&
-             (theFields->value == (void *) name))
-           { theReturnValue = theFields; }
+             (theFields->lexemeValue == name))
+           {
+            if (theReturnValue == NULL)
+              { theReturnValue = theFields; }
+            else if (! theFields->goalCE)
+              { theReturnValue = theFields; }
+           }
 
          /*============================*/
          /* Move on to the next field. */

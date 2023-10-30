@@ -1,7 +1,7 @@
    /*******************************************************/
    /*      "C" Language Integrated Production System      */
    /*                                                     */
-   /*            CLIPS Version 6.40  08/06/16             */
+   /*            CLIPS Version 6.50  10/13/23             */
    /*                                                     */
    /*                   DEFRULE MODULE                    */
    /*******************************************************/
@@ -63,6 +63,8 @@
 /*            data structures.                               */
 /*                                                           */
 /*            ALLOW_ENVIRONMENT_GLOBALS no longer supported. */
+/*                                                           */
+/*      6.50: Support for data driven backward chaining.     */
 /*                                                           */
 /*************************************************************/
 
@@ -130,6 +132,8 @@ void InitializeDefrules(
    AddReservedPatternSymbol(theEnv,"logical",NULL);
    AddReservedPatternSymbol(theEnv,"exists",NULL);
    AddReservedPatternSymbol(theEnv,"forall",NULL);
+   AddReservedPatternSymbol(theEnv,"goal",NULL);
+   AddReservedPatternSymbol(theEnv,"explicit",NULL);
 
    DefruleBasicCommands(theEnv);
 
@@ -156,6 +160,7 @@ void InitializeDefrules(
 
    DefruleData(theEnv)->RightPrimeJoins = NULL;
    DefruleData(theEnv)->LeftPrimeJoins = NULL;
+   DefruleData(theEnv)->GoalPrimeJoins = NULL;
   }
 
 /**************************************************/
@@ -398,13 +403,15 @@ Defrule *GetNthDisjunct(
 void DefruleRunTimeInitialize(
   Environment *theEnv,
   struct joinLink *rightPrime,
-  struct joinLink *leftPrime)
+  struct joinLink *leftPrime,
+  struct joinLink *goalPrime)
   {
    Defmodule *theModule;
    Defrule *theRule, *theDisjunct;
 
    DefruleData(theEnv)->RightPrimeJoins = rightPrime;
    DefruleData(theEnv)->LeftPrimeJoins = leftPrime;
+   DefruleData(theEnv)->GoalPrimeJoins = goalPrime;
 
    SaveCurrentModule(theEnv);
 

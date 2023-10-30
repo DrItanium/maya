@@ -1,7 +1,7 @@
    /*******************************************************/
    /*      "C" Language Integrated Production System      */
    /*                                                     */
-   /*            CLIPS Version 6.40  07/23/20             */
+   /*            CLIPS Version 6.50  08/26/23             */
    /*                                                     */
    /*                  CONSTRUCT MODULE                   */
    /*******************************************************/
@@ -80,6 +80,8 @@
 /*                                                           */
 /*            File name/line count displayed for errors      */
 /*            and warnings during load command.              */
+/*                                                           */
+/*      6.50: Support for data driven backward chaining.     */
 /*                                                           */
 /*************************************************************/
 
@@ -721,7 +723,8 @@ bool Clear(
 
 #if DEFRULE_CONSTRUCT
    if ((DefruleData(theEnv)->RightPrimeJoins != NULL) ||
-       (DefruleData(theEnv)->LeftPrimeJoins != NULL))
+       (DefruleData(theEnv)->LeftPrimeJoins != NULL) ||
+       (DefruleData(theEnv)->GoalPrimeJoins != NULL))
      { SystemError(theEnv,"CONSTRCT",1); }
 #endif
 

@@ -1,7 +1,7 @@
    /*******************************************************/
    /*      "C" Language Integrated Production System      */
    /*                                                     */
-   /*            CLIPS Version 6.41  12/04/22             */
+   /*            CLIPS Version 6.50  09/16/23             */
    /*                                                     */
    /*            DEFTEMPLATE UTILITIES MODULE             */
    /*******************************************************/
@@ -60,6 +60,8 @@
 /*                                                           */
 /*            Used gensnprintf in place of gensprintf and.   */
 /*            sprintf.                                       */
+/*                                                           */
+/*      6.50: Support for data driven backward chaining.     */
 /*                                                           */
 /*************************************************************/
 
@@ -611,15 +613,20 @@ Deftemplate *CreateImpliedDeftemplate(
    newDeftemplate->numberOfSlots = 0;
    newDeftemplate->inScope = 1;
    newDeftemplate->patternNetwork = NULL;
+   newDeftemplate->goalNetwork = NULL;
    newDeftemplate->factList = NULL;
    newDeftemplate->lastFact = NULL;
    newDeftemplate->busyCount = 0;
-   newDeftemplate->watch = false;
+   newDeftemplate->watchFacts = false;
+   newDeftemplate->watchGoals = false;
    newDeftemplate->header.next = NULL;
 
 #if DEBUGGING_FUNCTIONS
    if (GetWatchItem(theEnv,"facts") == 1)
-     { DeftemplateSetWatch(newDeftemplate,true); }
+     { DeftemplateSetWatchFacts(newDeftemplate,true); }
+
+   if (GetWatchItem(theEnv,"goals") == 1)
+     { DeftemplateSetWatchGoals(newDeftemplate,true); }
 #endif
 
    newDeftemplate->header.whichModule = (struct defmoduleItemHeader *)

@@ -1,7 +1,7 @@
    /*******************************************************/
    /*      "C" Language Integrated Production System      */
    /*                                                     */
-   /*             CLIPS Version 6.40  07/02/18            */
+   /*             CLIPS Version 6.50  10/13/23            */
    /*                                                     */
    /*              FACTS MANAGER HEADER FILE              */
    /*******************************************************/
@@ -73,6 +73,8 @@
 /*                                                           */
 /*            Pretty print functions accept optional logical */
 /*            name argument.                                 */
+/*                                                           */
+/*      6.50: Support for data driven backward chaining.     */
 /*                                                           */
 /*************************************************************/
 
@@ -155,10 +157,13 @@ struct fact
       TypeHeader header;
      };
    Deftemplate *whichDeftemplate;
-   void *list;
+   struct patternMatch *list;
    long long factIndex;
    unsigned long hashValue;
    unsigned int garbage : 1;
+   unsigned int goal : 1;
+   unsigned int pendingAssert : 1;
+   unsigned int supportCount : 13;
    Fact *previousFact;
    Fact *nextFact;
    Fact *previousTemplateFact;
@@ -182,6 +187,12 @@ struct factModifier
    char *changeMap;
   };
 
+struct goalNetworkUpdate
+   {
+    Deftemplate *updateDeftemplate;
+    struct goalNetworkUpdate *next;
+   };
+   
 #include "facthsh.h"
 
 #define FACTS_DATA 3
@@ -189,15 +200,21 @@ struct factModifier
 struct factsData
   {
    bool ChangeToFactList;
+   bool ChangeToGoalList;
 #if DEBUGGING_FUNCTIONS
    bool WatchFacts;
+   bool WatchGoals;
 #endif
    Fact DummyFact;
    Fact *GarbageFacts;
    Fact *LastFact;
    Fact *FactList;
+   Fact *LastGoal;
+   Fact *GoalList;
    long long NextFactIndex;
+   long long NextGoalIndex;
    unsigned long NumberOfFacts;
+   unsigned long NumberOfGoals;
    struct callFunctionItemWithArg *ListOfAssertFunctions;
    struct callFunctionItemWithArg *ListOfRetractFunctions;
    ModifyCallFunctionItem *ListOfModifyFunctions;
@@ -221,6 +238,11 @@ struct factsData
    AssertStringError assertStringError;
    FactModifierError factModifierError;
    FactBuilderError factBuilderError;
+   struct queueItem *goalQueue;
+   struct queueItem *lastInGoalQueue;
+   struct goalNetworkUpdate *goalUpdateList;
+   struct extractedInfo **goalInfoArray;
+   bool goalGenerationDisabled;
   };
 
 #define FactData(theEnv) ((struct factsData *) GetEnvironmentData(theEnv,FACTS_DATA))
@@ -240,17 +262,21 @@ struct factsData
    RetractError                   Retract(Fact *);
    RetractError                   RetractDriver(Environment *,Fact *,bool,char *);
    RetractError                   RetractAllFacts(Environment *);
+   RetractError                   RetractAllGoals(Environment *);
    Fact                          *CreateFactBySize(Environment *,size_t);
    void                           FactInstall(Environment *,Fact *);
    void                           FactDeinstall(Environment *,Fact *);
    Fact                          *GetNextFact(Environment *,Fact *);
    Fact                          *GetNextFactInScope(Environment *,Fact *);
+   Fact                          *GetNextGoal(Environment *,Fact *);
+   Fact                          *GetNextGoalInScope(Environment *,Fact *);
    void                           FactPPForm(Fact *,StringBuilder *,bool);
    bool                           GetFactListChanged(Environment *);
    void                           SetFactListChanged(Environment *,bool);
    unsigned long                  GetNumberOfFacts(Environment *);
    void                           InitializeFacts(Environment *);
    Fact                          *FindIndexedFact(Environment *,long long);
+   Fact                          *FindIndexedGoal(Environment *,long long);
    void                           RetainFact(Fact *);
    void                           IncrementFactCallback(Environment *,Fact *);
    void                           PrintFactIdentifier(Environment *,const char *,Fact *);
@@ -316,6 +342,8 @@ struct factsData
    ModifyCallFunctionItem        *RemoveModifyFunctionFromCallList(Environment *,const char *,
                                                                    ModifyCallFunctionItem *,bool *);
    void                           DeallocateModifyCallList(Environment *,ModifyCallFunctionItem *);
+   Fact                          *AssertGoal(Fact *);
+   RetractError                   RetractGoal(Fact *);
 
 #endif /* _H_factmngr */
 

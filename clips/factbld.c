@@ -1,7 +1,7 @@
    /*******************************************************/
    /*      "C" Language Integrated Production System      */
    /*                                                     */
-   /*            CLIPS Version 6.40  12/07/17             */
+   /*            CLIPS Version 6.50  10/13/23             */
    /*                                                     */
    /*                   FACT BUILD MODULE                 */
    /*******************************************************/
@@ -35,6 +35,8 @@
 /*                                                           */
 /*            Removed initial-fact support.                  */
 /*                                                           */
+/*      6.50: Support for data driven backward chaining.     */
+/*                                                           */
 /*************************************************************/
 
 #include "setup.h"
@@ -47,6 +49,7 @@
 #include "envrnmnt.h"
 #include "factcmp.h"
 #include "factgen.h"
+#include "factgoal.h"
 #include "factlhs.h"
 #include "factmch.h"
 #include "factmngr.h"
@@ -65,14 +68,16 @@
 
 #if (! RUN_TIME) && (! BLOAD_ONLY)
    static struct factPatternNode    *FindPatternNode(struct factPatternNode *,struct lhsParseNode *,
-                                                  struct factPatternNode **,bool,bool);
+                                                     struct factPatternNode **,bool,bool);
    static struct factPatternNode    *CreateNewPatternNode(Environment *,struct lhsParseNode *,struct factPatternNode *,
-                                                       struct factPatternNode *,bool,bool);
+                                                       struct factPatternNode *,bool,bool,bool);
    static void                       ClearPatternMatches(Environment *,struct factPatternNode *);
    static void                       DetachFactPattern(Environment *,struct patternNodeHeader *);
-   static struct patternNodeHeader  *PlaceFactPattern(Environment *,struct lhsParseNode *);
+   static struct patternNodeHeader  *PlaceFactPattern(Environment *,struct lhsParseNode *,bool *,struct expr **);
    static struct lhsParseNode       *RemoveUnneededSlots(Environment *,struct lhsParseNode *);
    static void                       FindAndSetDeftemplatePatternNetwork(Environment *,struct factPatternNode *,struct factPatternNode *);
+   static void                       UpdateGoalExpressions(Environment *,Deftemplate *,struct factPatternNode *,Expression *);
+   static void                       IncrementalResetGoalsDriver(Environment *,struct factPatternNode *);
 #endif
 
 /*********************************************************/
@@ -152,7 +157,9 @@ void InitializeFactPatterns(
 /******************************************************************************/
 static struct patternNodeHeader *PlaceFactPattern(
   Environment *theEnv,
-  struct lhsParseNode *thePattern)
+  struct lhsParseNode *thePattern,
+  bool *generatesGoal,
+  struct expr **goalExpression)
   {
    struct lhsParseNode *tempPattern;
    struct factPatternNode *currentLevel, *lastLevel;
@@ -160,6 +167,8 @@ static struct patternNodeHeader *PlaceFactPattern(
    bool endSlot;
    unsigned int count;
    const char *deftemplateName;
+   bool addToGoalNetwork = false;
+   bool goalNetworkWasEmpty = false;
 
    /*======================================================================*/
    /* Get the name of the deftemplate associated with the pattern being    */
@@ -167,7 +176,15 @@ static struct patternNodeHeader *PlaceFactPattern(
    /*======================================================================*/
 
    deftemplateName = thePattern->right->bottom->lexemeValue->contents;
-
+   
+   /*==================================================*/
+   /* Determine if the pattern is for the fact pattern */
+   /* network or the goal pattern network.             */
+   /*==================================================*/
+   
+   if (thePattern->goalCE == true)
+     { addToGoalNetwork = true; }
+      
    /*=====================================================*/
    /* Remove any slot tests that test only for existance. */
    /*=====================================================*/
@@ -240,7 +257,22 @@ static struct patternNodeHeader *PlaceFactPattern(
    /* pattern is being added to the pattern network. */
    /*================================================*/
 
-   currentLevel = FactData(theEnv)->CurrentDeftemplate->patternNetwork;
+   if (addToGoalNetwork)
+     {
+      currentLevel = FactData(theEnv)->CurrentDeftemplate->goalNetwork;
+      if (currentLevel == NULL)
+        { goalNetworkWasEmpty = true; }
+     }
+   else
+     {
+      currentLevel = FactData(theEnv)->CurrentDeftemplate->patternNetwork;
+      if (FactData(theEnv)->CurrentDeftemplate->goalNetwork != NULL)
+        {
+         *generatesGoal = true;
+         *goalExpression = GenConstant(theEnv,DEFTEMPLATE_PTR,FactData(theEnv)->CurrentDeftemplate);
+        }
+     }
+     
    lastLevel = NULL;
    thePattern = thePattern->right;
 
@@ -285,7 +317,7 @@ static struct patternNodeHeader *PlaceFactPattern(
       /*================================================*/
 
       if (newNode == NULL)
-        { newNode = CreateNewPatternNode(theEnv,thePattern,nodeBeforeMatch,lastLevel,endSlot,false); }
+        { newNode = CreateNewPatternNode(theEnv,thePattern,nodeBeforeMatch,lastLevel,endSlot,false,addToGoalNetwork); }
 
       if (thePattern->constantSelector != NULL)
         {
@@ -294,7 +326,7 @@ static struct patternNodeHeader *PlaceFactPattern(
          newNode = FindPatternNode(currentLevel,thePattern,&nodeBeforeMatch,endSlot,true);
 
          if (newNode == NULL)
-           { newNode = CreateNewPatternNode(theEnv,thePattern,nodeBeforeMatch,lastLevel,endSlot,true); }
+           { newNode = CreateNewPatternNode(theEnv,thePattern,nodeBeforeMatch,lastLevel,endSlot,true,addToGoalNetwork); }
         }
 
       /*===========================================================*/
@@ -328,13 +360,178 @@ static struct patternNodeHeader *PlaceFactPattern(
       currentLevel = newNode->nextLevel;
      }
 
+   /*=====================================================*/
+   /* If the goal network for this deftemplate was empty, */
+   /* mark all the joins that can be reached by this      */
+   /* network to indicate goals should be generated.      */
+   /*=====================================================*/
+   
+   if (addToGoalNetwork && goalNetworkWasEmpty)
+     {
+      struct goalNetworkUpdate *theUpdate;
+      
+      theUpdate = get_struct(theEnv,goalNetworkUpdate);
+      theUpdate->updateDeftemplate = FactData(theEnv)->CurrentDeftemplate;
+      theUpdate->next = FactData(theEnv)->goalUpdateList;
+      FactData(theEnv)->goalUpdateList = theUpdate;
+     }
+     
    /*==================================================*/
    /* Return the leaf node of the newly added pattern. */
    /*==================================================*/
 
    return((struct patternNodeHeader *) newNode);
   }
+   
+/***************************************/
+/* IncrementalResetAddGoalExpressions: */
+/***************************************/
+void IncrementalResetAddGoalExpressions(
+  Environment *theEnv)
+  {
+   struct goalNetworkUpdate *theUpdate;
+   Expression *theGoalExpression;
 
+   for (theUpdate = FactData(theEnv)->goalUpdateList;
+        theUpdate != NULL;
+        theUpdate = theUpdate->next)
+     {
+      theGoalExpression = GenConstant(theEnv,DEFTEMPLATE_PTR,theUpdate->updateDeftemplate);
+      UpdateGoalExpressions(theEnv,
+                            theUpdate->updateDeftemplate,
+                            theUpdate->updateDeftemplate->patternNetwork,
+                            theGoalExpression);
+      ReturnExpression(theEnv,theGoalExpression);
+     }
+  }
+
+/**************************/
+/* UpdateGoalExpressions: */
+/**************************/
+static void UpdateGoalExpressions(
+  Environment *theEnv,
+  Deftemplate *theDeftemplate,
+  struct factPatternNode *theNode,
+  Expression *theGoalExpression)
+  {
+   struct joinNode *theJoin;
+   struct joinLink *theLink;
+
+   while (theNode != NULL)
+     {
+      for (theJoin = theNode->header.entryJoin; theJoin != NULL; theJoin = theJoin->rightMatchNode)
+        {
+         if (theJoin->joinFromTheRight ||
+             theJoin->patternIsNegated ||
+             theJoin->patternIsExists)
+           { continue; }
+           
+         if (theJoin->goalExpression != NULL)
+           { continue; }
+         
+         theJoin->goalJoin = true;
+         theJoin->goalExpression = AddHashedExpression(theEnv,theGoalExpression);
+         
+         if (theJoin->firstJoin)
+           {
+            theJoin->leftMemory = get_struct(theEnv,betaMemory);
+            theJoin->leftMemory->beta = (struct partialMatch **) genalloc(theEnv,sizeof(struct partialMatch *));
+            theJoin->leftMemory->beta[0] = CreateEmptyPartialMatch(theEnv);
+            theJoin->leftMemory->beta[0]->owner = theJoin;
+            theJoin->leftMemory->size = 1;
+            theJoin->leftMemory->count = 1;
+
+            theLink = get_struct(theEnv,joinLink);
+            theLink->join = theJoin;
+            theLink->enterDirection = RHS;
+            theLink->next = DefruleData(theEnv)->GoalPrimeJoins;
+            DefruleData(theEnv)->GoalPrimeJoins = theLink;
+           }
+        }
+        
+      UpdateGoalExpressions(theEnv,theDeftemplate,theNode->nextLevel,theGoalExpression);
+      theNode = theNode->rightNode;
+     }
+  }
+  
+/**************************/
+/* IncrementalResetGoals: */
+/**************************/
+void IncrementalResetGoals(
+  Environment *theEnv)
+  {
+   struct goalNetworkUpdate *theUpdate;
+
+   for (theUpdate = FactData(theEnv)->goalUpdateList;
+        theUpdate != NULL;
+        theUpdate = theUpdate->next)
+     { IncrementalResetGoalsDriver(theEnv,theUpdate->updateDeftemplate->patternNetwork); }
+  }
+
+/********************************/
+/* IncrementalResetGoalsDriver: */
+/********************************/
+static void IncrementalResetGoalsDriver(
+  Environment *theEnv,
+  struct factPatternNode *theNode)
+  {
+   struct joinNode *theJoin;
+   struct betaMemory *theMemory;
+   struct partialMatch *listOfMatches;
+   unsigned long b;
+
+   while (theNode != NULL)
+     {
+      for (theJoin = theNode->header.entryJoin; theJoin != NULL; theJoin = theJoin->rightMatchNode)
+        {
+         if (theJoin->joinFromTheRight ||
+             theJoin->patternIsNegated ||
+             theJoin->patternIsExists)
+           { continue; }
+           
+         if (theJoin->goalExpression == NULL)
+           { continue; }
+
+         if (theJoin->firstJoin &&
+             GetAlphaMemory(theEnv,(struct patternNodeHeader *) theJoin->rightSideEntryStructure,0) != NULL)
+           { continue; }
+           
+         theMemory = theJoin->leftMemory;
+
+         for (b = 0; b < theMemory->size; b++)
+           {
+            listOfMatches = theMemory->beta[b];
+            while (listOfMatches != NULL)
+              {
+               if (listOfMatches->children == NULL)
+                 { AttachGoal(theEnv,theJoin,listOfMatches,listOfMatches,true); }
+     
+               listOfMatches = listOfMatches->nextInMemory;
+              }
+           }
+        }
+
+      IncrementalResetGoalsDriver(theEnv,theNode->nextLevel);
+      theNode = theNode->rightNode;
+     }
+  }
+
+/***********************/
+/* ReleaseGoalUpdates: */
+/***********************/
+void ReleaseGoalUpdates(
+  Environment *theEnv)
+  {
+   struct goalNetworkUpdate *theUpdate;
+
+   while (FactData(theEnv)->goalUpdateList != NULL)
+     {
+      theUpdate = FactData(theEnv)->goalUpdateList;
+      FactData(theEnv)->goalUpdateList = theUpdate->next;
+      rtn_struct(theEnv,goalNetworkUpdate,theUpdate);
+     }
+  }
+  
 /*************************************************************/
 /* FindPatternNode: Looks for a pattern node at a specified  */
 /*  level in the pattern network that can be reused (shared) */
@@ -598,7 +795,8 @@ static struct factPatternNode *CreateNewPatternNode(
   struct factPatternNode *nodeBeforeMatch,
   struct factPatternNode *upperLevel,
   bool endSlot,
-  bool constantSelector)
+  bool constantSelector,
+  bool goal)
   {
    struct factPatternNode *newNode;
 
@@ -671,8 +869,16 @@ static struct factPatternNode *CreateNewPatternNode(
 
    if (nodeBeforeMatch == NULL)
      {
-      if (upperLevel == NULL) FactData(theEnv)->CurrentDeftemplate->patternNetwork = newNode;
-      else upperLevel->nextLevel = newNode;
+      if (upperLevel == NULL)
+        {
+         if (goal)
+           { FactData(theEnv)->CurrentDeftemplate->goalNetwork = newNode; }
+         else
+           { FactData(theEnv)->CurrentDeftemplate->patternNetwork = newNode; }
+        }
+      else
+        { upperLevel->nextLevel = newNode; }
+      
       return(newNode);
      }
 
@@ -698,11 +904,23 @@ static struct factPatternNode *CreateNewPatternNode(
    /* the first node visited in the pattern network.      */
    /*=====================================================*/
 
-   newNode->rightNode = FactData(theEnv)->CurrentDeftemplate->patternNetwork;
-   if (FactData(theEnv)->CurrentDeftemplate->patternNetwork != NULL)
-     { FactData(theEnv)->CurrentDeftemplate->patternNetwork->leftNode = newNode; }
+   if (goal)
+     {
+      newNode->rightNode = FactData(theEnv)->CurrentDeftemplate->goalNetwork;
+      if (FactData(theEnv)->CurrentDeftemplate->goalNetwork != NULL)
+        { FactData(theEnv)->CurrentDeftemplate->goalNetwork->leftNode = newNode; }
 
-   FactData(theEnv)->CurrentDeftemplate->patternNetwork = newNode;
+      FactData(theEnv)->CurrentDeftemplate->goalNetwork = newNode;
+     }
+   else
+     {
+      newNode->rightNode = FactData(theEnv)->CurrentDeftemplate->patternNetwork;
+      if (FactData(theEnv)->CurrentDeftemplate->patternNetwork != NULL)
+        { FactData(theEnv)->CurrentDeftemplate->patternNetwork->leftNode = newNode; }
+
+      FactData(theEnv)->CurrentDeftemplate->patternNetwork = newNode;
+     }
+     
    return(newNode);
   }
 
@@ -939,6 +1157,12 @@ static void FindAndSetDeftemplatePatternNetwork(
             theDeftemplate->patternNetwork = newRootNode;
             return;
            }
+         else if (theDeftemplate->goalNetwork == rootNode)
+           {
+            RestoreCurrentModule(theEnv);
+            theDeftemplate->goalNetwork = newRootNode;
+            return;
+           }
         }
      }
 
@@ -979,7 +1203,7 @@ static void ClearPatternMatches(
       /*========================================*/
 
       lastMatch = NULL;
-      theMatch = (struct patternMatch *) theFact->list;
+      theMatch = theFact->list;
 
       while (theMatch != NULL)
         {
@@ -998,7 +1222,7 @@ static void ClearPatternMatches(
 
                theFact->list = theMatch->next;
                rtn_struct(theEnv,patternMatch,theMatch);
-               theMatch = (struct patternMatch *) theFact->list;
+               theMatch = theFact->list;
               }
             else
              {
@@ -1030,6 +1254,3 @@ static void ClearPatternMatches(
 #endif /* (! RUN_TIME) && (! BLOAD_ONLY) */
 
 #endif /* DEFTEMPLATE_CONSTRUCT && DEFRULE_CONSTRUCT */
-
-
-

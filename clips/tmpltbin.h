@@ -1,7 +1,7 @@
    /*******************************************************/
    /*      "C" Language Integrated Production System      */
    /*                                                     */
-   /*             CLIPS Version 6.40  07/30/16            */
+   /*             CLIPS Version 6.50  08/24/23            */
    /*                                                     */
    /*         DEFTEMPLATE BSAVE/BLOAD HEADER FILE         */
    /*******************************************************/
@@ -30,6 +30,8 @@
 /*                                                           */
 /*            Removed use of void pointers for specific      */
 /*            data structures.                               */
+/*                                                           */
+/*      6.50: Support for data driven backward chaining.     */
 /*                                                           */
 /*************************************************************/
 
@@ -66,6 +68,7 @@ struct bsaveDeftemplate
    unsigned int implied : 1;
    unsigned int numberOfSlots : 15;
    unsigned long patternNetwork;
+   unsigned long goalNetwork;
   };
 
 #include "modulbin.h"

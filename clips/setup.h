@@ -101,8 +101,7 @@
 #pragma once
 
 #define _H_setup
-// auto detect must go here, can't do it through a simple include
-#include "platform/os.h"
+
 /****************************************************************/
 /* -------------------- COMPILER FLAGS ------------------------ */
 /****************************************************************/

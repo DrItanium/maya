@@ -1,7 +1,7 @@
    /*******************************************************/
    /*      "C" Language Integrated Production System      */
    /*                                                     */
-   /*            CLIPS Version 6.40  07/30/16             */
+   /*            CLIPS Version 6.50  08/26/23             */
    /*                                                     */
    /*                 RULE DELETION MODULE                */
    /*******************************************************/
@@ -37,6 +37,8 @@
 /*                                                           */
 /*            Removed use of void pointers for specific      */
 /*            data structures.                               */
+/*                                                           */
+/*      6.50: Support for data driven backward chaining.     */
 /*                                                           */
 /*************************************************************/
 
@@ -362,6 +364,7 @@ static void DetachJoins(
         {
          RemoveHashedExpression(theEnv,join->networkTest);
          RemoveHashedExpression(theEnv,join->secondaryNetworkTest);
+         RemoveHashedExpression(theEnv,join->goalExpression);
          RemoveHashedExpression(theEnv,join->leftHash);
          RemoveHashedExpression(theEnv,join->rightHash);
         }
@@ -429,7 +432,39 @@ static void DetachJoins(
               }
            }
         }
+        
+      /*===========================*/
+      /* Fix the goal prime links. */
+      /*===========================*/
 
+      if (join->firstJoin && join->goalJoin)
+        {
+         lastLink = NULL;
+
+         theLink = DefruleData(theEnv)->GoalPrimeJoins;
+         while (theLink != NULL)
+           {
+            if (theLink->join == join)
+              {
+               if (lastLink == NULL)
+                 { DefruleData(theEnv)->GoalPrimeJoins = theLink->next; }
+               else
+                 { lastLink->next = theLink->next; }
+
+#if (! RUN_TIME) && (! BLOAD_ONLY)
+               rtn_struct(theEnv,joinLink,theLink);
+#endif
+
+               theLink = NULL;
+              }
+            else
+              {
+               lastLink = theLink;
+               theLink = lastLink->next;
+              }
+           }
+        }
+        
       /*==================================================*/
       /* Remove the link to the join from the join above. */
       /*==================================================*/

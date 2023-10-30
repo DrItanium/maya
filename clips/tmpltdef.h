@@ -1,7 +1,7 @@
    /*******************************************************/
    /*      "C" Language Integrated Production System      */
    /*                                                     */
-   /*             CLIPS Version 6.40  05/03/19            */
+   /*             CLIPS Version 6.50  09/14/23            */
    /*                                                     */
    /*               DEFTEMPLATE HEADER FILE               */
    /*******************************************************/
@@ -55,6 +55,8 @@
 /*                                                           */
 /*            ALLOW_ENVIRONMENT_GLOBALS no longer supported. */
 /*                                                           */
+/*      6.50: Support for data driven backward chaining.     */
+/*                                                           */
 /*************************************************************/
 
 #ifndef _H_tmpltdef
@@ -89,11 +91,13 @@ struct deftemplate
    ConstructHeader header;
    struct templateSlot *slotList;
    unsigned int implied       : 1;
-   unsigned int watch         : 1;
+   unsigned int watchFacts    : 1;
+   unsigned int watchGoals    : 1;
    unsigned int inScope       : 1;
    unsigned short numberOfSlots;
    long busyCount;
    struct factPatternNode *patternNetwork;
+   struct factPatternNode *goalNetwork;
    Fact *factList;
    Fact *lastFact;
   };

@@ -1,7 +1,7 @@
    /*******************************************************/
    /*      "C" Language Integrated Production System      */
    /*                                                     */
-   /*            CLIPS Version 6.41  12/04/22             */
+   /*            CLIPS Version 6.50  10/08/23             */
    /*                                                     */
    /*                  EVALUATION MODULE                  */
    /*******************************************************/
@@ -70,6 +70,8 @@
 /*                                                           */
 /*            Used gensnprintf in place of gensprintf and.   */
 /*            sprintf.                                       */
+/*                                                           */
+/*      6.50: Support for data driven backward chaining.     */
 /*                                                           */
 /*************************************************************/
 
@@ -182,6 +184,7 @@ bool EvaluateExpression(
       case SYMBOL_TYPE:
       case FLOAT_TYPE:
       case INTEGER_TYPE:
+      case UQV_TYPE:
 #if OBJECT_SYSTEM
       case INSTANCE_NAME_TYPE:
       case INSTANCE_ADDRESS_TYPE:
@@ -417,6 +420,7 @@ void WriteCLIPSValue(
       case SYMBOL_TYPE:
       case STRING_TYPE:
       case INTEGER_TYPE:
+      case UQV_TYPE:
       case FLOAT_TYPE:
       case EXTERNAL_ADDRESS_TYPE:
       case FACT_ADDRESS_TYPE:
@@ -457,6 +461,7 @@ void WriteUDFValue(
       case SYMBOL_TYPE:
       case STRING_TYPE:
       case INTEGER_TYPE:
+      case UQV_TYPE:
       case FLOAT_TYPE:
       case EXTERNAL_ADDRESS_TYPE:
       case FACT_ADDRESS_TYPE:
@@ -574,6 +579,7 @@ void Retain(
         break;
 
       case INTEGER_TYPE:
+      case UQV_TYPE:
         IncrementIntegerCount(th);
         break;
 
@@ -630,6 +636,7 @@ void Release(
         break;
 
       case INTEGER_TYPE:
+      case UQV_TYPE:
         ReleaseInteger(theEnv,(CLIPSInteger *) th);
         break;
 
@@ -690,6 +697,7 @@ void AtomInstall(
         break;
 
       case INTEGER_TYPE:
+      case UQV_TYPE:
         IncrementIntegerCount(vPtr);
         break;
 
@@ -740,6 +748,7 @@ void AtomDeinstall(
         break;
 
       case INTEGER_TYPE:
+      case UQV_TYPE:
         ReleaseInteger(theEnv,(CLIPSInteger *) vPtr);
         break;
 
@@ -857,6 +866,7 @@ unsigned long GetAtomicHashValue(
         break;
 
       case INTEGER_TYPE:
+      case UQV_TYPE:
         tvalue = (unsigned long) ((CLIPSInteger *) value)->contents;
         break;
 

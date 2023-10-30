@@ -2,7 +2,7 @@
    /*******************************************************/
    /*      "C" Language Integrated Production System      */
    /*                                                     */
-   /*            CLIPS Version 6.40  11/01/16             */
+   /*            CLIPS Version 6.50  08/24/23             */
    /*                                                     */
    /*     FACT PATTERN NETWORK CONSTRUCTS-TO-C MODULE     */
    /*******************************************************/
@@ -30,6 +30,8 @@
 /*                                                           */
 /*            Removed use of void pointers for specific      */
 /*            data structures.                               */
+/*                                                           */
+/*      6.50: Support for data driven backward chaining.     */
 /*                                                           */
 /*************************************************************/
 
@@ -113,6 +115,11 @@ static void BeforePatternNetworkToCode(
 
          theDeftemplate->header.bsaveID = whichDeftemplate++;
          for (thePattern = theDeftemplate->patternNetwork;
+              thePattern != NULL;
+              thePattern = GetNextPatternNode(thePattern))
+           { thePattern->bsaveID = whichPattern++; }
+
+         for (thePattern = theDeftemplate->goalNetwork;
               thePattern != NULL;
               thePattern = GetNextPatternNode(thePattern))
            { thePattern->bsaveID = whichPattern++; }
@@ -219,6 +226,31 @@ static bool PatternNetworkToCode(
          /*======================================================*/
 
          for (thePatternNode = theTemplate->patternNetwork;
+              thePatternNode != NULL;
+              thePatternNode = GetNextPatternNode(thePatternNode))
+           {
+            networkFile = OpenFileIfNeeded(theEnv,networkFile,fileName,pathName,fileNameBuffer,fileID,imageID,&fileCount,
+                                         networkArrayVersion,headerFP,
+                                         "struct factPatternNode",FactPrefix(),false,NULL);
+            if (networkFile == NULL)
+              {
+               CloseNetworkFiles(theEnv,networkFile,maxIndices);
+               return false;
+              }
+
+            PatternNodeToCode(theEnv,networkFile,thePatternNode,imageID,maxIndices);
+            networkArrayCount++;
+            networkFile = CloseFileIfNeeded(theEnv,networkFile,&networkArrayCount,
+                                            &networkArrayVersion,maxIndices,NULL,NULL);
+           }
+           
+         /*======================================================*/
+         /* Loop through each pattern node in the deftemplate's  */
+         /* goal network writing its C code representation to    */
+         /* the file as it is traversed.                         */
+         /*======================================================*/
+
+         for (thePatternNode = theTemplate->goalNetwork;
               thePatternNode != NULL;
               thePatternNode = GetNextPatternNode(thePatternNode))
            {

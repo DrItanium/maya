@@ -1,7 +1,7 @@
    /*******************************************************/
    /*      "C" Language Integrated Production System      */
    /*                                                     */
-   /*            CLIPS Version 6.40  08/28/17             */
+   /*            CLIPS Version 6.50  09/16/23             */
    /*                                                     */
    /*                   RETRACT MODULE                    */
    /*******************************************************/
@@ -42,6 +42,8 @@
 /*            Removed use of void pointers for specific      */
 /*            data structures.                               */
 /*                                                           */
+/*      6.50: Support for data driven backward chaining.     */
+/*                                                           */
 /*************************************************************/
 
 #include <stdio.h>
@@ -57,6 +59,7 @@
 #include "drive.h"
 #include "engine.h"
 #include "envrnmnt.h"
+#include "factgoal.h"
 #include "lgcldpnd.h"
 #include "match.h"
 #include "memalloc.h"
@@ -65,6 +68,10 @@
 #include "reteutil.h"
 #include "router.h"
 #include "symbol.h"
+
+#if DEFTEMPLATE_CONSTRUCT
+#include "factmngr.h"
+#endif
 
 #include "retract.h"
 
@@ -129,9 +136,15 @@ void PosEntryRetractAlpha(
   int operation)
   {
    struct partialMatch *betaMatch, *tempMatch;
-   struct joinNode *joinPtr;
+   struct joinNode *joinPtr, *lastJoin;
 
    betaMatch = alphaMatch->children;
+   
+   if (betaMatch != NULL)
+     { lastJoin = ((struct joinNode *) betaMatch->owner)->lastLevel; }
+   else
+     { lastJoin = NULL; }
+   
    while (betaMatch != NULL)
      {
       joinPtr = (struct joinNode *) betaMatch->owner;
@@ -148,6 +161,20 @@ void PosEntryRetractAlpha(
 		  (betaMatch->marker != NULL) : false)
 		{ RemoveActivation(theEnv,(struct activation *) betaMatch->marker,true,true); }
 
+      /*=======================================*/
+      /* Remove support for any attached goal. */
+      /*=======================================*/
+      
+#if DEFTEMPLATE_CONSTRUCT
+      if (betaMatch->goalMarker && (betaMatch->marker != NULL))
+        { UpdateGoalSupport(theEnv,betaMatch); }
+        
+      if ((lastJoin != NULL) &&
+          (lastJoin->goalJoin) &&
+          (betaMatch->leftParent != NULL))
+        { AttachGoal(theEnv,lastJoin,betaMatch->leftParent,betaMatch->leftParent,true); }
+#endif
+
 	  tempMatch = betaMatch->nextRightChild;
 
 	  if (betaMatch->rhsMemory)
@@ -159,6 +186,11 @@ void PosEntryRetractAlpha(
 
       betaMatch = tempMatch;
      }
+     
+   if ((lastJoin != NULL) &&
+       (lastJoin->firstJoin == true) &&
+       (lastJoin->goalExpression != NULL))
+     { AttachGoal(theEnv,lastJoin,NULL,lastJoin->leftMemory->beta[0],true); }
   }
 
 /*************************/
@@ -290,6 +322,9 @@ void PosEntryRetractBeta(
       else
         { UnlinkNonLeftLineage(theEnv,(struct joinNode *) betaMatch->owner,betaMatch,LHS); }
 
+      if (betaMatch->goalMarker && (betaMatch->marker != NULL))
+        { UpdateGoalSupport(theEnv,betaMatch); }
+        
       if (betaMatch->dependents != NULL) RemoveLogicalSupport(theEnv,betaMatch);
       ReturnPartialMatch(theEnv,betaMatch);
 
@@ -343,7 +378,9 @@ static bool FindNextConflictingMatch(
         possibleConflicts != NULL;
         possibleConflicts = possibleConflicts->nextInMemory)
      {
+#if DEBUGGING_FUNCTIONS
       theJoin->memoryCompares++;
+#endif
 
       /*=====================================*/
       /* Initially indicate that the partial */

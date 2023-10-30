@@ -1,7 +1,7 @@
    /*******************************************************/
    /*      "C" Language Integrated Production System      */
    /*                                                     */
-   /*            CLIPS Version 6.41  12/04/22             */
+   /*            CLIPS Version 6.50  08/31/23             */
    /*                                                     */
    /*                 FACT HASHING MODULE                 */
    /*******************************************************/
@@ -49,6 +49,8 @@
 /*      6.41: Used gensnprintf in place of gensprintf and.   */
 /*            sprintf.                                       */
 /*                                                           */
+/*      6.50: Support for data driven backward chaining.     */
+/*                                                           */
 /*************************************************************/
 
 #include <stdio.h>
@@ -77,7 +79,6 @@
 /* LOCAL INTERNAL FUNCTION DEFINITIONS */
 /***************************************/
 
-   static Fact                   *FactExists(Environment *,Fact *,size_t);
    static struct factHashEntry  **CreateFactHashTable(Environment *,size_t);
    static void                    ResizeFactHashTable(Environment *);
    static void                    ResetFactHashTable(Environment *);
@@ -120,7 +121,7 @@ size_t HashFact(
 /* FactExists: Determines if a specified fact */
 /*   already exists in the fact hash table.   */
 /**********************************************/
-static Fact *FactExists(
+Fact *FactExists(
   Environment *theEnv,
   Fact *theFact,
   size_t hashValue)
@@ -134,6 +135,9 @@ static Fact *FactExists(
         theFactHash = theFactHash->next)
      {
       if (theFact->hashValue != theFactHash->theFact->hashValue)
+        { continue; }
+        
+      if (theFact->goal != theFactHash->theFact->goal)
         { continue; }
 
       if ((theFact->whichDeftemplate == theFactHash->theFact->whichDeftemplate) ?
@@ -155,7 +159,7 @@ void AddHashedFact(
   {
    struct factHashEntry *newhash, *temp;
 
-   if (FactData(theEnv)->NumberOfFacts > FactData(theEnv)->FactHashTableSize)
+   if ((FactData(theEnv)->NumberOfFacts + FactData(theEnv)->NumberOfGoals) > FactData(theEnv)->FactHashTableSize)
      { ResizeFactHashTable(theEnv); }
 
    newhash = get_struct(theEnv,factHashEntry);
@@ -192,7 +196,7 @@ bool RemoveHashedFact(
            {
             FactData(theEnv)->FactHashTable[hashValue] = hptr->next;
             rtn_struct(theEnv,factHashEntry,hptr);
-            if (FactData(theEnv)->NumberOfFacts == 1)
+            if ((FactData(theEnv)->NumberOfFacts + FactData(theEnv)->NumberOfGoals) == 1)
               { ResetFactHashTable(theEnv); }
             return true;
            }
@@ -200,7 +204,7 @@ bool RemoveHashedFact(
            {
             prev->next = hptr->next;
             rtn_struct(theEnv,factHashEntry,hptr);
-            if (FactData(theEnv)->NumberOfFacts == 1)
+            if ((FactData(theEnv)->NumberOfFacts + FactData(theEnv)->NumberOfGoals) == 1)
               { ResetFactHashTable(theEnv); }
             return true;
            }
@@ -296,7 +300,43 @@ bool SetFactDuplication(
    FactData(theEnv)->FactDuplication = value;
    return ov;
   }
+  
+/*****************************************************/
+/* HandleGoalDuplication: Determines if a goal to be */
+/*   added to the goal-list is a duplicate entry and */
+/*   takes appropriate action.                       */
+/*****************************************************/
+size_t HandleGoalDuplication(
+  Environment *theEnv,
+  Fact *theFact,
+  Fact **duplicate)
+  {
+   size_t hashValue;
+   
+   *duplicate = NULL;
 
+   /*===========================================*/
+   /* If the goal doesn't already exist, return */
+   /* the hash value for the new goal.          */
+   /*===========================================*/
+   
+   hashValue = HashFact(theFact);
+
+   *duplicate = FactExists(theEnv,theFact,hashValue);
+   if (*duplicate == NULL) return hashValue;
+
+   /*===============================================*/
+   /* Otherwise, increment the count for the goal's */
+   /* supporting partial matches and delete the     */
+   /* data structures for the duplicated goal.      */
+   /*===============================================*/
+   
+   (*duplicate)->supportCount++;
+   ReturnFact(theEnv,theFact);
+
+   return 0;
+  }
+  
 /**************************************************/
 /* InitializeFactHashTable: Initializes the table */
 /*   entries in the fact hash table to NULL.      */

@@ -1,7 +1,7 @@
    /*******************************************************/
    /*      "C" Language Integrated Production System      */
    /*                                                     */
-   /*             CLIPS Version 6.40  12/30/16            */
+   /*             CLIPS Version 6.50  08/31/23            */
    /*                                                     */
    /*                 FACT HASHING MODULE                 */
    /*******************************************************/
@@ -46,6 +46,8 @@
 /*            Assert returns duplicate fact. FALSE is now    */
 /*            returned only if an error occurs.              */
 /*                                                           */
+/*      6.50: Support for data driven backward chaining.     */
+/*                                                           */
 /*************************************************************/
 
 #ifndef _H_facthsh
@@ -75,6 +77,8 @@ struct factHashEntry
    void                           ShowFactHashTableCommand(Environment *,UDFContext *,UDFValue *);
    size_t                         HashFact(Fact *);
    bool                           FactWillBeAsserted(Environment *,Fact *);
+   size_t                         HandleGoalDuplication(Environment *,Fact *,Fact **);
+   Fact                          *FactExists(Environment *,Fact *,size_t);
 
 #endif /* _H_facthsh */
 

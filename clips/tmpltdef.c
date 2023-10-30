@@ -1,7 +1,7 @@
    /*******************************************************/
    /*      "C" Language Integrated Production System      */
    /*                                                     */
-   /*            CLIPS Version 6.40  11/01/16             */
+   /*            CLIPS Version 6.50  09/16/23             */
    /*                                                     */
    /*                 DEFTEMPLATE MODULE                  */
    /*******************************************************/
@@ -54,6 +54,8 @@
 /*            data structures.                               */
 /*                                                           */
 /*            ALLOW_ENVIRONMENT_GLOBALS no longer supported. */
+/*                                                           */
+/*      6.50: Support for data driven backward chaining.     */
 /*                                                           */
 /*************************************************************/
 
@@ -305,6 +307,7 @@ bool DeftemplateIsDeletable(
 
    if (theDeftemplate->busyCount > 0) return false;
    if (theDeftemplate->patternNetwork != NULL) return false;
+   if (theDeftemplate->goalNetwork != NULL) return false;
 
    return true;
   }
@@ -328,7 +331,8 @@ static void ReturnDeftemplate(
 
 #if DEBUGGING_FUNCTIONS
    DeftemplateData(theEnv)->DeletedTemplateDebugFlags = 0;
-   if (theDeftemplate->watch) BitwiseSet(DeftemplateData(theEnv)->DeletedTemplateDebugFlags,0);
+   if (theDeftemplate->watchFacts) BitwiseSet(DeftemplateData(theEnv)->DeletedTemplateDebugFlags,0);
+   if (theDeftemplate->watchGoals) BitwiseSet(DeftemplateData(theEnv)->DeletedTemplateDebugFlags,1);
 #endif
 
    /*===========================================*/
@@ -385,6 +389,7 @@ static void DestroyDeftemplate(
 #endif
 
    DestroyFactPatternNetwork(theEnv,theDeftemplate->patternNetwork);
+   DestroyFactPatternNetwork(theEnv,theDeftemplate->goalNetwork);
 
    /*==================================*/
    /* Free storage used by the header. */
@@ -526,6 +531,7 @@ static void RuntimeDeftemplateAction(
    
    theDeftemplate->header.env = theEnv;
    SearchForHashedPatternNodes(theEnv,theDeftemplate->patternNetwork);
+   SearchForHashedPatternNodes(theEnv,theDeftemplate->goalNetwork);
   }
 
 /********************************/

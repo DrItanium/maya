@@ -1,7 +1,7 @@
    /*******************************************************/
    /*      "C" Language Integrated Production System      */
    /*                                                     */
-   /*            CLIPS Version 6.40  11/01/16             */
+   /*            CLIPS Version 6.50  08/24/23             */
    /*                                                     */
    /*                FACT BSAVE/BLOAD MODULE              */
    /*******************************************************/
@@ -28,6 +28,8 @@
 /*                                                           */
 /*            Removed use of void pointers for specific      */
 /*            data structures.                               */
+/*                                                           */
+/*      6.50: Support for data driven backward chaining.     */
 /*                                                           */
 /*************************************************************/
 
@@ -178,7 +180,10 @@ static void BsaveFind(
       for (theDeftemplate = GetNextDeftemplate(theEnv,NULL);
            theDeftemplate != NULL;
            theDeftemplate = GetNextDeftemplate(theEnv,theDeftemplate))
-        { BsaveDriver(theEnv,BSAVE_FIND,NULL,theDeftemplate->patternNetwork); }
+        {
+         BsaveDriver(theEnv,BSAVE_FIND,NULL,theDeftemplate->patternNetwork);
+         BsaveDriver(theEnv,BSAVE_FIND,NULL,theDeftemplate->goalNetwork);
+        }
      }
   }
 
@@ -276,7 +281,10 @@ static void BsaveFactPatterns(
       for (theDeftemplate = GetNextDeftemplate(theEnv,NULL);
            theDeftemplate != NULL;
            theDeftemplate = GetNextDeftemplate(theEnv,theDeftemplate))
-        { BsaveDriver(theEnv,BSAVE_PATTERNS,fp,theDeftemplate->patternNetwork); }
+        {
+         BsaveDriver(theEnv,BSAVE_PATTERNS,fp,theDeftemplate->patternNetwork);
+         BsaveDriver(theEnv,BSAVE_PATTERNS,fp,theDeftemplate->goalNetwork);
+        }
     }
 
    /*=============================================================*/

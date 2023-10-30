@@ -1,7 +1,7 @@
    /*******************************************************/
    /*      "C" Language Integrated Production System      */
    /*                                                     */
-   /*            CLIPS Version 6.41  12/04/22             */
+   /*            CLIPS Version 6.50  10/13/23             */
    /*                                                     */
    /*             DEFTEMPLATE FUNCTIONS MODULE            */
    /*******************************************************/
@@ -2128,7 +2128,7 @@ bool UpdateModifyDuplicate(
   Environment *theEnv,
   struct expr *top,
   const char *name,
-  void *vTheLHS)
+  struct lhsParseNode *theLHS)
   {
    struct expr *functionArgs, *tempArg;
    CLIPSLexeme *templateName;
@@ -2145,8 +2145,7 @@ bool UpdateModifyDuplicate(
      {
       if (SearchParsedBindNames(theEnv,functionArgs->lexemeValue) != 0)
         { return true; }
-      templateName = FindTemplateForFactAddress(functionArgs->lexemeValue,
-                                                (struct lhsParseNode *) vTheLHS);
+      templateName = FindTemplateForFactAddress(functionArgs->lexemeValue,theLHS);
       if (templateName == NULL) return true;
      }
    else

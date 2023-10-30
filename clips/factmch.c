@@ -1,7 +1,7 @@
    /*******************************************************/
    /*      "C" Language Integrated Production System      */
    /*                                                     */
-   /*            CLIPS Version 6.41  12/04/22             */
+   /*            CLIPS Version 6.50  10/13/23             */
    /*                                                     */
    /*                 FACT MATCH MODULE                   */
    /*******************************************************/
@@ -48,6 +48,8 @@
 /*                                                           */
 /*      6.41: Used gensnprintf in place of gensprintf and.   */
 /*            sprintf.                                       */
+/*                                                           */
+/*      6.50: Support for data driven backward chaining.     */
 /*                                                           */
 /*************************************************************/
 
@@ -573,11 +575,11 @@ static void ProcessFactAlphaMatch(
   /* Add the pattern to the list of matches for this fact. */
   /*=======================================================*/
 
-  listOfMatches = (struct patternMatch *) theFact->list;
+  listOfMatches = theFact->list;
   theFact->list = get_struct(theEnv,patternMatch);
-  ((struct patternMatch *) theFact->list)->next = listOfMatches;
-  ((struct patternMatch *) theFact->list)->matchingPattern = (struct patternNodeHeader *) thePattern;
-  ((struct patternMatch *) theFact->list)->theMatch = theMatch;
+  theFact->list->next = listOfMatches;
+  theFact->list->matchingPattern = &thePattern->header;
+  theFact->list->theMatch = theMatch;
 
   /*================================================================*/
   /* Send the partial match to the joins connected to this pattern. */
@@ -896,6 +898,17 @@ void FactsIncrementalReset(
       EngineData(theEnv)->JoinOperationInProgress = true;
       FactPatternMatch(theEnv,factPtr,
                        factPtr->whichDeftemplate->patternNetwork,
+                       0,0,NULL,NULL);
+      EngineData(theEnv)->JoinOperationInProgress = false;
+     }
+
+   for (factPtr = GetNextGoal(theEnv,NULL);
+        factPtr != NULL;
+        factPtr = GetNextGoal(theEnv,factPtr))
+     {
+      EngineData(theEnv)->JoinOperationInProgress = true;
+      FactPatternMatch(theEnv,factPtr,
+                       factPtr->whichDeftemplate->goalNetwork,
                        0,0,NULL,NULL);
       EngineData(theEnv)->JoinOperationInProgress = false;
      }
