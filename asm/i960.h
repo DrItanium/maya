@@ -30,6 +30,8 @@
 #ifndef MAYA_I960_H__
 #define MAYA_I960_H__
 #include <cstdint>
+#include <variant>
+#include <tuple>
 namespace i960 {
 using LongOrdinal = uint64_t;
 using LongInteger = int64_t;
@@ -39,6 +41,8 @@ using ShortOrdinal = uint16_t;
 using ShortInteger = int16_t;
 using ByteOrdinal = uint8_t;
 using ByteInteger = int8_t;
+using Address = Ordinal;
+using EncodedInstruction = std::tuple<Address, std::variant<Ordinal, LongOrdinal>>;
 enum class InstructionClass : ByteOrdinal {
     Unknown,
     REG,
@@ -258,22 +262,34 @@ enum class InstructionOpcode : ShortOrdinal {
     subrl,
     addrl = 0x79f,
 };
-
-[[nodiscard]] constexpr auto determineInstructionClass(InstructionOpcode opcode) noexcept {
-    switch (static_cast<ShortOrdinal>(opcode)) {
+[[nodiscard]] constexpr auto determineInstructionClass(ByteOrdinal opcode) noexcept {
+    switch (opcode) {
         case 0x08 ... 0x1f:
             return InstructionClass::CTRL;
-        case 0x20 ... 0x3F:
+        case 0x20 ... 0x3f:
             return InstructionClass::COBR;
-        case 0x580 ... 0x7FF:
+        case 0x58 ... 0x7f:
             return InstructionClass::REG;
-        case 0x80 ... 0xFF:
+        case 0x80 ... 0xff:
             return InstructionClass::MEM;
         default:
             return InstructionClass::Unknown;
     }
 }
-
+[[nodiscard]] constexpr auto determineInstructionClass(InstructionOpcode opcode) noexcept {
+    switch (static_cast<ShortOrdinal>(opcode)) {
+        case 0x08 ... 0x1f:
+            return InstructionClass::CTRL;
+        case 0x20 ... 0x3f:
+            return InstructionClass::COBR;
+        case 0x580 ... 0x7ff:
+            return InstructionClass::REG;
+        case 0x80 ... 0xff:
+            return InstructionClass::MEM;
+        default:
+            return InstructionClass::Unknown;
+    }
+}
 union [[gnu::packed]] Instruction {
     LongOrdinal full;
     Ordinal halves[sizeof(LongOrdinal)/sizeof(Ordinal)];
@@ -335,9 +351,16 @@ union [[gnu::packed]] Instruction {
         Integer optionalDisplacement;
     } memb;
     static_assert(sizeof(memb) == sizeof(LongOrdinal));
-    [[nodiscard]] constexpr auto determineInstructionClass() const noexcept {
-        switch (generic.opcode) {
-        }
+    [[nodiscard]] constexpr auto getInstructionClass() const noexcept {
+        return determineInstructionClass(generic.opcode);
+    }
+    [[nodiscard]] constexpr InstructionOpcode getOpcode() const noexcept {
+        ShortOrdinal so = generic.opcode;
+        if (getInstructionClass() == InstructionClass::REG) {
+            so <<= 4;
+            so |= reg.opcodeLo;
+        } 
+        return static_cast<InstructionOpcode>(so);
     }
 };
 
