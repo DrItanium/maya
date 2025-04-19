@@ -48,9 +48,9 @@ InitializeBinaryExtensions(RawEnvironment* env)
 // backend operation for exploding a given number into a given width
 // (1, 2, 3, 4, 5, 6, 7, 8...)
 void
-binaryExplodeNumberLSB(UDF_ARGS__) 
+binaryExplodeNumber(UDF_ARGS__) 
 {
-    using NumberBackingStore = decltype(UDFValue::numberValue->contents);
+    using NumberBackingStore = decltype(Electron::Integer::contents);
     static constexpr auto MAXIMUM_BIT_COUNT = CHAR_BIT * sizeof(NumberBackingStore);
     auto& theEnv = Environment::fromRaw(env);
     UDFValue number;
@@ -63,14 +63,18 @@ binaryExplodeNumberLSB(UDF_ARGS__)
         out->lexemeValue = theEnv.falseSymbol();
         return;
     }
-    auto theNumber = number.numberValue->contents;
-    auto theSize = size.numberValue->contents;
+    auto theNumber = number.integerValue->contents;
+    auto theSize = size.integerValue->contents;
     if (theNumber <= 0) {
         out->lexemeValue = theEnv.falseSymbol();
         return;
     }
     MultifieldBuilder mfb(theEnv);
+    out->multifieldValue = mfb.create();
+#if 0
     for (int i = 0; i < 
+#endif
+
 }
 #if 0
 void
