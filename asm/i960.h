@@ -39,30 +39,69 @@ using ShortOrdinal = uint16_t;
 using ShortInteger = int16_t;
 using ByteOrdinal = uint8_t;
 using ByteInteger = int8_t;
-struct [[gnu::packed]] REGFormatInstruction {
-    Ordinal src1 : 5;
-    Ordinal s1 : 1;
-    Ordinal s2 : 1;
-    Ordinal opcodeLo : 4;
-    Ordinal m1 : 1;
-    Ordinal m2 : 1;
-    Ordinal m3 : 1;
-    Ordinal src2 : 5;
-    Ordinal srcDst : 5;
-    Ordinal opcode : 8;
-};
-static_assert(sizeof(REGFormatInstruction) == sizeof(Ordinal));
 
-struct [[gnu::packed]] COBRFormatInstruction {
-    Ordinal s2 : 1;
-    Ordinal t : 1;
-    Ordinal displacement : 11;
-    Ordinal m1 : 1;
-    Ordinal src2 : 5;
-    Ordinal src1 : 5;
-    Ordinal opcode : 8;
+union [[gnu::packed]] Instruction {
+    LongOrdinal full;
+    Ordinal halves[sizeof(LongOrdinal)/sizeof(Ordinal)];
+    struct {
+        Ordinal : 24;
+        Ordinal opcode : 8;
+    } generic;
+    static_assert(sizeof(generic) == sizeof(Ordinal));
+    struct {
+        Ordinal src1 : 5;
+        Ordinal : 2;
+        Ordinal opcodeLo : 4;
+        Ordinal m1 : 1;
+        Ordinal m2 : 1;
+        Ordinal m3 : 1;
+        Ordinal src2 : 5;
+        Ordinal srcDest : 5;
+        Ordinal opcode : 8;
+    } reg;
+    static_assert(sizeof(reg) == sizeof(Ordinal));
+    struct {
+        Ordinal s2 : 1;
+        Ordinal t : 1;
+        Ordinal displacement : 11;
+        Ordinal m1 : 1;
+        Ordinal src2 : 5;
+        Ordinal src1 : 5;
+        Ordinal opcode : 8;
+    } cobr;
+    static_assert(sizeof(cobr) == sizeof(Ordinal));
+    struct {
+        Ordinal : 2;
+        Ordinal displacement : 22;
+        Ordinal opcode : 8;
+    } ctrl;
+    static_assert(sizeof(ctrl) == sizeof(Ordinal));
+    struct {
+        Ordinal : 12;
+        Ordinal mode : 1;
+        Ordinal : 19;
+    } memoryGeneric;
+    static_assert(sizeof(memoryGeneric) == sizeof(Ordinal));
+    struct {
+        Ordinal offset : 12;
+        Ordinal mode : 2; 
+        Ordinal abase : 5;
+        Ordinal srcDest : 5;
+        Ordinal opcode : 8;
+    } mema;
+    static_assert(sizeof(mema) == sizeof(Ordinal));
+    struct {
+        Ordinal index : 5;
+        Ordinal : 2;
+        Ordinal scale : 3;
+        Ordinal mode : 4; 
+        Ordinal abase : 5;
+        Ordinal srcDest : 5;
+        Ordinal opcode : 8;
+        Ordinal optionalDisplacement;
+    } memb;
+    static_assert(sizeof(memb) == sizeof(LongOrdinal));
 };
-static_assert(sizeof(COBRFormatInstruction) == sizeof(Ordinal));
 
 } // end namespace i960
 
