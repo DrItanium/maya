@@ -101,6 +101,27 @@ union [[gnu::packed]] Instruction {
         Ordinal optionalDisplacement;
     } memb;
     static_assert(sizeof(memb) == sizeof(LongOrdinal));
+    enum class InstructionClass {
+        Unknown,
+        REG,
+        COBR,
+        CTRL,
+        MEM,
+    };
+    constexpr auto determineInstructionClass() const noexcept {
+        switch (generic.opcode) {
+            case 0x08 ... 0x1F:
+                return InstructionClass::CTRL;
+            case 0x20 ... 0x3F:
+                return InstructionClass::COBR;
+            case 0x58 ... 0x7F:
+                return InstructionClass::REG;
+            case 0x80 ... 0xFF:
+                return InstructionClass::MEM;
+            default:
+                return InstructionClass::Unknown;
+        }
+    }
 };
 
 } // end namespace i960
