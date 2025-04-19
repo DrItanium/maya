@@ -36,19 +36,19 @@ extern "C" {
 namespace Electron
 {
     // (binary-explode ?number ?width) => multifield (lsb -> msb)
-static void binaryExplodeNumber(UDF_ARGS__);
+static void binaryExplodeNumberLSB(UDF_ARGS__);
 
 void
 InitializeBinaryExtensions(RawEnvironment* env) 
 {
     auto& theEnv = Environment::fromRaw(env);
-    theEnv.addFunction("binary-explode", "mb", 2, 2, "l;l;l", binaryExplodeNumber, "binaryExplodeNumber");
+    theEnv.addFunction("binary-explode-lsb", "mb", 2, 2, "l;l;l", binaryExplodeNumberLSB, "binaryExplodeNumberLSB");
 }
 
 // backend operation for exploding a given number into a given width
 // (1, 2, 3, 4, 5, 6, 7, 8...)
 void
-binaryExplodeNumber(UDF_ARGS__) 
+binaryExplodeNumberLSB(UDF_ARGS__) 
 {
     using NumberBackingStore = decltype(Electron::Integer::contents);
     static constexpr auto MAXIMUM_BIT_COUNT = CHAR_BIT * sizeof(NumberBackingStore);
@@ -65,15 +65,21 @@ binaryExplodeNumber(UDF_ARGS__)
     }
     auto theNumber = number.integerValue->contents;
     auto theSize = size.integerValue->contents;
-    if (theNumber <= 0) {
+    if (theSize < 0) {
         out->lexemeValue = theEnv.falseSymbol();
         return;
+    } else if (theSize > MAXIMUM_BIT_COUNT) {
+        // It doesn't make sense to go beyond whatever the maximum bit count is
+        theSize = MAXIMUM_BIT_COUNT;
     }
     MultifieldBuilder mfb(theEnv);
+    for (int i = 0; i < theSize; ++i) {
+        mfb.append(theEnv.createBool(theNumber & 0b1));
+        theNumber >>= 1;
+    }
+    // now we start at the least significant bit and stash the lsb as we go
+    // through this
     out->multifieldValue = mfb.create();
-#if 0
-    for (int i = 0; i < 
-#endif
 
 }
 #if 0
