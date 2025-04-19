@@ -39,21 +39,30 @@ using ShortOrdinal = uint16_t;
 using ShortInteger = int16_t;
 using ByteOrdinal = uint8_t;
 using ByteInteger = int8_t;
-union REGFormatInstruction {
-    Ordinal full;
-    struct {
-        Ordinal src1 : 5;
-        Ordinal : 2;
-        Ordinal opcodeLo : 4;
-        Ordinal m1 : 1;
-        Ordinal m2 : 1;
-        Ordinal m3 : 1;
-        Ordinal src2 : 5;
-        Ordinal srcDst : 5;
-        Ordinal opcode : 8;
-    };
+struct [[gnu::packed]] REGFormatInstruction {
+    Ordinal src1 : 5;
+    Ordinal s1 : 1;
+    Ordinal s2 : 1;
+    Ordinal opcodeLo : 4;
+    Ordinal m1 : 1;
+    Ordinal m2 : 1;
+    Ordinal m3 : 1;
+    Ordinal src2 : 5;
+    Ordinal srcDst : 5;
+    Ordinal opcode : 8;
 };
 static_assert(sizeof(REGFormatInstruction) == sizeof(Ordinal));
+
+struct [[gnu::packed]] COBRFormatInstruction {
+    Ordinal s2 : 1;
+    Ordinal t : 1;
+    Ordinal displacement : 11;
+    Ordinal m1 : 1;
+    Ordinal src2 : 5;
+    Ordinal src1 : 5;
+    Ordinal opcode : 8;
+};
+static_assert(sizeof(COBRFormatInstruction) == sizeof(Ordinal));
 
 } // end namespace i960
 
