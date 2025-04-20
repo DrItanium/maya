@@ -226,6 +226,14 @@ constexpr Ordinal branchIfBitClear(Register bitpos, Register src, Integer targ) 
 constexpr Ordinal branchIfBitClear(ByteOrdinal bitpos, Register src, Integer targ) noexcept {
     return encodeCOBR(COBROpcodes::bbc, bitpos, src, targ);
 }
+constexpr Ordinal branchIfBitSet(Register bitpos, Register src, Integer targ) noexcept {
+    return encodeCOBR(COBROpcodes::bbs, bitpos, src, targ);
+}
+constexpr Ordinal branchIfBitSet(ByteOrdinal bitpos, Register src, Integer targ) noexcept {
+    return encodeCOBR(COBROpcodes::bbs, bitpos, src, targ);
+}
+constexpr Ordinal branchIfMSBSet(Register src, Integer targ) noexcept { return branchIfBitSet(31, src, targ); }
+constexpr Ordinal branchIfMSBClear(Register src, Integer targ) noexcept { return branchIfBitClear(31, src, targ); }
 static_assert(branchIfBitClear(0, Register::pfp, 0) == (encode(COBROpcodes::bbc) | BitM1Set_COBR));
 #define X(title, k) constexpr Ordinal title ( Register dest) noexcept { return encodeCOBR(COBROpcodes :: test ## k , dest, Register::ignore, 0); }
 X(testIfUnordered, no);
