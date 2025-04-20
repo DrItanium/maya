@@ -100,7 +100,7 @@ constexpr Ordinal branchAndLink(Integer displacement) noexcept { return encodeCT
 constexpr Ordinal call(Integer displacement) noexcept { return encodeCTRL(CTRLOpcodes::call, displacement); }
 constexpr Ordinal ret() noexcept { return encodeCTRL(CTRLOpcodes::ret, 0); }
 
-#define X(title, c) constexpr Ordinal title (Integer displacement) { return encodeCTRL(CTRLOpcodes:: c , displacement ); }
+#define X(title, c) constexpr Ordinal title (Integer displacement) noexcept { return encodeCTRL(CTRLOpcodes:: c , displacement ); }
 X(branchIfUnordered, bno);
 X(branchIfGreaterThan, bg);
 X(branchIfEqual, be);
@@ -110,6 +110,61 @@ X(branchIfNotEqual, bne);
 X(branchIfLessThanOrEqual, ble);
 X(branchIfOrdered, bo);
 #undef X
+#define X(title, c) constexpr Ordinal title () noexcept { return encodeCTRL(CTRLOpcodes:: c , 0 ); }
+X(faultIfUnordered, faultno);
+X(faultIfGreaterThan, faultg);
+X(faultIfEqual, faulte);
+X(faultIfGreaterThanOrEqual, faultge);
+X(faultIfLessThan, faultl);
+X(faultIfNotEqual, faultne);
+X(faultIfLessThanOrEqual, faultle);
+X(faultIfOrdered, faulto);
+#undef X
+
+enum class Register : Ordinal {
+    pfp,
+    sp,
+    rip,
+    r3,
+    r4,
+    r5,
+    r6,
+    r7,
+    r8,
+    r9,
+    r10,
+    r11,
+    r12,
+    r13,
+    r14,
+    r15,
+    g0,
+    g1,
+    g2,
+    g3,
+    g4,
+    g5,
+    g6,
+    g7,
+    g8,
+    g9,
+    g10,
+    g11,
+    g12,
+    g13,
+    g14,
+    fp,
+};
+
+constexpr Ordinal encodeForSrcDest(Register value) noexcept {
+    //0b00000000'11111000'00000000'00000000;
+    return static_cast<Ordinal>(value) << 19;
+}
+static_assert(encodeForSrcDest(Register::pfp) == 0x00'00'00'00);
+static_assert(encodeForSrcDest(Register::sp) == 0x00'08'00'00);
+static_assert(encodeForSrcDest(Register::rip) == 0x00'10'00'00);
+static_assert(encodeForSrcDest(Register::r3) == 0x00'18'00'00);
+static_assert(encodeForSrcDest(Register::fp) == 0x00'F8'00'00);
 
 } // end namespace i960
 
