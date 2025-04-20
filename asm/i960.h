@@ -95,7 +95,21 @@ constexpr Ordinal encodeCTRL(CTRLOpcodes opcode, Integer displacement) noexcept 
 }
 static_assert(encodeCTRL(CTRLOpcodes::b, -1) == 0x08'FFFFFC, "Bad encoding work!");
 
+constexpr Ordinal branch(Integer displacement) noexcept { return encodeCTRL(CTRLOpcodes::b, displacement); }
+constexpr Ordinal branchAndLink(Integer displacement) noexcept { return encodeCTRL(CTRLOpcodes::bal, displacement); }
+constexpr Ordinal call(Integer displacement) noexcept { return encodeCTRL(CTRLOpcodes::call, displacement); }
+constexpr Ordinal ret() noexcept { return encodeCTRL(CTRLOpcodes::ret, 0); }
 
+#define X(title, c) constexpr Ordinal title (Integer displacement) { return encodeCTRL(CTRLOpcodes:: c , displacement ); }
+X(branchIfUnordered, bno);
+X(branchIfGreaterThan, bg);
+X(branchIfEqual, be);
+X(branchIfGreaterThanOrEqual, bge);
+X(branchIfLessThan, bl);
+X(branchIfNotEqual, bne);
+X(branchIfLessThanOrEqual, ble);
+X(branchIfOrdered, bo);
+#undef X
 
 } // end namespace i960
 
