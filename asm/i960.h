@@ -228,14 +228,18 @@ constexpr Ordinal encodeCOBR(COBROpcodes opcode, ByteOrdinal src1, Register src2
     // just toggle M1 on in this case also chop down to between 0 and 31
     return encodeCOBR(opcode, static_cast<Register>(src1 & 0b11111), src2, displacement) | BitM1Set_COBR;
 }
-constexpr Ordinal branchIfBitClear(Register bitpos, Register src, Integer targ) noexcept { return encodeCOBR(COBROpcodes::bbc, bitpos, src, targ); }
-constexpr Ordinal branchIfBitClear(ByteOrdinal bitpos, Register src, Integer targ) noexcept { return encodeCOBR(COBROpcodes::bbc, bitpos, src, targ); }
-constexpr Ordinal branchIfBitSet(Register bitpos, Register src, Integer targ) noexcept { return encodeCOBR(COBROpcodes::bbs, bitpos, src, targ); }
-constexpr Ordinal branchIfBitSet(ByteOrdinal bitpos, Register src, Integer targ) noexcept { return encodeCOBR(COBROpcodes::bbs, bitpos, src, targ); }
-constexpr Ordinal branchIfMSBSet(Register src, Integer targ) noexcept { return branchIfBitSet(31, src, targ); }
-constexpr Ordinal branchIfMSBClear(Register src, Integer targ) noexcept { return branchIfBitClear(31, src, targ); }
+constexpr auto branchIfBitClear(Register bitpos, Register src, Integer targ) noexcept { return encodeCOBR(COBROpcodes::bbc, bitpos, src, targ); }
+constexpr auto branchIfBitClear(ByteOrdinal bitpos, Register src, Integer targ) noexcept { return encodeCOBR(COBROpcodes::bbc, bitpos, src, targ); }
+constexpr auto bbc(Register bitpos, Register src, Integer targ) noexcept { return branchIfBitClear(bitpos, src, targ); }
+constexpr auto bbc(ByteOrdinal bitpos, Register src, Integer targ) noexcept { return branchIfBitClear(bitpos, src, targ); }
+constexpr auto branchIfBitSet(Register bitpos, Register src, Integer targ) noexcept { return encodeCOBR(COBROpcodes::bbs, bitpos, src, targ); }
+constexpr auto branchIfBitSet(ByteOrdinal bitpos, Register src, Integer targ) noexcept { return encodeCOBR(COBROpcodes::bbs, bitpos, src, targ); }
+constexpr auto bbs(Register bitpos, Register src, Integer targ) noexcept { return branchIfBitSet(bitpos, src, targ); }
+constexpr auto bbs(ByteOrdinal bitpos, Register src, Integer targ) noexcept { return branchIfBitSet(bitpos, src, targ); }
+constexpr auto branchIfMSBSet(Register src, Integer targ) noexcept { return branchIfBitSet(31, src, targ); }
+constexpr auto branchIfMSBClear(Register src, Integer targ) noexcept { return branchIfBitClear(31, src, targ); }
 static_assert(branchIfBitClear(0, Register::pfp, 0) == (encode(COBROpcodes::bbc) | BitM1Set_COBR));
-#define X(title, k) constexpr Ordinal testIf ## title ( Register dest) noexcept { return encodeCOBR(COBROpcodes :: test ## k , dest, Register::ignore, 0); }
+#define X(title, k) constexpr auto testIf ## title ( Register dest) noexcept { return encodeCOBR(COBROpcodes :: test ## k , dest, Register::ignore, 0); }
 X(Unordered, no);
 X(GreaterThan, g);
 X(Equal, e);
