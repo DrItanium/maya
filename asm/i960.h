@@ -95,30 +95,38 @@ constexpr Ordinal encodeCTRL(CTRLOpcodes opcode, Integer displacement) noexcept 
 }
 static_assert(encodeCTRL(CTRLOpcodes::b, -1) == 0x08'FFFFFC, "Bad encoding work!");
 
-constexpr Ordinal branch(Integer displacement) noexcept { return encodeCTRL(CTRLOpcodes::b, displacement); }
-constexpr Ordinal branchAndLink(Integer displacement) noexcept { return encodeCTRL(CTRLOpcodes::bal, displacement); }
-constexpr Ordinal call(Integer displacement) noexcept { return encodeCTRL(CTRLOpcodes::call, displacement); }
-constexpr Ordinal ret() noexcept { return encodeCTRL(CTRLOpcodes::ret, 0); }
+constexpr auto branch(Integer displacement) noexcept { return encodeCTRL(CTRLOpcodes::b, displacement); }
+constexpr auto b(Integer displacement) noexcept { return branch(displacement); }
+constexpr auto branchAndLink(Integer displacement) noexcept { return encodeCTRL(CTRLOpcodes::bal, displacement); }
+constexpr auto bal(Integer displacement) noexcept { return branchAndLink(displacement); }
+constexpr auto call(Integer displacement) noexcept { return encodeCTRL(CTRLOpcodes::call, displacement); }
+constexpr auto callSubroutine(Integer displacement) noexcept { return call(displacement); }
+constexpr auto ret() noexcept { return encodeCTRL(CTRLOpcodes::ret, 0); }
 
-#define X(title, c) constexpr Ordinal title (Integer displacement) noexcept { return encodeCTRL(CTRLOpcodes:: c , displacement ); }
-X(branchIfUnordered, bno);
-X(branchIfGreaterThan, bg);
-X(branchIfEqual, be);
-X(branchIfGreaterThanOrEqual, bge);
-X(branchIfLessThan, bl);
-X(branchIfNotEqual, bne);
-X(branchIfLessThanOrEqual, ble);
-X(branchIfOrdered, bo);
+#define X(title, c) \
+    constexpr auto branchIf ## title (Integer displacement) noexcept { return encodeCTRL(CTRLOpcodes:: b ## c , displacement ); } \
+    constexpr auto b ## c (Integer displacement) noexcept { return branchIf ## title (displacement); } 
+X(Unordered, no);
+X(GreaterThan, g);
+X(Equal, e);
+X(GreaterThanOrEqual, ge);
+X(LessThan, l);
+X(NotEqual, ne);
+X(LessThanOrEqual, le);
+X(Ordered, o);
 #undef X
-#define X(title, c) constexpr Ordinal title () noexcept { return encodeCTRL(CTRLOpcodes:: c , 0 ); }
-X(faultIfUnordered, faultno);
-X(faultIfGreaterThan, faultg);
-X(faultIfEqual, faulte);
-X(faultIfGreaterThanOrEqual, faultge);
-X(faultIfLessThan, faultl);
-X(faultIfNotEqual, faultne);
-X(faultIfLessThanOrEqual, faultle);
-X(faultIfOrdered, faulto);
+#define X(title, c) \
+    constexpr auto faultIf ## title () noexcept { return encodeCTRL(CTRLOpcodes:: fault ## c , 0 ); } \
+    constexpr auto fault ## c () noexcept { return faultIf ## title ( ) ; } 
+                
+X(Unordered, no);
+X(GreaterThan, g);
+X(Equal, e);
+X(GreaterThanOrEqual, ge);
+X(LessThan, l);
+X(NotEqual, ne);
+X(LessThanOrEqual, le);
+X(Ordered, o);
 #undef X
 
 enum class Register : Ordinal {
