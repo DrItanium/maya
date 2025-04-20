@@ -239,8 +239,10 @@ X(Ordered, o);
 #undef X
 
 #define X(title, k) \
-    constexpr Ordinal compareAndBranchOrdinalIf ## title ( Register src1, Register src2, Integer displacement) noexcept { return encodeCOBR(COBROpcodes :: cmpob ## k , src1, src2, displacement); } \
-    constexpr Ordinal compareAndBranchOrdinalIf ## title ( ByteOrdinal src1, Register src2, Integer displacement) noexcept { return encodeCOBR(COBROpcodes :: cmpob ## k , src1, src2, displacement); }
+    constexpr auto compareAndBranchOrdinalIf ## title ( Register src1, Register src2, Integer displacement) noexcept { return encodeCOBR(COBROpcodes :: cmpob ## k , src1, src2, displacement); } \
+    constexpr auto compareAndBranchOrdinalIf ## title ( ByteOrdinal src1, Register src2, Integer displacement) noexcept { return encodeCOBR(COBROpcodes :: cmpob ## k , src1, src2, displacement); } \
+    constexpr auto cmpob ## k ( Register src1, Register src2, Integer displacement) noexcept { return encodeCOBR(COBROpcodes :: cmpob ## k , src1, src2, displacement); } \
+    constexpr auto cmpob ## k ( ByteOrdinal src1, Register src2, Integer displacement) noexcept { return encodeCOBR(COBROpcodes :: cmpob ## k , src1, src2, displacement); }
 //X(Unordered, no);
 X(GreaterThan, g);
 X(Equal, e);
@@ -251,8 +253,11 @@ X(LessThanOrEqual, le);
 //X(Ordered, o);
 #undef X
 #define X(title, k) \
-    constexpr Ordinal compareAndBranchIntegerIf ## title ( Register src1, Register src2, Integer displacement) noexcept { return encodeCOBR(COBROpcodes :: cmpib ## k , src1, src2, displacement); } \
-    constexpr Ordinal compareAndBranchIntegerIf ## title ( ByteOrdinal src1, Register src2, Integer displacement) noexcept { return encodeCOBR(COBROpcodes :: cmpib ## k , src1, src2, displacement); }
+    constexpr auto compareAndBranchIntegerIf ## title ( Register src1, Register src2, Integer displacement) noexcept { return encodeCOBR(COBROpcodes :: cmpib ## k , src1, src2, displacement); } \
+    constexpr auto compareAndBranchIntegerIf ## title ( ByteOrdinal src1, Register src2, Integer displacement) noexcept { return encodeCOBR(COBROpcodes :: cmpib ## k , src1, src2, displacement); } \
+    constexpr auto cmpib ## k ( Register src1, Register src2, Integer displacement) noexcept { return encodeCOBR(COBROpcodes :: cmpib ## k , src1, src2, displacement); } \
+    constexpr auto cmpib ## k ( ByteOrdinal src1, Register src2, Integer displacement) noexcept { return encodeCOBR(COBROpcodes :: cmpib ## k , src1, src2, displacement); } 
+    
 X(Unordered, no);
 X(GreaterThan, g);
 X(Equal, e);
@@ -262,6 +267,11 @@ X(NotEqual, ne);
 X(LessThanOrEqual, le);
 X(Ordered, o);
 #undef X
+
+constexpr auto cmpibgz(Register src2, Integer displacement) noexcept { return cmpibg(0, src2, displacement); }
+constexpr auto cmpibgez(Register src2, Integer displacement) noexcept { return cmpibge(0, src2, displacement); }
+constexpr auto cmpiblz(Register src2, Integer displacement) noexcept { return cmpibl(0, src2, displacement); }
+constexpr auto cmpiblez(Register src2, Integer displacement) noexcept { return cmpible(0, src2, displacement); }
 } // end namespace i960
 
 #endif // end !defined(MAYA_I960_H__)
