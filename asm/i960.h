@@ -237,8 +237,10 @@ constexpr auto branchIfBitSet(ByteOrdinal bitpos, Register src, Integer targ) no
 constexpr auto bbs(Register bitpos, Register src, Integer targ) noexcept { return branchIfBitSet(bitpos, src, targ); }
 constexpr auto bbs(ByteOrdinal bitpos, Register src, Integer targ) noexcept { return branchIfBitSet(bitpos, src, targ); }
 constexpr auto branchIfMSBSet(Register src, Integer targ) noexcept { return branchIfBitSet(31, src, targ); }
+constexpr auto bbsMSB(Register src, Integer targ) noexcept { return branchIfMSBSet(src, targ); }
 constexpr auto branchIfMSBClear(Register src, Integer targ) noexcept { return branchIfBitClear(31, src, targ); }
-static_assert(branchIfBitClear(0, Register::pfp, 0) == (encode(COBROpcodes::bbc) | BitM1Set_COBR));
+constexpr auto bbcMSB(Register src, Integer targ) noexcept { return branchIfMSBClear(src, targ); }
+static_assert(branchIfBitClear(0, Register::ignore, 0) == (encode(COBROpcodes::bbc) | BitM1Set_COBR));
 #define X(title, k) constexpr auto testIf ## title ( Register dest) noexcept { return encodeCOBR(COBROpcodes :: test ## k , dest, Register::ignore, 0); }
 X(Unordered, no);
 X(GreaterThan, g);
