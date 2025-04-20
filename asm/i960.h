@@ -158,13 +158,20 @@ enum class Register : Ordinal {
 
 constexpr Ordinal encodeForSrcDest(Register value) noexcept {
     //0b00000000'11111000'00000000'00000000;
-    return static_cast<Ordinal>(value) << 19;
+    return (static_cast<Ordinal>(value) & 0b11111) << 19;
 }
 static_assert(encodeForSrcDest(Register::pfp) == 0x00'00'00'00);
 static_assert(encodeForSrcDest(Register::sp) == 0x00'08'00'00);
 static_assert(encodeForSrcDest(Register::rip) == 0x00'10'00'00);
 static_assert(encodeForSrcDest(Register::r3) == 0x00'18'00'00);
 static_assert(encodeForSrcDest(Register::fp) == 0x00'F8'00'00);
+
+constexpr Ordinal encodeForSrc2(Register value) noexcept {
+    //0b00000000'00000'11111'000000'00000000;
+    //0b00000000'00000111'11000000'00000000;
+    return (static_cast<Ordinal>(value) & 0b11111) << 14;
+}
+static_assert(encodeForSrc2(Register::fp) == 0x00'07'C0'00);
 
 } // end namespace i960
 
