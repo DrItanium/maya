@@ -154,6 +154,7 @@ enum class Register : Ordinal {
     g13,
     g14,
     fp,
+    ignore = pfp,
 };
 
 constexpr Ordinal encodeForSrcDest(Register value) noexcept {
@@ -226,6 +227,16 @@ constexpr Ordinal branchIfBitClear(ByteOrdinal bitpos, Register src, Integer tar
     return encodeCOBR(COBROpcodes::bbc, bitpos, src, targ);
 }
 static_assert(branchIfBitClear(0, Register::pfp, 0) == (encode(COBROpcodes::bbc) | BitM1Set_COBR));
+#define X(title, k) constexpr Ordinal title ( Register dest) noexcept { return encodeCOBR(COBROpcodes :: test ## k , dest, Register::ignore, 0); }
+X(testIfUnordered, no);
+X(testIfGreaterThan, g);
+X(testIfEqual, e);
+X(testIfGreaterThanOrEqual, ge);
+X(testIfLessThan, l);
+X(testIfNotEqual, ne);
+X(testIfLessThanOrEqual, le);
+X(testIfOrdered, o);
+#undef X
 } // end namespace i960
 
 #endif // end !defined(MAYA_I960_H__)
