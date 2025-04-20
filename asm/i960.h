@@ -169,6 +169,10 @@ constexpr Ordinal encodeForSrcDest(Register value) noexcept {
     //0b00000000'11111000'00000000'00000000;
     return (static_cast<Ordinal>(value) & 0b11111) << 19;
 }
+template<typename T>
+constexpr auto encodeForSrcDest(T value) noexcept {
+    return encodeForSrcDest(static_cast<Register>(static_cast<ByteOrdinal>(value) & 0b11111));
+}
 static_assert(encodeForSrcDest(Register::pfp) == 0x00'00'00'00);
 static_assert(encodeForSrcDest(Register::sp) == 0x00'08'00'00);
 static_assert(encodeForSrcDest(Register::rip) == 0x00'10'00'00);
@@ -181,6 +185,14 @@ constexpr Ordinal encodeForSrc2(Register value) noexcept {
     //0b00000000'00000'11111'000000'00000000;
     //0b00000000'00000111'11000000'00000000;
     return (static_cast<Ordinal>(value) & 0b11111) << 14;
+}
+template<typename T>
+constexpr auto encodeForSrc2(T value) noexcept {
+    return encodeForSrc2(static_cast<Register>(static_cast<ByteOrdinal>(value) & 0b11111));
+}
+template<typename T>
+constexpr Ordinal encodeForSrc1(T value) noexcept {
+    return static_cast<Ordinal>(value) & 0b11111;
 }
 static_assert(encodeForSrc2(Register::fp) == 0x00'07'C0'00);
 
@@ -287,6 +299,70 @@ X(NotEqual, ne);
 X(LessThanOrEqual, le);
 X(Ordered, o);
 #undef X
+
+enum class REGOpcodes : Ordinal {
+    notbit = 0x580,
+};
+/**
+ * @brief Special form for fp based instructions which are shoved into the * literal field.
+ */
+enum class FPReg : ByteOrdinal {
+     fp0 = 0,
+     fp1,
+     fp2,
+     fp3,
+     PositiveZeroPointZero = 0b10000,
+     PositiveOnePointZero = 0b10110,
+};
+
+constexpr Ordinal encode(REGOpcodes opcode) noexcept {
+    Ordinal conv = static_cast<Ordinal>(opcode) & 0xFFF;
+    Ordinal lo4 = conv & 0xF;
+    Ordinal hi8 = (conv >> 4) & 0xFF;
+    Ordinal hi8Pos = hi8 << 24;
+    Ordinal lo4Pos = lo4 << 7;
+    return hi8Pos | lo4Pos;
+}
+using REGFormatOperand = std::variant<Register, FPReg, ByteOrdinal>;
+
+constexpr Ordinal encodeSrcDest(REGFormatOperand operand) noexcept {
+    if (std::holds_alternative<Register>(operand)) {
+        return encodeForSrcDest(std::get<Register>(operand));
+    } else if (std::holds_alternative<ByteOrdinal>(operand)) {
+        return encodeForSrcDest((std::get<ByteOrdinal>(operand))) | BitM3Set_REG;
+    } else if (std::holds_alternative<FPReg>(operand)) {
+        return encodeForSrcDest((std::get<FPReg>(operand))) | BitM3Set_REG;
+    } else {
+        return 0xFFFF'FFFF;
+    }
+}
+constexpr Ordinal encodeSrc2(REGFormatOperand operand) noexcept {
+    if (std::holds_alternative<Register>(operand)) {
+        return encodeForSrc2(std::get<Register>(operand));
+    } else if (std::holds_alternative<ByteOrdinal>(operand)) {
+        return encodeForSrc2((std::get<ByteOrdinal>(operand))) | BitM2Set_REG;
+    } else if (std::holds_alternative<FPReg>(operand)) {
+        return encodeForSrc2((std::get<FPReg>(operand))) | BitM2Set_REG;
+    } else {
+        return 0xFFFF'FFFF;
+    }
+}
+constexpr Ordinal encodeSrc1(REGFormatOperand operand) noexcept {
+    if (std::holds_alternative<Register>(operand)) {
+        return encodeForSrc1(std::get<Register>(operand));
+    } else if (std::holds_alternative<ByteOrdinal>(operand)) {
+        return encodeForSrc1((std::get<ByteOrdinal>(operand))) | BitM1Set_REG;
+    } else if (std::holds_alternative<FPReg>(operand)) {
+        return encodeForSrc1((std::get<FPReg>(operand))) | BitM1Set_REG;
+    } else {
+        return 0xFFFF'FFFF;
+    }
+}
+// unlike the other formats, reg format instructions have many control bits so
+// we want to actually make the design as simple as possible.
+constexpr Ordinal encodeREG(REGOpcodes opcode, REGFormatOperand src1, REGFormatOperand src2, REGFormatOperand srcDest) noexcept {
+    return encode(opcode) | encodeSrcDest(srcDest) | encodeSrc1(src1) | encodeSrc2(src2);
+}
 
 } // end namespace i960
 
