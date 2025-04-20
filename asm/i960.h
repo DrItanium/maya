@@ -220,30 +220,47 @@ constexpr Ordinal encodeCOBR(COBROpcodes opcode, ByteOrdinal src1, Register src2
     // just toggle M1 on in this case also chop down to between 0 and 31
     return encodeCOBR(opcode, static_cast<Register>(src1 & 0b11111), src2, displacement) | BitM1Set_COBR;
 }
-constexpr Ordinal branchIfBitClear(Register bitpos, Register src, Integer targ) noexcept {
-    return encodeCOBR(COBROpcodes::bbc, bitpos, src, targ);
-}
-constexpr Ordinal branchIfBitClear(ByteOrdinal bitpos, Register src, Integer targ) noexcept {
-    return encodeCOBR(COBROpcodes::bbc, bitpos, src, targ);
-}
-constexpr Ordinal branchIfBitSet(Register bitpos, Register src, Integer targ) noexcept {
-    return encodeCOBR(COBROpcodes::bbs, bitpos, src, targ);
-}
-constexpr Ordinal branchIfBitSet(ByteOrdinal bitpos, Register src, Integer targ) noexcept {
-    return encodeCOBR(COBROpcodes::bbs, bitpos, src, targ);
-}
+constexpr Ordinal branchIfBitClear(Register bitpos, Register src, Integer targ) noexcept { return encodeCOBR(COBROpcodes::bbc, bitpos, src, targ); }
+constexpr Ordinal branchIfBitClear(ByteOrdinal bitpos, Register src, Integer targ) noexcept { return encodeCOBR(COBROpcodes::bbc, bitpos, src, targ); }
+constexpr Ordinal branchIfBitSet(Register bitpos, Register src, Integer targ) noexcept { return encodeCOBR(COBROpcodes::bbs, bitpos, src, targ); }
+constexpr Ordinal branchIfBitSet(ByteOrdinal bitpos, Register src, Integer targ) noexcept { return encodeCOBR(COBROpcodes::bbs, bitpos, src, targ); }
 constexpr Ordinal branchIfMSBSet(Register src, Integer targ) noexcept { return branchIfBitSet(31, src, targ); }
 constexpr Ordinal branchIfMSBClear(Register src, Integer targ) noexcept { return branchIfBitClear(31, src, targ); }
 static_assert(branchIfBitClear(0, Register::pfp, 0) == (encode(COBROpcodes::bbc) | BitM1Set_COBR));
-#define X(title, k) constexpr Ordinal title ( Register dest) noexcept { return encodeCOBR(COBROpcodes :: test ## k , dest, Register::ignore, 0); }
-X(testIfUnordered, no);
-X(testIfGreaterThan, g);
-X(testIfEqual, e);
-X(testIfGreaterThanOrEqual, ge);
-X(testIfLessThan, l);
-X(testIfNotEqual, ne);
-X(testIfLessThanOrEqual, le);
-X(testIfOrdered, o);
+#define X(title, k) constexpr Ordinal testIf ## title ( Register dest) noexcept { return encodeCOBR(COBROpcodes :: test ## k , dest, Register::ignore, 0); }
+X(Unordered, no);
+X(GreaterThan, g);
+X(Equal, e);
+X(GreaterThanOrEqual, ge);
+X(LessThan, l);
+X(NotEqual, ne);
+X(LessThanOrEqual, le);
+X(Ordered, o);
+#undef X
+
+#define X(title, k) \
+    constexpr Ordinal compareAndBranchOrdinalIf ## title ( Register src1, Register src2, Integer displacement) noexcept { return encodeCOBR(COBROpcodes :: cmpob ## k , src1, src2, displacement); } \
+    constexpr Ordinal compareAndBranchOrdinalIf ## title ( ByteOrdinal src1, Register src2, Integer displacement) noexcept { return encodeCOBR(COBROpcodes :: cmpob ## k , src1, src2, displacement); }
+//X(Unordered, no);
+X(GreaterThan, g);
+X(Equal, e);
+X(GreaterThanOrEqual, ge);
+X(LessThan, l);
+X(NotEqual, ne);
+X(LessThanOrEqual, le);
+//X(Ordered, o);
+#undef X
+#define X(title, k) \
+    constexpr Ordinal compareAndBranchIntegerIf ## title ( Register src1, Register src2, Integer displacement) noexcept { return encodeCOBR(COBROpcodes :: cmpib ## k , src1, src2, displacement); } \
+    constexpr Ordinal compareAndBranchIntegerIf ## title ( ByteOrdinal src1, Register src2, Integer displacement) noexcept { return encodeCOBR(COBROpcodes :: cmpib ## k , src1, src2, displacement); }
+X(Unordered, no);
+X(GreaterThan, g);
+X(Equal, e);
+X(GreaterThanOrEqual, ge);
+X(LessThan, l);
+X(NotEqual, ne);
+X(LessThanOrEqual, le);
+X(Ordered, o);
 #undef X
 } // end namespace i960
 
