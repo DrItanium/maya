@@ -165,6 +165,8 @@ static_assert(encodeForSrcDest(Register::sp) == 0x00'08'00'00);
 static_assert(encodeForSrcDest(Register::rip) == 0x00'10'00'00);
 static_assert(encodeForSrcDest(Register::r3) == 0x00'18'00'00);
 static_assert(encodeForSrcDest(Register::fp) == 0x00'F8'00'00);
+// aliases
+constexpr auto encodeForCOBRSrc1(Register value) noexcept { return encodeForSrcDest(value); }
 
 constexpr Ordinal encodeForSrc2(Register value) noexcept {
     //0b00000000'00000'11111'000000'00000000;
@@ -173,6 +175,57 @@ constexpr Ordinal encodeForSrc2(Register value) noexcept {
 }
 static_assert(encodeForSrc2(Register::fp) == 0x00'07'C0'00);
 
+constexpr auto encodeForAbase(Register value) noexcept { return encodeForSrc2(value); }
+constexpr Ordinal BitM3Set_REG = 0b00000000'00000'00000'1'0'0'0000'00'00000;
+constexpr Ordinal BitM2Set_REG = 0b00000000'00000'00000'0'1'0'0000'00'00000;
+constexpr Ordinal BitM1Set_REG = 0b00000000'00000'00000'0'0'1'0000'00'00000;
+constexpr Ordinal DisplacementMask_COBR = 0b00000000'00000'00000'0'1111111111100;
+constexpr Ordinal Enable_MEMB = BitM2Set_REG;
+constexpr Ordinal BitM1Set_COBR = BitM3Set_REG;
+constexpr Ordinal ModeSet_MEMA = BitM3Set_REG;
+enum class COBROpcodes : Ordinal {
+    testno = 0x20,
+    testg,
+    teste,
+    testge,
+    testl,
+    testne,
+    testle,
+    testo,
+    bbc = 0x30,
+    cmpobg,
+    cmpobe,
+    cmpobge,
+    cmpobl,
+    cmpobne,
+    cmpoble,
+    bbs,
+    cmpibno,
+    cmpibg,
+    cmpibe,
+    cmpibge,
+    cmpibl,
+    cmpibne,
+    cmpible,
+    cmpibo,
+};
+constexpr Ordinal encode(COBROpcodes opcode) noexcept {
+    return (static_cast<Ordinal>(opcode) << 24) & 0xFF00'0000;
+}
+constexpr Ordinal encodeCOBR(COBROpcodes opcode, Register src1, Register src2, Integer displacement) noexcept {
+    return encode(opcode) | encodeForCOBRSrc1(src1) | encodeForSrc2(src2) | (displacement & DisplacementMask_COBR);
+}
+constexpr Ordinal encodeCOBR(COBROpcodes opcode, ByteOrdinal src1, Register src2, Integer displacement) noexcept {
+    // just toggle M1 on in this case also chop down to between 0 and 31
+    return encodeCOBR(opcode, static_cast<Register>(src1 & 0b11111), src2, displacement) | BitM1Set_COBR;
+}
+constexpr Ordinal branchIfBitClear(Register bitpos, Register src, Integer targ) noexcept {
+    return encodeCOBR(COBROpcodes::bbc, bitpos, src, targ);
+}
+constexpr Ordinal branchIfBitClear(ByteOrdinal bitpos, Register src, Integer targ) noexcept {
+    return encodeCOBR(COBROpcodes::bbc, bitpos, src, targ);
+}
+static_assert(branchIfBitClear(0, Register::pfp, 0) == (encode(COBROpcodes::bbc) | BitM1Set_COBR));
 } // end namespace i960
 
 #endif // end !defined(MAYA_I960_H__)
