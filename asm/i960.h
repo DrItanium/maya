@@ -65,6 +65,37 @@ constexpr InstructionPlacement place(Address baseAddress, Ordinal lo) noexcept {
 constexpr InstructionPlacement place(Address baseAddress, Ordinal lo, Ordinal hi) noexcept {
     return place(baseAddress, makeInstruction(lo, hi));
 }
+enum class CTRLOpcodes : Ordinal {
+    b = 0x8,
+    call,
+    ret,
+    bal,
+    bno = 0x10,
+    bg,
+    be,
+    bge,
+    bl,
+    bne,
+    ble,
+    bo,
+    faultno,
+    faultg,
+    faulte,
+    faultge,
+    faultl,
+    faultne,
+    faultle,
+    faulto,
+};
+constexpr Ordinal encode(CTRLOpcodes opcode) noexcept {
+    return (static_cast<Ordinal>(opcode) << 24) & 0xFF00'0000;
+}
+constexpr Ordinal encodeCTRL(CTRLOpcodes opcode, Integer displacement) noexcept {
+    return encode(opcode) | (displacement & 0x00'FFFFFC);
+}
+static_assert(encodeCTRL(CTRLOpcodes::b, -1) == 0x08'FFFFFC, "Bad encoding work!");
+
+
 
 } // end namespace i960
 
