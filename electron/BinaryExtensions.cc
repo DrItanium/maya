@@ -36,19 +36,18 @@ extern "C" {
 namespace Electron
 {
     // (binary-explode ?number ?width) => multifield (lsb -> msb)
-static void binaryExplodeNumberLSB(UDF_ARGS__);
-
+static void binaryExplodeNumber(UDF_ARGS__);
 void
 InitializeBinaryExtensions(RawEnvironment* env) 
 {
     auto& theEnv = Environment::fromRaw(env);
-    theEnv.addFunction("binary-explode-lsb", "mb", 2, 2, "l;l;l", binaryExplodeNumberLSB, "binaryExplodeNumberLSB");
+    theEnv.addFunction("binary-explode", "mb", 2, 2, "l;l;l", binaryExplodeNumber, "binaryExplodeNumber");
 }
 
 // backend operation for exploding a given number into a given width
 // (1, 2, 3, 4, 5, 6, 7, 8...)
 void
-binaryExplodeNumberLSB(UDF_ARGS__) 
+binaryExplodeNumber(UDF_ARGS__) 
 {
     using NumberBackingStore = decltype(Electron::Integer::contents);
     static constexpr auto MAXIMUM_BIT_COUNT = CHAR_BIT * sizeof(NumberBackingStore);
