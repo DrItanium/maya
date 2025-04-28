@@ -636,6 +636,18 @@ constexpr Ordinal encodeSrc1(REGFormatOperand operand) noexcept {
 constexpr Ordinal encodeREG(REGOpcodes opcode, REGFormatOperand src1, REGFormatOperand src2, REGFormatOperand srcDest) noexcept {
     return encode(opcode) | encodeSrcDest(srcDest) | encodeSrc1(src1) | encodeSrc2(src2);
 }
+#define X(title, opcode) \
+    constexpr Ordinal title ( Register src1, Register src2, Register srcDest) noexcept { return encodeREG(REGOpcodes :: opcode , src1, src2, srcDest); } \
+    constexpr Ordinal title ( ByteOrdinal src1, Register src2, Register srcDest) noexcept { return encodeREG(REGOpcodes :: opcode , src1, src2, srcDest); } \
+    constexpr Ordinal title ( Register src1, ByteOrdinal src2, Register srcDest) noexcept { return encodeREG(REGOpcodes :: opcode , src1, src2, srcDest); } \
+    constexpr Ordinal title ( ByteOrdinal src1, ByteOrdinal src2, Register srcDest) noexcept { return encodeREG(REGOpcodes :: opcode , src1, src2, srcDest); }
+    X(addo, addo);
+    X(addi, addi);
+    X(subo, subo);
+    X(subi, subi);
+#undef X
+    constexpr Ordinal incro(Register src2, Register srcDest) noexcept { return addo(1, src2, srcDest); }
+    constexpr Ordinal decro(Register src2, Register srcDest) noexcept { return subo(1, src2, srcDest); }
 enum class MEMOpcodes : Ordinal {
     ldob = 0x80,
     stob = 0x82,
@@ -684,6 +696,9 @@ constexpr bool valid(MEMOpcodes opcodes) noexcept {
         default:
             return false;
     }
+}
+constexpr Ordinal encode(MEMOpcodes opcode) noexcept {
+    return (static_cast<Ordinal>(opcode) << 24) & 0xFF00'0000;
 }
 } // end namespace i960
 
