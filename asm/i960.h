@@ -418,6 +418,39 @@ enum class REGOpcodes : Ordinal {
     movl = 0x5DC,
     movt = 0x5EC,
     movq = 0x5FC,
+    synmov = 0x600,
+    synmovl,
+    synmovq,
+    cmpstr,
+    movqstr,
+    movstr,
+    atmod = 0x610,
+    atadd = 0x612,
+    inspacc,
+    ldphy,
+    synld,
+    fill = 0x617,
+    spanbit  = 0x640,
+    scanbit,
+    daddc,
+    dsubc,
+    dmovt,
+    modac,
+    condrec,
+    modify = 0x650,
+    extract,
+    modtc = 0x654,
+    modpc,
+    receive,
+    calls = 0x660,
+    send = 0x662,
+    sendserv,
+    resumprcs,
+    scedprcs,
+    saveprcs,
+    condwait = 0x668,
+    wait,
+    signal,
     mark = 0x66B,
     fmark = 0x66C,
     flushreg = 0x66D,
@@ -603,7 +636,55 @@ constexpr Ordinal encodeSrc1(REGFormatOperand operand) noexcept {
 constexpr Ordinal encodeREG(REGOpcodes opcode, REGFormatOperand src1, REGFormatOperand src2, REGFormatOperand srcDest) noexcept {
     return encode(opcode) | encodeSrcDest(srcDest) | encodeSrc1(src1) | encodeSrc2(src2);
 }
-
+enum class MEMOpcodes : Ordinal {
+    ldob = 0x80,
+    stob = 0x82,
+    bx = 0x84,
+    balx = 0x85,
+    callx = 0x86,
+    ldos = 0x88,
+    stos = 0x8A,
+    lda = 0x8C,
+    ld = 0x90,
+    st = 0x92,
+    ldl = 0x98,
+    stl = 0x9A,
+    ldt = 0xA0,
+    stt = 0xA2,
+    ldq = 0xB0,
+    stq = 0xB2,
+    ldib = 0xC0,
+    stib = 0xC2,
+    ldis = 0xC8,
+    stis = 0xCA,
+};
+constexpr bool valid(MEMOpcodes opcodes) noexcept {
+    switch (opcodes) {
+        case MEMOpcodes::ldob:
+        case MEMOpcodes::stob:
+        case MEMOpcodes::bx:
+        case MEMOpcodes::balx:
+        case MEMOpcodes::callx:
+        case MEMOpcodes::ldos:
+        case MEMOpcodes::stos:
+        case MEMOpcodes::lda:
+        case MEMOpcodes::ld:
+        case MEMOpcodes::st:
+        case MEMOpcodes::ldl:
+        case MEMOpcodes::stl:
+        case MEMOpcodes::ldt:
+        case MEMOpcodes::stt:
+        case MEMOpcodes::ldq:
+        case MEMOpcodes::stq:
+        case MEMOpcodes::ldib:
+        case MEMOpcodes::stib:
+        case MEMOpcodes::ldis:
+        case MEMOpcodes::stis:
+            return true;
+        default:
+            return false;
+    }
+}
 } // end namespace i960
 
 #endif // end !defined(MAYA_I960_H__)
