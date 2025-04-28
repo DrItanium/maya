@@ -231,6 +231,15 @@ constexpr bool valid(Register reg) noexcept {
             return false;
     }
 }
+constexpr bool longRegisterAligned(Register reg) noexcept {
+    return valid(reg) && ((static_cast<uint8_t>(reg) & 0b1) == 0);
+}
+constexpr bool quadRegisterAligned(Register reg) noexcept {
+    return valid(reg) && ((static_cast<uint8_t>(reg) & 0b11) == 0);
+}
+constexpr bool tripleRegisterAligned(Register reg) noexcept {
+    return quadRegisterAligned(reg);
+}
 
 constexpr Ordinal encodeForSrcDest(Register value) noexcept {
     //0b00000000'11111000'00000000'00000000;
@@ -383,6 +392,32 @@ enum class REGOpcodes : Ordinal {
     notor,
     nand,
     alterbit,
+    addo,
+    addi,
+    subo,
+    subi,
+    shro = 0x598,
+    shrdi = 0x59A,
+    shri,
+    shlo,
+    rotate,
+    shli,
+    cmpo = 0x5a0,
+    cmpi,
+    concmpo = 0x5A2,
+    concmpi = 0x5A3,
+    cmpinco,
+    cmpinci,
+    cmpdeco,
+    cmpdeci,
+    scanbyte = 0x5AC,
+    chkbit = 0x5AE,
+    addc = 0x5B0,
+    subc = 0x5B2,
+    mov = 0x5CC,
+    movl = 0x5DC,
+    movt = 0x5EC,
+    movq = 0x5FC,
     mark = 0x66B,
     fmark = 0x66C,
     flushreg = 0x66D,
