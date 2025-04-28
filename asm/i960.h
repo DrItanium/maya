@@ -88,6 +88,33 @@ enum class CTRLOpcodes : Ordinal {
     faultle,
     faulto,
 };
+constexpr bool valid(CTRLOpcodes opcode) noexcept {
+    switch(opcode) {
+        case CTRLOpcodes::b:
+        case CTRLOpcodes::call:
+        case CTRLOpcodes::ret:
+        case CTRLOpcodes::bal:
+        case CTRLOpcodes::bno:
+        case CTRLOpcodes::bg:
+        case CTRLOpcodes::be:
+        case CTRLOpcodes::bge:
+        case CTRLOpcodes::bl:
+        case CTRLOpcodes::bne:
+        case CTRLOpcodes::ble:
+        case CTRLOpcodes::bo:
+        case CTRLOpcodes::faultno:
+        case CTRLOpcodes::faultg:
+        case CTRLOpcodes::faulte:
+        case CTRLOpcodes::faultge:
+        case CTRLOpcodes::faultl:
+        case CTRLOpcodes::faultne:
+        case CTRLOpcodes::faultle:
+        case CTRLOpcodes::faulto:
+            return true;
+        default:
+            return false;
+    }
+}
 constexpr Ordinal encode(CTRLOpcodes opcode) noexcept {
     return (static_cast<Ordinal>(opcode) << 24) & 0xFF00'0000;
 }
@@ -342,7 +369,140 @@ X(Ordered, o);
 
 enum class REGOpcodes : Ordinal {
     notbit = 0x580,
+    op_and,
+    andnot,
+    setbit,
+    notand,
+    op_xor = 0x586,
+    op_or,
+    nor,
+    xnor,
+    op_not,
+    ornot,
+    clrbit,
+    notor,
+    nand,
+    alterbit,
+    mark = 0x66B,
+    fmark = 0x66C,
+    flushreg = 0x66D,
+    syncf = 0x66F,
+    emul = 0x670,
+    ediv = 0x671,
+    ldtime = 0x673,
+    cvtir = 0x674,
+    cvtilr = 0x675,
+    scalerl = 0x676,
+    scaler = 0x677,
+    atanr = 0x680,
+    logepr = 0x681,
+    logr = 0x682,
+    remr = 0x683,
+    cmpor = 0x684,
+    cmpr = 0x685,
+    sqrtr = 0x688,
+    expr = 0x689,
+    logbnr = 0x68A,
+    roundr = 0x68B,
+    sinr = 0x68C,
+    cosr = 0x68D,
+    tanr = 0x68E,
+    classr = 0x68F,
+    atanrl = 0x690,
+    logeprl = 0x691,
+    logrl = 0x692,
+    remrl = 0x693,
+    cmporl = 0x694,
+    cmprl = 0x695,
+    sqrtrl = 0x698,
+    exprl = 0x699,
+    logbnrl = 0x69A,
+    roundrl = 0x69B,
+    sinrl = 0x69C,
+    cosrl = 0x69D,
+    tanrl = 0x69E,
+    classrl = 0x69F,
+    cvtri = 0x6C0,
+    cvtril = 0x6C1,
+    cvtzri = 0x6C2,
+    cvtzril = 0x6C3,
+    movr = 0x6C9,
+    movrl = 0x6D9,
+    cpysre = 0x6E2,
+    cpyrsre = 0x6E3,
+    movre = 0x6E1,
+    mulo = 0x701,
+    remo = 0x708,
+    divo = 0x70B,
+    muli = 0x741,
+    remi  = 0x748,
+    modi = 0x749,
+    divi = 0x74B,
+    divr = 0x78B,
+    mulr = 0x78C,
+    subr = 0x78D,
+    addr = 0x78F,
+    divrl = 0x79B,
+    mulrl = 0x79C,
+    subrl = 0x79D,
+    addrl = 0x79F,
 };
+    [[nodiscard]] constexpr bool isFPInstruction(REGOpcodes opcode) noexcept {
+        switch (opcode) {
+            case REGOpcodes::cvtri:
+            case REGOpcodes::cvtril:
+            case REGOpcodes::cvtzri:
+            case REGOpcodes::cvtzril:
+            case REGOpcodes::movr:
+            case REGOpcodes::movrl:
+            case REGOpcodes::cpysre:
+            case REGOpcodes::cpyrsre:
+            case REGOpcodes::atanr:
+            case REGOpcodes::logepr:
+            case REGOpcodes::logr:
+            case REGOpcodes::remr:
+            case REGOpcodes::cmpor:
+            case REGOpcodes::cmpr:
+            case REGOpcodes::sqrtr:
+            case REGOpcodes::expr:
+            case REGOpcodes::logbnr:
+            case REGOpcodes::roundr:
+            case REGOpcodes::sinr:
+            case REGOpcodes::cosr:
+            case REGOpcodes::tanr:
+            case REGOpcodes::classr:
+            case REGOpcodes::atanrl:
+            case REGOpcodes::logeprl:
+            case REGOpcodes::logrl:
+            case REGOpcodes::remrl:
+            case REGOpcodes::cmporl:
+            case REGOpcodes::cmprl:
+            case REGOpcodes::sqrtrl:
+            case REGOpcodes::exprl:
+            case REGOpcodes::logbnrl:
+            case REGOpcodes::roundrl:
+            case REGOpcodes::sinrl:
+            case REGOpcodes::cosrl:
+            case REGOpcodes::tanrl:
+            case REGOpcodes::classrl:
+            case REGOpcodes::cvtir:
+            case REGOpcodes::cvtilr:
+            case REGOpcodes::scaler:
+            case REGOpcodes::scalerl:
+            case REGOpcodes::movre:
+            case REGOpcodes::divr:
+            case REGOpcodes::mulr:
+            case REGOpcodes::subr:
+            case REGOpcodes::addr:
+            case REGOpcodes::divrl:
+            case REGOpcodes::mulrl:
+            case REGOpcodes::subrl:
+            case REGOpcodes::addrl:
+                return true;
+            default:
+                return false;
+        }
+    }
 /**
  * @brief Special form for fp based instructions which are shoved into the * literal field.
  */
@@ -367,6 +527,7 @@ enum class FPReg : ByteOrdinal {
             return false;
     }
 }
+
 
 constexpr Ordinal encode(REGOpcodes opcode) noexcept {
     Ordinal conv = static_cast<Ordinal>(opcode) & 0xFFF;
