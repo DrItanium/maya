@@ -273,6 +273,7 @@ constexpr Ordinal encodeForSrc1(T value) noexcept {
 static_assert(encodeForSrc2(Register::fp) == 0x00'07'C0'00);
 
 constexpr auto encodeForAbase(Register value) noexcept { return encodeForSrc2(value); }
+constexpr auto encodeForIndex(Register value) noexcept { return encodeForSrc1(value); }
 constexpr Ordinal BitM3Set_REG = 0b00000000'00000'00000'1'0'0'0000'00'00000;
 constexpr Ordinal BitM2Set_REG = 0b00000000'00000'00000'0'1'0'0000'00'00000;
 constexpr Ordinal BitM1Set_REG = 0b00000000'00000'00000'0'0'1'0000'00'00000;
@@ -705,9 +706,60 @@ constexpr bool valid(MEMOpcodes opcodes) noexcept {
             return false;
     }
 }
+enum class MEMBMode : ByteOrdinal {
+    abase = 0b0100,
+    ipPlusDisplacement = 0b0101,
+    abasePlusIndexTimesScale = 0b0111,
+    displacement = 0b1100,
+    abasePlusDisplacement = 0b1101,
+    indexTimesScalePlusDisplacement = 0b1110,
+    abasePlusIndexTimesScalePlusDisplacement = 0b1111,
+};
+constexpr bool valid(MEMBMode mode) noexcept {
+    switch (mode) {
+        case MEMBMode::abase:
+        case MEMBMode::ipPlusDisplacement:
+        case MEMBMode::abasePlusIndexTimesScale:
+        case MEMBMode::displacement:
+        case MEMBMode::abasePlusDisplacement:
+        case MEMBMode::indexTimesScalePlusDisplacement:
+        case MEMBMode::abasePlusIndexTimesScalePlusDisplacement:
+            return true;
+        default:
+            return false;
+    }
+}
+constexpr bool isDoubleWideInstruction(MEMBMode mode) noexcept {
+    switch (mode) {
+        case MEMBMode::ipPlusDisplacement:
+        case MEMBMode::displacement:
+        case MEMBMode::abasePlusDisplacement:
+        case MEMBMode::indexTimesScalePlusDisplacement:
+        case MEMBMode::abasePlusIndexTimesScalePlusDisplacement:
+            return true;
+        default:
+            return false;
+    }
+}
 constexpr Ordinal encode(MEMOpcodes opcode) noexcept {
     return (static_cast<Ordinal>(opcode) << 24) & 0xFF00'0000;
 }
+constexpr Ordinal encode(MEMBMode mode) noexcept {
+    return (static_cast<Ordinal>(mode) & 0b1111) << 10;
+}
+constexpr Ordinal encodeMEMA(MEMOpcodes opcode, Register srcDest, Register abase, bool mode, Ordinal offset) noexcept {
+    return encode(opcode) | encodeForSrcDest(srcDest) | encodeForAbase(abase) | (mode ? ModeSet_MEMA : 0) | (offset & 0x00000'FFF);
+}
+constexpr EncodedInstruction encodeMEMB(MEMOpcodes opcode, Register srcDest, Register abase, MEMBMode mode, ByteOrdinal scale, Register index, Integer displacement) noexcept {
+    Ordinal lower = encode(opcode) | encodeForSrcDest(srcDest) | encodeForAbase(abase) | encode(mode) | (static_cast<Ordinal>(scale & 0b111) << 7) | encodeForIndex(index);
+    if (isDoubleWideInstruction(mode)) {
+        return DoubleInstruction{ lower, displacement };
+    } else {
+        return lower;
+    }
+}
+
+
 } // end namespace i960
 
 #endif // end !defined(MAYA_I960_H__)
