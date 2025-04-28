@@ -32,6 +32,7 @@
 #include <cstdint>
 #include <variant>
 #include <tuple>
+#include "features/overloaded.h"
 namespace i960 {
 using LongOrdinal = uint64_t;
 using LongInteger = int64_t;
@@ -164,6 +165,45 @@ enum class Register : Ordinal {
     fp,
     ignore = pfp,
 };
+constexpr bool valid(Register reg) noexcept {
+    switch (reg) {
+        case Register::pfp:
+        case Register::sp:
+        case Register::rip:
+        case Register::r3:
+        case Register::r4:
+        case Register::r5:
+        case Register::r6:
+        case Register::r7:
+        case Register::r8:
+        case Register::r9:
+        case Register::r10:
+        case Register::r11:
+        case Register::r12:
+        case Register::r13:
+        case Register::r14:
+        case Register::r15:
+        case Register::g0:
+        case Register::g1:
+        case Register::g2:
+        case Register::g3:
+        case Register::g4:
+        case Register::g5:
+        case Register::g6:
+        case Register::g7:
+        case Register::g8:
+        case Register::g9:
+        case Register::g10:
+        case Register::g11:
+        case Register::g12:
+        case Register::g13:
+        case Register::g14:
+        case Register::fp:
+            return true;
+        default:
+            return false;
+    }
+}
 
 constexpr Ordinal encodeForSrcDest(Register value) noexcept {
     //0b00000000'11111000'00000000'00000000;
@@ -314,6 +354,19 @@ enum class FPReg : ByteOrdinal {
      PositiveZeroPointZero = 0b10000,
      PositiveOnePointZero = 0b10110,
 };
+[[nodiscard]] constexpr bool valid(FPReg reg) noexcept {
+    switch (reg) {
+        case FPReg::fp0:
+        case FPReg::fp1:
+        case FPReg::fp2:
+        case FPReg::fp3:
+        case FPReg::PositiveZeroPointZero:
+        case FPReg::PositiveOnePointZero:
+            return true;
+        default:
+            return false;
+    }
+}
 
 constexpr Ordinal encode(REGOpcodes opcode) noexcept {
     Ordinal conv = static_cast<Ordinal>(opcode) & 0xFFF;
@@ -326,37 +379,28 @@ constexpr Ordinal encode(REGOpcodes opcode) noexcept {
 using REGFormatOperand = std::variant<Register, FPReg, ByteOrdinal>;
 
 constexpr Ordinal encodeSrcDest(REGFormatOperand operand) noexcept {
-    if (std::holds_alternative<Register>(operand)) {
-        return encodeForSrcDest(std::get<Register>(operand));
-    } else if (std::holds_alternative<ByteOrdinal>(operand)) {
-        return encodeForSrcDest((std::get<ByteOrdinal>(operand))) | BitM3Set_REG;
-    } else if (std::holds_alternative<FPReg>(operand)) {
-        return encodeForSrcDest((std::get<FPReg>(operand))) | BitM3Set_REG;
-    } else {
-        return 0xFFFF'FFFF;
-    }
+    return std::visit(Neutron::overloaded {
+        [](Register reg) { return encodeForSrcDest(reg); },
+        [](ByteOrdinal byte) { return encodeForSrcDest(byte) | BitM3Set_REG; },
+        [](FPReg fp) { return encodeForSrcDest(fp) | BitM3Set_REG; },
+        [](auto) { return 0xFFFF'FFFF; }
+    }, operand);
 }
 constexpr Ordinal encodeSrc2(REGFormatOperand operand) noexcept {
-    if (std::holds_alternative<Register>(operand)) {
-        return encodeForSrc2(std::get<Register>(operand));
-    } else if (std::holds_alternative<ByteOrdinal>(operand)) {
-        return encodeForSrc2((std::get<ByteOrdinal>(operand))) | BitM2Set_REG;
-    } else if (std::holds_alternative<FPReg>(operand)) {
-        return encodeForSrc2((std::get<FPReg>(operand))) | BitM2Set_REG;
-    } else {
-        return 0xFFFF'FFFF;
-    }
+    return std::visit(Neutron::overloaded {
+        [](Register reg) { return encodeForSrc2(reg); },
+        [](ByteOrdinal byte) { return encodeForSrc2(byte) | BitM2Set_REG; },
+        [](FPReg fp) { return encodeForSrc2(fp) | BitM2Set_REG; },
+        [](auto) { return 0xFFFF'FFFF; }
+    }, operand);
 }
 constexpr Ordinal encodeSrc1(REGFormatOperand operand) noexcept {
-    if (std::holds_alternative<Register>(operand)) {
-        return encodeForSrc1(std::get<Register>(operand));
-    } else if (std::holds_alternative<ByteOrdinal>(operand)) {
-        return encodeForSrc1((std::get<ByteOrdinal>(operand))) | BitM1Set_REG;
-    } else if (std::holds_alternative<FPReg>(operand)) {
-        return encodeForSrc1((std::get<FPReg>(operand))) | BitM1Set_REG;
-    } else {
-        return 0xFFFF'FFFF;
-    }
+    return std::visit(Neutron::overloaded {
+        [](Register reg) { return encodeForSrc1(reg); },
+        [](ByteOrdinal byte) { return encodeForSrc1(byte) | BitM1Set_REG; },
+        [](FPReg fp) { return encodeForSrc1(fp) | BitM1Set_REG; },
+        [](auto) { return 0xFFFF'FFFF; }
+    }, operand);
 }
 // unlike the other formats, reg format instructions have many control bits so
 // we want to actually make the design as simple as possible.
