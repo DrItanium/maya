@@ -444,6 +444,7 @@ target_link_libraries(maya-app PUBLIC
 		Boost::filesystem
 		Boost::system
 		Boost::program_options
+        assembly
 		)
 target_include_directories(maya PUBLIC "${PROJECT_SRC_DIR}"
 		"${CMAKE_CURRENT_BINARY_DIR}")
