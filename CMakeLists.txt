@@ -420,6 +420,10 @@ add_library(electron
 		electron/BinaryExtensions.h
 )
 add_executable(maya cmd/maya/main.cc)
+add_library(assembly
+        asm/i960.h
+        asm/i960.cc
+)
 target_link_libraries(maya PUBLIC
 		electron
 		neutron
@@ -427,6 +431,7 @@ target_link_libraries(maya PUBLIC
 		Boost::regex
 		Boost::filesystem
 		Boost::system
+        assembly
 	)
 
 
@@ -450,5 +455,7 @@ target_include_directories(clips PUBLIC "${PROJECT_SRC_DIR}"
 		"${CMAKE_CURRENT_BINARY_DIR}")
 target_include_directories(maya-app PUBLIC "${PROJECT_SRC_DIR}"
 		"${CMAKE_CURRENT_BINARY_DIR}")
+target_include_directories(assembly PUBLIC "${PROJECT_SRC_DIR}"
+        "${CMAKE_CURRENT_BINARY_DIR}")
 install(TARGETS maya DESTINATION bin)
 install(TARGETS maya-app DESTINATION bin)
