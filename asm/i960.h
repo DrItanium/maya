@@ -645,6 +645,14 @@ constexpr Ordinal encodeREG(REGOpcodes opcode, REGFormatOperand src1, REGFormatO
     X(addi, addi);
     X(subo, subo);
     X(subi, subi);
+    X(mulo, mulo);
+    X(muli, muli);
+    X(divo, divo);
+    X(divi, divi);
+    X(shro, shro);
+    X(shri, shri);
+    X(shlo, shlo);
+    X(shli, shli);
 #undef X
     constexpr Ordinal incro(Register src2, Register srcDest) noexcept { return addo(1, src2, srcDest); }
     constexpr Ordinal decro(Register src2, Register srcDest) noexcept { return subo(1, src2, srcDest); }
