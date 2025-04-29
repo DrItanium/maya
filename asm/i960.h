@@ -747,10 +747,11 @@ constexpr Ordinal encode(MEMOpcodes opcode) noexcept {
 constexpr Ordinal encode(MEMBMode mode) noexcept {
     return (static_cast<Ordinal>(mode) & 0b1111) << 10;
 }
-constexpr Ordinal encodeMEMA(MEMOpcodes opcode, Register srcDest, Register abase, bool mode, Ordinal offset) noexcept {
+constexpr EncodedInstruction encodeMEMA(MEMOpcodes opcode, Register srcDest, Register abase, bool mode, Ordinal offset) noexcept {
     return encode(opcode) | encodeForSrcDest(srcDest) | encodeForAbase(abase) | (mode ? ModeSet_MEMA : 0) | (offset & 0x00000'FFF);
 }
-constexpr EncodedInstruction encodeMEMB(MEMOpcodes opcode, Register srcDest, Register abase, MEMBMode mode, ByteOrdinal scale, Register index, Integer displacement) noexcept {
+
+constexpr EncodedInstruction encodeMEMB(MEMOpcodes opcode, Register srcDest, Register abase, MEMBMode mode, ByteOrdinal scale = 0, Register index = Register::ignore, Integer displacement = 0) noexcept {
     Ordinal lower = encode(opcode) | encodeForSrcDest(srcDest) | encodeForAbase(abase) | encode(mode) | (static_cast<Ordinal>(scale & 0b111) << 7) | encodeForIndex(index);
     if (isDoubleWideInstruction(mode)) {
         return DoubleInstruction{ lower, displacement };
@@ -758,8 +759,52 @@ constexpr EncodedInstruction encodeMEMB(MEMOpcodes opcode, Register srcDest, Reg
         return lower;
     }
 }
-
-
+constexpr auto encodeAbaseMEM(MEMOpcodes opcode, Register srcDest, Register abase) noexcept {
+    return encodeMEMB(opcode, srcDest, abase, MEMBMode::abase, 0, Register::ignore, 0);
+}
+constexpr auto encodeOffset(MEMOpcodes opcode, Register srcDest, Ordinal offset) noexcept {
+    return encodeMEMA(opcode, srcDest, Register::ignore, false, offset);
+}
+constexpr auto encodeAbasePlusOffset(MEMOpcodes opcode, Register srcDest, Register abase, Ordinal offset) noexcept {
+    if (offset == 0) {
+        // no need to waste two instructions
+        return encodeAbaseMEM(opcode, srcDest, abase);
+    } else {
+        return encodeMEMA(opcode, srcDest, abase, true, offset);
+    }
+}
+constexpr auto encodeAbasePlusDisplacementMEM(MEMOpcodes opcode, Register srcDest, Register abase, Integer displacement) noexcept {
+    if (displacement == 0) {
+        // no need to waste two instructions
+        return encodeAbaseMEM(opcode, srcDest, abase);
+    } else if (displacement < 4096 && displacement > 0) {
+        // use MEMA instead of MEMB to save space
+        return encodeAbasePlusOffset(opcode, srcDest, abase, displacement);
+    } else {
+        return encodeMEMB(opcode, srcDest, abase, MEMBMode::abasePlusDisplacement, 0, Register::ignore, displacement);
+    }
+}
+constexpr auto encodeIPRelativeMEM(MEMOpcodes opcode, Register srcDest, Integer displacement) noexcept {
+    return encodeMEMB(opcode, srcDest, Register::ignore, MEMBMode::ipPlusDisplacement, 0, Register::ignore,
+                      displacement);
+}
+constexpr auto encodeAbasePlusIndexTime2ToTheScaleMEM(MEMOpcodes opcode, Register srcDest, Register abase, ByteOrdinal scale, Register index) noexcept {
+    /// @todo sanity check scale
+    return encodeMEMB(opcode, srcDest, abase, MEMBMode::abasePlusIndexTimesScale, scale, index, 0);
+}
+constexpr auto encodeABasePlusDisplacementMEM(MEMOpcodes opcode, Register srcDest, Register abase, Integer displacement) noexcept {
+    return encodeMEMB(opcode, srcDest, abase, MEMBMode::abasePlusDisplacement, 0, Register::ignore, displacement);
+}
+constexpr auto encodeIndexTimesScalePlusDisplacementMEM(MEMOpcodes opcode, Register srcDest, ByteOrdinal scale, Register index, Integer displacement) noexcept {
+    return encodeMEMB(opcode, srcDest, Register::ignore, MEMBMode::indexTimesScalePlusDisplacement, scale, index,
+                      displacement);
+}
+constexpr auto encodeAbasePlusIndexTimesScalePlusDisplacementMEM(MEMOpcodes opcode, Register srcDest, Register abase, ByteOrdinal scale, Register index, Integer displacement) noexcept {
+    return encodeMEMB(opcode, srcDest, abase, MEMBMode::abasePlusIndexTimesScalePlusDisplacement, scale, index, displacement);
+}
+constexpr auto encodeDisplacementMEM(MEMOpcodes opcode, Register srcDest, Integer displacement) noexcept {
+    return encodeMEMB(opcode, srcDest, Register::ignore, MEMBMode::displacement, 0, Register::ignore, displacement);
+}
 } // end namespace i960
 
 #endif // end !defined(MAYA_I960_H__)
