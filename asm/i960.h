@@ -638,25 +638,85 @@ constexpr Ordinal encodeREG(REGOpcodes opcode, REGFormatOperand src1, REGFormatO
     return encode(opcode) | encodeSrcDest(srcDest) | encodeSrc1(src1) | encodeSrc2(src2);
 }
 #define X(title, opcode) \
-    constexpr Ordinal title ( Register src1, Register src2, Register srcDest) noexcept { return encodeREG(REGOpcodes :: opcode , src1, src2, srcDest); } \
-    constexpr Ordinal title ( ByteOrdinal src1, Register src2, Register srcDest) noexcept { return encodeREG(REGOpcodes :: opcode , src1, src2, srcDest); } \
-    constexpr Ordinal title ( Register src1, ByteOrdinal src2, Register srcDest) noexcept { return encodeREG(REGOpcodes :: opcode , src1, src2, srcDest); } \
-    constexpr Ordinal title ( ByteOrdinal src1, ByteOrdinal src2, Register srcDest) noexcept { return encodeREG(REGOpcodes :: opcode , src1, src2, srcDest); }
-    X(addo, addo);
-    X(addi, addi);
-    X(subo, subo);
-    X(subi, subi);
-    X(mulo, mulo);
-    X(muli, muli);
-    X(divo, divo);
-    X(divi, divi);
-    X(shro, shro);
-    X(shri, shri);
-    X(shlo, shlo);
-    X(shli, shli);
+    constexpr Ordinal title ( Register src1, Register src2, Register srcDest) noexcept { return encodeREG(opcode , src1, src2, srcDest); } \
+    constexpr Ordinal title ( ByteOrdinal src1, Register src2, Register srcDest) noexcept { return encodeREG(opcode , src1, src2, srcDest); } \
+    constexpr Ordinal title ( Register src1, ByteOrdinal src2, Register srcDest) noexcept { return encodeREG(opcode , src1, src2, srcDest); } \
+    constexpr Ordinal title ( ByteOrdinal src1, ByteOrdinal src2, Register srcDest) noexcept { return encodeREG(opcode , src1, src2, srcDest); }
+    X(op_and, REGOpcodes::op_and);
+    X(andnot, REGOpcodes::andnot);
+    X(op_xor, REGOpcodes::op_xor);
+    X(op_or, REGOpcodes::op_or);
+    X(nor, REGOpcodes::nor);
+    X(xnor, REGOpcodes::xnor);
+    X(ornot, REGOpcodes::ornot);
+    X(notor, REGOpcodes::notor);
+    X(nand, REGOpcodes::nand);
+    X(addo, REGOpcodes::addo);
+    X(addi, REGOpcodes::addi);
+    X(subo, REGOpcodes::subo);
+    X(subi, REGOpcodes::subi);
+    X(shro, REGOpcodes::shro);
+    X(shrdi, REGOpcodes::shrdi);
+    X(shri, REGOpcodes::shri);
+    X(shlo, REGOpcodes::shlo);
+    X(rotate, REGOpcodes::rotate);
+    X(shli, REGOpcodes::shli);
+    X(cmpinco, REGOpcodes::cmpinco);
+    X(cmpinci, REGOpcodes::cmpinci);
+    X(cmpdeco, REGOpcodes::cmpdeco);
+    X(cmpdeci, REGOpcodes::cmpdeci);
+    X(addc, REGOpcodes::addc);
+    X(subc, REGOpcodes::subc);
+    X(mulo, REGOpcodes::mulo);
+    X(muli, REGOpcodes::muli);
+    X(divo, REGOpcodes::divo);
+    X(divi, REGOpcodes::divi);
+
+
 #undef X
-    constexpr Ordinal incro(Register src2, Register srcDest) noexcept { return addo(1, src2, srcDest); }
-    constexpr Ordinal decro(Register src2, Register srcDest) noexcept { return subo(1, src2, srcDest); }
+#define X(title, opcode) \
+    constexpr Ordinal title ( Register bitpos, Register src, Register dest) noexcept { return encodeREG(opcode , bitpos, src, dest); } \
+    constexpr Ordinal title ( ByteOrdinal bitpos, Register src, Register dest) noexcept { return encodeREG(opcode , bitpos, src, dest); } \
+    constexpr Ordinal title ( Register bitpos, ByteOrdinal src, Register dest) noexcept { return encodeREG(opcode , bitpos, src, dest); } \
+    constexpr Ordinal title ( ByteOrdinal bitpos, ByteOrdinal src, Register dest) noexcept { return encodeREG(opcode , bitpos, src, dest); }
+    X(notbit, REGOpcodes::notbit);
+    X(setbit, REGOpcodes::setbit);
+    X(clrbit, REGOpcodes::clrbit);
+    X(alterbit, REGOpcodes::alterbit);
+#undef X
+constexpr Ordinal chkbit(Register bitpos, Register src) noexcept { return encodeREG(REGOpcodes::chkbit, bitpos, src, Register::ignore); }
+constexpr Ordinal chkbit(ByteOrdinal bitpos, Register src) noexcept { return encodeREG(REGOpcodes::chkbit , bitpos, src, Register::ignore); }
+constexpr Ordinal chkbit(Register bitpos, ByteOrdinal src) noexcept { return encodeREG(REGOpcodes::chkbit , bitpos, src, Register::ignore); }
+constexpr Ordinal chkbit(ByteOrdinal bitpos, ByteOrdinal src) noexcept { return encodeREG(REGOpcodes::chkbit , bitpos, src, Register::ignore); }
+constexpr Ordinal extract ( Register bitpos, Register len, Register srcDest) noexcept { return encodeREG(REGOpcodes::extract , bitpos, len, srcDest); }
+constexpr Ordinal extract ( ByteOrdinal bitpos, Register len, Register srcDest) noexcept { return encodeREG(REGOpcodes::extract , bitpos, len, srcDest); }
+constexpr Ordinal extract ( Register bitpos, ByteOrdinal len, Register srcDest) noexcept { return encodeREG(REGOpcodes::extract , bitpos, len, srcDest); }
+constexpr Ordinal extract ( ByteOrdinal bitpos, ByteOrdinal len, Register srcDest) noexcept { return encodeREG(REGOpcodes::extract , bitpos, len, srcDest); }
+#define X(title, opcode) \
+    constexpr Ordinal title (Register src, Register srcDest) noexcept { return encodeREG(opcode, src, Register::ignore, srcDest); } \
+    constexpr Ordinal title (ByteOrdinal src, Register srcDest) noexcept { return encodeREG(opcode, src, Register::ignore, srcDest); }
+    X(op_not, REGOpcodes::op_not);
+    X(mov, REGOpcodes::mov);
+    X(movl, REGOpcodes::movl);
+    X(movt, REGOpcodes::movt);
+    X(movq, REGOpcodes::movq);
+#undef X
+
+#define X(title, opcode) \
+    constexpr Ordinal title ( Register src1, Register src2) noexcept { return encodeREG(opcode , src1, src2, Register::ignore); } \
+    constexpr Ordinal title ( ByteOrdinal src1, Register src2) noexcept { return encodeREG(opcode , src1, src2, Register::ignore); } \
+    constexpr Ordinal title ( Register src1, ByteOrdinal src2) noexcept { return encodeREG(opcode , src1, src2, Register::ignore); } \
+    constexpr Ordinal title ( ByteOrdinal src1, ByteOrdinal src2) noexcept { return encodeREG(opcode , src1, src2, Register::ignore); }
+    X(cmpo, REGOpcodes::cmpo);
+    X(cmpi, REGOpcodes::cmpi);
+    X(concmpo, REGOpcodes::concmpo);
+    X(concmpi, REGOpcodes::concmpi);
+    X(scanbyte, REGOpcodes::scanbyte);
+#undef X
+    constexpr auto synmov(Register dest, Register src) noexcept { return encodeREG(REGOpcodes::synmov, dest, src, Register::ignore); }
+    constexpr auto synmovl(Register dest, Register src) noexcept { return encodeREG(REGOpcodes::synmovl, dest, src, Register::ignore); }
+    constexpr auto synmovq(Register dest, Register src) noexcept { return encodeREG(REGOpcodes::synmovq, dest, src, Register::ignore); }
+    constexpr auto synld(Register src, Register dest) noexcept { return encodeREG(REGOpcodes::synld, src, Register::ignore, dest); }
 enum class MEMOpcodes : Ordinal {
     ldob = 0x80,
     stob = 0x82,
@@ -822,10 +882,9 @@ constexpr auto encodeDisplacementMEM(MEMOpcodes opcode, Register srcDest, Intege
     constexpr auto title ( Register srcDest, Register abase, Register index, ByteOrdinal scale, Integer displacement) noexcept { return encodeAbasePlusIndexTimesScalePlusDisplacementMEM(opcode , srcDest , abase , scale , index , displacement ); }
 X(ldob, MEMOpcodes::ldob);
 X(stob, MEMOpcodes::stob);
-X(ldib, MEMOpcodes::ldib);
-X(stib, MEMOpcodes::stib);
-X(ldis, MEMOpcodes::ldis);
-X(stis, MEMOpcodes::stis);
+X(balx, MEMOpcodes::balx);
+X(ldos, MEMOpcodes::ldos);
+X(stos, MEMOpcodes::stos);
 X(lda, MEMOpcodes::lda);
 X(ld, MEMOpcodes::ld);
 X(st, MEMOpcodes::st);
@@ -835,7 +894,10 @@ X(ldt, MEMOpcodes::ldt);
 X(stt, MEMOpcodes::stt);
 X(ldq, MEMOpcodes::ldq);
 X(stq, MEMOpcodes::stq);
-X(balx, MEMOpcodes::balx);
+X(ldib, MEMOpcodes::ldib);
+X(stib, MEMOpcodes::stib);
+X(ldis, MEMOpcodes::ldis);
+X(stis, MEMOpcodes::stis);
 #undef X
 
 constexpr auto bx(Register abase) noexcept { return encodeAbaseMEM(MEMOpcodes::bx, Register::ignore, abase); }
