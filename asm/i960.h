@@ -784,6 +784,7 @@ constexpr auto encodeAbasePlusDisplacementMEM(MEMOpcodes opcode, Register srcDes
         return encodeMEMB(opcode, srcDest, abase, MEMBMode::abasePlusDisplacement, 0, Register::ignore, displacement);
     }
 }
+struct TreatAsIPRelative { };
 constexpr auto encodeIPRelativeMEM(MEMOpcodes opcode, Register srcDest, Integer displacement) noexcept {
     return encodeMEMB(opcode, srcDest, Register::ignore, MEMBMode::ipPlusDisplacement, 0, Register::ignore,
                       displacement);
@@ -796,15 +797,53 @@ constexpr auto encodeABasePlusDisplacementMEM(MEMOpcodes opcode, Register srcDes
     return encodeMEMB(opcode, srcDest, abase, MEMBMode::abasePlusDisplacement, 0, Register::ignore, displacement);
 }
 constexpr auto encodeIndexTimesScalePlusDisplacementMEM(MEMOpcodes opcode, Register srcDest, ByteOrdinal scale, Register index, Integer displacement) noexcept {
-    return encodeMEMB(opcode, srcDest, Register::ignore, MEMBMode::indexTimesScalePlusDisplacement, scale, index,
-                      displacement);
+    return encodeMEMB(opcode, srcDest, Register::ignore, MEMBMode::indexTimesScalePlusDisplacement, scale, index, displacement);
 }
 constexpr auto encodeAbasePlusIndexTimesScalePlusDisplacementMEM(MEMOpcodes opcode, Register srcDest, Register abase, ByteOrdinal scale, Register index, Integer displacement) noexcept {
-    return encodeMEMB(opcode, srcDest, abase, MEMBMode::abasePlusIndexTimesScalePlusDisplacement, scale, index, displacement);
+    if (displacement == 0) {
+        return encodeAbasePlusIndexTime2ToTheScaleMEM(opcode, srcDest, abase, scale, index);
+    } else {
+        return encodeMEMB(opcode, srcDest, abase, MEMBMode::abasePlusIndexTimesScalePlusDisplacement, scale, index,
+                          displacement);
+    }
 }
 constexpr auto encodeDisplacementMEM(MEMOpcodes opcode, Register srcDest, Integer displacement) noexcept {
     return encodeMEMB(opcode, srcDest, Register::ignore, MEMBMode::displacement, 0, Register::ignore, displacement);
 }
+#define X(title, opcode) \
+    constexpr auto title ( Register srcDest, Register abase) noexcept { return encodeAbaseMEM(opcode, srcDest, abase); } \
+    constexpr auto title ( Register srcDest, Register abase, Integer displacement) noexcept { return encodeAbasePlusDisplacementMEM(opcode, srcDest, abase, displacement); } \
+    constexpr auto title ( Register srcDest, Integer displacement) noexcept { return encodeDisplacementMEM(opcode, srcDest, displacement); } \
+    constexpr auto title ( Register srcDest, Integer displacement, TreatAsIPRelative) noexcept { return encodeIPRelativeMEM(opcode, srcDest, displacement); } \
+    constexpr auto title ( Register srcDest, Register index, ByteOrdinal scale, Integer displacement) noexcept { return encodeIndexTimesScalePlusDisplacementMEM(opcode, srcDest, scale, index, displacement); } \
+    constexpr auto title ( Register srcDest, Register abase, Register index, ByteOrdinal scale) noexcept { return encodeAbasePlusIndexTime2ToTheScaleMEM(opcode, srcDest, abase, scale, index); } \
+    constexpr auto title ( Register srcDest, Register abase, Register index, ByteOrdinal scale, Integer displacement) noexcept { return encodeAbasePlusIndexTimesScalePlusDisplacementMEM(opcode , srcDest , abase , scale , index , displacement ); }
+X(ldob, MEMOpcodes::ldob);
+X(stob, MEMOpcodes::stob);
+X(ldib, MEMOpcodes::ldib);
+X(stib, MEMOpcodes::stib);
+X(ldis, MEMOpcodes::ldis);
+X(stis, MEMOpcodes::stis);
+X(lda, MEMOpcodes::lda);
+X(ld, MEMOpcodes::ld);
+X(st, MEMOpcodes::st);
+X(ldl, MEMOpcodes::ldl);
+X(stl, MEMOpcodes::stl);
+X(ldt, MEMOpcodes::ldt);
+X(stt, MEMOpcodes::stt);
+X(ldq, MEMOpcodes::ldq);
+X(stq, MEMOpcodes::stq);
+X(balx, MEMOpcodes::balx);
+#undef X
+
+constexpr auto bx(Register abase) noexcept { return encodeAbaseMEM(MEMOpcodes::bx, Register::ignore, abase); }
+constexpr auto bx(Register abase, Integer displacement) noexcept { return encodeABasePlusDisplacementMEM(MEMOpcodes::bx, Register::ignore, abase, displacement); }
+constexpr auto bx(Integer displacement) noexcept { return encodeDisplacementMEM(MEMOpcodes::bx, Register::ignore, displacement); }
+constexpr auto bx(Integer displacement, TreatAsIPRelative) noexcept { return encodeIPRelativeMEM(MEMOpcodes::bx, Register::ignore, displacement); }
+constexpr auto bx(Register abase, Register index, ByteOrdinal scale) noexcept { return encodeAbasePlusIndexTime2ToTheScaleMEM(MEMOpcodes::bx, Register::ignore, abase, scale, index); }
+constexpr auto bx(Register index, ByteOrdinal scale, Integer displacement) noexcept { return encodeIndexTimesScalePlusDisplacementMEM(MEMOpcodes::bx, Register::ignore, scale, index, displacement); }
+constexpr auto bx(Register abase, Register index, ByteOrdinal scale, Integer displacement) noexcept { return encodeAbasePlusIndexTimesScalePlusDisplacementMEM(MEMOpcodes::bx, Register::ignore, abase, scale, index, displacement); }
+
 } // end namespace i960
 
 #endif // end !defined(MAYA_I960_H__)
