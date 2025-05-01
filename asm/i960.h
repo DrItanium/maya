@@ -916,10 +916,14 @@ constexpr auto callx(Register abase, Register index, ByteOrdinal scale) noexcept
 constexpr auto callx(Register index, ByteOrdinal scale, Integer displacement) noexcept { return encodeIndexTimesScalePlusDisplacementMEM(MEMOpcodes::callx, Register::ignore, scale, index, displacement); }
 constexpr auto callx(Register abase, Register index, ByteOrdinal scale, Integer displacement) noexcept { return encodeAbasePlusIndexTimesScalePlusDisplacementMEM(MEMOpcodes::callx, Register::ignore, abase, scale, index, displacement); }
 
-constexpr EncodedInstruction ldconst(Register srcDest, Integer value) noexcept {
+constexpr EncodedInstruction ldconst(Integer value, Register srcDest) noexcept {
     switch (value) {
+        case -31 ... -1:
+            return subo(-value, 0, srcDest);
         case 0 ... 31:
             return mov(value, srcDest);
+        case 32 ... 62:
+            return addo(value - 31, 31, srcDest);
         default:
             return lda(srcDest, value);
     }
