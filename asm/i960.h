@@ -684,17 +684,18 @@ constexpr Ordinal encodeREG(REGOpcodes opcode, REGFormatOperand src1, REGFormatO
     X(clrbit, REGOpcodes::clrbit);
     X(alterbit, REGOpcodes::alterbit);
 #undef X
-constexpr Ordinal chkbit(Register bitpos, Register src) noexcept { return encodeREG(REGOpcodes::chkbit, bitpos, src, Register::ignore); }
-constexpr Ordinal chkbit(ByteOrdinal bitpos, Register src) noexcept { return encodeREG(REGOpcodes::chkbit , bitpos, src, Register::ignore); }
-constexpr Ordinal chkbit(Register bitpos, ByteOrdinal src) noexcept { return encodeREG(REGOpcodes::chkbit , bitpos, src, Register::ignore); }
-constexpr Ordinal chkbit(ByteOrdinal bitpos, ByteOrdinal src) noexcept { return encodeREG(REGOpcodes::chkbit , bitpos, src, Register::ignore); }
+constexpr Ordinal chkbit(Register bitpos, Register src) noexcept { return encodeREG(REGOpcodes::chkbit, bitpos, src, static_cast<ByteOrdinal>(0)); }
+constexpr Ordinal chkbit(ByteOrdinal bitpos, Register src) noexcept { return encodeREG(REGOpcodes::chkbit , bitpos, src, static_cast<ByteOrdinal>(0)); }
+constexpr Ordinal chkbit(Register bitpos, ByteOrdinal src) noexcept { return encodeREG(REGOpcodes::chkbit , bitpos, src, static_cast<ByteOrdinal>(0)); }
+constexpr Ordinal chkbit(ByteOrdinal bitpos, ByteOrdinal src) noexcept { return encodeREG(REGOpcodes::chkbit , bitpos, src, static_cast<ByteOrdinal>(0)); }
 constexpr Ordinal extract ( Register bitpos, Register len, Register srcDest) noexcept { return encodeREG(REGOpcodes::extract , bitpos, len, srcDest); }
 constexpr Ordinal extract ( ByteOrdinal bitpos, Register len, Register srcDest) noexcept { return encodeREG(REGOpcodes::extract , bitpos, len, srcDest); }
 constexpr Ordinal extract ( Register bitpos, ByteOrdinal len, Register srcDest) noexcept { return encodeREG(REGOpcodes::extract , bitpos, len, srcDest); }
 constexpr Ordinal extract ( ByteOrdinal bitpos, ByteOrdinal len, Register srcDest) noexcept { return encodeREG(REGOpcodes::extract , bitpos, len, srcDest); }
+// manual states that using a byte ordinal for src2 when it goes unused will improve performance on REG based operations that don't use all three arguments
 #define X(title, opcode) \
-    constexpr Ordinal title (Register src, Register srcDest) noexcept { return encodeREG(opcode, src, Register::ignore, srcDest); } \
-    constexpr Ordinal title (ByteOrdinal src, Register srcDest) noexcept { return encodeREG(opcode, src, Register::ignore, srcDest); }
+    constexpr Ordinal title (Register src, Register srcDest) noexcept { return encodeREG(opcode, src, static_cast<ByteOrdinal>(0), srcDest); } \
+    constexpr Ordinal title (ByteOrdinal src, Register srcDest) noexcept { return encodeREG(opcode, src, static_cast<ByteOrdinal>(0), srcDest); }
     X(op_not, REGOpcodes::op_not);
     X(mov, REGOpcodes::mov);
     X(movl, REGOpcodes::movl);
@@ -703,20 +704,20 @@ constexpr Ordinal extract ( ByteOrdinal bitpos, ByteOrdinal len, Register srcDes
 #undef X
 
 #define X(title, opcode) \
-    constexpr Ordinal title ( Register src1, Register src2) noexcept { return encodeREG(opcode , src1, src2, Register::ignore); } \
-    constexpr Ordinal title ( ByteOrdinal src1, Register src2) noexcept { return encodeREG(opcode , src1, src2, Register::ignore); } \
-    constexpr Ordinal title ( Register src1, ByteOrdinal src2) noexcept { return encodeREG(opcode , src1, src2, Register::ignore); } \
-    constexpr Ordinal title ( ByteOrdinal src1, ByteOrdinal src2) noexcept { return encodeREG(opcode , src1, src2, Register::ignore); }
+    constexpr Ordinal title ( Register src1, Register src2) noexcept { return encodeREG(opcode , src1, src2, static_cast<ByteOrdinal>(0)); } \
+    constexpr Ordinal title ( ByteOrdinal src1, Register src2) noexcept { return encodeREG(opcode , src1, src2, static_cast<ByteOrdinal>(0)); } \
+    constexpr Ordinal title ( Register src1, ByteOrdinal src2) noexcept { return encodeREG(opcode , src1, src2, static_cast<ByteOrdinal>(0)); } \
+    constexpr Ordinal title ( ByteOrdinal src1, ByteOrdinal src2) noexcept { return encodeREG(opcode , src1, src2, static_cast<ByteOrdinal>(0)); }
     X(cmpo, REGOpcodes::cmpo);
     X(cmpi, REGOpcodes::cmpi);
     X(concmpo, REGOpcodes::concmpo);
     X(concmpi, REGOpcodes::concmpi);
     X(scanbyte, REGOpcodes::scanbyte);
 #undef X
-    constexpr auto synmov(Register dest, Register src) noexcept { return encodeREG(REGOpcodes::synmov, dest, src, Register::ignore); }
-    constexpr auto synmovl(Register dest, Register src) noexcept { return encodeREG(REGOpcodes::synmovl, dest, src, Register::ignore); }
-    constexpr auto synmovq(Register dest, Register src) noexcept { return encodeREG(REGOpcodes::synmovq, dest, src, Register::ignore); }
-    constexpr auto synld(Register src, Register dest) noexcept { return encodeREG(REGOpcodes::synld, src, Register::ignore, dest); }
+    constexpr auto synmov(Register dest, Register src) noexcept { return encodeREG(REGOpcodes::synmov, dest, src, static_cast<ByteOrdinal>(0)); }
+    constexpr auto synmovl(Register dest, Register src) noexcept { return encodeREG(REGOpcodes::synmovl, dest, src, static_cast<ByteOrdinal>(0)); }
+    constexpr auto synmovq(Register dest, Register src) noexcept { return encodeREG(REGOpcodes::synmovq, dest, src, static_cast<ByteOrdinal>(0)); }
+    constexpr auto synld(Register src, Register dest) noexcept { return encodeREG(REGOpcodes::synld, src, static_cast<ByteOrdinal>(0), dest); }
 enum class MEMOpcodes : Ordinal {
     ldob = 0x80,
     stob = 0x82,
@@ -915,6 +916,14 @@ constexpr auto callx(Register abase, Register index, ByteOrdinal scale) noexcept
 constexpr auto callx(Register index, ByteOrdinal scale, Integer displacement) noexcept { return encodeIndexTimesScalePlusDisplacementMEM(MEMOpcodes::callx, Register::ignore, scale, index, displacement); }
 constexpr auto callx(Register abase, Register index, ByteOrdinal scale, Integer displacement) noexcept { return encodeAbasePlusIndexTimesScalePlusDisplacementMEM(MEMOpcodes::callx, Register::ignore, abase, scale, index, displacement); }
 
+constexpr EncodedInstruction ldconst(Register srcDest, Integer value) noexcept {
+    switch (value) {
+        case 0 ... 31:
+            return mov(value, srcDest);
+        default:
+            return lda(srcDest, value);
+    }
+}
 } // end namespace i960
 
 #endif // end !defined(MAYA_I960_H__)
