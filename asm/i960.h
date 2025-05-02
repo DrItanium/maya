@@ -915,16 +915,50 @@ constexpr auto callx(Integer displacement, TreatAsIPRelative) noexcept { return 
 constexpr auto callx(Register abase, Register index, ByteOrdinal scale) noexcept { return encodeAbasePlusIndexTime2ToTheScaleMEM(MEMOpcodes::callx, Register::ignore, abase, scale, index); }
 constexpr auto callx(Register index, ByteOrdinal scale, Integer displacement) noexcept { return encodeIndexTimesScalePlusDisplacementMEM(MEMOpcodes::callx, Register::ignore, scale, index, displacement); }
 constexpr auto callx(Register abase, Register index, ByteOrdinal scale, Integer displacement) noexcept { return encodeAbasePlusIndexTimesScalePlusDisplacementMEM(MEMOpcodes::callx, Register::ignore, abase, scale, index, displacement); }
-
 constexpr EncodedInstruction ldconst(Integer value, Register srcDest) noexcept {
     switch (value) {
+        case -32:
+            static_assert((~31) == -32);
+            return op_not(31, srcDest);
         case -31 ... -1:
             return subo(-value, 0, srcDest);
         case 0 ... 31:
             return mov(value, srcDest);
         case 32 ... 62:
             return addo(value - 31, 31, srcDest);
+#define X(value, shift) case (1 << shift): \
+            static_assert((1 << shift) == value); \
+            return shlo(shift, 1, srcDest)
+        X(64, 6);
+        X(128, 7);
+        X(256, 8);
+        X(512, 9);
+        X(1024, 10);
+        X(2048, 11);
+        X(4096, 12);
+        X(8192, 13);
+        X(16384, 14);
+        X(32768, 15);
+        X(65536, 16);
+        X(131072, 17);
+        X(262144, 18);
+        X(524288, 19);
+        X(1048576, 20);
+        X(2097152, 21);
+        X(4194304, 22);
+        X(8388608, 23);
+        X(16777216, 24);
+        X(33554432, 25);
+        X(67108864, 26);
+        X(134217728, 27);
+        X(268435456, 28);
+        X(536870912, 29);
+        X(1073741824, 30);
+#undef X
+        case (1 << 31):
+            return shlo(31, 1, srcDest);
         default:
+            // holes in the 0 - 4096 range use the lda instruction with the 12-bit offset since it does not add any overhead
             return lda(srcDest, value);
     }
 }
