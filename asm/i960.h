@@ -962,6 +962,9 @@ constexpr EncodedInstruction ldconst(Integer value, Register srcDest) noexcept {
             return lda(srcDest, value);
     }
 }
+constexpr Integer iprelative(Ordinal ip, Integer displacement) noexcept {
+    return static_cast<Integer>(ip) + displacement;
+}
 } // end namespace i960
 
 #endif // end !defined(MAYA_I960_H__)
