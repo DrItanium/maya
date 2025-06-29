@@ -200,7 +200,8 @@
 
 
 (deffacts MAIN::file-to-read
-          (lineize test.s)
+          ;(lineize test.s)
+          (lineize flops.s)
           (stage (current walk-file)
                  (rest isolate-commas
                        tokenization
