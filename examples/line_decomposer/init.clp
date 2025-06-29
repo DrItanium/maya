@@ -25,28 +25,37 @@
              "This function must be here, it is called by maya-app first"
              ()
              )
+(deftemplate MAIN::stage
+             (slot current
+                   (type SYMBOL) 
+                   (default ?NONE))
+             (multislot rest
+                        (type SYMBOL)))
 
-(deffacts MAIN::file-to-read
-          (lineize test.s))
-(defclass MAIN::source-line
+(defclass MAIN::has-parent
   (is-a USER)
   (slot parent
-        (type SYMBOL
-              INSTANCE)
+        (type INSTANCE
+              SYMBOL)
         (allowed-symbols FALSE)
-        (default ?NONE))
+        (visibility public)
+        (storage local)
+        (default ?NONE)))
+(defclass MAIN::source-line
+  (is-a has-parent)
   (slot line-number
         (type INTEGER)
         (range 1 ?VARIABLE)
         (default ?NONE))
-  (slot raw
-        (type LEXEME)
-        (default ?NONE))
+  (multislot generations
+             (type LEXEME)
+             (default ?NONE))
   (slot decomposed
         (type SYMBOL)
         (allowed-symbols FALSE
                          TRUE))
   (multislot decomposition))
+
 
 (defclass MAIN::source-file
   (is-a USER)
@@ -60,63 +69,124 @@
         (default ?NONE))
   (multislot lines))
 
+(deftemplate MAIN::source-file-walker
+            (slot id
+                  (type SYMBOL)
+                  (default (gensym*)))
+            (slot path
+                  (type LEXEME)
+                  (default ?NONE))
+            (slot line-number-count
+                  (type INTEGER)
+                  (range 0 ?VARIABLE)
+                  (default 0))
+            (slot file-handle
+                  (type SYMBOL)
+                  (default ?NONE))
+            (slot current-item
+                  (default ?NONE))
+            (slot finished
+                  (type SYMBOL)
+                  (allowed-symbols FALSE
+                                   TRUE)
+                  (default FALSE))
+            (multislot lines
+                       (type INSTANCE)))
 
-(defrule MAIN::create-source-file-walker
+(defrule MAIN::next-stage
+         (declare (salience -10000))
+         ?f <- (stage (rest ?next $?rest))
+         =>
+         (modify ?f 
+                 (current ?next)
+                 (rest ?rest)))
+
+(defrule MAIN::done-parsing-file
+         (stage (current walk-file))
+         ?f <- (source-file-walker (finished FALSE)
+                                   (current-item FALSE|EOF)
+                                   (line-number-count ?lnc)
+                                   (path ?path)
+                                   (id ?id)
+                                   (file-handle ?fh)
+                                   (lines $?lines))
+         =>
+         (retract ?f)
+         (close ?fh)
+         (make-instance ?id of source-file
+                        (path ?path)
+                        (line-number-count ?lnc)
+                        (lines ?lines)))
+(defrule MAIN::try-open-file
+         (stage (current walk-file))
          ?f <- (lineize ?path)
          =>
          (retract ?f)
-         (if (open ?path 
-                   (bind ?file-handle 
-                         (gensym*)) 
+         (if (open ?path
+                   (bind ?fh
+                         (gensym*))
                    "r") then
-           (bind ?source-file-name
-                 (symbol-to-instance-name (gensym*)))
-           (bind ?line-number
-                 0)
-           (bind ?lines
-                 (create$))
-           (while (neq (bind ?current-line
-                                  (readline ?file-handle))
-                            FALSE
-                            EOF) do
-                  (bind ?line-number
-                        (+ ?line-number
-                           1))
-                  (bind ?lines
-                        ?lines
+           (assert (source-file-walker (path ?path)
+                                       (file-handle ?fh)
+                                       (current-item (readline ?fh))))))
+(defrule MAIN::create-source-line
+         (stage (current walk-file))
+         ?f <- (source-file-walker (finished FALSE)
+                                   (current-item ?line&~EOF&~FALSE)
+                                   (line-number-count ?lnc)
+                                   (id ?id)
+                                   (file-handle ?fh)
+                                   (lines $?lines))
+         =>
+         (bind ?nlnc (+ ?lnc 1))
+         (modify ?f
+                 (current-item (readline ?fh))
+                 (line-number-count ?nlnc)
+                 (lines $?lines
                         (make-instance of source-line
-                                       (parent ?source-file-name)
-                                       (line-number ?line-number)
-                                       (raw ?current-line)))
-                  (bind ?line-number
-                        (+ ?line-number
-                           1))
-                  )
-           (make-instance ?source-file-name of source-file
-                          (path ?path)
-                          (line-number-count ?line-number)
-                          (lines ?lines))
-           (close ?file-handle)
-           )
-         )
+                                       (parent (symbol-to-instance-name ?id))
+                                       (line-number ?nlnc)
+                                       (generations ?line)))))
+(defrule MAIN::isolate-commas-fact
+         (declare (salience 10000))
+         (stage (current isolate-commas))
+         (object (is-a source-line)
+                 (name ?id))
+         =>
+         (assert (isolate commas on ?id)))
+(defrule MAIN::isolate-commas
+         (stage (current isolate-commas))
+         ?f <- (isolate commas on ?id)
+         ?obj <- (object (is-a source-line)
+                         (name ?id)
+                         (generations $?a 
+                                      ?last))
+         =>
+         (retract ?f)
+         (modify-instance ?obj
+                          (generations $?a
+                                       ?last
+                                       (str-replace ?last "," " , "))))
+
+
 
 (defrule MAIN::decompose-source-line
+         (stage (current tokenization))
          ?obj <- (object (is-a source-line)
                          (decomposed FALSE)
-                         (raw ?line))
+                         (generations $? ?line))
          =>
-         (bind ?new-line
-               (str-replace ?line "," " , "))
          (modify-instance ?obj
                           (decomposed TRUE)
-                          (decomposition (explode$ ?new-line))))
+                          (decomposition (explode$ ?line))))
 
 (defrule MAIN::print-source-line
+         (stage (current display-result))
          (object (is-a source-line)
                  (decomposed TRUE)
                  (parent ?p)
                  (line-number ?ln)
-                 (raw ?str)
+                 (generations ?str $?)
                  (decomposition $?result))
          (object (is-a source-file)
                  (name ?p)
@@ -124,8 +194,14 @@
 
          =>
          (printout stdout
-                   "[" ?path ":" ?ln "]: \"" ?str "\" -> " ?result crlf))
+                   "[" ?path ":" ?ln "]: \"" ?str "\" -> ... -> " ?result crlf))
                 
 ; to run this program, just execute maya-app from this directory
 
 
+(deffacts MAIN::file-to-read
+          (lineize test.s)
+          (stage (current walk-file)
+                 (rest isolate-commas
+                       tokenization
+                       display-result)))
