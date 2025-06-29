@@ -262,6 +262,73 @@
          (assert (source-line-fact (target ?ref)
                                    (class label-declaration)
                                    (item ?name))))
+; --------------
+(defglobal MAIN
+           ?*instructions* = (create$ add addi
+                                      neg
+                                      sub
+                                      mul
+                                      mulh
+                                      mulhu
+                                      mulhsu
+                                      div
+                                      rem
+                                      and andi
+                                      not
+                                      or ori
+                                      xor xori
+                                      sll slli
+                                      srl srli
+                                      sra srai
+                                      li
+                                      lui
+                                      auipc
+                                      lw
+                                      lh
+                                      lhu
+                                      lb
+                                      lbu
+                                      la
+                                      sw
+                                      sh
+                                      sb
+                                      j
+                                      jal
+                                      jalr
+                                      call
+                                      ret
+                                      beq
+                                      beqz
+                                      bne
+                                      bnez
+                                      blt
+                                      bltu
+                                      bltz
+                                      bgt
+                                      bgtu
+                                      bgtz
+                                      ble
+                                      bleu
+                                      blez
+                                      bge
+                                      bgeu
+                                      bgez
+                                      slt slti
+                                      sltu sltiu
+                                      seqz
+                                      snez
+                                      sltz
+                                      sgtz
+                                      ebreak
+                                      ecall
+                                      fence fence.i
+                                      mv
+                                      nop
+                                      csrrc csrrci
+                                      csrrs csrrsi
+                                      csrrw csrrwi
+                                      )
+
 
 ; --------------
 (defrule MAIN::print-source-line
