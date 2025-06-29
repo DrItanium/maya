@@ -75,10 +75,10 @@
                  0)
            (bind ?lines
                  (create$))
-           (while (not (neq (bind ?current-line
+           (while (neq (bind ?current-line
                                   (readline ?file-handle))
                             FALSE
-                            EOF)) do
+                            EOF) do
                   (bind ?line-number
                         (+ ?line-number
                            1))
@@ -100,5 +100,32 @@
            )
          )
 
+(defrule MAIN::decompose-source-line
+         ?obj <- (object (is-a source-line)
+                         (decomposed FALSE)
+                         (raw ?line))
+         =>
+         (bind ?new-line
+               (str-replace ?line "," " , "))
+         (modify-instance ?obj
+                          (decomposed TRUE)
+                          (decomposition (explode$ ?new-line))))
 
+(defrule MAIN::print-source-line
+         (object (is-a source-line)
+                 (decomposed TRUE)
+                 (parent ?p)
+                 (line-number ?ln)
+                 (raw ?str)
+                 (decomposition $?result))
+         (object (is-a source-file)
+                 (name ?p)
+                 (path ?path))
+
+         =>
+         (printout stdout
+                   "[" ?path ":" ?ln "]: \"" ?str "\" -> " ?result crlf))
+                
 ; to run this program, just execute maya-app from this directory
+
+
