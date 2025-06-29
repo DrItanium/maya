@@ -187,7 +187,6 @@
                                                       "," 
                                                       " , "))))
          )
-
 (defrule MAIN::decompose-source-line
          (stage (current tokenization))
          ?obj <- (object (is-a source-line)
@@ -197,6 +196,36 @@
          (modify-instance ?obj
                           (decomposed TRUE)
                           (decomposition (explode$ ?line))))
+
+(defclass MAIN::label
+  (is-a source-line)
+  (slot id
+        (type LEXEME)
+        (default ?NONE)))
+(defrule MAIN::identify-label-declaration
+         (stage (current label-identification))
+         ?k <- (object (is-a source-line&~label)
+                       (name ?name)
+                       (parent ?parent)
+                       (line-number ?ln)
+                       (generations $?gens)
+                       (decomposed TRUE)
+                       (decomposition ?title&:(and (symbolp ?title)
+                                                   (has-suffix ?title 
+                                                               ":"))))
+         =>
+         (unmake-instance ?k)
+         (make-instance ?name of label
+                        (parent ?parent)
+                        (line-number ?ln)
+                        (generations $?gens)
+                        (decomposed TRUE)
+                        (decomposition ?title)
+                        (id (string-to-field (sub-string 1 
+                                                         (- (str-length ?title)
+                                                            1)
+                                                         ?title)))))
+
 
 (defrule MAIN::print-source-line
          (stage (current display-result))
@@ -228,4 +257,5 @@
           (stage (current walk-file)
                  (rest do-text-transformations
                        tokenization
+                       label-identification
                        display-result)))
