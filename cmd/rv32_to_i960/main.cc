@@ -31,8 +31,8 @@ extern "C" {
     #include "clips/clips.h"
 }
 #include "electron/Environment.h"
-#include <boost/program_options.hpp>
 #include "fs/path.h"
+#include <boost/program_options.hpp>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -55,13 +55,11 @@ extern "C" {
 /***************************************/
 
 Electron::Environment mainEnv;
-
 /****************************************/
 /* main: Starts execution of the expert */
 /*   system development environment.    */
 /****************************************/
-int main(int argc, char *argv[])
-  {
+int main(int argc, char *argv[]) {
 #if UNIX_V || LINUX || DARWIN || UNIX_7 || WIN_GCC || WIN_MVC
     signal(SIGINT, CatchCtrlC);
 #endif
