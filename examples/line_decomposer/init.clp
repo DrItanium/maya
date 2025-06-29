@@ -249,6 +249,20 @@
          (assert (source-line-fact (target ?decl)
                                    (class global-label-decl)
                                    (item ?name))))
+(defrule MAIN::use-global-label-for-external-declaration
+         "When we see a global declaration without a label declaration then we need to make sure it is known to be a label"
+         (declare (salience -1)) ; make sure that we've processed everything else
+         (stage (current label-identification))
+         (source-line-fact (class global-label-decl)
+                           (target ?ref)
+                           (item ?name))
+         (not (source-line-fact (class label-declaration)
+                                (item ?name)))
+         =>
+         (assert (source-line-fact (target ?ref)
+                                   (class label-declaration)
+                                   (item ?name))))
+
 ; --------------
 (defrule MAIN::print-source-line
          (stage (current display-result))
