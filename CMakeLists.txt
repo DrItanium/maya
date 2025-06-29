@@ -446,6 +446,17 @@ target_link_libraries(maya-app PUBLIC
 		Boost::program_options
         assembly
 		)
+add_executable(rv32_to_i960 cmd/rv32_to_i960/main.cc)
+target_link_libraries(rv32_to_i960 PUBLIC
+		electron
+		neutron
+		clips
+		Boost::regex
+		Boost::filesystem
+		Boost::system
+		Boost::program_options
+        assembly
+		)
 target_include_directories(maya PUBLIC "${PROJECT_SRC_DIR}"
 		"${CMAKE_CURRENT_BINARY_DIR}")
 target_include_directories(electron PUBLIC "${PROJECT_SRC_DIR}"
@@ -458,5 +469,8 @@ target_include_directories(maya-app PUBLIC "${PROJECT_SRC_DIR}"
 		"${CMAKE_CURRENT_BINARY_DIR}")
 target_include_directories(assembly PUBLIC "${PROJECT_SRC_DIR}"
         "${CMAKE_CURRENT_BINARY_DIR}")
+target_include_directories(rv32_to_i960 PUBLIC "${PROJECT_SRC_DIR}"
+		"${CMAKE_CURRENT_BINARY_DIR}")
 install(TARGETS maya DESTINATION bin)
 install(TARGETS maya-app DESTINATION bin)
+install(TARGETS rv32_to_i960 DESTINATION bin)
