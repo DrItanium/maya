@@ -187,6 +187,11 @@
                                                       "," 
                                                       " , "))))
          )
+(defrule MAIN::remove-text-transformation-request-contents
+         (declare (salience -9999))
+         ?f <- (text-transformation-pass-tracker (passes))
+         =>
+         (retract ?f))
 (defrule MAIN::decompose-source-line
          (stage (current tokenization))
          ?obj <- (object (is-a source-line)
@@ -197,36 +202,54 @@
                           (decomposed TRUE)
                           (decomposition (explode$ ?line))))
 
-(defclass MAIN::label
-  (is-a source-line)
-  (slot id
-        (type LEXEME)
-        (default ?NONE)))
+(deftemplate MAIN::source-line-fact
+             (slot target
+                   (type INSTANCE)
+                   (default ?NONE))
+             (slot class
+                   (type SYMBOL)
+                   (default ?NONE))
+             (multislot item
+                   (type LEXEME)
+                   (default ?NONE)))
 (defrule MAIN::identify-label-declaration
          (stage (current label-identification))
-         ?k <- (object (is-a source-line&~label)
-                       (name ?name)
-                       (parent ?parent)
-                       (line-number ?ln)
-                       (generations $?gens)
-                       (decomposed TRUE)
-                       (decomposition ?title&:(and (symbolp ?title)
-                                                   (has-suffix ?title 
-                                                               ":"))))
+         (object (is-a source-line)
+                 (name ?name)
+                 (decomposed TRUE)
+                 (decomposition ?title&:(and (symbolp ?title)
+                                             (has-suffix ?title 
+                                                         ":"))))
          =>
-         (unmake-instance ?k)
-         (make-instance ?name of label
-                        (parent ?parent)
-                        (line-number ?ln)
-                        (generations $?gens)
-                        (decomposed TRUE)
-                        (decomposition ?title)
-                        (id (string-to-field (sub-string 1 
-                                                         (- (str-length ?title)
-                                                            1)
-                                                         ?title)))))
+         (assert (source-line-fact (target ?name)
+                                   (class label-declaration)
+                                   (item (string-to-field (sub-string 1 
+                                                                      (- (str-length ?title)
+                                                                         1)
+                                                                      ?title))))))
 
-
+(defrule MAIN::find-label-usage
+         (stage (current label-identification))
+         (source-line-fact (class label-declaration)
+                           (target ?other)
+                           (item ?label))
+         (object (is-a source-line)
+                 (decomposition $? ?label $?)
+                 (name ?user))
+         =>
+         (assert (source-line-fact (target ?user)
+                                   (class uses-label)
+                                   (item ?other))))
+(defrule MAIN::identify-global-label-declaration
+         (stage (current label-identification))
+         (object (is-a source-line)
+                 (decomposition .globl ?name)
+                 (name ?decl))
+         =>
+         (assert (source-line-fact (target ?decl)
+                                   (class global-label-decl)
+                                   (item ?name))))
+; --------------
 (defrule MAIN::print-source-line
          (stage (current display-result))
          (object (is-a source-file)
