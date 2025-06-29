@@ -25,6 +25,15 @@
              "This function must be here, it is called by maya-app first"
              ()
              )
+(defglobal MAIN
+           ?*text-transform-passes* = (create$ isolate-commas))
+(deftemplate MAIN::text-transformation-pass-tracker
+             (slot target
+                   (type INSTANCE)
+                   (default ?NONE))
+             (multislot passes
+                        (type LEXEME)
+                        (default ?NONE)))
 (deftemplate MAIN::stage
              (slot current
                    (type SYMBOL) 
@@ -147,28 +156,34 @@
                                        (parent (symbol-to-instance-name ?id))
                                        (line-number ?nlnc)
                                        (generations ?line)))))
-(defrule MAIN::isolate-commas-fact
+(defrule MAIN::declare-text-transformation-passes
          (declare (salience 10000))
-         (stage (current isolate-commas))
+         (stage (current do-text-transformations))
          (object (is-a source-line)
                  (name ?id))
          =>
-         (assert (isolate commas on ?id)))
+         (assert (text-transformation-pass-tracker (target ?id)
+                                                   (passes ?*text-transform-passes*))))
+         
 (defrule MAIN::isolate-commas
-         (stage (current isolate-commas))
-         ?f <- (isolate commas on ?id)
+         (stage (current do-text-transformations))
+         ?f <- (text-transformation-pass-tracker (target ?id)
+                                                 (passes $?a
+                                                         isolate-commas
+                                                         $?b))
          ?obj <- (object (is-a source-line)
                          (name ?id)
                          (generations $?a 
                                       ?last))
          =>
-         (retract ?f)
+         (modify ?f
+                 (passes ?a ?b))
          (modify-instance ?obj
                           (generations $?a
                                        ?last
-                                       (str-replace ?last "," " , "))))
-
-
+                                       (str-replace ?last 
+                                                    "," 
+                                                    " , "))))
 
 (defrule MAIN::decompose-source-line
          (stage (current tokenization))
@@ -203,6 +218,6 @@
           ;(lineize test.s)
           (lineize flops.s)
           (stage (current walk-file)
-                 (rest isolate-commas
+                 (rest do-text-transformations
                        tokenization
                        display-result)))
