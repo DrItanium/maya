@@ -178,12 +178,15 @@
          =>
          (modify ?f
                  (passes ?a ?b))
-         (modify-instance ?obj
-                          (generations $?a
-                                       ?last
-                                       (str-replace ?last 
-                                                    "," 
-                                                    " , "))))
+         (if (str-index "," 
+                        ?last) then
+           (modify-instance ?obj
+                            (generations $?a
+                                         ?last
+                                         (str-replace ?last 
+                                                      "," 
+                                                      " , "))))
+         )
 
 (defrule MAIN::decompose-source-line
          (stage (current tokenization))
@@ -197,20 +200,25 @@
 
 (defrule MAIN::print-source-line
          (stage (current display-result))
-         (object (is-a source-line)
-                 (decomposed TRUE)
-                 (parent ?p)
-                 (line-number ?ln)
-                 (generations ?str $?)
-                 (decomposition $?result))
          (object (is-a source-file)
-                 (name ?p)
-                 (path ?path))
-
+                 (path ?path)
+                 (lines $?lines))
          =>
-         (printout stdout
-                   "[" ?path ":" ?ln "]: \"" ?str "\" -> ... -> " ?result crlf))
-                
+         (progn$ (?line ?lines)
+                 (printout stdout 
+                           "[" ?path ":" 
+                           (send ?line
+                                 get-line-number)
+                           "]: ")
+                 (progn$ (?str (send ?line
+                                     get-generations))
+                         (printout stdout
+                                   "\"" ?str "\" -> "))
+                 (printout stdout
+                           (send ?line
+                                 get-decomposition)
+                           crlf)))
+
 ; to run this program, just execute maya-app from this directory
 
 
