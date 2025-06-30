@@ -2,7 +2,7 @@
 	.option nopic
 	.attribute arch, "rv32i2p1_m2p0_a2p1_c2p0_zicsr2p0_zfinx1p0_zdinx1p0_zba1p0_zbb1p0_zbs1p0"
 	.attribute unaligned_access, 0
-	.attribute stack_align, 16
+	.attribute stack_align, 4
 	.text
 	.section	.rodata.str1.4,"aMS",@progbits,1
 	.align	2
@@ -61,20 +61,10 @@
 	.globl	main
 	.type	main, @function
 main:
-	addi	sp,sp,-128
-	sw	ra,124(sp)
-	sw	s0,120(sp)
-	sw	s1,116(sp)
-	sw	s2,112(sp)
-	sw	s3,108(sp)
-	sw	s4,104(sp)
-	sw	s5,100(sp)
-	sw	s6,96(sp)
-	sw	s7,92(sp)
-	sw	s8,88(sp)
-	sw	s9,84(sp)
-	sw	s10,80(sp)
-	sw	s11,76(sp)
+	addi	sp,sp,-88
+	sw	ra,84(sp)
+	sw	s0,80(sp)
+	sw	s1,76(sp)
 	li	a0,10
 	call	putchar
 	lui	a0,%hi(.LC0)
@@ -147,16 +137,12 @@ main:
 	sw	zero,%lo(sa)(a5)
 	sw	zero,%lo(sa+4)(a5)
 	li	a5,16384
-	addi	s3,a5,-759
-	lui	a5,%hi(.LANCHOR0)
-	addi	a5,a5,%lo(.LANCHOR0)
-	sw	s0,8(sp)
-	sw	s3,0(sp)
-	sw	a5,24(sp)
+	addi	a5,a5,-759
+	sw	a5,4(sp)
 	j	.L2
 .L54:
-	lw	s3,0(sp)
-	fcvt.d.w	a2,s3
+	lw	s0,4(sp)
+	fcvt.d.w	a2,s0
 	lui	a5,%hi(.LC11)
 	lw	a4,%lo(.LC11)(a5)
 	lw	a5,%lo(.LC11+4)(a5)
@@ -171,49 +157,52 @@ main:
 	addi	a0,a0,288
 	call	dtime
 	li	a5,1
-	bgt	s3,a5,.L32
+	bgt	s0,a5,.L32
 	j	.L7
 .L34:
-	li	s6,0
-	li	s7,0
+	sw	zero,20(sp)
+	sw	zero,24(sp)
 	j	.L16
 .L35:
 	li	s0,0
 	li	s1,0
 	j	.L18
 .L36:
-	li	s4,0
-	li	s5,0
+	sw	zero,12(sp)
+	sw	zero,16(sp)
 	j	.L20
 .L37:
-	li	s4,0
-	li	s5,0
+	sw	zero,12(sp)
+	sw	zero,16(sp)
 	j	.L22
 .L38:
-	li	s0,0
-	li	s1,0
+	sw	zero,4(sp)
+	sw	zero,8(sp)
 	j	.L24
 .L39:
-	li	s6,0
-	li	s7,0
+	sw	zero,4(sp)
+	sw	zero,8(sp)
 	j	.L26
 .L29:
 	lui	a0,%hi(.LANCHOR0)
 	addi	a0,a0,%lo(.LANCHOR0)
 	sw	zero,40(a0)
 	sw	zero,44(a0)
-	fcvt.d.w	s2,s2
+	lw	a5,4(sp)
+	fcvt.d.w	a2,a5
 	lui	a5,%hi(sc)
-	sw	s2,%lo(sc)(a5)
-	sw	s3,%lo(sc+4)(a5)
+	sw	a2,%lo(sc)(a5)
+	sw	a3,%lo(sc+4)(a5)
 	addi	a0,a0,288
 	call	dtime
-	li	s2,0
-	li	s3,0
-	mv	s8,s2
-	mv	s9,s3
-	mv	s6,s2
-	mv	s7,s3
+	li	a4,0
+	li	a5,0
+	sw	a4,4(sp)
+	sw	a5,8(sp)
+	sw	a4,20(sp)
+	sw	a5,24(sp)
+	sw	a4,12(sp)
+	sw	a5,16(sp)
 	j	.L28
 .L11:
 	lui	s0,%hi(.LANCHOR0)
@@ -233,31 +222,37 @@ main:
 	addi	a0,a0,%lo(.LANCHOR0)
 	sw	a4,40(a0)
 	sw	a5,44(a0)
-	fcvt.d.w	s2,s2
+	lw	a5,4(sp)
+	fcvt.d.w	a2,a5
 	lui	a5,%hi(sc)
-	sw	s2,%lo(sc)(a5)
-	sw	s3,%lo(sc+4)(a5)
+	sw	a2,%lo(sc)(a5)
+	sw	a3,%lo(sc+4)(a5)
 	addi	a0,a0,288
 	call	dtime
-	li	s2,0
-	li	s3,0
-	mv	s8,s2
-	mv	s9,s3
-	mv	s6,s2
-	mv	s7,s3
+	li	a4,0
+	li	a5,0
+	sw	a4,4(sp)
+	sw	a5,8(sp)
+	sw	a4,20(sp)
+	sw	a5,24(sp)
+	sw	a4,12(sp)
+	sw	a5,16(sp)
 	j	.L28
 .L13:
 	lui	a0,%hi(.LANCHOR0)
 	addi	a0,a0,%lo(.LANCHOR0)
 	sw	zero,40(a0)
 	sw	zero,44(a0)
-	fcvt.d.w	a4,s2
+	lw	a5,4(sp)
+	fcvt.d.w	a4,a5
 	lui	a3,%hi(sc)
 	sw	a4,%lo(sc)(a3)
 	sw	a5,%lo(sc+4)(a3)
 	lui	a5,%hi(sa)
-	lw	s4,%lo(sa)(a5)
-	lw	s5,%lo(sa+4)(a5)
+	lw	a4,%lo(sa)(a5)
+	lw	a5,%lo(sa+4)(a5)
+	sw	a4,12(sp)
+	sw	a5,16(sp)
 	addi	a0,a0,288
 	call	dtime
 	j	.L31
@@ -271,11 +266,11 @@ main:
 	lui	a5,%hi(sa)
 	sw	a2,%lo(sa)(a5)
 	sw	a3,%lo(sa+4)(a5)
-	li	s8,0
-	li	s9,0
+	sw	zero,28(sp)
+	sw	zero,32(sp)
 .L33:
-	lw	a5,16(sp)
-	sw	a5,0(sp)
+	lw	a5,12(sp)
+	sw	a5,4(sp)
 .L2:
 	lui	a5,%hi(sa)
 	lw	a4,%lo(sa)(a5)
@@ -285,69 +280,79 @@ main:
 	lw	a3,%lo(TLimit+4)(a3)
 	flt.d	a4,a4,a2
 	beq	a4,zero,.L54
-	lw	s8,0(sp)
-	slli	s2,s8,1
-	sw	s2,16(sp)
+	lw	a5,4(sp)
+	slli	a4,a5,1
 	lui	a5,%hi(one)
 	lw	s0,%lo(one)(a5)
 	lw	s1,%lo(one+4)(a5)
-	fcvt.d.w	s10,s2
-	fdiv.d	s10,s0,s10
-	lw	a0,8(sp)
+	sw	a4,12(sp)
+	fcvt.d.w	a4,a4
+	fdiv.d	a4,s0,a4
+	sw	a4,20(sp)
+	sw	a5,24(sp)
+	lui	a0,%hi(.LANCHOR0+288)
+	addi	a0,a0,%lo(.LANCHOR0+288)
 	call	dtime
 	li	a5,1
-	ble	s2,a5,.L3
+	lw	a4,12(sp)
+	ble	a4,a5,.L3
 	lui	a5,%hi(D3)
-	lw	t5,%lo(D3)(a5)
-	lw	t6,%lo(D3+4)(a5)
+	lw	s2,%lo(D3)(a5)
+	lw	s3,%lo(D3+4)(a5)
 	lui	a5,%hi(D2)
-	lw	s4,%lo(D2)(a5)
-	lw	s5,%lo(D2+4)(a5)
+	lw	t5,%lo(D2)(a5)
+	lw	t6,%lo(D2+4)(a5)
 	lui	a5,%hi(D1)
-	lw	a6,%lo(D1)(a5)
-	lw	a7,%lo(D1+4)(a5)
+	lw	t1,%lo(D1)(a5)
+	lw	t2,%lo(D1+4)(a5)
 	lui	a5,%hi(E3)
-	lw	s6,%lo(E3)(a5)
-	lw	s7,%lo(E3+4)(a5)
+	lw	t3,%lo(E3)(a5)
+	lw	t4,%lo(E3+4)(a5)
 	lui	a5,%hi(E2)
-	lw	s2,%lo(E2)(a5)
-	lw	s3,%lo(E2+4)(a5)
-	slli	t4,s8,1
-	li	t3,1
-	li	a0,0
-	li	a1,0
-	mv	s8,a0
-	mv	s9,a1
+	lw	s6,%lo(E2)(a5)
+	lw	s7,%lo(E2+4)(a5)
+	lw	a5,4(sp)
+	slli	s4,a5,1
+	li	t0,1
+	li	a6,0
+	li	a7,0
+	mv	s8,a6
+	mv	s9,a7
+	lw	s10,20(sp)
+	lw	s11,24(sp)
 .L4:
-	fadd.d	a0,a0,s0
-	fmul.d	t1,s10,a0
-	fmul.d	a2,t5,t1
-	fadd.d	a2,a2,s4
-	fmul.d	a2,a2,t1
-	fadd.d	a2,a2,a6
-	fmul.d	a4,s6,t1
-	fadd.d	a4,a4,s2
-	fmul.d	a4,a4,t1
-	fadd.d	a4,a4,a6
-	fmul.d	a4,a4,t1
+	fadd.d	a6,a6,s0
+	fmul.d	a0,s10,a6
+	fmul.d	a2,s2,a0
+	fadd.d	a2,a2,t5
+	fmul.d	a2,a2,a0
+	fadd.d	a2,a2,t1
+	fmul.d	a4,t3,a0
+	fadd.d	a4,a4,s6
+	fmul.d	a4,a4,a0
+	fadd.d	a4,a4,t1
+	fmul.d	a4,a4,a0
 	fadd.d	a4,a4,s0
 	fdiv.d	a2,a2,a4
 	fadd.d	s8,s8,a2
-	addi	t3,t3,1
-	bne	t3,t4,.L4
-	lw	a0,8(sp)
+	addi	t0,t0,1
+	bne	t0,s4,.L4
+	sw	s8,28(sp)
+	sw	s9,32(sp)
+	lui	s0,%hi(.LANCHOR0)
+	addi	s0,s0,%lo(.LANCHOR0)
+	addi	a0,s0,288
 	call	dtime
-	lw	a5,24(sp)
-	lw	a4,296(a5)
-	lw	a5,300(a5)
-	lui	a3,%hi(sa)
-	sw	a4,%lo(sa)(a3)
-	sw	a5,%lo(sa+4)(a3)
+	lw	a2,296(s0)
+	lw	a3,300(s0)
+	lui	a5,%hi(sa)
+	sw	a2,%lo(sa)(a5)
+	sw	a3,%lo(sa+4)(a5)
 	li	a5,256000000
-	lw	a4,0(sp)
+	lw	a4,4(sp)
 	bne	a4,a5,.L33
-	lw	s3,16(sp)
-	fcvt.d.w	a2,s3
+	lw	s0,12(sp)
+	fcvt.d.w	a2,s0
 	lui	a5,%hi(.LC11)
 	lw	a4,%lo(.LC11)(a5)
 	lw	a5,%lo(.LC11+4)(a5)
@@ -361,11 +366,13 @@ main:
 	sw	a5,12(a0)
 	addi	a0,a0,288
 	call	dtime
+	sw	s0,4(sp)
 .L32:
 	li	a5,1
+	lw	a4,4(sp)
 .L8:
 	addi	a5,a5,1
-	bne	a5,s3,.L8
+	bne	a5,a4,.L8
 .L7:
 	lui	s0,%hi(.LANCHOR0)
 	addi	s0,s0,%lo(.LANCHOR0)
@@ -385,70 +392,74 @@ main:
 	li	a4,0
 	li	a5,0
 .L10:
-	sw	a4,32(sp)
-	sw	a5,36(sp)
+	sw	a4,36(sp)
+	sw	a5,40(sp)
 	lui	a5,%hi(nulltime)
-	lw	a0,32(sp)
-	lw	a1,36(sp)
+	lw	a0,36(sp)
+	lw	a1,40(sp)
 	sw	a0,%lo(nulltime)(a5)
 	sw	a1,%lo(nulltime+4)(a5)
-	lui	s4,%hi(sa)
-	lw	a4,%lo(sa)(s4)
-	lw	a5,%lo(sa+4)(s4)
-	fmul.d	a4,a2,a4
-	lui	a3,%hi(nulltime)
-	lw	a2,%lo(nulltime)(a3)
-	lw	a3,%lo(nulltime+4)(a3)
-	fsub.d	a4,a4,a2
-	lui	s3,%hi(.LANCHOR0)
-	addi	s3,s3,%lo(.LANCHOR0)
-	sw	a4,16(s3)
-	sw	a5,20(s3)
-	lui	a3,%hi(D1)
-	lw	a6,%lo(D1)(a3)
-	lw	a7,%lo(D1+4)(a3)
-	lui	s5,%hi(one)
-	lw	a0,%lo(one)(s5)
-	lw	a1,%lo(one+4)(s5)
-	lui	a3,%hi(D2)
-	lw	t1,%lo(D2)(a3)
-	lw	t2,%lo(D2+4)(a3)
-	fadd.d	t1,a6,t1
-	lui	a3,%hi(D3)
-	lw	a2,%lo(D3)(a3)
-	lw	a3,%lo(D3+4)(a3)
-	fadd.d	t1,t1,a2
-	fadd.d	t3,a6,a0
-	lui	a3,%hi(E2)
-	lw	a2,%lo(E2)(a3)
-	lw	a3,%lo(E2+4)(a3)
-	fadd.d	a2,t3,a2
-	lui	t3,%hi(E3)
-	lw	t4,%lo(E3+4)(t3)
-	lw	t3,%lo(E3)(t3)
-	fadd.d	a2,a2,t3
-	fdiv.d	a2,t1,a2
-	lui	t1,%hi(.LC12)
-	lw	t2,%lo(.LC12+4)(t1)
-	lw	t1,%lo(.LC12)(t1)
-	fdiv.d	t1,a4,t1
-	sw	t1,24(s3)
-	sw	t2,28(s3)
-	lui	t3,%hi(two)
-	lw	t4,%lo(two+4)(t3)
-	lw	t3,%lo(two)(t3)
-	fadd.d	a2,a6,a2
-	fmul.d	s8,t3,s8
-	fadd.d	a2,a2,s8
-	fmul.d	a2,a2,s10
-	fdiv.d	a2,a2,t3
-	sw	a2,%lo(sa)(s4)
-	sw	a3,%lo(sa+4)(s4)
-	fdiv.d	a2,a0,a2
+	lui	t6,%hi(sa)
+	lw	a4,%lo(sa)(t6)
+	lw	a5,%lo(sa+4)(t6)
+	fmul.d	a2,a2,a4
+	lui	a5,%hi(nulltime)
+	lw	a4,%lo(nulltime)(a5)
+	lw	a5,%lo(nulltime+4)(a5)
+	fsub.d	a2,a2,a4
+	lui	a5,%hi(.LANCHOR0)
+	addi	t5,a5,%lo(.LANCHOR0)
+	sw	a2,16(t5)
+	sw	a3,20(t5)
+	lui	a5,%hi(D1)
+	lw	a4,%lo(D1)(a5)
+	lw	a5,%lo(D1+4)(a5)
+	lui	a1,%hi(one)
+	lw	a0,%lo(one)(a1)
+	lw	a1,%lo(one+4)(a1)
+	lui	a6,%hi(D2)
+	lw	t3,%lo(D2)(a6)
+	lw	t4,%lo(D2+4)(a6)
+	fadd.d	t3,a4,t3
+	lui	a6,%hi(D3)
+	lw	a7,%lo(D3+4)(a6)
+	lw	a6,%lo(D3)(a6)
+	fadd.d	t3,t3,a6
+	fadd.d	a6,a4,a0
+	lui	t1,%hi(E2)
+	lw	t2,%lo(E2+4)(t1)
+	lw	t1,%lo(E2)(t1)
+	fadd.d	a6,a6,t1
+	lui	t1,%hi(E3)
+	lw	t2,%lo(E3+4)(t1)
+	lw	t1,%lo(E3)(t1)
+	fadd.d	a6,a6,t1
+	fdiv.d	t3,t3,a6
+	lui	a6,%hi(.LC12)
+	lw	t1,%lo(.LC12)(a6)
+	lw	t2,%lo(.LC12+4)(a6)
+	fdiv.d	t1,a2,t1
+	sw	t1,24(t5)
+	sw	t2,28(t5)
+	lui	a6,%hi(two)
+	lw	a7,%lo(two+4)(a6)
+	lw	a6,%lo(two)(a6)
+	fadd.d	a4,a4,t3
+	lw	s0,28(sp)
+	lw	s1,32(sp)
+	fmul.d	t3,a6,s0
+	fadd.d	a4,a4,t3
+	lw	s0,20(sp)
+	lw	s1,24(sp)
+	fmul.d	a4,a4,s0
+	fdiv.d	a4,a4,a6
+	sw	a4,%lo(sa)(t6)
+	sw	a5,%lo(sa+4)(t6)
+	fdiv.d	a4,a0,a4
 	lui	a6,%hi(sb)
-	sw	a2,%lo(sb)(a6)
-	sw	a3,%lo(sb+4)(a6)
-	fcvt.w.d a6,a2,rtz
+	sw	a4,%lo(sb)(a6)
+	sw	a5,%lo(sb+4)(a6)
+	fcvt.w.d a6,a4,rtz
 	li	a7,40960
 	addi	a7,a7,-960
 	mul	a6,a6,a7
@@ -457,17 +468,27 @@ main:
 	lw	t4,%lo(scale+4)(t3)
 	lw	t3,%lo(scale)(t3)
 	fdiv.d	a6,a6,t3
-	fcvt.w.d s2,a6,rtz
+	fcvt.w.d s0,a6,rtz
+	sw	s0,4(sp)
 	lui	a6,%hi(.LC13)
 	lw	a7,%lo(.LC13+4)(a6)
 	lw	a6,%lo(.LC13)(a6)
-	fsub.d	a2,a2,a6
-	lui	a6,%hi(sc)
-	sw	a2,%lo(sc)(a6)
-	sw	a3,%lo(sc+4)(a6)
-	fdiv.d	a6,a0,t1
-	sw	a6,32(s3)
-	sw	a7,36(s3)
+	fsub.d	a6,a4,a6
+	lui	a5,%hi(sc)
+	sw	a6,%lo(sc)(a5)
+	sw	a7,%lo(sc+4)(a5)
+	fdiv.d	a0,a0,t1
+	sw	t5,12(sp)
+	sw	a0,32(t5)
+	sw	a1,36(t5)
+	sw	a0,68(sp)
+	sw	a1,72(sp)
+	sw	a1,0(sp)
+	mv	a5,a0
+	mv	a4,a3
+	mv	a3,a2
+	mv	a1,a6
+	mv	a2,a7
 	lui	a0,%hi(.LC14)
 	addi	a0,a0,%lo(.LC14)
 	call	printf
@@ -475,17 +496,22 @@ main:
 	lw	s0,%lo(five)(a5)
 	lw	s1,%lo(five+4)(a5)
 	fneg.d	s0,s0
-	lw	a4,%lo(one)(s5)
-	lw	a5,%lo(one+4)(s5)
+	lui	a1,%hi(one)
+	lw	a4,%lo(one)(a1)
+	lw	a5,%lo(one+4)(a1)
 	fneg.d	a4,a4
-	sw	a4,%lo(sa)(s4)
-	sw	a5,%lo(sa+4)(s4)
-	addi	a0,s3,288
+	lui	t6,%hi(sa)
+	sw	a4,%lo(sa)(t6)
+	sw	a5,%lo(sa+4)(t6)
+	lw	t5,12(sp)
+	addi	a0,t5,288
 	call	dtime
-	ble	s2,zero,.L11
-	lw	a0,%lo(sa)(s4)
-	lw	a1,%lo(sa+4)(s4)
-	addi	a2,s2,1
+	lw	a4,4(sp)
+	ble	a4,zero,.L11
+	lui	a5,%hi(sa)
+	lw	a0,%lo(sa)(a5)
+	lw	a1,%lo(sa+4)(a5)
+	addi	a2,a4,1
 	li	a3,1
 .L12:
 	mv	a4,s0
@@ -497,14 +523,16 @@ main:
 	lui	a5,%hi(sa)
 	sw	a0,%lo(sa)(a5)
 	sw	a1,%lo(sa+4)(a5)
-	lui	s3,%hi(.LANCHOR0)
-	addi	s3,s3,%lo(.LANCHOR0)
-	addi	a0,s3,288
+	lui	a5,%hi(.LANCHOR0)
+	addi	a3,a5,%lo(.LANCHOR0)
+	sw	a3,12(sp)
+	addi	a0,a3,288
 	call	dtime
-	lw	a4,8(s3)
-	lw	a5,12(s3)
-	lw	a2,296(s3)
-	lw	a3,300(s3)
+	lw	a3,12(sp)
+	lw	a4,8(a3)
+	lw	a5,12(a3)
+	lw	a2,296(a3)
+	lw	a3,300(a3)
 	fmul.d	a4,a4,a2
 	li	a2,0
 	li	a3,0
@@ -514,13 +542,16 @@ main:
 	addi	a0,a0,%lo(.LANCHOR0)
 	sw	a4,40(a0)
 	sw	a5,44(a0)
-	fcvt.d.w	a4,s2
+	lw	a5,4(sp)
+	fcvt.d.w	a4,a5
 	lui	a3,%hi(sc)
 	sw	a4,%lo(sc)(a3)
 	sw	a5,%lo(sc+4)(a3)
 	lui	a5,%hi(sa)
-	lw	s4,%lo(sa)(a5)
-	lw	s5,%lo(sa+4)(a5)
+	lw	a4,%lo(sa)(a5)
+	lw	a5,%lo(sa+4)(a5)
+	sw	a4,12(sp)
+	sw	a5,16(sp)
 	addi	a0,a0,288
 	call	dtime
 .L31:
@@ -530,131 +561,159 @@ main:
 	lui	a5,%hi(two)
 	lw	a6,%lo(two)(a5)
 	lw	a7,%lo(two+4)(a5)
-	addi	a4,s2,1
+	lw	a5,4(sp)
+	addi	a4,a5,1
 	li	a5,1
-	li	s2,0
-	li	s3,0
-	mv	s8,s2
-	mv	s9,s3
-	mv	s6,s2
-	mv	s7,s3
+	li	t1,0
+	li	t2,0
+	mv	t5,t1
+	mv	t6,t2
+	mv	t3,t1
+	mv	t4,t2
+	lw	a0,12(sp)
+	lw	a1,16(sp)
 .L15:
-	mv	a0,s0
-	mv	a1,s1
+	mv	s2,s0
+	mv	s3,s1
 	fneg.d	s0,s0
-	fsub.d	a2,a2,a0
-	fadd.d	s4,s4,a6
-	fsub.d	a0,s0,s4
-	fadd.d	s2,s2,a0
-	fmul.d	a0,s0,s4
-	fsub.d	s6,s6,a0
-	fdiv.d	a0,s0,s4
-	fadd.d	s8,s8,a0
+	fsub.d	a2,a2,s2
+	fadd.d	a0,a0,a6
+	fsub.d	s2,s0,a0
+	fadd.d	t1,t1,s2
+	fmul.d	s2,s0,a0
+	fsub.d	t3,t3,s2
+	fdiv.d	s2,s0,a0
+	fadd.d	t5,t5,s2
 	addi	a5,a5,1
 	bne	a4,a5,.L15
+	sw	t1,4(sp)
+	sw	t2,8(sp)
+	sw	t3,12(sp)
+	sw	t4,16(sp)
+	sw	t5,20(sp)
+	sw	t6,24(sp)
 	lui	a5,%hi(sa)
 	sw	a2,%lo(sa)(a5)
 	sw	a3,%lo(sa+4)(a5)
 .L28:
-	lui	s1,%hi(.LANCHOR0)
-	addi	s1,s1,%lo(.LANCHOR0)
-	addi	s0,s1,288
-	mv	a0,s0
+	lui	a5,%hi(.LANCHOR0)
+	addi	s0,a5,%lo(.LANCHOR0)
+	lui	a5,%hi(.LANCHOR0+288)
+	addi	a0,a5,%lo(.LANCHOR0+288)
 	call	dtime
-	lw	a4,8(s1)
-	lw	a5,12(s1)
-	lw	a2,296(s1)
-	lw	a3,300(s1)
-	fmul.d	a4,a4,a2
-	sw	a4,48(s1)
-	sw	a5,52(s1)
-	lw	a2,40(s1)
-	lw	a3,44(s1)
-	fsub.d	a4,a4,a2
-	lui	a3,%hi(.LC15)
-	lw	a6,%lo(.LC15)(a3)
-	lw	a7,%lo(.LC15+4)(a3)
-	fdiv.d	a6,a4,a6
-	sw	a6,56(s1)
-	sw	a7,60(s1)
-	lui	t1,%hi(sa)
-	lw	a2,%lo(sa)(t1)
-	lw	a3,%lo(sa+4)(t1)
-	fmul.d	a2,s2,a2
-	lui	t3,%hi(sc)
-	lw	a0,%lo(sc)(t3)
-	lw	a1,%lo(sc+4)(t3)
-	fdiv.d	a2,a2,a0
-	fcvt.w.d s10,a2,rtz
-	lui	a3,%hi(five)
-	lw	a2,%lo(five)(a3)
-	lw	a3,%lo(five+4)(a3)
-	lui	a1,%hi(four)
-	lw	a0,%lo(four)(a1)
-	lw	a1,%lo(four+4)(a1)
-	fmul.d	a0,s8,a0
-	fdiv.d	a0,a0,a2
-	sw	a0,%lo(sa)(t1)
-	sw	a1,%lo(sa+4)(t1)
-	fdiv.d	a2,a2,s6
-	fadd.d	a2,a2,a0
-	lui	a1,%hi(sb)
-	sw	a2,%lo(sb)(a1)
-	sw	a3,%lo(sb+4)(a1)
-	lui	a1,%hi(.LC16)
-	lw	t1,%lo(.LC16)(a1)
-	lw	t2,%lo(.LC16+4)(a1)
-	sw	t1,%lo(sc)(t3)
-	sw	t2,%lo(sc+4)(t3)
-	fmul.d	a0,s6,s6
-	fmul.d	a0,a0,s6
-	fdiv.d	t1,t1,a0
-	fsub.d	t1,a2,t1
-	lui	a3,%hi(piprg)
-	sw	t1,%lo(piprg)(a3)
-	sw	t2,%lo(piprg+4)(a3)
-	lui	s2,%hi(piref)
-	lw	a2,%lo(piref)(s2)
-	lw	a3,%lo(piref+4)(s2)
-	fsub.d	a2,t1,a2
-	lui	a1,%hi(pierr)
-	sw	a2,%lo(pierr)(a1)
-	sw	a3,%lo(pierr+4)(a1)
-	lui	a1,%hi(one)
-	lw	a0,%lo(one)(a1)
-	lw	a1,%lo(one+4)(a1)
-	fdiv.d	a6,a0,a6
-	sw	a6,64(s1)
-	sw	a7,68(s1)
+	lw	a2,8(s0)
+	lw	a3,12(s0)
+	lw	a4,296(s0)
+	lw	a5,300(s0)
+	fmul.d	a2,a2,a4
+	sw	a2,48(s0)
+	sw	a3,52(s0)
+	lw	a4,40(s0)
+	lw	a5,44(s0)
+	fsub.d	a2,a2,a4
+	lui	a5,%hi(.LC15)
+	lw	a6,%lo(.LC15)(a5)
+	lw	a7,%lo(.LC15+4)(a5)
+	fdiv.d	a6,a2,a6
+	sw	a6,56(s0)
+	sw	a7,60(s0)
+	lui	t3,%hi(sa)
+	lw	a4,%lo(sa)(t3)
+	lw	a5,%lo(sa+4)(t3)
+	lw	a0,4(sp)
+	lw	a1,8(sp)
+	fmul.d	a4,a0,a4
+	lui	t1,%hi(sc)
+	lw	a0,%lo(sc)(t1)
+	lw	a1,%lo(sc+4)(t1)
+	fdiv.d	a4,a4,a0
+	fcvt.w.d a5,a4,rtz
+	sw	a5,4(sp)
+	lui	a5,%hi(five)
+	lw	a0,%lo(five)(a5)
+	lw	a1,%lo(five+4)(a5)
+	lui	a5,%hi(four)
+	lw	a4,%lo(four)(a5)
+	lw	a5,%lo(four+4)(a5)
+	lw	t5,20(sp)
+	lw	t6,24(sp)
+	fmul.d	a4,t5,a4
+	fdiv.d	a4,a4,a0
+	sw	a4,%lo(sa)(t3)
+	sw	a5,%lo(sa+4)(t3)
+	lw	t3,12(sp)
+	lw	t4,16(sp)
+	fdiv.d	a0,a0,t3
+	fadd.d	a0,a0,a4
+	lui	a5,%hi(sb)
+	sw	a0,%lo(sb)(a5)
+	sw	a1,%lo(sb+4)(a5)
+	lui	a5,%hi(.LC16)
+	lw	a4,%lo(.LC16)(a5)
+	lw	a5,%lo(.LC16+4)(a5)
+	sw	a4,%lo(sc)(t1)
+	sw	a5,%lo(sc+4)(t1)
+	fmul.d	t1,t3,t3
+	fmul.d	t1,t1,t3
+	fdiv.d	a4,a4,t1
+	fsub.d	a0,a0,a4
+	lui	a5,%hi(piprg)
+	sw	a0,%lo(piprg)(a5)
+	sw	a1,%lo(piprg+4)(a5)
+	lui	s1,%hi(piref)
+	lw	a4,%lo(piref)(s1)
+	lw	a5,%lo(piref+4)(s1)
+	fsub.d	a0,a0,a4
+	lui	a5,%hi(pierr)
+	sw	a0,%lo(pierr)(a5)
+	sw	a1,%lo(pierr+4)(a5)
+	lui	a5,%hi(one)
+	lw	a4,%lo(one)(a5)
+	lw	a5,%lo(one+4)(a5)
+	fdiv.d	a4,a4,a6
+	sw	a4,64(s0)
+	sw	a5,68(s0)
+	sw	a4,68(sp)
+	sw	a5,72(sp)
+	sw	a5,0(sp)
+	mv	a5,a4
+	mv	a4,a3
+	mv	a3,a2
+	mv	a2,a1
+	mv	a1,a0
 	lui	a0,%hi(.LC17)
 	addi	a0,a0,%lo(.LC17)
 	call	printf
-	fcvt.d.w	a2,s10
-	sw	a2,56(sp)
-	sw	a3,60(sp)
+	lw	s0,4(sp)
+	fcvt.d.w	a2,s0
+	sw	a2,60(sp)
+	sw	a3,64(sp)
 	lui	a5,%hi(three)
 	lw	a4,%lo(three)(a5)
 	lw	a5,%lo(three+4)(a5)
 	fmul.d	a4,a2,a4
-	lw	s8,%lo(piref)(s2)
-	lw	s9,%lo(piref+4)(s2)
-	fdiv.d	s8,s8,a4
-	mv	a0,s0
+	lw	a2,%lo(piref)(s1)
+	lw	a3,%lo(piref+4)(s1)
+	fdiv.d	a4,a2,a4
+	sw	a4,12(sp)
+	sw	a5,16(sp)
+	lui	a5,%hi(.LANCHOR0+288)
+	addi	a0,a5,%lo(.LANCHOR0+288)
 	call	dtime
 	li	a5,1
-	ble	s10,a5,.L34
+	ble	s0,a5,.L34
 	lui	a5,%hi(one)
 	lw	t1,%lo(one)(a5)
 	lw	t2,%lo(one+4)(a5)
 	lui	a5,%hi(A6)
-	lw	t3,%lo(A6)(a5)
-	lw	t4,%lo(A6+4)(a5)
+	lw	s0,%lo(A6)(a5)
+	lw	s1,%lo(A6+4)(a5)
 	lui	a5,%hi(A5)
 	lw	t5,%lo(A5)(a5)
 	lw	t6,%lo(A5+4)(a5)
 	lui	a5,%hi(A4)
-	lw	s0,%lo(A4)(a5)
-	lw	s1,%lo(A4+4)(a5)
+	lw	t3,%lo(A4)(a5)
+	lw	t4,%lo(A4+4)(a5)
 	lui	a5,%hi(A3)
 	lw	s2,%lo(A3)(a5)
 	lw	s3,%lo(A3+4)(a5)
@@ -662,46 +721,43 @@ main:
 	lw	s4,%lo(A2)(a5)
 	lw	s5,%lo(A2+4)(a5)
 	lui	a5,%hi(A1)
-	lw	a4,%lo(A1)(a5)
-	lw	a5,%lo(A1+4)(a5)
-	sw	a4,0(sp)
-	sw	a5,4(sp)
+	lw	s6,%lo(A1)(a5)
+	lw	s7,%lo(A1+4)(a5)
 	li	t0,1
 	li	a6,0
 	li	a7,0
-	mv	s6,a6
-	mv	s7,a7
-	sw	t3,8(sp)
-	sw	t4,12(sp)
+	mv	s8,a6
+	mv	s9,a7
+	lw	s10,12(sp)
+	lw	s11,16(sp)
 .L17:
 	fadd.d	a6,a6,t1
-	fmul.d	a0,s8,a6
+	fmul.d	a0,s10,a6
 	fmul.d	a2,a0,a0
-	lw	a4,8(sp)
-	lw	a5,12(sp)
-	fmul.d	a4,a4,a2
+	fmul.d	a4,s0,a2
 	fsub.d	a4,a4,t5
 	fmul.d	a4,a4,a2
-	fadd.d	a4,a4,s0
+	fadd.d	a4,a4,t3
 	fmul.d	a4,a4,a2
 	fsub.d	a4,a4,s2
 	fmul.d	a4,a4,a2
 	fadd.d	a4,a4,s4
 	fmul.d	a4,a4,a2
-	lw	t3,0(sp)
-	lw	t4,4(sp)
-	fadd.d	a4,a4,t3
+	fadd.d	a4,a4,s6
 	fmul.d	a4,a4,a2
 	fadd.d	a4,a4,t1
 	fmul.d	a4,a4,a0
-	fadd.d	s6,s6,a4
+	fadd.d	s8,s8,a4
 	addi	t0,t0,1
-	bne	s10,t0,.L17
+	lw	a5,4(sp)
+	bne	a5,t0,.L17
+	sw	s8,20(sp)
+	sw	s9,24(sp)
 .L16:
 	lui	s0,%hi(.LANCHOR0)
 	addi	s0,s0,%lo(.LANCHOR0)
-	addi	s4,s0,288
-	mv	a0,s4
+	lui	a5,%hi(.LANCHOR0+288)
+	addi	a0,a5,%lo(.LANCHOR0+288)
 	call	dtime
 	lw	a4,8(s0)
 	lw	a5,12(s0)
@@ -711,390 +767,424 @@ main:
 	lui	a3,%hi(nulltime)
 	lw	a2,%lo(nulltime)(a3)
 	lw	a3,%lo(nulltime+4)(a3)
-	fsub.d	a4,a4,a2
-	sw	a4,72(s0)
-	sw	a5,76(s0)
-	lui	s2,%hi(piref)
-	lui	s3,%hi(three)
-	lw	a0,%lo(piref)(s2)
-	lw	a1,%lo(piref+4)(s2)
-	lw	a2,%lo(three)(s3)
-	lw	a3,%lo(three+4)(s3)
-	fdiv.d	a2,a0,a2
-	fmul.d	a6,a2,a2
-	lui	a1,%hi(one)
-	lw	t3,%lo(one)(a1)
-	lw	t4,%lo(one+4)(a1)
-	lui	a1,%hi(A6)
-	lw	t1,%lo(A6)(a1)
-	lw	t2,%lo(A6+4)(a1)
-	fmul.d	t1,a6,t1
+	fsub.d	a2,a4,a2
+	sw	a2,72(s0)
+	sw	a3,76(s0)
+	lui	a4,%hi(piref)
+	lw	a0,%lo(piref)(a4)
+	lw	a1,%lo(piref+4)(a4)
+	lui	s1,%hi(three)
+	lw	a4,%lo(three)(s1)
+	lw	a5,%lo(three+4)(s1)
+	fdiv.d	a0,a0,a4
+	fmul.d	t3,a0,a0
+	lui	a5,%hi(one)
+	lw	a4,%lo(one)(a5)
+	lw	a5,%lo(one+4)(a5)
+	lui	a6,%hi(A6)
+	lw	t1,%lo(A6)(a6)
+	lw	t2,%lo(A6+4)(a6)
+	fmul.d	t1,t3,t1
 	lui	s1,%hi(A5)
-	lw	a0,%lo(A5)(s1)
-	lw	a1,%lo(A5+4)(s1)
-	fsub.d	t1,t1,a0
-	fmul.d	t1,t1,a6
-	lui	a1,%hi(A4)
-	lw	a0,%lo(A4)(a1)
-	lw	a1,%lo(A4+4)(a1)
-	fadd.d	t1,t1,a0
-	fmul.d	t1,t1,a6
-	lui	s5,%hi(A3)
-	lw	a0,%lo(A3)(s5)
-	lw	a1,%lo(A3+4)(s5)
-	fsub.d	t1,t1,a0
-	fmul.d	t1,t1,a6
-	lui	a1,%hi(A2)
-	lw	a0,%lo(A2)(a1)
-	lw	a1,%lo(A2+4)(a1)
-	fadd.d	t1,t1,a0
-	fmul.d	t1,t1,a6
-	lui	a1,%hi(A1)
-	lw	a0,%lo(A1)(a1)
-	lw	a1,%lo(A1+4)(a1)
-	fadd.d	a0,t1,a0
-	fmul.d	a0,a0,a6
-	fadd.d	a0,a0,t3
-	fmul.d	t1,a0,a2
-	lui	a3,%hi(.LC18)
-	lw	a0,%lo(.LC18)(a3)
-	lw	a1,%lo(.LC18+4)(a3)
-	fdiv.d	a0,a4,a0
-	sw	a0,80(s0)
-	sw	a1,84(s0)
-	lui	a3,%hi(two)
-	lw	a6,%lo(two)(a3)
-	lw	a7,%lo(two+4)(a3)
-	fmul.d	a2,a6,s6
-	fadd.d	a2,a2,t1
-	fmul.d	a2,a2,s8
-	fdiv.d	a2,a2,a6
-	lui	a6,%hi(sa)
-	sw	a2,%lo(sa)(a6)
-	sw	a3,%lo(sa+4)(a6)
-	lui	a6,%hi(.LC19)
-	lw	a7,%lo(.LC19+4)(a6)
-	lw	a6,%lo(.LC19)(a6)
-	lui	t1,%hi(sb)
-	sw	a6,%lo(sb)(t1)
-	sw	a7,%lo(sb+4)(t1)
-	fsub.d	a2,a2,a6
-	lui	a6,%hi(sc)
-	sw	a2,%lo(sc)(a6)
-	sw	a3,%lo(sc+4)(a6)
-	fdiv.d	a6,t3,a0
-	sw	a6,88(s0)
-	sw	a7,92(s0)
+	lw	a6,%lo(A5)(s1)
+	lw	a7,%lo(A5+4)(s1)
+	fsub.d	t1,t1,a6
+	fmul.d	t1,t1,t3
+	lui	a6,%hi(A4)
+	lw	a7,%lo(A4+4)(a6)
+	lw	a6,%lo(A4)(a6)
+	fadd.d	t1,t1,a6
+	fmul.d	t1,t1,t3
+	lui	s1,%hi(A3)
+	lw	a6,%lo(A3)(s1)
+	lw	a7,%lo(A3+4)(s1)
+	fsub.d	t1,t1,a6
+	fmul.d	t1,t1,t3
+	lui	a6,%hi(A2)
+	lw	a7,%lo(A2+4)(a6)
+	lw	a6,%lo(A2)(a6)
+	fadd.d	t1,t1,a6
+	fmul.d	t1,t1,t3
+	lui	a6,%hi(A1)
+	lw	a7,%lo(A1+4)(a6)
+	lw	a6,%lo(A1)(a6)
+	fadd.d	t1,t1,a6
+	fmul.d	t1,t1,t3
+	fadd.d	t1,t1,a4
+	fmul.d	t1,t1,a0
+	lui	a1,%hi(.LC18)
+	lw	a6,%lo(.LC18)(a1)
+	lw	a7,%lo(.LC18+4)(a1)
+	fdiv.d	a6,a2,a6
+	sw	a6,80(s0)
+	sw	a7,84(s0)
+	lui	a1,%hi(two)
+	lw	t3,%lo(two)(a1)
+	lw	t4,%lo(two+4)(a1)
+	lw	a0,20(sp)
+	lw	a1,24(sp)
+	fmul.d	a0,t3,a0
+	fadd.d	a0,a0,t1
+	lw	t1,12(sp)
+	lw	t2,16(sp)
+	fmul.d	a0,a0,t1
+	fdiv.d	a0,a0,t3
+	lui	t1,%hi(sa)
+	sw	a0,%lo(sa)(t1)
+	sw	a1,%lo(sa+4)(t1)
+	lui	t1,%hi(.LC19)
+	lw	t2,%lo(.LC19+4)(t1)
+	lw	t1,%lo(.LC19)(t1)
+	lui	t3,%hi(sb)
+	sw	t1,%lo(sb)(t3)
+	sw	t2,%lo(sb+4)(t3)
+	fsub.d	a0,a0,t1
+	lui	t1,%hi(sc)
+	sw	a0,%lo(sc)(t1)
+	sw	a1,%lo(sc+4)(t1)
+	fdiv.d	a4,a4,a6
+	sw	a4,88(s0)
+	sw	a5,92(s0)
+	sw	a4,68(sp)
+	sw	a5,72(sp)
+	sw	a5,0(sp)
+	mv	a5,a4
+	mv	a4,a3
+	mv	a3,a2
+	mv	a2,a1
+	mv	a1,a0
 	lui	a0,%hi(.LC20)
 	addi	a0,a0,%lo(.LC20)
 	call	printf
-	lw	a4,%lo(A3)(s5)
-	lw	a5,%lo(A3+4)(s5)
+	lw	a4,%lo(A3)(s1)
+	lw	a5,%lo(A3+4)(s1)
 	fneg.d	a4,a4
-	sw	a4,%lo(A3)(s5)
-	sw	a5,%lo(A3+4)(s5)
-	lw	a4,%lo(A5)(s1)
-	lw	a5,%lo(A5+4)(s1)
+	sw	a4,%lo(A3)(s1)
+	sw	a5,%lo(A3+4)(s1)
+	lui	a3,%hi(A5)
+	lw	a4,%lo(A5)(a3)
+	lw	a5,%lo(A5+4)(a3)
 	fneg.d	a4,a4
-	sw	a4,%lo(A5)(s1)
-	sw	a5,%lo(A5+4)(s1)
-	lw	a4,%lo(three)(s3)
-	lw	a5,%lo(three+4)(s3)
-	lw	a2,56(sp)
-	lw	a3,60(sp)
+	sw	a4,%lo(A5)(a3)
+	sw	a5,%lo(A5+4)(a3)
+	lui	s1,%hi(three)
+	lw	a4,%lo(three)(s1)
+	lw	a5,%lo(three+4)(s1)
+	lw	a2,60(sp)
+	lw	a3,64(sp)
 	fmul.d	a4,a2,a4
-	lw	s3,%lo(piref+4)(s2)
-	lw	s2,%lo(piref)(s2)
-	fdiv.d	s2,s2,a4
-	mv	a0,s4
+	lui	a3,%hi(piref)
+	lw	a2,%lo(piref)(a3)
+	lw	a3,%lo(piref+4)(a3)
+	fdiv.d	a4,a2,a4
+	sw	a4,12(sp)
+	sw	a5,16(sp)
+	lui	a5,%hi(.LANCHOR0+288)
+	addi	a0,a5,%lo(.LANCHOR0+288)
 	call	dtime
 	li	a5,1
-	ble	s10,a5,.L35
+	lw	s8,4(sp)
+	ble	s8,a5,.L35
 	lui	a5,%hi(B6)
-	lw	t5,%lo(B6)(a5)
-	lw	t6,%lo(B6+4)(a5)
+	lw	s2,%lo(B6)(a5)
+	lw	s3,%lo(B6+4)(a5)
 	lui	a5,%hi(B5)
-	lw	t3,%lo(B5)(a5)
-	lw	t4,%lo(B5+4)(a5)
+	lw	t5,%lo(B5)(a5)
+	lw	t6,%lo(B5+4)(a5)
 	lui	a5,%hi(B4)
-	lw	t1,%lo(B4)(a5)
-	lw	t2,%lo(B4+4)(a5)
+	lw	t3,%lo(B4)(a5)
+	lw	t4,%lo(B4+4)(a5)
 	lui	a5,%hi(B3)
-	lw	a6,%lo(B3)(a5)
-	lw	a7,%lo(B3+4)(a5)
+	lw	t1,%lo(B3)(a5)
+	lw	t2,%lo(B3+4)(a5)
 	lui	a5,%hi(B2)
-	lw	a0,%lo(B2)(a5)
-	lw	a1,%lo(B2+4)(a5)
+	lw	a6,%lo(B2)(a5)
+	lw	a7,%lo(B2+4)(a5)
 	lui	a5,%hi(B1)
-	lw	s4,%lo(B1)(a5)
-	lw	s5,%lo(B1+4)(a5)
+	lw	a0,%lo(B1)(a5)
+	lw	a1,%lo(B1+4)(a5)
 	lui	a5,%hi(one)
-	lw	s6,%lo(one)(a5)
-	lw	s7,%lo(one+4)(a5)
+	lw	s4,%lo(one)(a5)
+	lw	s5,%lo(one+4)(a5)
 	li	t0,1
 	li	s0,0
 	li	s1,0
+	lw	a2,12(sp)
+	lw	a3,16(sp)
 .L19:
-	fcvt.d.w	a2,t0
-	fmul.d	a2,a2,s2
-	fmul.d	a2,a2,a2
-	fmul.d	a4,t5,a2
+	fcvt.d.w	s6,t0
+	fmul.d	s6,s6,a2
+	fmul.d	s6,s6,s6
+	fmul.d	a4,s2,s6
+	fadd.d	a4,a4,t5
+	fmul.d	a4,a4,s6
 	fadd.d	a4,a4,t3
-	fmul.d	a4,a4,a2
+	fmul.d	a4,a4,s6
 	fadd.d	a4,a4,t1
-	fmul.d	a4,a4,a2
+	fmul.d	a4,a4,s6
 	fadd.d	a4,a4,a6
-	fmul.d	a4,a4,a2
+	fmul.d	a4,a4,s6
 	fadd.d	a4,a4,a0
-	fmul.d	a4,a4,a2
-	fadd.d	a4,a4,s4
-	fmul.d	a4,a4,a2
+	fmul.d	a4,a4,s6
 	fadd.d	s0,a4,s0
-	fadd.d	s0,s0,s6
+	fadd.d	s0,s0,s4
 	addi	t0,t0,1
-	bne	s10,t0,.L19
+	bne	s8,t0,.L19
 .L18:
-	lui	s4,%hi(.LANCHOR0)
-	addi	s4,s4,%lo(.LANCHOR0)
-	addi	s5,s4,288
-	mv	a0,s5
+	lui	a5,%hi(.LANCHOR0)
+	addi	s2,a5,%lo(.LANCHOR0)
+	sw	s2,20(sp)
+	lui	a5,%hi(.LANCHOR0+288)
+	addi	a0,a5,%lo(.LANCHOR0+288)
 	call	dtime
-	lw	a4,8(s4)
-	lw	a5,12(s4)
-	lw	a2,296(s4)
-	lw	a3,300(s4)
+	lw	s2,20(sp)
+	lw	a4,8(s2)
+	lw	a5,12(s2)
+	lw	a2,296(s2)
+	lw	a3,300(s2)
 	fmul.d	a4,a4,a2
 	lui	a3,%hi(nulltime)
-	lw	a2,%lo(nulltime)(a3)
-	lw	a3,%lo(nulltime+4)(a3)
-	fsub.d	a4,a4,a2
-	sw	a4,96(s4)
-	sw	a5,100(s4)
-	lui	s6,%hi(piref)
-	lui	s7,%hi(three)
-	lw	a0,%lo(piref)(s6)
-	lw	a1,%lo(piref+4)(s6)
-	lw	t1,%lo(three)(s7)
-	lw	t2,%lo(three+4)(s7)
-	fdiv.d	t1,a0,t1
-	fmul.d	a0,t1,t1
-	lui	a3,%hi(one)
-	lw	a6,%lo(one)(a3)
-	lw	a7,%lo(one+4)(a3)
-	lui	a3,%hi(B6)
-	lw	t3,%lo(B6)(a3)
-	lw	t4,%lo(B6+4)(a3)
-	fmul.d	t3,a0,t3
-	lui	a3,%hi(B5)
-	lw	a2,%lo(B5)(a3)
-	lw	a3,%lo(B5+4)(a3)
-	fadd.d	t3,t3,a2
-	fmul.d	t3,t3,a0
-	lui	a3,%hi(B4)
-	lw	a2,%lo(B4)(a3)
-	lw	a3,%lo(B4+4)(a3)
-	fadd.d	t3,t3,a2
-	fmul.d	t3,t3,a0
-	lui	a3,%hi(B3)
-	lw	a2,%lo(B3)(a3)
-	lw	a3,%lo(B3+4)(a3)
-	fadd.d	t3,t3,a2
-	fmul.d	t3,t3,a0
-	lui	a3,%hi(B2)
-	lw	a2,%lo(B2)(a3)
-	lw	a3,%lo(B2+4)(a3)
-	fadd.d	t3,t3,a2
-	fmul.d	t3,t3,a0
-	lui	a3,%hi(B1)
-	lw	a2,%lo(B1)(a3)
-	lw	a3,%lo(B1+4)(a3)
-	fadd.d	a2,t3,a2
-	fmul.d	a2,a2,a0
-	fadd.d	s8,a2,a6
-	lui	a3,%hi(.LC2)
-	lw	t5,%lo(.LC2)(a3)
-	lw	t6,%lo(.LC2+4)(a3)
-	fdiv.d	t5,a4,t5
-	sw	t5,104(s4)
-	sw	t6,108(s4)
-	lui	a3,%hi(two)
-	lw	t3,%lo(two)(a3)
-	lw	t4,%lo(two+4)(a3)
-	fadd.d	s8,a6,s8
-	fmul.d	a2,t3,s0
-	fadd.d	a2,s8,a2
-	fmul.d	a2,a2,s2
-	fdiv.d	a2,a2,t3
-	lui	t3,%hi(sa)
-	sw	a2,%lo(sa)(t3)
-	sw	a3,%lo(sa+4)(t3)
-	lui	t3,%hi(A6)
-	lw	s0,%lo(A6)(t3)
-	lw	s1,%lo(A6+4)(t3)
-	fmul.d	s0,a0,s0
-	lui	t3,%hi(A5)
-	lw	t4,%lo(A5+4)(t3)
-	lw	t3,%lo(A5)(t3)
-	fadd.d	s0,s0,t3
-	fmul.d	s0,s0,a0
-	lui	t3,%hi(A4)
-	lw	t4,%lo(A4+4)(t3)
-	lw	t3,%lo(A4)(t3)
-	fadd.d	s0,s0,t3
-	fmul.d	s0,s0,a0
-	lui	t3,%hi(A3)
-	lw	t4,%lo(A3+4)(t3)
-	lw	t3,%lo(A3)(t3)
-	fadd.d	s0,s0,t3
-	fmul.d	s0,s0,a0
-	lui	t3,%hi(A2)
-	lw	t4,%lo(A2+4)(t3)
-	lw	t3,%lo(A2)(t3)
-	fadd.d	s0,s0,t3
-	fmul.d	s0,s0,a0
-	lui	t3,%hi(A1)
-	lw	t4,%lo(A1+4)(t3)
-	lw	t3,%lo(A1)(t3)
-	fadd.d	t3,s0,t3
-	fmul.d	t3,t3,a0
-	lui	a1,%hi(A0)
-	lw	a0,%lo(A0)(a1)
-	lw	a1,%lo(A0+4)(a1)
-	fadd.d	t3,t3,a0
-	fmul.d	t3,t3,t1
-	lui	a1,%hi(sb)
-	sw	t3,%lo(sb)(a1)
-	sw	t4,%lo(sb+4)(a1)
-	fsub.d	a2,a2,t3
-	lui	a1,%hi(sc)
-	sw	a2,%lo(sc)(a1)
-	sw	a3,%lo(sc+4)(a1)
-	fdiv.d	a6,a6,t5
-	sw	a6,112(s4)
-	sw	a7,116(s4)
+	lw	a6,%lo(nulltime)(a3)
+	lw	a7,%lo(nulltime+4)(a3)
+	fsub.d	a6,a4,a6
+	sw	a6,96(s2)
+	sw	a7,100(s2)
+	lui	a4,%hi(piref)
+	lw	t1,%lo(piref)(a4)
+	lw	t2,%lo(piref+4)(a4)
+	lui	a2,%hi(three)
+	lw	a4,%lo(three)(a2)
+	lw	a5,%lo(three+4)(a2)
+	fdiv.d	t1,t1,a4
+	fmul.d	a2,t1,t1
+	lui	a5,%hi(one)
+	lw	a0,%lo(one)(a5)
+	lw	a1,%lo(one+4)(a5)
+	lui	a5,%hi(B6)
+	lw	a4,%lo(B6)(a5)
+	lw	a5,%lo(B6+4)(a5)
+	fmul.d	a4,a2,a4
+	lui	t3,%hi(B5)
+	lw	t4,%lo(B5+4)(t3)
+	lw	t3,%lo(B5)(t3)
+	fadd.d	a4,a4,t3
+	fmul.d	a4,a4,a2
+	lui	t3,%hi(B4)
+	lw	t4,%lo(B4+4)(t3)
+	lw	t3,%lo(B4)(t3)
+	fadd.d	a4,a4,t3
+	fmul.d	a4,a4,a2
+	lui	t3,%hi(B3)
+	lw	t4,%lo(B3+4)(t3)
+	lw	t3,%lo(B3)(t3)
+	fadd.d	a4,a4,t3
+	fmul.d	a4,a4,a2
+	lui	t3,%hi(B2)
+	lw	t4,%lo(B2+4)(t3)
+	lw	t3,%lo(B2)(t3)
+	fadd.d	a4,a4,t3
+	fmul.d	a4,a4,a2
+	lui	t3,%hi(B1)
+	lw	t4,%lo(B1+4)(t3)
+	lw	t3,%lo(B1)(t3)
+	fadd.d	a4,a4,t3
+	fmul.d	a4,a4,a2
+	fadd.d	a4,a4,a0
+	lui	t3,%hi(.LC2)
+	lw	t4,%lo(.LC2+4)(t3)
+	lw	t3,%lo(.LC2)(t3)
+	fdiv.d	t3,a6,t3
+	sw	t3,104(s2)
+	sw	t4,108(s2)
+	lui	t5,%hi(two)
+	lw	t6,%lo(two+4)(t5)
+	lw	t5,%lo(two)(t5)
+	fadd.d	a4,a0,a4
+	fmul.d	s0,t5,s0
+	fadd.d	a4,a4,s0
+	lw	s0,12(sp)
+	lw	s1,16(sp)
+	fmul.d	a4,a4,s0
+	fdiv.d	a4,a4,t5
+	lui	t5,%hi(sa)
+	sw	a4,%lo(sa)(t5)
+	sw	a5,%lo(sa+4)(t5)
+	lui	t5,%hi(A6)
+	lw	t6,%lo(A6+4)(t5)
+	lw	t5,%lo(A6)(t5)
+	fmul.d	t5,a2,t5
+	lui	t0,%hi(A5)
+	lw	s0,%lo(A5)(t0)
+	lw	s1,%lo(A5+4)(t0)
+	fadd.d	t5,t5,s0
+	fmul.d	t5,t5,a2
+	lui	t0,%hi(A4)
+	lw	s0,%lo(A4)(t0)
+	lw	s1,%lo(A4+4)(t0)
+	fadd.d	t5,t5,s0
+	fmul.d	t5,t5,a2
+	lui	t0,%hi(A3)
+	lw	s0,%lo(A3)(t0)
+	lw	s1,%lo(A3+4)(t0)
+	fadd.d	t5,t5,s0
+	fmul.d	t5,t5,a2
+	lui	t0,%hi(A2)
+	lw	s0,%lo(A2)(t0)
+	lw	s1,%lo(A2+4)(t0)
+	fadd.d	t5,t5,s0
+	fmul.d	t5,t5,a2
+	lui	t0,%hi(A1)
+	lw	s0,%lo(A1)(t0)
+	lw	s1,%lo(A1+4)(t0)
+	fadd.d	t5,t5,s0
+	fmul.d	a2,t5,a2
+	lui	t5,%hi(A0)
+	lw	t6,%lo(A0+4)(t5)
+	lw	t5,%lo(A0)(t5)
+	fadd.d	a2,a2,t5
+	fmul.d	a2,a2,t1
+	lui	t1,%hi(sb)
+	sw	a2,%lo(sb)(t1)
+	sw	a3,%lo(sb+4)(t1)
+	fsub.d	t1,a4,a2
+	lui	a5,%hi(sc)
+	sw	t1,%lo(sc)(a5)
+	sw	t2,%lo(sc+4)(a5)
+	fdiv.d	a0,a0,t3
+	sw	a0,112(s2)
+	sw	a1,116(s2)
+	sw	a0,68(sp)
+	sw	a1,72(sp)
+	sw	a1,0(sp)
+	mv	a5,a0
+	mv	a3,a6
+	mv	a4,a7
+	mv	a1,t1
+	mv	a2,t2
 	lui	a0,%hi(.LC21)
 	addi	a0,a0,%lo(.LC21)
 	call	printf
-	lw	a4,%lo(three)(s7)
-	lw	a5,%lo(three+4)(s7)
-	lw	a2,56(sp)
-	lw	a3,60(sp)
+	lui	a2,%hi(three)
+	lw	a4,%lo(three)(a2)
+	lw	a5,%lo(three+4)(a2)
+	lw	a2,60(sp)
+	lw	a3,64(sp)
 	fmul.d	a4,a2,a4
-	lw	s7,%lo(piref+4)(s6)
-	lw	s6,%lo(piref)(s6)
-	fdiv.d	s6,s6,a4
-	mv	a0,s5
+	lui	a3,%hi(piref)
+	lw	a2,%lo(piref)(a3)
+	lw	a3,%lo(piref+4)(a3)
+	fdiv.d	a4,a2,a4
+	sw	a4,20(sp)
+	sw	a5,24(sp)
+	lui	a5,%hi(.LANCHOR0+288)
+	addi	a0,a5,%lo(.LANCHOR0+288)
 	call	dtime
 	li	a5,1
-	ble	s10,a5,.L36
+	lw	a4,4(sp)
+	ble	a4,a5,.L36
 	lui	a5,%hi(A6)
-	lw	t3,%lo(A6)(a5)
-	lw	t4,%lo(A6+4)(a5)
+	lw	s0,%lo(A6)(a5)
+	lw	s1,%lo(A6+4)(a5)
 	lui	a5,%hi(A5)
-	lw	t1,%lo(A5)(a5)
-	lw	t2,%lo(A5+4)(a5)
+	lw	t5,%lo(A5)(a5)
+	lw	t6,%lo(A5+4)(a5)
 	lui	a5,%hi(A4)
-	lw	t5,%lo(A4)(a5)
-	lw	t6,%lo(A4+4)(a5)
+	lw	t3,%lo(A4)(a5)
+	lw	t4,%lo(A4+4)(a5)
 	lui	a5,%hi(A3)
-	lw	s0,%lo(A3)(a5)
-	lw	s1,%lo(A3+4)(a5)
+	lw	t1,%lo(A3)(a5)
+	lw	t2,%lo(A3+4)(a5)
 	lui	a5,%hi(A2)
 	lw	s2,%lo(A2)(a5)
 	lw	s3,%lo(A2+4)(a5)
 	lui	a5,%hi(A1)
-	lw	s8,%lo(A1)(a5)
-	lw	s9,%lo(A1+4)(a5)
+	lw	s4,%lo(A1)(a5)
+	lw	s5,%lo(A1+4)(a5)
 	lui	a5,%hi(one)
 	lw	a6,%lo(one)(a5)
 	lw	a7,%lo(one+4)(a5)
 	lui	a5,%hi(B6)
-	lw	a4,%lo(B6)(a5)
-	lw	a5,%lo(B6+4)(a5)
-	sw	a4,0(sp)
-	sw	a5,4(sp)
+	lw	s6,%lo(B6)(a5)
+	lw	s7,%lo(B6+4)(a5)
 	lui	a5,%hi(B5)
-	lw	a4,%lo(B5)(a5)
-	lw	a5,%lo(B5+4)(a5)
-	sw	a4,8(sp)
-	sw	a5,12(sp)
+	lw	s8,%lo(B5)(a5)
+	lw	s9,%lo(B5+4)(a5)
 	lui	a5,%hi(B4)
-	lw	a4,%lo(B4)(a5)
-	lw	a5,%lo(B4+4)(a5)
-	sw	a4,16(sp)
-	sw	a5,20(sp)
+	lw	s10,%lo(B4)(a5)
+	lw	s11,%lo(B4+4)(a5)
 	lui	a5,%hi(B3)
 	lw	a4,%lo(B3)(a5)
 	lw	a5,%lo(B3+4)(a5)
-	sw	a4,24(sp)
-	sw	a5,28(sp)
+	sw	a4,28(sp)
+	sw	a5,32(sp)
 	lui	a5,%hi(B2)
 	lw	a4,%lo(B2)(a5)
 	lw	a5,%lo(B2+4)(a5)
-	sw	a4,32(sp)
-	sw	a5,36(sp)
+	sw	a4,36(sp)
+	sw	a5,40(sp)
 	lui	a5,%hi(B1)
 	lw	a4,%lo(B1)(a5)
 	lw	a5,%lo(B1+4)(a5)
-	sw	a4,40(sp)
-	sw	a5,44(sp)
+	sw	a4,44(sp)
+	sw	a5,48(sp)
 	li	t0,1
-	li	s4,0
-	li	s5,0
-	sw	t1,48(sp)
-	sw	t2,52(sp)
+	sw	zero,12(sp)
+	sw	zero,16(sp)
+	sw	t1,52(sp)
+	sw	t2,56(sp)
 .L21:
-	fcvt.d.w	a2,t0
-	fmul.d	a2,a2,s6
-	fmul.d	a0,a2,a2
-	fmul.d	a4,t3,a0
-	lw	t1,48(sp)
-	lw	t2,52(sp)
-	fadd.d	a4,a4,t1
-	fmul.d	a4,a4,a0
+	fcvt.d.w	a0,t0
+	lw	a4,20(sp)
+	lw	a5,24(sp)
+	fmul.d	a0,a0,a4
+	fmul.d	a2,a0,a0
+	fmul.d	a4,s0,a2
 	fadd.d	a4,a4,t5
-	fmul.d	a4,a4,a0
-	fadd.d	a4,a4,s0
-	fmul.d	a4,a4,a0
-	fadd.d	a4,a4,s2
-	fmul.d	a4,a4,a0
-	fadd.d	a4,a4,s8
-	fmul.d	a4,a4,a0
-	fadd.d	a4,a4,a6
 	fmul.d	a4,a4,a2
-	lw	a2,0(sp)
-	lw	a3,4(sp)
-	fmul.d	a2,a2,a0
-	lw	t1,8(sp)
-	lw	t2,12(sp)
-	fadd.d	a2,a2,t1
-	fmul.d	a2,a2,a0
-	lw	t1,16(sp)
-	lw	t2,20(sp)
-	fadd.d	a2,a2,t1
-	fmul.d	a2,a2,a0
-	lw	t1,24(sp)
-	lw	t2,28(sp)
-	fadd.d	a2,a2,t1
-	fmul.d	a2,a2,a0
-	lw	t1,32(sp)
-	lw	t2,36(sp)
-	fadd.d	a2,a2,t1
-	fmul.d	a2,a2,a0
-	lw	t1,40(sp)
-	lw	t2,44(sp)
-	fadd.d	a2,a2,t1
-	fmul.d	a2,a2,a0
-	fadd.d	a2,a2,a6
-	fdiv.d	a4,a4,a2
-	fadd.d	s4,s4,a4
+	fadd.d	a4,a4,t3
+	fmul.d	a4,a4,a2
+	lw	t1,52(sp)
+	lw	t2,56(sp)
+	fadd.d	a4,a4,t1
+	fmul.d	a4,a4,a2
+	fadd.d	a4,a4,s2
+	fmul.d	a4,a4,a2
+	fadd.d	a4,a4,s4
+	fmul.d	a4,a4,a2
+	fadd.d	a4,a4,a6
+	fmul.d	a0,a4,a0
+	fmul.d	a4,s6,a2
+	fadd.d	a4,a4,s8
+	fmul.d	a4,a4,a2
+	fadd.d	a4,a4,s10
+	fmul.d	a4,a4,a2
+	lw	t1,28(sp)
+	lw	t2,32(sp)
+	fadd.d	a4,a4,t1
+	fmul.d	a4,a4,a2
+	lw	t1,36(sp)
+	lw	t2,40(sp)
+	fadd.d	a4,a4,t1
+	fmul.d	a4,a4,a2
+	lw	t1,44(sp)
+	lw	t2,48(sp)
+	fadd.d	a4,a4,t1
+	fmul.d	a4,a4,a2
+	fadd.d	a4,a4,a6
+	fdiv.d	a0,a0,a4
+	lw	a4,12(sp)
+	lw	a5,16(sp)
+	fadd.d	a4,a4,a0
+	sw	a4,12(sp)
+	sw	a5,16(sp)
 	addi	t0,t0,1
-	bne	s10,t0,.L21
+	lw	a5,4(sp)
+	bne	a5,t0,.L21
 .L20:
 	lui	s0,%hi(.LANCHOR0)
 	addi	s0,s0,%lo(.LANCHOR0)
-	addi	s1,s0,288
-	mv	a0,s1
+	lui	a5,%hi(.LANCHOR0+288)
+	addi	a0,a5,%lo(.LANCHOR0+288)
 	call	dtime
 	lw	a4,8(s0)
 	lw	a5,12(s0)
@@ -1102,583 +1192,628 @@ main:
 	lw	a3,300(s0)
 	fmul.d	a4,a4,a2
 	lui	a3,%hi(nulltime)
-	lw	a2,%lo(nulltime)(a3)
-	lw	a3,%lo(nulltime+4)(a3)
-	fsub.d	a4,a4,a2
-	sw	a4,120(s0)
-	sw	a5,124(s0)
-	lui	s2,%hi(piref)
-	lw	t3,%lo(piref)(s2)
-	lw	t4,%lo(piref+4)(s2)
-	lui	a3,%hi(three)
-	lw	a2,%lo(three)(a3)
-	lw	a3,%lo(three+4)(a3)
-	fdiv.d	t3,t3,a2
-	fmul.d	a6,t3,t3
-	lui	a3,%hi(one)
-	lw	t1,%lo(one)(a3)
-	lw	t2,%lo(one+4)(a3)
-	lui	a3,%hi(A6)
-	lw	a2,%lo(A6)(a3)
-	lw	a3,%lo(A6+4)(a3)
-	fmul.d	a2,a6,a2
-	lui	a1,%hi(A5)
-	lw	a0,%lo(A5)(a1)
-	lw	a1,%lo(A5+4)(a1)
-	fadd.d	a2,a2,a0
-	fmul.d	a2,a2,a6
-	lui	a1,%hi(A4)
-	lw	a0,%lo(A4)(a1)
-	lw	a1,%lo(A4+4)(a1)
-	fadd.d	a2,a2,a0
-	fmul.d	a2,a2,a6
-	lui	a1,%hi(A3)
-	lw	a0,%lo(A3)(a1)
-	lw	a1,%lo(A3+4)(a1)
-	fadd.d	a2,a2,a0
-	fmul.d	a2,a2,a6
-	lui	a1,%hi(A2)
-	lw	a0,%lo(A2)(a1)
-	lw	a1,%lo(A2+4)(a1)
-	fadd.d	a2,a2,a0
-	fmul.d	a2,a2,a6
-	lui	a1,%hi(A1)
-	lw	a0,%lo(A1)(a1)
-	lw	a1,%lo(A1+4)(a1)
-	fadd.d	a0,a2,a0
-	fmul.d	a0,a0,a6
-	fadd.d	a0,a0,t1
-	fmul.d	a0,a0,t3
-	lui	a3,%hi(B6)
-	lw	a2,%lo(B6)(a3)
-	lw	a3,%lo(B6+4)(a3)
-	fmul.d	a2,a6,a2
+	lw	a6,%lo(nulltime)(a3)
+	lw	a7,%lo(nulltime+4)(a3)
+	fsub.d	a6,a4,a6
+	sw	a6,120(s0)
+	sw	a7,124(s0)
+	lui	s1,%hi(piref)
+	lw	a0,%lo(piref)(s1)
+	lw	a1,%lo(piref+4)(s1)
+	lui	a5,%hi(three)
+	lw	a4,%lo(three)(a5)
+	lw	a5,%lo(three+4)(a5)
+	fdiv.d	a0,a0,a4
+	fmul.d	t1,a0,a0
+	lui	a5,%hi(one)
+	lw	a2,%lo(one)(a5)
+	lw	a3,%lo(one+4)(a5)
+	lui	a5,%hi(A6)
+	lw	a4,%lo(A6)(a5)
+	lw	a5,%lo(A6+4)(a5)
+	fmul.d	a4,t1,a4
+	lui	t3,%hi(A5)
+	lw	t4,%lo(A5+4)(t3)
+	lw	t3,%lo(A5)(t3)
+	fadd.d	a4,a4,t3
+	fmul.d	a4,a4,t1
+	lui	t3,%hi(A4)
+	lw	t4,%lo(A4+4)(t3)
+	lw	t3,%lo(A4)(t3)
+	fadd.d	a4,a4,t3
+	fmul.d	a4,a4,t1
+	lui	t3,%hi(A3)
+	lw	t4,%lo(A3+4)(t3)
+	lw	t3,%lo(A3)(t3)
+	fadd.d	a4,a4,t3
+	fmul.d	a4,a4,t1
+	lui	t3,%hi(A2)
+	lw	t4,%lo(A2+4)(t3)
+	lw	t3,%lo(A2)(t3)
+	fadd.d	a4,a4,t3
+	fmul.d	a4,a4,t1
+	lui	t3,%hi(A1)
+	lw	t4,%lo(A1+4)(t3)
+	lw	t3,%lo(A1)(t3)
+	fadd.d	a4,a4,t3
+	fmul.d	a4,a4,t1
+	fadd.d	a4,a4,a2
+	fmul.d	a4,a4,a0
+	lui	a1,%hi(B6)
+	lw	a0,%lo(B6)(a1)
+	lw	a1,%lo(B6+4)(a1)
+	fmul.d	a0,t1,a0
 	lui	t3,%hi(B5)
 	lw	t4,%lo(B5+4)(t3)
 	lw	t3,%lo(B5)(t3)
-	fadd.d	a2,a2,t3
-	fmul.d	a2,a2,a6
+	fadd.d	a0,a0,t3
+	fmul.d	a0,a0,t1
 	lui	t3,%hi(B4)
 	lw	t4,%lo(B4+4)(t3)
 	lw	t3,%lo(B4)(t3)
-	fadd.d	a2,a2,t3
-	fmul.d	a2,a2,a6
+	fadd.d	a0,a0,t3
+	fmul.d	a0,a0,t1
 	lui	t3,%hi(B3)
 	lw	t4,%lo(B3+4)(t3)
 	lw	t3,%lo(B3)(t3)
-	fadd.d	a2,a2,t3
-	fmul.d	a2,a2,a6
+	fadd.d	a0,a0,t3
+	fmul.d	a0,a0,t1
 	lui	t3,%hi(B2)
 	lw	t4,%lo(B2+4)(t3)
 	lw	t3,%lo(B2)(t3)
-	fadd.d	a2,a2,t3
-	fmul.d	a2,a2,a6
+	fadd.d	a0,a0,t3
+	fmul.d	a0,a0,t1
 	lui	t3,%hi(B1)
 	lw	t4,%lo(B1+4)(t3)
 	lw	t3,%lo(B1)(t3)
-	fadd.d	a2,a2,t3
-	fmul.d	a2,a2,a6
-	fadd.d	a2,a2,t1
-	fdiv.d	a2,a0,a2
+	fadd.d	a0,a0,t3
+	fmul.d	a0,a0,t1
+	fadd.d	a0,a0,a2
+	fdiv.d	a4,a4,a0
 	lui	a1,%hi(.LC22)
-	lw	a0,%lo(.LC22)(a1)
-	lw	a1,%lo(.LC22+4)(a1)
-	fdiv.d	a0,a4,a0
-	sw	a0,128(s0)
-	sw	a1,132(s0)
-	lui	a6,%hi(two)
-	lw	a7,%lo(two+4)(a6)
-	lw	a6,%lo(two)(a6)
-	fmul.d	s4,a6,s4
-	fadd.d	a2,s4,a2
-	fmul.d	a2,a2,s6
-	fdiv.d	a2,a2,a6
-	lui	a6,%hi(sa)
-	sw	a2,%lo(sa)(a6)
-	sw	a3,%lo(sa+4)(a6)
-	lui	a6,%hi(.LC23)
-	lw	a7,%lo(.LC23+4)(a6)
-	lw	a6,%lo(.LC23)(a6)
+	lw	t1,%lo(.LC22)(a1)
+	lw	t2,%lo(.LC22+4)(a1)
+	fdiv.d	t1,a6,t1
+	sw	t1,128(s0)
+	sw	t2,132(s0)
+	lui	a1,%hi(two)
+	lw	t3,%lo(two)(a1)
+	lw	t4,%lo(two+4)(a1)
+	lw	a0,12(sp)
+	lw	a1,16(sp)
+	fmul.d	a0,t3,a0
+	fadd.d	a0,a0,a4
+	lw	a4,20(sp)
+	lw	a5,24(sp)
+	fmul.d	a0,a0,a4
+	fdiv.d	a0,a0,t3
+	lui	a5,%hi(sa)
+	sw	a0,%lo(sa)(a5)
+	sw	a1,%lo(sa+4)(a5)
+	lui	a5,%hi(.LC23)
+	lw	a4,%lo(.LC23)(a5)
+	lw	a5,%lo(.LC23+4)(a5)
 	lui	t3,%hi(sb)
-	sw	a6,%lo(sb)(t3)
-	sw	a7,%lo(sb+4)(t3)
-	fsub.d	a2,a2,a6
-	lui	a6,%hi(sc)
-	sw	a2,%lo(sc)(a6)
-	sw	a3,%lo(sc+4)(a6)
-	fdiv.d	a6,t1,a0
-	sw	a6,136(s0)
-	sw	a7,140(s0)
+	sw	a4,%lo(sb)(t3)
+	sw	a5,%lo(sb+4)(t3)
+	fsub.d	a0,a0,a4
+	lui	a5,%hi(sc)
+	sw	a0,%lo(sc)(a5)
+	sw	a1,%lo(sc+4)(a5)
+	fdiv.d	a2,a2,t1
+	sw	a2,136(s0)
+	sw	a3,140(s0)
+	sw	a2,68(sp)
+	sw	a3,72(sp)
+	sw	a3,0(sp)
+	mv	a5,a2
+	mv	a3,a6
+	mv	a4,a7
+	mv	a2,a1
+	mv	a1,a0
 	lui	a0,%hi(.LC24)
 	addi	a0,a0,%lo(.LC24)
 	call	printf
 	lui	a5,%hi(four)
 	lw	a4,%lo(four)(a5)
 	lw	a5,%lo(four+4)(a5)
-	lw	a2,56(sp)
-	lw	a3,60(sp)
+	lw	a2,60(sp)
+	lw	a3,64(sp)
 	fmul.d	a4,a2,a4
-	lw	s6,%lo(piref)(s2)
-	lw	s7,%lo(piref+4)(s2)
-	fdiv.d	s6,s6,a4
-	mv	a0,s1
+	lw	a2,%lo(piref)(s1)
+	lw	a3,%lo(piref+4)(s1)
+	fdiv.d	a4,a2,a4
+	sw	a4,20(sp)
+	sw	a5,24(sp)
+	lui	a5,%hi(.LANCHOR0+288)
+	addi	a0,a5,%lo(.LANCHOR0+288)
 	call	dtime
 	li	a5,1
-	ble	s10,a5,.L37
+	lw	a4,4(sp)
+	ble	a4,a5,.L37
 	lui	a5,%hi(A6)
-	lw	t3,%lo(A6)(a5)
-	lw	t4,%lo(A6+4)(a5)
+	lw	s0,%lo(A6)(a5)
+	lw	s1,%lo(A6+4)(a5)
 	lui	a5,%hi(A5)
-	lw	t1,%lo(A5)(a5)
-	lw	t2,%lo(A5+4)(a5)
+	lw	t5,%lo(A5)(a5)
+	lw	t6,%lo(A5+4)(a5)
 	lui	a5,%hi(A4)
-	lw	t5,%lo(A4)(a5)
-	lw	t6,%lo(A4+4)(a5)
+	lw	t3,%lo(A4)(a5)
+	lw	t4,%lo(A4+4)(a5)
 	lui	a5,%hi(A3)
-	lw	s0,%lo(A3)(a5)
-	lw	s1,%lo(A3+4)(a5)
+	lw	t1,%lo(A3)(a5)
+	lw	t2,%lo(A3+4)(a5)
 	lui	a5,%hi(A2)
 	lw	s2,%lo(A2)(a5)
 	lw	s3,%lo(A2+4)(a5)
 	lui	a5,%hi(A1)
-	lw	s8,%lo(A1)(a5)
-	lw	s9,%lo(A1+4)(a5)
+	lw	s4,%lo(A1)(a5)
+	lw	s5,%lo(A1+4)(a5)
 	lui	a5,%hi(one)
 	lw	a6,%lo(one)(a5)
 	lw	a7,%lo(one+4)(a5)
 	lui	a5,%hi(B6)
-	lw	a4,%lo(B6)(a5)
-	lw	a5,%lo(B6+4)(a5)
-	sw	a4,0(sp)
-	sw	a5,4(sp)
+	lw	s6,%lo(B6)(a5)
+	lw	s7,%lo(B6+4)(a5)
 	lui	a5,%hi(B5)
-	lw	a4,%lo(B5)(a5)
-	lw	a5,%lo(B5+4)(a5)
-	sw	a4,8(sp)
-	sw	a5,12(sp)
+	lw	s8,%lo(B5)(a5)
+	lw	s9,%lo(B5+4)(a5)
 	lui	a5,%hi(B4)
-	lw	a4,%lo(B4)(a5)
-	lw	a5,%lo(B4+4)(a5)
-	sw	a4,16(sp)
-	sw	a5,20(sp)
+	lw	s10,%lo(B4)(a5)
+	lw	s11,%lo(B4+4)(a5)
 	lui	a5,%hi(B3)
 	lw	a4,%lo(B3)(a5)
 	lw	a5,%lo(B3+4)(a5)
-	sw	a4,24(sp)
-	sw	a5,28(sp)
+	sw	a4,28(sp)
+	sw	a5,32(sp)
 	lui	a5,%hi(B2)
 	lw	a4,%lo(B2)(a5)
 	lw	a5,%lo(B2+4)(a5)
-	sw	a4,32(sp)
-	sw	a5,36(sp)
+	sw	a4,36(sp)
+	sw	a5,40(sp)
 	lui	a5,%hi(B1)
 	lw	a4,%lo(B1)(a5)
 	lw	a5,%lo(B1+4)(a5)
-	sw	a4,40(sp)
-	sw	a5,44(sp)
+	sw	a4,44(sp)
+	sw	a5,48(sp)
 	li	t0,1
-	li	s4,0
-	li	s5,0
-	sw	t1,48(sp)
-	sw	t2,52(sp)
+	sw	zero,12(sp)
+	sw	zero,16(sp)
+	sw	t1,52(sp)
+	sw	t2,56(sp)
 .L23:
-	fcvt.d.w	a2,t0
-	fmul.d	a2,a2,s6
-	fmul.d	a0,a2,a2
-	fmul.d	a4,t3,a0
-	lw	t1,48(sp)
-	lw	t2,52(sp)
-	fadd.d	a4,a4,t1
-	fmul.d	a4,a4,a0
+	fcvt.d.w	a0,t0
+	lw	a4,20(sp)
+	lw	a5,24(sp)
+	fmul.d	a0,a0,a4
+	fmul.d	a2,a0,a0
+	fmul.d	a4,s0,a2
 	fadd.d	a4,a4,t5
-	fmul.d	a4,a4,a0
-	fadd.d	a4,a4,s0
-	fmul.d	a4,a4,a0
+	fmul.d	a4,a4,a2
+	fadd.d	a4,a4,t3
+	fmul.d	a4,a4,a2
+	lw	t1,52(sp)
+	lw	t2,56(sp)
+	fadd.d	a4,a4,t1
+	fmul.d	a4,a4,a2
 	fadd.d	a4,a4,s2
-	fmul.d	a4,a4,a0
-	fadd.d	a4,a4,s8
-	fmul.d	a4,a4,a0
+	fmul.d	a4,a4,a2
+	fadd.d	a4,a4,s4
+	fmul.d	a4,a4,a2
 	fadd.d	a4,a4,a6
+	fmul.d	a0,a4,a0
+	fmul.d	a4,s6,a2
+	fadd.d	a4,a4,s8
 	fmul.d	a4,a4,a2
-	lw	a2,0(sp)
-	lw	a3,4(sp)
-	fmul.d	a2,a2,a0
-	lw	t1,8(sp)
-	lw	t2,12(sp)
-	fadd.d	a2,a2,t1
-	fmul.d	a2,a2,a0
-	lw	t1,16(sp)
-	lw	t2,20(sp)
-	fadd.d	a2,a2,t1
-	fmul.d	a2,a2,a0
-	lw	t1,24(sp)
-	lw	t2,28(sp)
-	fadd.d	a2,a2,t1
-	fmul.d	a2,a2,a0
-	lw	t1,32(sp)
-	lw	t2,36(sp)
-	fadd.d	a2,a2,t1
-	fmul.d	a2,a2,a0
-	lw	t1,40(sp)
-	lw	t2,44(sp)
-	fadd.d	a2,a2,t1
-	fmul.d	a2,a2,a0
-	fadd.d	a2,a2,a6
+	fadd.d	a4,a4,s10
 	fmul.d	a4,a4,a2
-	fadd.d	s4,s4,a4
+	lw	t1,28(sp)
+	lw	t2,32(sp)
+	fadd.d	a4,a4,t1
+	fmul.d	a4,a4,a2
+	lw	t1,36(sp)
+	lw	t2,40(sp)
+	fadd.d	a4,a4,t1
+	fmul.d	a4,a4,a2
+	lw	t1,44(sp)
+	lw	t2,48(sp)
+	fadd.d	a4,a4,t1
+	fmul.d	a4,a4,a2
+	fadd.d	a4,a4,a6
+	fmul.d	a0,a0,a4
+	lw	a4,12(sp)
+	lw	a5,16(sp)
+	fadd.d	a4,a4,a0
+	sw	a4,12(sp)
+	sw	a5,16(sp)
 	addi	t0,t0,1
-	bne	s10,t0,.L23
+	lw	a5,4(sp)
+	bne	a5,t0,.L23
 .L22:
-	lui	s1,%hi(.LANCHOR0)
-	addi	s1,s1,%lo(.LANCHOR0)
-	addi	s0,s1,288
-	mv	a0,s0
+	lui	s0,%hi(.LANCHOR0)
+	addi	s0,s0,%lo(.LANCHOR0)
+	lui	a5,%hi(.LANCHOR0+288)
+	addi	a0,a5,%lo(.LANCHOR0+288)
 	call	dtime
-	lw	a4,8(s1)
-	lw	a5,12(s1)
-	lw	a2,296(s1)
-	lw	a3,300(s1)
+	lw	a4,8(s0)
+	lw	a5,12(s0)
+	lw	a2,296(s0)
+	lw	a3,300(s0)
 	fmul.d	a4,a4,a2
 	lui	a3,%hi(nulltime)
-	lw	a2,%lo(nulltime)(a3)
-	lw	a3,%lo(nulltime+4)(a3)
-	fsub.d	a4,a4,a2
-	sw	a4,144(s1)
-	sw	a5,148(s1)
-	lui	a3,%hi(piref)
-	lw	t3,%lo(piref)(a3)
-	lw	t4,%lo(piref+4)(a3)
-	lui	a3,%hi(four)
-	lw	a2,%lo(four)(a3)
-	lw	a3,%lo(four+4)(a3)
-	fdiv.d	t3,t3,a2
-	fmul.d	a6,t3,t3
-	lui	s2,%hi(one)
-	lw	t1,%lo(one)(s2)
-	lw	t2,%lo(one+4)(s2)
-	lui	a3,%hi(A6)
-	lw	a2,%lo(A6)(a3)
-	lw	a3,%lo(A6+4)(a3)
-	fmul.d	a2,a6,a2
-	lui	a1,%hi(A5)
-	lw	a0,%lo(A5)(a1)
-	lw	a1,%lo(A5+4)(a1)
-	fadd.d	a2,a2,a0
-	fmul.d	a2,a2,a6
-	lui	a1,%hi(A4)
-	lw	a0,%lo(A4)(a1)
-	lw	a1,%lo(A4+4)(a1)
-	fadd.d	a2,a2,a0
-	fmul.d	a2,a2,a6
-	lui	a1,%hi(A3)
-	lw	a0,%lo(A3)(a1)
-	lw	a1,%lo(A3+4)(a1)
-	fadd.d	a2,a2,a0
-	fmul.d	a2,a2,a6
-	lui	a1,%hi(A2)
-	lw	a0,%lo(A2)(a1)
-	lw	a1,%lo(A2+4)(a1)
-	fadd.d	a2,a2,a0
-	fmul.d	a2,a2,a6
-	lui	a1,%hi(A1)
-	lw	a0,%lo(A1)(a1)
-	lw	a1,%lo(A1+4)(a1)
-	fadd.d	a0,a2,a0
-	fmul.d	a0,a0,a6
-	fadd.d	a0,a0,t1
-	fmul.d	a0,a0,t3
-	lui	a3,%hi(B6)
-	lw	a2,%lo(B6)(a3)
-	lw	a3,%lo(B6+4)(a3)
-	fmul.d	a2,a6,a2
+	lw	a6,%lo(nulltime)(a3)
+	lw	a7,%lo(nulltime+4)(a3)
+	fsub.d	a6,a4,a6
+	sw	a6,144(s0)
+	sw	a7,148(s0)
+	lui	a5,%hi(piref)
+	lw	a0,%lo(piref)(a5)
+	lw	a1,%lo(piref+4)(a5)
+	lui	a5,%hi(four)
+	lw	a4,%lo(four)(a5)
+	lw	a5,%lo(four+4)(a5)
+	fdiv.d	a0,a0,a4
+	fmul.d	t1,a0,a0
+	lui	s1,%hi(one)
+	lw	a2,%lo(one)(s1)
+	lw	a3,%lo(one+4)(s1)
+	lui	a5,%hi(A6)
+	lw	a4,%lo(A6)(a5)
+	lw	a5,%lo(A6+4)(a5)
+	fmul.d	a4,t1,a4
+	lui	t3,%hi(A5)
+	lw	t4,%lo(A5+4)(t3)
+	lw	t3,%lo(A5)(t3)
+	fadd.d	a4,a4,t3
+	fmul.d	a4,a4,t1
+	lui	t3,%hi(A4)
+	lw	t4,%lo(A4+4)(t3)
+	lw	t3,%lo(A4)(t3)
+	fadd.d	a4,a4,t3
+	fmul.d	a4,a4,t1
+	lui	t3,%hi(A3)
+	lw	t4,%lo(A3+4)(t3)
+	lw	t3,%lo(A3)(t3)
+	fadd.d	a4,a4,t3
+	fmul.d	a4,a4,t1
+	lui	t3,%hi(A2)
+	lw	t4,%lo(A2+4)(t3)
+	lw	t3,%lo(A2)(t3)
+	fadd.d	a4,a4,t3
+	fmul.d	a4,a4,t1
+	lui	t3,%hi(A1)
+	lw	t4,%lo(A1+4)(t3)
+	lw	t3,%lo(A1)(t3)
+	fadd.d	a4,a4,t3
+	fmul.d	a4,a4,t1
+	fadd.d	a4,a4,a2
+	fmul.d	a4,a4,a0
+	lui	a1,%hi(B6)
+	lw	a0,%lo(B6)(a1)
+	lw	a1,%lo(B6+4)(a1)
+	fmul.d	a0,t1,a0
 	lui	t3,%hi(B5)
 	lw	t4,%lo(B5+4)(t3)
 	lw	t3,%lo(B5)(t3)
-	fadd.d	a2,a2,t3
-	fmul.d	a2,a2,a6
+	fadd.d	a0,a0,t3
+	fmul.d	a0,a0,t1
 	lui	t3,%hi(B4)
 	lw	t4,%lo(B4+4)(t3)
 	lw	t3,%lo(B4)(t3)
-	fadd.d	a2,a2,t3
-	fmul.d	a2,a2,a6
+	fadd.d	a0,a0,t3
+	fmul.d	a0,a0,t1
 	lui	t3,%hi(B3)
 	lw	t4,%lo(B3+4)(t3)
 	lw	t3,%lo(B3)(t3)
-	fadd.d	a2,a2,t3
-	fmul.d	a2,a2,a6
+	fadd.d	a0,a0,t3
+	fmul.d	a0,a0,t1
 	lui	t3,%hi(B2)
 	lw	t4,%lo(B2+4)(t3)
 	lw	t3,%lo(B2)(t3)
-	fadd.d	a2,a2,t3
-	fmul.d	a2,a2,a6
+	fadd.d	a0,a0,t3
+	fmul.d	a0,a0,t1
 	lui	t3,%hi(B1)
 	lw	t4,%lo(B1+4)(t3)
 	lw	t3,%lo(B1)(t3)
-	fadd.d	a2,a2,t3
-	fmul.d	a2,a2,a6
-	fadd.d	a2,a2,t1
-	fmul.d	a2,a0,a2
+	fadd.d	a0,a0,t3
+	fmul.d	a0,a0,t1
+	fadd.d	a0,a0,a2
+	fmul.d	a4,a4,a0
 	lui	a1,%hi(.LC22)
-	lw	a0,%lo(.LC22)(a1)
-	lw	a1,%lo(.LC22+4)(a1)
-	fdiv.d	a0,a4,a0
-	sw	a0,152(s1)
-	sw	a1,156(s1)
-	lui	a6,%hi(two)
-	lw	a7,%lo(two+4)(a6)
-	lw	a6,%lo(two)(a6)
-	fmul.d	s4,a6,s4
-	fadd.d	a2,s4,a2
-	fmul.d	a2,a2,s6
-	fdiv.d	a2,a2,a6
-	lui	s5,%hi(sa)
-	sw	a2,%lo(sa)(s5)
-	sw	a3,%lo(sa+4)(s5)
-	lui	a6,%hi(.LC25)
-	lw	a7,%lo(.LC25+4)(a6)
-	lw	a6,%lo(.LC25)(a6)
+	lw	t1,%lo(.LC22)(a1)
+	lw	t2,%lo(.LC22+4)(a1)
+	fdiv.d	t1,a6,t1
+	sw	t1,152(s0)
+	sw	t2,156(s0)
+	lui	a1,%hi(two)
+	lw	t3,%lo(two)(a1)
+	lw	t4,%lo(two+4)(a1)
+	lw	a0,12(sp)
+	lw	a1,16(sp)
+	fmul.d	a0,t3,a0
+	fadd.d	a0,a0,a4
+	lw	a4,20(sp)
+	lw	a5,24(sp)
+	fmul.d	a0,a0,a4
+	fdiv.d	a0,a0,t3
+	lui	a4,%hi(sa)
+	sw	a0,%lo(sa)(a4)
+	sw	a1,%lo(sa+4)(a4)
+	lui	a5,%hi(.LC25)
+	lw	a4,%lo(.LC25)(a5)
+	lw	a5,%lo(.LC25+4)(a5)
 	lui	t3,%hi(sb)
-	sw	a6,%lo(sb)(t3)
-	sw	a7,%lo(sb+4)(t3)
-	fsub.d	a2,a2,a6
-	lui	a6,%hi(sc)
-	sw	a2,%lo(sc)(a6)
-	sw	a3,%lo(sc+4)(a6)
-	fdiv.d	a6,t1,a0
-	sw	a6,160(s1)
-	sw	a7,164(s1)
+	sw	a4,%lo(sb)(t3)
+	sw	a5,%lo(sb+4)(t3)
+	fsub.d	a0,a0,a4
+	lui	a5,%hi(sc)
+	sw	a0,%lo(sc)(a5)
+	sw	a1,%lo(sc+4)(a5)
+	fdiv.d	a2,a2,t1
+	sw	a2,160(s0)
+	sw	a3,164(s0)
+	sw	a2,68(sp)
+	sw	a3,72(sp)
+	sw	a3,0(sp)
+	mv	a5,a2
+	mv	a3,a6
+	mv	a4,a7
+	mv	a2,a1
+	mv	a1,a0
 	lui	a0,%hi(.LC26)
 	addi	a0,a0,%lo(.LC26)
 	call	printf
-	lw	s3,%lo(one+4)(s2)
-	lw	s2,%lo(one)(s2)
+	lw	s0,%lo(one)(s1)
+	lw	s1,%lo(one+4)(s1)
 	lui	a5,%hi(.LC27)
 	lw	a4,%lo(.LC27)(a5)
 	lw	a5,%lo(.LC27+4)(a5)
-	sw	a4,%lo(sa)(s5)
-	sw	a5,%lo(sa+4)(s5)
-	lw	a2,56(sp)
-	lw	a3,60(sp)
-	fdiv.d	s4,a4,a2
-	mv	a0,s0
+	lui	a3,%hi(sa)
+	sw	a4,%lo(sa)(a3)
+	sw	a5,%lo(sa+4)(a3)
+	lw	a2,60(sp)
+	lw	a3,64(sp)
+	fdiv.d	a4,a4,a2
+	sw	a4,12(sp)
+	sw	a5,16(sp)
+	lui	a5,%hi(.LANCHOR0+288)
+	addi	a0,a5,%lo(.LANCHOR0+288)
 	call	dtime
 	li	a5,1
-	ble	s10,a5,.L38
+	lw	a7,4(sp)
+	ble	a7,a5,.L38
 	mv	a6,a5
-	li	s0,0
-	li	s1,0
+	li	a0,0
+	li	a1,0
+	lw	t1,12(sp)
+	lw	t2,16(sp)
 .L25:
 	fcvt.d.w	a4,a6
-	fmul.d	a4,a4,s4
-	fmul.d	a0,a4,a4
-	fadd.d	a2,s2,a4
-	fdiv.d	a2,s2,a2
-	fsub.d	a2,s0,a2
-	fadd.d	s0,s2,a0
-	fdiv.d	s0,a4,s0
-	fsub.d	s0,a2,s0
-	fmul.d	a4,a4,a0
-	fadd.d	a4,a4,s2
-	fdiv.d	a0,a0,a4
-	fsub.d	s0,s0,a0
+	fmul.d	a4,a4,t1
+	fmul.d	a2,a4,a4
+	fadd.d	t3,s0,a4
+	fdiv.d	t3,s0,t3
+	fsub.d	a0,a0,t3
+	fadd.d	t3,s0,a2
+	fdiv.d	t3,a4,t3
+	fsub.d	a0,a0,t3
+	fmul.d	a4,a4,a2
+	fadd.d	a4,a4,s0
+	fdiv.d	a2,a2,a4
+	fsub.d	a0,a0,a2
 	addi	a6,a6,1
-	bne	s10,a6,.L25
+	bne	a7,a6,.L25
+	sw	a0,4(sp)
+	sw	a1,8(sp)
 .L24:
-	lui	s6,%hi(.LANCHOR0)
-	addi	s6,s6,%lo(.LANCHOR0)
-	addi	s7,s6,288
-	mv	a0,s7
+	lui	a5,%hi(.LANCHOR0)
+	addi	t6,a5,%lo(.LANCHOR0)
+	sw	t6,20(sp)
+	lui	a5,%hi(.LANCHOR0+288)
+	addi	a0,a5,%lo(.LANCHOR0+288)
 	call	dtime
-	lw	a4,8(s6)
-	lw	a5,12(s6)
-	lw	a2,296(s6)
-	lw	a3,300(s6)
+	lw	t6,20(sp)
+	lw	a4,8(t6)
+	lw	a5,12(t6)
+	lw	a2,296(t6)
+	lw	a3,300(t6)
 	fmul.d	a4,a4,a2
 	lui	a3,%hi(nulltime)
 	lw	a2,%lo(nulltime)(a3)
 	lw	a3,%lo(nulltime+4)(a3)
-	fsub.d	a4,a4,a2
-	sw	a4,168(s6)
-	sw	a5,172(s6)
-	lui	a3,%hi(.LC28)
-	lw	a6,%lo(.LC28)(a3)
-	lw	a7,%lo(.LC28+4)(a3)
-	fdiv.d	a6,a4,a6
-	sw	a6,176(s6)
-	sw	a7,180(s6)
+	fsub.d	a2,a4,a2
+	sw	a2,168(t6)
+	sw	a3,172(t6)
+	lui	a5,%hi(.LC28)
+	lw	a0,%lo(.LC28)(a5)
+	lw	a1,%lo(.LC28+4)(a5)
+	fdiv.d	a0,a2,a0
+	sw	a0,176(t6)
+	sw	a1,180(t6)
 	lui	t5,%hi(sa)
-	lw	a0,%lo(sa)(t5)
-	lw	a1,%lo(sa+4)(t5)
-	fmul.d	a2,a0,a0
-	fneg.d	t3,s2
-	fadd.d	t1,s2,a0
-	fdiv.d	t1,s2,t1
-	fsub.d	t3,t3,t1
-	fadd.d	t1,s2,a2
-	fdiv.d	t1,a0,t1
-	fsub.d	t1,t3,t1
-	fmul.d	a0,a0,a2
-	fadd.d	a0,a0,s2
-	fdiv.d	a2,a2,a0
-	fsub.d	a2,t1,a2
-	lui	a1,%hi(two)
-	lw	a0,%lo(two)(a1)
-	lw	a1,%lo(two+4)(a1)
-	fmul.d	s0,s0,a0
-	fadd.d	a2,a2,s0
-	lui	a1,%hi(.LC29)
-	lw	a0,%lo(.LC29)(a1)
-	lw	a1,%lo(.LC29+4)(a1)
-	fmul.d	s4,s4,a0
-	fmul.d	a2,a2,s4
-	sw	a2,%lo(sa)(t5)
-	sw	a3,%lo(sa+4)(t5)
-	fcvt.w.d a0,a2,rtz
-	li	a1,-2000
-	mul	a0,a0,a1
-	fcvt.d.w	a0,a0
+	lw	a4,%lo(sa)(t5)
+	lw	a5,%lo(sa+4)(t5)
+	fmul.d	t3,a4,a4
+	fneg.d	t1,s0
+	fadd.d	a6,s0,a4
+	fdiv.d	a6,s0,a6
+	fsub.d	t1,t1,a6
+	fadd.d	a6,s0,t3
+	fdiv.d	a6,a4,a6
+	fsub.d	a6,t1,a6
+	fmul.d	a4,a4,t3
+	fadd.d	a4,a4,s0
+	fdiv.d	a4,t3,a4
+	fsub.d	a6,a6,a4
+	lui	a5,%hi(two)
+	lw	a4,%lo(two)(a5)
+	lw	a5,%lo(two+4)(a5)
+	lw	s0,4(sp)
+	lw	s1,8(sp)
+	fmul.d	a4,s0,a4
+	fadd.d	a6,a6,a4
+	lui	a5,%hi(.LC29)
+	lw	a4,%lo(.LC29)(a5)
+	lw	a5,%lo(.LC29+4)(a5)
+	lw	s0,12(sp)
+	lw	s1,16(sp)
+	fmul.d	a4,s0,a4
+	fmul.d	a6,a6,a4
+	sw	a6,%lo(sa)(t5)
+	sw	a7,%lo(sa+4)(t5)
+	fcvt.w.d a4,a6,rtz
+	li	a5,-2000
+	mul	a4,a4,a5
+	fcvt.d.w	a4,a4
 	lui	t1,%hi(scale)
 	lw	t2,%lo(scale+4)(t1)
 	lw	t1,%lo(scale)(t1)
-	fdiv.d	a0,a0,t1
-	fcvt.w.d s4,a0,rtz
-	lui	a1,%hi(.LC30)
-	lw	a0,%lo(.LC30)(a1)
-	lw	a1,%lo(.LC30+4)(a1)
-	fadd.d	a2,a2,a0
-	lui	a1,%hi(sc)
-	sw	a2,%lo(sc)(a1)
-	sw	a3,%lo(sc+4)(a1)
-	lui	a1,%hi(one)
-	lw	a0,%lo(one)(a1)
-	lw	a1,%lo(one+4)(a1)
-	fdiv.d	a6,a0,a6
-	sw	a6,184(s6)
-	sw	a7,188(s6)
+	fdiv.d	a4,a4,t1
+	fcvt.w.d s0,a4,rtz
+	sw	s0,12(sp)
+	lui	a5,%hi(.LC30)
+	lw	a4,%lo(.LC30)(a5)
+	lw	a5,%lo(.LC30+4)(a5)
+	fadd.d	a6,a6,a4
+	lui	a5,%hi(sc)
+	sw	a6,%lo(sc)(a5)
+	sw	a7,%lo(sc+4)(a5)
+	lui	a5,%hi(one)
+	lw	a4,%lo(one)(a5)
+	lw	a5,%lo(one+4)(a5)
+	fdiv.d	a4,a4,a0
+	sw	a4,184(t6)
+	sw	a5,188(t6)
+	sw	a4,68(sp)
+	sw	a5,72(sp)
+	sw	a5,0(sp)
+	mv	a5,a4
+	mv	a4,a3
+	mv	a3,a2
+	mv	a1,a6
+	mv	a2,a7
 	lui	a0,%hi(.LC31)
 	addi	a0,a0,%lo(.LC31)
 	call	printf
-	fcvt.d.w	a4,s4
+	fcvt.d.w	a4,s0
 	lui	a3,%hi(three)
 	lw	a2,%lo(three)(a3)
 	lw	a3,%lo(three+4)(a3)
 	fmul.d	a4,a4,a2
 	lui	a3,%hi(piref)
-	lw	s8,%lo(piref)(a3)
-	lw	s9,%lo(piref+4)(a3)
-	fdiv.d	s8,s8,a4
-	mv	a0,s7
+	lw	a2,%lo(piref)(a3)
+	lw	a3,%lo(piref+4)(a3)
+	fdiv.d	a4,a2,a4
+	sw	a4,20(sp)
+	sw	a5,24(sp)
+	lui	a5,%hi(.LANCHOR0+288)
+	addi	a0,a5,%lo(.LANCHOR0+288)
 	call	dtime
 	li	a5,1
-	ble	s4,a5,.L39
+	ble	s0,a5,.L39
 	lui	a5,%hi(B6)
-	lw	t3,%lo(B6)(a5)
-	lw	t4,%lo(B6+4)(a5)
+	lw	s0,%lo(B6)(a5)
+	lw	s1,%lo(B6+4)(a5)
 	lui	a5,%hi(B5)
 	lw	t5,%lo(B5)(a5)
 	lw	t6,%lo(B5+4)(a5)
 	lui	a5,%hi(B4)
-	lw	s0,%lo(B4)(a5)
-	lw	s1,%lo(B4+4)(a5)
+	lw	t3,%lo(B4)(a5)
+	lw	t4,%lo(B4+4)(a5)
 	lui	a5,%hi(B3)
 	lw	s2,%lo(B3)(a5)
 	lw	s3,%lo(B3+4)(a5)
 	lui	a5,%hi(B2)
-	lw	s10,%lo(B2)(a5)
-	lw	s11,%lo(B2+4)(a5)
+	lw	s4,%lo(B2)(a5)
+	lw	s5,%lo(B2+4)(a5)
 	lui	a5,%hi(B1)
-	lw	a4,%lo(B1)(a5)
-	lw	a5,%lo(B1+4)(a5)
-	sw	a4,0(sp)
-	sw	a5,4(sp)
+	lw	s6,%lo(B1)(a5)
+	lw	s7,%lo(B1+4)(a5)
 	lui	a5,%hi(one)
 	lw	t1,%lo(one)(a5)
 	lw	t2,%lo(one+4)(a5)
 	lui	a5,%hi(A6)
-	lw	a4,%lo(A6)(a5)
-	lw	a5,%lo(A6+4)(a5)
-	sw	a4,8(sp)
-	sw	a5,12(sp)
+	lw	s8,%lo(A6)(a5)
+	lw	s9,%lo(A6+4)(a5)
 	lui	a5,%hi(A5)
-	lw	a4,%lo(A5)(a5)
-	lw	a5,%lo(A5+4)(a5)
-	sw	a4,16(sp)
-	sw	a5,20(sp)
+	lw	s10,%lo(A5)(a5)
+	lw	s11,%lo(A5+4)(a5)
 	lui	a5,%hi(A4)
 	lw	a4,%lo(A4)(a5)
 	lw	a5,%lo(A4+4)(a5)
-	sw	a4,24(sp)
-	sw	a5,28(sp)
+	sw	a4,28(sp)
+	sw	a5,32(sp)
 	lui	a5,%hi(A3)
 	lw	a4,%lo(A3)(a5)
 	lw	a5,%lo(A3+4)(a5)
-	sw	a4,32(sp)
-	sw	a5,36(sp)
+	sw	a4,36(sp)
+	sw	a5,40(sp)
 	lui	a5,%hi(A2)
 	lw	a4,%lo(A2)(a5)
 	lw	a5,%lo(A2+4)(a5)
-	sw	a4,40(sp)
-	sw	a5,44(sp)
+	sw	a4,44(sp)
+	sw	a5,48(sp)
 	lui	a5,%hi(A1)
 	lw	a4,%lo(A1)(a5)
 	lw	a5,%lo(A1+4)(a5)
-	sw	a4,48(sp)
-	sw	a5,52(sp)
+	sw	a4,52(sp)
+	sw	a5,56(sp)
 	li	t0,1
-	li	s6,0
-	li	s7,0
-	sw	t3,56(sp)
-	sw	t4,60(sp)
+	sw	zero,4(sp)
+	sw	zero,8(sp)
+	sw	t3,60(sp)
+	sw	t4,64(sp)
 .L27:
 	fcvt.d.w	a6,t0
-	fmul.d	a6,a6,s8
+	lw	a4,20(sp)
+	lw	a5,24(sp)
+	fmul.d	a6,a6,a4
 	fmul.d	a0,a6,a6
-	lw	a4,56(sp)
-	lw	a5,60(sp)
-	fmul.d	a4,a4,a0
+	fmul.d	a4,s0,a0
 	fadd.d	a4,a4,t5
 	fmul.d	a4,a4,a0
-	fadd.d	a4,a4,s0
+	lw	a2,60(sp)
+	lw	a3,64(sp)
+	fadd.d	a4,a4,a2
 	fmul.d	a4,a4,a0
 	fadd.d	a4,a4,s2
 	fmul.d	a4,a4,a0
-	fadd.d	a4,a4,s10
+	fadd.d	a4,a4,s4
 	fmul.d	a4,a4,a0
-	lw	a2,0(sp)
-	lw	a3,4(sp)
-	fadd.d	a4,a4,a2
+	fadd.d	a4,a4,s6
 	fmul.d	a4,a4,a0
 	fadd.d	a4,a4,t1
-	lw	a2,8(sp)
-	lw	a3,12(sp)
+	fmul.d	a2,s8,a0
+	fadd.d	a2,a2,s10
 	fmul.d	a2,a2,a0
-	lw	t3,16(sp)
-	lw	t4,20(sp)
+	lw	t3,28(sp)
+	lw	t4,32(sp)
 	fadd.d	a2,a2,t3
 	fmul.d	a2,a2,a0
-	lw	t3,24(sp)
-	lw	t4,28(sp)
+	lw	t3,36(sp)
+	lw	t4,40(sp)
 	fadd.d	a2,a2,t3
 	fmul.d	a2,a2,a0
-	lw	t3,32(sp)
-	lw	t4,36(sp)
+	lw	t3,44(sp)
+	lw	t4,48(sp)
 	fadd.d	a2,a2,t3
 	fmul.d	a2,a2,a0
-	lw	t3,40(sp)
-	lw	t4,44(sp)
-	fadd.d	a2,a2,t3
-	fmul.d	a2,a2,a0
-	lw	t3,48(sp)
-	lw	t4,52(sp)
+	lw	t3,52(sp)
+	lw	t4,56(sp)
 	fadd.d	a2,a2,t3
 	fmul.d	a2,a2,a0
 	fadd.d	a2,a2,t1
 	fmul.d	a4,a4,a4
 	fmul.d	a4,a4,a6
 	fmul.d	a2,a2,a4
-	fadd.d	s6,s6,a2
+	lw	a4,4(sp)
+	lw	a5,8(sp)
+	fadd.d	a4,a4,a2
+	sw	a4,4(sp)
+	sw	a5,8(sp)
 	addi	t0,t0,1
-	bne	s4,t0,.L27
+	lw	a5,12(sp)
+	bne	a5,t0,.L27
 .L26:
 	lui	s0,%hi(.LANCHOR0)
 	addi	s0,s0,%lo(.LANCHOR0)
@@ -1689,240 +1824,247 @@ main:
 	lw	a2,296(s0)
 	lw	a3,300(s0)
 	fmul.d	a4,a4,a2
-	lui	s1,%hi(nulltime)
-	lw	a2,%lo(nulltime)(s1)
-	lw	a3,%lo(nulltime+4)(s1)
-	fsub.d	a4,a4,a2
-	sw	a4,192(s0)
-	sw	a5,196(s0)
-	lui	a3,%hi(piref)
-	lw	t3,%lo(piref)(a3)
-	lw	t4,%lo(piref+4)(a3)
-	lui	a3,%hi(three)
-	lw	a2,%lo(three)(a3)
-	lw	a3,%lo(three+4)(a3)
-	fdiv.d	t3,t3,a2
-	fmul.d	a6,t3,t3
-	lui	s2,%hi(one)
-	lw	t1,%lo(one)(s2)
-	lw	t2,%lo(one+4)(s2)
-	lui	a3,%hi(B6)
-	lw	a2,%lo(B6)(a3)
-	lw	a3,%lo(B6+4)(a3)
-	fmul.d	a2,a6,a2
-	lui	a1,%hi(B5)
-	lw	a0,%lo(B5)(a1)
-	lw	a1,%lo(B5+4)(a1)
-	fadd.d	a2,a2,a0
-	fmul.d	a2,a2,a6
-	lui	a1,%hi(B4)
-	lw	a0,%lo(B4)(a1)
-	lw	a1,%lo(B4+4)(a1)
-	fadd.d	a2,a2,a0
-	fmul.d	a2,a2,a6
-	lui	a1,%hi(B3)
-	lw	a0,%lo(B3)(a1)
-	lw	a1,%lo(B3+4)(a1)
-	fadd.d	a2,a2,a0
-	fmul.d	a2,a2,a6
-	lui	a1,%hi(B2)
-	lw	a0,%lo(B2)(a1)
-	lw	a1,%lo(B2+4)(a1)
-	fadd.d	a2,a2,a0
-	fmul.d	a2,a2,a6
-	lui	a1,%hi(B1)
-	lw	a0,%lo(B1)(a1)
-	lw	a1,%lo(B1+4)(a1)
-	fadd.d	a0,a2,a0
-	fmul.d	a0,a0,a6
-	fadd.d	a0,a0,t1
-	lui	a3,%hi(A6)
-	lw	a2,%lo(A6)(a3)
-	lw	a3,%lo(A6+4)(a3)
-	fmul.d	a2,a6,a2
+	lui	a3,%hi(nulltime)
+	lw	a0,%lo(nulltime)(a3)
+	lw	a1,%lo(nulltime+4)(a3)
+	fsub.d	a0,a4,a0
+	sw	a0,192(s0)
+	sw	a1,196(s0)
+	lui	a5,%hi(piref)
+	lw	t1,%lo(piref)(a5)
+	lw	t2,%lo(piref+4)(a5)
+	lui	a5,%hi(three)
+	lw	a4,%lo(three)(a5)
+	lw	a5,%lo(three+4)(a5)
+	fdiv.d	t1,t1,a4
+	fmul.d	t3,t1,t1
+	lui	s1,%hi(one)
+	lw	a2,%lo(one)(s1)
+	lw	a3,%lo(one+4)(s1)
+	lui	a5,%hi(B6)
+	lw	a6,%lo(B6)(a5)
+	lw	a7,%lo(B6+4)(a5)
+	fmul.d	a6,t3,a6
+	lui	a5,%hi(B5)
+	lw	a4,%lo(B5)(a5)
+	lw	a5,%lo(B5+4)(a5)
+	fadd.d	a6,a6,a4
+	fmul.d	a6,a6,t3
+	lui	a5,%hi(B4)
+	lw	a4,%lo(B4)(a5)
+	lw	a5,%lo(B4+4)(a5)
+	fadd.d	a6,a6,a4
+	fmul.d	a6,a6,t3
+	lui	a5,%hi(B3)
+	lw	a4,%lo(B3)(a5)
+	lw	a5,%lo(B3+4)(a5)
+	fadd.d	a6,a6,a4
+	fmul.d	a6,a6,t3
+	lui	a5,%hi(B2)
+	lw	a4,%lo(B2)(a5)
+	lw	a5,%lo(B2+4)(a5)
+	fadd.d	a6,a6,a4
+	fmul.d	a6,a6,t3
+	lui	a5,%hi(B1)
+	lw	a4,%lo(B1)(a5)
+	lw	a5,%lo(B1+4)(a5)
+	fadd.d	a6,a6,a4
+	fmul.d	a6,a6,t3
+	fadd.d	a6,a6,a2
+	lui	a5,%hi(A6)
+	lw	a4,%lo(A6)(a5)
+	lw	a5,%lo(A6+4)(a5)
+	fmul.d	a4,t3,a4
 	lui	t5,%hi(A5)
 	lw	t6,%lo(A5+4)(t5)
 	lw	t5,%lo(A5)(t5)
-	fadd.d	a2,a2,t5
-	fmul.d	a2,a2,a6
+	fadd.d	a4,a4,t5
+	fmul.d	a4,a4,t3
 	lui	t5,%hi(A4)
 	lw	t6,%lo(A4+4)(t5)
 	lw	t5,%lo(A4)(t5)
-	fadd.d	a2,a2,t5
-	fmul.d	a2,a2,a6
+	fadd.d	a4,a4,t5
+	fmul.d	a4,a4,t3
 	lui	t5,%hi(A3)
 	lw	t6,%lo(A3+4)(t5)
 	lw	t5,%lo(A3)(t5)
-	fadd.d	a2,a2,t5
-	fmul.d	a2,a2,a6
+	fadd.d	a4,a4,t5
+	fmul.d	a4,a4,t3
 	lui	t5,%hi(A2)
 	lw	t6,%lo(A2+4)(t5)
 	lw	t5,%lo(A2)(t5)
-	fadd.d	a2,a2,t5
-	fmul.d	a2,a2,a6
+	fadd.d	a4,a4,t5
+	fmul.d	a4,a4,t3
 	lui	t5,%hi(A1)
 	lw	t6,%lo(A1+4)(t5)
 	lw	t5,%lo(A1)(t5)
-	fadd.d	a2,a2,t5
-	fmul.d	a2,a2,a6
-	fadd.d	a2,a2,t1
-	fmul.d	a2,a2,t3
-	fmul.d	a2,a2,a0
-	fmul.d	a2,a2,a0
-	lui	a1,%hi(.LC32)
-	lw	a0,%lo(.LC32)(a1)
-	lw	a1,%lo(.LC32+4)(a1)
-	fdiv.d	a0,a4,a0
-	sw	a0,200(s0)
-	sw	a1,204(s0)
+	fadd.d	a4,a4,t5
+	fmul.d	a4,a4,t3
+	fadd.d	a4,a4,a2
+	fmul.d	a4,a4,t1
+	fmul.d	a4,a4,a6
+	fmul.d	a4,a4,a6
+	lui	a6,%hi(.LC32)
+	lw	t1,%lo(.LC32)(a6)
+	lw	t2,%lo(.LC32+4)(a6)
+	fdiv.d	t1,a0,t1
+	sw	t1,200(s0)
+	sw	t2,204(s0)
 	lui	a6,%hi(two)
-	lw	a7,%lo(two+4)(a6)
-	lw	a6,%lo(two)(a6)
-	fmul.d	s6,a6,s6
-	fadd.d	a2,s6,a2
-	fmul.d	a2,a2,s8
-	fdiv.d	a2,a2,a6
-	lui	a6,%hi(sa)
-	sw	a2,%lo(sa)(a6)
-	sw	a3,%lo(sa+4)(a6)
-	lui	a6,%hi(.LC33)
-	lw	a7,%lo(.LC33+4)(a6)
-	lw	a6,%lo(.LC33)(a6)
+	lw	t3,%lo(two)(a6)
+	lw	t4,%lo(two+4)(a6)
+	lw	a6,4(sp)
+	lw	a7,8(sp)
+	fmul.d	a6,t3,a6
+	fadd.d	a6,a6,a4
+	lw	a4,20(sp)
+	lw	a5,24(sp)
+	fmul.d	a6,a6,a4
+	fdiv.d	a6,a6,t3
+	lui	a5,%hi(sa)
+	sw	a6,%lo(sa)(a5)
+	sw	a7,%lo(sa+4)(a5)
+	lui	a5,%hi(.LC33)
+	lw	a4,%lo(.LC33)(a5)
+	lw	a5,%lo(.LC33+4)(a5)
 	lui	t3,%hi(sb)
-	sw	a6,%lo(sb)(t3)
-	sw	a7,%lo(sb+4)(t3)
-	fsub.d	a2,a2,a6
-	lui	a6,%hi(sc)
-	sw	a2,%lo(sc)(a6)
-	sw	a3,%lo(sc+4)(a6)
-	fdiv.d	a6,t1,a0
-	sw	a6,208(s0)
-	sw	a7,212(s0)
+	sw	a4,%lo(sb)(t3)
+	sw	a5,%lo(sb+4)(t3)
+	fsub.d	a6,a6,a4
+	lui	a5,%hi(sc)
+	sw	a6,%lo(sc)(a5)
+	sw	a7,%lo(sc+4)(a5)
+	fdiv.d	a2,a2,t1
+	sw	a2,208(s0)
+	sw	a3,212(s0)
+	sw	a2,68(sp)
+	sw	a3,72(sp)
+	sw	a3,0(sp)
+	mv	a5,a2
+	mv	a3,a0
+	mv	a4,a1
+	mv	a1,a6
+	mv	a2,a7
 	lui	a0,%hi(.LC34)
 	addi	a0,a0,%lo(.LC34)
 	call	printf
-	lw	a2,72(s0)
-	lw	a3,76(s0)
-	lw	a4,48(s0)
-	lw	a5,52(s0)
+	lw	a4,72(s0)
+	lw	a5,76(s0)
+	lw	a2,48(s0)
+	lw	a3,52(s0)
 	lw	a0,40(s0)
 	lw	a1,44(s0)
-	fsub.d	a4,a4,a0
+	fsub.d	a2,a2,a0
 	lui	a1,%hi(five)
 	lw	a0,%lo(five)(a1)
 	lw	a1,%lo(five+4)(a1)
-	fmul.d	a4,a4,a0
-	fadd.d	a4,a4,a2
+	fmul.d	a2,a2,a0
+	fadd.d	a2,a2,a4
 	lui	a1,%hi(.LC35)
 	lw	a0,%lo(.LC35)(a1)
 	lw	a1,%lo(.LC35+4)(a1)
-	fdiv.d	a4,a4,a0
-	sw	a4,216(s0)
-	sw	a5,220(s0)
-	lw	a6,%lo(one)(s2)
-	lw	a7,%lo(one+4)(s2)
-	fdiv.d	a4,a6,a4
-	sw	a4,224(s0)
-	sw	a5,228(s0)
-	lw	t1,96(s0)
-	lw	t2,100(s0)
-	lw	s2,144(s0)
-	lw	s3,148(s0)
-	lw	a4,16(s0)
-	lw	a5,20(s0)
-	fadd.d	a4,a2,a4
-	fadd.d	a4,a4,t1
-	lw	a0,120(s0)
-	lw	a1,124(s0)
-	fadd.d	a4,a4,a0
-	fadd.d	a4,a4,s2
-	lw	t3,168(s0)
-	lw	t4,172(s0)
-	lui	a1,%hi(four)
-	lw	a0,%lo(four)(a1)
-	lw	a1,%lo(four+4)(a1)
-	fmul.d	a0,t3,a0
-	fadd.d	a0,a0,a4
-	lui	t5,%hi(.LC36)
-	lw	t6,%lo(.LC36+4)(t5)
-	lw	t5,%lo(.LC36)(t5)
-	fdiv.d	a0,a0,t5
-	sw	a0,232(s0)
-	sw	a1,236(s0)
-	fdiv.d	a0,a6,a0
-	sw	a0,240(s0)
-	sw	a1,244(s0)
-	lw	a0,192(s0)
-	lw	a1,196(s0)
+	fdiv.d	a2,a2,a0
+	sw	a2,216(s0)
+	sw	a3,220(s0)
+	lw	a0,%lo(one)(s1)
+	lw	a1,%lo(one+4)(s1)
+	fdiv.d	a2,a0,a2
+	sw	a2,224(s0)
+	sw	a3,228(s0)
+	lw	t3,96(s0)
+	lw	t4,100(s0)
+	lw	t1,144(s0)
+	lw	t2,148(s0)
+	lw	a2,16(s0)
+	lw	a3,20(s0)
+	fadd.d	a2,a4,a2
+	fadd.d	a2,a2,t3
+	lw	a6,120(s0)
+	lw	a7,124(s0)
+	fadd.d	a2,a2,a6
+	fadd.d	a2,a2,t1
+	lw	t5,168(s0)
+	lw	t6,172(s0)
+	lui	a6,%hi(four)
+	lw	a7,%lo(four+4)(a6)
+	lw	a6,%lo(four)(a6)
+	fmul.d	a6,t5,a6
+	fadd.d	a6,a6,a2
+	lui	t0,%hi(.LC36)
+	lw	s2,%lo(.LC36)(t0)
+	lw	s3,%lo(.LC36+4)(t0)
+	fdiv.d	a6,a6,s2
+	sw	a6,232(s0)
+	sw	a7,236(s0)
+	fdiv.d	a6,a0,a6
+	sw	a6,240(s0)
+	sw	a7,244(s0)
+	lw	a6,192(s0)
+	lw	a7,196(s0)
+	fadd.d	a2,a2,t5
+	fadd.d	a2,a2,a6
+	lui	t5,%hi(.LC37)
+	lw	t6,%lo(.LC37+4)(t5)
+	lw	t5,%lo(.LC37)(t5)
+	fdiv.d	a2,a2,t5
+	sw	a2,248(s0)
+	sw	a3,252(s0)
+	fdiv.d	a2,a0,a2
+	sw	a2,256(s0)
+	sw	a3,260(s0)
 	fadd.d	a4,a4,t3
-	fadd.d	a4,a4,a0
-	lui	t3,%hi(.LC37)
-	lw	t4,%lo(.LC37+4)(t3)
-	lw	t3,%lo(.LC37)(t3)
-	fdiv.d	a4,a4,t3
-	sw	a4,248(s0)
-	sw	a5,252(s0)
-	fdiv.d	a4,a6,a4
-	sw	a4,256(s0)
-	sw	a5,260(s0)
-	fadd.d	a4,a2,t1
-	fadd.d	a4,a4,s2
-	fadd.d	a4,a4,a0
+	fadd.d	a4,a4,t1
+	fadd.d	a4,a4,a6
 	lui	a3,%hi(.LC38)
 	lw	a2,%lo(.LC38)(a3)
 	lw	a3,%lo(.LC38+4)(a3)
 	fdiv.d	a4,a4,a2
 	sw	a4,264(s0)
 	sw	a5,268(s0)
-	fdiv.d	a6,a6,a4
-	sw	a6,272(s0)
-	sw	a7,276(s0)
+	fdiv.d	a0,a0,a4
+	sw	a0,272(s0)
+	sw	a1,276(s0)
 	li	a0,10
 	call	putchar
-	mv	a1,s4
+	lw	a1,12(sp)
 	lui	a0,%hi(.LC39)
 	addi	a0,a0,%lo(.LC39)
 	call	printf
-	lw	a2,%lo(nulltime)(s1)
-	lw	a3,%lo(nulltime+4)(s1)
+	lui	a3,%hi(nulltime)
+	lw	a4,%lo(nulltime)(a3)
+	lw	a5,%lo(nulltime+4)(a3)
+	mv	a1,a4
+	mv	a2,a5
 	lui	a0,%hi(.LC40)
 	addi	a0,a0,%lo(.LC40)
 	call	printf
-	lw	a2,224(s0)
-	lw	a3,228(s0)
+	lw	a1,224(s0)
+	lw	a2,228(s0)
 	lui	a0,%hi(.LC41)
 	addi	a0,a0,%lo(.LC41)
 	call	printf
-	lw	a2,240(s0)
-	lw	a3,244(s0)
+	lw	a1,240(s0)
+	lw	a2,244(s0)
 	lui	a0,%hi(.LC42)
 	addi	a0,a0,%lo(.LC42)
 	call	printf
-	lw	a2,256(s0)
-	lw	a3,260(s0)
+	lw	a1,256(s0)
+	lw	a2,260(s0)
 	lui	a0,%hi(.LC43)
 	addi	a0,a0,%lo(.LC43)
 	call	printf
-	lw	a2,272(s0)
-	lw	a3,276(s0)
+	lw	a4,272(s0)
+	lw	a5,276(s0)
+	mv	a1,a4
+	mv	a2,a5
 	lui	a0,%hi(.LC44)
 	addi	a0,a0,%lo(.LC44)
 	call	printf
 	li	a0,0
-	lw	ra,124(sp)
-	lw	s0,120(sp)
-	lw	s1,116(sp)
-	lw	s2,112(sp)
-	lw	s3,108(sp)
-	lw	s4,104(sp)
-	lw	s5,100(sp)
-	lw	s6,96(sp)
-	lw	s7,92(sp)
-	lw	s8,88(sp)
-	lw	s9,84(sp)
-	lw	s10,80(sp)
-	lw	s11,76(sp)
-	addi	sp,sp,128
+	lw	ra,84(sp)
+	lw	s0,80(sp)
+	lw	s1,76(sp)
+	addi	sp,sp,88
 	jr	ra
 	.size	main, .-main
 	.globl	E3
