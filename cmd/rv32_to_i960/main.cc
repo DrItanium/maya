@@ -136,10 +136,17 @@ namespace rv32_grammar {
     struct imm_dec : plus<digit> {};
     struct imm_hex : seq<istring<'0','x'>, plus<xdigit>> {};
     struct imm_bin : seq<istring<'0','b'>, plus<one<'0','1'>>> {};
-    struct immediate : sor<imm_hex, imm_bin, imm_dec> {};
+    struct imm_oct : seq<istring<'0'>, plus<one<'0','1','2','3','4','5','6','7'>>> {};
+    struct immediate : sor<imm_hex, imm_bin, imm_dec, imm_oct> {};
 
     // Directives (e.g., .text, .data)
     struct directive : seq<one<'.'>, identifier> {};
+    // directives can accept a string or an identifier or numbers
+    struct directive_with_string_or_identifier : seq<directive, opt_ws, opt<sor<identifier, seq<one<'\"'>, star<not_one<'\"'>>, one<'\"'>>>>> {};
+
+
+
+
 
     // Label (e.g., label:)
     struct label : seq<identifier, one<':'>> {};
@@ -152,6 +159,7 @@ namespace rv32_grammar {
     // Line: directive, label, instruction, or comment
     struct line_content : sor<
         directive,
+        directive_with_string_or_identifier,
         label,
         instruction
     > { };
