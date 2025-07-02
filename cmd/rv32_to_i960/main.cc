@@ -60,8 +60,8 @@ struct WhiteSpace :
 #define X(title, text) struct Keyword ## title : TAO_PEGTL_STRING( text ) { };
 #define Directive(title, text) X( Directive ## title , "." text)
 #define DefModifier(title, text) X( Modifier ## title , "%" text )
-#define DefRegister(title, text) X( Register ## title , text )
-Directive(Abort, "abort");
+#define DefRegister(title) X( Register_ ## title , #title )
+Directive(Altmacro, "altmacro");
 Directive(Align, "align");
 Directive(Ascii, "ascii");
 Directive(Asciz, "asciz");
@@ -180,6 +180,35 @@ Directive(DTPrelDWord ,"dtpreldword");
 Directive(Option ,"option");
 Directive(Insn ,"insn");
 Directive(Attribute ,"attribute") ;
+
+#define CFIDirective(text) Directive(CFI_ ## text, ".cfi_" #text );
+CFIDirective(sections);
+CFIDirective(startproc);
+CFIDirective(endproc);
+CFIDirective(personality);
+CFIDirective(personality_id);
+CFIDirective(fde_data);
+CFIDirective(lsda);
+CFIDirective(inline_lsda);
+CFIDirective(def_cfa);
+CFIDirective(def_cfa_register);
+CFIDirective(def_cfa_offset);
+CFIDirective(adjust);
+CFIDirective(offset);
+CFIDirective(val_offset);
+CFIDirective(rel_offset);
+CFIDirective(register);
+CFIDirective(restore);
+CFIDirective(undefined);
+CFIDirective(same_value);
+CFIDirective(remember_state);
+CFIDirective(restore_state);
+CFIDirective(return_column);
+CFIDirective(signal_frame);
+CFIDirective(window);
+CFIDirective(escape);
+CFIDirective(val_encoded_addr);
+#undef CFIDirective
 // assembler modifiers
 DefModifier(Lo, "lo");
 DefModifier(Hi, "hi");
@@ -192,38 +221,79 @@ DefModifier(TPRelHi, "tprel_hi");
 DefModifier(TLSIEPCRELHi, "tls_ie_pcrel_hi");
 DefModifier(TLSGDPCRELHi, "tls_gd_pcrel_hi");
 // registers
-DefRegister(Zero, "zero");
-DefRegister(RA, "ra");
-DefRegister(SP, "sp");
-DefRegister(GP, "gp");
-DefRegister(TP, "tp");
-DefRegister(T0, "t0");
-DefRegister(T1, "t1");
-DefRegister(T2, "t2");
-DefRegister(S0, "s0");
-DefRegister(S1, "s1");
-DefRegister(A0, "a0");
-DefRegister(A1, "a1");
-DefRegister(A2, "a2");
-DefRegister(A3, "a3");
-DefRegister(A4, "a4");
-DefRegister(A5, "a5");
-DefRegister(A6, "a6");
-DefRegister(A7, "a7");
-DefRegister(S2, "s2");
-DefRegister(S3, "s3");
-DefRegister(S4, "s4");
-DefRegister(S5, "s5");
-DefRegister(S6, "s6");
-DefRegister(S7, "s7");
-DefRegister(S8, "s8");
-DefRegister(S9, "s9");
-DefRegister(S10, "s10");
-DefRegister(S11, "s11");
-DefRegister(T3, "t3");
-DefRegister(T4, "t4");
-DefRegister(T5, "t5");
-DefRegister(T6, "t6");
+#define RegisterDecl(idx, alias) \
+    DefRegister( x ## idx ); \
+    DefRegister( alias ) 
+#define FloatRegisterDecl(idx, alias) \
+    DefRegister( f ## idx ); \
+    DefRegister( alias )
+RegisterDecl(0, zero);
+RegisterDecl(1, ra);
+RegisterDecl(2, sp);
+RegisterDecl(3, gp);
+RegisterDecl(4, tp);
+RegisterDecl(5, t0);
+RegisterDecl(6, t1);
+RegisterDecl(7, t2);
+RegisterDecl(8, s0);
+RegisterDecl(9, s1);
+RegisterDecl(10, a0);
+RegisterDecl(11, a1);
+RegisterDecl(12, a2);
+RegisterDecl(13, a3);
+RegisterDecl(14, a4);
+RegisterDecl(15, a5);
+RegisterDecl(16, a6);
+RegisterDecl(17, a7);
+RegisterDecl(18, s2);
+RegisterDecl(19, s3);
+RegisterDecl(20, s4);
+RegisterDecl(21, s5);
+RegisterDecl(22, s6);
+RegisterDecl(23, s7);
+RegisterDecl(24, s8);
+RegisterDecl(25, s9);
+RegisterDecl(26, s10);
+RegisterDecl(27, s11);
+RegisterDecl(28, t3);
+RegisterDecl(29, t4);
+RegisterDecl(30, t5);
+RegisterDecl(31, t6);
+
+FloatRegisterDecl(0, ft0);
+FloatRegisterDecl(1, ft1);
+FloatRegisterDecl(2, ft2);
+FloatRegisterDecl(3, ft3);
+FloatRegisterDecl(4, ft4);
+FloatRegisterDecl(5, ft5);
+FloatRegisterDecl(6, ft6);
+FloatRegisterDecl(7, ft7);
+FloatRegisterDecl(8, fs0);
+FloatRegisterDecl(9, fs1);
+FloatRegisterDecl(10, fa0);
+FloatRegisterDecl(11, fa1);
+FloatRegisterDecl(12, fa2);
+FloatRegisterDecl(13, fa3);
+FloatRegisterDecl(14, fa4);
+FloatRegisterDecl(15, fa5);
+FloatRegisterDecl(16, fa6);
+FloatRegisterDecl(17, fa7);
+FloatRegisterDecl(18, fs2);
+FloatRegisterDecl(19, fs3);
+FloatRegisterDecl(20, fs4);
+FloatRegisterDecl(21, fs5);
+FloatRegisterDecl(22, fs6);
+FloatRegisterDecl(23, fs7);
+FloatRegisterDecl(24, fs8);
+FloatRegisterDecl(25, fs9);
+FloatRegisterDecl(26, fs10);
+FloatRegisterDecl(27, fs11);
+FloatRegisterDecl(28, ft8);
+FloatRegisterDecl(29, ft9);
+FloatRegisterDecl(30, ft10);
+FloatRegisterDecl(31, ft11);
+#undef FloatRegisterDecl
+#undef RegisterDecl
 #undef DefRegister
 #undef DefModifier
 #undef Directive
