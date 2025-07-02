@@ -45,50 +45,188 @@ template<char letter>
 struct GenericLineComment : tp::seq< tp::one <letter>, tp::until< tp::eolf>> { };
 
 using CStyleLineComment = GenericLineComment<'/'>;
-using SemiColonLineComment = GenericLineComment<';'>;
 using PoundLineComment = GenericLineComment<'#'>;
 struct EndBlockComment : tp::until<tp::string<'*', '/'>> { };
 struct BlockComment : tp::if_must<tp::one<'*'>, EndBlockComment> { };
 
 struct CStyleComment : tp::sor< CStyleLineComment, BlockComment> { };
-#if 0
 struct WhiteSpace : 
     tp::sor <
-        tp::one < ' ', '\t', '\n', '\t' >
+        tp::one < ' ', '\t', '\n', '\t' >,
+        PoundLineComment,
+        tp::if_must<tp::one<'/'>, CStyleLineComment>
     > { };
-#endif
 
-struct KeywordLo : TAO_PEGTL_STRING("%lo") { };
-struct KeywordHi : TAO_PEGTL_STRING("%hi") { };
-struct KeywordPCRelLo : TAO_PEGTL_STRING("%pcrel_lo") { };
-struct KeywordPCRelHi : TAO_PEGTL_STRING("%pcrel_hi") { };
-struct KeywordGotPCRELHi : TAO_PEGTL_STRING("%got_pcrel_hi") { };
-struct KeywordTPRelAdd : TAO_PEGTL_STRING("%tprel_add") { };
-struct KeywordTPRelLo : TAO_PEGTL_STRING("%tprel_lo") { };
-struct KeywordTPRelHi : TAO_PEGTL_STRING("%tprel_hi") { };
-struct KeywordTLSIEPCRELHi : TAO_PEGTL_STRING("%tls_ie_pcrel_hi") { };
-struct KeywordTLSGDPCRELHi : TAO_PEGTL_STRING("%tls_gd_pcrel_hi") { };
-#define X(title, text) struct KeywordDirective ## title : TAO_PEGTL_STRING( text ) { };
-X(Abort, ".abort");
-X(Align, ".align");
-X(Ascii, ".ascii");
-X(Asciz, ".asciz");
-X(AttachToGroup, ".attach_to_group");
-X(BAlign, ".balign");
-X(Base64, ".base64");
-X(Bss, ".bss");
-X(Byte, ".byte");
-X(Comm, ".comm");
-X(HalfWord, ".half");
-X(Word, ".word");
-X(DWord, ".dword");
-X(DTPrelWord ,".dtprelword");
-X(DTPrelDWord ,".dtpreldword");
-X(ULEB128 ,".uleb128");
-X(SLEB128 ,".sleb128");
-X(Option ,".option");
-X(Insn ,".insn");
-X(Attribute ,".attribute") ;
+#define X(title, text) struct Keyword ## title : TAO_PEGTL_STRING( text ) { };
+#define Directive(title, text) X( Directive ## title , "." text)
+#define DefModifier(title, text) X( Modifier ## title , "%" text )
+#define DefRegister(title, text) X( Register ## title , text )
+Directive(Abort, "abort");
+Directive(Align, "align");
+Directive(Ascii, "ascii");
+Directive(Asciz, "asciz");
+Directive(AttachToGroup, "attach_to_group");
+Directive(BAlign, "balign");
+Directive(Base64, "base64");
+Directive(Bss, "bss");
+Directive(Byte, "byte");
+Directive(Comm, "comm");
+Directive(Data, "data");
+Directive(Def, "def");
+Directive(Desc, "desc");
+Directive(Dim, "dim");
+Directive(Double, "double");
+Directive(Eject, "eject");
+Directive(Else, "else");
+Directive(ElseIf, "elseif");
+Directive(End, "end");
+Directive(Endef, "endef");
+Directive(EndFunc, "endfunc");
+Directive(EndIf, "endif");
+Directive(Equ, "equ");
+Directive(Equiv, "equiv");
+Directive(Eqv, "eqv");
+Directive(Err, "err");
+Directive(Error, "error");
+Directive(Exitm, "exitm");
+Directive(Extern, "extern");
+Directive(Fail, "fail");
+Directive(File, "file");
+Directive(Fill, "fill");
+Directive(Float, "float");
+Directive(Func, "func");
+Directive(Global, "global");
+Directive(GnuAttribute, "gnu_attribute");
+Directive(Hidden, "hidden");
+Directive(HWord, "hword");
+Directive(Ident, "ident");
+Directive(If, "if");
+Directive(IncBin, "incbin");
+Directive(Include, "include");
+Directive(Int, "int");
+Directive(Internal, "internal");
+Directive(Irp, "irp");
+Directive(Irpc, "irpc");
+Directive(LComm, "lcomm");
+Directive(LFlags, "lflags");
+Directive(Line, "line");
+Directive(LinkOnce, "linkonce");
+Directive(List, "list");
+Directive(Ln, "ln");
+Directive(Loc, "loc");
+Directive(LocMarkLabels, "loc_mark_labels");
+Directive(Local, "local");
+Directive(Long, "long");
+Directive(Macro, "macro");
+Directive(Mri, "mri");
+Directive(NoAltMacro, "noaltmacro");
+Directive(NoList, "nolist");
+Directive(Nop, "nop");
+Directive(Nops, "nops");
+Directive(Octa, "octa");
+Directive(Offset, "offset");
+Directive(Org, "org");
+Directive(P2Align, "p2align");
+Directive(PopSection, "popsection");
+Directive(Previous, "previous");
+Directive(Print, "print");
+Directive(Protected, "protected");
+Directive(PSize, "psize");
+Directive(Purgem, "purgem");
+Directive(PushSection, "pushsection");
+Directive(Quad, "quad");
+Directive(Reloc, "reloc");
+Directive(Rept, "rept");
+Directive(Sbttl, "sbttl");
+Directive(Scl, "scl");
+Directive(Section, "section");
+Directive(Set, "set");
+Directive(Short, "short");
+Directive(Single, "single");
+Directive(Size, "size");
+Directive(Skip, "skip");
+Directive(SLEB128 ,"sleb128");
+Directive(Space, "space");
+Directive(Stabd, "stabd");
+Directive(Stabn, "stabn");
+Directive(Stabs, "stabs");
+Directive(String, "string");
+Directive(Struct, "struct");
+Directive(Subsection, "subsection");
+Directive(Symver, "symver");
+Directive(Tag, "tag");
+Directive(Text, "text");
+Directive(Title, "title");
+Directive(TLS, "tls");
+Directive(Type, "type");
+Directive(ULEB128 ,"uleb128");
+Directive(Val, "val");
+Directive(Version, "version");
+Directive(VTable, "vtable");
+Directive(VTableInherit, "vtable_inherit");
+Directive(Warning, "warning");
+Directive(Weak, "weak");
+Directive(Weakref, "weakref");
+Directive(Word, "word");
+Directive(Zero, "zero");
+Directive(TwoByte, "2byte");
+Directive(FourByte, "4byte");
+Directive(EightByte, "8byte");
+
+Directive(Half, "half");
+Directive(DWord, "dword");
+Directive(DTPrelWord ,"dtprelword");
+Directive(DTPrelDWord ,"dtpreldword");
+Directive(Option ,"option");
+Directive(Insn ,"insn");
+Directive(Attribute ,"attribute") ;
+// assembler modifiers
+DefModifier(Lo, "lo");
+DefModifier(Hi, "hi");
+DefModifier(PCRELLo, "pcrel_lo");
+DefModifier(PCRELHi, "pcrel_hi");
+DefModifier(GotPCRELHi, "got_pcrel_hi");
+DefModifier(TPRelAdd, "tprel_add");
+DefModifier(TPRelLo, "tprel_lo");
+DefModifier(TPRelHi, "tprel_hi");
+DefModifier(TLSIEPCRELHi, "tls_ie_pcrel_hi");
+DefModifier(TLSGDPCRELHi, "tls_gd_pcrel_hi");
+// registers
+DefRegister(Zero, "zero");
+DefRegister(RA, "ra");
+DefRegister(SP, "sp");
+DefRegister(GP, "gp");
+DefRegister(TP, "tp");
+DefRegister(T0, "t0");
+DefRegister(T1, "t1");
+DefRegister(T2, "t2");
+DefRegister(S0, "s0");
+DefRegister(S1, "s1");
+DefRegister(A0, "a0");
+DefRegister(A1, "a1");
+DefRegister(A2, "a2");
+DefRegister(A3, "a3");
+DefRegister(A4, "a4");
+DefRegister(A5, "a5");
+DefRegister(A6, "a6");
+DefRegister(A7, "a7");
+DefRegister(S2, "s2");
+DefRegister(S3, "s3");
+DefRegister(S4, "s4");
+DefRegister(S5, "s5");
+DefRegister(S6, "s6");
+DefRegister(S7, "s7");
+DefRegister(S8, "s8");
+DefRegister(S9, "s9");
+DefRegister(S10, "s10");
+DefRegister(S11, "s11");
+DefRegister(T3, "t3");
+DefRegister(T4, "t4");
+DefRegister(T5, "t5");
+DefRegister(T6, "t6");
+#undef DefRegister
+#undef DefModifier
+#undef Directive
 #undef X
 
 
