@@ -38,6 +38,59 @@ extern "C" {
 #include <vector>
 #include <list>
 #include <tao/pegtl.hpp>
+namespace tp = tao::pegtl; 
+
+// taken from json grammar.hpp
+template<char letter>
+struct GenericLineComment : tp::seq< tp::one <letter>, tp::until< tp::eolf>> { };
+
+using CStyleLineComment = GenericLineComment<'/'>;
+using SemiColonLineComment = GenericLineComment<';'>;
+using PoundLineComment = GenericLineComment<'#'>;
+struct EndBlockComment : tp::until<tp::string<'*', '/'>> { };
+struct BlockComment : tp::if_must<tp::one<'*'>, EndBlockComment> { };
+
+struct CStyleComment : tp::sor< CStyleLineComment, BlockComment> { };
+#if 0
+struct WhiteSpace : 
+    tp::sor <
+        tp::one < ' ', '\t', '\n', '\t' >
+    > { };
+#endif
+
+struct KeywordLo : TAO_PEGTL_STRING("%lo") { };
+struct KeywordHi : TAO_PEGTL_STRING("%hi") { };
+struct KeywordPCRelLo : TAO_PEGTL_STRING("%pcrel_lo") { };
+struct KeywordPCRelHi : TAO_PEGTL_STRING("%pcrel_hi") { };
+struct KeywordGotPCRELHi : TAO_PEGTL_STRING("%got_pcrel_hi") { };
+struct KeywordTPRelAdd : TAO_PEGTL_STRING("%tprel_add") { };
+struct KeywordTPRelLo : TAO_PEGTL_STRING("%tprel_lo") { };
+struct KeywordTPRelHi : TAO_PEGTL_STRING("%tprel_hi") { };
+struct KeywordTLSIEPCRELHi : TAO_PEGTL_STRING("%tls_ie_pcrel_hi") { };
+struct KeywordTLSGDPCRELHi : TAO_PEGTL_STRING("%tls_gd_pcrel_hi") { };
+#define X(title, text) struct KeywordDirective ## title : TAO_PEGTL_STRING( text ) { };
+X(Abort, ".abort");
+X(Align, ".align");
+X(Ascii, ".ascii");
+X(Asciz, ".asciz");
+X(AttachToGroup, ".attach_to_group");
+X(BAlign, ".balign");
+X(Base64, ".base64");
+X(Bss, ".bss");
+X(Byte, ".byte");
+X(Comm, ".comm");
+X(HalfWord, ".half");
+X(Word, ".word");
+X(DWord, ".dword");
+X(DTPrelWord ,".dtprelword");
+X(DTPrelDWord ,".dtpreldword");
+X(ULEB128 ,".uleb128");
+X(SLEB128 ,".sleb128");
+X(Option ,".option");
+X(Insn ,".insn");
+X(Attribute ,".attribute") ;
+#undef X
+
 
 #if   UNIX_V || LINUX || DARWIN || UNIX_7 || WIN_GCC || WIN_MVC
 #include <signal.h>
