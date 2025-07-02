@@ -37,6 +37,7 @@ extern "C" {
 #include <string>
 #include <vector>
 #include <list>
+#include <tao/pegtl.hpp>
 
 #if   UNIX_V || LINUX || DARWIN || UNIX_7 || WIN_GCC || WIN_MVC
 #include <signal.h>

@@ -457,22 +457,29 @@ target_link_libraries(rv32_to_i960 PUBLIC
 		Boost::system
 		Boost::program_options
         assembly
-		pegtl
+		taocpp::pegtl
 		)
-target_include_directories(maya PUBLIC "${PROJECT_SRC_DIR}"
-		"${CMAKE_CURRENT_BINARY_DIR}")
-target_include_directories(electron PUBLIC "${PROJECT_SRC_DIR}"
-		"${CMAKE_CURRENT_BINARY_DIR}")
-target_include_directories(neutron PUBLIC "${PROJECT_SRC_DIR}"
-		"${CMAKE_CURRENT_BINARY_DIR}")
-target_include_directories(clips PUBLIC "${PROJECT_SRC_DIR}"
-		"${CMAKE_CURRENT_BINARY_DIR}")
-target_include_directories(maya-app PUBLIC "${PROJECT_SRC_DIR}"
-		"${CMAKE_CURRENT_BINARY_DIR}")
-target_include_directories(assembly PUBLIC "${PROJECT_SRC_DIR}"
-        "${CMAKE_CURRENT_BINARY_DIR}")
-target_include_directories(rv32_to_i960 PUBLIC "${PROJECT_SRC_DIR}"
-		"${CMAKE_CURRENT_BINARY_DIR}")
+target_include_directories(maya 
+	PUBLIC "${PROJECT_SRC_DIR}" "${CMAKE_CURRENT_BINARY_DIR}"
+)
+target_include_directories(electron 
+	PUBLIC "${PROJECT_SRC_DIR}" "${CMAKE_CURRENT_BINARY_DIR}"
+)
+target_include_directories(neutron 
+	PUBLIC "${PROJECT_SRC_DIR}" "${CMAKE_CURRENT_BINARY_DIR}"
+)
+target_include_directories(clips 
+	PUBLIC "${PROJECT_SRC_DIR}" "${CMAKE_CURRENT_BINARY_DIR}"
+)
+target_include_directories(maya-app 
+	PUBLIC "${PROJECT_SRC_DIR}" "${CMAKE_CURRENT_BINARY_DIR}"
+)
+target_include_directories(assembly 
+	PUBLIC "${PROJECT_SRC_DIR}" "${CMAKE_CURRENT_BINARY_DIR}"
+)
+target_include_directories(rv32_to_i960 
+	PUBLIC "${PROJECT_SRC_DIR}" "${CMAKE_CURRENT_BINARY_DIR}"
+)
 install(TARGETS maya DESTINATION bin)
 install(TARGETS maya-app DESTINATION bin)
 install(TARGETS rv32_to_i960 DESTINATION bin)
