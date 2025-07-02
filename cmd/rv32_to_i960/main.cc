@@ -53,10 +53,84 @@ namespace rv32_grammar {
 
     // Identifiers (labels, instructions, etc.)
     struct identifier : seq<plus<sor<alpha, one<'_','.'>>>, star<sor<alnum, one<'_','.'>>>> {};
-
     // Registers
-    struct gpr : seq<one<'x'>, plus<digit>> {};
-    struct fpr : seq<one<'f'>, plus<digit>> {};
+    struct gpr : sor<
+        seq<one<'x'>, one<'0'>>, // x0
+        seq<one<'x'>, one<'1','2'>, digit>, // x10-x29
+        seq<one<'x'>, one<'3'>, one<'0','1'>>, // x30-x31
+        seq<one<'x'>, digit>, // x1-x9
+        istring<'z','e','r','o'>,  // x0
+        istring<'r','a'>,    // x1
+        istring<'s','p'>,    // x2
+        istring<'g','p'>,    // x3
+        istring<'t','p'>,    // x4
+        istring<'t','0'>,    // x5
+        istring<'t','1'>,    // x6
+        istring<'t','2'>,    // x7
+        istring<'s','0'>,    // x8
+        istring<'s','1'>,    // x9
+        istring<'a','0'>,    // x10
+        istring<'a','1'>,    // x11
+        istring<'a','2'>,    // x12
+        istring<'a','3'>,    // x13
+        istring<'a','4'>,    // x14
+        istring<'a','5'>,    // x15
+        istring<'a','6'>,    // x16
+        istring<'a','7'>,    // x17
+        istring<'s','2'>,    // x18
+        istring<'s','3'>,    // x19
+        istring<'s','4'>,    // x20
+        istring<'s','5'>,    // x21
+        istring<'s','6'>,    // x22
+        istring<'s','7'>,    // x23
+        istring<'s','8'>,    // x24
+        istring<'s','9'>,    // x25
+        istring<'s','1','0'>,   // x26
+        istring<'s','1','1'>,   // x27
+        istring<'t','3'>,    // x28
+        istring<'t','4'>,    // x29
+        istring<'t','5'>,    // x30
+        istring<'t','6'>     // x31
+    > {};;
+
+    struct fpr : sor<
+            seq<one<'f'>, one<'0'>>, // f0
+            seq<one<'f'>, one<'1','2'>, digit>, // f10-f29
+            seq<one<'f'>, one<'3'>, one<'0','1'>>, // f30-f31
+            seq<one<'f'>, digit>, // f1-f9
+            istring<'f','t','0'>,   // f0
+            istring<'f','t','1'>,   // f1
+            istring<'f','t','2'>,   // f2
+            istring<'f','t','3'>,   // f3
+            istring<'f','t','4'>,   // f4
+            istring<'f','t','5'>,   // f5
+            istring<'f','t','6'>,   // f6
+            istring<'f','t','7'>,   // f7
+            istring<'f','s','0'>,   // f8
+            istring<'f','s','1'>,   // f9
+            istring<'f','a','0'>,   // f10
+            istring<'f','a','1'>,   // f11
+            istring<'f','a','2'>,   // f12
+            istring<'f','a','3'>,   // f13
+            istring<'f','a','4'>,   // f14
+            istring<'f','a','5'>,   // f15
+            istring<'f','a','6'>,   // f16
+            istring<'f','a','7'>,   // f17
+            istring<'f','s','2'>,   // f18
+            istring<'f','s','3'>,   // f19
+            istring<'f','s','4'>,   // f20
+            istring<'f','s','5'>,   // f21
+            istring<'f','s','6'>,   // f22
+            istring<'f','s','7'>,   // f23
+            istring<'f','s','8'>,   // f24
+            istring<'f','s','9'>,   // f25
+            istring<'f','s','1','0'>, // f26
+            istring<'f','s','1','1'>, // f27
+            istring<'f','t','8'>,   // f28
+            istring<'f','t','9'>,   // f29
+            istring<'f','t','1','0'>, // f30
+            istring<'f','t','1','1'>  // f31
+        > {};
 
     // Immediate values (decimal, hex, or binary)
     struct imm_dec : plus<digit> {};
