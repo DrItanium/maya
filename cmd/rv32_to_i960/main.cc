@@ -225,81 +225,45 @@ DefModifier(tls_gd_pcrel_hi);
 // registers
 #define RegisterDecl(idx, alias) \
     DefRegister( x ## idx ); \
-    DefRegister( alias ) 
+    DefRegister( alias );
+#define FirstRegisterDecl(i, a) RegisterDecl(i, a)
+#define LastRegisterDecl(i, a) RegisterDecl(i, a)
+#include "RegisterDecl.def"
+#undef FirstRegisterDecl
+#undef LastRegisterDecl
+#undef RegisterDecl
 #define FloatRegisterDecl(idx, alias) \
     DefRegister( f ## idx ); \
-    DefRegister( alias )
-RegisterDecl(0, zero);
-RegisterDecl(1, ra);
-RegisterDecl(2, sp);
-RegisterDecl(3, gp);
-RegisterDecl(4, tp);
-RegisterDecl(5, t0);
-RegisterDecl(6, t1);
-RegisterDecl(7, t2);
-RegisterDecl(8, s0);
-RegisterDecl(9, s1);
-RegisterDecl(10, a0);
-RegisterDecl(11, a1);
-RegisterDecl(12, a2);
-RegisterDecl(13, a3);
-RegisterDecl(14, a4);
-RegisterDecl(15, a5);
-RegisterDecl(16, a6);
-RegisterDecl(17, a7);
-RegisterDecl(18, s2);
-RegisterDecl(19, s3);
-RegisterDecl(20, s4);
-RegisterDecl(21, s5);
-RegisterDecl(22, s6);
-RegisterDecl(23, s7);
-RegisterDecl(24, s8);
-RegisterDecl(25, s9);
-RegisterDecl(26, s10);
-RegisterDecl(27, s11);
-RegisterDecl(28, t3);
-RegisterDecl(29, t4);
-RegisterDecl(30, t5);
-RegisterDecl(31, t6);
-
-FloatRegisterDecl(0, ft0);
-FloatRegisterDecl(1, ft1);
-FloatRegisterDecl(2, ft2);
-FloatRegisterDecl(3, ft3);
-FloatRegisterDecl(4, ft4);
-FloatRegisterDecl(5, ft5);
-FloatRegisterDecl(6, ft6);
-FloatRegisterDecl(7, ft7);
-FloatRegisterDecl(8, fs0);
-FloatRegisterDecl(9, fs1);
-FloatRegisterDecl(10, fa0);
-FloatRegisterDecl(11, fa1);
-FloatRegisterDecl(12, fa2);
-FloatRegisterDecl(13, fa3);
-FloatRegisterDecl(14, fa4);
-FloatRegisterDecl(15, fa5);
-FloatRegisterDecl(16, fa6);
-FloatRegisterDecl(17, fa7);
-FloatRegisterDecl(18, fs2);
-FloatRegisterDecl(19, fs3);
-FloatRegisterDecl(20, fs4);
-FloatRegisterDecl(21, fs5);
-FloatRegisterDecl(22, fs6);
-FloatRegisterDecl(23, fs7);
-FloatRegisterDecl(24, fs8);
-FloatRegisterDecl(25, fs9);
-FloatRegisterDecl(26, fs10);
-FloatRegisterDecl(27, fs11);
-FloatRegisterDecl(28, ft8);
-FloatRegisterDecl(29, ft9);
-FloatRegisterDecl(30, ft10);
-FloatRegisterDecl(31, ft11);
+    DefRegister( alias );
+#define FirstFloatRegisterDecl(a, b) FloatRegisterDecl(a, b)
+#define LastFloatRegisterDecl(a, b) FloatRegisterDecl(a, b)
+#include "FloatRegisterDecl.def"
+#undef FirstFloatRegisterDecl
+#undef LastFloatRegisterDecl
 #undef FloatRegisterDecl
-#undef RegisterDecl
 #undef DefRegister
 #undef DefModifier
 #undef Directive
 #undef X
+
+struct GPRs : tp::sor<
+#define FirstRegisterDecl(idx, alias) KeywordRegister_x ## idx , KeywordRegister_ ## alias 
+#define RegisterDecl(idx, alias) , FirstRegisterDecl(idx, alias)
+#define LastRegisterDecl(idx, alias) RegisterDecl(idx, alias)
+#include "RegisterDecl.def"
+#undef FirstRegisterDecl
+#undef LastRegisterDecl
+#undef RegisterDecl
+              > {} ;
+struct FPRs : tp::sor<
+#define FirstFloatRegisterDecl(idx, alias) KeywordRegister_f ## idx , KeywordRegister_ ## alias 
+#define FloatRegisterDecl(idx, alias) , FirstFloatRegisterDecl(idx, alias)
+#define LastFloatRegisterDecl(idx, alias) FloatRegisterDecl(idx, alias)
+#include "FloatRegisterDecl.def"
+#undef FirstFloatRegisterDecl
+#undef LastFloatRegisterDecl
+#undef FloatRegisterDecl
+              > { };
 
 
 #if   UNIX_V || LINUX || DARWIN || UNIX_7 || WIN_GCC || WIN_MVC

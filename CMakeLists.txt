@@ -447,7 +447,11 @@ target_link_libraries(maya-app PUBLIC
 		Boost::program_options
         assembly
 		)
-add_executable(rv32_to_i960 cmd/rv32_to_i960/main.cc)
+add_executable(rv32_to_i960 
+    cmd/rv32_to_i960/main.cc
+    cmd/rv32_to_i960/RegisterDecl.def
+    cmd/rv32_to_i960/FloatRegisterDecl.def
+)
 target_link_libraries(rv32_to_i960 PUBLIC
 		electron
 		neutron
