@@ -457,6 +457,7 @@ target_link_libraries(rv32_to_i960 PUBLIC
 		Boost::system
 		Boost::program_options
         assembly
+		pegtl
 		)
 target_include_directories(maya PUBLIC "${PROJECT_SRC_DIR}"
 		"${CMAKE_CURRENT_BINARY_DIR}")
