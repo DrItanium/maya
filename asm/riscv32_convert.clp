@@ -383,3 +383,72 @@
                  ?rs1
                  at)))
 
+(defmethod riscv32::j
+  ((?offset SYMBOL
+            INTEGER))
+  (one-arg-instruction b 
+                       ?offset))
+
+(defmethod riscv32::jr
+  ((?rs1 SYMBOL))
+  (one-arg-instruction bx
+                       (format nil
+                               "(%s)"
+                               ?rs1)))
+
+; @todo figure out jal since it is ?offset(ip) and thus we need to figure out the best way to call it!
+
+(defmethod riscv32::ret () (jr ra))
+; does call have other forms?
+(defmethod riscv32::op-call 
+  ((?func SYMBOL))
+  (two-arg-instruction balx
+                       ?func
+                       (register-convert:rv32->i960 ra)))
+          
+(defmethod riscv32::jalr
+  ((?rd SYMBOL)
+   (?rs1 SYMBOL)
+   (?offset LEXEME
+            INTEGER))
+  (two-arg-instruction balx
+                       (format nil
+                               "%s(%s)"
+                               (if (and (integerp ?offset)
+                                        (= ?offset 0)) then
+                                 ""
+                                 else
+                                 (str-cat ?offset))
+                               (register-convert:rv32->i960 ?rs1))
+                       (register-convert:rv32->i960 ?rd)))
+(defmethod riscv32::jalr
+  ((?rs SYMBOL))
+  (jalr ra
+        ?rs
+        0))
+                       
+(defmethod riscv32::la
+  ((?rd SYMBOL)
+   (?sym SYMBOL))
+  (ldconst ?sym
+           (register-convert:rv32->i960 ?rd)))
+(defmethod riscv32::li
+  ((?rd SYMBOL)
+   (?imm INTEGER))
+  (ldconst ?imm
+           (register-convert:rv32->i960 ?rd)))
+
+(defmethod riscv32::mv
+  ((?rd SYMBOL)
+   (?rs SYMBOL))
+  (two-arg-instruction mov
+                       (register-convert:rv32->i960 ?rs)
+                       (register-convert:rv32->i960 ?rd)))
+
+(defmethod riscv32::op-not
+  ((?rd SYMBOL)
+   (?rs SYMBOL))
+  (two-arg-instruction not
+                       (register-convert:rv32->i960 ?rs)
+                       (register-convert:rv32->i960 ?rd)))
+
