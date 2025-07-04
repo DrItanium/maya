@@ -95,7 +95,7 @@
 (defgeneric i960::register-convert:rv32->i960
             "convert the given riscv32 register to an i960 register")
 ; the riscv32 environment being emulated has the following march designation
-; RV32EIMACBU_Zfinx_Zicond 
+; RV32EIMACBU_Zfinx
 ; I am using picorv32 as a good reference for the march designation
 ; There will be modifications but the E designator is very important as there is no way I can map all 32 registers safely
 ; If I decide to add support for floating point then Zfinx is important as the i960 only has four extra fp registers and is meant to use normal registers like Zfinix
@@ -181,6 +181,7 @@
           (case a3 then ?*a3-register*)
           (case a4 then ?*a4-register*)
           (case a5 then ?*a5-register*)
+          (case pc then ip) ; special case
           (default ?register)))
 
 
@@ -188,3 +189,5 @@
   ((?register SYMBOL))
   (register-convert:rv32->i960 ?register
                                gpr))
+
+
