@@ -184,3 +184,7 @@
           (default ?register)))
 
 
+(defmethod i960::register-convert:rv32->i960
+  ((?register SYMBOL))
+  (register-convert:rv32->i960 ?register
+                               gpr))
