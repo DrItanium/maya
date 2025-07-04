@@ -94,4 +94,33 @@
           ?src2
           (str-cat ?displacement)))
 
-            
+
+
+(defgeneric i960::bx)
+(defmethod i960::bx
+  ((?abase SYMBOL)
+   (?displacement INTEGER))
+  (if (= ?displacement 0) then
+    (format nil
+            "bx (%s)"
+            ?abase)
+    else
+    (format nil
+            "bx %d(%s)"
+            ?displacement
+            ?abase)))
+(defmethod i960::bx
+  ((?abase SYMBOL)
+   (?displacement SYMBOL))
+  (format nil
+          "bx %s(%s)"
+          ?displacement
+          ?abase))
+
+(defmethod i960::bx
+  ((?displacement LEXEME
+                  INTEGER))
+  (format nil
+          "bx %s"
+          (str-cat ?displacement)))
+;; todo: describe the different modes as needed?
