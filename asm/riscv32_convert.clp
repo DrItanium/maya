@@ -191,3 +191,82 @@
                                gpr))
 
 
+(defmethod riscv32::add
+  ((?rd SYMBOL)
+   (?rs1 SYMBOL)
+   (?rs2 SYMBOL))
+  (three-arg-instruction addo
+                         (register-convert:rv32->i960 ?rs2)
+                         (register-convert:rv32->i960 ?rs1)
+                         (register-convert:rv32->i960 ?rd)
+                         ""))
+
+(defmethod riscv32::sub
+  ((?rd SYMBOL)
+   (?rs1 SYMBOL)
+   (?rs2 SYMBOL))
+  (three-arg-instruction subo
+                         (register-convert:rv32->i960 ?rs2)
+                         (register-convert:rv32->i960 ?rs1)
+                         (register-convert:rv32->i960 ?rd)
+                         ""))
+(defmethod riscv32::xor
+  ((?rd SYMBOL)
+   (?rs1 SYMBOL)
+   (?rs2 SYMBOL))
+  (three-arg-instruction xor
+                         (register-convert:rv32->i960 ?rs2)
+                         (register-convert:rv32->i960 ?rs1)
+                         (register-convert:rv32->i960 ?rd)
+                         ""))
+
+
+(defmethod riscv32::op-and
+  ((?rd SYMBOL)
+   (?rs1 SYMBOL)
+   (?rs2 SYMBOL))
+  (three-arg-instruction and
+                         (register-convert:rv32->i960 ?rs2)
+                         (register-convert:rv32->i960 ?rs1)
+                         (register-convert:rv32->i960 ?rd)
+                         ""))
+(defmethod riscv32::op-andi
+  ((?rd SYMBOL)
+   (?rs1 SYMBOL)
+   (?imm SYMBOL
+         NUMBER))
+  (create$ (ldconst ?imm 
+                    (register-convert:rv32->i960 at))
+           (op-and ?rd ?rs1 at)))
+(defmethod riscv32::op-or
+  ((?rd SYMBOL)
+   (?rs1 SYMBOL)
+   (?rs2 SYMBOL))
+  (three-arg-instruction or
+                         (register-convert:rv32->i960 ?rs2)
+                         (register-convert:rv32->i960 ?rs1)
+                         (register-convert:rv32->i960 ?rd)
+                         ""))
+
+(defmethod riscv32::op-ori
+  ((?rd SYMBOL)
+   (?rs1 SYMBOL)
+   (?imm SYMBOL
+         NUMBER))
+  (create$ (ldconst ?imm 
+                    (register-convert:rv32->i960 at))
+           (op-or ?rd 
+                  at ; make sure that it gets stashed in src2 for a bypass optimization
+                  ?rs1)))
+
+(defmethod riscv32::op-xori
+  ((?rd SYMBOL)
+   (?rs1 SYMBOL)
+   (?imm SYMBOL
+         NUMBER))
+  (create$ (ldconst ?imm 
+                    (register-convert:rv32->i960 at))
+           (xor ?rd 
+                at  ; make sure that it gets stashed in src2 for a bypass optimization
+                ?rs1)))
+
