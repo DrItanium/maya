@@ -153,6 +153,9 @@
            ?*a3-register* = g3
            ?*a4-register* = g4
            ?*a5-register* = g5
+           ?*at-register* = r4
+           ?*lo-mask-register* = r5
+           ?*hi-mask-register* = r6
            )
 
 (defmethod i960::register-convert:rv32->i960
@@ -182,6 +185,9 @@
           (case a4 then ?*a4-register*)
           (case a5 then ?*a5-register*)
           (case pc then ip) ; special case
+          (case at then ?*at-register*)
+          (case hi-mask then ?*hi-mask-register*)
+          (case lo-mask then ?*lo-mask-register*)
           (default ?register)))
 
 
@@ -269,4 +275,111 @@
            (xor ?rd 
                 at  ; make sure that it gets stashed in src2 for a bypass optimization
                 ?rs1)))
+
+(defmethod riscv32::sll
+  ((?rd SYMBOL)
+   (?rs1 SYMBOL)
+   (?rs2 SYMBOL))
+  (three-arg-instruction shlo
+                         (register-convert:rv32->i960 ?rs2)
+                         (register-convert:rv32->i960 ?rs1)
+                         (register-convert:rv32->i960 ?rd)))
+
+(defmethod riscv32::slli
+  ((?rd SYMBOL)
+   (?rs1 SYMBOL)
+   (?rs2 INTEGER))
+  (three-arg-instruction shlo
+                         ?rs2
+                         (register-convert:rv32->i960 ?rs1)
+                         (register-convert:rv32->i960 ?rd)))
+
+(defmethod riscv32::sra
+  ((?rd SYMBOL)
+   (?rs1 SYMBOL)
+   (?rs2 SYMBOL))
+  (three-arg-instruction shri
+                         (register-convert:rv32->i960 ?rs2)
+                         (register-convert:rv32->i960 ?rs1)
+                         (register-convert:rv32->i960 ?rd)))
+(defmethod riscv32::srai
+  ((?rd SYMBOL)
+   (?rs1 SYMBOL)
+   (?shamt INTEGER))
+  (three-arg-instruction shri
+                         ?shamt
+                         (register-convert:rv32->i960 ?rs1)
+                         (register-convert:rv32->i960 ?rd)))
+
+(defmethod riscv32::srl
+  ((?rd SYMBOL)
+   (?rs1 SYMBOL)
+   (?rs2 SYMBOL))
+  (three-arg-instruction shro
+                         (register-convert:rv32->i960 ?rs2)
+                         (register-convert:rv32->i960 ?rs1)
+                         (register-convert:rv32->i960 ?rd)))
+(defmethod riscv32::srli
+  ((?rd SYMBOL)
+   (?rs1 SYMBOL)
+   (?shamt INTEGER))
+  (three-arg-instruction shro
+                         ?shamt
+                         (register-convert:rv32->i960 ?rs1)
+                         (register-convert:rv32->i960 ?rd)))
+
+(defmethod riscv32::lui
+  ((?rd SYMBOL)
+   (?imm SYMBOL
+         NUMBER))
+  ; we want to emulate this as best as possible so the psuedo code is:
+  ; and ?imm, 0xFFFF'F000, ?rd
+  ; The implementation is wasteful since we will probably be adding the lower part back in 
+  (create$ (ldconst ?imm
+                    (register-convert:rv32->i960 at))
+           (op-and ?rd
+                   at
+                   hi-mask)))
+; @todo implement auipc and addi
+(defmethod riscv32::slt
+  ((?rd SYMBOL)
+   (?rs1 SYMBOL)
+   (?rs2 SYMBOL))
+  (create$ (two-arg-instruction cmpi 
+                                (register-convert:rv32->i960 ?rs1)
+                                (register-convert:rv32->i960 ?rs2))
+           (one-arg-instruction testl
+                                (register-convert:rv32->i960 ?rd))))
+
+(defmethod riscv32::slti
+  ((?rd SYMBOL)
+   (?rs1 SYMBOL)
+   (?imm SYMBOL
+         INTEGER))
+  (create$ (ldconst ?imm
+                    (register-convert:rv32->i960 at))
+           (slt ?rd 
+                ?rs1
+                at)))
+
+(defmethod riscv32::sltu
+  ((?rd SYMBOL)
+   (?rs1 SYMBOL)
+   (?rs2 SYMBOL))
+  (create$ (two-arg-instruction cmpo
+                                (register-convert:rv32->i960 ?rs1)
+                                (register-convert:rv32->i960 ?rs2))
+           (one-arg-instruction testl
+                                (register-convert:rv32->i960 ?rd))))
+
+(defmethod riscv32::sltiu
+  ((?rd SYMBOL)
+   (?rs1 SYMBOL)
+   (?imm SYMBOL
+         INTEGER))
+  (create$ (ldconst ?imm
+                    (register-convert:rv32->i960 at))
+           (sltu ?rd 
+                 ?rs1
+                 at)))
 
