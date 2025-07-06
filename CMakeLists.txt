@@ -16,6 +16,7 @@ endif()
 if (APPLE)
 add_compile_options(-fexperimental-library)
 endif()
+add_subdirectory(raylib)
 add_library(clips
 clips/agenda.c
 clips/analysis.c
