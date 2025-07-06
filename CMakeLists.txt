@@ -438,6 +438,16 @@ target_link_libraries(maya-app PUBLIC
 		Boost::system
 		Boost::program_options
 		)
+add_executable(line-parser cmd/line-parser/main.cc)
+target_link_libraries(line-parser PUBLIC
+		electron
+		neutron
+		clips
+		Boost::regex
+		Boost::filesystem
+		Boost::system
+		Boost::program_options
+		)
 target_include_directories(maya PUBLIC "${PROJECT_SRC_DIR}"
 		"${CMAKE_CURRENT_BINARY_DIR}")
 target_include_directories(electron PUBLIC "${PROJECT_SRC_DIR}"
@@ -447,6 +457,8 @@ target_include_directories(neutron PUBLIC "${PROJECT_SRC_DIR}"
 target_include_directories(clips PUBLIC "${PROJECT_SRC_DIR}"
 		"${CMAKE_CURRENT_BINARY_DIR}")
 target_include_directories(maya-app PUBLIC "${PROJECT_SRC_DIR}"
+		"${CMAKE_CURRENT_BINARY_DIR}")
+target_include_directories(line-parser PUBLIC "${PROJECT_SRC_DIR}"
 		"${CMAKE_CURRENT_BINARY_DIR}")
 install(TARGETS maya DESTINATION bin)
 install(TARGETS maya-app DESTINATION bin)
