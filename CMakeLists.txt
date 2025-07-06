@@ -415,8 +415,10 @@ add_library(electron
 	electron/ArgumentConstructor.h
 	electron/ParsingExtensions.h
 	electron/ParsingExtensions.cc
-        electron/MultifieldExtensions.cc
-        electron/MultifieldExtensions.h
+	electron/MultifieldExtensions.cc 
+	electron/MultifieldExtensions.h
+	electron/RaylibExtensions.h
+	electron/RaylibExtensions.cc
 )
 add_executable(maya cmd/maya/main.cc)
 target_link_libraries(maya PUBLIC
@@ -426,6 +428,7 @@ target_link_libraries(maya PUBLIC
 		Boost::regex
 		Boost::filesystem
 		Boost::system
+		raylib
 	)
 
 
@@ -438,6 +441,7 @@ target_link_libraries(maya-app PUBLIC
 		Boost::filesystem
 		Boost::system
 		Boost::program_options
+		raylib
 		)
 target_include_directories(maya PUBLIC "${PROJECT_SRC_DIR}"
 		"${CMAKE_CURRENT_BINARY_DIR}")
