@@ -28,9 +28,7 @@ extern "C" {
 #include "clips/clips.h"
 }
 // GetFileName in Raylib conflicts with GetFileName inside of clips!
-#define GetFileName GetFileName_Raylib
 #include <raylib.h>
-#undef GetFileName
 namespace Electron
 {
 
