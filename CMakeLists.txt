@@ -16,6 +16,7 @@ endif()
 if (APPLE)
 add_compile_options(-fexperimental-library)
 endif()
+set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory(raylib)
 add_library(clips
 clips/agenda.c
@@ -444,14 +445,18 @@ target_link_libraries(maya-app PUBLIC
 		raylib
 		)
 target_include_directories(maya PUBLIC "${PROJECT_SRC_DIR}"
-		"${CMAKE_CURRENT_BINARY_DIR}")
+		"${CMAKE_CURRENT_BINARY_DIR}"
+	)
 target_include_directories(electron PUBLIC "${PROJECT_SRC_DIR}"
-		"${CMAKE_CURRENT_BINARY_DIR}")
+		"${CMAKE_CURRENT_BINARY_DIR}"
+		"${CMAKE_CURRENT_BINARY_DIR}/raylib/raylib/include"
+	)
 target_include_directories(neutron PUBLIC "${PROJECT_SRC_DIR}"
 		"${CMAKE_CURRENT_BINARY_DIR}")
 target_include_directories(clips PUBLIC "${PROJECT_SRC_DIR}"
 		"${CMAKE_CURRENT_BINARY_DIR}")
 target_include_directories(maya-app PUBLIC "${PROJECT_SRC_DIR}"
 		"${CMAKE_CURRENT_BINARY_DIR}")
+
 install(TARGETS maya DESTINATION bin)
 install(TARGETS maya-app DESTINATION bin)
