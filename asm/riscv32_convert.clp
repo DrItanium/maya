@@ -142,20 +142,32 @@
            ?*ra-register* = g14
            ?*gp-register* = g12
            ?*tp-register* = g13
-           ?*t0-register* = g6
-           ?*t1-register* = g7
-           ?*t2-register* = g8
-           ?*s0-register* = g9
-           ?*s1-register* = g10
+           ?*t0-register* = r4 
+           ?*t1-register* = r5
+           ?*t2-register* = r6
+           ?*s0-register* = g6
+           ?*s1-register* = g7
            ?*a0-register* = g0
            ?*a1-register* = g1
            ?*a2-register* = g2
            ?*a3-register* = g3
            ?*a4-register* = g4
            ?*a5-register* = g5
-           ?*at-register* = r4
-           ?*lo-mask-register* = r5
-           ?*hi-mask-register* = r6
+           ; these are for internal purposes only but can be referenced in hand written assembly
+           ?*t3-register* = r7 ; aka assembler temporary
+           ?*t4-register* = r8 ; 
+           ?*t5-register* = r9 ;
+           ?*t6-register* = r10 ;
+           ; s3 and s2 are not mapped at all!
+           ?*s4-register* = r15
+           ?*s5-register* = r14
+           ?*s6-register* = r13
+           ?*s7-register* = r12 
+           ?*s8-register* = r11 
+           ?*s9-register* = g8 ; aka free for context transfer
+           ?*s10-register* = g9 ; aka hi-mask
+           ?*s11-register* = g10 ; aka lo-mask
+           ?*at-register* = ?*t3-register*
            )
 
 (defmethod i960::register-convert:rv32->i960
@@ -185,9 +197,20 @@
           (case a4 then ?*a4-register*)
           (case a5 then ?*a5-register*)
           (case pc then ip) ; special case
+          ; internal uses
+          (case t3 then ?*t3-register*)
+          (case t4 then ?*t4-register*)
+          (case t5 then ?*t5-register*)
+          (case t6 then ?*t6-register*)
+          (case s4 then ?*s4-register*)
+          (case s5 then ?*s5-register*)
+          (case s6 then ?*s6-register*)
+          (case s7 then ?*s7-register*)
+          (case s8 then ?*s8-register*)
+          (case s9 then ?*s9-register*)
+          (case s10 then ?*s10-register*)
+          (case s11 then ?*s11-register*)
           (case at then ?*at-register*)
-          (case hi-mask then ?*hi-mask-register*)
-          (case lo-mask then ?*lo-mask-register*)
           (default ?register)))
 
 
