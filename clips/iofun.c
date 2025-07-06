@@ -606,7 +606,7 @@ void OpenFunction(
    /* Get the file name. */
    /*====================*/
 
-   if ((fileName = GetFileName(context)) == NULL)
+   if ((fileName = CLIPS_GetFileName(context)) == NULL)
      {
       returnValue->lexemeValue = FalseSymbol(theEnv);
       return;
@@ -1180,7 +1180,7 @@ void RemoveFunction(
    /* Get the file name. */
    /*====================*/
 
-   if ((theFileName = GetFileName(context)) == NULL)
+   if ((theFileName = CLIPS_GetFileName(context)) == NULL)
      {
       returnValue->lexemeValue = FalseSymbol(theEnv);
       return;
@@ -1209,13 +1209,13 @@ void RenameFunction(
    /* Check for the file names. */
    /*===========================*/
 
-   if ((oldFileName = GetFileName(context)) == NULL)
+   if ((oldFileName = CLIPS_GetFileName(context)) == NULL)
      {
       returnValue->lexemeValue = FalseSymbol(theEnv);
       return;
      }
 
-   if ((newFileName = GetFileName(context)) == NULL)
+   if ((newFileName = CLIPS_GetFileName(context)) == NULL)
      {
       returnValue->lexemeValue = FalseSymbol(theEnv);
       return;
@@ -1260,7 +1260,7 @@ void ChdirFunction(
    /* Get the file name. */
    /*====================*/
 
-   if ((theFileName = GetFileName(context)) == NULL)
+   if ((theFileName = CLIPS_GetFileName(context)) == NULL)
      {
       returnValue->lexemeValue = FalseSymbol(theEnv);
       return;
@@ -2347,7 +2347,7 @@ void WithOpenFileFunction(
    /* Get the file name. */
    /*====================*/
 
-   if ((fileName = GetFileName(context)) == NULL)
+   if ((fileName = CLIPS_GetFileName(context)) == NULL)
      {
       returnValue->lexemeValue = FalseSymbol(theEnv);
       return;

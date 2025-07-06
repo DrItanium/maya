@@ -121,12 +121,12 @@ const char *GetLogicalName(
   }
 
 /************************************************************/
-/* GetFileName: Retrieves the nth argument passed to the    */
+/* CLIPS_GetFileName: Retrieves the nth argument passed to the    */
 /*   function call currently being evaluated and determines */
 /*   if it is a valid file name. If valid, the file name is */
 /*   returned, otherwise NULL is returned.                  */
 /************************************************************/
-const char *GetFileName(
+const char *CLIPS_GetFileName(
   UDFContext *context)
   {
    UDFValue theArg;

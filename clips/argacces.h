@@ -56,7 +56,7 @@
 #include "moduldef.h"
 
    const char                    *GetLogicalName(UDFContext *,const char *);
-   const char                    *GetFileName(UDFContext *);
+   const char                    *CLIPS_GetFileName(UDFContext *);
    const char                    *GetConstructName(UDFContext *,const char *,const char *);
    void                           ExpectedCountError(Environment *,const char *,int,unsigned int);
    void                           OpenErrorMessage(Environment *,const char *,const char *);
