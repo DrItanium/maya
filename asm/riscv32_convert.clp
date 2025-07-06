@@ -35,6 +35,12 @@
                    ?ALL)
            (export ?ALL))
 
+(defmodule MAIN
+           (import i960
+                   ?ALL)
+           (import riscv32
+                   ?ALL))
+
 ; start with the core pseudo-instruction
 (defgeneric i960::ldconst)
 
@@ -51,6 +57,7 @@
    (?destination SYMBOL))
   (ldconst (str-cat ?value)
            ?destination))
+
 (defmethod i960::one-arg-instruction
   ((?opcode SYMBOL)
    (?arg0 LEXEME
@@ -420,7 +427,6 @@
                                ?rs1)))
 
 ; @todo figure out jal since it is ?offset(ip) and thus we need to figure out the best way to call it!
-
 (defmethod riscv32::ret () (jr ra))
 ; does call have other forms?
 (defmethod riscv32::op-call 
