@@ -71,11 +71,10 @@ int main(
         //clang-format off
         desc.add_options()
                 ("help,h", "Help screen")
+                ("input-file,p", boost::program_options::value<Neutron::Path>(), "file to parse")
                 ("include,I", boost::program_options::value<std::vector<Neutron::Path>>(), "add the given path to the back of include path")
-                ("working-dir,w", boost::program_options::value<Neutron::Path>()->default_value("."),
-                 "Set the root of this application")
-                ("repl,r", boost::program_options::bool_switch()->default_value(false),
-                 "Enter into the repl instead of invoking the standard design loop")
+                ("working-dir,w", boost::program_options::value<Neutron::Path>()->default_value("."), "Set the root of this application")
+                ("repl,r", boost::program_options::bool_switch()->default_value(false), "Enter into the repl instead of invoking the standard design loop")
                 ("batch,f", boost::program_options::value<std::vector<Neutron::Path>>(), "files to batch")
                 ("batch-star", boost::program_options::value<std::vector<Neutron::Path>>(), "files to batch*")
                 ("f2", boost::program_options::value<std::vector<Neutron::Path>>(), "files to batch*")
@@ -104,8 +103,13 @@ int main(
             std::cerr << "ERROR: Failed to batch " << initLocation << std::endl;
             return 1;
         }
+        auto parseTarget = vm["input-file"];
+        if (parseTarget.empty()) {
+            std::cerr << "ERROR: no file to parse provided!" << std::endl;
+            return 1;
+        } 
+        auto fileToParse = parseTarget.as<Neutron::Path>();
         // okay so we have loaded the init.clp
-
         if (vm.count("batch")) {
             for (const auto &path: vm["batch"].as<std::vector<Neutron::Path>>()) {
                 if (!mainEnv.batchFile(path, false)) {
