@@ -31,57 +31,19 @@
 extern "C" {
     #include "clips/clips.h"
 }
-#include "electron/Environment.h"
 
-#if   UNIX_V || LINUX || DARWIN || UNIX_7 || WIN_GCC || WIN_MVC
-#include <signal.h>
-#endif
-
-/***************************************/
-/* LOCAL INTERNAL FUNCTION DEFINITIONS */
-/***************************************/
-
-#if UNIX_V || LINUX || DARWIN || UNIX_7 || WIN_GCC || WIN_MVC
-   static void                    CatchCtrlC(int);
-#endif
 
 /***************************************/
 /* LOCAL INTERNAL VARIABLE DEFINITIONS */
 /***************************************/
 
-Electron::Environment* mainEnv = nullptr;
+Environment* mainEnv = nullptr;
 
-/****************************************/
-/* main: Starts execution of the expert */
-/*   system development environment.    */
-/****************************************/
-int main(
-  int argc,
-  char *argv[])
-  {
-      // need to allocate and destroy it ahead of time to make sure we don't
-      // have dangling memory references
-    mainEnv = new Electron::Environment();
-#if UNIX_V || LINUX || DARWIN || UNIX_7 || WIN_GCC || WIN_MVC
-   signal(SIGINT,CatchCtrlC);
-#endif
-   mainEnv->addToIncludePathFront(".");
-   RerouteStdin(*mainEnv, argc, argv);
-   CommandLoop(*mainEnv);
-
-    delete mainEnv;
-   return -1;
-  }
-
-#if UNIX_V || LINUX || DARWIN || UNIX_7 || WIN_GCC || WIN_MVC || DARWIN
-/***************/
-/* CatchCtrlC: */
-/***************/
-static void CatchCtrlC(
-  int sgnl)
-  {
-   SetHaltExecution(*mainEnv,true);
-   CloseAllBatchSources(*mainEnv);
-   signal(SIGINT,CatchCtrlC);
-  }
-#endif
+void 
+setup() {
+    mainEnv = ::CreateEnvironment();
+}
+void
+loop() {
+    CommandLoop(mainEnv);
+}
