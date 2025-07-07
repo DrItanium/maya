@@ -75,7 +75,7 @@ int main(
                 ("output-file,o", boost::program_options::value<Neutron::Path>(), "output file to save output to")
                 ("include,I", boost::program_options::value<std::vector<Neutron::Path>>(), "add the given path to the back of include path")
                 ("working-dir,w", boost::program_options::value<Neutron::Path>()->default_value("."), "Set the root of this application")
-                ("repl,r", boost::program_options::bool_switch()->default_value(false), "Enter into the repl instead of invoking the standard design loop")
+                //("repl,r", boost::program_options::bool_switch()->default_value(false), "Enter into the repl instead of invoking the standard design loop")
                 ;
         boost::program_options::variables_map vm;
         boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
@@ -106,16 +106,22 @@ int main(
             std::cerr << "ERROR: no file to parse provided!" << std::endl;
             return 1;
         } 
-        auto fileToParse = parseTarget.as<Neutron::Path>();
+        auto outputParseTarget = vm["output-file"];
+        Electron::Value returnValue;
         // okay so we have loaded the init.clp
+        // now pass the input and output paths to the expert system
+        if (outputParseTarget.empty()) {
+            mainEnv.call("begin", &returnValue, parseTarget.as<Neutron::Path>(), false);
+        } else {
+            mainEnv.call("begin", &returnValue, parseTarget.as<Neutron::Path>(), outputParseTarget.as<Neutron::Path>());
+        }
         bool enableRepl = vm["repl"].as<bool>();
         if (enableRepl) {
             std::cout << "REPL MODE" << std::endl;
-            std::cout << "NOTE: begin and reset must be invoked manually" << std::endl;
+            std::cout << "begin has been called but reset has not" << std::endl;
             CommandLoop(mainEnv);
             return -1;
         } else {
-            mainEnv.call("begin");
             mainEnv.reset();
             mainEnv.run(-1);
         }
