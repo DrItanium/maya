@@ -27,7 +27,6 @@
  *
  */
 
-#include "platform/os.h"
 extern "C" {
     #include "clips/clips.h"
 }
