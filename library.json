@@ -5,6 +5,6 @@
 	"keywords" : "maya",
 	"build": {
 		"srcDir": ".",
-		"srcFilter": "+<*> -<cmd> -<electron> -<regex> -<fs>"
+		"srcFilter": "+<*> -<cmd> -<electron> -<regex> -<fs> -<cmake*> -<build>"
 	}
 }

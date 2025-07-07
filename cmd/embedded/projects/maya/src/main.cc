@@ -26,23 +26,19 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
-
+#include <Arduino.h>
 extern "C" {
-    #include "clips/clips.h"
+#include "clips/clips.h"
 }
-
-
-/***************************************/
-/* LOCAL INTERNAL VARIABLE DEFINITIONS */
-/***************************************/
-
-Environment* mainEnv = nullptr;
 
 void 
 setup() {
-    mainEnv = ::CreateEnvironment();
+    Serial.begin(9600);
+    Serial.println("Donuts");
 }
 void
 loop() {
-    CommandLoop(mainEnv);
+    Environment* mainEnv = CreateEnvironment();
+    ::CommandLoop(mainEnv);
+    ::DestroyEnvironment(mainEnv);
 }
