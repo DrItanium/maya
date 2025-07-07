@@ -75,7 +75,7 @@ int main(
                 ("output-file,o", boost::program_options::value<Neutron::Path>(), "output file to save output to")
                 ("include,I", boost::program_options::value<std::vector<Neutron::Path>>(), "add the given path to the back of include path")
                 ("working-dir,w", boost::program_options::value<Neutron::Path>()->default_value("."), "Set the root of this application")
-                //("repl,r", boost::program_options::bool_switch()->default_value(false), "Enter into the repl instead of invoking the standard design loop")
+                ("repl,r", boost::program_options::bool_switch()->default_value(false), "Enter into the repl instead of invoking the standard design loop")
                 ;
         boost::program_options::variables_map vm;
         boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
