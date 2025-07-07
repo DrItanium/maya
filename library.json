@@ -1,0 +1,10 @@
+{
+	"name": "maya",
+	"version" : "1",
+	"description" : "maya interface",
+	"keywords" : "maya",
+	"build": {
+		"srcDir": ".",
+		"srcFilter": "+<*> -<cmd> -<electron> -<regex> -<fs>"
+	}
+}
