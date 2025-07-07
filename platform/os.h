@@ -44,6 +44,9 @@
 #if defined(__MINGW32__)
 #define WIN_GCC 1
 #endif
+#if defined(ARDUINO)
+#define EMBEDDED 1
+#endif
 #ifdef __cplusplus
 namespace Neutron {
     constexpr bool onLinux() noexcept {

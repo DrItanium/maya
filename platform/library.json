@@ -1,0 +1,6 @@
+{
+	"name": "platform",
+	"version" : "1",
+	"description" : "platform detection library",
+	"keywords" : "platform"
+}
