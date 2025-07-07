@@ -25,3 +25,8 @@ cmake-build-release
 # Entries below this point are managed by Please (DO NOT EDIT)
 plz-out
 .plzconfig.local
+
+cmd/embedded/bin
+cmd/embedded/lib
+cmd/embedded/lib64
+cmd/embedded/pyvenv.cfg

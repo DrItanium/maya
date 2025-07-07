@@ -14,3 +14,4 @@ new terminal is run
 ` . bin/activate `
 
 
+All projects should go in the projects directory
