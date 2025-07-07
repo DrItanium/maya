@@ -1,6 +1,6 @@
 /**
  * @file
- * Frontend to maya repl (CLIPS)
+ * Frontend to my maya-app library
  * @copyright
  * maya-app
  * Copyright (c) 2012-2023, Joshua Scoggins
@@ -26,12 +26,17 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
-
 #include "platform/os.h"
 extern "C" {
     #include "clips/clips.h"
 }
 #include "electron/Environment.h"
+#include <boost/program_options.hpp>
+#include "fs/path.h"
+#include <iostream>
+#include <string>
+#include <vector>
+#include <list>
 
 #if   UNIX_V || LINUX || DARWIN || UNIX_7 || WIN_GCC || WIN_MVC
 #include <signal.h>
@@ -49,8 +54,7 @@ extern "C" {
 /* LOCAL INTERNAL VARIABLE DEFINITIONS */
 /***************************************/
 
-Electron::Environment* mainEnv = nullptr;
-
+Electron::Environment mainEnv;
 /****************************************/
 /* main: Starts execution of the expert */
 /*   system development environment.    */
@@ -59,29 +63,109 @@ int main(
   int argc,
   char *argv[])
   {
-      // need to allocate and destroy it ahead of time to make sure we don't
-      // have dangling memory references
-    mainEnv = new Electron::Environment();
 #if UNIX_V || LINUX || DARWIN || UNIX_7 || WIN_GCC || WIN_MVC
-   signal(SIGINT,CatchCtrlC);
+    signal(SIGINT, CatchCtrlC);
 #endif
-   mainEnv->addToIncludePathFront(".");
-   RerouteStdin(*mainEnv, argc, argv);
-   CommandLoop(*mainEnv);
+    try {
+        boost::program_options::options_description desc{"Options"};
+        //clang-format off
+        desc.add_options()
+                ("help,h", "Help screen")
+                ("include,I", boost::program_options::value<std::vector<Neutron::Path>>(), "add the given path to the back of include path")
+                ("working-dir,w", boost::program_options::value<Neutron::Path>()->default_value("."),
+                 "Set the root of this application")
+                ("repl,r", boost::program_options::bool_switch()->default_value(false),
+                 "Enter into the repl instead of invoking the standard design loop")
+                ("batch,f", boost::program_options::value<std::vector<Neutron::Path>>(), "files to batch")
+                ("batch-star", boost::program_options::value<std::vector<Neutron::Path>>(), "files to batch*")
+                ("f2", boost::program_options::value<std::vector<Neutron::Path>>(), "files to batch*")
+                ("load,l", boost::program_options::value<std::vector<Neutron::Path>>(), "files to load");
+        boost::program_options::variables_map vm;
+        boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
+        boost::program_options::notify(vm);
+        // clang-format on
+        if (vm.count("help")) {
+            std::cerr << desc << std::endl;
+            return 1;
+        }
+        if (vm.count("include")) {
+            for (const auto &path: vm["include"].as<std::vector<Neutron::Path>>()) {
+                mainEnv.addToIncludePathBack(path);
+            }
+        }
+        auto value = vm["working-dir"].as<Neutron::Path>();
+        mainEnv.addToIncludePathFront(value);
+        Neutron::Path initLocation{value / "init.clp"};
+        if (!Neutron::exists(initLocation)) {
+            std::cerr << "ERROR: " << initLocation << " does not exist!" << std::endl;
+            return 1;
+        }
+        if (!mainEnv.batchFile(initLocation)) {
+            std::cerr << "ERROR: Failed to batch " << initLocation << std::endl;
+            return 1;
+        }
+        // okay so we have loaded the init.clp
 
-    delete mainEnv;
-   return -1;
-  }
+        if (vm.count("batch")) {
+            for (const auto &path: vm["batch"].as<std::vector<Neutron::Path>>()) {
+                if (!mainEnv.batchFile(path, false)) {
+                    std::cerr << "couldn't batch "  << path << std::endl;
+                    return 1;
+                }
+            }
+        }
+        if (vm.count("batch-star")) {
+            for (const auto &path: vm["batch-star"].as<std::vector<Neutron::Path>>()) {
+                if (!mainEnv.batchFile(path)) {
+                    std::cerr << "couldn't batch* " << path <<  std::endl;
+                    return 1;
+                }
+            }
+        }
+        if (vm.count("f2")) {
+            for (const auto &path: vm["f2"].as<std::vector<Neutron::Path>>()) {
+                if (!mainEnv.batchFile(path)) {
+                    std::cerr << "couldn't batch* " << path <<  std::endl;
+                    return 1;
+                }
+            }
+        }
+        if (vm.count("load")) {
+            for (const auto& path : vm["load"].as<std::vector<Neutron::Path>>()) {
+                mainEnv.loadFile(path);
+            }
+        }
+        bool enableRepl = vm["repl"].as<bool>();
+        if (enableRepl) {
+            std::cout << "REPL MODE" << std::endl;
+            std::cout << "NOTE: begin and reset must be invoked manually" << std::endl;
+            CommandLoop(mainEnv);
+            return -1;
+        } else {
+            mainEnv.call("begin");
+            mainEnv.reset();
+            mainEnv.run(-1);
+        }
+        // unlike normal CLIPS, the environment will automatically clean itself up
+        return 0;
+    } catch (const Neutron::Exception& ex) {
+        std::cerr << ex.what() << std::endl;
+        return 1;
+    } catch (const boost::program_options::error& ex) {
+        std::cerr << ex.what() << std::endl;
+        return 1;
+    }
+}
 
 #if UNIX_V || LINUX || DARWIN || UNIX_7 || WIN_GCC || WIN_MVC || DARWIN
 /***************/
 /* CatchCtrlC: */
 /***************/
 static void CatchCtrlC(
-  int sgnl)
-  {
-   SetHaltExecution(*mainEnv,true);
-   CloseAllBatchSources(*mainEnv);
-   signal(SIGINT,CatchCtrlC);
-  }
+        int sgnl)
+{
+    SetHaltExecution(mainEnv,true);
+    CloseAllBatchSources(mainEnv);
+    signal(SIGINT,CatchCtrlC);
+}
 #endif
