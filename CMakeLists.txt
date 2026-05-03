@@ -1,11 +1,13 @@
 cmake_minimum_required(VERSION 3.30)
 project(maya VERSION 6.40
         LANGUAGES C CXX)
-find_package(Boost CONFIG)
-find_package(boost_regex REQUIRED)
-find_package(boost_filesystem REQUIRED)
-find_package(boost_system REQUIRED)
-find_package(boost_program_options REQUIRED)
+find_package(Boost 
+	COMPONENTS regex filesystem program_options
+)
+#find_package(Boost boost_regex REQUIRED)
+#find_package(Boost boost_filesystem REQUIRED)
+#find_package(Boost boost_system REQUIRED)
+#find_package(boost_program_options REQUIRED)
 include(CheckIncludeFiles)
 include(CheckIncludeFileCXX)
 set(CMAKE_CXX_STANDARD 17)
@@ -424,7 +426,6 @@ target_link_libraries(maya PUBLIC
 		clips
 		Boost::regex
 		Boost::filesystem
-		Boost::system
 	)
 
 
@@ -435,7 +436,6 @@ target_link_libraries(maya-app PUBLIC
 		clips
 		Boost::regex
 		Boost::filesystem
-		Boost::system
 		Boost::program_options
 		)
 add_executable(maya-file-processor cmd/maya-file-processor/main.cc)
@@ -445,7 +445,6 @@ target_link_libraries(maya-file-processor PUBLIC
 		clips
 		Boost::regex
 		Boost::filesystem
-		Boost::system
 		Boost::program_options
 		)
 target_include_directories(maya PUBLIC "${PROJECT_SRC_DIR}"
