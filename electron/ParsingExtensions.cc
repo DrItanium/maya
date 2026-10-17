@@ -121,7 +121,7 @@ nextTokenFunction(UDF_ARGS__) {
                 bldr.append(theToken.printForm, TreatLexemeAsSymbol{});
                 break;
             case TokenType::MF_GBL_VARIABLE_TOKEN:
-                bldr.append("MF_GBL_WILDCARD", TreatLexemeAsSymbol{});
+                bldr.append("MF_GBL_VARIABLE", TreatLexemeAsSymbol{});
                 bldr.append(theToken.printForm, TreatLexemeAsSymbol{});
                 break;
             case TokenType::NOT_CONSTRAINT_TOKEN:
