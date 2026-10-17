@@ -420,6 +420,8 @@ add_library(electron
         electron/MultifieldExtensions.h
         electron/BinaryExtensions.cc
         electron/BinaryExtensions.h
+        electron/NumericExtensions.cc
+        electron/NumericExtensions.h
 )
 add_executable(maya cmd/maya/main.cc)
 target_link_libraries(maya PUBLIC
