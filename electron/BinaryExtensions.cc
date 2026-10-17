@@ -38,6 +38,7 @@ extern "C" {
 
 namespace Electron
 {
+namespace {
 static void leftShift(UDF_ARGS__) noexcept;
 static void rightShift(UDF_ARGS__) noexcept;
 static void andOperation(UDF_ARGS__) noexcept;
@@ -67,6 +68,8 @@ static void countTrailingZeros(UDF_ARGS__) noexcept;
 static void countTrailingOnes(UDF_ARGS__) noexcept;
 static void populationCount(UDF_ARGS__) noexcept;
 static void getPlatformEndianness(UDF_ARGS__) noexcept;
+static void bitCeiling(UDF_ARGS__) noexcept;
+}
 
 void
 InitializeBinaryExtensions(RawEnvironment* env)
@@ -103,25 +106,25 @@ InitializeBinaryExtensions(RawEnvironment* env)
     theEnv.addFunction("platform-endianness", "sy", 0, 0, "sy", getPlatformEndianness, "getPlatformEndianness");
 
 }
-namespace {
-    std::optional<std::tuple<int64_t, int64_t>>
-    extractTwoArguments(Environment& theEnv, Electron::UDFContext* context) noexcept {
-        UDFValue arg0, arg1;
-        if (!theEnv.firstArgument(context, ArgumentBits::Integer, &arg0)) {
-            return std::nullopt;
-        } else if (!theEnv.nextArgument(context, ArgumentBits::Integer, &arg1)) {
-            return std::nullopt;
-        }
-        return std::make_optional(std::make_tuple(arg0.integerValue->contents, arg1.integerValue->contents));
+namespace 
+{
+std::optional<std::tuple<int64_t, int64_t>>
+extractTwoArguments(Environment& theEnv, Electron::UDFContext* context) noexcept {
+    UDFValue arg0, arg1;
+    if (!theEnv.firstArgument(context, ArgumentBits::Integer, &arg0)) {
+        return std::nullopt;
+    } else if (!theEnv.nextArgument(context, ArgumentBits::Integer, &arg1)) {
+        return std::nullopt;
     }
-    std::optional<int64_t>
-    extractOneArgument(Environment& theEnv, Electron::UDFContext* context) noexcept {
-        UDFValue arg0;
-        if (!theEnv.firstArgument(context, ArgumentBits::Integer, &arg0)) {
-            return std::nullopt;
-        }
-        return std::make_optional(arg0.integerValue->contents);
+    return std::make_optional(std::make_tuple(arg0.integerValue->contents, arg1.integerValue->contents));
+}
+std::optional<int64_t>
+extractOneArgument(Environment& theEnv, Electron::UDFContext* context) noexcept {
+    UDFValue arg0;
+    if (!theEnv.firstArgument(context, ArgumentBits::Integer, &arg0)) {
+        return std::nullopt;
     }
+    return std::make_optional(arg0.integerValue->contents);
 }
 void
 leftShift(UDF_ARGS__) noexcept
@@ -505,6 +508,5 @@ populationCount(UDF_ARGS__) noexcept {
         out->lexemeValue = theEnv.falseSymbol();
     }
 }
-
-
+} // end namespace 
 } // end namespace Electron
