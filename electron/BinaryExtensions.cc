@@ -38,7 +38,6 @@ extern "C" {
 
 namespace Electron
 {
-namespace {
 static void leftShift(UDF_ARGS__) noexcept;
 static void rightShift(UDF_ARGS__) noexcept;
 static void andOperation(UDF_ARGS__) noexcept;
@@ -73,7 +72,7 @@ static void bitFloor(UDF_ARGS__) noexcept;
 static void bitWidth(UDF_ARGS__) noexcept;
 static void hasSingleBit(UDF_ARGS__) noexcept;
 static void eConstantOperation(UDF_ARGS__) noexcept;
-}
+static void scanbyteOperation(UDF_ARGS__) noexcept;
 
 void
 InitializeBinaryExtensions(RawEnvironment* env)
@@ -113,6 +112,7 @@ InitializeBinaryExtensions(RawEnvironment* env)
     theEnv.addFunction("bit-width", "l", 1, 1, "l", bitWidth, "bitWidth");
     theEnv.addFunction("has-single-bit", "b", 1, 1, "l", hasSingleBit, "hasSingleBit");
     theEnv.addFunction("e", "ld", 0, 0, "sy", eConstantOperation, "eConstantOperation");
+    theEnv.addFunction("scanbyte", "b", 2, 2, "l", scanbyteOperation, "scanbyteOperation");
 }
 namespace 
 {
@@ -133,6 +133,7 @@ extractOneArgument(Environment& theEnv, Electron::UDFContext* context) noexcept 
         return std::nullopt;
     }
     return std::make_optional(arg0.integerValue->contents);
+}
 }
 void
 leftShift(UDF_ARGS__) noexcept
@@ -560,5 +561,28 @@ eConstantOperation(UDF_ARGS__) noexcept {
     auto& theEnv = Environment::fromRaw(env);
     out->floatValue = theEnv.createFloat(std::numbers::e);
 }
-} // end namespace 
+void
+scanbyteOperation(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    bool outcome = false;
+    if (auto result = extractTwoArguments(theEnv, context); result) {
+        auto [arg0, arg1] = *result;
+        auto src1 = static_cast<uint64_t>(arg0);
+        auto src2 = static_cast<uint64_t>(arg1);
+        // scanbyte is an i960 instruction which performs a byte by byte comparison of src1 and src2 and sets the condition code to 0b010 if any two corresponding bytes are equal. If no
+        // corresponding bytes are equal, the condition code is set to 0b000
+        //
+        // We adapt it to just return a boolean condition
+        outcome = 
+            ((src1 & 0x00000000000000FF) == (src2 & 0x00000000000000FF)) |
+            ((src1 & 0x000000000000FF00) == (src2 & 0x000000000000FF00)) |
+            ((src1 & 0x0000000000FF0000) == (src2 & 0x0000000000FF0000)) |
+            ((src1 & 0x00000000FF000000) == (src2 & 0x00000000FF000000)) |
+            ((src1 & 0x000000FF00000000) == (src2 & 0x000000FF00000000)) |
+            ((src1 & 0x0000FF0000000000) == (src2 & 0x0000FF0000000000)) |
+            ((src1 & 0x00FF000000000000) == (src2 & 0x00FF000000000000)) |
+            ((src1 & 0xFF00000000000000) == (src2 & 0xFF00000000000000));
+    } 
+    out->lexemeValue = theEnv.createBool(outcome);
+}
 } // end namespace Electron
