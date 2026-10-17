@@ -30,6 +30,7 @@
 #include <tuple>
 #include <optional>
 #include <bit>
+#include <numbers>
 
 extern "C" {
 #include "clips/clips.h"
@@ -72,6 +73,7 @@ static void bitCeiling(UDF_ARGS__) noexcept;
 static void bitFloor(UDF_ARGS__) noexcept;
 static void bitWidth(UDF_ARGS__) noexcept;
 static void hasSingleBit(UDF_ARGS__) noexcept;
+static void eConstantOperation(UDF_ARGS__) noexcept;
 }
 
 void
@@ -111,6 +113,7 @@ InitializeBinaryExtensions(RawEnvironment* env)
     theEnv.addFunction("bit-floor", "l", 1, 1, "l", bitFloor, "bitFloor");
     theEnv.addFunction("bit-width", "l", 1, 1, "l", bitWidth, "bitWidth");
     theEnv.addFunction("has-single-bit", "b", 1, 1, "l", hasSingleBit, "hasSingleBit");
+    theEnv.addFunction("e", "ld", 0, 0, "sy", eConstantOperation, "eConstantOperation");
 }
 namespace 
 {
@@ -552,6 +555,11 @@ hasSingleBit(UDF_ARGS__) noexcept {
     } else {
         out->lexemeValue = theEnv.falseSymbol();
     }
+}
+void
+eConstantOperation(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    out->floatValue = theEnv.createFloat(std::numbers::e);
 }
 } // end namespace 
 } // end namespace Electron
