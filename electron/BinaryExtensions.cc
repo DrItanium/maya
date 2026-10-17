@@ -100,7 +100,7 @@ InitializeBinaryExtensions(RawEnvironment* env)
     theEnv.addFunction("count-trailing-zeros", "l", 1, 1, "l", countTrailingZeros, "countTrailingZeros");
     theEnv.addFunction("count-trailing-ones", "l", 1, 1, "l", countTrailingOnes, "countTrailingOnes");
     theEnv.addFunction("population-count", "l", 1, 1, "l", populationCount, "populationCount");
-    theEnv.addFunction("platform-endianness", "sy", 0, 0, nullptr, getPlatformEndianness, "getPlatformEndianness");
+    theEnv.addFunction("platform-endianness", "sy", 0, 0, "sy", getPlatformEndianness, "getPlatformEndianness");
 
 }
 namespace {
