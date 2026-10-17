@@ -39,6 +39,10 @@ namespace Electron
 {
 static void leftShift(UDF_ARGS__) noexcept;
 static void rightShift(UDF_ARGS__) noexcept;
+static void andOperation(UDF_ARGS__) noexcept;
+static void orOperation(UDF_ARGS__) noexcept;
+static void notOperation(UDF_ARGS__) noexcept;
+static void xorOperation(UDF_ARGS__) noexcept;
 
 void
 InitializeBinaryExtensions(RawEnvironment* env)
@@ -46,6 +50,10 @@ InitializeBinaryExtensions(RawEnvironment* env)
     auto& theEnv = Environment::fromRaw(env);
     theEnv.addFunction("left-shift", "lb", 2, 2, "l", leftShift, "leftShift");
     theEnv.addFunction("right-shift", "lb", 2, 2, "l", rightShift, "rightShift");
+    theEnv.addFunction("bitwise-and", "l", 2, 2, "l", andOperation, "andOperation");
+    theEnv.addFunction("bitwise-or", "l", 2, 2, "l", orOperation, "orOperation");
+    theEnv.addFunction("bitwise-xor", "l", 2, 2, "l", xorOperation, "xorOperation");
+    theEnv.addFunction("bitwise-not", "l", 1, 1, "l", notOperation, "notOperation");
 }
 namespace {
     std::optional<std::tuple<int64_t, int64_t>>
@@ -91,6 +99,51 @@ rightShift(UDF_ARGS__) noexcept
         } else {
             out->integerValue = theEnv.createInteger(0);
         }
+    } else {
+        out->lexemeValue = theEnv.falseSymbol();
+    }
+}
+void
+notOperation(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    UDFValue arg;
+    if (!theEnv.firstArgument(context, ArgumentBits::Integer, &arg)) {
+        out->lexemeValue = theEnv.falseSymbol();
+    } else {
+        out->integerValue = theEnv.createInteger(~arg.integerValue->contents);
+    }
+}
+void
+andOperation(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    if (auto result = extractTwoArguments(theEnv, context); result) {
+        auto [arg0, arg1] = *result;
+        // follow the design of what shlo does on the i960
+        out->integerValue = theEnv.createInteger(arg0 & arg1);
+    } else {
+        out->lexemeValue = theEnv.falseSymbol();
+    }
+}
+
+void
+orOperation(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    if (auto result = extractTwoArguments(theEnv, context); result) {
+        auto [arg0, arg1] = *result;
+        // follow the design of what shlo does on the i960
+        out->integerValue = theEnv.createInteger(arg0 | arg1);
+    } else {
+        out->lexemeValue = theEnv.falseSymbol();
+    }
+}
+
+void
+xorOperation(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    if (auto result = extractTwoArguments(theEnv, context); result) {
+        auto [arg0, arg1] = *result;
+        // follow the design of what shlo does on the i960
+        out->integerValue = theEnv.createInteger(arg0 ^ arg1);
     } else {
         out->lexemeValue = theEnv.falseSymbol();
     }
