@@ -37,12 +37,16 @@ extern "C" {
 namespace Electron
 {
 static void midpointOperation(UDF_ARGS__) noexcept;
+static void lcmOperation(UDF_ARGS__) noexcept;
+static void gcdOperation(UDF_ARGS__) noexcept;
 
 void
 InitializeNumericExtensions(RawEnvironment* env)
 {
     auto& theEnv = Environment::fromRaw(env);
     theEnv.addFunction("midpoint", "ld", 2, 2, "ld", midpointOperation, "midpointOperation");
+    theEnv.addFunction("lcm", "l", 2, 2, "l", lcmOperation, "lcmOperation");
+    theEnv.addFunction("gcd", "l", 2, 2, "l", gcdOperation, "gcdOperation");
 }
 void
 midpointOperation(UDF_ARGS__) noexcept
@@ -67,6 +71,40 @@ midpointOperation(UDF_ARGS__) noexcept
         out->integerValue = theEnv.createInteger(std::midpoint(a, b));
     }
     // if both are integers then we stay as integers, if either is a float then we convert both to float
-    
+}
+
+void
+gcdOperation(UDF_ARGS__) noexcept
+{
+    auto& theEnv = Environment::fromRaw(env);
+    UDFValue arg0, arg1;
+    if (!theEnv.firstArgument(context, ArgumentBits::Integer, &arg0)) {
+        out->lexemeValue = theEnv.falseSymbol();
+        return;
+    }
+    if (!theEnv.nextArgument(context, ArgumentBits::Integer, &arg1)) {
+        out->lexemeValue = theEnv.falseSymbol();
+        return;
+    }
+    out->integerValue = theEnv.createInteger(
+            std::gcd(arg0.integerValue->contents,
+                     arg1.integerValue->contents));
+}
+void
+lcmOperation(UDF_ARGS__) noexcept
+{
+    auto& theEnv = Environment::fromRaw(env);
+    UDFValue arg0, arg1;
+    if (!theEnv.firstArgument(context, ArgumentBits::Integer, &arg0)) {
+        out->lexemeValue = theEnv.falseSymbol();
+        return;
+    }
+    if (!theEnv.nextArgument(context, ArgumentBits::Integer, &arg1)) {
+        out->lexemeValue = theEnv.falseSymbol();
+        return;
+    }
+    out->integerValue = theEnv.createInteger(
+            std::lcm(arg0.integerValue->contents,
+                     arg1.integerValue->contents));
 }
 } // end namespace Electron
