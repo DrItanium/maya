@@ -36,9 +36,7 @@ extern "C" {
 
 namespace Electron
 {
-namespace {
 static void midpointOperation(UDF_ARGS__) noexcept;
-}
 
 void
 InitializeNumericExtensions(RawEnvironment* env)
@@ -46,35 +44,29 @@ InitializeNumericExtensions(RawEnvironment* env)
     auto& theEnv = Environment::fromRaw(env);
     theEnv.addFunction("midpoint", "ld", 2, 2, "ld", midpointOperation, "midpointOperation");
 }
-namespace 
-{
-std::optional<std::tuple<int64_t, int64_t>>
-extractTwoArguments(Environment& theEnv, Electron::UDFContext* context) noexcept {
-    UDFValue arg0, arg1;
-    if (!theEnv.firstArgument(context, ArgumentBits::Integer, &arg0)) {
-        return std::nullopt;
-    } else if (!theEnv.nextArgument(context, ArgumentBits::Integer, &arg1)) {
-        return std::nullopt;
-    }
-    return std::make_optional(std::make_tuple(arg0.integerValue->contents, arg1.integerValue->contents));
-}
 void
 midpointOperation(UDF_ARGS__) noexcept
 {
     auto& theEnv = Environment::fromRaw(env);
-    if (auto result = extractTwoArguments(theEnv, context); result) {
-        auto [value, len] = *result;
-        // follow the design of what shlo does on the i960
-        if (len < 0) {
-            out->lexemeValue = theEnv.falseSymbol();
-        } else if (len < 64) {
-            out->integerValue = theEnv.createInteger(value << len);
-        } else {
-            out->integerValue = theEnv.createInteger(0);
-        }
-    } else {
+    UDFValue arg0, arg1;
+    if (!theEnv.firstArgument(context, ArgumentBits::Number, &arg0)) {
         out->lexemeValue = theEnv.falseSymbol();
+        return;
     }
+    if (!theEnv.nextArgument(context, ArgumentBits::Number, &arg1)) {
+        out->lexemeValue = theEnv.falseSymbol();
+        return;
+    }
+    if (isFloat(arg0) || isFloat(arg1)) {
+        auto a = CVCoerceToFloat(&arg0);
+        auto b = CVCoerceToFloat(&arg1);
+        out->floatValue = theEnv.createFloat(std::midpoint(a, b));
+    } else {
+        auto a = CVCoerceToInteger(&arg0);
+        auto b = CVCoerceToInteger(&arg1);
+        out->integerValue = theEnv.createInteger(std::midpoint(a, b));
+    }
+    // if both are integers then we stay as integers, if either is a float then we convert both to float
+    
 }
-} // end namespace 
 } // end namespace Electron
