@@ -1281,6 +1281,8 @@ public:
 
 template<>
 bool Environment::extractValue<bool>(Value* data);
+template<>
+bool Environment::extractValue<bool>(UDFValue* data);
 
 /**
  * Extract the integer or enum value stored within the provided DataObject and cast to the provided type,

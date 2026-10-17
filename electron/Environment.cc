@@ -247,10 +247,16 @@ extractData(Environment& env, Value* dobj)
 {
     return {dobj->lexemeValue->contents};
 }
-
 template<>
 bool
 Environment::extractValue<bool>(Value* data)
+{
+    return (data->header->type == SYMBOL_TYPE) && (data->lexemeValue != falseSymbol());
+}
+
+template<>
+bool
+Environment::extractValue<bool>(UDFValue* data)
 {
     return (data->header->type == SYMBOL_TYPE) && (data->lexemeValue != falseSymbol());
 }

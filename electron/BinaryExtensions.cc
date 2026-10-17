@@ -47,6 +47,7 @@ static void setbitOperation(UDF_ARGS__) noexcept;
 static void clrbitOperation(UDF_ARGS__) noexcept;
 static void notbitOperation(UDF_ARGS__) noexcept;
 static void chkbitOperation(UDF_ARGS__) noexcept;
+static void alterbitOperation(UDF_ARGS__) noexcept;
 
 void
 InitializeBinaryExtensions(RawEnvironment* env)
@@ -62,6 +63,7 @@ InitializeBinaryExtensions(RawEnvironment* env)
     theEnv.addFunction("clrbit", "l", 2, 2, "l", clrbitOperation, "clrbitOperation");
     theEnv.addFunction("notbit", "l", 2, 2, "l", notbitOperation, "notbitOperation");
     theEnv.addFunction("chkbit", "b", 2, 2, "l", chkbitOperation, "chkbitOperation");
+    theEnv.addFunction("alterbit", "lb", 3, 3, "l;l;l;b", alterbitOperation, "alterbitOperation");
 }
 namespace {
     std::optional<std::tuple<int64_t, int64_t>>
@@ -201,6 +203,41 @@ chkbitOperation(UDF_ARGS__) noexcept {
         out->lexemeValue = theEnv.createBool((src & (1ll << (bitpos & 0b111111))) != 0);
     } else {
         out->lexemeValue = theEnv.falseSymbol();
+    }
+}
+#if 0
+        UDFValue arg0, arg1;
+        if (!theEnv.firstArgument(context, ArgumentBits::Integer, &arg0)) {
+            return std::nullopt;
+        } else if (!theEnv.nextArgument(context, ArgumentBits::Integer, &arg1)) {
+            return std::nullopt;
+        }
+        return std::make_optional(std::make_tuple(arg0.integerValue->contents, arg1.integerValue->contents));
+#endif
+
+void
+alterbitOperation(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    UDFValue arg0, arg1, arg2;
+    if (!theEnv.firstArgument(context, ArgumentBits::Integer, &arg0)) {
+        out->lexemeValue = theEnv.falseSymbol();
+        return;
+    } 
+    if (!theEnv.nextArgument(context, ArgumentBits::Integer, &arg1)) {
+        out->lexemeValue = theEnv.falseSymbol();
+        return;
+    }
+    if (!theEnv.nextArgument(context, ArgumentBits::Boolean, &arg2)) {
+        out->lexemeValue = theEnv.falseSymbol();
+        return;
+    }
+    auto value = arg0.integerValue->contents;
+    auto bitpos = arg1.integerValue->contents;
+    // copies the source value to destination with one bit altered.
+    if (!theEnv.extractValue<bool>(&arg2)) {
+        out->integerValue = theEnv.createInteger(value & ~(1ll << (bitpos & 0b111'111)));
+    } else {
+        out->integerValue = theEnv.createInteger(value | (1ll << (bitpos & 0b111'111)));
     }
 }
 
