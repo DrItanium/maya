@@ -1,7 +1,8 @@
 /**
- * @file * C++ wrapper functions for building electron environments
+ * @file 
+ * C++ wrapper functions for building electron routers 
  * @copyright
- * Copyright (c) 2015-2025 Parasoft Corporation
+ * Copyright (c) 2015-2026 Parasoft Corporation
  *
  * This software is provided 'as-is', without any express or implied
  * warranty. In no event will the authors be held liable for any damages

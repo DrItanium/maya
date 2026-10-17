@@ -2,7 +2,7 @@
  * @file
  * C++ wrapper functions for building electron environments
  * @copyright
- * Copyright (c) 2015-2022 Parasoft Corporation
+ * Copyright (c) 2015-2026 Parasoft Corporation
  *
  * This software is provided 'as-is', without any express or implied
  * warranty. In no event will the authors be held liable for any damages
@@ -836,7 +836,7 @@ public:
     /**
      * Install an IO router object into the given environment!
      * @param router the router to install, this object must not go out of scope or be destroyed while the environment is holding onto it!
-     * @return a boolean value singifying if the router was successfully added
+     * @return a boolean value signifying if the router was successfully added
      */
     bool addRouter(IORouter* router) noexcept;
 
@@ -868,12 +868,12 @@ public:
      * when you want to construct routers which wrap other routers) until
      * reactivated.
      * @param name the name of the router to deactivate
-     * @return boolean value signifying if the given router was recoginzed
+     * @return boolean value signifying if the given router was recognized
      */
     bool deactivateRouter(const std::string& name) noexcept;
 
     /**
-     * Temporaryily deactivate a given router, once this object goes out of
+     * Temporarily deactivate a given router, once this object goes out of
      * scope then reactivate the given router!
      */
     class RouterDeactivator {
@@ -1159,7 +1159,7 @@ public:
 public:
      /**
       * Given a provided class, call its corresponding InstallExtensions static method. A compile time error
-      * will happen if the method in question does not have the apropriate method implemented!
+      * will happen if the method in question does not have the appropriate method implemented!
       * @tparam T The class that has an InstallExtensions method to be invoked
       */
      template<typename T>

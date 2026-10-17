@@ -2,7 +2,6 @@
  * @file
  * Implementation of the extensions to electron which provide extended numeric operations
  * @copyright
- * Copyright (c) 2015-2022 Parasoft Corporation
  * Copyright (c) 2026 Joshua Scoggins
  *
  * This software is provided 'as-is', without any express or implied
