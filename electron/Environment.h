@@ -326,6 +326,10 @@ private:
 };
 
 
+/**
+ * @brief It is necessary to keep track of the index a given external address type is registered with; this structure handles it and scales to however many environments you create; this is handled automatically whenever you register external address types
+ * @tparam T The C/C++ data type that you have registered as an external address type inside of a given environment. 
+ */
 template<typename T>
 struct ExternalAddressCache
 {

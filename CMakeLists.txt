@@ -465,3 +465,4 @@ target_include_directories(maya-file-processor PUBLIC "${PROJECT_SRC_DIR}"
 		"${CMAKE_CURRENT_BINARY_DIR}")
 install(TARGETS maya DESTINATION bin)
 install(TARGETS maya-app DESTINATION bin)
+install(TARGETS maya-file-processor DESTINATION bin)
