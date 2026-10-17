@@ -29,6 +29,7 @@
 
 #include <tuple>
 #include <optional>
+#include <bit>
 
 extern "C" {
 #include "clips/clips.h"
@@ -58,6 +59,7 @@ static void xnorOperation(UDF_ARGS__) noexcept;
 static void splitIntoHalvesOperation(UDF_ARGS__) noexcept;
 static void extractOperation(UDF_ARGS__) noexcept;
 static void modifyOperation(UDF_ARGS__) noexcept;
+static void rotateOperation(UDF_ARGS__) noexcept;
 
 void
 InitializeBinaryExtensions(RawEnvironment* env)
@@ -84,6 +86,7 @@ InitializeBinaryExtensions(RawEnvironment* env)
     theEnv.addFunction("bitwise-split", "m", 1, 1, "l", splitIntoHalvesOperation, "splitIntoHalvesOperation");
     theEnv.addFunction("bitwise-extract", "l", 3, 3, "l", extractOperation, "extractOperation");
     theEnv.addFunction("bitwise-modify", "l", 3, 3, "l", modifyOperation, "modifyOperation");
+    theEnv.addFunction("bitwise-rotate", "l", 2, 2, "l", rotateOperation, "rotateOperation");
 
 }
 namespace {
@@ -397,5 +400,17 @@ modifyOperation(UDF_ARGS__) noexcept {
     auto result = (src & mask) | (src2 & ~mask);
     out->integerValue = theEnv.createInteger(result);
 }
+void
+rotateOperation(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    if (auto result = extractTwoArguments(theEnv, context); result) {
+        auto [arg0, arg1] = *result;
+        out->integerValue = theEnv.createInteger(arg0 | ~arg1);
+    } else {
+        out->lexemeValue = theEnv.falseSymbol();
+    }
+}
+
+
 
 } // end namespace Electron

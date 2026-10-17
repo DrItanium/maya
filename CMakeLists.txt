@@ -10,7 +10,7 @@ find_package(Boost
 #find_package(boost_program_options REQUIRED)
 include(CheckIncludeFiles)
 include(CheckIncludeFileCXX)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 if(Boost_FOUND)
 	include_directories(${Boost_INCLUDE_DIRS})
