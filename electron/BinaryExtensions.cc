@@ -48,6 +48,13 @@ static void clrbitOperation(UDF_ARGS__) noexcept;
 static void notbitOperation(UDF_ARGS__) noexcept;
 static void chkbitOperation(UDF_ARGS__) noexcept;
 static void alterbitOperation(UDF_ARGS__) noexcept;
+static void andnotOperation(UDF_ARGS__) noexcept;
+static void notandOperation(UDF_ARGS__) noexcept;
+static void ornotOperation(UDF_ARGS__) noexcept;
+static void notorOperation(UDF_ARGS__) noexcept;
+static void nandOperation(UDF_ARGS__) noexcept;
+static void norOperation(UDF_ARGS__) noexcept;
+static void xnorOperation(UDF_ARGS__) noexcept;
 
 void
 InitializeBinaryExtensions(RawEnvironment* env)
@@ -64,6 +71,14 @@ InitializeBinaryExtensions(RawEnvironment* env)
     theEnv.addFunction("notbit", "l", 2, 2, "l", notbitOperation, "notbitOperation");
     theEnv.addFunction("chkbit", "b", 2, 2, "l", chkbitOperation, "chkbitOperation");
     theEnv.addFunction("alterbit", "lb", 3, 3, "l;l;l;b", alterbitOperation, "alterbitOperation");
+    theEnv.addFunction("andnot", "l", 2, 2, "l", andnotOperation, "andnotOperation");
+    theEnv.addFunction("ornot", "l", 2, 2, "l", ornotOperation, "ornotOperation");
+    theEnv.addFunction("notand", "l", 2, 2, "l", notandOperation, "notandOperation");
+    theEnv.addFunction("notor", "l", 2, 2, "l", notorOperation, "notorOperation");
+    theEnv.addFunction("xnor", "l", 2, 2, "l", xnorOperation, "xnorOperation");
+    theEnv.addFunction("nand", "l", 2, 2, "l", nandOperation, "nandOperation");
+    theEnv.addFunction("nor", "l", 2, 2, "l", norOperation, "norOperation");
+
 }
 namespace {
     std::optional<std::tuple<int64_t, int64_t>>
@@ -238,6 +253,86 @@ alterbitOperation(UDF_ARGS__) noexcept {
         out->integerValue = theEnv.createInteger(value & ~(1ll << (bitpos & 0b111'111)));
     } else {
         out->integerValue = theEnv.createInteger(value | (1ll << (bitpos & 0b111'111)));
+    }
+}
+
+void
+andnotOperation(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    if (auto result = extractTwoArguments(theEnv, context); result) {
+        auto [arg0, arg1] = *result;
+        out->integerValue = theEnv.createInteger(arg0 & ~arg1);
+    } else {
+        out->lexemeValue = theEnv.falseSymbol();
+    }
+}
+
+void
+notandOperation(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    if (auto result = extractTwoArguments(theEnv, context); result) {
+        auto [arg0, arg1] = *result;
+        out->integerValue = theEnv.createInteger(~arg0 & arg1);
+    } else {
+        out->lexemeValue = theEnv.falseSymbol();
+    }
+}
+
+void
+ornotOperation(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    if (auto result = extractTwoArguments(theEnv, context); result) {
+        auto [arg0, arg1] = *result;
+        out->integerValue = theEnv.createInteger(arg0 | ~arg1);
+    } else {
+        out->lexemeValue = theEnv.falseSymbol();
+    }
+}
+
+void
+notorOperation(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    if (auto result = extractTwoArguments(theEnv, context); result) {
+        auto [arg0, arg1] = *result;
+        out->integerValue = theEnv.createInteger(~arg0 | arg1);
+    } else {
+        out->lexemeValue = theEnv.falseSymbol();
+    }
+}
+
+void
+nandOperation(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    if (auto result = extractTwoArguments(theEnv, context); result) {
+        auto [arg0, arg1] = *result;
+        // follow the design of what shlo does on the i960
+        out->integerValue = theEnv.createInteger(~(arg0 & arg1));
+    } else {
+        out->lexemeValue = theEnv.falseSymbol();
+    }
+}
+
+void
+norOperation(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    if (auto result = extractTwoArguments(theEnv, context); result) {
+        auto [arg0, arg1] = *result;
+        // follow the design of what shlo does on the i960
+        out->integerValue = theEnv.createInteger(~(arg0 | arg1));
+    } else {
+        out->lexemeValue = theEnv.falseSymbol();
+    }
+}
+
+void
+xnorOperation(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    if (auto result = extractTwoArguments(theEnv, context); result) {
+        auto [arg0, arg1] = *result;
+        // follow the design of what shlo does on the i960
+        out->integerValue = theEnv.createInteger(~(arg0 ^ arg1));
+    } else {
+        out->lexemeValue = theEnv.falseSymbol();
     }
 }
 
