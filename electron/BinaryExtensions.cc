@@ -43,6 +43,9 @@ static void andOperation(UDF_ARGS__) noexcept;
 static void orOperation(UDF_ARGS__) noexcept;
 static void notOperation(UDF_ARGS__) noexcept;
 static void xorOperation(UDF_ARGS__) noexcept;
+static void setbitOperation(UDF_ARGS__) noexcept;
+static void clrbitOperation(UDF_ARGS__) noexcept;
+static void notbitOperation(UDF_ARGS__) noexcept;
 
 void
 InitializeBinaryExtensions(RawEnvironment* env)
@@ -54,6 +57,9 @@ InitializeBinaryExtensions(RawEnvironment* env)
     theEnv.addFunction("bitwise-or", "l", 2, 2, "l", orOperation, "orOperation");
     theEnv.addFunction("bitwise-xor", "l", 2, 2, "l", xorOperation, "xorOperation");
     theEnv.addFunction("bitwise-not", "l", 1, 1, "l", notOperation, "notOperation");
+    theEnv.addFunction("setbit", "l", 2, 2, "l", setbitOperation, "setbitOperation");
+    theEnv.addFunction("clrbit", "l", 2, 2, "l", clrbitOperation, "clrbitOperation");
+    theEnv.addFunction("notbit", "l", 2, 2, "l", notbitOperation, "notbitOperation");
 }
 namespace {
     std::optional<std::tuple<int64_t, int64_t>>
@@ -144,6 +150,42 @@ xorOperation(UDF_ARGS__) noexcept {
         auto [arg0, arg1] = *result;
         // follow the design of what shlo does on the i960
         out->integerValue = theEnv.createInteger(arg0 ^ arg1);
+    } else {
+        out->lexemeValue = theEnv.falseSymbol();
+    }
+}
+
+void
+setbitOperation(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    if (auto result = extractTwoArguments(theEnv, context); result) {
+        auto [src, bitpos] = *result;
+        // follow the design of what shlo does on the i960
+        out->integerValue = theEnv.createInteger(src | (1ll << (bitpos & 0b111111)));
+    } else {
+        out->lexemeValue = theEnv.falseSymbol();
+    }
+}
+
+void
+clrbitOperation(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    if (auto result = extractTwoArguments(theEnv, context); result) {
+        auto [src, bitpos] = *result;
+        // follow the design of what shlo does on the i960
+        out->integerValue = theEnv.createInteger(src & ~(1ll << (bitpos & 0b111111)));
+    } else {
+        out->lexemeValue = theEnv.falseSymbol();
+    }
+}
+
+void
+notbitOperation(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    if (auto result = extractTwoArguments(theEnv, context); result) {
+        auto [src, bitpos] = *result;
+        // follow the design of what shlo does on the i960
+        out->integerValue = theEnv.createInteger(src ^ (1ll << (bitpos & 0b111111)));
     } else {
         out->lexemeValue = theEnv.falseSymbol();
     }
