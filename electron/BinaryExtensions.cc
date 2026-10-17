@@ -37,8 +37,8 @@ extern "C" {
 
 namespace Electron
 {
-static void leftShift(UDF_ARGS__);
-static void rightShift(UDF_ARGS__);
+static void leftShift(UDF_ARGS__) noexcept;
+static void rightShift(UDF_ARGS__) noexcept;
 
 void
 InitializeBinaryExtensions(RawEnvironment* env)
@@ -46,17 +46,10 @@ InitializeBinaryExtensions(RawEnvironment* env)
     auto& theEnv = Environment::fromRaw(env);
     theEnv.addFunction("left-shift", "lb", 2, 2, "l", leftShift, "leftShift");
     theEnv.addFunction("right-shift", "lb", 2, 2, "l", rightShift, "rightShift");
-#if 0
-    theEnv.addFunction("has-prefix", "b", 2, 2, "sy;sy;sy", hasPrefix, "hasPrefix");
-    theEnv.addFunction("has-suffix", "b", 2, 2, "sy;sy;sy", hasSuffix, "hasSuffix");
-    theEnv.addFunction("split-once", "mb", 2, 2, "sy;sy;sy", splitOnce, "splitOnce");
-    theEnv.addFunction("replace-all", "sy", 3, 3, "sy;sy;sy;sy", replaceAll, "replaceAll");
-    theEnv.addFunction("replace-regex-all", "sy", 3, 3, "sy;sy;sy;sy", replaceRegexAll, "replaceRegexAll");
-#endif
 }
 namespace {
     std::optional<std::tuple<int64_t, int64_t>>
-    extractTwoArguments(Environment& theEnv, Electron::UDFContext* context) {
+    extractTwoArguments(Environment& theEnv, Electron::UDFContext* context) noexcept {
         UDFValue arg0, arg1;
         if (!theEnv.firstArgument(context, ArgumentBits::Integer, &arg0)) {
             return std::nullopt;
@@ -67,7 +60,7 @@ namespace {
     }
 }
 void
-leftShift(UDF_ARGS__) 
+leftShift(UDF_ARGS__) noexcept
 {
     auto& theEnv = Environment::fromRaw(env);
     if (auto result = extractTwoArguments(theEnv, context); result) {
@@ -85,7 +78,7 @@ leftShift(UDF_ARGS__)
     }
 }
 void
-rightShift(UDF_ARGS__) 
+rightShift(UDF_ARGS__) noexcept
 {
     auto& theEnv = Environment::fromRaw(env);
     if (auto result = extractTwoArguments(theEnv, context); result) {
@@ -102,123 +95,5 @@ rightShift(UDF_ARGS__)
         out->lexemeValue = theEnv.falseSymbol();
     }
 }
-#if 0
-void
-splitOnce(UDF_ARGS__)
-{
-    auto& theEnv = Environment::fromRaw(env);
-    UDFValue arg0;
-    UDFValue arg1;
-    if (!theEnv.firstArgument(context, ArgumentBits::Lexeme, &arg0)) {
-        out->lexemeValue = theEnv.falseSymbol();
-        return;
-    }
-
-    if (!theEnv.nextArgument(context, ArgumentBits::Lexeme, &arg1)) {
-        out->lexemeValue = theEnv.falseSymbol();
-        return;
-    }
-    std::string str(arg0.lexemeValue->contents);
-    std::string split(arg1.lexemeValue->contents);
-    MultifieldBuilder mfb(theEnv);
-    if (auto result = str.find(split); result == std::string::npos) {
-        mfb.append(theEnv.createString(str));
-    } else {
-        mfb.append(str.substr(0, result), TreatLexemeAsString {});
-        mfb.append(str.substr(result + split.length()), TreatLexemeAsString{});
-    }
-    out->multifieldValue = mfb.create();
-}
-
-void
-hasPrefix(UDF_ARGS__)
-{
-    auto& theEnv = Environment::fromRaw(env);
-    UDFValue arg0;
-    UDFValue arg1;
-    if (!theEnv.firstArgument(context, ArgumentBits::Lexeme, &arg0)) {
-        out->lexemeValue = theEnv.falseSymbol();
-        return;
-    }
-    if (!theEnv.nextArgument(context, ArgumentBits::Lexeme, &arg1)) {
-        out->lexemeValue = theEnv.falseSymbol();
-        return;
-    }
-    std::string str(arg0.lexemeValue->contents);
-    std::string prefix(arg1.lexemeValue->contents);
-    out->lexemeValue = theEnv.createBool(Neutron::hasPrefix(str, prefix));
-}
-
-void
-hasSuffix(UDF_ARGS__)
-{
-    auto& theEnv = Environment::fromRaw(env);
-    UDFValue arg0;
-    UDFValue arg1;
-    if (!theEnv.firstArgument(context, ArgumentBits::Lexeme, &arg0)) {
-        out->lexemeValue = theEnv.falseSymbol();
-        return;
-    }
-    if (!theEnv.nextArgument(context, ArgumentBits::Lexeme, &arg1)) {
-        out->lexemeValue = theEnv.falseSymbol();
-        return;
-    }
-    std::string str(arg0.lexemeValue->contents);
-    std::string prefix(arg1.lexemeValue->contents);
-    out->lexemeValue = theEnv.createBool(Neutron::hasSuffix(str, prefix));
-}
-
-void
-replaceAll(UDF_ARGS__)
-{
-    auto& theEnv = Environment::fromRaw(env);
-    UDFValue arg0;
-    UDFValue arg1;
-    UDFValue arg2;
-    if (!theEnv.firstArgument(context, ArgumentBits::Lexeme, &arg0)) {
-        out->lexemeValue = theEnv.falseSymbol();
-        return;
-    }
-    if (!theEnv.nextArgument(context, ArgumentBits::Lexeme, &arg1)) {
-        out->lexemeValue = theEnv.falseSymbol();
-        return;
-    }
-    if (!theEnv.nextArgument(context, ArgumentBits::Lexeme, &arg2)) {
-        out->lexemeValue = theEnv.falseSymbol();
-        return;
-    }
-    std::string str(arg0.lexemeValue->contents);
-    std::string find(arg1.lexemeValue->contents);
-    std::string replacement(arg2.lexemeValue->contents);
-    auto result = Neutron::replace_all_copy(str, find, replacement);
-    out->lexemeValue = theEnv.createString(result);
-}
-
-void
-replaceRegexAll(UDF_ARGS__)
-{
-    auto& theEnv = Environment::fromRaw(env);
-    UDFValue arg0;
-    UDFValue arg1;
-    UDFValue arg2;
-    if (!theEnv.firstArgument(context, ArgumentBits::Lexeme, &arg0)) {
-        out->lexemeValue = theEnv.falseSymbol();
-        return;
-    }
-    if (!theEnv.nextArgument(context, ArgumentBits::Lexeme, &arg1)) {
-        out->lexemeValue = theEnv.falseSymbol();
-        return;
-    }
-    if (!theEnv.nextArgument(context, ArgumentBits::Lexeme, &arg2)) {
-        out->lexemeValue = theEnv.falseSymbol();
-        return;
-    }
-    std::string str(arg0.lexemeValue->contents);
-    std::string find(arg1.lexemeValue->contents);
-    std::string replacement(arg2.lexemeValue->contents);
-    auto result = Neutron::replace_all_regex_copy(str, Neutron::regex(find), replacement);
-    out->lexemeValue = theEnv.createString(result);
-}
-#endif
 
 } // end namespace Electron
