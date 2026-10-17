@@ -28,6 +28,7 @@
 #include "electron/ParsingExtensions.h"
 #include "electron/MultifieldExtensions.h"
 #include "electron/BinaryExtensions.h"
+#include "electron/NumericExtensions.h"
 
 extern "C" {
 #include "clips/clips.h"
@@ -52,6 +53,7 @@ Environment::Environment() : _env(::CreateEnvironment())
     InitializeParsingExtensions(_env);
     InitializeMultifieldExtensions(_env);
     InitializeBinaryExtensions(_env);
+    InitializeNumericExtensions(_env);
 }
 
 Environment::~Environment()
