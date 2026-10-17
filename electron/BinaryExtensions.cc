@@ -55,29 +55,35 @@ static void notorOperation(UDF_ARGS__) noexcept;
 static void nandOperation(UDF_ARGS__) noexcept;
 static void norOperation(UDF_ARGS__) noexcept;
 static void xnorOperation(UDF_ARGS__) noexcept;
+static void splitIntoHalvesOperation(UDF_ARGS__) noexcept;
+static void extractOperation(UDF_ARGS__) noexcept;
+static void modifyOperation(UDF_ARGS__) noexcept;
 
 void
 InitializeBinaryExtensions(RawEnvironment* env)
 {
     auto& theEnv = Environment::fromRaw(env);
-    theEnv.addFunction("left-shift", "lb", 2, 2, "l", leftShift, "leftShift");
-    theEnv.addFunction("right-shift", "lb", 2, 2, "l", rightShift, "rightShift");
+    theEnv.addFunction("bitwise-left-shift", "lb", 2, 2, "l", leftShift, "leftShift");
+    theEnv.addFunction("bitwise-right-shift", "lb", 2, 2, "l", rightShift, "rightShift");
     theEnv.addFunction("bitwise-and", "l", 2, 2, "l", andOperation, "andOperation");
     theEnv.addFunction("bitwise-or", "l", 2, 2, "l", orOperation, "orOperation");
     theEnv.addFunction("bitwise-xor", "l", 2, 2, "l", xorOperation, "xorOperation");
     theEnv.addFunction("bitwise-not", "l", 1, 1, "l", notOperation, "notOperation");
-    theEnv.addFunction("setbit", "l", 2, 2, "l", setbitOperation, "setbitOperation");
-    theEnv.addFunction("clrbit", "l", 2, 2, "l", clrbitOperation, "clrbitOperation");
-    theEnv.addFunction("notbit", "l", 2, 2, "l", notbitOperation, "notbitOperation");
-    theEnv.addFunction("chkbit", "b", 2, 2, "l", chkbitOperation, "chkbitOperation");
-    theEnv.addFunction("alterbit", "lb", 3, 3, "l;l;l;b", alterbitOperation, "alterbitOperation");
-    theEnv.addFunction("andnot", "l", 2, 2, "l", andnotOperation, "andnotOperation");
-    theEnv.addFunction("ornot", "l", 2, 2, "l", ornotOperation, "ornotOperation");
-    theEnv.addFunction("notand", "l", 2, 2, "l", notandOperation, "notandOperation");
-    theEnv.addFunction("notor", "l", 2, 2, "l", notorOperation, "notorOperation");
-    theEnv.addFunction("xnor", "l", 2, 2, "l", xnorOperation, "xnorOperation");
-    theEnv.addFunction("nand", "l", 2, 2, "l", nandOperation, "nandOperation");
-    theEnv.addFunction("nor", "l", 2, 2, "l", norOperation, "norOperation");
+    theEnv.addFunction("bitwise-setbit", "l", 2, 2, "l", setbitOperation, "setbitOperation");
+    theEnv.addFunction("bitwise-clrbit", "l", 2, 2, "l", clrbitOperation, "clrbitOperation");
+    theEnv.addFunction("bitwise-notbit", "l", 2, 2, "l", notbitOperation, "notbitOperation");
+    theEnv.addFunction("bitwise-chkbit", "b", 2, 2, "l", chkbitOperation, "chkbitOperation");
+    theEnv.addFunction("bitwise-alterbit", "lb", 3, 3, "l;l;l;b", alterbitOperation, "alterbitOperation");
+    theEnv.addFunction("bitwise-andnot", "l", 2, 2, "l", andnotOperation, "andnotOperation");
+    theEnv.addFunction("bitwise-ornot", "l", 2, 2, "l", ornotOperation, "ornotOperation");
+    theEnv.addFunction("bitwise-notand", "l", 2, 2, "l", notandOperation, "notandOperation");
+    theEnv.addFunction("bitwise-notor", "l", 2, 2, "l", notorOperation, "notorOperation");
+    theEnv.addFunction("bitwise-xnor", "l", 2, 2, "l", xnorOperation, "xnorOperation");
+    theEnv.addFunction("bitwise-nand", "l", 2, 2, "l", nandOperation, "nandOperation");
+    theEnv.addFunction("bitwise-nor", "l", 2, 2, "l", norOperation, "norOperation");
+    theEnv.addFunction("bitwise-split", "m", 1, 1, "l", splitIntoHalvesOperation, "splitIntoHalvesOperation");
+    theEnv.addFunction("bitwise-extract", "l", 3, 3, "l", extractOperation, "extractOperation");
+    theEnv.addFunction("bitwise-modify", "l", 3, 3, "l", modifyOperation, "modifyOperation");
 
 }
 namespace {
@@ -220,15 +226,6 @@ chkbitOperation(UDF_ARGS__) noexcept {
         out->lexemeValue = theEnv.falseSymbol();
     }
 }
-#if 0
-        UDFValue arg0, arg1;
-        if (!theEnv.firstArgument(context, ArgumentBits::Integer, &arg0)) {
-            return std::nullopt;
-        } else if (!theEnv.nextArgument(context, ArgumentBits::Integer, &arg1)) {
-            return std::nullopt;
-        }
-        return std::make_optional(std::make_tuple(arg0.integerValue->contents, arg1.integerValue->contents));
-#endif
 
 void
 alterbitOperation(UDF_ARGS__) noexcept {
@@ -334,6 +331,71 @@ xnorOperation(UDF_ARGS__) noexcept {
     } else {
         out->lexemeValue = theEnv.falseSymbol();
     }
+}
+void
+splitIntoHalvesOperation(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    UDFValue arg;
+    if (!theEnv.firstArgument(context, ArgumentBits::Integer, &arg)) {
+        out->lexemeValue = theEnv.falseSymbol();
+    } else {
+        MultifieldBuilder mfb(theEnv);
+        auto value = arg.integerValue->contents;
+        uint32_t lo = static_cast<uint32_t>(value),
+                 hi = static_cast<uint32_t>(value >> 32);
+        mfb.append(static_cast<int64_t>(lo));
+        mfb.append(static_cast<int64_t>(hi));
+        out->multifieldValue = mfb.create();
+    }
+}
+
+void
+extractOperation(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    UDFValue arg0, arg1, arg2;
+    if (!theEnv.firstArgument(context, ArgumentBits::Integer, &arg0)) {
+        out->lexemeValue = theEnv.falseSymbol();
+        return;
+    } 
+    if (!theEnv.nextArgument(context, ArgumentBits::Integer, &arg1)) {
+        out->lexemeValue = theEnv.falseSymbol();
+        return;
+    }
+    if (!theEnv.nextArgument(context, ArgumentBits::Integer, &arg2)) {
+        out->lexemeValue = theEnv.falseSymbol();
+        return;
+    }
+    auto src = static_cast<uint64_t>(arg0.integerValue->contents);
+    auto pos = static_cast<uint64_t>(arg1.integerValue->contents) & 0b111'111;
+    auto length = static_cast<uint64_t>(arg2.integerValue->contents);
+    if (length > 63) {
+        length = 63;
+    }
+    auto result = (src >> pos) & ((static_cast<uint64_t>(1) << length) - 1);
+    out->integerValue = theEnv.createInteger(result);
+}
+
+void
+modifyOperation(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    UDFValue arg0, arg1, arg2;
+    if (!theEnv.firstArgument(context, ArgumentBits::Integer, &arg0)) {
+        out->lexemeValue = theEnv.falseSymbol();
+        return;
+    } 
+    if (!theEnv.nextArgument(context, ArgumentBits::Integer, &arg1)) {
+        out->lexemeValue = theEnv.falseSymbol();
+        return;
+    }
+    if (!theEnv.nextArgument(context, ArgumentBits::Integer, &arg2)) {
+        out->lexemeValue = theEnv.falseSymbol();
+        return;
+    }
+    auto src = static_cast<uint64_t>(arg0.integerValue->contents);
+    auto src2 = static_cast<uint64_t>(arg1.integerValue->contents);
+    auto mask = static_cast<uint64_t>(arg2.integerValue->contents);
+    auto result = (src & mask) | (src2 & ~mask);
+    out->integerValue = theEnv.createInteger(result);
 }
 
 } // end namespace Electron
