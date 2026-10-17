@@ -69,6 +69,9 @@ static void countTrailingOnes(UDF_ARGS__) noexcept;
 static void populationCount(UDF_ARGS__) noexcept;
 static void getPlatformEndianness(UDF_ARGS__) noexcept;
 static void bitCeiling(UDF_ARGS__) noexcept;
+static void bitFloor(UDF_ARGS__) noexcept;
+static void bitWidth(UDF_ARGS__) noexcept;
+static void hasSingleBit(UDF_ARGS__) noexcept;
 }
 
 void
@@ -104,7 +107,10 @@ InitializeBinaryExtensions(RawEnvironment* env)
     theEnv.addFunction("count-trailing-ones", "l", 1, 1, "l", countTrailingOnes, "countTrailingOnes");
     theEnv.addFunction("population-count", "l", 1, 1, "l", populationCount, "populationCount");
     theEnv.addFunction("platform-endianness", "sy", 0, 0, "sy", getPlatformEndianness, "getPlatformEndianness");
-
+    theEnv.addFunction("bit-ceiling", "l", 1, 1, "l", bitCeiling, "bitCeiling");
+    theEnv.addFunction("bit-floor", "l", 1, 1, "l", bitFloor, "bitFloor");
+    theEnv.addFunction("bit-width", "l", 1, 1, "l", bitWidth, "bitWidth");
+    theEnv.addFunction("has-single-bit", "b", 1, 1, "l", hasSingleBit, "hasSingleBit");
 }
 namespace 
 {
@@ -504,6 +510,45 @@ populationCount(UDF_ARGS__) noexcept {
     auto& theEnv = Environment::fromRaw(env);
     if (auto result = extractOneArgument(theEnv, context); result) {
         out->integerValue = theEnv.createInteger(std::popcount(static_cast<uint64_t>(*result)));
+    } else {
+        out->lexemeValue = theEnv.falseSymbol();
+    }
+}
+
+void
+bitWidth(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    if (auto result = extractOneArgument(theEnv, context); result) {
+        out->integerValue = theEnv.createInteger(std::bit_width(static_cast<uint64_t>(*result)));
+    } else {
+        out->lexemeValue = theEnv.falseSymbol();
+    }
+}
+
+void
+bitCeiling(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    if (auto result = extractOneArgument(theEnv, context); result) {
+        out->integerValue = theEnv.createInteger(std::bit_ceil(static_cast<uint64_t>(*result)));
+    } else {
+        out->lexemeValue = theEnv.falseSymbol();
+    }
+}
+void
+bitFloor(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    if (auto result = extractOneArgument(theEnv, context); result) {
+        out->integerValue = theEnv.createInteger(std::bit_floor(static_cast<uint64_t>(*result)));
+    } else {
+        out->lexemeValue = theEnv.falseSymbol();
+    }
+}
+
+void
+hasSingleBit(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    if (auto result = extractOneArgument(theEnv, context); result) {
+        out->lexemeValue = theEnv.createBool(std::has_single_bit(static_cast<uint64_t>(*result)));
     } else {
         out->lexemeValue = theEnv.falseSymbol();
     }
