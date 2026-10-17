@@ -73,6 +73,8 @@ static void bitWidth(UDF_ARGS__) noexcept;
 static void hasSingleBit(UDF_ARGS__) noexcept;
 static void eConstantOperation(UDF_ARGS__) noexcept;
 static void scanbyteOperation(UDF_ARGS__) noexcept;
+static void bitIsSet(UDF_ARGS__) noexcept;
+static void bitIsClear(UDF_ARGS__) noexcept;
 
 void
 InitializeBinaryExtensions(RawEnvironment* env)
@@ -113,6 +115,8 @@ InitializeBinaryExtensions(RawEnvironment* env)
     theEnv.addFunction("has-single-bit", "b", 1, 1, "l", hasSingleBit, "hasSingleBit");
     theEnv.addFunction("e", "ld", 0, 0, "sy", eConstantOperation, "eConstantOperation");
     theEnv.addFunction("scanbyte", "b", 2, 2, "l", scanbyteOperation, "scanbyteOperation");
+    theEnv.addFunction("bit-setp", "b", 2, 2, "l", bitIsSet, "bitIsSet");
+    theEnv.addFunction("bit-clearp", "b", 2, 2, "l", bitIsSet, "bitIsSet");
 }
 namespace 
 {
@@ -582,6 +586,30 @@ scanbyteOperation(UDF_ARGS__) noexcept {
             ((src1 & 0x0000FF0000000000) == (src2 & 0x0000FF0000000000)) |
             ((src1 & 0x00FF000000000000) == (src2 & 0x00FF000000000000)) |
             ((src1 & 0xFF00000000000000) == (src2 & 0xFF00000000000000));
+    } 
+    out->lexemeValue = theEnv.createBool(outcome);
+}
+void
+bitIsSet(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    bool outcome = false;
+    if (auto result = extractTwoArguments(theEnv, context); result) {
+        auto [arg0, arg1] = *result;
+        auto src = static_cast<uint64_t>(arg0);
+        auto bitpos = static_cast<uint64_t>(arg1) & 0b111'111;
+        outcome = (src & (1ull << bitpos)) != 0;
+    } 
+    out->lexemeValue = theEnv.createBool(outcome);
+}
+void
+bitIsClear(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    bool outcome = false;
+    if (auto result = extractTwoArguments(theEnv, context); result) {
+        auto [arg0, arg1] = *result;
+        auto src = static_cast<uint64_t>(arg0);
+        auto bitpos = static_cast<uint64_t>(arg1) & 0b111'111;
+        outcome = (src & (1ull << bitpos)) == 0;
     } 
     out->lexemeValue = theEnv.createBool(outcome);
 }
