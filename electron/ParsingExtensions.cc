@@ -36,6 +36,7 @@ namespace Electron
 {
 
 static void nextTokenFunction(UDF_ARGS__);
+static void canBeTreatedAsLogicalName(UDF_ARGS__);
 
 void
 InitializeParsingExtensions(RawEnvironment* env)
@@ -44,6 +45,7 @@ InitializeParsingExtensions(RawEnvironment* env)
     // this function is useful if you want to parse CLIPS syntax as is, if you want to use clips for general parsing
     // then you will need to use get-char and pray
     theEnv.addFunction("next-token", "synldfie", 1, 1, "y", nextTokenFunction, "nextTokenFunction");
+    theEnv.addFunction("logical-namep", "b", 1, 1, "y", canBeTreatedAsLogicalName, "canBeTreatedAsLogicalName");
 }
 
 void
@@ -150,6 +152,14 @@ nextTokenFunction(UDF_ARGS__) {
         }
     }
     out->multifieldValue = bldr.create();
+}
+
+void
+canBeTreatedAsLogicalName(UDF_ARGS__) {
+    // given a symbol, does it pass query checks into the router list?
+    auto& theEnv = Environment::fromRaw(env);
+    auto logicalName = ::GetLogicalName(context, STDIN);
+    out->lexemeValue = theEnv.createBool(theEnv.queryRouters(logicalName));
 }
 
 } // end namespace Electron

@@ -1217,7 +1217,7 @@ public:
     void unrecognizedRouterMessage(const std::string& function) noexcept {
         ::UnrecognizedRouterMessage(_env, function.c_str());
     }
-    bool queryRouters(const std::string& logicalName) noexcept {
+    [[nodiscard]] inline bool queryRouters(const std::string& logicalName) noexcept {
         return ::QueryRouters(_env, logicalName.c_str());
     }
     RouterDataModule& routerData() { return *RouterData(_env); }
