@@ -116,7 +116,7 @@ InitializeBinaryExtensions(RawEnvironment* env)
     theEnv.addFunction("e", "ld", 0, 0, "sy", eConstantOperation, "eConstantOperation");
     theEnv.addFunction("scanbyte", "b", 2, 2, "l", scanbyteOperation, "scanbyteOperation");
     theEnv.addFunction("bit-setp", "b", 2, 2, "l", bitIsSet, "bitIsSet");
-    theEnv.addFunction("bit-clearp", "b", 2, 2, "l", bitIsSet, "bitIsSet");
+    theEnv.addFunction("bit-clearp", "b", 2, 2, "l", bitIsClear, "bitIsClear");
 }
 namespace 
 {
