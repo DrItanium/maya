@@ -59,7 +59,8 @@ static void xnorOperation(UDF_ARGS__) noexcept;
 static void splitIntoHalvesOperation(UDF_ARGS__) noexcept;
 static void extractOperation(UDF_ARGS__) noexcept;
 static void modifyOperation(UDF_ARGS__) noexcept;
-static void rotateOperation(UDF_ARGS__) noexcept;
+static void rotateLeftOperation(UDF_ARGS__) noexcept;
+static void rotateRightOperation(UDF_ARGS__) noexcept;
 
 void
 InitializeBinaryExtensions(RawEnvironment* env)
@@ -86,7 +87,8 @@ InitializeBinaryExtensions(RawEnvironment* env)
     theEnv.addFunction("bitwise-split", "m", 1, 1, "l", splitIntoHalvesOperation, "splitIntoHalvesOperation");
     theEnv.addFunction("bitwise-extract", "l", 3, 3, "l", extractOperation, "extractOperation");
     theEnv.addFunction("bitwise-modify", "l", 3, 3, "l", modifyOperation, "modifyOperation");
-    theEnv.addFunction("bitwise-rotate", "l", 2, 2, "l", rotateOperation, "rotateOperation");
+    theEnv.addFunction("bitwise-rotate-left", "l", 2, 2, "l", rotateLeftOperation, "rotateLeftOperation");
+    theEnv.addFunction("bitwise-rotate-right", "l", 2, 2, "l", rotateRightOperation, "rotateRightOperation");
 
 }
 namespace {
@@ -401,15 +403,28 @@ modifyOperation(UDF_ARGS__) noexcept {
     out->integerValue = theEnv.createInteger(result);
 }
 void
-rotateOperation(UDF_ARGS__) noexcept {
+rotateRightOperation(UDF_ARGS__) noexcept {
     auto& theEnv = Environment::fromRaw(env);
     if (auto result = extractTwoArguments(theEnv, context); result) {
         auto [arg0, arg1] = *result;
-        out->integerValue = theEnv.createInteger(arg0 | ~arg1);
+        auto src = static_cast<uint64_t>(arg0);
+        out->integerValue = theEnv.createInteger(std::rotr(src, arg1));
     } else {
         out->lexemeValue = theEnv.falseSymbol();
     }
 }
+void
+rotateLeftOperation(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    if (auto result = extractTwoArguments(theEnv, context); result) {
+        auto [arg0, arg1] = *result;
+        auto src = static_cast<uint64_t>(arg0);
+        out->integerValue = theEnv.createInteger(std::rotl(src, arg1));
+    } else {
+        out->lexemeValue = theEnv.falseSymbol();
+    }
+}
+
 
 
 
