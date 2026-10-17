@@ -61,6 +61,12 @@ static void extractOperation(UDF_ARGS__) noexcept;
 static void modifyOperation(UDF_ARGS__) noexcept;
 static void rotateLeftOperation(UDF_ARGS__) noexcept;
 static void rotateRightOperation(UDF_ARGS__) noexcept;
+static void countLeadingZeros(UDF_ARGS__) noexcept;
+static void countLeadingOnes(UDF_ARGS__) noexcept;
+static void countTrailingZeros(UDF_ARGS__) noexcept;
+static void countTrailingOnes(UDF_ARGS__) noexcept;
+static void populationCount(UDF_ARGS__) noexcept;
+static void getPlatformEndianness(UDF_ARGS__) noexcept;
 
 void
 InitializeBinaryExtensions(RawEnvironment* env)
@@ -89,6 +95,12 @@ InitializeBinaryExtensions(RawEnvironment* env)
     theEnv.addFunction("bitwise-modify", "l", 3, 3, "l", modifyOperation, "modifyOperation");
     theEnv.addFunction("bitwise-rotate-left", "l", 2, 2, "l", rotateLeftOperation, "rotateLeftOperation");
     theEnv.addFunction("bitwise-rotate-right", "l", 2, 2, "l", rotateRightOperation, "rotateRightOperation");
+    theEnv.addFunction("count-leading-zeros", "l", 1, 1, "l", countLeadingZeros, "countLeadingZeros");
+    theEnv.addFunction("count-leading-ones", "l", 1, 1, "l", countLeadingOnes, "countLeadingOnes");
+    theEnv.addFunction("count-trailing-zeros", "l", 1, 1, "l", countTrailingZeros, "countTrailingZeros");
+    theEnv.addFunction("count-trailing-ones", "l", 1, 1, "l", countTrailingOnes, "countTrailingOnes");
+    theEnv.addFunction("population-count", "l", 1, 1, "l", populationCount, "populationCount");
+    theEnv.addFunction("platform-endianness", "sy", 0, 0, nullptr, getPlatformEndianness, "getPlatformEndianness");
 
 }
 namespace {
@@ -101,6 +113,14 @@ namespace {
             return std::nullopt;
         }
         return std::make_optional(std::make_tuple(arg0.integerValue->contents, arg1.integerValue->contents));
+    }
+    std::optional<int64_t>
+    extractOneArgument(Environment& theEnv, Electron::UDFContext* context) noexcept {
+        UDFValue arg0;
+        if (!theEnv.firstArgument(context, ArgumentBits::Integer, &arg0)) {
+            return std::nullopt;
+        }
+        return std::make_optional(arg0.integerValue->contents);
     }
 }
 void
@@ -142,11 +162,10 @@ rightShift(UDF_ARGS__) noexcept
 void
 notOperation(UDF_ARGS__) noexcept {
     auto& theEnv = Environment::fromRaw(env);
-    UDFValue arg;
-    if (!theEnv.firstArgument(context, ArgumentBits::Integer, &arg)) {
-        out->lexemeValue = theEnv.falseSymbol();
+    if (auto result = extractOneArgument(theEnv, context); result) {
+        out->integerValue = theEnv.createInteger(~*result);
     } else {
-        out->integerValue = theEnv.createInteger(~arg.integerValue->contents);
+        out->lexemeValue = theEnv.falseSymbol();
     }
 }
 void
@@ -413,6 +432,7 @@ rotateRightOperation(UDF_ARGS__) noexcept {
         out->lexemeValue = theEnv.falseSymbol();
     }
 }
+
 void
 rotateLeftOperation(UDF_ARGS__) noexcept {
     auto& theEnv = Environment::fromRaw(env);
@@ -425,7 +445,66 @@ rotateLeftOperation(UDF_ARGS__) noexcept {
     }
 }
 
+void
+countLeadingZeros(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    if (auto result = extractOneArgument(theEnv, context); result) {
+        out->integerValue = theEnv.createInteger(std::countl_zero(static_cast<uint64_t>(*result)));
+    } else {
+        out->lexemeValue = theEnv.falseSymbol();
+    }
+}
 
+void
+countLeadingOnes(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    if (auto result = extractOneArgument(theEnv, context); result) {
+        out->integerValue = theEnv.createInteger(std::countl_one(static_cast<uint64_t>(*result)));
+    } else {
+        out->lexemeValue = theEnv.falseSymbol();
+    }
+}
+
+void
+countTrailingZeros(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    if (auto result = extractOneArgument(theEnv, context); result) {
+        out->integerValue = theEnv.createInteger(std::countr_zero(static_cast<uint64_t>(*result)));
+    } else {
+        out->lexemeValue = theEnv.falseSymbol();
+    }
+}
+
+void
+countTrailingOnes(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    if (auto result = extractOneArgument(theEnv, context); result) {
+        out->integerValue = theEnv.createInteger(std::countr_one(static_cast<uint64_t>(*result)));
+    } else {
+        out->lexemeValue = theEnv.falseSymbol();
+    }
+}
+
+void
+getPlatformEndianness(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    if constexpr (std::endian::native == std::endian::big) {
+        out->lexemeValue = theEnv.createSymbol("big");
+    } else if constexpr (std::endian::native == std::endian::little) {
+        out->lexemeValue = theEnv.createSymbol("little");
+    } else {
+        out->lexemeValue = theEnv.createSymbol("mixed");
+    }
+}
+void
+populationCount(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    if (auto result = extractOneArgument(theEnv, context); result) {
+        out->integerValue = theEnv.createInteger(std::popcount(static_cast<uint64_t>(*result)));
+    } else {
+        out->lexemeValue = theEnv.falseSymbol();
+    }
+}
 
 
 } // end namespace Electron
