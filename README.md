@@ -5,7 +5,7 @@ library we use internally (LibElectron), this is different from the archived
 LibElectron because this one is far more complete. To simplify the open
 sourcing process, I have preserved the file structure we use internally for our
 tools which use clips. We have designed the electron wrapper in such a way as
-to make it more natural to interface with CLIPS from a C++17 context. 
+to make it more natural to interface with CLIPS from a C++20 context. 
 
 I wrote the electron library for Parasoft starting in 2015 because we needed a better way to 
 interface with CLIPS through Modern C++. All of the features in the library are used internally by
