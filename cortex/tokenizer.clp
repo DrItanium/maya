@@ -310,11 +310,10 @@
          (make-instance ?tok of variable
                         (parent ?p)
                         (value ?value)
-                        (is-global (switch ?kind
-                                           (case GBL_VARIABLE then TRUE)
-                                           (case MF_GBL_VARIABLE then TRUE)
-                                           (default FALSE)))
-                        (is-multifield (switch ?kind
-                                               (case MF_VARIABLE then TRUE)
-                                               (case MF_GBL_VARIABLE then TRUE)
-                                               (default FALSE)))))
+                        (is-global (not (neq ?kind
+                                             GBL_VARIABLE
+                                             MF_GBL_VARIABLE)))
+                        (is-multifield (not (neq ?kind
+                                                 MF_VARIABLE
+                                                 MF_GBL_VARIABLE)))))
+
