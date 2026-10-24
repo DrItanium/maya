@@ -43,13 +43,6 @@
         has-title
         has-comment))
 
-(defclass clips-common::slot-attribute
-  (is-a has-parent
-        has-kind)
-  (multislot values
-             (storage local)
-             (visibility public)
-             (default ?NONE)))
 
 (defclass clips-common::slot
   (is-a has-parent
@@ -77,6 +70,14 @@
   (slot kind
         (source composite)
         (default multi)))
+
+(defclass clips-common::slot-attribute
+  (is-a has-parent
+        has-kind)
+  (multislot values
+             (storage local)
+             (visibility public)
+             (default ?NONE)))
 ; ----
 (defmodule identify-global-constructs
            (import clips-common
@@ -343,6 +344,22 @@
                         (parent ?p)
                         (title ?name)
                         (attributes ?attributes)))
+
+(defrule identify-deftemplate-constructs::identify-slot-attribute
+         (object (is-a slot)
+                 (name ?slot)
+                 (attributes $? ?expr $?))
+         (object (is-a expression)
+                 (name ?expr)
+                 (parent ?slot)
+                 (contents ?kind 
+                           $?rest))
+         =>
+         (unmake-instance ?expr)
+         (make-instance ?expr of slot-attribute
+                        (parent ?slot)
+                        (kind ?kind)
+                        (values ?rest)))
 
 
 ; TODO: add sanity checking
