@@ -327,6 +327,23 @@
                         (title ?name)
                         (attributes ?attributes)))
 
+(defrule identify-deftemplate-constructs::create-multi-slot
+         (object (is-a deftemplate-construct)
+                 (name ?p)
+                 (definitions $? ?a $?))
+         ?expr <- (object (is-a expression)
+                          (name ?a)
+                          (parent ?p)
+                          (contents multislot 
+                                    ?name
+                                    $?attributes))
+         =>
+         (unmake-instance ?expr)
+         (make-instance ?a of multi-slot
+                        (parent ?p)
+                        (title ?name)
+                        (attributes ?attributes)))
+
 
 ; TODO: add sanity checking
 ; ----
