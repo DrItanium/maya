@@ -345,7 +345,14 @@
                         (title ?name)
                         (attributes ?attributes)))
 
-(defrule identify-deftemplate-constructs::identify-slot-attribute
+
+
+; TODO: add sanity checking
+; ----
+(defmodule identify-slot-attributes
+           (import clips-common
+                   ?ALL))
+(defrule identify-slot-attributes::construct-slot-attribute 
          (object (is-a slot)
                  (name ?slot)
                  (attributes $? ?expr $?))
@@ -360,9 +367,7 @@
                         (parent ?slot)
                         (kind ?kind)
                         (values ?rest)))
-
-
-; TODO: add sanity checking
+           
 ; ----
 (defmodule identify-deffunction-constructs
            (import clips-common 
@@ -479,6 +484,8 @@
                                        identify-generic-constructs
                                        identify-deftemplate-constructs
                                        identify-deffunction-constructs
+                                       ; slots need to have attributes identified
+                                       identify-slot-attributes
                                        ; reset targets
                                        identify-deffacts-constructs
                                        ; must be last
