@@ -23,6 +23,7 @@
 
 (include cortex/common.clp)
 (include cortex/tokenizer.clp)
+; ----
 (defmodule clips-common
            (import common
                    ?ALL)
@@ -36,8 +37,11 @@
         has-title
         has-comment))
 
+; ----
 (defmodule identify-global-constructs
            (import clips-common
+                   ?ALL)
+           (import variable-identification
                    ?ALL)
            (export ?ALL))
 (defclass identify-global-constructs::defglobal-construct
@@ -101,6 +105,36 @@
                         (target-module) ; no module specified
                         (assignments $?rest)))
 
+(defrule identify-global-constructs::new-assignment-found
+         ?obj <- (object (is-a defglobal-construct)
+                         (name ?dfg)
+                         (assignments $?before
+                                      ?name =(sym-cat "=")  ?expression
+                                      $?after))
+         ?vo <- (object (is-a variable)
+                        (name ?name)
+                        (is-global TRUE)
+                        (is-multifield FALSE)
+                        (value ?var))
+         ?eo <- (object (is-a expression)
+                        (name ?expression))
+         =>
+         (bind ?assignment
+               (make-instance of global-assignment
+                              (parent ?dfg)
+                              (target-variable ?name)
+                              (expression ?expression)))
+         (modify-instance ?vo
+                          (parent ?assignment))
+         (modify-instance ?eo
+                          (parent ?assignment))
+         (modify-instance ?obj
+                          (assignments $?before
+                                       ?assignment
+                                       $?after)))
+; TODO: add checks for bad global assignments
+
+; ----
 
 
 (defmodule finish-clips-parsing
@@ -127,6 +161,8 @@
                    ?ALL)
            (import variable-identification
                    ?ALL)
+           (import clips-common
+                   ?ALL)
            (import identify-global-constructs
                    ?ALL)
            (export ?ALL))
@@ -142,7 +178,7 @@
                                        ; must be last
                                        finish-clips-parsing))
 
-                                       
+
 (defrule clips::do-clips-parsing
          (object (is-a translation-unit)
                  (status UNPROCESSED)
