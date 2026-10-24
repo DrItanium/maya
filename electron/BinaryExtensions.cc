@@ -80,6 +80,7 @@ static void bitsPerChar(UDF_ARGS__) noexcept;
 static void bytesPerInteger(UDF_ARGS__) noexcept;
 static void bytesPerFloat(UDF_ARGS__) noexcept;
 static void bytesPerPointer(UDF_ARGS__) noexcept;
+static void getFloatBits(UDF_ARGS__) noexcept;
 
 void
 InitializeBinaryExtensions(RawEnvironment* env)
@@ -127,6 +128,7 @@ InitializeBinaryExtensions(RawEnvironment* env)
     theEnv.addFunction("bytes-per-integer", "l", 0, 0, "l", bytesPerInteger, "bytesPerInteger");
     theEnv.addFunction("bytes-per-float", "l", 0, 0, "l", bytesPerFloat, "bytesPerFloat");
     theEnv.addFunction("bytes-per-pointer", "l", 0, 0, "l", bytesPerPointer, "bytesPerPointer");
+    theEnv.addFunction("float-bits", "l", 1, 1, "ld", getFloatBits, "getFloatBits");
 }
 namespace 
 {
@@ -645,5 +647,24 @@ void
 bytesPerPointer(UDF_ARGS__) noexcept {
     auto& theEnv = Environment::fromRaw(env);
     out->integerValue = theEnv.createInteger(sizeof(void*));
+}
+
+void
+getFloatBits(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    UDFValue arg0;
+    if (!theEnv.firstArgument(context, ArgumentBits::Float, &arg0)) {
+        out->lexemeValue = theEnv.falseSymbol();
+    } else {
+        // this is very dangerous to do since there is an assumption that the two data types are the same size...
+        // there is no guarantee of this but for my purposes this is fine!
+        union Converter {
+            decltype(CLIPSFloat::contents) from;
+            decltype(CLIPSInteger::contents) to;
+        };
+        Converter c;
+        c.from = arg0.floatValue->contents;
+        out->integerValue = theEnv.createInteger( c.to);
+    }
 }
 } // end namespace Electron
