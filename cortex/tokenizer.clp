@@ -216,4 +216,22 @@
                    "End of the file before closing everything up on " ?ln ! crlf)
          (modify ?f
                  (status ERROR)))
+(defmodule raise-constants
+           "Custom pass that hoists constants like lexeme's and numbers out of tokens into direct CLIPS representations"
+           (import tokenizer
+                   ?ALL))
+
+(defrule raise-constants::hoist-constant
+         ?obj <- (object (is-a token)
+                         (parent ?parent)
+                         (kind INTEGER|FLOAT|SYMBOL|STRING)
+                         (value ?value)
+                         (name ?tok))
+         ?expr <- (object (is-a expression)
+                          (name ?parent)
+                          (contents $?a ?tok $?b))
+         =>
+         (unmake-instance ?obj)
+         (modify-instance ?expr
+                          (contents ?a ?value ?b)))
 
