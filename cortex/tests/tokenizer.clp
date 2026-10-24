@@ -38,7 +38,11 @@
 
 (definstances MAIN::standard-parse-setup
               (of translation-unit
-                  (path cortex/tokenizer.clp)))
+                  (path cortex/tokenizer.clp))
+              (of translation-unit
+                  (path cortex/common.clp))
+              (of translation-unit
+                  (path /this/is/not/a/real/path)))
 
 (defrule MAIN::run-tokenization
          (object (is-a translation-unit)
@@ -52,6 +56,36 @@
                 wildcard-identification ; then identify wildcards
                 constraint-identification ; then identify constraints
          ))
+
+(defrule MAIN::status-message-generation
+         "Print out status messages while processing translation units"
+         (declare (salience 1))
+         (object (is-a translation-unit)
+                 (valid TRUE)
+                 (status ?k)
+                 (path ?path))
+         =>
+         (switch ?k
+                 (case ERROR then 
+                   (printout stderr 
+                             "Failed to process " ?path crlf))
+                 (case FINISHED then
+                   (printout stderr
+                             "Successfully processed " ?path crlf))
+                 (case UNPROCESSED then 
+                   (printout stderr
+                             "Processing " ?path crlf))
+                 (default
+                   (printout stderr
+                             "Something went funky while processing " ?path crlf))))
+
+(defrule MAIN::invalid-translation-unit-message
+         (object (is-a translation-unit)
+                 (valid FALSE)
+                 (path ?path))
+         =>
+         (printout stderr
+                   "Invalid translation unit " ?path crlf))
 
 
 
