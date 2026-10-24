@@ -80,3 +80,9 @@
         (visibility public)
         (default ?NONE)))
 
+(defclass common::has-single-value
+  (is-a USER)
+  (slot value
+        (storage local)
+        (visibility public)
+        (default ?NONE)))

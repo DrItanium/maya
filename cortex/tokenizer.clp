@@ -56,6 +56,15 @@
         (visibility public)
         (access initialize-only)
         (default-dynamic (gensym*)))
+  (slot status
+        (type SYMBOL)
+        (allowed-symbols UNPROCESSED
+                         PROCESSING
+                         FINISHED
+                         ERROR)
+        (storage local)
+        (visibility public)
+        (default UNPROCESSED))
   (slot valid
         (type SYMBOL)
         (allowed-symbols FALSE
@@ -70,6 +79,7 @@
         (storage local)
         (visibility public)
         (default FALSE))
+  (message-handler finish primary)
   (message-handler init after))
 (defmessage-handler tokenizer::translation-unit init after
                     ()
@@ -78,6 +88,15 @@
                                 (open ?self:path
                                       ?self:logical-name
                                       ?self:permissions))))
+
+(defmessage-handler tokenizer::translation-unit finish primary
+                    ()
+                    (if (and ?self:valid 
+                             ?self:is-open) then
+                      (close ?self:logical-name)
+                      (bind ?self:is-open
+                            FALSE)))
+
 
 
 
@@ -112,10 +131,13 @@
          "Each translation-unit needs a corresponding tracker to work with"
          (object (is-a translation-unit)
                  (name ?tu)
+                 (status UNPROCESSED)
                  (valid TRUE)
                  (logical-name ?lu))
          (not (tracker (translation-unit ?tu)))
          =>
+         (modify-instance ?tu
+                          (status PROCESSING))
          (assert (tracker (translation-unit ?tu)
                           (logical-name ?lu)
                           (current-expression ?tu)
@@ -186,6 +208,9 @@
                         (current-token RIGHT_PARENTHESIS 
                                        $?))
          =>
+         (modify-instance ?expr
+                          (status ERROR))
+         ; don't finish here!
          (printout stdout
                    "Found an extra right paren on " ?ln ! crlf)
          (modify ?f
@@ -200,22 +225,33 @@
                         (logical-name ?ln)
                         (current-token STOP $?))
          =>
+         (send ?expr
+               finish)
+         (modify-instance ?expr 
+                          (status FINISHED))
          (modify ?f
                  (status FINISHED)))
 
 (defrule tokenizer::finish-tokenization-fail
          (declare (salience 1))
          ?f <- (tracker (current-expression ?expr)
-                        (translation-unit ~?expr)
+                        (translation-unit ?k&~?expr)
                         (status PROCESSING)
                         (logical-name ?ln)
                         (current-token STOP 
                                        $?))
          =>
+         ; finish here since there is no point in keeping the file open
+         (send ?k 
+               finish)
+         (modify-instance ?k 
+                          (status ERROR))
          (printout stdout
                    "End of the file before closing everything up on " ?ln ! crlf)
          (modify ?f
                  (status ERROR)))
+
+; custom passes that you add after the initial tokenizer module if you want these features
 (defmodule raise-constants
            "Custom pass that hoists constants like lexeme's and numbers out of tokens into direct CLIPS representations"
            (import tokenizer
@@ -279,7 +315,8 @@
            (export ?ALL))
 
 (defclass variable-identification::variable
-  (is-a has-parent)
+  (is-a has-parent
+        has-single-value)
   (slot is-multifield
         (type SYMBOL)
         (allowed-symbols FALSE
@@ -291,10 +328,6 @@
         (type SYMBOL)
         (allowed-symbols FALSE
                          TRUE)
-        (storage local)
-        (visibility public)
-        (default ?NONE))
-  (slot value
         (storage local)
         (visibility public)
         (default ?NONE)))
@@ -317,3 +350,35 @@
                                                  MF_VARIABLE
                                                  MF_GBL_VARIABLE)))))
 
+(defmodule constraint-identification
+           (import tokenizer
+                   ?ALL)
+           (export ?ALL))
+
+(defclass constraint-identification::constraint
+  (is-a has-parent
+        has-kind
+        has-single-value)
+  (slot kind
+        (source composite)
+        (allowed-symbols NOT
+                         AND
+                         OR)))
+
+
+(defrule constraint-identification::convert
+         ?t <- (object (is-a token)
+                       (kind ?kind&NOT_CONSTRAINT|AND_CONSTRAINT|OR_CONSTRAINT)
+                       (value ?value)
+                       (name ?tok)
+                       (parent ?p))
+         =>
+         (unmake-instance ?t)
+         (make-instance ?tok of constraint
+                        (parent ?p)
+                        (value ?value)
+                        (kind (switch ?kind
+                                      (case NOT_CONSTRAINT then NOT)
+                                      (case AND_CONSTRAINT then AND)
+                                      (case OR_CONSTRAINT then OR)
+                                      (default UNKNOWN)))))
