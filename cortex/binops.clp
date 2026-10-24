@@ -22,22 +22,69 @@
 ;SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ; 
 ; code module to demonstrate different features of the new binary operations
-(defmodule binary_operations
-           (export ?ALL))
-(deffunction binary_operations::bits-per-integer
+(defmodule binary-operations
+           (export deffunction 
+                   ?ALL)
+           (export defgeneric 
+                   ?ALL)
+           ; hide all defglobals for now
+           (export defglobal
+                   ?NONE))
+(defglobal binary-operations
+           ?*integer-bitwidth* = (* (bits-per-byte)
+                                    (bytes-per-integer))
+           ?*float-bitwidth* = (* (bits-per-byte)
+                                  (bytes-per-float))
+           ?*pointer-bitwidth* = (* (bits-per-byte)
+                                    (bytes-per-pointer))
+           ?*highest-valid-bit-index* = (- ?*integer-bitwidth* 
+                                           1))
+(deffunction binary-operations::bits-per-integer
              "Return the number of bits that make up a clips integer"
              ()
-             (* (bits-per-byte)
-                (bytes-per-integer)))
+             ?*integer-bitwidth*)
 
-(deffunction binary_operations::bits-per-float
+(deffunction binary-operations::bits-per-float
              "Return the number of bits that make up a clips float"
              ()
-             (* (bits-per-byte)
-                (bytes-per-float)))
+             ?*float-bitwidth*)
 
-(deffunction binary_operations::bits-per-pointer
+(deffunction binary-operations::bits-per-pointer
              "Return the number of bits that a pointer is composed of on this target platform"
              ()
-             (* (bits-per-byte)
-                (bytes-per-pointer)))
+             ?*pointer-bitwidth*)
+(deffunction binary-operations::valid-bit-index
+             (?index)
+             (<= 0
+                 ?index
+                 ?*highest-valid-bit-index*))
+(deffunction binary-opeartions::valid-bit-width
+             (?index)
+             (<= 1
+                 ?index
+                 ?*integer-bitwidth*))
+(defgeneric binary-operations::make-bitwidth-mask
+            "Constructs a bitmask given a width")
+(defmethod binary-operations::make-bitwidth-mask
+  ((?width INTEGER
+           (valid-bit-width ?current-argument)))
+  (- (bitwise-left-shift 1 
+                         ?width) 1))
+(defmethod binary-operations::make-bitwidth-mask
+  ((?width INTEGER))
+  FALSE)
+
+(defgeneric binary-operations::extract-bit
+            "extract a single bit out of an integer and convert to a boolean")
+
+(defmethod binary-operations::extract-bit
+  ((?value INTEGER)
+   (?index INTEGER
+           (valid-bit-index ?current-argument)))
+  (bitwise-chkbit ?value
+                  ?index))
+
+(defmethod binary-opeartions::extract-bit
+  ((?value INTEGER)
+   (?index INTEGER))
+  FALSE)
