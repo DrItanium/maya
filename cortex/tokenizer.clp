@@ -235,3 +235,43 @@
          (modify-instance ?expr
                           (contents ?a ?value ?b)))
 
+(defmodule tokens->wildcards
+           "custom pass which converts a wildcard into a new wildcard type"
+           (import tokenizer 
+                   ?ALL)
+           (export ?ALL))
+(defclass tokens->wildcards::wildcard
+    (is-a has-parent)
+    (slot is-multifield
+          (type SYMBOL)
+          (allowed-symbols FALSE
+                           TRUE
+                           UNDEFINED)
+          (storage local)
+          (visibility public)
+          (default ?NONE))
+    (slot value
+          (type SYMBOL)
+          (storage local)
+          (visibility public)
+          (default ?NONE)))
+
+(defrule tokens->wildcards::convert
+         ?t <- (object (is-a token)
+                       (kind ?kind&SF_WILDCARD|MF_WILDCARD)
+                       (value ?value)
+                       (name ?tok)
+                       (parent ?p))
+         =>
+         (unmake-instance ?t)
+         (make-instance ?tok of wildcard
+                        (parent ?p)
+                        (value ?value)
+                        (is-multifield (switch ?kind
+                                               (case SF_WILDCARD then FALSE)
+                                               (case MF_WILDCARD then TRUE)
+                                               (default UNDEFINED)))))
+                        
+
+
+
