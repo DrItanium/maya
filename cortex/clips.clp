@@ -29,6 +29,12 @@
                    ?ALL)
            (import tokenizer
                    ?ALL)
+           (import variable-identification
+                   ?ALL)
+           (import wildcard-identification
+                   ?ALL)
+           (import constraint-identification
+                   ?ALL)
            (export ?ALL))
 (defclass clips-common::construct
   (is-a has-parent))
@@ -40,8 +46,6 @@
 ; ----
 (defmodule identify-global-constructs
            (import clips-common
-                   ?ALL)
-           (import variable-identification
                    ?ALL)
            (export ?ALL))
 (defclass identify-global-constructs::defglobal-construct
@@ -173,6 +177,105 @@
                         (parent ?tu)
                         (title ?name)))
 ; ----
+(defmodule identify-deffacts-constructs
+           (import clips-common 
+                   ?ALL)
+           (export ?ALL))
+
+(defclass identify-deffacts-constructs::deffacts-construct
+  (is-a titled-construct)
+  (multislot patterns
+             (storage local)
+             (visibility public)
+             (default ?NONE)))
+
+(defrule identify-deffacts-constructs::create-deffacts-full
+         (declare (salience 1))
+         (object (is-a translation-unit)
+                 (status TOKENIZED)
+                 (name ?tu))
+         ?ex <- (object (is-a expression)
+                        (name ?expr)
+                        (parent ?tu)
+                        (contents deffacts
+                                  ?title 
+                                  ?comment&:(stringp ?comment)
+                                  $?rest))
+         =>
+         (unmake-instance ?ex)
+         (make-instance ?expr of deffacts-construct
+                        (parent ?tu)
+                        (title ?title)
+                        (comment ?comment)
+                        (patterns $?rest)))
+
+(defrule identify-deffacts-constructs::create-deffacts-no-comment
+         (object (is-a translation-unit)
+                 (status TOKENIZED)
+                 (name ?tu))
+         ?ex <- (object (is-a expression)
+                        (name ?expr)
+                        (parent ?tu)
+                        (contents deffacts
+                                  ?title 
+                                  $?rest))
+         =>
+         (unmake-instance ?ex)
+         (make-instance ?expr of deffacts-construct
+                        (parent ?tu)
+                        (title ?title)
+                        (patterns $?rest)))
+; ----
+(defmodule identify-deftemplate-constructs
+           (import clips-common 
+                   ?ALL)
+           (export ?ALL))
+
+(defclass identify-deftemplate-constructs::deftemplate-construct
+  (is-a titled-construct)
+  (multislot definitions
+             (storage local)
+             (visibility public)
+             (default ?NONE)))
+
+(defrule identify-deftemplate-constructs::create-deftemplate-full
+         (declare (salience 1))
+         (object (is-a translation-unit)
+                 (status TOKENIZED)
+                 (name ?tu))
+         ?ex <- (object (is-a expression)
+                        (name ?expr)
+                        (parent ?tu)
+                        (contents deftemplate
+                                  ?title 
+                                  ?comment&:(stringp ?comment)
+                                  $?rest))
+         =>
+         (unmake-instance ?ex)
+         (make-instance ?expr of deftemplate-construct
+                        (parent ?tu)
+                        (title ?title)
+                        (comment ?comment)
+                        (definitions $?rest)))
+
+(defrule identify-deftemplate-constructs::create-deftemplate-no-comment
+         (object (is-a translation-unit)
+                 (status TOKENIZED)
+                 (name ?tu))
+         ?ex <- (object (is-a expression)
+                        (name ?expr)
+                        (parent ?tu)
+                        (contents deftemplate
+                                  ?title 
+                                  $?rest))
+         =>
+         (unmake-instance ?ex)
+         (make-instance ?expr of deftemplate-construct
+                        (parent ?tu)
+                        (title ?title)
+                        (definitions $?rest)))
+
+; ----
 
 
 (defmodule finish-clips-parsing
@@ -205,6 +308,10 @@
                    ?ALL)
            (import identify-generic-constructs
                    ?ALL)
+           (import identify-deffacts-constructs
+                   ?ALL)
+           (import identify-deftemplate-constructs
+                   ?ALL)
            (export ?ALL))
 
 (defglobal clips
@@ -216,6 +323,8 @@
                                        ; parsing phases
                                        identify-global-constructs
                                        identify-generic-constructs
+                                       identify-deffacts-constructs
+                                       identify-deftemplate-constructs
                                        ; must be last
                                        finish-clips-parsing))
 
