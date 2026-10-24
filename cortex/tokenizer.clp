@@ -25,6 +25,8 @@
 (defmodule tokenizer
            (import common
                    ?ALL)
+           (export deftemplate
+                   tracker)
            (export defclass
                    ?ALL))
 
@@ -116,7 +118,7 @@
          =>
          (assert (tracker (translation-unit ?tu)
                           (logical-name ?lu)
-                          (current-expression ?lu)
+                          (current-expression ?tu)
                           (current-token (next-token ?lu)))))
 
 (defrule tokenizer::create-token
