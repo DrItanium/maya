@@ -66,3 +66,9 @@
         (visibility public)
         (default ?NONE)))
 
+
+(deffunction common::contains$
+             (?looking-for $?in)
+             (not (neq ?looking-for
+                       (expand$ ?in))))
+
