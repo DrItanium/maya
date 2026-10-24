@@ -135,6 +135,44 @@
 ; TODO: add checks for bad global assignments
 
 ; ----
+(defmodule identify-generic-constructs
+           (import clips-common 
+                   ?ALL)
+           (export ?ALL))
+(defclass identify-generic-constructs::defgeneric-construct
+  (is-a titled-construct))
+
+(defrule identify-generic-constructs::create-defgeneric-full
+         (object (is-a translation-unit)
+                 (status TOKENIZED)
+                 (name ?tu))
+         ?ex <- (object (is-a expression)
+                        (name ?expr)
+                        (parent ?tu)
+                        (contents defgeneric 
+                                  ?name
+                                  ?comment))
+         =>
+         (unmake-instance ?ex)
+         (make-instance ?expr of defgeneric-construct
+                        (parent ?tu)
+                        (title ?name)
+                        (comment ?comment)))
+(defrule identify-generic-constructs::create-defgeneric-no-comment
+         (object (is-a translation-unit)
+                 (status TOKENIZED)
+                 (name ?tu))
+         ?ex <- (object (is-a expression)
+                        (name ?expr)
+                        (parent ?tu)
+                        (contents defgeneric 
+                                  ?name))
+         =>
+         (unmake-instance ?ex)
+         (make-instance ?expr of defgeneric-construct
+                        (parent ?tu)
+                        (title ?name)))
+; ----
 
 
 (defmodule finish-clips-parsing

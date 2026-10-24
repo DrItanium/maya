@@ -94,3 +94,15 @@
         (storage local)
         (visibility public)
         (default-dynamic "")))
+
+; --- technically these are redundant but act as a good sanity check
+(defgeneric common::token-constantp
+            "Can the given type be considered a token constant?")
+(defmethod common::token-constantp
+  ((?type SYMBOL))
+  (switch ?type
+          (case SYMBOL then TRUE)
+          (case STRING then TRUE)
+          (case INTEGER then TRUE)
+          (case FLOAT then TRUE)
+          (default FALSE)))
