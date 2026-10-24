@@ -1,5 +1,5 @@
 ;maya
-;Copyright (c) 2012-2023, Joshua Scoggins
+;Copyright (c) 2012-2025, Joshua Scoggins
 ;All rights reserved.
 ;
 ;Redistribution and use in source and binary forms, with or without
@@ -20,10 +20,49 @@
 ;ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 ;(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 ;SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-(include cortex/has-parent.clp)
+(defmodule common
+           (export ?ALL))
 
-(defclass MAIN::container
+(defclass common::has-parent
+  (is-a USER)
+  (slot parent
+        (type SYMBOL 
+              INSTANCE)
+        (allowed-symbols FALSE)
+        (storage local)
+        (visibility public))
+  (message-handler has-parent primary))
+
+(defmessage-handler common::has-parent has-parent primary
+                    (?parent)
+                    (or (eq ?self:parent
+                            ?parent)
+                        (send ?self:parent
+                              has-parent
+                              ?parent)))
+(defmessage-handler PRIMITIVE has-parent primary
+                    (?parent)
+                    FALSE)
+
+
+(defclass common::container
   (is-a has-parent)
   (multislot contents
              (storage local)
              (visibility public)))
+
+(defclass common::has-description
+  (is-a USER)
+  (slot description
+        (type STRING)
+        (storage local)
+        (visibility public)))
+
+(defclass common::has-title
+  (is-a USER)
+  (slot title
+        (type SYMBOL)
+        (storage local)
+        (visibility public)
+        (default ?NONE)))
+
