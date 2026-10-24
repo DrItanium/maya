@@ -276,6 +276,68 @@
                         (definitions $?rest)))
 
 ; ----
+(defmodule identify-deffunction-constructs
+           (import clips-common 
+                   ?ALL)
+           (export ?ALL))
+
+(defclass identify-deffunction-constructs::deffunction-construct
+  (is-a titled-construct)
+  (slot arguments
+        (type INSTANCE)
+        (storage local)
+        (visibility public)
+        (default ?NONE))
+  (multislot actions
+             (storage local)
+             (visibility public)
+             (default ?NONE)))
+
+(defrule identify-deffunction-constructs::create-deffunction-full
+         (declare (salience 1))
+         (object (is-a translation-unit)
+                 (status TOKENIZED)
+                 (name ?tu))
+         ?ex <- (object (is-a expression)
+                        (name ?expr)
+                        (parent ?tu)
+                        (contents deffunction
+                                  ?title 
+                                  ?comment&:(stringp ?comment)
+                                  ?args
+                                  $?rest))
+         (object (is-a expression)
+                 (name ?args))
+         =>
+         (unmake-instance ?ex)
+         (make-instance ?expr of deffunction-construct
+                        (parent ?tu)
+                        (title ?title)
+                        (comment ?comment)
+                        (arguments ?args)
+                        (actions ?rest)))
+
+(defrule identify-deffunction-constructs::create-deffunction-no-comment
+         (object (is-a translation-unit)
+                 (status TOKENIZED)
+                 (name ?tu))
+         ?ex <- (object (is-a expression)
+                        (name ?expr)
+                        (parent ?tu)
+                        (contents deffunction
+                                  ?title 
+                                  ?args
+                                  $?rest))
+         (object (is-a expression)
+                 (name ?args))
+         =>
+         (unmake-instance ?ex)
+         (make-instance ?expr of deffunction-construct
+                        (parent ?tu)
+                        (title ?title)
+                        (arguments ?args)
+                        (actions ?rest)))
+; ----
 
 
 (defmodule finish-clips-parsing
@@ -312,6 +374,8 @@
                    ?ALL)
            (import identify-deftemplate-constructs
                    ?ALL)
+           (import identify-deffunction-constructs
+                   ?ALL)
            (export ?ALL))
 
 (defglobal clips
@@ -321,10 +385,13 @@
                                        wildcard-identification
                                        variable-identification
                                        ; parsing phases
+                                       ; construct declaration
                                        identify-global-constructs
                                        identify-generic-constructs
-                                       identify-deffacts-constructs
                                        identify-deftemplate-constructs
+                                       identify-deffunction-constructs
+                                       ; reset targets
+                                       identify-deffacts-constructs
                                        ; must be last
                                        finish-clips-parsing))
 
