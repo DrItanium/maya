@@ -58,7 +58,7 @@
              (<= 0
                  ?index
                  ?*highest-valid-bit-index*))
-(deffunction binary-opeartions::valid-bit-width
+(deffunction binary-operations::valid-bit-width
              (?index)
              (<= 1
                  ?index
@@ -84,7 +84,7 @@
   (bitwise-chkbit ?value
                   ?index))
 
-(defmethod binary-opeartions::extract-bit
+(defmethod binary-operations::extract-bit
   ((?value INTEGER)
    (?index INTEGER))
   FALSE)
