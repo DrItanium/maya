@@ -79,6 +79,7 @@ static void bitIsClear(UDF_ARGS__) noexcept;
 static void bitsPerChar(UDF_ARGS__) noexcept;
 static void bytesPerInteger(UDF_ARGS__) noexcept;
 static void bytesPerFloat(UDF_ARGS__) noexcept;
+static void bytesPerPointer(UDF_ARGS__) noexcept;
 
 void
 InitializeBinaryExtensions(RawEnvironment* env)
@@ -125,6 +126,7 @@ InitializeBinaryExtensions(RawEnvironment* env)
     theEnv.addFunction("bits-per-byte", "l", 0, 0, "l", bitsPerChar, "bitsPerChar");
     theEnv.addFunction("bytes-per-integer", "l", 0, 0, "l", bytesPerInteger, "bytesPerInteger");
     theEnv.addFunction("bytes-per-float", "l", 0, 0, "l", bytesPerFloat, "bytesPerFloat");
+    theEnv.addFunction("bytes-per-pointer", "l", 0, 0, "l", bytesPerPointer, "bytesPerPointer");
 }
 namespace 
 {
@@ -637,5 +639,11 @@ void
 bytesPerFloat(UDF_ARGS__) noexcept {
     auto& theEnv = Environment::fromRaw(env);
     out->integerValue = theEnv.createInteger(sizeof(CLIPSFloat::contents));
+}
+
+void
+bytesPerPointer(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    out->integerValue = theEnv.createInteger(sizeof(void*));
 }
 } // end namespace Electron

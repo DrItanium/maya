@@ -25,11 +25,19 @@
 (defmodule binary_operations
            (export ?ALL))
 (deffunction binary_operations::bits-per-integer
+             "Return the number of bits that make up a clips integer"
              ()
              (* (bits-per-byte)
                 (bytes-per-integer)))
 
 (deffunction binary_operations::bits-per-float
+             "Return the number of bits that make up a clips float"
              ()
              (* (bits-per-byte)
                 (bytes-per-float)))
+
+(deffunction binary_operations::bits-per-pointer
+             "Return the number of bits that a pointer is composed of on this target platform"
+             ()
+             (* (bits-per-byte)
+                (bytes-per-pointer)))
