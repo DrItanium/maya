@@ -25,7 +25,8 @@
 (defmodule tokenizer
            (import common
                    ?ALL)
-           (export ?ALL))
+           (export defclass
+                   ?ALL))
 
 
 
@@ -42,3 +43,120 @@
 
 
 
+(deftemplate tokenizer::tracker
+             (slot metadata
+                   (type INSTANCE)
+                   (default ?NONE))
+             (slot logical-name
+                   (type SYMBOL)
+                   (default ?NONE))
+             (slot status
+                   (type SYMBOL)
+                   (allowed-symbols PROCESSING
+                                    FINISHED
+                                    ERROR)
+                   (default PROCESSING))
+             (slot top-level-expression
+                   (type INSTANCE)
+                   (default ?NONE))
+             (slot current-expression
+                   (type INSTANCE)
+                   (default ?NONE))
+             (multislot current-token
+                        (default ?NONE)))
+
+
+(defrule tokenizer::create-token
+         ?f <- (tracker (current-expression ?expr)
+                        (logical-name ?ln)
+                        (status PROCESSING)
+                        (current-token ?kind $?value))
+         ?obj <- (object (is-a expression)
+                         (name ?expr)
+                         (contents $?contents))
+         =>
+         (modify-instance ?obj
+                          (contents $?contents
+                                    (make-instance of token
+                                                   (parent ?expr)
+                                                   (kind ?kind)
+                                                   (value $?value))))
+         (modify ?f
+                 (current-token (next-token ?ln))))
+
+
+(defrule tokenizer::enter-expression
+         (declare (salience 1))
+         ?f <- (tracker (current-expression ?expr)
+                        (logical-name ?ln)
+                        (status PROCESSING)
+                        (current-token LEFT_PARENTHESIS $?))
+         ?obj <- (object (is-a expression)
+                         (name ?expr)
+                         (contents $?contents))
+         =>
+         (modify-instance ?obj
+                          (contents $?contents
+                                    (bind ?new-expr
+                                          (make-instance of expression
+                                                         (parent ?expr)
+                                                         (contents)))))
+                                    
+         (modify ?f
+                 (current-expression ?new-expr)
+                 (current-token (next-token ?ln))))
+
+(defrule tokenizer::leave-expression
+         (declare (salience 1))
+         ?f <- (tracker (current-expression ?expr)
+                        (top-level-expression ~?expr)
+                        (logical-name ?ln)
+                        (status PROCESSING)
+                        (current-token RIGHT_PARENTHESIS 
+                                       $?))
+         (object (is-a expression)
+                 (name ?expr)
+                 (parent ?p))
+         =>
+         (modify ?f
+                 (current-expression ?p)
+                 (current-token (next-token ?ln))))
+(defrule tokenizer::leave-expression-and-fail
+         (declare (salience 1))
+         ?f <- (tracker (current-expression ?expr)
+                        (top-level-expression ?expr)
+                        (logical-name ?ln)
+                        (status PROCESSING)
+                        (current-token RIGHT_PARENTHESIS 
+                                       $?))
+         =>
+         (printout stdout
+                   "Found an extra right paren on " ?ln ! crlf)
+         (modify ?f
+                 (status ERROR)
+                 (current-token (next-token ?ln))))
+
+(defrule tokenizer::finish-tokenization-success
+         (declare (salience 1))
+         ?f <- (tracker (current-expression ?expr)
+                        (top-level-expression ?expr)
+                        (status PROCESSING)
+                        (logical-name ?ln)
+                        (current-token STOP $?))
+         =>
+         (modify ?f
+                 (status FINISHED)))
+
+(defrule tokenizer::finish-tokenization-fail
+         (declare (salience 1))
+         ?f <- (tracker (current-expression ?expr)
+                        (top-level-expression ~?expr)
+                        (status PROCESSING)
+                        (logical-name ?ln)
+                        (current-token STOP 
+                                       $?))
+         =>
+         (printout stdout
+                   "End of the file before closing everything up on " ?ln ! crlf)
+         (modify ?f
+                 (status ERROR)))
