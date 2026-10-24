@@ -43,6 +43,42 @@
         has-title
         has-comment))
 
+(defclass clips-common::slot-attribute
+  (is-a has-parent
+        has-kind)
+  (multislot values
+             (storage local)
+             (visibility public)
+             (default ?NONE)))
+
+(defclass clips-common::slot
+  (is-a has-parent
+        has-title
+        has-kind)
+  (slot kind
+        (source composite)
+        (storage shared)
+        (allowed-symbols single
+                         multi
+                         UNDEFINED)
+        (access initialize-only)
+        (default UNDEFINED))
+  (multislot attributes
+             (storage local)
+             (visibility public)
+             (default ?NONE)))
+
+(defclass clips-common::single-slot
+  (is-a slot)
+  (slot kind
+        (source composite)
+        (default single)))
+
+(defclass clips-common::multi-slot
+  (is-a slot)
+  (slot kind
+        (source composite)
+        (default multi)))
 ; ----
 (defmodule identify-global-constructs
            (import clips-common
@@ -238,6 +274,8 @@
              (visibility public)
              (default ?NONE)))
 
+
+
 (defrule identify-deftemplate-constructs::create-deftemplate-full
          (declare (salience 1))
          (object (is-a translation-unit)
@@ -275,6 +313,7 @@
                         (title ?title)
                         (definitions $?rest)))
 
+; TODO: add sanity checking
 ; ----
 (defmodule identify-deffunction-constructs
            (import clips-common 
@@ -337,6 +376,7 @@
                         (title ?title)
                         (arguments ?args)
                         (actions ?rest)))
+; TODO: add sanity checking
 ; ----
 
 
