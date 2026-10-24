@@ -367,7 +367,6 @@
                         (parent ?slot)
                         (kind ?kind)
                         (values ?rest)))
-           
 ; ----
 (defmodule identify-deffunction-constructs
            (import clips-common 
@@ -432,6 +431,33 @@
                         (actions ?rest)))
 ; TODO: add sanity checking
 ; ----
+(defmodule sanity-check-slot-attributes
+           "double checks that the slot attributes defined for a given slot actually make sense"
+           (import clips-common
+                   ?ALL))
+; in this module we want to make sure that the attributes bound for a given slot make sense
+; this pass is generic so add new rules as needed here, this pass should not be responsible for 
+; checking validity of concepts but instead does the attribute make sense for the given target 
+; slot. Also, attribute argument count is another thing that can be checked here!
+
+
+; ----
+(defmodule display-clips-errors
+           (import clips-common
+                   ?ALL)
+           (import identify-global-constructs
+                   ?ALL)
+           (import identify-generic-constructs
+                   ?ALL)
+           (import identify-deffacts-constructs
+                   ?ALL)
+           (import identify-deftemplate-constructs
+                   ?ALL)
+           (import identify-deffunction-constructs
+                   ?ALL)
+           )
+           
+; ----
 
 
 (defmodule finish-clips-parsing
@@ -488,7 +514,10 @@
                                        identify-slot-attributes
                                        ; reset targets
                                        identify-deffacts-constructs
+                                       ; passes for different sanity check actions
+                                       sanity-check-slot-attributes
                                        ; must be last
+                                       display-clips-errors
                                        finish-clips-parsing))
 
 
