@@ -72,3 +72,11 @@
              (not (neq ?looking-for
                        (expand$ ?in))))
 
+(defclass common::has-kind
+  (is-a USER)
+  (slot kind
+        (type SYMBOL)
+        (storage local)
+        (visibility public)
+        (default ?NONE)))
+
