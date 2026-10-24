@@ -203,6 +203,8 @@
                    ?ALL)
            (import identify-global-constructs
                    ?ALL)
+           (import identify-generic-constructs
+                   ?ALL)
            (export ?ALL))
 
 (defglobal clips
@@ -213,6 +215,7 @@
                                        variable-identification
                                        ; parsing phases
                                        identify-global-constructs
+                                       identify-generic-constructs
                                        ; must be last
                                        finish-clips-parsing))
 
