@@ -86,3 +86,11 @@
         (storage local)
         (visibility public)
         (default ?NONE)))
+
+(defclass common::has-comment
+  (is-a USER)
+  (slot comment
+        (type STRING)
+        (storage local)
+        (visibility public)
+        (default-dynamic "")))

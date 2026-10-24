@@ -23,9 +23,56 @@
 
 (include cortex/common.clp)
 (include cortex/tokenizer.clp)
+(defmodule clips-common
+           (import common
+                   ?ALL)
+           (import tokenizer
+                   ?ALL)
+           (export ?ALL))
+(defclass clips-common::construct
+  (is-a has-parent))
+(defclass clips-common::titled-construct
+  (is-a construct
+        has-title
+        has-comment))
+
+(defmodule identify-global-constructs
+           (import clips-common
+                   ?ALL)
+           (export ?ALL))
+(defclass identify-global-constructs::defglobal-construct
+  (is-a construct)
+  (multislot target-module
+        (type SYMBOL)
+        (storage local)
+        (visibility public)
+        (cardinality 0 1)
+        (default ?NONE))
+  (multislot assignments
+             (storage local)
+             (visibility public)
+             (default ?NONE)))
+
+(defclass identify-global-constructs::global-assignment
+  (is-a has-parent)
+  (slot target-variable
+        (type INSTANCE)
+        (allowed-classes variable)
+        (storage local)
+        (visibility public)
+        (default ?NONE))
+  (slot expression
+        (type INSTANCE)
+        (storage local)
+        (visibility public)
+        (default ?NONE)))
+
+;(defrule identify-global-constructs::find-legal-defglobal-construct
+
+
 
 (defmodule finish-clips-parsing
-           "Last stage in the clips processing setup which marks the translation-unit as finished"
+           "Last stage in the clips processing setup which marks the translation-unit as parsed"
            (import tokenizer
                    defclass translation-unit))
 
@@ -49,7 +96,18 @@
                    ?ALL)
            (export ?ALL))
 
+(defglobal clips
+           ?*module-passes* = (create$ tokenizer
+                                       raise-constants
+                                       constraint-identification
+                                       wildcard-identification
+                                       variable-identification
+                                       ; parsing phases
+                                       identify-global-constructs
+                                       ; must be last
+                                       finish-clips-parsing))
 
+                                       
 (defrule clips::do-clips-parsing
          (object (is-a translation-unit)
                  (status UNPROCESSED)
@@ -59,12 +117,8 @@
          ; linkage would take place after parsing is done!
          (printout stderr
                    "Found an unprocessed translation-unit!" crlf)
-         (focus tokenizer
-                raise-constants
-                constraint-identification
-                wildcard-identification
-                variable-identification
-                finish-clips-parsing))
+         (focus (expand$ ?*module-passes*)))
+
 
 (defrule clips::leave-clips
          (declare (salience -10000))
