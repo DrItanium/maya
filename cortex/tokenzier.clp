@@ -28,6 +28,53 @@
            (export defclass
                    ?ALL))
 
+(defclass tokenizer::translation-unit
+  (is-a expression)
+  (slot parent
+        (source composite)
+        (access initialize-only)
+        (default FALSE))
+  (slot path
+        (type LEXEME)
+        (storage local)
+        (visibility public)
+        (access initialize-only)
+        (default ?NONE))
+  (slot permissions
+        (type LEXEME)
+        (storage local)
+        (visibility public)
+        (access initialize-only)
+        (default-dynamic "r"))
+  (slot logical-name
+        (type SYMBOL)
+        (storage local)
+        (visibility public)
+        (access initialize-only)
+        (default-dynamic (gensym*)))
+  (slot valid
+        (type SYMBOL)
+        (allowed-symbols FALSE
+                         TRUE)
+        (storage local)
+        (visibility public)
+        (access initialize-only))
+  (slot is-open
+        (type SYMBOL)
+        (allowed-symbols FALSE
+                         TRUE)
+        (storage local)
+        (visibility public)
+        (default FALSE))
+  (message-handler init after))
+(defmessage-handler tokenizer::translation-unit init after
+                    ()
+                    (bind ?self:valid
+                          (bind ?self:is-open
+                                (open ?self:path
+                                      ?self:logical-name
+                                      ?self:permissions))))
+
 
 
 (defclass tokenizer::expression
@@ -41,12 +88,7 @@
              (visibility public)
              (default ?NONE)))
 
-
-
 (deftemplate tokenizer::tracker
-             (slot metadata
-                   (type INSTANCE)
-                   (default ?NONE))
              (slot logical-name
                    (type SYMBOL)
                    (default ?NONE))
@@ -56,7 +98,7 @@
                                     FINISHED
                                     ERROR)
                    (default PROCESSING))
-             (slot top-level-expression
+             (slot translation-unit
                    (type INSTANCE)
                    (default ?NONE))
              (slot current-expression
@@ -64,13 +106,25 @@
                    (default ?NONE))
              (multislot current-token
                         (default ?NONE)))
-
+(defrule tokenizer::create-tracker
+         "Each translation-unit needs a corresponding tracker to work with"
+         (object (is-a translation-unit)
+                 (name ?tu)
+                 (valid TRUE)
+                 (logical-name ?lu))
+         (not (tracker (translation-unit ?tu)))
+         =>
+         (assert (tracker (translation-unit ?tu)
+                          (logical-name ?lu)
+                          (current-expression ?lu)
+                          (current-token (next-token ?lu)))))
 
 (defrule tokenizer::create-token
          ?f <- (tracker (current-expression ?expr)
                         (logical-name ?ln)
                         (status PROCESSING)
-                        (current-token ?kind $?value))
+                        (current-token ?kind 
+                                       $?value))
          ?obj <- (object (is-a expression)
                          (name ?expr)
                          (contents $?contents))
@@ -101,7 +155,6 @@
                                           (make-instance of expression
                                                          (parent ?expr)
                                                          (contents)))))
-                                    
          (modify ?f
                  (current-expression ?new-expr)
                  (current-token (next-token ?ln))))
@@ -109,7 +162,7 @@
 (defrule tokenizer::leave-expression
          (declare (salience 1))
          ?f <- (tracker (current-expression ?expr)
-                        (top-level-expression ~?expr)
+                        (translation-unit ~?expr)
                         (logical-name ?ln)
                         (status PROCESSING)
                         (current-token RIGHT_PARENTHESIS 
@@ -121,10 +174,11 @@
          (modify ?f
                  (current-expression ?p)
                  (current-token (next-token ?ln))))
+
 (defrule tokenizer::leave-expression-and-fail
          (declare (salience 1))
          ?f <- (tracker (current-expression ?expr)
-                        (top-level-expression ?expr)
+                        (translation-unit ?expr)
                         (logical-name ?ln)
                         (status PROCESSING)
                         (current-token RIGHT_PARENTHESIS 
@@ -139,7 +193,7 @@
 (defrule tokenizer::finish-tokenization-success
          (declare (salience 1))
          ?f <- (tracker (current-expression ?expr)
-                        (top-level-expression ?expr)
+                        (translation-unit ?expr)
                         (status PROCESSING)
                         (logical-name ?ln)
                         (current-token STOP $?))
@@ -150,7 +204,7 @@
 (defrule tokenizer::finish-tokenization-fail
          (declare (salience 1))
          ?f <- (tracker (current-expression ?expr)
-                        (top-level-expression ~?expr)
+                        (translation-unit ~?expr)
                         (status PROCESSING)
                         (logical-name ?ln)
                         (current-token STOP 
@@ -160,3 +214,4 @@
                    "End of the file before closing everything up on " ?ln ! crlf)
          (modify ?f
                  (status ERROR)))
+
