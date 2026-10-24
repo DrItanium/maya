@@ -24,4 +24,12 @@
 ; code module to demonstrate different features of the new binary operations
 (defmodule binary_operations
            (export ?ALL))
+(deffunction binary_operations::bits-per-integer
+             ()
+             (* (bits-per-byte)
+                (bytes-per-integer)))
 
+(deffunction binary_operations::bits-per-float
+             ()
+             (* (bits-per-byte)
+                (bytes-per-float)))
