@@ -45,6 +45,8 @@
               (of translation-unit
                   (path cortex/common.clp))
               (of translation-unit
+                  (path cortex/clips.clp))
+              (of translation-unit
                   (path /this/is/not/a/real/path)))
 
 (defrule MAIN::run-tokenization

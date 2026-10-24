@@ -67,7 +67,39 @@
         (visibility public)
         (default ?NONE)))
 
-;(defrule identify-global-constructs::find-legal-defglobal-construct
+(defrule identify-global-constructs::new-defglobal-with-specified-module
+         (declare (salience 1))
+         (object (is-a translation-unit)
+                 (status TOKENIZED)
+                 (name ?tu))
+         ?ex <- (object (is-a expression)
+                        (name ?expr)
+                        (parent ?tu)
+                        (contents defglobal 
+                                  ?module&:(symbolp ?module)
+                                  $?rest))
+         =>
+         (unmake-instance ?ex)
+         (make-instance ?expr of defglobal-construct
+                        (parent ?tu)
+                        (target-module ?module)
+                        (assignments $?rest)))
+
+(defrule identify-global-constructs::new-defglobal-without-specified-module
+         (object (is-a translation-unit)
+                 (status TOKENIZED)
+                 (name ?tu))
+         ?ex <- (object (is-a expression)
+                        (name ?expr)
+                        (parent ?tu)
+                        (contents defglobal 
+                                  $?rest))
+         =>
+         (unmake-instance ?ex)
+         (make-instance ?expr of defglobal-construct
+                        (parent ?tu)
+                        (target-module) ; no module specified
+                        (assignments $?rest)))
 
 
 
@@ -82,6 +114,7 @@
          =>
          (modify-instance ?obj
                           (status PARSED)))
+
 (defmodule clips
            "top-level clips module that is used for parsing functionality"
            (import common
@@ -93,6 +126,8 @@
            (import wildcard-identification
                    ?ALL)
            (import variable-identification
+                   ?ALL)
+           (import identify-global-constructs
                    ?ALL)
            (export ?ALL))
 
