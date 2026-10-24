@@ -66,15 +66,18 @@
                  (path ?path))
          =>
          (switch ?k
-                 (case ERROR then 
-                   (printout stderr 
-                             "Failed to process " ?path crlf))
-                 (case FINISHED then
-                   (printout stderr
-                             "Successfully processed " ?path crlf))
                  (case UNPROCESSED then 
                    (printout stderr
                              "Processing " ?path crlf))
+                 (case ERROR then 
+                   (printout stderr 
+                             "Failed to process " ?path crlf))
+                 (case PARSED then
+                   (printout stderr
+                             "Parsed " ?path crlf))
+                 (case FINISHED then
+                   (printout stderr
+                             "Successfully finished processing " ?path crlf))
                  (default
                    (printout stderr
                              "Something went funky while processing " ?path crlf))))

@@ -60,6 +60,8 @@
         (type SYMBOL)
         (allowed-symbols UNPROCESSED
                          PROCESSING
+                         TOKENIZED
+                         PARSED
                          FINISHED
                          ERROR)
         (storage local)
@@ -228,7 +230,7 @@
          (send ?expr
                finish)
          (modify-instance ?expr 
-                          (status FINISHED))
+                          (status TOKENIZED))
          (modify ?f
                  (status FINISHED)))
 
