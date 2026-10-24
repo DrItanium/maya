@@ -628,6 +628,6 @@ bitsPerChar(UDF_ARGS__) noexcept {
 void
 bytesPerInteger(UDF_ARGS__) noexcept {
     auto& theEnv = Environment::fromRaw(env);
-    out->integerValue = theEnv.createInteger(sizeof(CLIPSInteger));
+    out->integerValue = theEnv.createInteger(sizeof(CLIPSInteger::contents));
 }
 } // end namespace Electron
