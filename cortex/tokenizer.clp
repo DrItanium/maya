@@ -28,6 +28,8 @@
            (export defclass
                    ?ALL))
 
+(defclass tokenizer::expression
+  (is-a container))
 (defclass tokenizer::translation-unit
   (is-a expression)
   (slot parent
@@ -77,8 +79,6 @@
 
 
 
-(defclass tokenizer::expression
-  (is-a container))
 
 (defclass tokenizer::token
   (is-a has-parent
