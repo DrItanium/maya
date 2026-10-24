@@ -30,6 +30,7 @@
 #include <optional>
 #include <bit>
 #include <numbers>
+#include <climits>
 
 extern "C" {
 #include "clips/clips.h"
@@ -75,6 +76,8 @@ static void eConstantOperation(UDF_ARGS__) noexcept;
 static void scanbyteOperation(UDF_ARGS__) noexcept;
 static void bitIsSet(UDF_ARGS__) noexcept;
 static void bitIsClear(UDF_ARGS__) noexcept;
+static void bitsPerChar(UDF_ARGS__) noexcept;
+static void bytesPerInteger(UDF_ARGS__) noexcept;
 
 void
 InitializeBinaryExtensions(RawEnvironment* env)
@@ -117,6 +120,9 @@ InitializeBinaryExtensions(RawEnvironment* env)
     theEnv.addFunction("scanbyte", "b", 2, 2, "l", scanbyteOperation, "scanbyteOperation");
     theEnv.addFunction("bit-setp", "b", 2, 2, "l", bitIsSet, "bitIsSet");
     theEnv.addFunction("bit-clearp", "b", 2, 2, "l", bitIsClear, "bitIsClear");
+    // query information about the underlying system in a safe manner
+    theEnv.addFunction("bits-per-byte", "l", 0, 0, "l", bitsPerChar, "bitsPerChar");
+    theEnv.addFunction("bytes-per-integer", "l", 0, 0, "l", bytesPerInteger, "bytesPerInteger");
 }
 namespace 
 {
@@ -612,5 +618,16 @@ bitIsClear(UDF_ARGS__) noexcept {
         outcome = (src & (1ull << bitpos)) == 0;
     } 
     out->lexemeValue = theEnv.createBool(outcome);
+}
+
+void
+bitsPerChar(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    out->integerValue = theEnv.createInteger(CHAR_BIT);
+}
+void
+bytesPerInteger(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    out->integerValue = theEnv.createInteger(sizeof(CLIPSInteger));
 }
 } // end namespace Electron
