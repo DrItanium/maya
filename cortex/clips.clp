@@ -53,15 +53,13 @@
 
 (defclass clips-common::slot
   (is-a has-parent
-        has-title
-        has-kind)
+        has-title)
   (slot kind
-        (source composite)
         (storage shared)
-        (allowed-symbols single
-                         multi
-                         UNDEFINED)
-        (access initialize-only)
+        (allowed-symbols UNDEFINED
+                         single
+                         multi)
+        (access read-only)
         (default UNDEFINED))
   (multislot attributes
              (storage local)
@@ -312,6 +310,23 @@
                         (parent ?tu)
                         (title ?title)
                         (definitions $?rest)))
+(defrule identify-deftemplate-constructs::create-single-slot
+         (object (is-a deftemplate-construct)
+                 (name ?p)
+                 (definitions $? ?a $?))
+         ?expr <- (object (is-a expression)
+                          (name ?a)
+                          (parent ?p)
+                          (contents slot 
+                                    ?name
+                                    $?attributes))
+         =>
+         (unmake-instance ?expr)
+         (make-instance ?a of single-slot
+                        (parent ?p)
+                        (title ?name)
+                        (attributes ?attributes)))
+
 
 ; TODO: add sanity checking
 ; ----
