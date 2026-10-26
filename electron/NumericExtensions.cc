@@ -53,9 +53,20 @@ InitializeNumericExtensions(RawEnvironment* env)
     theEnv.addFunction("midpoint", "ld", 2, 2, "ld", midpointOperation, "midpointOperation");
     theEnv.addFunction("lcm", "l", 2, 2, "l", lcmOperation, "lcmOperation");
     theEnv.addFunction("gcd", "l", 2, 2, "l", gcdOperation, "gcdOperation");
-    theEnv.addFunction("tau", "d", 0, 0, "sy", 
-            genericFPConstantOperation<boost::math::constants::tau<UnderlyingFloat>()>,
-            "genericFPConstantOperation<boost::math::constants::tau<UnderlyingFloat>()>");
+
+#define DefConstantFull(name, fn) \
+    theEnv.addFunction(name, "d", 0, 0, "sy", \
+            genericFPConstantOperation<boost::math::constants:: fn <UnderlyingFloat>()>, \
+            "genericFPConstantOperation<boost::math::constants::" #fn "<UnderlyingFloat>()>") 
+#define DefConstant(fn) DefConstantFull( #fn , fn )
+    DefConstant(tau);
+    DefConstantFull("log-pi", log_pi);
+    DefConstant(plastic);
+    DefConstant(gauss);
+    DefConstant(dottie);
+#undef DefConstant
+#undef DefConstantFull
+
 }
 void
 midpointOperation(UDF_ARGS__) noexcept
