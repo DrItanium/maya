@@ -38,7 +38,9 @@ namespace Electron
 
 static void nextTokenFunction(UDF_ARGS__);
 static void canBeTreatedAsLogicalName(UDF_ARGS__);
-static void boostDefaultTokenizeString(UDF_ARGS__);
+static void boostTokenizeString_CharSeparator(UDF_ARGS__);
+static void boostTokenizeString_EscapedListSeparator(UDF_ARGS__);
+static void boostTokenizeString_OffsetSeparator(UDF_ARGS__);
 
 void
 InitializeParsingExtensions(RawEnvironment* env)
@@ -48,7 +50,15 @@ InitializeParsingExtensions(RawEnvironment* env)
     // then you will need to use get-char and pray
     theEnv.addFunction("next-token", "synldfie", 1, 1, "y", nextTokenFunction, "nextTokenFunction");
     theEnv.addFunction("logical-namep", "b", 1, 1, "y", canBeTreatedAsLogicalName, "canBeTreatedAsLogicalName");
-    theEnv.addFunction("tokenize-string", "m", 1, 1, "sy", boostDefaultTokenizeString, "boostDefaultTokenizeString");
+    theEnv.addFunction("tokenize-string:char-separator", "m", 1, 1, "sy", 
+            boostTokenizeString_CharSeparator,
+            "boostTokenizeString_CharSeparator");
+    theEnv.addFunction("tokenize-string:escaped-list-separator", "m", 1, 1, "sy", 
+            boostTokenizeString_EscapedListSeparator,
+            "boostTokenizeString_EscapedListSeparator");
+    theEnv.addFunction("tokenize-string:offset-separator", "m", 1, 1, "sy", 
+            boostTokenizeString_OffsetSeparator,
+            "boostTokenizeString_OffsetSeparator");
 }
 
 void
@@ -165,9 +175,9 @@ canBeTreatedAsLogicalName(UDF_ARGS__) {
     out->lexemeValue = theEnv.createBool(theEnv.queryRouters(logicalName));
 }
 
+template<typename T>
 void
-boostDefaultTokenizeString(UDF_ARGS__) {
-    
+boostTokenizeString(UDF_ARGS__) noexcept {
     auto& theEnv = Environment::fromRaw(env);
     UDFValue arg0;
     if (!theEnv.firstArgument(context, ArgumentBits::Lexeme, &arg0)) {
@@ -176,12 +186,26 @@ boostDefaultTokenizeString(UDF_ARGS__) {
     }
     MultifieldBuilder bldr(theEnv);
     std::string converted(arg0.lexemeValue->contents);
-    boost::tokenizer<> tok(converted);
+    boost::tokenizer<T> tok(converted);
     for (const auto& curr : tok) {
         bldr.append(curr, TreatLexemeAsSymbol{});
     }
     out->multifieldValue = bldr.create();
+}
 
+void
+boostTokenizeString_CharSeparator(UDF_ARGS__) {
+    boostTokenizeString<boost::char_separator<char>>(PASS_UDF_ARGS__);
+}
+
+void
+boostTokenizeString_EscapedListSeparator(UDF_ARGS__) {
+    boostTokenizeString<boost::escaped_list_separator<char>>(PASS_UDF_ARGS__);
+}
+
+void
+boostTokenizeString_OffsetSeparator(UDF_ARGS__) {
+    boostTokenizeString<boost::offset_separator>(PASS_UDF_ARGS__);
 }
 
 } // end namespace Electron

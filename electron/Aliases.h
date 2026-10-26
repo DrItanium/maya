@@ -67,5 +67,6 @@ using PatternMatch = ::patternMatch;
 } // end namespace Electron
 
 #define UDF_ARGS__ Electron::RawEnvironment* env, Electron::UDFContext* context, Electron::UDFValue* out
+#define PASS_UDF_ARGS__ env, context, out
 
 #endif // end __LibElectron_Aliases_h__
