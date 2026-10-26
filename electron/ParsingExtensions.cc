@@ -27,6 +27,7 @@
 #include "electron/MultifieldBuilder.h"
 #include "fs/path.h"
 #include <string>
+#include <boost/tokenizer.hpp>
 extern "C" {
 #include "clips/clips.h"
 }
@@ -37,6 +38,7 @@ namespace Electron
 
 static void nextTokenFunction(UDF_ARGS__);
 static void canBeTreatedAsLogicalName(UDF_ARGS__);
+static void boostDefaultTokenizeString(UDF_ARGS__);
 
 void
 InitializeParsingExtensions(RawEnvironment* env)
@@ -46,6 +48,7 @@ InitializeParsingExtensions(RawEnvironment* env)
     // then you will need to use get-char and pray
     theEnv.addFunction("next-token", "synldfie", 1, 1, "y", nextTokenFunction, "nextTokenFunction");
     theEnv.addFunction("logical-namep", "b", 1, 1, "y", canBeTreatedAsLogicalName, "canBeTreatedAsLogicalName");
+    theEnv.addFunction("tokenize-string", "m", 1, 1, "sy", boostDefaultTokenizeString, "boostDefaultTokenizeString");
 }
 
 void
@@ -160,6 +163,25 @@ canBeTreatedAsLogicalName(UDF_ARGS__) {
     auto& theEnv = Environment::fromRaw(env);
     auto logicalName = ::GetLogicalName(context, STDIN);
     out->lexemeValue = theEnv.createBool(theEnv.queryRouters(logicalName));
+}
+
+void
+boostDefaultTokenizeString(UDF_ARGS__) {
+    
+    auto& theEnv = Environment::fromRaw(env);
+    UDFValue arg0;
+    if (!theEnv.firstArgument(context, ArgumentBits::Lexeme, &arg0)) {
+        out->lexemeValue = theEnv.falseSymbol();
+        return;
+    }
+    MultifieldBuilder bldr(theEnv);
+    std::string converted(arg0.lexemeValue->contents);
+    boost::tokenizer<> tok(converted);
+    for (const auto& curr : tok) {
+        bldr.append(curr, TreatLexemeAsSymbol{});
+    }
+    out->multifieldValue = bldr.create();
+
 }
 
 } // end namespace Electron
