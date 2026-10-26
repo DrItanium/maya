@@ -27,6 +27,7 @@
 #include "electron/MultifieldBuilder.h"
 
 #include <numeric>
+#include <boost/math/constants/constants.hpp>
 
 extern "C" {
 #include "clips/clips.h"
@@ -35,9 +36,15 @@ extern "C" {
 
 namespace Electron
 {
+using UnderlyingFloat = decltype(CLIPSFloat::contents);
 static void midpointOperation(UDF_ARGS__) noexcept;
 static void lcmOperation(UDF_ARGS__) noexcept;
 static void gcdOperation(UDF_ARGS__) noexcept;
+template<UnderlyingFloat f>
+static void genericFPConstantOperation(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    out->floatValue = theEnv.createFloat(f);
+}
 
 void
 InitializeNumericExtensions(RawEnvironment* env)
@@ -46,6 +53,9 @@ InitializeNumericExtensions(RawEnvironment* env)
     theEnv.addFunction("midpoint", "ld", 2, 2, "ld", midpointOperation, "midpointOperation");
     theEnv.addFunction("lcm", "l", 2, 2, "l", lcmOperation, "lcmOperation");
     theEnv.addFunction("gcd", "l", 2, 2, "l", gcdOperation, "gcdOperation");
+    theEnv.addFunction("tau", "d", 0, 0, "sy", 
+            genericFPConstantOperation<boost::math::constants::tau<UnderlyingFloat>()>,
+            "genericFPConstantOperation<boost::math::constants::tau<UnderlyingFloat>()>");
 }
 void
 midpointOperation(UDF_ARGS__) noexcept
