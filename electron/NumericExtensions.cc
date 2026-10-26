@@ -28,6 +28,7 @@
 
 #include <numeric>
 #include <boost/math/constants/constants.hpp>
+#include <boost/math/special_functions/prime.hpp>
 
 extern "C" {
 #include "clips/clips.h"
@@ -45,6 +46,8 @@ static void genericFPConstantOperation(UDF_ARGS__) noexcept {
     auto& theEnv = Environment::fromRaw(env);
     out->floatValue = theEnv.createFloat(f);
 }
+
+static void nthPrimeNumber(UDF_ARGS__) noexcept;
 
 void
 InitializeNumericExtensions(RawEnvironment* env)
@@ -66,6 +69,9 @@ InitializeNumericExtensions(RawEnvironment* env)
     DefConstant(dottie);
 #undef DefConstant
 #undef DefConstantFull
+    theEnv.addFunction("nth-prime", "ld", 1, 1, "l", 
+            nthPrimeNumber,
+            "nthPrimeNumber");
 
 }
 void
@@ -126,5 +132,20 @@ lcmOperation(UDF_ARGS__) noexcept
     out->integerValue = theEnv.createInteger(
             std::lcm(arg0.integerValue->contents,
                      arg1.integerValue->contents));
+}
+
+void
+nthPrimeNumber(UDF_ARGS__) noexcept {
+    auto& theEnv = Environment::fromRaw(env);
+    UDFValue arg0;
+    if (!theEnv.firstArgument(context, ArgumentBits::Integer, &arg0)) {
+        out->lexemeValue = theEnv.falseSymbol();
+        return;
+    }
+    if (auto value = arg0.integerValue->contents; value > 0 && value <= boost::math::max_prime) {
+        out->integerValue = theEnv.createInteger(boost::math::prime(value));
+    } else {
+        out->lexemeValue = theEnv.falseSymbol();
+    }
 }
 } // end namespace Electron
