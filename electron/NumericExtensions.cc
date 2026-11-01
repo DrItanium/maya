@@ -63,7 +63,6 @@ InitializeNumericExtensions(RawEnvironment* env)
             "genericFPConstantOperation<boost::math::constants::" #fn "<UnderlyingFloat>()>") 
 #define DefConstant(fn) DefConstantFull( #fn , fn )
     DefConstant(tau);
-    DefConstantFull("log-pi", log_pi);
     DefConstant(plastic);
     DefConstant(gauss);
     DefConstant(dottie);
